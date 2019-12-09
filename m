@@ -2,218 +2,640 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708C2C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1178C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484FD20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B572077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AF+ZrVUh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="icsNm3j6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfLIXDT (ORCPT
+        id S1727165AbfLIXDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:03:19 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10959 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfLIXDS (ORCPT
+        Mon, 9 Dec 2019 18:03:22 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:38057 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfLIXDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:03:18 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5deed2ab0000>; Mon, 09 Dec 2019 15:03:07 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 09 Dec 2019 15:03:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 15:03:13 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 23:03:13 +0000
-Received: from [10.2.174.71] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
- 23:03:11 +0000
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
-Message-ID: <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
-Date:   Mon, 9 Dec 2019 15:03:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575932588; bh=RD/UuYFLXtwBxgHk80kzPJPqxUQ1zAc8jBfi48zHg7Y=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=AF+ZrVUhuuI4n2G07/qPG+bFuep43+eiGM4ll6OZKtOX7H9bG1ZBL6W1Y+0W0aIEb
-         KOqfHAt9utQisUiWPXchiaiRf0/+hVFVhOdpZ7TEicYJDa72O/5HGWJLSZHKhE/302
-         1VDHk6r585XJ6/xRAmujBL7OldwSDkMLqh7O5sFMxOPaf5H9bCIjTrbpM1b5ZQ7ZlW
-         fmOuV43ULlc2wjdH1uOk+j864vcHbBAJGgbfa4p6BXgpxy61xeUseg67hVGMiZ/e2w
-         iFBT03GD7G+fs9/i3BrSP86QSVFkZihdGSB0eACQVGHdVcAaYfNpgb4Sj58eNj9iHt
-         7sW63WDhQtmEQ==
+        Mon, 9 Dec 2019 18:03:21 -0500
+Received: by mail-pj1-f74.google.com with SMTP id k93so8742298pjh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 15:03:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=W3soJVkX3chqUA4yexryiNdNdsd2zeyH2ACPivdWQA8=;
+        b=icsNm3j6tS4DrwHUSrvkGKpTESpzPvJ21F8+b7+8VyQZIlooOA9DopmsKukKCtDh1L
+         gWhNEmCuuXB6cvoF9kyyZUYQgJP/RZ+FmfXvXZjTcEA7q+syn79PWukJn4wTqyx/4hwl
+         PFMKjibfUgLhCrmgl/XsSXgaUu0Rhf8IbwhY5oVzyCQNhNO2heAURtl24uC1v7bZt1Jm
+         PvSYyPwmWrDKnI26TrIa5FrsQuEQqglS3nFbpvF86TPaBXztcohHNqfcZhnhJCK47wSR
+         4DQ/fsCbncLuP1EoQRHhH0srUeMDn/iVxTNqXJEyszZWOrH2/RO1lzUW3AQUJIhLPMbj
+         h3Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=W3soJVkX3chqUA4yexryiNdNdsd2zeyH2ACPivdWQA8=;
+        b=OXPTEeGZa6GD8zkQyWLdr1bXEFrRjqjC4waE7q3x0I7E89srORuv75bD3pPaWQGrC6
+         JqqMmIjtI5OB2VzJBwd7f/lQtLIg/rSLbxnaeHcA5hJZ2/0l5uLRcsYPBO55pWfyVWZL
+         oJzC5xL7guVglz039nFX5OeQLM2c0L4tNZUs5AyspchBP6C7VZ4ZCsYKzUdDyMblF1wG
+         WYC36ZC4Zik/rh1nOgnVl2Lx97Wq+qDF3pefewOzn9ZdQ2lDSwHcaUNw4pDmPe64n7jN
+         CApEf3KuZ4sqk7SLYwBqoa1gDdgr1Y0NUUDnn2YR+ByPKJIKZKYt1gtdbtpgBpob8lAV
+         s7Yg==
+X-Gm-Message-State: APjAAAWGpf79Z6e5wL7ZJudke0jYX4q4w7h+auOSgXXpVAtY3iD3aJCq
+        bYZd8tOSs5ss+DSX6yWZI8v85ZfHxnYHl5pxpRsJVA==
+X-Google-Smtp-Source: APXvYqzVTDS325/noPt/l65faddq5BSPhWvBoetxhq7lm3/LJ7lJuFMdzueIB5+pqewiDHaxVSYyVIiUeNpKdBk6i8PefQ==
+X-Received: by 2002:a63:5718:: with SMTP id l24mr20858274pgb.136.1575932599919;
+ Mon, 09 Dec 2019 15:03:19 -0800 (PST)
+Date:   Mon,  9 Dec 2019 15:02:48 -0800
+Message-Id: <20191209230248.227508-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v1] uml: remove support for CONFIG_STATIC_LINK
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
+Cc:     johannes.berg@intel.com, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org, davidgow@google.com,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+CONFIG_STATIC_LINK appears to have been broken since before v4.20. It
+doesn't play nice with CONFIG_UML_NET_VECTOR=y:
 
-On 12/9/19 12:46 PM, Sowjanya Komatineni wrote:
->
-> On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
->> 08.12.2019 00:36, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
->>>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
->>>>> 07.12.2019 18:53, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> 07.12.2019 18:47, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> 07.12.2019 17:28, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3
->>>>>>>>> with
->>>>>>>>> mux and gate for each of these clocks.
->>>>>>>>>
->>>>>>>>> Currently these PMC clocks are registered by Tegra clock driver
->>>>>>>>> using
->>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base=20
->>>>>>>>> address
->>>>>>>>> and register offsets and PMC programming for these clocks happens
->>>>>>>>> through direct PMC access by the clock driver.
->>>>>>>>>
->>>>>>>>> With this, when PMC is in secure mode any direct PMC access=20
->>>>>>>>> from the
->>>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>>> functional.
->>>>>>>>>
->>>>>>>>> This patch adds these clocks registration with PMC as a clock
->>>>>>>>> provider
->>>>>>>>> for these clocks. clk_ops callback implementations for these=20
->>>>>>>>> clocks
->>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
->>>>>>>>> programming
->>>>>>>>> in secure mode and non-secure mode.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>> [snip]
->>>>>>>
->>>>>>>>> +
->>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
->>>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
->>>>>>>>> +};
->>>>>>>> What's the benefit of separating GATE from the MUX?
->>>>>>>>
->>>>>>>> I think it could be a single clock.
->>>>>>> According to TRM:
->>>>>>>
->>>>>>> 1. GATE and MUX are separate entities.
->>>>>>>
->>>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in=20
->>>>>>> TRM).
->>>>>>>
->>>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,
->>>>>>> correct?
->>> Was following existing clk-tegra-pmc as I am not sure of reason for
->>> having these clocks registered as separate mux and gate clocks.
->>>
->>> Yes, PMC clocks can be registered as single clock and can use clk_ops
->>> for set/get parent and enable/disable.
->>>
->>> enable/disable of PMC clocks is for force-enable to force the clock to
->>> run regardless of ACCEPT_REQ or INVERT_REQ.
->>>
->>>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
->>>>>> should belong to PMC.
->>>>> Also, it should be "osc" and not "clk_m".
->>>> I followed the same parents as it were in existing clk-tegra-pmc=20
->>>> driver.
->>>>
->>>> Yeah they are wrong and they should be from osc and not clk_m.
->>>>
->>>> Will fix in next version.
->>>>
-Reg clk_m_div2/3, they are dividers at OSC pad and not really internal=20
-to PMC block.
+/usr/bin/ld: arch/um/drivers/vector_user.o: in function
+`user_init_socket_fds': vector_user.c:(.text+0x430): warning: Using
+'getaddrinfo' in statically linked applications requires at runtime the
+shared libraries from the glibc version used for linking
 
-current clock driver creates clk_m_div clocks which should actually be=20
-osc_div2/osc_div4 clocks with osc as parent.
+And it seems to break the ptrace check:
 
-There are no clk_m_div2 and clk_m_div4 from clk_m
+Checking that ptrace can change system call numbers...check_ptrace :
+child exited with exitcode 6, while expecting 0; status 0x67f
+[1]    126822 abort      ./linux mem=256M
 
-Will fix this in next version.
+(Apparently, a patch was recently discussed that fixes this - around
+v5.5-rc1[1] - but the fact that this was broken for over a year
+remains.)
 
->> Could you please describe the full EXTPERIPH clock topology and how the
->> pinmux configuration is related to it all?
->>
->> What is internal to the Tegra chip and what are the external outputs?
->>
->> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
->
-> PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,=20
-> EXTPERIPH from CAR.
->
-> OSC_DIV1/2/4 are with internal dividers at the OSC Pads
->
-> EXTPERIPH is from CAR and it has reset and enable controls along with=20
-> clock source selections to choose one of the PLLA_OUT0, CLK_S,=20
-> PLLP_OUT0, CLK_M, PLLE_OUT0
->
-> So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2, OSC_DIV4,=20
-> EXTERN.
->
->
-> CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these pins.
->
->
-> When EXTERN output clock is selected for these PMC clocks thru=20
-> CLKx_SRC_SEL, output clock is from driver by EXTPERIPH from CAR via=20
-> Pinmux logic or driven as per CLKx_SRC_SEL bypassing pinmux based on=20
-> CLKx_ACCEPT_REQ bit.
->
->
-> PMC Clock control register has bit CLKx_ACCEPT_REQ
-> When CLKx_ACCEPT_REQ =3D 0, output clock driver is from by EXTPERIPH=20
-> through the pinmux
-> When CLKx_ACCEPT_REQ =3D 1, output clock is based on CLKx_SRC_SEL bits=20
-> (OSC_DIV1/2/4 and EXTPERIPH clock bypassing the pinmux)
->
-> FORCE_EN bit in PMC CLock control register forces the clock to run=20
-> regardless of this.
+According to Anton, PCAP throws even more warnings, and the resulting
+binary isn't really even static anyway, so there is really no point in
+keeping this config around[2].
+
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Link[1]: https://www.spinics.net/lists/stable/msg346933.html
+Link[2]: https://lkml.org/lkml/2019/12/6/46
+---
+ arch/um/Kconfig              |  23 +----
+ arch/um/Makefile             |   3 +-
+ arch/um/kernel/dyn.lds.S     | 170 ----------------------------------
+ arch/um/kernel/uml.lds.S     | 115 -----------------------
+ arch/um/kernel/vmlinux.lds.S | 175 ++++++++++++++++++++++++++++++++++-
+ 5 files changed, 172 insertions(+), 314 deletions(-)
+ delete mode 100644 arch/um/kernel/dyn.lds.S
+ delete mode 100644 arch/um/kernel/uml.lds.S
+
+diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+index 2a6d04fcb3e91..00927fb7ce67a 100644
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@ -19,6 +19,7 @@ config UML
+ 	select GENERIC_CLOCKEVENTS
+ 	select HAVE_GCC_PLUGINS
+ 	select TTY # Needed for line.c
++	select MODULE_REL_CRCS if MODVERSIONS
+ 
+ config MMU
+ 	bool
+@@ -61,28 +62,6 @@ config NR_CPUS
+ 
+ source "arch/$(HEADER_ARCH)/um/Kconfig"
+ 
+-config STATIC_LINK
+-	bool "Force a static link"
+-	default n
+-	help
+-	  This option gives you the ability to force a static link of UML.
+-	  Normally, UML is linked as a shared binary.  This is inconvenient for
+-	  use in a chroot jail.  So, if you intend to run UML inside a chroot,
+-	  you probably want to say Y here.
+-	  Additionally, this option enables using higher memory spaces (up to
+-	  2.75G) for UML.
+-
+-config LD_SCRIPT_STATIC
+-	bool
+-	default y
+-	depends on STATIC_LINK
+-
+-config LD_SCRIPT_DYN
+-	bool
+-	default y
+-	depends on !LD_SCRIPT_STATIC
+-	select MODULE_REL_CRCS if MODVERSIONS
+-
+ config HOSTFS
+ 	tristate "Host filesystem"
+ 	help
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index d2daa206872da..ec8af28daf051 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -117,8 +117,7 @@ archheaders:
+ archprepare:
+ 	$(Q)$(MAKE) $(build)=$(HOST_DIR)/um include/generated/user_constants.h
+ 
+-LINK-$(CONFIG_LD_SCRIPT_STATIC) += -static
+-LINK-$(CONFIG_LD_SCRIPT_DYN) += -Wl,-rpath,/lib $(call cc-option, -no-pie)
++LINK-y += -Wl,-rpath,/lib $(call cc-option, -no-pie)
+ 
+ CFLAGS_NO_HARDENING := $(call cc-option, -fno-PIC,) $(call cc-option, -fno-pic,) \
+ 	$(call cc-option, -fno-stack-protector,) \
+diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
+deleted file mode 100644
+index c69d69ee96beb..0000000000000
+--- a/arch/um/kernel/dyn.lds.S
++++ /dev/null
+@@ -1,170 +0,0 @@
+-#include <asm/vmlinux.lds.h>
+-#include <asm/page.h>
+-
+-OUTPUT_FORMAT(ELF_FORMAT)
+-OUTPUT_ARCH(ELF_ARCH)
+-ENTRY(_start)
+-jiffies = jiffies_64;
+-
+-SECTIONS
+-{
+-  PROVIDE (__executable_start = START);
+-  . = START + SIZEOF_HEADERS;
+-  .interp         : { *(.interp) }
+-  __binary_start = .;
+-  . = ALIGN(4096);		/* Init code and data */
+-  _text = .;
+-  INIT_TEXT_SECTION(PAGE_SIZE)
+-
+-  . = ALIGN(PAGE_SIZE);
+-
+-  /* Read-only sections, merged into text segment: */
+-  .hash           : { *(.hash) }
+-  .gnu.hash       : { *(.gnu.hash) }
+-  .dynsym         : { *(.dynsym) }
+-  .dynstr         : { *(.dynstr) }
+-  .gnu.version    : { *(.gnu.version) }
+-  .gnu.version_d  : { *(.gnu.version_d) }
+-  .gnu.version_r  : { *(.gnu.version_r) }
+-  .rel.init       : { *(.rel.init) }
+-  .rela.init      : { *(.rela.init) }
+-  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
+-  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
+-  .rel.fini       : { *(.rel.fini) }
+-  .rela.fini      : { *(.rela.fini) }
+-  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
+-  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
+-  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
+-  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
+-  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
+-  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
+-  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
+-  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
+-  .rel.ctors      : { *(.rel.ctors) }
+-  .rela.ctors     : { *(.rela.ctors) }
+-  .rel.dtors      : { *(.rel.dtors) }
+-  .rela.dtors     : { *(.rela.dtors) }
+-  .rel.got        : { *(.rel.got) }
+-  .rela.got       : { *(.rela.got) }
+-  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
+-  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
+-  .rel.plt : {
+-	*(.rel.plt)
+-	PROVIDE_HIDDEN(__rel_iplt_start = .);
+-	*(.rel.iplt)
+-	PROVIDE_HIDDEN(__rel_iplt_end = .);
+-  }
+-  .rela.plt : {
+-	*(.rela.plt)
+-	PROVIDE_HIDDEN(__rela_iplt_start = .);
+-	*(.rela.iplt)
+-	PROVIDE_HIDDEN(__rela_iplt_end = .);
+-  }
+-  .init           : {
+-    KEEP (*(.init))
+-  } =0x90909090
+-  .plt            : { *(.plt) }
+-  .text           : {
+-    _stext = .;
+-    TEXT_TEXT
+-    SCHED_TEXT
+-    CPUIDLE_TEXT
+-    LOCK_TEXT
+-    IRQENTRY_TEXT
+-    SOFTIRQENTRY_TEXT
+-    *(.fixup)
+-    *(.stub .text.* .gnu.linkonce.t.*)
+-    /* .gnu.warning sections are handled specially by elf32.em.  */
+-    *(.gnu.warning)
+-
+-    . = ALIGN(PAGE_SIZE);
+-  } =0x90909090
+-  . = ALIGN(PAGE_SIZE);
+-  .syscall_stub : {
+-	__syscall_stub_start = .;
+-	*(.__syscall_stub*)
+-	__syscall_stub_end = .;
+-  }
+-  .fini           : {
+-    KEEP (*(.fini))
+-  } =0x90909090
+-
+-  .kstrtab : { *(.kstrtab) }
+-
+-  #include <asm/common.lds.S>
+-
+-  __init_begin = .;
+-  init.data : { INIT_DATA }
+-  __init_end = .;
+-
+-  /* Ensure the __preinit_array_start label is properly aligned.  We
+-     could instead move the label definition inside the section, but
+-     the linker would then create the section even if it turns out to
+-     be empty, which isn't pretty.  */
+-  . = ALIGN(32 / 8);
+-  .preinit_array     : { *(.preinit_array) }
+-  .fini_array     : { *(.fini_array) }
+-  .data           : {
+-    INIT_TASK_DATA(KERNEL_STACK_SIZE)
+-    . = ALIGN(KERNEL_STACK_SIZE);
+-    *(.data..init_irqstack)
+-    DATA_DATA
+-    *(.data.* .gnu.linkonce.d.*)
+-    SORT(CONSTRUCTORS)
+-  }
+-  .data1          : { *(.data1) }
+-  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
+-  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+-  .eh_frame       : { KEEP (*(.eh_frame)) }
+-  .gcc_except_table   : { *(.gcc_except_table) }
+-  .dynamic        : { *(.dynamic) }
+-  .ctors          : {
+-    /* gcc uses crtbegin.o to find the start of
+-       the constructors, so we make sure it is
+-       first.  Because this is a wildcard, it
+-       doesn't matter if the user does not
+-       actually link against crtbegin.o; the
+-       linker won't look for a file to match a
+-       wildcard.  The wildcard also means that it
+-       doesn't matter which directory crtbegin.o
+-       is in.  */
+-    KEEP (*crtbegin.o(.ctors))
+-    /* We don't want to include the .ctor section from
+-       from the crtend.o file until after the sorted ctors.
+-       The .ctor section from the crtend file contains the
+-       end of ctors marker and it must be last */
+-    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
+-    KEEP (*(SORT(.ctors.*)))
+-    KEEP (*(.ctors))
+-  }
+-  .dtors          : {
+-    KEEP (*crtbegin.o(.dtors))
+-    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
+-    KEEP (*(SORT(.dtors.*)))
+-    KEEP (*(.dtors))
+-  }
+-  .jcr            : { KEEP (*(.jcr)) }
+-  .got            : { *(.got.plt) *(.got) }
+-  _edata = .;
+-  PROVIDE (edata = .);
+-  .bss            : {
+-   __bss_start = .;
+-   *(.dynbss)
+-   *(.bss .bss.* .gnu.linkonce.b.*)
+-   *(COMMON)
+-   /* Align here to ensure that the .bss section occupies space up to
+-      _end.  Align after .bss to ensure correct alignment even if the
+-      .bss section disappears because there are no input sections.  */
+-   . = ALIGN(32 / 8);
+-  . = ALIGN(32 / 8);
+-  }
+-   __bss_stop = .;
+-  _end = .;
+-  PROVIDE (end = .);
+-
+-  STABS_DEBUG
+-
+-  DWARF_DEBUG
+-
+-  DISCARDS
+-}
+diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
+deleted file mode 100644
+index 9f21443be2c9e..0000000000000
+--- a/arch/um/kernel/uml.lds.S
++++ /dev/null
+@@ -1,115 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <asm/vmlinux.lds.h>
+-#include <asm/page.h>
+-
+-OUTPUT_FORMAT(ELF_FORMAT)
+-OUTPUT_ARCH(ELF_ARCH)
+-ENTRY(_start)
+-jiffies = jiffies_64;
+-
+-SECTIONS
+-{
+-  /* This must contain the right address - not quite the default ELF one.*/
+-  PROVIDE (__executable_start = START);
+-  /* Static binaries stick stuff here, like the sigreturn trampoline,
+-   * invisibly to objdump.  So, just make __binary_start equal to the very
+-   * beginning of the executable, and if there are unmapped pages after this,
+-   * they are forever unusable.
+-   */
+-  __binary_start = START;
+-
+-  . = START + SIZEOF_HEADERS;
+-
+-  _text = .;
+-  INIT_TEXT_SECTION(0)
+-  . = ALIGN(PAGE_SIZE);
+-
+-  .text      :
+-  {
+-    _stext = .;
+-    TEXT_TEXT
+-    SCHED_TEXT
+-    CPUIDLE_TEXT
+-    LOCK_TEXT
+-    IRQENTRY_TEXT
+-    SOFTIRQENTRY_TEXT
+-    *(.fixup)
+-    /* .gnu.warning sections are handled specially by elf32.em.  */
+-    *(.gnu.warning)
+-    *(.gnu.linkonce.t*)
+-  }
+-
+-  . = ALIGN(PAGE_SIZE);
+-  .syscall_stub : {
+-	__syscall_stub_start = .;
+-	*(.__syscall_stub*)
+-	__syscall_stub_end = .;
+-  }
+-
+-  /*
+-   * These are needed even in a static link, even if they wind up being empty.
+-   * Newer glibc needs these __rel{,a}_iplt_{start,end} symbols.
+-   */
+-  .rel.plt : {
+-	*(.rel.plt)
+-	PROVIDE_HIDDEN(__rel_iplt_start = .);
+-	*(.rel.iplt)
+-	PROVIDE_HIDDEN(__rel_iplt_end = .);
+-  }
+-  .rela.plt : {
+-	*(.rela.plt)
+-	PROVIDE_HIDDEN(__rela_iplt_start = .);
+-	*(.rela.iplt)
+-	PROVIDE_HIDDEN(__rela_iplt_end = .);
+-  }
+-
+-  #include <asm/common.lds.S>
+-
+-  __init_begin = .;
+-  init.data : { INIT_DATA }
+-  __init_end = .;
+-
+-  .data    :
+-  {
+-    INIT_TASK_DATA(KERNEL_STACK_SIZE)
+-    . = ALIGN(KERNEL_STACK_SIZE);
+-    *(.data..init_irqstack)
+-    DATA_DATA
+-    *(.gnu.linkonce.d*)
+-    CONSTRUCTORS
+-  }
+-  .data1   : { *(.data1) }
+-  .ctors         :
+-  {
+-    *(.ctors)
+-  }
+-  .dtors         :
+-  {
+-    *(.dtors)
+-  }
+-
+-  .got           : { *(.got.plt) *(.got) }
+-  .dynamic       : { *(.dynamic) }
+-  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
+-  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
+-  /* We want the small data sections together, so single-instruction offsets
+-     can access them all, and initialized data all before uninitialized, so
+-     we can shorten the on-disk segment size.  */
+-  .sdata     : { *(.sdata) }
+-  _edata  =  .;
+-  PROVIDE (edata = .);
+-  . = ALIGN(PAGE_SIZE);
+-  __bss_start = .;
+-  PROVIDE(_bss_start = .);
+-  SBSS(0)
+-  BSS(0)
+-   __bss_stop = .;
+-  _end = .;
+-  PROVIDE (end = .);
+-
+-  STABS_DEBUG
+-
+-  DWARF_DEBUG
+-
+-  DISCARDS
+-}
+diff --git a/arch/um/kernel/vmlinux.lds.S b/arch/um/kernel/vmlinux.lds.S
+index 16e49bfa2b426..f4b6114e54d62 100644
+--- a/arch/um/kernel/vmlinux.lds.S
++++ b/arch/um/kernel/vmlinux.lds.S
+@@ -1,8 +1,173 @@
+ 
+ KERNEL_STACK_SIZE = 4096 * (1 << CONFIG_KERNEL_STACK_ORDER);
+ 
+-#ifdef CONFIG_LD_SCRIPT_STATIC
+-#include "uml.lds.S"
+-#else
+-#include "dyn.lds.S"
+-#endif
++#include <asm/vmlinux.lds.h>
++#include <asm/page.h>
++
++OUTPUT_FORMAT(ELF_FORMAT)
++OUTPUT_ARCH(ELF_ARCH)
++ENTRY(_start)
++jiffies = jiffies_64;
++
++SECTIONS
++{
++  PROVIDE (__executable_start = START);
++  . = START + SIZEOF_HEADERS;
++  .interp         : { *(.interp) }
++  __binary_start = .;
++  . = ALIGN(4096);		/* Init code and data */
++  _text = .;
++  INIT_TEXT_SECTION(PAGE_SIZE)
++
++  . = ALIGN(PAGE_SIZE);
++
++  /* Read-only sections, merged into text segment: */
++  .hash           : { *(.hash) }
++  .gnu.hash       : { *(.gnu.hash) }
++  .dynsym         : { *(.dynsym) }
++  .dynstr         : { *(.dynstr) }
++  .gnu.version    : { *(.gnu.version) }
++  .gnu.version_d  : { *(.gnu.version_d) }
++  .gnu.version_r  : { *(.gnu.version_r) }
++  .rel.init       : { *(.rel.init) }
++  .rela.init      : { *(.rela.init) }
++  .rel.text       : { *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*) }
++  .rela.text      : { *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*) }
++  .rel.fini       : { *(.rel.fini) }
++  .rela.fini      : { *(.rela.fini) }
++  .rel.rodata     : { *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*) }
++  .rela.rodata    : { *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*) }
++  .rel.data       : { *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*) }
++  .rela.data      : { *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*) }
++  .rel.tdata	  : { *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*) }
++  .rela.tdata	  : { *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*) }
++  .rel.tbss	  : { *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*) }
++  .rela.tbss	  : { *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*) }
++  .rel.ctors      : { *(.rel.ctors) }
++  .rela.ctors     : { *(.rela.ctors) }
++  .rel.dtors      : { *(.rel.dtors) }
++  .rela.dtors     : { *(.rela.dtors) }
++  .rel.got        : { *(.rel.got) }
++  .rela.got       : { *(.rela.got) }
++  .rel.bss        : { *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*) }
++  .rela.bss       : { *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*) }
++  .rel.plt : {
++	*(.rel.plt)
++	PROVIDE_HIDDEN(__rel_iplt_start = .);
++	*(.rel.iplt)
++	PROVIDE_HIDDEN(__rel_iplt_end = .);
++  }
++  .rela.plt : {
++	*(.rela.plt)
++	PROVIDE_HIDDEN(__rela_iplt_start = .);
++	*(.rela.iplt)
++	PROVIDE_HIDDEN(__rela_iplt_end = .);
++  }
++  .init           : {
++    KEEP (*(.init))
++  } =0x90909090
++  .plt            : { *(.plt) }
++  .text           : {
++    _stext = .;
++    TEXT_TEXT
++    SCHED_TEXT
++    CPUIDLE_TEXT
++    LOCK_TEXT
++    IRQENTRY_TEXT
++    SOFTIRQENTRY_TEXT
++    *(.fixup)
++    *(.stub .text.* .gnu.linkonce.t.*)
++    /* .gnu.warning sections are handled specially by elf32.em.  */
++    *(.gnu.warning)
++
++    . = ALIGN(PAGE_SIZE);
++  } =0x90909090
++  . = ALIGN(PAGE_SIZE);
++  .syscall_stub : {
++	__syscall_stub_start = .;
++	*(.__syscall_stub*)
++	__syscall_stub_end = .;
++  }
++  .fini           : {
++    KEEP (*(.fini))
++  } =0x90909090
++
++  .kstrtab : { *(.kstrtab) }
++
++  #include <asm/common.lds.S>
++
++  __init_begin = .;
++  init.data : { INIT_DATA }
++  __init_end = .;
++
++  /* Ensure the __preinit_array_start label is properly aligned.  We
++     could instead move the label definition inside the section, but
++     the linker would then create the section even if it turns out to
++     be empty, which isn't pretty.  */
++  . = ALIGN(32 / 8);
++  .preinit_array     : { *(.preinit_array) }
++  .fini_array     : { *(.fini_array) }
++  .data           : {
++    INIT_TASK_DATA(KERNEL_STACK_SIZE)
++    . = ALIGN(KERNEL_STACK_SIZE);
++    *(.data..init_irqstack)
++    DATA_DATA
++    *(.data.* .gnu.linkonce.d.*)
++    SORT(CONSTRUCTORS)
++  }
++  .data1          : { *(.data1) }
++  .tdata	  : { *(.tdata .tdata.* .gnu.linkonce.td.*) }
++  .tbss		  : { *(.tbss .tbss.* .gnu.linkonce.tb.*) *(.tcommon) }
++  .eh_frame       : { KEEP (*(.eh_frame)) }
++  .gcc_except_table   : { *(.gcc_except_table) }
++  .dynamic        : { *(.dynamic) }
++  .ctors          : {
++    /* gcc uses crtbegin.o to find the start of
++       the constructors, so we make sure it is
++       first.  Because this is a wildcard, it
++       doesn't matter if the user does not
++       actually link against crtbegin.o; the
++       linker won't look for a file to match a
++       wildcard.  The wildcard also means that it
++       doesn't matter which directory crtbegin.o
++       is in.  */
++    KEEP (*crtbegin.o(.ctors))
++    /* We don't want to include the .ctor section from
++       from the crtend.o file until after the sorted ctors.
++       The .ctor section from the crtend file contains the
++       end of ctors marker and it must be last */
++    KEEP (*(EXCLUDE_FILE (*crtend.o ) .ctors))
++    KEEP (*(SORT(.ctors.*)))
++    KEEP (*(.ctors))
++  }
++  .dtors          : {
++    KEEP (*crtbegin.o(.dtors))
++    KEEP (*(EXCLUDE_FILE (*crtend.o ) .dtors))
++    KEEP (*(SORT(.dtors.*)))
++    KEEP (*(.dtors))
++  }
++  .jcr            : { KEEP (*(.jcr)) }
++  .got            : { *(.got.plt) *(.got) }
++  _edata = .;
++  PROVIDE (edata = .);
++  .bss            : {
++   __bss_start = .;
++   *(.dynbss)
++   *(.bss .bss.* .gnu.linkonce.b.*)
++   *(COMMON)
++   /* Align here to ensure that the .bss section occupies space up to
++      _end.  Align after .bss to ensure correct alignment even if the
++      .bss section disappears because there are no input sections.  */
++   . = ALIGN(32 / 8);
++  . = ALIGN(32 / 8);
++  }
++   __bss_stop = .;
++  _end = .;
++  PROVIDE (end = .);
++
++  STABS_DEBUG
++
++  DWARF_DEBUG
++
++  DISCARDS
++}
+-- 
+2.24.0.393.g34dc348eaf-goog
+
