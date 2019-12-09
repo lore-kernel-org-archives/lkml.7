@@ -2,69 +2,87 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763F6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC9C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F74E2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QPhX/g5v"
+	by mail.kernel.org (Postfix) with ESMTP id C7B6E207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575914022;
+	bh=HuQ62wstCd1mF4TNHxM7QiHac/0n2/yEKYYNbygXw/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KfZ99Nht6ciUDrUg3zIbEUegD/9tzspIesc2dPKkM5ReOS2VBu0oC2Ig/5hQEV9Ka
+	 SUvMqNAyEw64vtyi9RFZcrM9FOXs5xr8fB3TdCbIH4Xi9PBkEY57KGwz5ong9Llt12
+	 r2YQM8pRfwWlZF+2jovQjQYTXNHq5PuSgFNY3Fjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfLIRvY (ORCPT
+        id S1726608AbfLIRxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:51:24 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:42836 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfLIRvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:51:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ms/F2s3/R6/K6xLFMgTAAHNf26wBJJq851sLoWDyaHM=; b=QPhX/g5vzvc1EQQR+ElUulM8CO
-        FQ5cp0+vJTpkVCwhpZxYH/fpmFvYseVfS37Ux9Yw4Ve0l/QbXlr9Nri9O6Im84c/1y21fBliMB2cC
-        67MfEbqnAKFKRkazihaobdHVRE9bpS28H7xPMBIp7nYjxCTXdP/C3iLcNLm7BXAr38Go=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ieNBn-0006wI-N6; Mon, 09 Dec 2019 18:51:19 +0100
-Date:   Mon, 9 Dec 2019 18:51:19 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Fabio Estevam <festevam@gmail.com>, netdev@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1] ARM i.MX6q: make sure PHY fixup for KSZ9031 is
- applied only on one board
-Message-ID: <20191209175119.GK9099@lunn.ch>
-References: <20191209084430.11107-1-o.rempel@pengutronix.de>
- <20191209171508.GD9099@lunn.ch>
- <20191209173952.qnkzfrbixjgi2jfy@pengutronix.de>
+        Mon, 9 Dec 2019 12:53:41 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35057 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIRxl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 12:53:41 -0500
+Received: by mail-ed1-f68.google.com with SMTP id f8so13495692edv.2;
+        Mon, 09 Dec 2019 09:53:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UrvHL4BYkHmgmCYtDoJeTxTYIse1XysrLlj41Dvh9n8=;
+        b=f/OyBQeV7RS8TMtru1oa6T6nikPaHzlVB0zMu5+Txbxw9qWp3egQMp3L84ipEm0LSO
+         xZOP6fAniFLFIDuT1GRrt8cn4nFwC/5gY3YxdZf21/1zmwtmpsh7g//j7iAA3ZTXTiDt
+         A5RZwAiPtclrEicckr0D6R05HLhJtITA6MH9lNSC8Gspc7CMvzl4bzoKD3O7IxHNTLIW
+         mrPp+N4jwrGPiD1rQKkTKDUE1oM/6wyEatANp0EOncWlv3IZ553G7B3p0BWJvwzkokJR
+         jrwZxbAFfg1hNjaBLIGM4rGK+hT9XUK1kbklAP6m3VU+JQOcqoV8UsXUND0e/bGkB9cQ
+         iyRg==
+X-Gm-Message-State: APjAAAWCZxDP45whYjvU3kAQ5GRf+dqom5bIywpuDz7Gaq9hw/3tvu4f
+        DPakymQysvg8xldgYWF7GlE=
+X-Google-Smtp-Source: APXvYqz7xZT94bkflIUqchNHC8Bx7fBoGQEEA7qmUQgUgR7AhVj7LrwjuPGVnN/TM4VY1+/+rELM7A==
+X-Received: by 2002:a17:906:8394:: with SMTP id p20mr19330863ejx.136.1575914019321;
+        Mon, 09 Dec 2019 09:53:39 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id u9sm12129edr.4.2019.12.09.09.53.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 09:53:38 -0800 (PST)
+Date:   Mon, 9 Dec 2019 18:53:35 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     lukasz.luba@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com,
+        Dietmar.Eggemann@arm.com
+Subject: Re: [PATCH] MAINTAINERS: update my email address
+Message-ID: <20191209175335.GA26324@kozik-lap>
+References: <20191209093907.6646-1-lukasz.luba@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191209173952.qnkzfrbixjgi2jfy@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191209093907.6646-1-lukasz.luba@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Yes. all of them are broken.
-> I just trying to not wake all wasp at one time. Most probably there are
-> board working by accident. So, it will be good to have at least separate
-> patches for each fixup.
+On Mon, Dec 09, 2019 at 09:39:07AM +0000, lukasz.luba@arm.com wrote:
+> From: Lukasz Luba <lukasz.luba@arm.com>
+> 
+> Update my email address to @arm.com in MAINTAINERS and map it correctly
+> in .mailmap file.
+> 
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+> Hi Krzysztof,
+> 
+> Could you pick it up, please?
 
-I agree about a patch per fixup. Can you try to generate such patches?
-See if there is enough history in git to determine which boards
-actually need these fixups?
+Thanks, applied for current (v5.5) cycle.
 
-Thanks
-	Andrew
+Best regards,
+Krzysztof
+
