@@ -2,178 +2,174 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F351C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A49C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6B320692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8660E2072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:08:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raeDBqrj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/gXbkIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLIJEm (ORCPT
+        id S1727427AbfLIJIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:04:42 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32857 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727260AbfLIJEm (ORCPT
+        Mon, 9 Dec 2019 04:08:05 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38156 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:04:42 -0500
-Received: by mail-wm1-f68.google.com with SMTP id y23so14908274wma.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:04:40 -0800 (PST)
+        Mon, 9 Dec 2019 04:08:05 -0500
+Received: by mail-qv1-f68.google.com with SMTP id t5so2357941qvs.5;
+        Mon, 09 Dec 2019 01:08:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RZoSncp8Gm/hUXyAbEpWIWsypgWXttJCmXXWrREfaMs=;
-        b=raeDBqrjbd2eNzWgUy4qXX5JyBD+OKsYSqVt8V9488J12vzQY9oU4p+mFf3HwdToTB
-         9oPNjPUtimG9EL86IAGucvxJdO3BgZ/vOmcADWRk3D4QxJkPY2W+bugUBCrGX0Us0Aiy
-         apH4F9oDJvwsMSQ32FkKT4UnrP7/XxzDlY9y1u7wC6bwFZBPZUe/f5Gh84xdLFztQkwi
-         BFuoTp1uJJ4kcXtmtP9xy0ylFyNYLA/7l587yZfTuTg8pg4oMlEbh5y1SPmZNjZtSwF3
-         CdeuPflY2sV+fRDU21oPiipa4ZyM9bKceG4NpEFH4/y25JYYMdgShtqkkSjQMQkEjuj/
-         Aqrg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CsQ2cDmGprhje/X0/mOxIqAZtiH95tZMfnRQcWgEtGU=;
+        b=k/gXbkIfkYKM8UAiGRIgpMRDdAMGNhUbCUJ3oWlXZg8YEhiUKi2kHqvCmFOspey+rK
+         ujqwNkVaywsbQ/6igJCoscQnzsUMtTVOLNOaTc8bQn0gL3Fuxxh6vi1mNQgphfiiCr1w
+         NsTvAN3Y9FOTMgXCo3xLA8WXyUFGMmrYI0m3OXXRyjssXs/WdaQKcz05WtnxWMYD7byY
+         uskqA4FG7EoEaHju57oXwUgW2winyNQd8jYTvsQEOahXHPGN6r7LkqHL79mgZpM9FwdJ
+         gkW5iQefATVtv5HmGLldwHgYis6+eiElsodNeCz1Xq8e7Rz9fzcuusCxo32T6tnndrAD
+         EqKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=RZoSncp8Gm/hUXyAbEpWIWsypgWXttJCmXXWrREfaMs=;
-        b=VFPonnROrnbGSUOnjeJTTEO100ueL7jr38v2D9DaExQ01eZMYNMlSsZbQEOjvgO0Lq
-         B0fBKIyh9oh76xxZeTAIxjDZ4tJnjxy50dkVzwK68kqg+dtuymcMZn8GuSu1Y+BqtQH3
-         LEyaEKR+0aBsj6ShgZ76wc4F1oYgDjw/90NbYk68H60s5JSxpxquQTVp5FrADeMV1+qO
-         +S2lIk4YOjXgZNq5KzFwM8aNRISmELLqj2ePN8L1ng9wNpw292mHH8UIYVqgsZ552Rnl
-         BnkDngKYq+c9jmkJMq/gEhNmfaqRKVSQU2XHIW4dGx8B/4i6StLhXhOO64hXWeIRgvlN
-         cosw==
-X-Gm-Message-State: APjAAAXNN29Of0qyMZfXhCkF4ByQBycm9SlFAGj06CG/3XTflBNkPT4a
-        eaPsHdZYtNMojioUeBFP145ENQ==
-X-Google-Smtp-Source: APXvYqwdnu8KsWql6oItMQ/066TgKlpCj3fZASxVAR2jJ7lZGW9l4RDCCaOGkHhfsUSIZzLhnmVDJg==
-X-Received: by 2002:a1c:20d6:: with SMTP id g205mr23723912wmg.38.1575882279570;
-        Mon, 09 Dec 2019 01:04:39 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe? ([2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe])
-        by smtp.googlemail.com with ESMTPSA id 5sm27838839wrh.5.2019.12.09.01.04.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 01:04:38 -0800 (PST)
-Subject: Re: [PATCH 0/6] brcmstb_thermal updates for new processes
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191030182132.25763-1-f.fainelli@gmail.com>
- <97fc97de-c515-7c70-0c98-44146db91b3e@gmail.com>
- <4edae8c7-abb6-fc71-14c3-9b8ddb4e7003@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d82e53e0-9690-3dfd-3e10-4512b097e0c9@linaro.org>
-Date:   Mon, 9 Dec 2019 10:04:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CsQ2cDmGprhje/X0/mOxIqAZtiH95tZMfnRQcWgEtGU=;
+        b=m2tHtaLGjCI6fgtKYQCXfwJAOD49pZcr9JuienSoZ+MdHr2tQXZMSaRoAEkfLZnKYU
+         UGV2HyV4th8tXU0z0W5uAIvAuTqkGZ7s+7/FI9CFmq9ML53bsHly197ak6+QkLgwKFzN
+         dGTCgPN95Z+zyhL/JKTfk+Z0UdNL/rGJIFNJcuM/bC9IQeHtTGF8JdpkuIPxlcseVPEC
+         AK/qeVFORyCFuiLIOd0mM50MzD5tk/6HmYvfpH3jsP4AbNCe2KSxakpQzaVIlH5M8I/9
+         nvx5pjV6zthUV7IoBoT9bHD/66uD5rH6ZU7OFv4wFm4gI3Q+4QKeVK2JJGR6j3K5Cz2A
+         JuKw==
+X-Gm-Message-State: APjAAAUncHHitqXEBrqKFO9KihjA/cw+G3YUewBXju/0MTIDe4o5QTyH
+        rDeHanFuonpUXaFB6E/vPVBtXME0t3RgrX7qp/o=
+X-Google-Smtp-Source: APXvYqwG+415JdeA8xETiG6lkE6CPXGAyNSlWo8u5TpjNUqOIU1vAQKLupugQVxv31avEepe1V+2zkFf+ajbMQKTQtk=
+X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr23160060qvb.89.1575882483886;
+ Mon, 09 Dec 2019 01:08:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4edae8c7-abb6-fc71-14c3-9b8ddb4e7003@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1574073572.git.baolin.wang7@gmail.com> <81d66ceaa2763cfc1e5ccb605bb3a4194b947f0d.1574073572.git.baolin.wang7@gmail.com>
+ <CAK8P3a1bUt+HERWtGEKmhdD9ctX0GRQQbXHxtUnJ8KNu=v87aw@mail.gmail.com> <CADBw62qW46KyEuj-YOw21sKxLB_uWxxWa_0-0JOXi-6Y48g0hw@mail.gmail.com>
+In-Reply-To: <CADBw62qW46KyEuj-YOw21sKxLB_uWxxWa_0-0JOXi-6Y48g0hw@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 9 Dec 2019 17:07:52 +0800
+Message-ID: <CADBw62qvkjrhpR7gKpf6NZNHai96Pc8GLHM+5sgNffbWS54WYA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] mmc: Add MMC host software queue support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ulf,
 
-Hi Florian,
+On Fri, Nov 22, 2019 at 6:42 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Hi Arnd,
+>
+> On Fri, Nov 22, 2019 at 6:32 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Nov 18, 2019 at 11:43 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >
+> > > From: Baolin Wang <baolin.wang@linaro.org>
+> > >
+> > > Now the MMC read/write stack will always wait for previous request is
+> > > completed by mmc_blk_rw_wait(), before sending a new request to hardware,
+> > > or queue a work to complete request, that will bring context switching
+> > > overhead, especially for high I/O per second rates, to affect the IO
+> > > performance.
+> > >
+> > > Thus this patch introduces MMC software queue interface based on the
+> > > hardware command queue engine's interfaces, which is similar with the
+> > > hardware command queue engine's idea, that can remove the context
+> > > switching. Moreover we set the default queue depth as 32 for software
+> > > queue, which allows more requests to be prepared, merged and inserted
+> > > into IO scheduler to improve performance, but we only allow 2 requests
+> > > in flight, that is enough to let the irq handler always trigger the
+> > > next request without a context switch, as well as avoiding a long latency.
+> > >
+> > > From the fio testing data in cover letter, we can see the software
+> > > queue can improve some performance with 4K block size, increasing
+> > > about 16% for random read, increasing about 90% for random write,
+> > > though no obvious improvement for sequential read and write.
+> > >
+> > > Moreover we can expand the software queue interface to support MMC
+> > > packed request or packed command in future.
+> > >
+> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> >
+> > Overall, this looks like enough of a win that I think we should just
+> > use the current version for the moment, while still working on all the
+> > other improvements.
+> >
+> > My biggest concern is the naming of "software queue", which is
+> > a concept that runs against the idea of doing all the heavy lifting,
+> > in particular the queueing in bfq.
+> >
+> > Then again, it does not /actually/ do much queuing at all, beyond
+> > preparing a single request so it can fire it off early. Even with the
+> > packed command support added in, there is not really any queuing
+> > beyond what it has to do anyway.
+>
+> Yes. But can not find any better name until now and 'software queue'
+> was suggested by Adrian.
+>
+> >
+> > Using the infrastructure that was added for cqe seems like a good
+> > compromise, as this already has a way to hand down multiple
+> > requests to the hardware and is overall more modern than the
+> > existing support.
+> >
+> > I still think we should do all the other things I mentioned in my
+> > earlier reply today, but they can be done as add-ons:
+> >
+> > - remove all blocking calls from the queue_rq() function:
+> >   partition-change, retune, etc should become non-blocking
+> >   operations that return busy in the queue_rq function.
+> >
+> > - get bfq to send down multiple requests all the way into
+> >   the device driver, so we don't have to actually queue them
+> >   here at all to do packed commands
+> >
+> > - add packed command support
+> >
+> > - submit cmds from hardirq context if this is advantageous,
+> >   and move everything else in the irq handler into irqthread
+> >   context in order to remove all other workqueue and softirq
+> >   processing from the request processing path.
+> >
+> > If we can agree on this as the rough plan for the future,
+> > feel free to add my
+>
+> Yes, I agree with your plan. Thast's what we should do in future.
+>
+> >
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Thanks for your reviewing and good suggestion.
+>
+> Ulf,
+>
+> I am not sure if there is any chance to merge this patch set into
+> V5.5, I've tested for a long time and did not find any resession.
+> Thanks.
 
-On 04/12/2019 05:50, Florian Fainelli wrote:
-> 
-> 
-> On 11/20/2019 10:43 AM, Florian Fainelli wrote:
->>
->>
->> On 10/30/2019 11:21 AM, Florian Fainelli wrote:
->>> Hi,
->>>
->>> This patch series contains a bug fix for the existing platforms and then
->>> paves the way for adding support for Broadcom STB's latest chips in 16nm
->>> processes, and finally updates the driver with pecularities introduced
->>> with the 16nm, like the lack of interrupt notification from the HW.
->>>
->>> Please queue up the first patch for -stable if you want, thanks!
->>
->> Ping?
-> 
-> Rui, anyone?
-
-Given comments on patch 1, I'm waiting for the V2.
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Could you apply this patchset if no objection from your side? Or do
+you need me to rebase and resend? Thanks.
