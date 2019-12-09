@@ -2,80 +2,141 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B30CC2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9041E2071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0822071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfLIGUD (ORCPT
+        id S1727117AbfLIGUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:20:03 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:35676 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfLIGUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 01:20:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id t15so10940637ilh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 22:20:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ib3fib3sKuBIkbtv5x2t+C/s5FzxvHK11gS8z3pdu9M=;
-        b=FF/mn156cCVLwfEj1SJ68S3zr/XouVnXBBeKScsCcZnApIKNJNEcITcPhy0L+2+Lt/
-         pXXMCUPQK2eLim6tj9cT7Be9onkpdN85bOcZMYoMZWCQe5Y+B5V78a8H2L5Vlm30ZcS+
-         N2Asj2fSr4htjWi7vL0F1HpxdZlce5S2jofrIQzf2tz+t0iJmGlMICjOQfrHnsPdBL76
-         75EU5Y+Z/WBQ7sd47O+dnEFuMwZVGrLoDN+sTSBjbW5nAeYpZzTYOY3mv8dKBU0K14gB
-         TJ5lvps6cWl/KL49RJouqY9JAETddr9KAwUx9JbPAPF4BMJOzFRBwro/w8+qKcTFS1iA
-         CliA==
-X-Gm-Message-State: APjAAAVXDB0U6d+lE0dK6mz7mNdeloDIjxodjNqI3C0fCGd/efUd0FJa
-        74o7rOb+vUZg5HUDOnKibgGZvUUEba8AU+2svD/eOeJ1kWl+
-X-Google-Smtp-Source: APXvYqxt5xSP7tbAVzuFhg+Ac4ya+TgZhTpk2Zr7W851b8K8a2VkPVv4m82Tfhoq72Q7Q0DHIeS8xNIuP9bQPMwA3Lj5vvagzqgz
+        Mon, 9 Dec 2019 01:20:07 -0500
+Received: from mail-bn8nam12on2053.outbound.protection.outlook.com ([40.107.237.53]:14529
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726270AbfLIGUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 01:20:06 -0500
+Received: from CY4PR02CA0023.namprd02.prod.outlook.com (2603:10b6:903:18::33)
+ by DM6PR02MB4713.namprd02.prod.outlook.com (2603:10b6:5:13::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Mon, 9 Dec
+ 2019 06:20:04 +0000
+Received: from SN1NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by CY4PR02CA0023.outlook.office365.com
+ (2603:10b6:903:18::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
+ Transport; Mon, 9 Dec 2019 06:20:04 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT031.mail.protection.outlook.com (10.152.72.116) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Mon, 9 Dec 2019 06:20:04 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieCGg-0004SE-Ql; Sun, 08 Dec 2019 22:11:38 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieCGb-0002d4-MK; Sun, 08 Dec 2019 22:11:33 -0800
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB96BWOM029704;
+        Sun, 8 Dec 2019 22:11:32 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieCGa-0002co-9a; Sun, 08 Dec 2019 22:11:32 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, michal.simek@xilinx.com,
+        robh+dt@kernel.org, shubhrajyoti.datta@gmail.com,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH v2 1/3] dt-bindings: misc: Add dt bindings for traffic generator
+Date:   Mon,  9 Dec 2019 11:41:26 +0530
+Message-Id: <8b3a446fc60cdd7d085203ce00c3f6bfba642437.1575871828.git.shubhrajyoti.datta@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--5.340-7.0-31-1
+X-imss-scan-details: No--5.340-7.0-31-1;No--5.340-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132203460042138298;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(39850400004)(396003)(346002)(199004)(189003)(6666004)(356004)(305945005)(107886003)(81156014)(81166006)(8936002)(50226002)(8676002)(70586007)(316002)(70206006)(9686003)(5660300002)(450100002)(82202003)(48376002)(50466002)(9786002)(118296001)(86362001)(2906002)(426003)(498600001)(4326008)(7696005)(73392003)(336012)(76482006)(51416003)(36756003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4713;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-X-Received: by 2002:a92:3984:: with SMTP id h4mr25241387ilf.36.1575872401339;
- Sun, 08 Dec 2019 22:20:01 -0800 (PST)
-Date:   Sun, 08 Dec 2019 22:20:01 -0800
-In-Reply-To: <000000000000bcd434057f4eb905@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b17fae05993f628b@google.com>
-Subject: Re: WARNING in tty_set_termios
-From:   syzbot <syzbot+a950165cbb86bdd023a4@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, gustavo@padovan.org,
-        johan.hedberg@gmail.com, jslaby@suse.com,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loic.poulain@intel.com, marcel@holtmann.org, mhjungk@gmail.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        vdronov@redhat.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3b08127a-4f85-4a7f-001a-08d77c6fd453
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4713:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB4713857BAB0074F84DEFDC1087580@DM6PR02MB4713.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 02462830BE
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wwHHjshntirVcT8JzxppteOw1XoIQK/GmKnzHjA4tW1svffO473niwMNZQtniFoNlStvcPGTq+kFz0wfhD9Ye6+jspNGwjGQrwVpmsTU38cnk4yM5RaEtq1FtPXQVyHXSxxrz+38KCKYYtr37o5zSA+Vi7qvqeiwC05EJbRvu8uBAe5QvRckBiZkjy0Kl4iU4ycUh5zFrjeCduU0NWkGac6+I2jgSS2PuFDNIJHisD6Lsnfc3AF3mrZdzx7H2MnehT2wyZ7PnQqEiNcZ2Pm34TR+1bMOq+oV/HogkVzHsFWaSONo0n1AsCd7WQ7HMdK4XobDVMY8Pn10n6lgjvEMMkMJaY6Chz1vhQGNj8sv0ktMYMZnkRFa9qcIKPXJ5qz3/SBZNPJObrA1ZWZOcSQEFNrEIj3HdekqqQEgXhD0y+pacx3F6xJr2D6hCHuRX9FM
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 06:20:04.0506
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b08127a-4f85-4a7f-001a-08d77c6fd453
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4713
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-commit b36a1552d7319bbfd5cf7f08726c23c5c66d4f73
-Author: Vladis Dronov <vdronov@redhat.com>
-Date:   Tue Jul 30 09:33:45 2019 +0000
+Add dt bindings for xilinx traffic generator IP.
 
-     Bluetooth: hci_uart: check for missing tty operations
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ .../bindings/misc/xlnx,axi-traffic-gen.txt         | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10b20aeae00000
-start commit:   66c56cfa Merge tag 'remove-dma_zalloc_coherent-5.0' of git..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b05cfdb4ee8ab9b2
-dashboard link: https://syzkaller.appspot.com/bug?extid=a950165cbb86bdd023a4
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=121cee07400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16fdaed8c00000
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+new file mode 100644
+index 0000000..6edb8f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/xlnx,axi-traffic-gen.txt
+@@ -0,0 +1,25 @@
++* Xilinx AXI Traffic generator IP
++
++Required properties:
++- compatible: "xlnx,axi-traffic-gen"
++- interrupts: Should contain AXI Traffic Generator interrupts.
++- interrupt-parent: Must be core interrupt controller.
++- reg: Should contain AXI Traffic Generator registers location and length.
++- interrupt-names: Should contain both the intr names of device - error
++		   and completion.
++- xlnx,device-id: Device instance Id.
++
++Optional properties:
++- clocks: Input clock specifier. Refer to common clock bindings.
++
++Example:
++++++++++
++axi_traffic_gen_1: axi-traffic-gen@76000000 {
++	compatible = "xlnx,axi-traffic-gen-1.0", "xlnx,axi-traffic-gen";
++	clocks = <&clkc 15>;
++	interrupts = <0 2 2 2>;
++	interrupt-parent = <&axi_intc_1>;
++	interrupt-names = "err-out", "irq-out";
++	reg = <0x76000000 0x800000>;
++	xlnx,device-id = <0x0>;
++} ;
+-- 
+2.1.1
 
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: Bluetooth: hci_uart: check for missing tty operations
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
