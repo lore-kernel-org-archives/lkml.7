@@ -2,145 +2,125 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C963EC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C31C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E9A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF67205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4xk6D9F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KIjyedjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLITaL (ORCPT
+        id S1726678AbfLITbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:30:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35818 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726562AbfLITaK (ORCPT
+        Mon, 9 Dec 2019 14:31:46 -0500
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:43974 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfLITbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:30:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575919809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=96bBHCk/wtYdQI2alAZrDQ5RvQLwzHoRyT++y2oaMKQ=;
-        b=b4xk6D9Fkl4y4j6Zkkev3hlQ+JmPUCH560ASNjGUVhVpEoQfGOp2jFwnc2hZ6SRTTGe1/u
-        Y7oXhZvjlV05QUC35Nx0qCcKm51smjt++NVSN4RC7e41Zn2ZzfvD6uvn+hlpqDuL2IImBU
-        M7wX1/fB7J4roMh7Vr6J1PzdTi4OvKY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-BdXiTdULNw-Roz2xXSZ0WQ-1; Mon, 09 Dec 2019 14:30:05 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32825107ACC9;
-        Mon,  9 Dec 2019 19:30:04 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-204-235.brq.redhat.com [10.40.204.235])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4E1FE60C05;
-        Mon,  9 Dec 2019 19:30:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon,  9 Dec 2019 20:30:03 +0100 (CET)
-Date:   Mon, 9 Dec 2019 20:30:00 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, christian.brauner@ubuntu.com,
-        luto@amacapital.net, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 4/4] samples: Add example of using PTRACE_GETFD in
- conjunction with user trap
-Message-ID: <20191209192959.GB10721@redhat.com>
-References: <20191209070646.GA32477@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
-In-Reply-To: <20191209070646.GA32477@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: BdXiTdULNw-Roz2xXSZ0WQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+        Mon, 9 Dec 2019 14:31:45 -0500
+Received: by mail-qv1-f73.google.com with SMTP id z9so5236598qvo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:31:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=prB1mk9zvmGsCm6yR+oUx6Ow5sTMlrAQcgGbY8ED3/U=;
+        b=KIjyedjy8nKNq/kpAMbwxkGMECaIvC3qdOkXTSD8uZOSbIA1zqIMm+d3v2GbyU9CsC
+         cewFDS9udMTcBDkUKZUS6p0AzmHYec6yPjkNtBiJZWVnBSF29uq9nXNAZDuzByhgHKGI
+         ud9yyn+iZ2S5WHgMw26FIeid04csehS+Fyof2aQAmzeurrobWJFSe1wjhKgN98C+hUsq
+         +em5TRFqHNGUupbBoZEuGtb1MxxLbu7ZE5qh/qvhG83X9bXVs4NUhouWhSvPe9WStWxm
+         JzpxqaZiGGvDXbAfO+PtALH4PaAOqAlVhkJqJJNAqh2Fx2P4mXyhyZfE24NwwRNXHjBc
+         4Eng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=prB1mk9zvmGsCm6yR+oUx6Ow5sTMlrAQcgGbY8ED3/U=;
+        b=JE+rWTlmp/VE1PRsV6ylwjrR/V4Q1xxTNae8BuVNaquRVKxQCoRN1rTY6P5nCNYS4S
+         uj6uUkwKO2WUYym0cok7DKkxXYyfjATPEPhzJdZgO56RM63tNlra4WBPf5aS36mQtEal
+         t3sgi20kkq3B9qeIWRjIr9AGgyze5vLowWd8i0kVCDnX/BdAVMv3UhiIT4jehr3g9KAI
+         Mo3zYsDx5Wx+NA9Zm82ugDHtHBRyXzgMhsfOFEgQT6kvUiwK5092OumSQHJqaHb8htLq
+         sB1+D5OzwMkt1sgzUkFFaPIgddGufhyXSt9Nxqx6rWDH07B0DcmVVLEypQFiJhB12q4Z
+         p8VA==
+X-Gm-Message-State: APjAAAXPxgXZyttE7pV9m8y3lsgG2NX8tj/JkdFXH04aLrj/Odkm8KRv
+        ZN10i9X/DW+a/wOQIrX/GXOjoTIU4DN6SKs=
+X-Google-Smtp-Source: APXvYqw9GHdPYoc93yCyiJKvU4kxnAKjk+GlfxyVvVSYOkfPpKh49jd7LxoXpmTmYo3eAgsuBRRMGKQCgC8Tku8=
+X-Received: by 2002:ac8:5155:: with SMTP id h21mr26336525qtn.174.1575919904561;
+ Mon, 09 Dec 2019 11:31:44 -0800 (PST)
+Date:   Mon,  9 Dec 2019 11:31:19 -0800
+Message-Id: <20191209193119.147056-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v3] of/platform: Unconditionally pause/resume sync state
+ during kernel init
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     kernel test robot <lkp@intel.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09, Sargun Dhillon wrote:
->
-> +#define CHILD_PORT_TRY_BIND=0980
-> +#define CHILD_PORT_ACTUAL_BIND=094998
+Commit 5e6669387e22 ("of/platform: Pause/resume sync state during init
+and of_platform_populate()") paused/resumed sync state during init only
+if Linux had parsed and populated a devicetree.
 
-...
+However, the check for that (of_have_populated_dt()) can change after
+of_platform_default_populate_init() executes.  One example of this is
+when devicetree unittests are enabled.  This causes an unmatched
+pause/resume of sync state. To avoid this, just unconditionally
+pause/resume sync state during init.
 
-> +static int handle_req(int listener)
-> +{
-> +=09struct sockaddr_in addr =3D {
-> +=09=09.sin_family=09=3D AF_INET,
-> +=09=09.sin_port=09=3D htons(4998),
+Fixes: 5e6669387e22 ("of/platform: Pause/resume sync state during init and of_platform_populate()")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+---
 
-then I think
-=09=09.sin_port =3D htons(CHILD_PORT_ACTUAL_BIND);
+v1->v2:
+- Updated the commit text to address Frank's comments
+- Added Frank's R-b
+v2->v3:
+- Added this change log to address Greg's comments
 
-would be more clear...
+ drivers/of/platform.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +=09=09.sin_addr=09=3D {
-> +=09=09=09.s_addr=09=3D htonl(INADDR_LOOPBACK)
-> +=09=09}
-> +=09};
-> +=09struct ptrace_getfd_args getfd_args =3D {
-> +=09=09.options =3D PTRACE_GETFD_O_CLOEXEC
-> +=09};
-> +=09struct seccomp_notif_sizes sizes;
-> +=09struct seccomp_notif_resp *resp;
-> +=09struct seccomp_notif *req;
-> +=09int fd, ret =3D 1;
-> +
-> +=09if (seccomp(SECCOMP_GET_NOTIF_SIZES, 0, &sizes) < 0) {
-> +=09=09perror("seccomp(GET_NOTIF_SIZES)");
-> +=09=09goto out;
-> +=09}
-> +=09req =3D malloc(sizes.seccomp_notif);
-> +=09if (!req)
-> +=09=09goto out;
-> +=09memset(req, 0, sizeof(*req));
-> +
-> +=09resp =3D malloc(sizes.seccomp_notif_resp);
-> +=09if (!resp)
-> +=09=09goto out_free_req;
-> +=09memset(resp, 0, sizeof(*resp));
-> +
-> +=09if (ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, req)) {
-> +=09=09perror("ioctl recv");
-> +=09=09goto out;
-> +=09}
-> +=09printf("Child tried to call bind with fd: %lld\n", req->data.args[0])=
-;
-> +=09getfd_args.fd =3D req->data.args[0];
-> +=09fd =3D ptrace_getfd(req->pid, &getfd_args);
-
-and iiuc otherwise you do not need to ptrace the child. So you could remove
-ptrace(PTRACE_SEIZE) in main() and just do
-
-=09ptrace(PTRACE_SEIZE, req->pid);
-=09fd =3D ptrace_getfd(req->pid, &getfd_args);
-=09ptrace(PTRACE_DETACH, req->pid);
-
-here. However, PTRACE_DETACH won't work, it needs the stopped tracee. We ca=
-n
-add PTRACE_DETACH_ASYNC, but this makes me think that PTRACE_GETFD has noth=
-ing
-to do with ptrace.
-
-May be a new syscall which does ptrace_may_access() + get_task_file() will =
-make
-more sense?
-
-Oleg.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index d93891a05f60..3371e4a06248 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -518,10 +518,11 @@ static int __init of_platform_default_populate_init(void)
+ {
+ 	struct device_node *node;
+ 
++	device_links_supplier_sync_state_pause();
++
+ 	if (!of_have_populated_dt())
+ 		return -ENODEV;
+ 
+-	device_links_supplier_sync_state_pause();
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
+@@ -545,8 +546,7 @@ arch_initcall_sync(of_platform_default_populate_init);
+ 
+ static int __init of_platform_sync_state_init(void)
+ {
+-	if (of_have_populated_dt())
+-		device_links_supplier_sync_state_resume();
++	device_links_supplier_sync_state_resume();
+ 	return 0;
+ }
+ late_initcall_sync(of_platform_sync_state_init);
+-- 
+2.24.0.393.g34dc348eaf-goog
 
