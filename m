@@ -2,106 +2,94 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA31C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE24920700
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575858205;
-	bh=ckJe1f9z+0yhWD6XSFJBjDXQNPIHJUlBowWUcrDFwnM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RDFJXNeampRpPVZG8yB5SXPD9TqneEjMD3OZshPZ7CJlwQGRs1YckZiFyUj+Iaby/
-	 7ITAxbeRLw4vow00q2gEhmQKxBdvGW7goUy5qQzLCe2ZKWY5Urk+YY08oIg7DxF8P2
-	 FwtpdMk224qnzPGLmzjvQArkZ2wUr8l4xOvcpbFc=
+	by mail.kernel.org (Postfix) with ESMTP id D5D4F206DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLICXX (ORCPT
+        id S1726923AbfLIC2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 21:23:23 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40190 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfLICXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 21:23:22 -0500
-Received: by mail-lj1-f193.google.com with SMTP id s22so13780968ljs.7
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 18:23:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jtNlyNh+mGdA2q4AO/JzXYXFrnuZqMnTZ+qQdX6qkbw=;
-        b=dZTJ7Zvl+X4Orlt5MxUX7caFe5OE31NxlNViH1WqR1xDkCBQ5UDeD13DvceCigkefe
-         NkUu8l4gfBUHZtIbZVYr5+fPLPBcJzA6yphObSdWg1lXpEgnqyLssA5GvFfNgnMwdzMh
-         tAhKKkBhHK2297EJrC4yT/2mx9cAPYvsAmndE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jtNlyNh+mGdA2q4AO/JzXYXFrnuZqMnTZ+qQdX6qkbw=;
-        b=ByLPVOUatMSZaXpQbV61f53HdwQHrzEWtuD5AC0KtmfCoGYI7mhh5D1gKwWHHX/YE/
-         8lnzLEQMbk/P1fYxlCr3hhSPphLpkt8/NocE+Uu7c5EXq0TEUJXN9qBJQmLkgBxeMavo
-         kvokC6L0ajndhTc0PoUTteWS59bPVorEM4aw19RK+tf7qRLlkwv4x57vfAppOR/lvfx1
-         4x0THeSa1DyG5kwlWAbOe38ZQMZc0oUR6efVz/KfIhWtTQjwaRRrShro1Q0BCss4w8rx
-         Z++myLvX5eO/2EbxoR1+UAt60iHw8UwUbETl64Po7d57v6ES6/45bGecYfreiOCeNvZV
-         sdTw==
-X-Gm-Message-State: APjAAAVJB94+TrJi0y04c74UanndDGK0MGzOkmk/FGlqXT6aSpsFC9Fw
-        Yq3EpkFl16fxdVYpubrLy/3XbejbQmc=
-X-Google-Smtp-Source: APXvYqzNVSf5Tiq6B5DYukD6RqIZSYJXtfwwhPGm/5sCBySXKWsDzBa7hBku4XI/afGj/HvT1Z3UAA==
-X-Received: by 2002:a2e:8646:: with SMTP id i6mr15350900ljj.122.1575858200302;
-        Sun, 08 Dec 2019 18:23:20 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id f26sm5118148ljn.104.2019.12.08.18.23.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Dec 2019 18:23:19 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id a13so13762375ljm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 18:23:19 -0800 (PST)
-X-Received: by 2002:a2e:241a:: with SMTP id k26mr15164274ljk.26.1575858198831;
- Sun, 08 Dec 2019 18:23:18 -0800 (PST)
-MIME-Version: 1.0
-References: <30808b0b-367a-266a-7ef4-de69c08e1319@internode.on.net> <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net>
-In-Reply-To: <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 8 Dec 2019 18:23:02 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
-Message-ID: <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
-Subject: Re: refcount_t: underflow; use-after-free with CIFS umount after
- scsi-misc commit ef2cc88e2a205b8a11a19e78db63a70d3728cdf5
-To:     Arthur Marsh <arthur.marsh@internode.on.net>
-Cc:     SCSI development list <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 8 Dec 2019 21:28:35 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:61971 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfLIC2f (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 21:28:35 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="33194851"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 09 Dec 2019 10:28:33 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71486:0:AUTH_RELAY)
+        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 10:28:35 +0800 (CST)
+Received: from 42.73.254.157
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101175:0:AUTH_LOGIN)
+        (envelope-from <dave.wang@emc.com.tw>); Mon, 09 Dec 2019 10:28:33 +0800 (CST)
+From:   Dave Wang <dave.wang@emc.com.tw>
+To:     Linux-input@vger.kernel.org, Linux-kernel@vger.kernel.org,
+        Dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw, josh.chen@emc.com.tw, jingle.wu@emc.com.tw,
+        kai.heng.feng@canonical.com, "Dave.Wang" <dave.wang@emc.com.tw>
+Subject: [PATCH] Input: elantech - Add pattern for firmware into elantech_device_info structure
+Date:   Sun,  8 Dec 2019 21:28:28 -0500
+Message-Id: <20191209022828.30143-1-dave.wang@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 5:49 PM Arthur Marsh
-<arthur.marsh@internode.on.net> wrote:
->
-> This still happens with 5.5.0-rc1:
+From: "Dave.Wang" <dave.wang@emc.com.tw>
 
-Does it happen 100% of the time?
+Add the conditional expression to distinguish different patterns
+regarding 0, 1, 2. Different patterns have its own location
+for device information.
 
-Your bisection result looks pretty nonsensical - not that it's
-impossible (anything is possible), but it really doesn't look very
-likely. Which makes me think maybe it's slightly timing-sensitive or
-something?
+Signed-off-by: Dave Wang <dave.wang@emc.com.tw>
+---
+ drivers/input/mouse/elantech.c | 11 +++++++++++
+ drivers/input/mouse/elantech.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-Would you mind trying to re-do the bisection, and for each kernel try
-the mount thing at least a few times before you decide a kernel is
-good?
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 2d8434b7b623..1f0d914acd78 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1557,6 +1557,17 @@ static int elantech_set_properties(struct elantech_device_info *info)
+ 		}
+ 	}
+ 
++	/* Get information pattern for hw_version 4 */
++	if (ver == 15) {
++		if ((info->fw_version & 0x0000ff) == 0x01)
++			info->pattern = 0x01;
++		else if ((info->fw_version & 0x0000ff) == 0x02)
++			info->pattern = 0x02;
++		else
++			info->pattern = 0x00;
++	} else
++		info->pattern = 0x00;
++
+ 	/* decide which send_cmd we're gonna use early */
+ 	info->send_cmd = info->hw_version >= 3 ? elantech_send_cmd :
+ 						 synaptics_send_cmd;
+diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
+index e0a3e59d4f1b..0aae6a9de8f0 100644
+--- a/drivers/input/mouse/elantech.h
++++ b/drivers/input/mouse/elantech.h
+@@ -140,6 +140,7 @@ struct elantech_device_info {
+ 	unsigned char samples[3];
+ 	unsigned char debug;
+ 	unsigned char hw_version;
++	unsigned char pattern;
+ 	unsigned int fw_version;
+ 	unsigned int x_min;
+ 	unsigned int y_min;
+-- 
+2.17.1
 
-Bisection is very powerful, but if _any_ of the kernels you marked
-good weren't really good (they just happened to not trigger the
-problem), bisection ends up giving completely the wrong answer. And
-with that bisection commit, there's not even a hint of what could have
-gone wrong.
-
-             Linus
