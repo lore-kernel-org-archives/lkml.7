@@ -2,117 +2,134 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F187C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30131C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CE120692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0650820692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="giGlsQnr"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YgglzsbO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfLIQOV (ORCPT
+        id S1726687AbfLIQOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:14:21 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46796 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIQOU (ORCPT
+        Mon, 9 Dec 2019 11:14:36 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:35605 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:14:20 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9GALHN047053;
-        Mon, 9 Dec 2019 16:13:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=DDBb3Lws0Bln7Q3yPsjcV6BrBWhAmpQz0iFXZoZdVaE=;
- b=giGlsQnrCGDqDgomc4UoquZSV7PRsD2k7cQm2RfMgqNza20kUYpjCUHilFp0DkiKE5fb
- QOr6dPrfdHR2ilzpjtJxaqs1CU0KfDs3l53gRkg0rytjH1rQqGnnI28q4v4E7S799y/r
- 4PwFmhkSRXehyzRjvFsAHVNY5IO0my80aOWjRPaEFUZDpYr2l7Xf6F71R3V+aOhXrNWA
- tN87Czw3clxzuxnoipdMDJOHfpgh4eThRyThiq7InI6TfeASDL6Q6iVlT9m/mKf7EMw8
- usL47NtHCR2+P7E3mp/qI67Fz5pUEbL/7RYQJocZqx31YCG+lOpcHWXVe7oQhyxx6YRt Tg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wrw4mwd1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Dec 2019 16:13:49 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9GALFE107601;
-        Mon, 9 Dec 2019 16:13:49 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2wrp7nkv16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Dec 2019 16:13:49 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB9GDjD5015770;
-        Mon, 9 Dec 2019 16:13:45 GMT
-Received: from tomti.i.net-space.pl (/10.175.212.194)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Dec 2019 08:13:45 -0800
-Date:   Mon, 9 Dec 2019 17:13:40 +0100
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] Documentation: x86: fix boot.rst warning and format
-Message-ID: <20191209161340.kdsikc2hvbhmpi6k@tomti.i.net-space.pl>
-References: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+        Mon, 9 Dec 2019 11:14:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575908075; x=1607444075;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=AbXRZejxfbJvwUT5PYTjIuXKm5OnarLWBVASHvDlVC8=;
+  b=YgglzsbOFnzu1g9vYxpwTxvrm/IkhiiTCZzEhI0L6/srAQHOmpBlSaj7
+   C3JZuuHRM0NgrER0VJ2LuMLM3Jgc/6DmHt+oa0LdrXHkuJ3XDMuUcJkla
+   hJ1zK4XOG96Xgd8DeC+9VerQ6qLTeceUro5ZsGqUmY9+QqzYLCqhZxgpA
+   E=;
+IronPort-SDR: 5NPnlg7itjRuqdLQIX0MmDciu2bVitEXz2U9Fmwo/KWACFlyIcXzmKnkYVnFngZJqOtG8GyZwi
+ 96b5uXRKjeUg==
+X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
+   d="scan'208";a="7698554"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 09 Dec 2019 16:14:34 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id DC7C2A279F;
+        Mon,  9 Dec 2019 16:14:28 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:14:27 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.162.249) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 16:14:17 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
+        <hhhawa@amazon.com>, <mchehab+samsung@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <tglx@linutronix.de>,
+        <khilman@baylibre.com>, <chanho.min@lge.com>, <heiko@sntech.de>,
+        <nm@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <barakw@amazon.com>
+Subject: [PATCH v2 2/6] arm64: dts: amazon: rename al folder to be amazon
+Date:   Mon, 9 Dec 2019 16:13:37 +0000
+Message-ID: <20191209161341.29607-3-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209161341.29607-1-hhhawa@amazon.com>
+References: <20191209161341.29607-1-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9465 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=988
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912090139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9465 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912090139
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.249]
+X-ClientProxiedBy: EX13D14UWB003.ant.amazon.com (10.43.161.162) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 08:25:10PM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix a Sphinx documentation format warning by breaking a long line
-> into 2 lines.
->
-> Also drop the ':' usage after the Protocol version numbers since
-> other Protocol versions don't use colons.
->
-> Documentation/x86/boot.rst:72: WARNING: Malformed table.
-> Text in column margin in table line 57.
->
-> Fixes: 2c33c27fd603 ("x86/boot: Introduce kernel_info")
-> Fixes: 00cd1c154d56 ("x86/boot: Introduce kernel_info.setup_type_max")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Cc: Daniel Kiper <daniel.kiper@oracle.com>
+As preparation to add device tree binding for Amazon's Annapurna Labs
+Alpine v3 support. Rename al device tree folder to be amazon.
 
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+---
+ MAINTAINERS                                          | 2 +-
+ arch/arm64/boot/dts/Makefile                         | 2 +-
+ arch/arm64/boot/dts/{al => amazon}/Makefile          | 0
+ arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts | 0
+ arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi    | 0
+ 5 files changed, 2 insertions(+), 2 deletions(-)
+ rename arch/arm64/boot/dts/{al => amazon}/Makefile (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
 
-What can I do next time to avoid mistakes like that? I suppose that
-I can run something to get this warning but I do not know what exactly
-it should be.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..ddc84e189e45 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1519,7 +1519,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-alpine/
+ F:	arch/arm/boot/dts/alpine*
+-F:	arch/arm64/boot/dts/al/
++F:	arch/arm64/boot/dts/amazon/*
+ F:	drivers/*/*alpine*
+ 
+ ARM/ARTPEC MACHINE SUPPORT
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index f19b762c008d..6f3e1556ce42 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-y += actions
+-subdir-y += al
+ subdir-y += allwinner
+ subdir-y += altera
++subdir-y += amazon
+ subdir-y += amd
+ subdir-y += amlogic
+ subdir-y += apm
+diff --git a/arch/arm64/boot/dts/al/Makefile b/arch/arm64/boot/dts/amazon/Makefile
+similarity index 100%
+rename from arch/arm64/boot/dts/al/Makefile
+rename to arch/arm64/boot/dts/amazon/Makefile
+diff --git a/arch/arm64/boot/dts/al/alpine-v2-evp.dts b/arch/arm64/boot/dts/amazon/alpine-v2-evp.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/al/alpine-v2-evp.dts
+rename to arch/arm64/boot/dts/amazon/alpine-v2-evp.dts
+diff --git a/arch/arm64/boot/dts/al/alpine-v2.dtsi b/arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/al/alpine-v2.dtsi
+rename to arch/arm64/boot/dts/amazon/alpine-v2.dtsi
+-- 
+2.17.1
 
-Daniel
