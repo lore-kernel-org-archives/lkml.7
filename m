@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5503EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A127C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D26C207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16F32465E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UuqxdSbd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HLgV18T+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfLIMUp (ORCPT
+        id S1727696AbfLIMUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:20:45 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37257 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfLIMUk (ORCPT
+        Mon, 9 Dec 2019 07:20:51 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44667 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727578AbfLIMUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 07:20:40 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s18so7157321pfm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:20:40 -0800 (PST)
+        Mon, 9 Dec 2019 07:20:48 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d199so7149681pfd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:20:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RSrmruetV1Q5rguocJH0M9Wy7zWX1u0QVwyNeDrugN0=;
-        b=UuqxdSbduusuMt2e/rucNTGlFMHM1xzrC2PqTwfYhfhv868xxCHhQe9BHiLMOvPUgl
-         p50cpbnrx2wWL/0cqTA0GO3vMQLQHdyN/cFqD8OOCwBoi4GTmnWS/XOBNubxOCAQWPz2
-         ngMKt12erzxBO71723VUwEh9wxiMDNs3WBrb0=
+        bh=uaDYqsyc1Amfj+rSgV5LdqRPEszOSqeoO5bxQF6wI/8=;
+        b=HLgV18T+ucI2mKJgCw3vbomZ0tuzLu/7/QH2PtjQy299n5JyYS+Q6PHKNLr7OTXImX
+         QY6tia+bJb7iRkFFxN7yJrcvlfR9Li81a98kc7ViNQ0V8S4AXznyoEG0HYaXQGQt4aT5
+         PZHiH6nFw3wYdCuYq6T8rCEZBXIUJf9UGdjZQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RSrmruetV1Q5rguocJH0M9Wy7zWX1u0QVwyNeDrugN0=;
-        b=YD1KNvwvuy3N2TOVcj8jtTv92xfFJ6J+GNftdHj0vmYYt1B9Pof2qdXQzCM9FPQTSY
-         4r6t86kUR1CEsxW/61hFkjhUO5MTL55OTMbWRsN15aHybhG15OwDk3jOmN91nbFd1SPO
-         3HzAj45B9NRvKB0l8TvtDlRiLLLagUUHybjvmGspl8r03iuPadf2ZSGXvbLDF2uvC2j9
-         8igfeQQ4Xd0C3gbSWTz5jo2CEuX5QQVksCQcrcvEBTGWPN5B8D0+J+FCemQfe8h8sLdY
-         s+4sVxF3qRfBw1hWmAyK/47MGWYhiqLc2OKf5asc/ugT7ssu3NPmbv9crKfmN1oG8oOb
-         P4cw==
-X-Gm-Message-State: APjAAAU+f2tN2hLM0i2H4N+vBqsjbhwklQ5skBKYTSR8nFag5x406rIA
-        GJ1fER3oNMi2WS5SfRH/gFa+zg==
-X-Google-Smtp-Source: APXvYqxuFnOxmzH4qGugcACPP5FsVxpy2XMw33Osu/8RcYLZ614AlQmm2wMvIatvYJOZO/oPrIUVNA==
-X-Received: by 2002:aa7:8d93:: with SMTP id i19mr29533222pfr.205.1575894039620;
-        Mon, 09 Dec 2019 04:20:39 -0800 (PST)
+        bh=uaDYqsyc1Amfj+rSgV5LdqRPEszOSqeoO5bxQF6wI/8=;
+        b=QluRpihH//7bNIhbG2Alr+Cgqv28DmW1P8gnSouug7dea64WNrWKo6W0Pu5avbH8tU
+         QdViJLiRIB0HDDYgeRIBztOGRw2D3TfoOlL9Qrp52Pu07dMHOa+o8Qc5myFfwsTlxoMW
+         dJvU+27vE7DvN0oEHM0b21iejosFg0idYBvl7rpud0RFskgeWWSl9SseQyNm9jeDDKh3
+         tUtSFRKDfFYP25bDQ2d2RkaXk7Q2/tEqIJZxKGMcFOHgTVKXQCWn1JlKc8/Jri1KonPl
+         6PZxbKLQA0s9pTpamqHhEFTlzyVzgMsjUHR5GCQlb6JVunNcqpfMivucCLw8vPsvgzjB
+         0iBw==
+X-Gm-Message-State: APjAAAUP4PAu0NU6bT9oJ6194an7c9OegcGV0mF4gAsBZuMFqqhO7emN
+        8xaifdsr9Xtdde6Qn4NYORSlfw==
+X-Google-Smtp-Source: APXvYqy/lHJIWrfIzvI2UJaglWQA7earIp8Y3bMqEUk8egTypwDN5U4K852L6vRuGCM11q/C3vqrtQ==
+X-Received: by 2002:a63:cd16:: with SMTP id i22mr19049999pgg.239.1575894047511;
+        Mon, 09 Dec 2019 04:20:47 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id p21sm26733813pfn.103.2019.12.09.04.20.37
+        by smtp.gmail.com with ESMTPSA id p21sm26733813pfn.103.2019.12.09.04.20.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 04:20:39 -0800 (PST)
+        Mon, 09 Dec 2019 04:20:47 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Archit Taneja <architt@codeaurora.org>,
@@ -62,9 +62,9 @@ Cc:     Archit Taneja <architt@codeaurora.org>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         Matthias Brugger <mbrugger@suse.com>, p.zabel@pengutronix.de,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] drm: bridge: anx7688: Add anx7688 bridge driver support.
-Date:   Mon,  9 Dec 2019 20:20:11 +0800
-Message-Id: <20191209122013.178564-3-hsinyi@chromium.org>
+Subject: [PATCH 4/4] drm: bridge: anx7688: Support bypass GPIO feature
+Date:   Mon,  9 Dec 2019 20:20:13 +0800
+Message-Id: <20191209122013.178564-5-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
 In-Reply-To: <20191209122013.178564-1-hsinyi@chromium.org>
 References: <20191209122013.178564-1-hsinyi@chromium.org>
@@ -75,266 +75,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+Support optional feature: bypass GPIO.
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+Get GPIO status in irq handler. If GPIO is active, mode_fixup would be
+bypassed.
 
-ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
-that has an internal microcontroller.
-
-The only reason a Linux kernel driver is necessary is to reject
-resolutions that require more bandwidth than what is available on
-the DP side. DP bandwidth and lane count are reported by the bridge
-via 2 registers on I2C.
-
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- drivers/gpu/drm/bridge/Kconfig            |   9 +
- drivers/gpu/drm/bridge/Makefile           |   1 +
- drivers/gpu/drm/bridge/analogix-anx7688.c | 203 ++++++++++++++++++++++
- 3 files changed, 213 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
+ drivers/gpu/drm/bridge/analogix-anx7688.c | 57 +++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 34362976cd6f..1f3fc6bec842 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -16,6 +16,15 @@ config DRM_PANEL_BRIDGE
- menu "Display Interface Bridges"
- 	depends on DRM && DRM_BRIDGE
- 
-+config DRM_ANALOGIX_ANX7688
-+	tristate "Analogix ANX7688 bridge"
-+	select DRM_KMS_HELPER
-+	select REGMAP_I2C
-+	---help---
-+	  ANX7688 is a transmitter to support DisplayPort over USB-C for
-+	  smartphone and tablets.
-+	  This driver only supports the HDMI to DP component of the chip.
-+
- config DRM_ANALOGIX_ANX78XX
- 	tristate "Analogix ANX78XX bridge"
- 	select DRM_KMS_HELPER
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index 4934fcf5a6f8..7a1e0ec032e6 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
- obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
- obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
- obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
 diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
-new file mode 100644
-index 000000000000..5a3a2251c1c5
---- /dev/null
+index 5a3a2251c1c5..1d09db2cf8e9 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx7688.c
 +++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
-@@ -0,0 +1,203 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ANX7688 HDMI->DP bridge driver
-+ *
-+ * Copyright 2016 Google LLC
-+ */
+@@ -5,11 +5,16 @@
+  * Copyright 2016 Google LLC
+  */
+ 
++#include <linux/gpio.h>
+ #include <linux/i2c.h>
++#include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/of_gpio.h>
+ #include <linux/regmap.h>
+ #include <drm/drm_bridge.h>
+ #include <drm/drm_crtc.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_probe_helper.h>
+ 
+ /* Register addresses */
+ #define VENDOR_ID_REG 0x00
+@@ -31,6 +36,9 @@ struct anx7688 {
+ 	struct i2c_client *client;
+ 	struct regmap *regmap;
+ 
++	struct gpio_desc *gpiod_bypass;
++	int bypass;
 +
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <drm/drm_bridge.h>
-+#include <drm/drm_crtc.h>
-+
-+/* Register addresses */
-+#define VENDOR_ID_REG 0x00
-+#define DEVICE_ID_REG 0x02
-+
-+#define FW_VERSION_REG 0x80
-+
-+#define DP_BANDWIDTH_REG 0x85
-+#define DP_LANE_COUNT_REG 0x86
-+
-+#define VENDOR_ID 0x1f29
-+#define DEVICE_ID 0x7688
-+
-+/* First supported firmware version (0.85) */
-+#define MINIMUM_FW_VERSION 0x0085
-+
-+struct anx7688 {
-+	struct drm_bridge bridge;
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+
-+	bool filter;
-+};
-+
-+static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct anx7688, bridge);
-+}
-+
-+static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
-+				      const struct drm_display_mode *mode,
-+				      struct drm_display_mode *adjusted_mode)
-+{
-+	struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
-+	u8 regs[2];
-+	u8 dpbw, lanecount;
-+	int totalbw, requiredbw;
-+	int ret;
-+
-+	if (!anx7688->filter)
+ 	bool filter;
+ };
+ 
+@@ -49,6 +57,10 @@ static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
+ 	int totalbw, requiredbw;
+ 	int ret;
+ 
++	/* bypass anx mode fixup */
++	if (anx7688->bypass)
 +		return true;
 +
-+	/* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
-+	ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
-+	if (ret < 0) {
-+		dev_err(&anx7688->client->dev,
-+			"Failed to read bandwidth/lane count\n");
-+		return false;
-+	}
-+	dpbw = regs[0];
-+	lanecount = regs[1];
+ 	if (!anx7688->filter)
+ 		return true;
+ 
+@@ -93,6 +105,19 @@ static const struct drm_bridge_funcs anx7688_bridge_funcs = {
+ 	.mode_fixup	= anx7688_bridge_mode_fixup,
+ };
+ 
++static irqreturn_t gpio_display_mux_det_threaded_handler(int unused, void *data)
++{
++	struct anx7688 *anx7688 = data;
 +
-+	/* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
-+	if (dpbw > 0x19 || lanecount > 2) {
-+		dev_err(&anx7688->client->dev,
-+			"Invalid bandwidth/lane count (%02x/%d)\n",
-+			dpbw, lanecount);
-+		return false;
-+	}
++	anx7688->bypass = gpiod_get_value(anx7688->gpiod_bypass);
++	dev_dbg(&anx7688->client->dev, "Interrupt %d!\n", anx7688->bypass);
 +
-+	/* Compute available bandwidth (kHz) */
-+	totalbw = dpbw * lanecount * 270000 * 8 / 10;
++	if (anx7688->bridge.dev)
++		drm_kms_helper_hotplug_event(anx7688->bridge.dev);
 +
-+	/* Required bandwidth (8 bpc, kHz) */
-+	requiredbw = mode->clock * 8 * 3;
-+
-+	dev_dbg(&anx7688->client->dev,
-+		"DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
-+		totalbw, dpbw, lanecount, requiredbw);
-+
-+	if (totalbw == 0) {
-+		dev_warn(&anx7688->client->dev,
-+			 "Bandwidth/lane count are 0, not rejecting modes\n");
-+		return true;
-+	}
-+
-+	return totalbw >= requiredbw;
++	return IRQ_HANDLED;
 +}
 +
-+static const struct drm_bridge_funcs anx7688_bridge_funcs = {
-+	.mode_fixup	= anx7688_bridge_mode_fixup,
-+};
-+
-+static const struct regmap_config anx7688_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int anx7688_i2c_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct anx7688 *anx7688;
-+	struct device *dev = &client->dev;
-+	int ret;
-+	u8 buffer[4];
-+	u16 vendor, device, fwversion;
-+
-+	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
-+	if (!anx7688)
-+		return -ENOMEM;
-+
-+#if IS_ENABLED(CONFIG_OF)
-+	anx7688->bridge.of_node = client->dev.of_node;
-+#endif
-+
-+	anx7688->client = client;
-+	i2c_set_clientdata(client, anx7688);
-+
-+	anx7688->regmap =
-+		devm_regmap_init_i2c(client, &anx7688_regmap_config);
-+
-+	/* Read both vendor and device id (4 bytes). */
-+	ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
-+	if (ret) {
-+		dev_err(dev, "Failed to read chip vendor/device id\n");
+ static const struct regmap_config anx7688_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
+@@ -156,6 +181,38 @@ static int anx7688_i2c_probe(struct i2c_client *client,
+ 			 buffer[0], buffer[1]);
+ 	}
+ 
++	/* Optional bypass-gpios */
++	anx7688->gpiod_bypass = devm_gpiod_get_optional(dev, "bypass",
++							GPIOD_IN);
++	if (IS_ERR(anx7688->gpiod_bypass)) {
++		ret = PTR_ERR(anx7688->gpiod_bypass);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "bypass-gpios assigned failed\n");
 +		return ret;
 +	}
++	if (anx7688->gpiod_bypass) {
++		int irq;
 +
-+	vendor = (u16)buffer[1] << 8 | buffer[0];
-+	device = (u16)buffer[3] << 8 | buffer[2];
-+	if (vendor != VENDOR_ID || device != DEVICE_ID) {
-+		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
-+			vendor, device);
-+		return -ENODEV;
++		irq = gpiod_to_irq(anx7688->gpiod_bypass);
++		if (irq < 0) {
++			dev_err(dev, "Failed to get output irq %d\n", irq);
++			return -ENODEV;
++		}
++
++		anx7688->bypass = gpiod_get_value(anx7688->gpiod_bypass);
++
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++				gpio_display_mux_det_threaded_handler,
++				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
++				IRQF_ONESHOT,
++				"gpio-display-mux-det", anx7688);
++		if (ret) {
++			dev_err(dev,
++				"Failed to request MUX_DET threaded irq\n");
++			return ret;
++		}
 +	}
 +
-+	ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read firmware version\n");
-+		return ret;
-+	}
-+
-+	fwversion = (u16)buffer[0] << 8 | buffer[1];
-+	dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
-+		 buffer[0], buffer[1]);
-+
-+	/* FW version >= 0.85 supports bandwidth/lane count registers */
-+	if (fwversion >= MINIMUM_FW_VERSION) {
-+		anx7688->filter = true;
-+	} else {
-+		/* Warn, but not fail, for backwards compatibility. */
-+		dev_warn(dev,
-+			 "Old ANX7688 FW version (%02x.%02x), not filtering\n",
-+			 buffer[0], buffer[1]);
-+	}
-+
-+	anx7688->bridge.funcs = &anx7688_bridge_funcs;
-+	drm_bridge_add(&anx7688->bridge);
-+
-+	return 0;
-+}
-+
-+static int anx7688_i2c_remove(struct i2c_client *client)
-+{
-+	struct anx7688 *anx7688 = i2c_get_clientdata(client);
-+
-+	drm_bridge_remove(&anx7688->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id anx7688_id[] = {
-+	{ "anx7688", 0 },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, anx7688_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id anx7688_match_table[] = {
-+	{ .compatible = "analogix,anx7688", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, anx7688_match_table);
-+#endif
-+
-+static struct i2c_driver anx7688_driver = {
-+	.driver = {
-+		   .name = "anx7688",
-+		   .of_match_table = of_match_ptr(anx7688_match_table),
-+		  },
-+	.probe = anx7688_i2c_probe,
-+	.remove = anx7688_i2c_remove,
-+	.id_table = anx7688_id,
-+};
-+
-+module_i2c_driver(anx7688_driver);
-+
-+MODULE_DESCRIPTION("ANX7688 SlimPort Transmitter driver");
-+MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
-+MODULE_LICENSE("GPL v2");
+ 	anx7688->bridge.funcs = &anx7688_bridge_funcs;
+ 	drm_bridge_add(&anx7688->bridge);
+ 
 -- 
 2.24.0.393.g34dc348eaf-goog
 
