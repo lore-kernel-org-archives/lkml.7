@@ -2,139 +2,117 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00438C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F187C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CAE2080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CE120692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URz2es96"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="giGlsQnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLIQLH (ORCPT
+        id S1726598AbfLIQOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:11:07 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:44015 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLIQLH (ORCPT
+        Mon, 9 Dec 2019 11:14:21 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46796 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:11:07 -0500
-Received: by mail-il1-f195.google.com with SMTP id u16so13179012ilg.10;
-        Mon, 09 Dec 2019 08:11:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
-        b=URz2es964aBg/tgzcHlwyqPIOI4zN8TSjwiGZ8xcptQ5xFQKA1+8VK9Q+bSAiyZPkt
-         74U96aFbCX1Vn0Im6NR7EzpsCgPqfqdODHuB33UHFQBfSpKJjtC9Tw9LcQVBqUIF3jGI
-         gCk3Ts8CIo4T4VRYAdJIKKuyMZJ4adIq5PWx7YmpIBaCrurtNXC76eBlhMFs7I8Lv5+0
-         YoeSBdX8JSuTVZQ6PIS0G3GjCmOFhCDRFvj93byVGJzXYHt4YJ52yyYOiF09c0tNpxhH
-         Be3AA8H6Rnr+6dj7Ykd97lapmM4QO+fshpQWO0J07qmm+AOl4rgm7Cb+iWiZdx9tzWiF
-         6Aww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=V1rQj2NYpyrjZuSj9vZCVjr8OoOEApgs5CD1MbhwecM=;
-        b=W+ZPj6GxT/yyxj4qPK/rZO0wDOMr4OUvcfYPDNTZ+3jB7fmhLO9c25grq2NZ2g5lAo
-         orJQ7HIvugR3RWoTqBLFfPiRUHUWb2gv9JkYHDnIWN9xf3Twxw5BjYKaDd1AZ/PLiKSA
-         kdB3Gb/ZSHssZ3dtvhSj5mOez7LkkC148a/DZvs8kljKh/u9utu+AKH6Y5FYjcA2zEwH
-         YtrS6f63AbJQv6HAFbjMIk4/uQkYqW73DDYZO8hGeklQWf0/7iAtKacXM6hDdykaM8So
-         82Y2mzel2P9GYWcw90hcXOUnCk83/RtN1qdT0hBOiVi+6QXGOnZOyCwMUUOVpWNG6kiS
-         HBiw==
-X-Gm-Message-State: APjAAAXdWlM8NYEm8sGWr8OwsHjSOy49OT64AZUd6YrDNS3zXAwrFtDw
-        Nb3c9dL1T/Beh/FFjs01AiPGDELGHjMMfbGPdis=
-X-Google-Smtp-Source: APXvYqz0nWHT53HKk7dsGX4luv1vsXxIjyyy+6bEaibX3GI/XQkhJ3tLcZNkrwGMUE6JA9WhNqD08VhRtGUdBkigH/8=
-X-Received: by 2002:a92:3b19:: with SMTP id i25mr28698139ila.85.1575907866282;
- Mon, 09 Dec 2019 08:11:06 -0800 (PST)
-MIME-Version: 1.0
-References: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-In-Reply-To: <PSXP216MB043824762539AFC40143D75880490@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Mon, 9 Dec 2019 10:10:55 -0600
-Message-ID: <CABhMZUXOQXruHnZARVqe8cdkuhGXenMZ__7GhaJtDDsdBrcoyQ@mail.gmail.com>
-Subject: Re: [[RFC PATCH v1] 0/1] Add pci=nobbn to ignore ACPI _BBN method to
- override host bridge bus window
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mon, 9 Dec 2019 11:14:20 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9GALHN047053;
+        Mon, 9 Dec 2019 16:13:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=DDBb3Lws0Bln7Q3yPsjcV6BrBWhAmpQz0iFXZoZdVaE=;
+ b=giGlsQnrCGDqDgomc4UoquZSV7PRsD2k7cQm2RfMgqNza20kUYpjCUHilFp0DkiKE5fb
+ QOr6dPrfdHR2ilzpjtJxaqs1CU0KfDs3l53gRkg0rytjH1rQqGnnI28q4v4E7S799y/r
+ 4PwFmhkSRXehyzRjvFsAHVNY5IO0my80aOWjRPaEFUZDpYr2l7Xf6F71R3V+aOhXrNWA
+ tN87Czw3clxzuxnoipdMDJOHfpgh4eThRyThiq7InI6TfeASDL6Q6iVlT9m/mKf7EMw8
+ usL47NtHCR2+P7E3mp/qI67Fz5pUEbL/7RYQJocZqx31YCG+lOpcHWXVe7oQhyxx6YRt Tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wrw4mwd1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 16:13:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9GALFE107601;
+        Mon, 9 Dec 2019 16:13:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2wrp7nkv16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 16:13:49 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB9GDjD5015770;
+        Mon, 9 Dec 2019 16:13:45 GMT
+Received: from tomti.i.net-space.pl (/10.175.212.194)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Dec 2019 08:13:45 -0800
+Date:   Mon, 9 Dec 2019 17:13:40 +0100
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] Documentation: x86: fix boot.rst warning and format
+Message-ID: <20191209161340.kdsikc2hvbhmpi6k@tomti.i.net-space.pl>
+References: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9465 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=988
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912090139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9465 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912090139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 9:02 PM Nicholas Johnson
-<nicholas.johnson-opensource@outlook.com.au> wrote:
+On Sun, Dec 08, 2019 at 08:25:10PM -0800, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 >
-> Hi all,
+> Fix a Sphinx documentation format warning by breaking a long line
+> into 2 lines.
 >
-> I want to be able to override the bus resource from ACPI, but nocrs does
-> not do it. I am putting this out here to get a feel for the sentiment
-> for doing something like this.
+> Also drop the ':' usage after the Protocol version numbers since
+> other Protocol versions don't use colons.
+>
+> Documentation/x86/boot.rst:72: WARNING: Malformed table.
+> Text in column margin in table line 57.
+>
+> Fixes: 2c33c27fd603 ("x86/boot: Introduce kernel_info")
+> Fixes: 00cd1c154d56 ("x86/boot: Introduce kernel_info.setup_type_max")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Cc: Daniel Kiper <daniel.kiper@oracle.com>
 
-This should be cc'd to linus-pci and linux-acpi (added).  I only
-noticed this message by accident.  And I don't see the patch at all.
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-> What is my motivation for doing this?
->
-> I have a Gigabyte Z170X Designare motherboard which only gives resource
-> [bus 00-7e]. I want the full [bus 00-ff] because I am trying to add as
-> many Thunderbolt 3 ports with add-in cards as possible. Thunderbolt
-> consumes bus numbers quickly. An Intel Ice Lake implementation (ideal)
-> consumes 42 busses per port, but prior solutions consume 50 busses per
-> port and have additional busses required for the NHI and USB
-> controllers, as well as the bridges from the root port.
->
-> Why not change nocrs to do this? Why the new kernel parameter?
->
-> I imagine that on systems with multiple PCI root complexes, things will
-> get hairy if we do this, if they are not placed on separate segments /
-> domains by the firmware. I do not own such a beast, but from what I
-> understand, the firmware normally places them on the same segment /
-> domain with non-overlapping bus numbers. But we may still want to use
-> nocrs for other reasons. I need to use nocrs to allow Linux to allocate
-> vast amounts of MMIO and MMIO_PREF under the Thunderbolt root ports
-> without the BIOS support for Thunderbolt. Hence, they should be kept
-> separate.
->
-> Why do this in general?
->
-> The bus resource is still a resource which is specified from ACPI, just
-> like those overridden by nocrs. Even if we do not use pci=nocrs to
-> override it, it should be possible to override it, just as it is
-> possible to override _CRS.
+What can I do next time to avoid mistakes like that? I suppose that
+I can run something to get this warning but I do not know what exactly
+it should be.
 
-pci=nocrs is for working around defects in firmware or Linux.  The
-firmware knows more about the platform than Linux, and in general we
-have to trust it.  We probably should taint the kernel when we use it.
-
-Any parameter like this should work the same on all ACPI systems,
-including ia64 and arm64, and should probably also taint the kernel.
-
-I can't see the patch itself, but I'm a little confused because we
-normally get the bus number range from _CRS in acpi_pci_root_add() and
-your patch doesn't appear to touch that.
-
-> Nicholas Johnson (1):
->   PCI: Add pci=nobbn to ignore ACPI _BBN method to override host bridge
->     bus window
->
->  Documentation/admin-guide/kernel-parameters.txt |  2 ++
->  arch/x86/include/asm/pci_x86.h                  |  1 +
->  arch/x86/pci/acpi.c                             | 11 +++++++++++
->  arch/x86/pci/common.c                           |  3 +++
->  4 files changed, 17 insertions(+)
->
-> --
-> 2.24.0
->
+Daniel
