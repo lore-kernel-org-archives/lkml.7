@@ -2,98 +2,145 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6C4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A00DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508972080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575906651;
-	bh=z50cp8vM2SpBO12/oa6Uc1IyYJi1iEKeInGOuXNLqJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=StbTAVlv//uK6ZKkcAazUdTQMO961EnMb5JUlFSZTfjUnS4eVKViORfztFV+kSL85
-	 vSbFXZi+EHYDC17+bGIlxY02WMgDqdnwNX9uSEuMTHUGVF9xfFvF+N+ITqVqVyDT72
-	 2sJlDppxEgsPps7tAO6C6WRuqGCe6hDyc1xlXwtc=
+	by mail.kernel.org (Postfix) with ESMTP id 1C2142073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:52:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gklrHy7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLIPuu (ORCPT
+        id S1726491AbfLIPwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfLIPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:50:49 -0500
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Dec 2019 10:52:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44124 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726080AbfLIPwy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:52:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575906773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KWsZtrZZRUqMfa4RKABURKvActJftASGEyBf7iOz0lA=;
+        b=gklrHy7H2yFxnQGu1cSQnTMXeSvkmgONfRbXOy2sJj8PyfqmZT9DrrTXT1L9SUMNDliFLo
+        RCB8T20vrlGqUA92C52l2Q+Ld1x6XlBeepT8vsOyMaVIvcZhJuxl83zkeDuWWM+MBNZqwK
+        m/oUo9F6Ccb4VDoFAH9GHJVf5gjjFn8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-FG0lZR-ONcK4G9mKrZ2U7Q-1; Mon, 09 Dec 2019 10:52:52 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9788207FF;
-        Mon,  9 Dec 2019 15:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575906649;
-        bh=z50cp8vM2SpBO12/oa6Uc1IyYJi1iEKeInGOuXNLqJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G113+63wCz0RXQ9kgpAE/x7hV+E2w9Sjx5PKBJmo48dPBblk1XZM9lq+oYewPTmdK
-         SCDRMAR4aDcQ0AdnwwADDvKxDP+LRa2XYJP9HLU4kG477ZmOa0Sq5VqbqBRPSvFTwn
-         +wl+4x28mBKLHAMAInFH4R+32BkYoqkrObHxkARY=
-Date:   Mon, 9 Dec 2019 16:50:46 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Paul Orlyk <pavel.orlik@smartexe.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 3/6] procfs: Use all-in-one vtime aware kcpustat accessor
-Message-ID: <20191209155046.GA32009@lenoir>
-References: <20191121024430.19938-1-frederic@kernel.org>
- <20191121024430.19938-4-frederic@kernel.org>
- <14ca94e3-5320-6f95-9d76-101dccb7e1b5@smartexe.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B67121852E30;
+        Mon,  9 Dec 2019 15:52:49 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (ovpn-204-235.brq.redhat.com [10.40.204.235])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A375D5D6B7;
+        Mon,  9 Dec 2019 15:52:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon,  9 Dec 2019 16:52:49 +0100 (CET)
+Date:   Mon, 9 Dec 2019 16:52:45 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, christian.brauner@ubuntu.com,
+        luto@amacapital.net, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v2 1/4] vfs, fdtable: Add get_task_file helper
+Message-ID: <20191209155242.GC5388@redhat.com>
+References: <20191209070609.GA32438@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
+In-Reply-To: <20191209070609.GA32438@ircssh-2.c.rugged-nimbus-611.internal>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: FG0lZR-ONcK4G9mKrZ2U7Q-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <14ca94e3-5320-6f95-9d76-101dccb7e1b5@smartexe.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 05:57:47PM +0200, Paul Orlyk wrote:
-> Looks like a copy-paste error. I think it should be:
-> 
-> - guest_nice	+= cpustat[CPUTIME_USER];
-> + guest_nice	+= cpustat[CPUTIME_GUEST_NICE];
-> 
-> and
-> 
-> - guest_nice	= cpustat[CPUTIME_USER];
-> + guest_nice	= cpustat[CPUTIME_GUEST_NICE];
-> 
-> With best regards,
-> Paul Orlyk
+On 12/09, Sargun Dhillon wrote:
+>
+> +struct file *get_task_file(struct task_struct *task, unsigned int fd)
+> +{
+> +=09struct file *file =3D NULL;
+> +
+> +=09task_lock(task);
+> +=09rcu_read_lock();
+> +
+> +=09if (task->files) {
+> +=09=09file =3D fcheck_files(task->files, fd);
+> +=09=09if (file && !get_file_rcu(file))
+> +=09=09=09file =3D NULL;
+> +=09}
 
-Yes the fix should be applied soonish:
+On second thought this is not exactly right, get_file_rcu() can fail if
+get_task_file() races with dup2(), in this case we need to do fcheck_files(=
+)
+again. And this is what __fget() already does, so may be the patch below
+makes more sense?
 
-https://lore.kernel.org/lkml/20191205020344.14940-1-frederic@kernel.org/
+I will leave this to other reviewers, but suddenly I recall that I have
+already sent the patch which adds a similar helper a while ago.
 
-Thanks.
+See https://lore.kernel.org/lkml/20180915160423.GA31461@redhat.com/
 
-> 
-> On 11/21/19 4:44 AM, Frederic Weisbecker wrote:
-> > +		guest		+= cpustat[CPUTIME_GUEST];
-> > +		guest_nice	+= cpustat[CPUTIME_USER];
-> > +		sum		+= kstat_cpu_irqs_sum(i);
-> > 
-> > +		guest		= cpustat[CPUTIME_GUEST];
-> > +		guest_nice	= cpustat[CPUTIME_USER];
-> >   		seq_printf(p, "cpu%d", i);
+In short, get_files_struct() should be avoided because it can race with
+exec() and break POSIX locks which use ->fl_owner =3D files_struct.
+
+Oleg.
+
+--- x/fs/file.c
++++ x/fs/file.c
+@@ -706,9 +706,9 @@ void do_close_on_exec(struct files_struc
+ =09spin_unlock(&files->file_lock);
+ }
+=20
+-static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int ref=
+s)
++static struct file *__fget_files(struct files_struct *files, unsigned int =
+fd,
++=09=09=09=09=09fmode_t mask, unsigned int refs)
+ {
+-=09struct files_struct *files =3D current->files;
+ =09struct file *file;
+=20
+ =09rcu_read_lock();
+@@ -729,6 +729,23 @@ loop:
+ =09return file;
+ }
+=20
++struct file *fget_task(struct task_struct *task, unsigned int fd)
++{
++=09struct file *file;
++
++=09task_lock(task);
++=09if (task->files)
++=09=09file =3D __fget_files(task->files, fd, 0, 1);
++=09task_unlock(task);
++
++=09return file;
++}
++
++static struct file *__fget(unsigned int fd, fmode_t mask, unsigned int ref=
+s)
++{
++=09return __fget_files(current->files, fd, mask, refs);
++}
++
+ struct file *fget_many(unsigned int fd, unsigned int refs)
+ {
+ =09return __fget(fd, FMODE_PATH, refs);
+
