@@ -2,225 +2,79 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4BAC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F87DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05F52077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fVrCyeXp"
+	by mail.kernel.org (Postfix) with ESMTP id 142022077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:18:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575904681;
+	bh=xBCiKRJvlz07kt4QEU1+dVyc64vZJjcsmGkYjjE13M8=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=C7PSdyWElknbT73FSiUfXqEWglnyf+kyFg2TxHq1sgKZ/8OBz601ClA50ENPcsmA1
+	 EURJ3B9OlELvknzBbKgNjA3jgqE5ZLl9Ssg8IbKWaqiGYEYZYQzZe0Usfq8JmYalJ9
+	 joKPaCloiAgLVKlLtvV69B4AGvPdZJBY4bpEXVb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfLIPPb (ORCPT
+        id S1726605AbfLIPR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:15:31 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:49360 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfLIPPa (ORCPT
+        Mon, 9 Dec 2019 10:17:59 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:53349 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbfLIPR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:15:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575904528; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8XfP90Nlwni1+fdvvtFIPCYN2PgxWebcTW6S+oGU2DU=;
-        b=fVrCyeXpmcJtkdaj0x6BgczRUtY+HTz3bmII6iUJGY1opRCHAqH3xVWglmKWNASEudvk/1
-        BqTNVK6oos0oalN6ZkKcmOJTWGKn8m0nNLhHuG6Kvrm/Z7VkiHQbyld/7ghubHKSOOjg7Y
-        k+DRmaAIl4KkrzK+aFIYe70rH/4xJiw=
-Date:   Mon, 09 Dec 2019 16:15:18 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 5/6] MIPS: X1000: Add missing X1000 nodes.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
-        ebiederm@xmission.com, ralf@linux-mips.org, heiko@sntech.de,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        krzk@kernel.org, geert+renesas@glider.be,
-        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, 772753199@qq.com
-Message-Id: <1575904518.3.3@crapouillou.net>
-In-Reply-To: <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
+        Mon, 9 Dec 2019 10:17:59 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ieKnE-0002Jf-Go; Mon, 09 Dec 2019 16:17:48 +0100
+To:     Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Dec 2019 15:17:48 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        <tglx@linutronix.de>, <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+In-Reply-To: <305198e5-f76f-ded4-946b-9cfade18f08c@suse.de>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <305198e5-f76f-ded4-946b-9cfade18f08c@suse.de>
+Message-ID: <c06752c858229854b37af3b47779b126@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: hare@suse.de, john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+On 2019-12-09 15:09, Hannes Reinecke wrote:
 
+[slight digression]
 
-Le lun., d=C3=A9c. 9, 2019 at 21:00, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanj=
-ie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Add the appropriate DT node to probe pdma/msc/rtc/watchdog/ethernet
-> driver using the devicetree.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v7:
->     New patch, merge[05/12],[07/12],[09/12],[11/12] in v6.
->=20
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 96=20
-> +++++++++++++++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
-> b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> index 13a6c9ff..398a756 100644
-> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <dt-bindings/clock/x1000-cgu.h>
-> +#include <dt-bindings/dma/x1000-dma.h>
->=20
->  / {
->  	#address-cells =3D <1>;
-> @@ -68,6 +69,25 @@
->  		interrupts =3D <27 26 25>;
->  	};
->=20
-> +	wdt: watchdog@10002000 {
-> +		compatible =3D "ingenic,x1000-watchdog", "ingenic,jz4780-watchdog";
-> +		reg =3D <0x10002000 0x10>;
-> +
-> +		clocks =3D <&cgu X1000_CLK_RTCLK>;
-> +		clock-names =3D "rtc";
-> +	};
+> My idea here is slightly different: can't we leverage SMT?
+> Most modern CPUs do SMT (I guess even ARM does it nowadays)
+> (Yes, I know about spectre and things. We're talking performance here 
+> :-)
 
-The watchdog node should be a children of the TCU node, see
-Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+I only know two of those: Cavium TX2 and ARM Neoverse-E1.
+ARM SMT CPUs are the absolute minority (and I can't say I'm 
+displeased).
 
-
-> +
-> +	rtc: rtc@10003000 {
-> +		compatible =3D "ingenic,x1000-rtc", "ingenic,jz4780-rtc";
-> +		reg =3D <0x10003000 0x4c>;
-> +
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <32>;
-> +
-> +		clocks =3D <&cgu X1000_CLK_RTCLK>;
-> +		clock-names =3D "rtc";
-> +	};
-> +
->  	pinctrl: pin-controller@10010000 {
->  		compatible =3D "ingenic,x1000-pinctrl";
->  		reg =3D <0x10010000 0x800>;
-> @@ -173,4 +193,80 @@
->=20
->  		status =3D "disabled";
->  	};
-> +
-> +	pdma: dma-controller@13420000 {
-> +		compatible =3D "ingenic,x1000-dma";
-> +		reg =3D <0x13420000 0x400
-> +			   0x13421000 0x40>;
-> +		#dma-cells =3D <2>;
-> +
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <10>;
-> +
-> +		clocks =3D <&cgu X1000_CLK_PDMA>;
-> +	};
-> +
-> +	mac: mac@134b0000 {
-
-Please name the nodes according to the devicetree specification; this=20
-should be 'ethernet@134b0000'.
-
-
-> +		compatible =3D "ingenic,x1000-mac", "snps,dwmac";
-> +		reg =3D <0x134b0000 0x2000>;
-> +
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <55>;
-> +		interrupt-names =3D "macirq";
-> +
-> +		clocks =3D <&cgu X1000_CLK_MAC>;
-> +		clock-names =3D "stmmaceth";
-> +
-> +		status =3D "disabled";
-> +
-> +		mdio: mdio {
-> +			compatible =3D "snps,dwmac-mdio";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			status =3D "disabled";
-> +		};
-> +	};
-> +
-> +	msc0: msc@13450000 {
-
-This should be 'mmc@13450000'
-
-
-> +		compatible =3D "ingenic,x1000-mmc";
-> +		reg =3D <0x13450000 0x1000>;
-> +
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <37>;
-> +
-> +		clocks =3D <&cgu X1000_CLK_MSC0>;
-> +		clock-names =3D "mmc";
-> +
-> +		cap-sd-highspeed;
-> +		cap-mmc-highspeed;
-> +		cap-sdio-irq;
-> +
-> +		dmas =3D <&pdma X1000_DMA_MSC0_RX 0xffffffff>,
-> +			   <&pdma X1000_DMA_MSC0_TX 0xffffffff>;
-> +		dma-names =3D "rx", "tx";
-> +
-> +		status =3D "disabled";
-> +	};
-> +
-> +	msc1: msc@13460000 {
-
-This should be 'mmc@13460000'.
-
-Cheers,
--Paul
-
-> +		compatible =3D "ingenic,x1000-mmc";
-> +		reg =3D <0x13460000 0x1000>;
-> +
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <36>;
-> +
-> +		clocks =3D <&cgu X1000_CLK_MSC1>;
-> +		clock-names =3D "mmc";
-> +
-> +		cap-sd-highspeed;
-> +		cap-mmc-highspeed;
-> +		cap-sdio-irq;
-> +
-> +		dmas =3D <&pdma X1000_DMA_MSC1_RX 0xffffffff>,
-> +			   <&pdma X1000_DMA_MSC1_TX 0xffffffff>;
-> +		dma-names =3D "rx", "tx";
-> +
-> +		status =3D "disabled";
-> +	};
->  };
-> --
-> 2.7.4
->=20
-
-=
-
+         M,
+-- 
+Jazz is not dead. It just smells funny...
