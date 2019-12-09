@@ -2,107 +2,104 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AF7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10847C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0C0208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575914841;
-	bh=ohH8zduCKM5iKFuWC84pzcG6Huw5EBpjWoLp0eAIqfM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D8J0M377TdC+ZElS6aT5uHQ4EM9VmwBmlKkToGUgngcP+oQOaE7BVGgvVNu02PATX
-	 HjkvqD/TJLNZbVQdwBKPqgYFPd8H0YRUC7wu+WzXijEzOIUB8ZwkFnDCbePXeMdY9s
-	 GbNPLdkwfMwKPFnHObjb5CO1Av13xUNIbWKLAfu0=
+	by mail.kernel.org (Postfix) with ESMTP id CFD66206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kl25IicR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfLISHU (ORCPT
+        id S1726589AbfLISIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:07:20 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:47006 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLISHU (ORCPT
+        Mon, 9 Dec 2019 13:08:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43719 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726265AbfLISIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:07:20 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f15so10641492lfl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:07:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AGi/ifhcVcI/E7pSJWWfjvPUeH7vDYT4NuvZCBxi0tA=;
-        b=b6hKlGMRX7yTmceZ+5D7sqF0IFlNCKrzfcCnpql1G/S92AqZQAUm3hh5oDzaZhut4n
-         YYRCBGTP1bICBVQ/a7TLGl5T/VHNpGlobuD9h8sO1/Fn4bPUtFRvFuqe+JLo1wi0yAcQ
-         XsNnYHAD+bu6DBKVSe3Zer0X0ALtsv6uXA184=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AGi/ifhcVcI/E7pSJWWfjvPUeH7vDYT4NuvZCBxi0tA=;
-        b=hRrlPuWxPEL4hGK1krWi5Fqvj5AOSyOVlkjDw9Xhekd2W9INVkiqKrAM/gcx2SMwHn
-         al/8DQ410P6JGD74WTOgdxznz9UXXSKqGMzPculZB1gnVPnNPGUX8JfCIdfB2FoDqt/D
-         Y/GC3pUeOkBRD8vrwPSO7AX/f7wk868I856FVYhhXpKHsFVCxuJ0+F6Qz/tI4NaPJ5lN
-         BjlJAuKHecC4KroqZf6D4NGTBVqXkvtOpXP3+O+2CfnXt6wiibKcRCLGLP0RqcTG9UVq
-         dawy1Uvp3VBfmPycxduWIrctW28YTvY9gNT8neu3R37zPtx3hHQK3kXkGGZXkdHvyyvG
-         RLtQ==
-X-Gm-Message-State: APjAAAW3NIQjm28eqBFQXwgXTxRKxa6sIdUwGs+sMuwzCT3sAXkYSY1/
-        BjDfkcw7bviBqcGzFPxA5lFpn6wgf5M=
-X-Google-Smtp-Source: APXvYqwau80/qVxVKlXOS63SpJS42tYpttQD8S2JG6BsPZeGnTNHMFhCvEndVqitNb6kI+5dn/Q+4A==
-X-Received: by 2002:a19:ca59:: with SMTP id h25mr16028978lfj.27.1575914837223;
-        Mon, 09 Dec 2019 10:07:17 -0800 (PST)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id s22sm325949ljm.41.2019.12.09.10.07.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 10:07:16 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id n12so11477584lfe.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:07:16 -0800 (PST)
-X-Received: by 2002:ac2:4946:: with SMTP id o6mr16222969lfi.170.1575914835885;
- Mon, 09 Dec 2019 10:07:15 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
- <20191209091813.GA41320@gmail.com> <20191209102759.GA123769@gmail.com>
-In-Reply-To: <20191209102759.GA123769@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 9 Dec 2019 10:06:59 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whpfd2cmuGj4NYjJ-UoJnoGPyaTZH-dA0xEAeTvgYZFZA@mail.gmail.com>
-Message-ID: <CAHk-=whpfd2cmuGj4NYjJ-UoJnoGPyaTZH-dA0xEAeTvgYZFZA@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
- wakeups reliable
-To:     Ingo Molnar <mingo@kernel.org>
+        Mon, 9 Dec 2019 13:08:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575914921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9cTjZfqtnLTQpkUl1nJ/jTzVdcY8EvBeyGVedbcZ4sA=;
+        b=Kl25IicRveu9rFZCe9NbxMgJjkIMuPGXMx017ShzcvFS3Emun5pbPI+Ad93Hud2+4B5QD8
+        3qcpB+JIYmSt1Gb+7fsJfQeNzJ1ISLqq7Acf+Gx+NZc/LLzu51DRbnszEEVSXclMp4UZSX
+        l+GS+UogP1VFqDPYGo9xzhMBORzNYsQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-27QZrnkLOk-XUVBphY-IGQ-1; Mon, 09 Dec 2019 13:08:37 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FF9D18C35AF;
+        Mon,  9 Dec 2019 18:08:36 +0000 (UTC)
+Received: from treble (ovpn-125-102.rdu2.redhat.com [10.10.125.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ACB511001901;
+        Mon,  9 Dec 2019 18:08:35 +0000 (UTC)
+Date:   Mon, 9 Dec 2019 12:08:33 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Olof Johansson <olof@lixom.net>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH] objtool: silence build output from sync-check.sh
+Message-ID: <20191209180833.2oleipnnzh7btqno@treble>
+References: <20191207205419.9344-1-olof@lixom.net>
+MIME-Version: 1.0
+In-Reply-To: <20191207205419.9344-1-olof@lixom.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 27QZrnkLOk-XUVBphY-IGQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 2:28 AM Ingo Molnar <mingo@kernel.org> wrote:
->
-> Totally untested, but shows the principle: I believe interrupted
-> exclusive waits should not auto-cleanup in prepare_to_wait_event().
+On Sat, Dec 07, 2019 at 12:54:20PM -0800, Olof Johansson wrote:
+> The sync-check.sh script prints out the path due to a "cd -" at the end
+> of the script, even on silent builds. This isn't needed, since the
+> script is never sourced (so it won't change the working directory of
+> the surrounding build anyway).
+>=20
+> Just remove the cd to make the build silent.
+>=20
+> Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-hea=
+ders.sh")
+> Signed-off-by: Olof Johansson <olof@lixom.net>
+> ---
+>  tools/objtool/sync-check.sh | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+> index 9bd04bbed01e..2a1261bfbb62 100755
+> --- a/tools/objtool/sync-check.sh
+> +++ b/tools/objtool/sync-check.sh
+> @@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-I "^#include [\=
+"<]\(asm/\)*inat_types.h[
+>  check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.=
+h[\">]"'
+>  check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\=
+)*asm/insn.h[\">]"'
+>  check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\=
+)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_p=
+refix.h[\">]"'
+> -
+> -cd -
 
-Oleg convinced me I was wrong, and that there is no bug, so I don't
-think we need anything after all.
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Yes, there's a "race" between wakeup and returning the error, but
-since any correct code already relies on the condition having become
-true before the wakeup (and it needs to be a stable condition -
-otherwise the exclusive waiters wouldn't work in the first place), the
-code that returns the error will never get reached because of the
+If you want to send it through -tip, please resend to x86@kernel.org.
 
->                 if (condition)
->                         break;
+--=20
+Josh
 
-part of the ___wait_event() macro.
-
-            Linus
