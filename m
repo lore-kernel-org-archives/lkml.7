@@ -2,106 +2,127 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A512C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E580720828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EDF2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yyZilLo1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QrlcNg0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfLIOKD (ORCPT
+        id S1727847AbfLIOKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:10:03 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27268 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbfLIOKD (ORCPT
+        Mon, 9 Dec 2019 09:10:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22662 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726687AbfLIOKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:10:03 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9E7mbB028360;
-        Mon, 9 Dec 2019 15:09:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=rMgFRcSFtiFbgW/awEUZ3ybc8wwxYOXSNEv2yL+9lZM=;
- b=yyZilLo1hu8fgeyo6uWmmNN+6Gkswci+Ye6OWQbHolQQsyU5pNaTs54lPyNLE4tqA2Xk
- eFVdyzJU88XeR66RFT1Ysq46A1t+PRCta5+T/jil3V3NMcJSLWeXS9MrtxHO2GiXA2Kw
- M3sC6OjMrP08bftjKCLJb/R9MKqPbbCNlPLBO0OYl8JBYo8HtQ28Ad5AvtokY0R57ujd
- PAsK0cT2KlWdLBzMpy1VuH8DLyZJl6elCbtIRGGQ5U57Hg/if1AlpS2LZEDULmcBm+VI
- a4gtU0eaXEa3aoPSOheeoUhTyGk5stdooxRI33m3oWcUctDyaWHkq0D5pZBtt4V9h3Wk Jg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrf7k08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 15:09:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9954110002A;
-        Mon,  9 Dec 2019 15:09:53 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A66520DAFE;
-        Mon,  9 Dec 2019 15:09:53 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
- 2019 15:09:53 +0100
-Subject: Re: [PATCH 2/3] ARM: dts: stm32: remove useless clock-names from RTC
- node on stm32f746
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191202145604.28872-1-benjamin.gaignard@st.com>
- <20191202145604.28872-2-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <e1c2fe53-1b63-9b66-b48f-0c4dcc5e84ae@st.com>
-Date:   Mon, 9 Dec 2019 15:09:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 09:10:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575900616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E8MHeSmErGIjySHPAAzp+CJ/YCYvZDrefSPRZN4SlDA=;
+        b=QrlcNg0Mlxm3t5sgINgeoTGRE03XJtbjlH6oB3LqS6+TkgPsunV50/oNOjrFkBC/Pbm8cu
+        6D4UgaEZ24uigEf3ST5NLmbvYrkjxft0RARkXqpdVWPnplofeYYWoY0tX/XSXyzICTo5ck
+        Q3pwgrrmZ7/xVb388Ae/FFSvC0sRjnw=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-6wiH1DbDMsqfdLsu_DMYhA-1; Mon, 09 Dec 2019 09:10:15 -0500
+Received: by mail-lf1-f70.google.com with SMTP id q3so2894699lfb.21
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:10:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=E8MHeSmErGIjySHPAAzp+CJ/YCYvZDrefSPRZN4SlDA=;
+        b=L3xUchrh3PfxVgQpQcHCVjHYk5XujEcloaQGtkvtl+PYFYNYqyry4sbJU3Su0AUvIO
+         94ctPzedeP3AWUV47LgHnPPNO8ut3dpa7qar5/LZD8rAwFyZv1Xvje7tl4JmKEE81dQI
+         iP0eB8us+IUixq+ZGk1vbi0PpU+NX7smxclc+XDRVUHuPbGp6S2FDWSTBUWF04TPfaej
+         Ljn8Qjd1YKA/XvVCTnsoAbF5EZpicAwp+34GQOC5nY5RnRM9BKUqMbq/f4UA8ImTESqF
+         MmhIIsGNc/Z0CseFEbFm4pYM+D/gI1fkkGvSQlGPqiftt1bW/O1psmvu1bEvovqzE6d2
+         am/g==
+X-Gm-Message-State: APjAAAXWRT/uULFAH8OvoQ0I5NWIbb1VPnoETTq4ERpSso9BooM83fkm
+        cpF2prLpzxbzADRmB0aInMJsAjBfb0/S39hUdHbxJHbZumSRNVwazi498yoDDirtvPDyhiPH1uh
+        wEECwMbbY9YlRCnsYd9ifGvmv
+X-Received: by 2002:a2e:5850:: with SMTP id x16mr17025787ljd.228.1575900613926;
+        Mon, 09 Dec 2019 06:10:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwbgId3BcY2VrxCOO3tOzW3tTJ8ze5gQc8m0QowN0hydiXJKpH9z/cbAknaAe2Dzi4DnaAxQg==
+X-Received: by 2002:a2e:5850:: with SMTP id x16mr17025767ljd.228.1575900613666;
+        Mon, 09 Dec 2019 06:10:13 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id r2sm10989213lfn.13.2019.12.09.06.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 06:10:12 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 2182D181938; Mon,  9 Dec 2019 15:10:12 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Steve French <smfrench@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org
+Subject: Re: 5.5-rc1 oops on boot in 802.11 kernel driver
+In-Reply-To: <87h829lpob.fsf@toke.dk>
+References: <CAH2r5mvZ=S0FHGP+Y_r5f37TXVehv2shj9f6w67zBxfjR+Zt-Q@mail.gmail.com> <0101016eea3353da-835ca00e-d6c9-4e2c-aa0b-f6db8a4c518a-000000@us-west-2.amazonses.com> <87h829lpob.fsf@toke.dk>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Mon, 09 Dec 2019 15:10:12 +0100
+Message-ID: <87muc1io8r.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <20191202145604.28872-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+X-MC-Unique: 6wiH1DbDMsqfdLsu_DMYhA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
+Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> writes:
 
-On 12/2/19 3:56 PM, Benjamin Gaignard wrote:
-> On stm32f7 family RTC node doesn't need clock-names property.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->   arch/arm/boot/dts/stm32f746.dtsi | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> index d26f93f8b9c2..3a8e2dc1978c 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -300,7 +300,6 @@
->   			compatible = "st,stm32-rtc";
->   			reg = <0x40002800 0x400>;
->   			clocks = <&rcc 1 CLK_RTC>;
-> -			clock-names = "ck_rtc";
->   			assigned-clocks = <&rcc 1 CLK_RTC>;
->   			assigned-clock-parents = <&rcc 1 CLK_LSE>;
->   			interrupt-parent = <&exti>;
-> 
+> Kalle Valo <kvalo@codeaurora.org> writes:
+>
+>> Hi Steve,
+>>
+>> Steve French <smfrench@gmail.com> writes:
+>>
+>>> Noticed this crash in the Linux kernel Wifi driver on boot a few
+>>> minutes ago immediately after updating to latest mainline kernel about
+>>> an hour ago. I didn't see it last week and certainly not in 5.4.
+>>
+>> please CC linux-wireless on all wireless related problems, we don't
+>> follow lkml very closely and I found your email just by chance.
+>>
+>> Full warning below. Steve is using iwlwifi.
+>
+> Right, we already got a similar report off-list, but with a different
+> stack trace. I was going to try to reproduce this on my own machine
+> today. However, the fact that this includes the iwl_mvm_tx_reclaim()
+> function may be a hint; that code seems to be reusing skbs without
+> freeing them?
+>
+> If I'm reading the code correctly, it seems the reuse leads to the same
+> skb being passed to ieee80211_tx_status() multiple times; the driver is
+> clearing info->status, but since we added the info->tx_time_est field,
+> that would lead to double-accounting of that SKB, which would explain
+> the warning?
+>
+> Can someone familiar with iwlwifi confirm that this is indeed what that
+> code is supposed to be doing? If it is, I think it needs the patch
+> below; however, if I'm wrong, then clearing the field could lead to the
+> opposite problem (that skbs fail to be accounted at all), which would
+> lead to the queue being throttled because the limit gets too high and is
+> never brought back down...
 
-Applied on stm32-next.
+Right, and now I did boot up my own laptop with the -next kernel, and
+tested the patch. It definitely breaks things, so that was not the
+issue. However, I don't get the WARN_ON either, so don't have any better
+ideas. I guess we'll have to wait for someone who actually knows the
+iwlwifi driver to take a look at this :)
 
-Thanks.
-Alex
+-Toke
+
