@@ -2,109 +2,138 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F3EC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1191C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A4D207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AE22077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="i6gezNq9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGoVvngF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfLILJ7 (ORCPT
+        id S1727821AbfLILLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:09:59 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:7924 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727678AbfLILJW (ORCPT
+        Mon, 9 Dec 2019 06:11:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34774 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727566AbfLILLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:09:22 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9B3UZm022346;
-        Mon, 9 Dec 2019 05:09:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=0v6TcqX+2q4zO9kQfJmYbgUU2bsSyCYLIYQGiirJCJk=;
- b=i6gezNq93Tx8U1ELAa70UF76ndB8APrC7LH/VhNCEleKqPiSCkrAlDeA4PdS4As/HbUC
- OTL432tHOuGJZwJx7gPuY1pb8lT/s/IWlWv/O7k1BiIEqCZZax70NNBsjG8GKmtNi+rA
- veD5wAIbqYLdtKJirQNwPnS9/S/mTF/H6uwNc0eKBUhq4TfgpJa4tER2y31/vrksiJDa
- hgVOnbiG0sbGupem1zqB2exV+XkRDsArjXErBE6H3qCpj0auOM1jBJdU2FL5O5NUVPwi
- RYn3bbRbviuFEyWWm9xiqVfNbExjKF0T69qY36LkBxXElhdXK4S/SfLONFCwwl5SsBzQ Vg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2wrac6j0mu-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 09 Dec 2019 05:09:19 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 9 Dec
- 2019 11:09:16 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 9 Dec 2019 11:09:16 +0000
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7B22B2D5;
-        Mon,  9 Dec 2019 11:09:16 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>
-CC:     <myungjoo.ham@samsung.com>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 07/10] extcon: arizona: Remove excessive WARN_ON
-Date:   Mon, 9 Dec 2019 11:09:13 +0000
-Message-ID: <20191209110916.29524-7-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191209110916.29524-1-ckeepax@opensource.cirrus.com>
-References: <20191209110916.29524-1-ckeepax@opensource.cirrus.com>
+        Mon, 9 Dec 2019 06:11:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575889870;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kKNJqGYoFHuNlkkCEvoI/4LL4dAPCIC/HY9H8FJVQzM=;
+        b=OGoVvngFeYFGO9jSFncwFSxBBp9GnxWTFL7gXQPj7GcBuYxa+PFgz2inzQpzEvKTeK13QI
+        sjdhzZ3OmZufQNkBJGBUpvPZoTKqgMhpbVJ1rfWs4tpzZIQjgJsDpl3/re3fkhfFKNtOhA
+        pDf7/HgFeGrXDR9tE740uX0uONN3LIM=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-G02mOvLaOIerl92oRSOGFg-1; Mon, 09 Dec 2019 06:11:04 -0500
+Received: by mail-lj1-f200.google.com with SMTP id p90so3209417ljp.23
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 03:11:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/XI1i3yD2ZF8jeazCNhTgJLTTX7l/kk7N2T0Iz8NsVo=;
+        b=Bt12ALjfELCcOH4no5MGP8Nb6A/Ns7LAGAQ5bAsIpRR0k+UjFsRYlkyIwvfo4sJuhh
+         2LFS9dRhWa5zbw2d/U/VczucZLuyTLj5ODGHZDeEgQV8X3xoVtY4dUAyoHHG1qXnv4aQ
+         y3CJILSNL+LgiOwbbCrcYEt9G05EPaVUvBZlnkt4hWCSrCNmc7IAaqK7T479f5Av1KCo
+         S3nARzQMiTRovBHtDH2M/xbg61eEry/Qobs41dsz9JLgy23ezMXJFAlPAw9LTghywVPi
+         z8cUZOLPc1MjSYEkkMW6YfdKGRg6sJGnaLYAh6MhxKif3zbeTErZGj2gfawBTPepwhm1
+         GwkQ==
+X-Gm-Message-State: APjAAAV3K6AT6xdYQSC+CNf2b2EOmdRDPnvbYvr4vxjr//Zha58vT6sT
+        p8jQnkAVpXQi9os/jGzvFSHOyOWI0m3BzKbGM8g0e/u7Ihv+Qbpls+wV2LUL+bg+R4lIWHpEp25
+        iO6aysaBXawRyU2R6e/Lr7J0c
+X-Received: by 2002:a2e:6a14:: with SMTP id f20mr17195080ljc.87.1575889862614;
+        Mon, 09 Dec 2019 03:11:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwz7+idSyfFRccLmSN8y783VRquoHKeJhGew9SSKWdah45sGBl7BuznHHfRp0fUYiD+0/fR8A==
+X-Received: by 2002:a2e:6a14:: with SMTP id f20mr17195059ljc.87.1575889862292;
+        Mon, 09 Dec 2019 03:11:02 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id v9sm4240067lfe.18.2019.12.09.03.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 03:11:01 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 9B41A18257B; Mon,  9 Dec 2019 12:11:00 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Steve French <smfrench@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org
+Subject: Re: 5.5-rc1 oops on boot in 802.11 kernel driver
+In-Reply-To: <0101016eea3353da-835ca00e-d6c9-4e2c-aa0b-f6db8a4c518a-000000@us-west-2.amazonses.com>
+References: <CAH2r5mvZ=S0FHGP+Y_r5f37TXVehv2shj9f6w67zBxfjR+Zt-Q@mail.gmail.com> <0101016eea3353da-835ca00e-d6c9-4e2c-aa0b-f6db8a4c518a-000000@us-west-2.amazonses.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Mon, 09 Dec 2019 12:11:00 +0100
+Message-ID: <87h829lpob.fsf@toke.dk>
 MIME-Version: 1.0
+X-MC-Unique: G02mOvLaOIerl92oRSOGFg-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=652
- spamscore=0 mlxscore=0 clxscore=1015 adultscore=0 impostorscore=0
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912090094
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A WARN_ON is very strong for simply finding a button that is out of
-range, downgrade this to a simple error message in the log.
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/extcon/extcon-arizona.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> Hi Steve,
+>
+> Steve French <smfrench@gmail.com> writes:
+>
+>> Noticed this crash in the Linux kernel Wifi driver on boot a few
+>> minutes ago immediately after updating to latest mainline kernel about
+>> an hour ago. I didn't see it last week and certainly not in 5.4.
+>
+> please CC linux-wireless on all wireless related problems, we don't
+> follow lkml very closely and I found your email just by chance.
+>
+> Full warning below. Steve is using iwlwifi.
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index e7c198e798e27..3f7ced35e0b86 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -960,14 +960,13 @@ static void arizona_micd_detect(struct work_struct *work)
- 				input_report_key(info->input,
- 						 info->micd_ranges[i].key, 0);
- 
--			WARN_ON(!lvl);
--			WARN_ON(ffs(lvl) - 1 >= info->num_micd_ranges);
- 			if (lvl && ffs(lvl) - 1 < info->num_micd_ranges) {
- 				key = info->micd_ranges[ffs(lvl) - 1].key;
- 				input_report_key(info->input, key, 1);
- 				input_sync(info->input);
-+			} else {
-+				dev_err(arizona->dev, "Button out of range\n");
- 			}
--
- 		} else if (info->detecting) {
- 			dev_dbg(arizona->dev, "Headphone detected\n");
- 			info->detecting = false;
--- 
-2.11.0
+Right, we already got a similar report off-list, but with a different
+stack trace. I was going to try to reproduce this on my own machine
+today. However, the fact that this includes the iwl_mvm_tx_reclaim()
+function may be a hint; that code seems to be reusing skbs without
+freeing them?
+
+If I'm reading the code correctly, it seems the reuse leads to the same
+skb being passed to ieee80211_tx_status() multiple times; the driver is
+clearing info->status, but since we added the info->tx_time_est field,
+that would lead to double-accounting of that SKB, which would explain
+the warning?
+
+Can someone familiar with iwlwifi confirm that this is indeed what that
+code is supposed to be doing? If it is, I think it needs the patch
+below; however, if I'm wrong, then clearing the field could lead to the
+opposite problem (that skbs fail to be accounted at all), which would
+lead to the queue being throttled because the limit gets too high and is
+never brought back down...
+
+-Toke
+
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wire=
+less/intel/iwlwifi/mvm/tx.c
+index dc5c02fbc65a..7d822445730c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1848,6 +1848,7 @@ static void iwl_mvm_tx_reclaim(struct iwl_mvm *mvm, i=
+nt sta_id, int tid,
+                iwl_trans_free_tx_cmd(mvm->trans, info->driver_data[1]);
+=20
+                memset(&info->status, 0, sizeof(info->status));
++               info->tx_time_est =3D 0;
+                /* Packet was transmitted successfully, failures come as si=
+ngle
+                 * frames because before failing a frame the firmware trans=
+mits
+                 * it without aggregation at least once.
 
