@@ -2,111 +2,120 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ED7C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE3C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3432120726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7536320726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Zdk2oEwb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6LUxwqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfLILlq (ORCPT
+        id S1727529AbfLILpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:41:46 -0500
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:42370 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727542AbfLILlp (ORCPT
+        Mon, 9 Dec 2019 06:45:01 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32972 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfLILpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:41:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575891704;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GzReoROje3tBp7FjKlB0oXgw2hTB34h1ddpP8D5LvGo=;
-  b=Zdk2oEwbmtG2pORJZMNVVdL5jrqB/fFnIxSvN9TpuEW0jPb4e9PObegy
-   KuYVqoJAle43Kf2UgmLsGv5Thk/hsndS7eiWOdl9G4B82I5/ImDTYlZtR
-   aW9oUFcc9HUs/o3QyExQAegAGyimFfCFVseespD3OB6xiJ7QgzSNBtK1O
-   o=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: Hm12VYnR78F0yIU6Vs5dDAXWyjZEnEngE4KcbEt+L9rMgOvnWLd9+lZvEAq3ooDyIwvLi/XKa8
- NHYIajNI8lrLjnqqYpJGPOxKzg3kuRIYuYET1hXD3y71VNmvjd91/7lVtTXI9o15/AlYCWtohG
- wOO7Paq80UomTbrY2MnK10YJ+scaydS4VYK/J0gmBDWgY7Tez/L/2+qlOmRdeWbNXDbnbazIb3
- LfsY0WlYE10LS3VoFXp7DLNL6rnJ0OC3MfKzR15mrHrqsQ0Y8/UIbNt1wZ7IxgApfXacaYd1oI
- S+k=
-X-SBRS: 2.7
-X-MesageID: 9942940
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,294,1571716800"; 
-   d="scan'208";a="9942940"
-Date:   Mon, 9 Dec 2019 12:41:37 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     Paul Durrant <pdurrant@amazon.com>
-CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
-        "Juergen Gross" <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Subject: Re: [Xen-devel] [PATCH 3/4] xen/interface: don't discard pending
- work in FRONT/BACK_RING_ATTACH
-Message-ID: <20191209114137.GT980@Air-de-Roger>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-4-pdurrant@amazon.com>
+        Mon, 9 Dec 2019 06:45:01 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 6so7012843pgk.0;
+        Mon, 09 Dec 2019 03:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IPlVvddAVkBLckSB5xQwsO5FlMrHgcla5wmGZLf2wA0=;
+        b=O6LUxwqG2ZiFRETIdI+pR6KDi4khLs4++dVjnKtHH9f1Iz8ORTxeRv88a6K9grAx2d
+         ZL9S2dF5SHg03oZFGIgJ+ofhfjDsb6r3UgKMwgtKyfQ1FAiLBFchgbu3SO0DKEflPtCz
+         nZ0lpRPPLkTBiQVI4rb3sqvErbnzKL/jVTh40alilx2Z/6Fsqgy4x8mRL34Y42PneeyY
+         tRBhlB5gqPAzNK8E3dqvTXoeSn+KgV9eQ2b23l73fCWBfp7DuiXF+vAa+iSP7xQ8h7l3
+         qf7lhk97X2tC3Qmi2YNtAGCgj3Qw8eTkkZrrDOv50jhKDg27SHj6TDK98VkhVuW6jq/3
+         AsOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IPlVvddAVkBLckSB5xQwsO5FlMrHgcla5wmGZLf2wA0=;
+        b=UDoRPx4LtR+YT3OqCb7p9c9QBQRvVbC5VpW0CFoytcHftQn+0nN1kfWpsaZCC0OxcM
+         LlkYBCDfnPF0s+zwB0v1v1BWyqRoKmJzaLQlGFHy/1jwL4LM03MeJkB8T2wgxvBXNlJK
+         o/p/bD4YyglQHFve4NnttQ72h+L81icjib98uEO0YoQphKgYKLLXSQ5QaUyBDWqk4OWe
+         OQJcq2dGNLqsRoO9SLVDw5zpzFReHXHv6lzqrF0GRhx+qGA51FRCbzfoE5W0W5OEsvez
+         i9oGIVi7FKKbvVyJzGFKdc5gzGJqTHoFoNhDRL7uUmj064LSAaJ06ga9tPLijzIePcfX
+         HTVg==
+X-Gm-Message-State: APjAAAVHQQJhuhFxzUsXSz9tH66am+N0Rt5vZFj77NbbCOB2EnRLmmlt
+        kQh8Br99xe6tD96zueMZgBEvdA7x
+X-Google-Smtp-Source: APXvYqyOvhZf0WvxvjusSfLsbdBKS5NIkM7Dlh2IsBYF7/Ve9lehAruLioZ4qFv7hQpDyW18O/ZdqA==
+X-Received: by 2002:aa7:9f94:: with SMTP id z20mr23171842pfr.111.1575891900131;
+        Mon, 09 Dec 2019 03:45:00 -0800 (PST)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c8sm27805289pfj.106.2019.12.09.03.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 03:44:59 -0800 (PST)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: [PATCH v4 0/3] Add Unisoc's SC9863A support
+Date:   Mon,  9 Dec 2019 19:44:01 +0800
+Message-Id: <20191209114404.22483-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191205140123.3817-4-pdurrant@amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 02:01:22PM +0000, Paul Durrant wrote:
-> Currently these macros will skip over any requests/responses that are
-> added to the shared ring whilst it is detached. This, in general, is not
-> a desirable semantic since most frontend implementations will eventually
-> block waiting for a response which would either never appear or never be
-> processed.
-> 
-> NOTE: These macros are currently unused. BACK_RING_ATTACH(), however, will
->       be used in a subsequent patch.
-> 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+SC9863A has Octa-core ARM Cortex A55 application processor. Find more
+details about it on the website: http://www.unisoc.com/sc9863a
 
-Those headers come from Xen, and should be modified in Xen first and
-then imported into Linux IMO.
+Changes from v3:
+* Rebased on v5.5-rc1;
+* Fix the cpu-map to put all cpus into the single cluster;
+* Fixed a bindings error.
 
-Thanks, Roger.
+Changes from v2:
+* Discard some dt-bindings patches which have been applied by Rob Herring.
+* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
+* Moved sprd.yaml to the vendor directory.
+* Addressed comments from Rob:
+- fixed dtbs_check errors;
+- move gic under to the bus node;
+- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
+- added specific compatible string for syscon nodes;
+- cut down registers range of syscon nodes;
+- removed unnecessary property "sprd,sc-id";
+- added earlycon support in devicetree.
+
+Changes from v1: 
+- Convert DT bindings to json-schema.
+
+Chunyan Zhang (3):
+  dt-bindings: arm: sprd: add global registers bindings
+  dt-bindings: arm: move sprd board file to vendor directory
+  arm64: dts: Add Unisoc's SC9863A SoC support
+
+ .../bindings/arm/sprd/global-regs.yaml        |  34 ++
+ .../bindings/arm/{ => sprd}/sprd.yaml         |   2 +-
+ arch/arm64/boot/dts/sprd/Makefile             |   3 +-
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 523 ++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi         | 148 +++++
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
+ 6 files changed, 747 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+ rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (92%)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+
+-- 
+2.20.1
+
