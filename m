@@ -2,136 +2,111 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50E5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1216BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F432071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbeEtoMz"
+	by mail.kernel.org (Postfix) with ESMTP id DDE58205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLIVhF (ORCPT
+        id S1726898AbfLIVhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:37:05 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50605 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLIVhF (ORCPT
+        Mon, 9 Dec 2019 16:37:25 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726708AbfLIVhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:37:05 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so963279wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMJA3Di2ivxRbsSzXza7HsfMjXgBB0+KSpDg3SPUVLQ=;
-        b=fbeEtoMzrLwHuNHnyz+UGn1uIq/g+CCc1Vu86q1v5Y4P/Ybr/MCajyIR5+R5yVpZVb
-         m+j3G2l6qbjJ69H3hu8o6ZXNc6SMFxMfQ6YLAxAwNeGvUJez38zK0yRa+gFf6+IeDTHk
-         X+CdKDHe+vLzB+uUNXfuWrvkP8BWbNAwzUDbwhjcmog1nh/FkCVmTjtAiLFJuRkUP2TV
-         8xR4laFN7pI25TkJ0M8Vk4ATu0qzO0Dy/SyoILHA1J9t0ZRHLN8NYKnwnZJKu8ZM0rl+
-         S3cL8FpaGea5mEPvlSfQ5km/1EFdvbraDBWPTL8EwyVee4kkYNCwN+c//TFKMEooXcne
-         W4ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KMJA3Di2ivxRbsSzXza7HsfMjXgBB0+KSpDg3SPUVLQ=;
-        b=Sl7ogIcSihgw5S+utvoaoVUsGs8TMG+rkJ9xXztIbonlgnXHfssajrdOPqRk7/aFkw
-         iFyOlZYfFljDln1IXPMdsXBSfliRAmm+kfLPYdFkbWVJSeQNLHXJxYCyasT8gwxUCGa1
-         6O+5MG2tz0VfTFC1qDYnVHyCPh9/9tUsJjpTiZwKA72DxwERdc7cia8SIQ12ri8ixUID
-         54t5OAw10eLKtpnyEu1hehB4SQ0i23V3ULd0eOY22ZaQAM8Wii/yeoa97XSYmmaYQLkI
-         q8twvnN4k0suIAOeEyEuHhhb7+w9GywsJxatekRWRP+elVMENSbhVUoCjS4/n0Lcs1IM
-         C/AA==
-X-Gm-Message-State: APjAAAWvlyPoKFgapM2Kto2C5TO2tgY2bXP3hyxmoa3/XnPcFxEL99x4
-        gBqI9LCZa3NqbxDoBIwP2BY=
-X-Google-Smtp-Source: APXvYqwXM97IR9th+kenNyJrOC96LNA0sb6otipYNvRNIp2l2DLLT8pGqubHjKwnSLLSr7fNt92ohQ==
-X-Received: by 2002:a7b:cd82:: with SMTP id y2mr1244266wmj.58.1575927423069;
-        Mon, 09 Dec 2019 13:37:03 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a03f:40f6:4600:a51f:44c:fbfb:c44])
-        by smtp.gmail.com with ESMTPSA id i16sm731578wmb.36.2019.12.09.13.37.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 13:37:02 -0800 (PST)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Mon, 9 Dec 2019 16:37:25 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9LbMY8081235
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 16:37:24 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wskna2qc3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:37:23 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 9 Dec 2019 21:37:04 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 21:37:00 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9Lawl152625544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 21:36:58 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9511A42042;
+        Mon,  9 Dec 2019 21:36:58 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D2784203F;
+        Mon,  9 Dec 2019 21:36:57 +0000 (GMT)
+Received: from dhcp-9-31-102-17.watson.ibm.com (unknown [9.31.102.17])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Dec 2019 21:36:57 +0000 (GMT)
+Subject: Re: [PATCH v10 0/9] powerpc: Enabling IMA arch specific secure boot
+ policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>
-Subject: [PATCH v2] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
-Date:   Mon,  9 Dec 2019 22:36:55 +0100
-Message-Id: <20191209213655.57985-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Date:   Mon, 09 Dec 2019 16:36:56 -0500
+In-Reply-To: <5254346f-4ba7-c820-e127-d46b84f2e6e6@linux.microsoft.com>
+References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+         <5254346f-4ba7-c820-e127-d46b84f2e6e6@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120921-4275-0000-0000-0000038D66CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120921-4276-0000-0000-000038A115A8
+Message-Id: <1575927416.4557.25.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=943 spamscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xsdfec_poll() is defined as returning 'unsigned int' but the
-.poll method is declared as returning '__poll_t', a bitwise type.
+On Mon, 2019-12-09 at 12:27 -0800, Lakshmi Ramasubramanian wrote:
+> Hi Mimi,
+> 
+> On 10/30/2019 8:31 PM, Mimi Zohar wrote:
+> 
+> > This patchset extends the previous version[1] by adding support for
+> > checking against a blacklist of binary hashes.
+> > 
+> > The IMA subsystem supports custom, built-in, arch-specific policies to
+> > define the files to be measured and appraised. These policies are honored
+> > based on priority, where arch-specific policy is the highest and custom
+> > is the lowest.
+> 
+> Has this change been signed off and merged for the next update of the 
+> kernel (v5.5)?
 
-Fix this by using the proper return type and using the EPOLL
-constants instead of the POLL ones, as required for __poll_t.
+Yes, refer to the linuxppc mailing list archives.
 
-CC: Derek Kiernan <derek.kiernan@xilinx.com>
-CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Acked-by: Dragan Cvetic <dragan.cvetic@xilinx.com>
----
+Mimi
 
-Greg,
-
-Can you take this in your tree?
-Thanks.
-
-Change since v1:
-- add Dragan's ack.
-
- drivers/misc/xilinx_sdfec.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 11835969e982..48ba7e02bed7 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
- }
- #endif
- 
--static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
-+static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
- {
--	unsigned int mask = 0;
-+	__poll_t mask = 0;
- 	struct xsdfec_dev *xsdfec;
- 
- 	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
- 
- 	if (!xsdfec)
--		return POLLNVAL | POLLHUP;
-+		return EPOLLNVAL | EPOLLHUP;
- 
- 	poll_wait(file, &xsdfec->waitq, wait);
- 
- 	/* XSDFEC ISR detected an error */
- 	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
- 	if (xsdfec->state_updated)
--		mask |= POLLIN | POLLPRI;
-+		mask |= EPOLLIN | EPOLLPRI;
- 
- 	if (xsdfec->stats_updated)
--		mask |= POLLIN | POLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
- 
- 	return mask;
--- 
-2.24.0
+[1] https://lists.ozlabs.org/pipermail/linuxppc-dev/
 
