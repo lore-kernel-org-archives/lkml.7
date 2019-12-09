@@ -2,179 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07D9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA31C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C394420692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0YvdE3p"
+	by mail.kernel.org (Postfix) with ESMTP id AE24920700
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575858205;
+	bh=ckJe1f9z+0yhWD6XSFJBjDXQNPIHJUlBowWUcrDFwnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RDFJXNeampRpPVZG8yB5SXPD9TqneEjMD3OZshPZ7CJlwQGRs1YckZiFyUj+Iaby/
+	 7ITAxbeRLw4vow00q2gEhmQKxBdvGW7goUy5qQzLCe2ZKWY5Urk+YY08oIg7DxF8P2
+	 FwtpdMk224qnzPGLmzjvQArkZ2wUr8l4xOvcpbFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfLICNz (ORCPT
+        id S1726915AbfLICXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 21:13:55 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40566 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfLICNz (ORCPT
+        Sun, 8 Dec 2019 21:23:23 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40190 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfLICXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 21:13:55 -0500
-Received: by mail-il1-f193.google.com with SMTP id b15so11336148ila.7;
-        Sun, 08 Dec 2019 18:13:54 -0800 (PST)
+        Sun, 8 Dec 2019 21:23:22 -0500
+Received: by mail-lj1-f193.google.com with SMTP id s22so13780968ljs.7
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 18:23:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k15R5nnH7ejDpMt2qDC/YjWGHq/27T3NqR985G0b1io=;
-        b=e0YvdE3pADvK2Ktnt0flJw9zLH2RNpK3dJowZUsSejzeefqwu7BqYYIeAY01iQt7cn
-         Z9s/Gk0ybxsjTSfOItKoypebt/D1cSPOPwVd1PBfSvFvNPpUph4qoH1IcXYJyDaJhRTL
-         j5FOw6lY1ggO3hL/aExyG+zCF6bG3Lu5ACeuK0YxQfJFk3r3dK473a4gLDcOacqGeiuU
-         yqg3OHtgpPy7qZ/Rl9BVaHBCJZkqKBh5tZl5FLFoHHAc0J05ijxNFI3Oi5DNRUf7xvDc
-         yAI4qM2ofJdINtkmivJhdalTyrdIO8v8rkoTQQ5/9xCv2gECnlcpbO/SOAnu+eRIHRO1
-         d8zw==
+         :cc;
+        bh=jtNlyNh+mGdA2q4AO/JzXYXFrnuZqMnTZ+qQdX6qkbw=;
+        b=dZTJ7Zvl+X4Orlt5MxUX7caFe5OE31NxlNViH1WqR1xDkCBQ5UDeD13DvceCigkefe
+         NkUu8l4gfBUHZtIbZVYr5+fPLPBcJzA6yphObSdWg1lXpEgnqyLssA5GvFfNgnMwdzMh
+         tAhKKkBhHK2297EJrC4yT/2mx9cAPYvsAmndE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k15R5nnH7ejDpMt2qDC/YjWGHq/27T3NqR985G0b1io=;
-        b=B8rVOxu+ng1LiM2Hk4C/QSePR+ZPxWb6lEMxQp5QBrMQ+LgUE4YMyBHSfuZnqUkI+z
-         lz3KlzQUal15K8YlHIAEaisKGrF7O4w1qqzo7Tr7grSCnnQihlIOUNzWttkbwTL+nTS7
-         nJcwhR4pt5AZyHKzbKjP20pJepiJ/7OTv+R6a0RyFDw7fqTNDjjIG+EdloCU1yFMicKy
-         6bMIh4bhI4WUWWSUvXCvYzDEKEsm5qUf0v3X0sp7uj3lnwEGkdrcujw3APnXHHRqzxuD
-         Th2q9uJ0P6MY7gjOK5SpHPA/vwI5TTa202fNE/WYMA0/35DNsuUaqQvsBiR95WZ6XjJg
-         6a5g==
-X-Gm-Message-State: APjAAAWvFzfnmKPM28BwFV3/dbrdyhGwIZRPRWUd5ZF8QqMx+r5ySxzH
-        eZzS4wbjG4ww6P2lQKdEFEyclRoDU0nwSpkqaJ4=
-X-Google-Smtp-Source: APXvYqxv5NywBnj4CHBu47U5qi0QCZ9tpg7hVXEx/R4Tuj/ZqbHkan08oiS9gCkMH9qRlDjKXXFtvT/03EDiC01wC4c=
-X-Received: by 2002:a92:6a08:: with SMTP id f8mr24730721ilc.27.1575857634060;
- Sun, 08 Dec 2019 18:13:54 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=jtNlyNh+mGdA2q4AO/JzXYXFrnuZqMnTZ+qQdX6qkbw=;
+        b=ByLPVOUatMSZaXpQbV61f53HdwQHrzEWtuD5AC0KtmfCoGYI7mhh5D1gKwWHHX/YE/
+         8lnzLEQMbk/P1fYxlCr3hhSPphLpkt8/NocE+Uu7c5EXq0TEUJXN9qBJQmLkgBxeMavo
+         kvokC6L0ajndhTc0PoUTteWS59bPVorEM4aw19RK+tf7qRLlkwv4x57vfAppOR/lvfx1
+         4x0THeSa1DyG5kwlWAbOe38ZQMZc0oUR6efVz/KfIhWtTQjwaRRrShro1Q0BCss4w8rx
+         Z++myLvX5eO/2EbxoR1+UAt60iHw8UwUbETl64Po7d57v6ES6/45bGecYfreiOCeNvZV
+         sdTw==
+X-Gm-Message-State: APjAAAVJB94+TrJi0y04c74UanndDGK0MGzOkmk/FGlqXT6aSpsFC9Fw
+        Yq3EpkFl16fxdVYpubrLy/3XbejbQmc=
+X-Google-Smtp-Source: APXvYqzNVSf5Tiq6B5DYukD6RqIZSYJXtfwwhPGm/5sCBySXKWsDzBa7hBku4XI/afGj/HvT1Z3UAA==
+X-Received: by 2002:a2e:8646:: with SMTP id i6mr15350900ljj.122.1575858200302;
+        Sun, 08 Dec 2019 18:23:20 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id f26sm5118148ljn.104.2019.12.08.18.23.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Dec 2019 18:23:19 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id a13so13762375ljm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 18:23:19 -0800 (PST)
+X-Received: by 2002:a2e:241a:: with SMTP id k26mr15164274ljk.26.1575858198831;
+ Sun, 08 Dec 2019 18:23:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204031005.2638-1-gmayyyha@gmail.com> <20191204103629.GA22244@hermes.olymp>
- <CAB9OAC2vzPy=ELYzDRjBvA6m8T8AvwdJugS2NoCczwD1+Xb36Q@mail.gmail.com> <20191205102433.GA5758@hermes.olymp>
-In-Reply-To: <20191205102433.GA5758@hermes.olymp>
-From:   Yanhu Cao <gmayyyha@gmail.com>
-Date:   Mon, 9 Dec 2019 10:13:41 +0800
-Message-ID: <CAB9OAC3eH89pA4EORu93gE+r9LJ7CW_gBYr4dSn0u3K3+p7T8w@mail.gmail.com>
-Subject: Re: [PATCH] ceph: check set quota operation support before syncing setxattr.
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     jlayton@kernel.org, sage@redhat.com, idryomov@gmail.com,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
+References: <30808b0b-367a-266a-7ef4-de69c08e1319@internode.on.net> <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net>
+In-Reply-To: <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 8 Dec 2019 18:23:02 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
+Message-ID: <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
+Subject: Re: refcount_t: underflow; use-after-free with CIFS umount after
+ scsi-misc commit ef2cc88e2a205b8a11a19e78db63a70d3728cdf5
+To:     Arthur Marsh <arthur.marsh@internode.on.net>
+Cc:     SCSI development list <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 6:24 PM Luis Henriques <lhenriques@suse.com> wrote:
+On Sun, Dec 8, 2019 at 5:49 PM Arthur Marsh
+<arthur.marsh@internode.on.net> wrote:
 >
-> On Thu, Dec 05, 2019 at 10:42:46AM +0800, Yanhu Cao wrote:
-> > On Wed, Dec 4, 2019 at 6:36 PM Luis Henriques <lhenriques@suse.com> wro=
-te:
-> > >
-> > > On Wed, Dec 04, 2019 at 11:10:05AM +0800, Yanhu Cao wrote:
-> > > > Environment
-> > > > -----------
-> > > > ceph version: 12.2.*
-> > > > kernel version: 4.19+
-> > > >
-> > > > setfattr quota operation actually sends op to MDS, and settings
-> > > > effective. but kclient outputs 'Operation not supported'. This may =
-confuse
-> > > > users' understandings.
-> > >
-> > > What exactly do you mean by "settings effective"?  There have been
-> > > changes in the way CephFS quotas work in mimic and, if you're using a
-> > > Luminous cluster (12.2.*) the kernel client effectively does *not*
-> > > support quotas -- you'll be able to exceed the quotas you've tried to
-> > > set because the client won't be checking the limits.  Thus, -EOPNOTSU=
-PP
-> > > seems appropriate for this scenario.
-> > >
-> > > I guess that the confusing part is that the xattr is actually set in
-> > > that case, but the kernel client won't be able to use it to validate
-> > > quotas in the filesystem tree because realms won't be created.
-> > >
-> > Yes. we use kcephfs+nfs for CentOS6.*, it does not support ceph-fuse(12=
-.2.*).
-> > The operating system of other applications is CentOS7.*, which uses
-> > ceph-fuse and can get quota settings set by kclient.
->
-> Ok, so if I understand correctly, you're setting quotas with the kernel
-> client but actually using ceph-fuse on CentOS7 (I'm assuming a Luminous
-> cluster).  This should work fine for the fuse-client, but please note
-> that the kernel client will not respect quotas.
-Yes. do with fuse-client now.
+> This still happens with 5.5.0-rc1:
 
->
-> Anyway, the ideal solution for this would be for the kernel to not set
-> the xattr if the cluster doesn't support the new quotas format
-> introduced in Mimic.  Unfortunately, the only way we have to find that
-> out is to set the xattr and see if we get a snap_realm.
-Therefore, I think that if kclient is incompatible with the ceph
-version, logically, op should not be sent to MDS.
+Does it happen 100% of the time?
 
-Thanks.
-BRs
+Your bisection result looks pretty nonsensical - not that it's
+impossible (anything is possible), but it really doesn't look very
+likely. Which makes me think maybe it's slightly timing-sensitive or
+something?
 
->
-> Cheers,
-> --
-> Lu=C3=ADs
->
-> >
-> > Thanks.
-> > BRs
-> >
-> > > Cheers,
-> > > --
-> > > Lu=C3=ADs
-> > > >
-> > > > If the kernel version and ceph version are not compatible, should c=
-heck
-> > > > quota operations are supported first, then do sync_setxattr.
-> > > >
-> > > > reference: https://docs.ceph.com/docs/master/cephfs/quota/
-> > > >
-> > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > > ---
-> > > >  fs/ceph/xattr.c | 6 ++++--
-> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> > > > index cb18ee637cb7..189aace75186 100644
-> > > > --- a/fs/ceph/xattr.c
-> > > > +++ b/fs/ceph/xattr.c
-> > > > @@ -1132,8 +1132,8 @@ int __ceph_setxattr(struct inode *inode, cons=
-t char *name,
-> > > >                                   "during filling trace\n", inode);
-> > > >               err =3D -EBUSY;
-> > > >       } else {
-> > > > -             err =3D ceph_sync_setxattr(inode, name, value, size, =
-flags);
-> > > > -             if (err >=3D 0 && check_realm) {
-> > > > +             err =3D 0;
-> > > > +             if (check_realm) {
-> > > >                       /* check if snaprealm was created for quota i=
-node */
-> > > >                       spin_lock(&ci->i_ceph_lock);
-> > > >                       if ((ci->i_max_files || ci->i_max_bytes) &&
-> > > > @@ -1142,6 +1142,8 @@ int __ceph_setxattr(struct inode *inode, cons=
-t char *name,
-> > > >                               err =3D -EOPNOTSUPP;
-> > > >                       spin_unlock(&ci->i_ceph_lock);
-> > > >               }
-> > > > +             if (err =3D=3D 0)
-> > > > +                     err =3D ceph_sync_setxattr(inode, name, value=
-, size, flags);
-> > > >       }
-> > > >  out:
-> > > >       ceph_free_cap_flush(prealloc_cf);
-> > > > --
-> > > > 2.21.0 (Apple Git-122.2)
-> > > >
+Would you mind trying to re-do the bisection, and for each kernel try
+the mount thing at least a few times before you decide a kernel is
+good?
+
+Bisection is very powerful, but if _any_ of the kernels you marked
+good weren't really good (they just happened to not trigger the
+problem), bisection ends up giving completely the wrong answer. And
+with that bisection commit, there's not even a hint of what could have
+gone wrong.
+
+             Linus
