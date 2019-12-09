@@ -2,92 +2,117 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44525C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CA6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A5E20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E1320726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wBYFQVYu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ea4Z1cQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfLIMm4 (ORCPT
+        id S1727598AbfLIMpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:42:56 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60348 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfLIMm4 (ORCPT
+        Mon, 9 Dec 2019 07:45:22 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44538 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfLIMpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 07:42:56 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 59ECF99A;
-        Mon,  9 Dec 2019 13:42:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575895374;
-        bh=/9t9mMNVnhK6lsKXNF7d29UDyDocfEsogVfQyZV5F7w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wBYFQVYuT+sG5EF7nE8SZitZwb+yVda0U0e9HMavQmUuYMtIrKclIXkwNhGl3ktqQ
-         aHHh/7IUKnvc85wHjSgBPjP/GQVXoN+CpfEM6tYC9oFWhdD1TXf3eNwnBucvUCRjxa
-         Te9SFXw1mGi5aqXepT8rAIOKehPAkK/lbQ6Tf+d8=
-Date:   Mon, 9 Dec 2019 14:42:47 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jiri Kosina <trivial@kernel.org>,
-        "open list:DRM DRIVERS FOR TI OMAP" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/omapdrm: Fix trivial spelling
-Message-ID: <20191209124247.GA9158@pendragon.ideasonboard.com>
-References: <20191209123320.10186-1-kieran.bingham+renesas@ideasonboard.com>
+        Mon, 9 Dec 2019 07:45:22 -0500
+Received: by mail-lj1-f195.google.com with SMTP id c19so15399330lji.11;
+        Mon, 09 Dec 2019 04:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0EqX6cEm7s4jaUP8gqU2WgVaUAwSF8/ZNfo7D9M8hX0=;
+        b=ea4Z1cQ4j6pVroJI93taTqrNYi4d55Dj2qnxcURpemD++k1BEhkABPoa3SP+An7qJa
+         hqOcS0dm14hhp7GHCdMy90aT9j7kxxGG06b9lh0kzY5z5ShRTjcq7q4XTCmx2aiyOnLx
+         VAUgCFXP0bed1Wtxma48iO60LicJGzeXvmxmGG7/d3YYtIrHxHKsRp36j4goGEB93LnA
+         eueH1BYrBFj81qVyHY8Ur24otJj76LOnZ4uygKZmRqZbVSwi9cyDENQgpvhyKV3YQDBC
+         4RKheWS7M4YZYVOqKwxmbeQZhgSg+puxqhejgz3ankmYLGoQPyFtJhVz8NGzR/KBFMKm
+         9O9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0EqX6cEm7s4jaUP8gqU2WgVaUAwSF8/ZNfo7D9M8hX0=;
+        b=gFuDyUxu249i9UArEDhDqMtLFWo1HymbSREjtPoRHXknRfzMAoZspRR7h9J+OP2aXN
+         TN7oHu/zKBxof1MWMsl6b04DIydkjjwAhUVffSwtv2LsQhiDlEZXavzShnLqmecYFCj1
+         jV0oHGO6xtEEf4n4P5P1TRyA/ddT/cg80r3hrFtNjXostLaKwNsKeDaXrd4GISOVbggd
+         vIJlvioK3kJlLMGPH3JbqZWd8z0Ft7IVJkI8AlTXuquYD3rTVJsrZk5ydgMSlKm1fZt/
+         YbpT/7NMKIwLm7uz9PAh+iz73/HCi04QWlQ9Ajz0j6R+9QAU+5voj+NWIfi2YgNmvTCS
+         Zmmg==
+X-Gm-Message-State: APjAAAVuI0cXxaSB4v3RXDWuWFUVIZKFxd3T9870zM8MLQNMoKKcA2JI
+        WAvNRDFBNeGey8VlmUXS4ge1YJ4U
+X-Google-Smtp-Source: APXvYqxu678dkp/5vM+8A/RpDAIhinyjuBIeVcmRDlVaSxwyt6q83NX/ycTAw/NrVajhxzxdCwC2jg==
+X-Received: by 2002:a2e:98c4:: with SMTP id s4mr16745523ljj.102.1575895519630;
+        Mon, 09 Dec 2019 04:45:19 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y72sm4442818lfa.12.2019.12.09.04.45.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 04:45:18 -0800 (PST)
+Subject: Re: Build regressions/improvements in v5.5-rc1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+References: <20191209105613.2491-1-geert@linux-m68k.org>
+ <CAMuHMdV+4Q2atJUPsYuc+UFxyoh1fscQL7aLUp4CWrb7=U706g@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <33f03ef9-c868-8bd5-ae5d-3da703d21fa9@gmail.com>
+Date:   Mon, 9 Dec 2019 15:45:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdV+4Q2atJUPsYuc+UFxyoh1fscQL7aLUp4CWrb7=U706g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191209123320.10186-1-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
-
-Thank you for the patch.
-
-On Mon, Dec 09, 2019 at 12:33:19PM +0000, Kieran Bingham wrote:
-> Fix trivial spelling identified while examining the code.
+09.12.2019 14:02, Geert Uytterhoeven пишет:
+> On Mon, Dec 9, 2019 at 11:57 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> Below is the list of build error/warning regressions/improvements in
+>> v5.5-rc1[1] compared to v5.4[2].
+>>
+>> Summarized:
+>>   - build errors: +2/-8
+>>   - build warnings: +84/-87
+>>
+>> Happy fixing! ;-)
+>>
+>> Thanks to the linux-next team for providing the build service.
+>>
+>> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/e42617b825f8073569da76dc4510bfa019b1c35a/ (all 232 configs)
+>> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/219d54332a09e8d8741c1e1982f5eae56099de85/ (all 232 configs)
+>>
+>>
+>> *** ERRORS ***
+>>
+>> 2 error regressions:
+>>   + error: "clk_set_min_rate" [drivers/devfreq/tegra30-devfreq.ko] undefined!:  => N/A
+>>   + error: tegra30-devfreq.c: undefined reference to `clk_set_min_rate':  => .text+0xcc8)
 > 
-> 	s/supprted./supported./
+> sh-all{mod,yes}config
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Legacy non-CCF platform do not provide clk_set_min_rate(), so this needs
+> a dependency on CCF.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Hello Geert,
 
-> ---
->  drivers/gpu/drm/omapdrm/omap_crtc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
-> index 3c5ddbf30e97..fce7e944a280 100644
-> --- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-> +++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-> @@ -831,7 +831,7 @@ struct drm_crtc *omap_crtc_init(struct drm_device *dev,
->  	 * OMAP_DSS_CHANNEL_DIGIT. X server assumes 256 element gamma
->  	 * tables so lets use that. Size of HW gamma table can be
->  	 * extracted with dispc_mgr_gamma_size(). If it returns 0
-> -	 * gamma table is not supprted.
-> +	 * gamma table is not supported.
->  	 */
->  	if (priv->dispc_ops->mgr_gamma_size(priv->dispc, channel)) {
->  		unsigned int gamma_lut_size = 256;
+Thanks for the report, I'll make a patch to fix it.
 
--- 
-Regards,
+> BTW, it seems this was already known back in June...
+> https://lore.kernel.org/linux-pm/5301c593-97e1-db4e-067b-0522537b55d9@gmail.com/
 
-Laurent Pinchart
+Yes, I was a bit confused about why only T20 driver was causing the
+trouble.
