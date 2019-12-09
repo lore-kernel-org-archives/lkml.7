@@ -2,105 +2,225 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01250C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4BAC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4913207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05F52077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebiupU58"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fVrCyeXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfLIPPO (ORCPT
+        id S1726810AbfLIPPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:15:14 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35302 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfLIPPO (ORCPT
+        Mon, 9 Dec 2019 10:15:31 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:49360 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfLIPPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:15:14 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so7278741pgk.2;
-        Mon, 09 Dec 2019 07:15:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5p1spyZSykr9TaP0CnkdC2CY7tPzDiSLkHXnb86Xovs=;
-        b=ebiupU584wSQfYKFi2wG9qmHHdMexkl4PdgFmox3KZidWxR9Nn5P8J+DLReJ5+IC7i
-         U1igfbyRMx5zpb5z5iehxHpAFenvBswLpAVG0yXBCKvh1RgZXM42Nm72gUWIHhGfriyy
-         7R/2f1jJ2xtBAqnOGOPG4tZsWr4TRbpjjP3JsAObtRf+9WuO6LTPMbbKsCc1iln4h2bj
-         lu9ljnsOSGiOegJujRwYoIDd9Bte2dqYhm2pc+BTQXEKWipqlTvTkEKjTzDR/ox4p2lC
-         k3jyKDLMtlhzgHzsSmLCT00JKWa8txDVmo2iuhLuAt/IkOwmHwwIQzYdcxj3RW/Jb2w3
-         YFAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5p1spyZSykr9TaP0CnkdC2CY7tPzDiSLkHXnb86Xovs=;
-        b=QsfhIPExsrbehGrL4XwKzAAn0Y/jxfKWvhAzPtb5M2fKYwTaq+n+xLwunwPFGOg9xe
-         FZrxSiBW10PVeLchYkc0lE5PlicxAlAAI6xXlLNmlrq09uBoJM672vOqa4F4wPrS6Zwd
-         x0ZTJIbFrZmg19yWgN1Gdt4TBvtY9MaZCVG+n8Cyx1Kb2DHCz/i4E4KdJSZXVv7PXs7j
-         uVG6NxoGAAlKbAK37Bfp1rc4UaQ6A7SeKpRFF/7mHz2zx8lxVs7k4EVYAGFG5epI2gOH
-         kC7LxlAp0VOxbWPR+87teJaz1QJXaKypEAMksuPmqsucDqruDV/qMXkdqBi2rOEvG++w
-         vclQ==
-X-Gm-Message-State: APjAAAXHxoqe0gHF9SUJwPa6iB68u6/rhQsrngTcC9EnlyewfKwis1Yf
-        ub00YCmjoqF+V8TPDbbFQY71ZKLBtXpKCJGlzzs=
-X-Google-Smtp-Source: APXvYqy73+fW5VBN9n2K5kkmfSpXWFsoHC63VdxOXZsOUofjku7qNi1PvaEx8jie715xSpQ7TeJ5LxL3F0XfVxej14s=
-X-Received: by 2002:aa7:9697:: with SMTP id f23mr28831776pfk.232.1575904513324;
- Mon, 09 Dec 2019 07:15:13 -0800 (PST)
+        Mon, 9 Dec 2019 10:15:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1575904528; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8XfP90Nlwni1+fdvvtFIPCYN2PgxWebcTW6S+oGU2DU=;
+        b=fVrCyeXpmcJtkdaj0x6BgczRUtY+HTz3bmII6iUJGY1opRCHAqH3xVWglmKWNASEudvk/1
+        BqTNVK6oos0oalN6ZkKcmOJTWGKn8m0nNLhHuG6Kvrm/Z7VkiHQbyld/7ghubHKSOOjg7Y
+        k+DRmaAIl4KkrzK+aFIYe70rH/4xJiw=
+Date:   Mon, 09 Dec 2019 16:15:18 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v7 5/6] MIPS: X1000: Add missing X1000 nodes.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        ebiederm@xmission.com, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Message-Id: <1575904518.3.3@crapouillou.net>
+In-Reply-To: <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20191209140234.6558-1-TheSven73@gmail.com> <20191209140234.6558-2-TheSven73@gmail.com>
- <81e05dad-8582-7673-7ff3-658d7f08ed6a@ti.com>
-In-Reply-To: <81e05dad-8582-7673-7ff3-658d7f08ed6a@ti.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 9 Dec 2019 10:15:02 -0500
-Message-ID: <CAGngYiVmOm2985Xu5pXdAx7Gx=hXJ-uUjMSgTv4L9_WeiyCXug@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] leds: tps6105x: add driver for mfd chip led mode
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for the review, Dan. Some remarks below.
+Hi Zhou,
 
-On Mon, Dec 9, 2019 at 9:12 AM Dan Murphy <dmurphy@ti.com> wrote:
->
-> > +     priv->fwnode = device_get_next_child_node(pdev->dev.parent, NULL);
->
-> Probably need to check for NULL on the return
->
 
-The driver will work without crashes or oopses even when this returns NULL:
-- struct led_init_data . fwnode is optional (can be NULL)
-- fwnode_handle_put() ignores NULL arguments
+Le lun., d=C3=A9c. 9, 2019 at 21:00, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanj=
+ie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add the appropriate DT node to probe pdma/msc/rtc/watchdog/ethernet
+> driver using the devicetree.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>=20
+> Notes:
+>     v7:
+>     New patch, merge[05/12],[07/12],[09/12],[11/12] in v6.
+>=20
+>  arch/mips/boot/dts/ingenic/x1000.dtsi | 96=20
+> +++++++++++++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> index 13a6c9ff..398a756 100644
+> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <dt-bindings/clock/x1000-cgu.h>
+> +#include <dt-bindings/dma/x1000-dma.h>
+>=20
+>  / {
+>  	#address-cells =3D <1>;
+> @@ -68,6 +69,25 @@
+>  		interrupts =3D <27 26 25>;
+>  	};
+>=20
+> +	wdt: watchdog@10002000 {
+> +		compatible =3D "ingenic,x1000-watchdog", "ingenic,jz4780-watchdog";
+> +		reg =3D <0x10002000 0x10>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_RTCLK>;
+> +		clock-names =3D "rtc";
+> +	};
 
-By not checking for NULL here, non-devicetree users can still select
-led mode through platform data on the parent mfd driver, and things
-will "just work".
+The watchdog node should be a children of the TCU node, see
+Documentation/devicetree/bindings/timer/ingenic,tcu.txt
 
-Could I persuade you to keep this behaviour?
-Perhaps I should put a comment in to clarify?
 
-> > +     ret = regmap_update_bits(tps6105x->regmap, TPS6105X_REG_0,
-> > +             TPS6105X_REG0_MODE_MASK | TPS6105X_REG0_TORCHC_MASK,
-> > +             TPS6105X_REG0_MODE_TORCH << TPS6105X_REG0_MODE_SHIFT);
-> Checkpatch should have warned about alignment here
+> +
+> +	rtc: rtc@10003000 {
+> +		compatible =3D "ingenic,x1000-rtc", "ingenic,jz4780-rtc";
+> +		reg =3D <0x10003000 0x4c>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <32>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_RTCLK>;
+> +		clock-names =3D "rtc";
+> +	};
+> +
+>  	pinctrl: pin-controller@10010000 {
+>  		compatible =3D "ingenic,x1000-pinctrl";
+>  		reg =3D <0x10010000 0x800>;
+> @@ -173,4 +193,80 @@
+>=20
+>  		status =3D "disabled";
+>  	};
+> +
+> +	pdma: dma-controller@13420000 {
+> +		compatible =3D "ingenic,x1000-dma";
+> +		reg =3D <0x13420000 0x400
+> +			   0x13421000 0x40>;
+> +		#dma-cells =3D <2>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <10>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_PDMA>;
+> +	};
+> +
+> +	mac: mac@134b0000 {
 
-I used 5.4's checkpatch.pl, but somehow it doesn't warn :(
-Will fix that up.
+Please name the nodes according to the devicetree specification; this=20
+should be 'ethernet@134b0000'.
+
+
+> +		compatible =3D "ingenic,x1000-mac", "snps,dwmac";
+> +		reg =3D <0x134b0000 0x2000>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <55>;
+> +		interrupt-names =3D "macirq";
+> +
+> +		clocks =3D <&cgu X1000_CLK_MAC>;
+> +		clock-names =3D "stmmaceth";
+> +
+> +		status =3D "disabled";
+> +
+> +		mdio: mdio {
+> +			compatible =3D "snps,dwmac-mdio";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			status =3D "disabled";
+> +		};
+> +	};
+> +
+> +	msc0: msc@13450000 {
+
+This should be 'mmc@13450000'
+
+
+> +		compatible =3D "ingenic,x1000-mmc";
+> +		reg =3D <0x13450000 0x1000>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <37>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_MSC0>;
+> +		clock-names =3D "mmc";
+> +
+> +		cap-sd-highspeed;
+> +		cap-mmc-highspeed;
+> +		cap-sdio-irq;
+> +
+> +		dmas =3D <&pdma X1000_DMA_MSC0_RX 0xffffffff>,
+> +			   <&pdma X1000_DMA_MSC0_TX 0xffffffff>;
+> +		dma-names =3D "rx", "tx";
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+> +	msc1: msc@13460000 {
+
+This should be 'mmc@13460000'.
+
+Cheers,
+-Paul
+
+> +		compatible =3D "ingenic,x1000-mmc";
+> +		reg =3D <0x13460000 0x1000>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <36>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_MSC1>;
+> +		clock-names =3D "mmc";
+> +
+> +		cap-sd-highspeed;
+> +		cap-mmc-highspeed;
+> +		cap-sdio-irq;
+> +
+> +		dmas =3D <&pdma X1000_DMA_MSC1_RX 0xffffffff>,
+> +			   <&pdma X1000_DMA_MSC1_TX 0xffffffff>;
+> +		dma-names =3D "rx", "tx";
+> +
+> +		status =3D "disabled";
+> +	};
+>  };
+> --
+> 2.7.4
+>=20
+
+=
+
