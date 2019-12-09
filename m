@@ -2,85 +2,85 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816A4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D9C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5554F2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42510207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfLITz2 (ORCPT
+        id S1726614AbfLIT5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:55:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43358 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbfLITz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:55:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E293CAD5C;
-        Mon,  9 Dec 2019 19:55:25 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id E57A1E0321; Mon,  9 Dec 2019 20:55:19 +0100 (CET)
-Message-Id: <cover.1575920565.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 0/5] ethtool netlink interface, preliminary patches
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Mon,  9 Dec 2019 20:55:19 +0100 (CET)
+        Mon, 9 Dec 2019 14:57:31 -0500
+Received: from mga04.intel.com ([192.55.52.120]:49527 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLIT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:57:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 11:57:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="264346146"
+Received: from nshalmon-mobl.ger.corp.intel.com (HELO localhost) ([10.252.8.146])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Dec 2019 11:57:21 -0800
+Date:   Mon, 9 Dec 2019 21:57:19 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191209195719.GH19243@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+ <20191128182450.GA3493127@kroah.com>
+ <20191206203807.GA9971@linux.intel.com>
+ <20191207080939.GA193518@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207080939.GA193518@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jakub Kicinski suggested in ethtool netlink v7 discussion, this
-submission consists only of preliminary patches which raised no objections;
-first four patches already have Acked-by or Reviewed-by.
+On Sat, Dec 07, 2019 at 09:09:39AM +0100, Greg KH wrote:
+> On Fri, Dec 06, 2019 at 10:38:07PM +0200, Jarkko Sakkinen wrote:
+> > > Why a whole cdev?
+> > > 
+> > > Why not use a misc device?  YOu only have 2 devices right?  Why not 2
+> > > misc devices then?  That saves the use of a whole major number and makes
+> > > your code a _LOT_ simpler.
+> > 
+> > The downside would be that if we ever want to add sysfs attributes, that
+> > could not be done synchronously with the device creation.
+> 
+> That is what the groups member of struct misc_device is for.
 
-- patch 1 exposes permanent hardware address (as shown by "ethtool -P")
-  via rtnetlink
-- patch 2 is renames existing netlink helper to a better name
-- patch 3 and 4 reorganize existing ethtool code (no functional change)
-- patch 5 makes the table of link mode names available as an ethtool string
-  set (will be needed for the netlink interface) 
+OK, cool, then there is no problem changing to misc.
 
-Once we get these out of the way, v8 of the first part of the ethtool
-netlink interface will follow.
+I haven't seen misc drivers (not that I've looked through every single
+of them so I suppose there are such) to use it and somehow have been
+blind to seeing it that it si there.
 
-Michal Kubecek (5):
-  rtnetlink: provide permanent hardware address in RTM_NEWLINK
-  netlink: rename nl80211_validate_nested() to nla_validate_nested()
-  ethtool: move to its own directory
-  ethtool: move string arrays into common file
-  ethtool: provide link mode names as a string set
+Thanks again for the feedback. I'll fix this for the next patch set
+version.
 
- include/linux/ethtool.h                 |   4 +
- include/net/netlink.h                   |   8 +-
- include/uapi/linux/ethtool.h            |   2 +
- include/uapi/linux/if_link.h            |   1 +
- net/Makefile                            |   2 +-
- net/core/Makefile                       |   2 +-
- net/core/rtnetlink.c                    |   5 +
- net/ethtool/Makefile                    |   3 +
- net/ethtool/common.c                    | 171 ++++++++++++++++++++++++
- net/ethtool/common.h                    |  19 +++
- net/{core/ethtool.c => ethtool/ioctl.c} |  89 +-----------
- net/wireless/nl80211.c                  |   3 +-
- 12 files changed, 219 insertions(+), 90 deletions(-)
- create mode 100644 net/ethtool/Makefile
- create mode 100644 net/ethtool/common.c
- create mode 100644 net/ethtool/common.h
- rename net/{core/ethtool.c => ethtool/ioctl.c} (95%)
-
--- 
-2.24.0
-
+/Jarkko
