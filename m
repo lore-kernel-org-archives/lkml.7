@@ -2,170 +2,167 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC1CC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FACC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482122072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DD42072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uPwVdXa2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FYhpnVQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfLIJxn (ORCPT
+        id S1727379AbfLIJyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:53:43 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53352 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfLIJxm (ORCPT
+        Mon, 9 Dec 2019 04:54:02 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37819 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfLIJyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:53:42 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99r2HG035917;
-        Mon, 9 Dec 2019 03:53:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575885182;
-        bh=HQh1TZLTVm5G5fKhCiTmdkbn5flX3Vcfi7oF9Gtg2R4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uPwVdXa2LkR+h/TtP/tEcgRZoUneHHW98+jKZPQe69fHca2oDmJcsHSz7bNu3UKtD
-         tEuH5/DB8L3Nqbsj3qr7qkfdSwRRJ4F6bNuKRtjYxjy1WUaUEVtbJfyugIR3rBAOU7
-         OiUfdkwiW4r2RVFkTyNifIx2jF4XJg34xfyr67Fw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99r24P091285
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 03:53:02 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 03:53:02 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 03:53:02 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99qwcX097397;
-        Mon, 9 Dec 2019 03:52:58 -0600
-Subject: Re: [PATCH 2/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
-To:     <masonccyang@mxic.com.tw>
-CC:     <bbrezillon@kernel.org>, <juliensu@mxic.com.tw>, <richard@nod.at>,
-        <tudor.ambarus@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <marek.vasut@gmail.com>,
-        <broonie@kernel.org>, <linux-mtd@lists.infradead.org>,
-        <miquel.raynal@bootlin.com>, <computersforpeace@gmail.com>,
-        <dwmw2@infradead.org>
-References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw>
- <1573808288-19365-3-git-send-email-masonccyang@mxic.com.tw>
- <3f514579-d3a4-1319-a55a-265a3f1ce00e@ti.com>
- <OFFE6363DF.95763BC3-ON482584CB.002A47E5-482584CB.002BAA8C@mxic.com.tw>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <20f3873f-66eb-3af9-c50d-1321a859093d@ti.com>
-Date:   Mon, 9 Dec 2019 15:23:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 04:54:01 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so10179587lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:53:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SrN+istqMjTsOK45GjMp/wgqCgFHWcl6iEK6o+bDYyM=;
+        b=FYhpnVQxjhJIIqGoA+uTyUBGndUjSdhRjhXD+hmCdSzrzcpK+TmYWixigujmqBc29g
+         cQw4LhNbscwXEXbw3rcU3LO+yNZN4dWwwT14yLzwBt9UGVsjKQbYKzNpmVOFq7TREiV0
+         tqL0VFCdHZ7v3c0GfjYLk46UAROJtl3WhUQa0/HUPL0P9aGB82cOgEJhIJuPNXgtlTgv
+         XChrtF2KrAZb9Z8WH9sR7PodmzJ/MB6tRnFFCYP7241+kzzZXN0qeNTcontRvE52wIaE
+         rVJuNBmIDPVwSZFdkYk198+xipgQqNpucAQrUMGlkaE0GDJ7z7nae9MUvq4veoX7s7YH
+         UZXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SrN+istqMjTsOK45GjMp/wgqCgFHWcl6iEK6o+bDYyM=;
+        b=ff9b7lyFvSCn9gBTEJhOJCgYfwV3+83lpMmjJdzTYhgIIkx0BYBLt3qcYFYd4kJ7cH
+         sCO50dTE7PoLjFWFG438OyrdWAiXegKjuM3mmRYOO3z8wiIoxArLf8wAHTpyLuaMYwyE
+         OSisWUmzLs1pa3GeBXCVS6YDknJi6ntL8WxlU1yWQckToFHZGWwP/iHx90G4tX8TqT2K
+         UCOP6NUa5HBPPQX/f/iSauh3D3ADxxAW2JQpStTiULfNs3w2+/kQkPMZ4GKckLiPMQCQ
+         Xr2Z2f6rQ1292q1x5OsJwOjKIM6deqpXB90YKkxFyaAC4CgZZHTFZBmf78P96J/AZ3tP
+         69NQ==
+X-Gm-Message-State: APjAAAUIb9wXho8eZGhEXXYF82p8AsOBUVtdygYKHFuzOnDkktXWH2XJ
+        OVPnHHJmmiOsvsN5gC0a4Lx4JFzPqhsl+qwygCrwfA==
+X-Google-Smtp-Source: APXvYqwfvOkeVUH5fg2kwnMXipvPVRUV+ZauWZg2WGQOLmGb4ZjQarFMEQy8e9EIVX91PBR/vHMnpU9Wsyptxc0KP8Y=
+X-Received: by 2002:ac2:43a7:: with SMTP id t7mr13538590lfl.125.1575885238439;
+ Mon, 09 Dec 2019 01:53:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <OFFE6363DF.95763BC3-ON482584CB.002A47E5-482584CB.002BAA8C@mxic.com.tw>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com> <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+In-Reply-To: <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 9 Dec 2019 10:53:46 +0100
+Message-ID: <CAKfTPtDBtPuvK0NzYC0VZgEhh31drCDN=o+3Hd3fUwoffQg0fw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, 7 Dec 2019 at 23:48, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Fri, Dec 6, 2019 at 7:50 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > The "make goes slow" problem bisects down to b667b8673443 ("pipe:
+> > Advance tail pointer inside of wait spinlock in pipe_read()").
+>
+> I'm not entirely sure that ends up being 100% true. It did bisect to
+> that, but the behavior wasn't entirely stable. There definitely is
+> some nasty timing trigger.
+>
+> But I did finally figure out what seems to have been going on with at
+> least the biggest part of the build performance regression. It's seems
+> to be a nasty interaction with the scheduler and the GNU make
+> jobserver, and in particular the pipe wakeups really _really_ do seem
+> to want to be synchronous both for the readers and the writers.
+>
+> When a writer wakes up a reader, we want the reader to react quickly
+> and vice versa. The most obvious case was for the GNU make jobserver,
+> where sub-makes would do a single-byte write to the jobserver pipe,
+> and we want to wake up the reader *immediatly*, because the reader is
+> actually a lot more important than the writer. The reader is what gets
+> the next job going, the writer just got done with the last one.
+>
+> And when a reader empties a full pipe, it's because the writer is
+> generating data, and you want to just get the writer going again asap.
+>
+> Anyway, I've spent way too much time looking at this and wondering
+> about odd performance patterns. It seems to be mostly back up to
+> normal.
+>
+> I say "mostly", because I still see times of "not as many concurrent
+> compiles going as I'd expect". It might be a kbuild problem, it might
+> be an issue with GNU make (I've seen problems with the make jobserver
+> wanting many more tokens than expected before and the kernel makefiles
+> - it migth be about deep subdirectories etc), and it might be some
+> remaining pipe issue. But my allmodconfig builds aren't _enormously_
+> slower than they used to be.
+>
+> But there's definitely some unhappy interaction with the jobserver. I
+> have 16 threads (8 cores with HT), and I generally use "make -j32" to
+> keep them busy because the jobserver isn't great. The pipe rework made
+> even that 2x slop not work all that well. Something held on to tokens
+> too long, and there was definitely some interaction with the pipe
+> wakeup code. Using "-j64" hid the problem, but it was a problem.
+>
+> It might be the new scheduler balancing changes that are interacting
+> with the pipe thing. I'm adding PeterZ, Ingo and Vincent to the cc,
+> because I hadn't realized just how important the sync wakeup seems to
+> be for pipe performance even at a big level.
 
-On 09/12/19 1:26 pm, masonccyang@mxic.com.tw wrote:
-> 
-> Hi Vignesh,
-> 
->>
->> On 15/11/19 2:28 pm, Mason Yang wrote:
->>> According to JESD216C (JEDEC Basic Flash Parameter Table 18th DWORD)
->>> Octal DTR(8D-8D-8D) command and command extension (00b: same, 01b: 
-> inverse)
->>> to add extension command mode in spi_nor struct and to add write_cr2
->>> (Write CFG Reg 2) for 8-8-8/8D-8D-8D mode sequences enable.
->>>
->>
->> But I don't see any code setting "nor->ext_cmd_mode" based on BFPT?
->>
->> Any new feature that we add to spi-nor should make use of autodiscovery
->> feature made possible by SFDP tables. Could you modify the patch to
->> discover capabilities supported by flash and opcodes to be used from
->> SFDP table?
-> 
-> Got it but our device will return a empty SFDP table.
-> 
+Which version of make should I use to reproduce the problem ?
+My setup is not the same and my make is a bit old but I haven't been
+able to reproduce the problem described above on my arm64 octa cores
+system and v5.5-rc1.
+All cores are busy with -j16. And even -j8 keeps the cores almost always busy
 
-If flash you tested on does not support JEDEC 216C then don't mention
-about it. Above commit message gives an impression that flash in JEDEC
-216C compliant.
-
->>
->>
->>> Define the relevant macrons and enum to add such modes and make sure
->>> op->xxx.dtr fields, command nbytes and extension command are properly
->>> filled and unmask DTR and X-X-X modes in 
-> spi_nor_spimem_adjust_hwcaps()
->>> so that DTR and X-X-X support detection is done through
->>> spi_mem_supports_op().
->>>
-[...]
->>> @@ -404,6 +436,30 @@ static int read_sr(struct spi_nor *nor)
->>>                 SPI_MEM_OP_NO_DUMMY,
->>>                 SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
->>>
->>
->> This is not based on the latest tree.
->>
->>> +      if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
->>> +         op.cmd.buswidth = 8;
->>> +         op.addr.buswidth = 8;
->>> +         op.dummy.buswidth = 8;
->>> +         op.data.buswidth = 8;
->>> +         op.cmd.nbytes = 2;
->>> +         op.addr.nbytes = 4;
->>> +         op.dummy.nbytes = 4;
->>> +         op.addr.val = 0;
->>
->> This is not scalable... There will be bunch of if...else ladders when we
->> want to support other X-X-X modes... Can't these be derived from
->> nor->reg_proto? And then borrow the logic from 
-> spi_nor_spimem_read_data()?
->>
-> 
-> Got it !
-> 
->>
->> Could you have a look at Boris's initial submission to add 8-8-8 mode at
->> https://patchwork.kernel.org/cover/10638055/ ?
->> You could use that series as the base for your changes/additions.
-> 
-> Got it.
-> My idea is to support 8D-8D-8D mode with a minimum patches because 
-> there is no define for 1D-1D-1D, 2D-2D-2D and 4D-4D-4D mode in JEDEC 
-> if I am right.
-> 
-
-JESD251-A1 does talk about 4S-4D-4D right? Also none of the JEDEC
-standards prohibit flash vendors from supporting other X-X-X modes.
-
-I think you haven't thought about bigger picture here. Flash devices
-that support other mode exist today and we would need the framework to
-be built such that these modes can be added in future.
-
-I suggest you start with Boris's series [1] as base and port it to
-latest kernel. Isn't that series alone enough to support Macronix Octal
-flashes at least?
-If required, you could also always include additional patches adding new
-features.
-
-[1] https://patchwork.kernel.org/cover/10638055/
-
--- 
-Regards
-Vignesh
+>
+> I've pushed out my pipe changes. I really didn't want to do that kind
+> of stuff at the end of the merge window, but I spent a lot more time
+> than I wanted looking at this code, because I was getting to the point
+> where the alternative was to just revert it all.
+>
+> DavidH, give these a look:
+>
+>   85190d15f4ea pipe: don't use 'pipe_wait() for basic pipe IO
+>   a28c8b9db8a1 pipe: remove 'waiting_writers' merging logic
+>   f467a6a66419 pipe: fix and clarify pipe read wakeup logic
+>   1b6b26ae7053 pipe: fix and clarify pipe write wakeup logic
+>   ad910e36da4c pipe: fix poll/select race introduced by the pipe rework
+>
+> the top two of which are purely "I'm fed up looking at this code, this
+> needs to go" kind of changes.
+>
+> In particular, that last change is because I think the GNU jobserver
+> problem is partly a thundering herd issue: when a job token becomes
+> free (ie somebody does a one-byte write to an empty jobserver pipe),
+> it wakes up *everybody* who is waiting for a token. One of them will
+> get it, and the others will go to sleep again. And then it repeats all
+> over. I didn't fix it, but it _could_ be fixed with exclusive waits
+> for readers/writers, but that means more smarts than pipe_wait() can
+> do. And because the jobserver isn't great at keeping everybody happy,
+> I'm using a much bigger "make -jX" value than the number of CPU's I
+> have, which makes the herd bigger. And I suspect none of this helps
+> the scheduler pick the _right_ process to run, which just makes
+> scheduling an even bigger problem.
+>
+>             Linus
