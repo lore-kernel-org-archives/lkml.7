@@ -2,64 +2,63 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF07C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6417AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83A5207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D8D2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V93v4RsD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c7JyKFkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfLIObw (ORCPT
+        id S1727682AbfLIOb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:31:52 -0500
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:49769 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbfLIObw (ORCPT
+        Mon, 9 Dec 2019 09:31:58 -0500
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:46916 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727038AbfLIOb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:31:52 -0500
-Received: by mail-yw1-f73.google.com with SMTP id q124so3016598ywb.16
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:31:51 -0800 (PST)
+        Mon, 9 Dec 2019 09:31:57 -0500
+Received: by mail-yb1-f201.google.com with SMTP id o85so6026929yba.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:31:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=6dJeiKQWAfFPvcJSNpo7bPzgTA1iBxJQ7E6uNYT5cFk=;
-        b=V93v4RsD7PkZduWaTBtsIbjC8Qu0QuHUBWPrdZzYDiwIkcz33Y5G0wjx4+1NYDYxJh
-         qUTGU6O525L2ph0mRx7Rqko6x/IOJc/5eUMomV272P/h+ItLB/vOK8mlUatwRaYogep+
-         7BvgsO5WLI8GZ6Ln0P1IrO6UhtKXfJ7aOlidT/KTHBfUstr1zaASpASf2+XGpcLMYj26
-         8EOHkPetyw0kUKLeUIoGJCcTMGC6m+x3cQkTi48jI7tJdeymgabpw6SfXzAzQ7CSVMY9
-         I92kc+2ate0/kS+Ry11zlU+8RjcYmpZW5lMMw6iURB1mga/kRaDvoCquCbzrR4hc7pN3
-         Q4pQ==
+        bh=g+A0f45IRCzFODlDzia7ir2GSqO4sEP6+0Dk2zsbcZc=;
+        b=c7JyKFknTNoFsHHfV3KI79yc7otJiU8Uz/Q+2FvsP3x9h+G6tmVlpGhHKoOdu2d65j
+         Hd4+fu0uAAQ7pQEwo3z6fZ1Jp/Se0SpE0/c4FF4Ya3uZK0Bqg9XwCaEv/dpZvIURG8Pe
+         k+bcuwbBYP5YUyckQ02q6j2hEjugYyu2j67ALaM/lY7NCfl8+Mc65my5QZj/R591IOrj
+         BFtsxJtu4lOii7oXXL+Cwwg4Z7SDH2cnbsLGseXXnfbNRmHdvnaiQfZJzGu2XZZDpcz7
+         RhFewKOfWUJArec5v99iM2cBTWJTlFKm6Lvvuf1e60sj6qEPbkAzE+MwOPXHTD7ojX2a
+         lVFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6dJeiKQWAfFPvcJSNpo7bPzgTA1iBxJQ7E6uNYT5cFk=;
-        b=CdkuRpOa345ThJtd8TSwzCqQzs/fUkPZBuSMIr2fXQwd5QRzz22iHqCVdHB17PBvnT
-         l5OOeOFEG/iaD4F/n2wuAT+HZvfTvwaxLTKH6kjzYPgrKYZybbGYR76ZB6dc01tCWcNt
-         zZwNKyGn3q6PS8FoAWHgJbw+QMkzfau8KHfLBH76loHWDUy8pBGeLIqXXQJ4t3pp4QJq
-         WZgbjAdIxy2IdkvHXGSWJFIHPryalCDgRhRtdeI7Qtd6Hq7hlEsGCy7lMypQhzdff7HW
-         5HFQShKP19YOTegYLvJeYqfu0KXIlgSH6OLfe0feXW2XAQpLHzdA9nqYeSeHN1fNv6vC
-         2jzA==
-X-Gm-Message-State: APjAAAUwWQyp3u4kn5h7ssHj9OydTnc2BlVE/7NpJn1tsRqDG2xTwmI6
-        L7B5wpzOSWaoRaKf4m59sOXvN2S9mA==
-X-Google-Smtp-Source: APXvYqxrTqUCB5Cav8Xav9DCo/+cBcZA/aqzAuJ0wgyQ3Oe74pB51iuVTgNRGTiKZtG088VI8Ouli/GPlA==
-X-Received: by 2002:a0d:c187:: with SMTP id c129mr5509408ywd.389.1575901910795;
- Mon, 09 Dec 2019 06:31:50 -0800 (PST)
-Date:   Mon,  9 Dec 2019 15:31:18 +0100
+        bh=g+A0f45IRCzFODlDzia7ir2GSqO4sEP6+0Dk2zsbcZc=;
+        b=ZIksCEueP1b1wXAqeL8WRtSO7WYLDsDZrDCr6/iQBQQCMLd3BGmdkndJPk9tN4/vyG
+         vkPR3TfpYL3Iwd+Lf7feuy1r8VQxepsMh+xOmdR/oOBaKXjWLa0nh9tzS5gcxfbcJF24
+         Ik37ie52omcVKit509WrZLqFdAuZyMF2PiAIIRV1G2suJeWPMwTQLpwvczLA1bXryo0t
+         H07z2MdvH2G02fjfnOCqLYWvjPGp6OUIcbmQv7b8/F5TQamYP2DsRWUzlAPK8B/acoF4
+         lpO8I88OufwFVYXPbaevDct2MOC3x8g5Gntk8NxxFYibPFJHs2PnmKXFk8V31c25d5Gk
+         omXw==
+X-Gm-Message-State: APjAAAWpkV9Deiebr6i7ZL4YRokIg1ri+RVP/ba0tynW0bpvumoaxNKQ
+        eG72do7s83zVfDLAoqBFxnh4pCdUDA==
+X-Google-Smtp-Source: APXvYqyK/KjJfZTmF8ECFTWDYve4nQpqx/VwFvDfyifPSevI5QfkqRGYwen/G9KnghiNCY7NBR9JXBh7Gw==
+X-Received: by 2002:a5b:350:: with SMTP id q16mr19288549ybp.392.1575901916740;
+ Mon, 09 Dec 2019 06:31:56 -0800 (PST)
+Date:   Mon,  9 Dec 2019 15:31:19 +0100
 In-Reply-To: <20191209143120.60100-1-jannh@google.com>
-Message-Id: <20191209143120.60100-2-jannh@google.com>
+Message-Id: <20191209143120.60100-3-jannh@google.com>
 Mime-Version: 1.0
 References: <20191209143120.60100-1-jannh@google.com>
 X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-Subject: [PATCH v6 2/4] x86/traps: Print address on #GP
+Subject: [PATCH v6 3/4] x86/dumpstack: Split out header line printing from __die()
 From:   Jann Horn <jannh@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -78,179 +77,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A frequent cause of #GP exceptions are memory accesses to non-canonical
-addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
-the kernel doesn't currently print the fault address for #GP.
-Luckily, we already have the necessary infrastructure for decoding X86
-instructions and computing the memory address that is being accessed;
-hook it up to the #GP handler so that we can figure out the address
-operand of the faulting instruction and print it.
+Split __die() into __die_header() and __die_body(). This allows callers to
+insert extra information below the header line that initiates the bug
+report.
 
-Distinguish two cases:
-  a) (Part of) the memory range being accessed lies in the non-canonical
-     address range; in this case, is is likely that the address we
-     decoded is actually the one that caused the #GP.
-  b) The entire memory range of the operand we decoded lies in canonical
-     address space; the #GP may or may not be related in some way to the
-     address we computed. We'll still print it, but with hedging
-     language in the message.
+This can e.g. be used by __die() callers to allow KASAN to print additional
+information below the header line of the bug report.
 
-While it is already possible to compute the faulting address manually by
-disassembling the opcode dump and evaluating the instruction against the
-register dump, this should make it slightly easier to identify crashes
-at a glance.
-
-Note that the operand length, which we get from the instruction decoder
-and use to determine whether the access straddles into non-canonical
-address space, is currently somewhat unreliable; but it should be good
-enough, considering that Linux on x86-64 never maps the page directly
-before the start of the non-canonical range anyway, and therefore the
-case where a memory range begins in that page and potentially straddles
-into the non-canonical range should be fairly uncommon.
-And if we do get this wrong, it only influences whether the error
-message claims that the access is canonical.
-
-Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
 
 Notes:
-    v2:
-     - print different message for segment-related GP (Borislav)
-     - rewrite check for non-canonical address (Sean)
-     - make it clear we don't know for sure why the GP happened (Andy)
     v3:
-     - change message format to one line (Borislav)
-    v4:
-     - rename insn_bytes to insn_buf (Ingo)
-     - add space after GPFSTR (Ingo)
-     - make sizeof(desc) clearer (Ingo, Borislav)
-     - also print the address (with a different message) if it's canonical (Ingo)
-    v5:
-     - reword comment on get_kernel_gp_address() (Sean)
-     - make get_kernel_gp_address() also work on 32-bit (Sean)
-     - minor nits (Sean)
-     - more hedging for canonical GP (Sean)
-     - let get_kernel_gp_address() return an enum (Sean)
-     - rewrite commit message
-    v6:
-     - add comma after GPFSTR (Sean)
-     - reorder variable declarations (Sean)
-    
-    I have already sent a patch to syzkaller that relaxes their parsing of GPF
-    messages (https://github.com/google/syzkaller/commit/432c7650) such that
-    changes like the one in this patch don't break it.
-    That patch has already made its way into syzbot's syzkaller instances
-    according to <https://syzkaller.appspot.com/upstream>.
+      new patch
+    v4-v6:
+      no changes
 
- arch/x86/kernel/traps.c | 70 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kdebug.h |  3 +++
+ arch/x86/kernel/dumpstack.c   | 13 ++++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index f19de6f45d48..c8b4ae6aed5b 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -56,6 +56,8 @@
- #include <asm/mpx.h>
- #include <asm/vm86.h>
- #include <asm/umip.h>
-+#include <asm/insn.h>
-+#include <asm/insn-eval.h>
+diff --git a/arch/x86/include/asm/kdebug.h b/arch/x86/include/asm/kdebug.h
+index 75f1e35e7c15..a0050fabce42 100644
+--- a/arch/x86/include/asm/kdebug.h
++++ b/arch/x86/include/asm/kdebug.h
+@@ -33,6 +33,9 @@ enum show_regs_mode {
+ };
  
- #ifdef CONFIG_X86_64
- #include <asm/x86_init.h>
-@@ -518,10 +520,55 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
+ extern void die(const char *, struct pt_regs *,long);
++extern void __die_header(const char *str, struct pt_regs *regs, long err);
++extern int __must_check __die_body(const char *str, struct pt_regs *regs,
++				   long err);
+ extern int __must_check __die(const char *, struct pt_regs *, long);
+ extern void show_stack_regs(struct pt_regs *regs);
+ extern void __show_regs(struct pt_regs *regs, enum show_regs_mode);
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index e07424e19274..6436f3f5f803 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -365,7 +365,7 @@ void oops_end(unsigned long flags, struct pt_regs *regs, int signr)
  }
+ NOKPROBE_SYMBOL(oops_end);
  
-+enum kernel_gp_hint {
-+	GP_NO_HINT,
-+	GP_NON_CANONICAL,
-+	GP_CANONICAL
-+};
-+
-+/*
-+ * When an uncaught #GP occurs, try to determine a memory address accessed by
-+ * the instruction and return that address to the caller.
-+ * Also try to figure out whether any part of the access to that address was
-+ * non-canonical.
-+ */
-+static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
-+						 unsigned long *addr)
-+{
-+	u8 insn_buf[MAX_INSN_SIZE];
-+	struct insn insn;
-+
-+	if (probe_kernel_read(insn_buf, (void *)regs->ip, MAX_INSN_SIZE))
-+		return GP_NO_HINT;
-+
-+	kernel_insn_init(&insn, insn_buf, MAX_INSN_SIZE);
-+	insn_get_modrm(&insn);
-+	insn_get_sib(&insn);
-+	*addr = (unsigned long)insn_get_addr_ref(&insn, regs);
-+
-+	if (*addr == -1UL)
-+		return GP_NO_HINT;
-+
-+#ifdef CONFIG_X86_64
-+	/*
-+	 * Check that:
-+	 *  - the operand is not in the kernel half
-+	 *  - the last byte of the operand is not in the user canonical half
-+	 */
-+	if (*addr < ~__VIRTUAL_MASK &&
-+	    *addr + insn.opnd_bytes - 1 > __VIRTUAL_MASK)
-+		return GP_NON_CANONICAL;
-+#endif
-+
-+	return GP_CANONICAL;
-+}
-+
-+#define GPFSTR "general protection fault"
-+
- dotraplinkage void
- do_general_protection(struct pt_regs *regs, long error_code)
+-int __die(const char *str, struct pt_regs *regs, long err)
++void __die_header(const char *str, struct pt_regs *regs, long err)
  {
--	const char *desc = "general protection fault";
-+	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
- 	struct task_struct *tsk;
+ 	const char *pr = "";
  
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-@@ -540,6 +587,9 @@ do_general_protection(struct pt_regs *regs, long error_code)
+@@ -384,7 +384,11 @@ int __die(const char *str, struct pt_regs *regs, long err)
+ 	       IS_ENABLED(CONFIG_KASAN)   ? " KASAN"           : "",
+ 	       IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION) ?
+ 	       (boot_cpu_has(X86_FEATURE_PTI) ? " PTI" : " NOPTI") : "");
++}
++NOKPROBE_SYMBOL(__die_header);
  
- 	tsk = current;
- 	if (!user_mode(regs)) {
-+		enum kernel_gp_hint hint = GP_NO_HINT;
-+		unsigned long gp_addr;
++int __die_body(const char *str, struct pt_regs *regs, long err)
++{
+ 	show_regs(regs);
+ 	print_modules();
+ 
+@@ -394,6 +398,13 @@ int __die(const char *str, struct pt_regs *regs, long err)
+ 
+ 	return 0;
+ }
++NOKPROBE_SYMBOL(__die_body);
 +
- 		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
- 			return;
++int __die(const char *str, struct pt_regs *regs, long err)
++{
++	__die_header(str, regs, err);
++	return __die_body(str, regs, err);
++}
+ NOKPROBE_SYMBOL(__die);
  
-@@ -556,8 +606,22 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 			return;
- 
- 		if (notify_die(DIE_GPF, desc, regs, error_code,
--			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
--			die(desc, regs, error_code);
-+			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
-+			return;
-+
-+		if (error_code)
-+			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
-+		else
-+			hint = get_kernel_gp_address(regs, &gp_addr);
-+
-+		if (hint != GP_NO_HINT)
-+			snprintf(desc, sizeof(desc), GPFSTR ", %s 0x%lx",
-+				 (hint == GP_NON_CANONICAL) ?
-+				 "probably for non-canonical address" :
-+				 "maybe for address",
-+				 gp_addr);
-+
-+		die(desc, regs, error_code);
- 		return;
- 	}
- 
+ /*
 -- 
 2.24.0.393.g34dc348eaf-goog
 
