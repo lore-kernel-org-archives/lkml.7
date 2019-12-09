@@ -2,116 +2,258 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9F7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DD6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678D72073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767A52073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OIrzvWlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfLIKqu (ORCPT
+        id S1727419AbfLIKue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:46:50 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41346 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfLIKqu (ORCPT
+        Mon, 9 Dec 2019 05:50:34 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46073 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfLIKud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:46:50 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so11740295otc.8;
-        Mon, 09 Dec 2019 02:46:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rMCpmtHEymGRf2uYDS22W75VCH1rWvIp47d3HDSdxPk=;
-        b=TX+2fZk2v1lHegoxun80Qz/RbiIHk0fL/CzSsuSJPTstXhoY16+jy5Ny8RIBMnZLyX
-         46jvuaesTFYweSpY+AckY9MDKNVHvnh8BO8t+0a3b4QjRu5tH3GZMMVEhCdm8CPvuunV
-         1GlKTFWTVL82FGde22jt2PBTnnSnGQMZPxDm3sXn9Qms1GeHOjYAHAEJD0CK1QLPmgF/
-         3xya/o4bUN9sfU+pGYipWtoUdBTBS0NfPBXBGqipfaDYRxOB2GXurHorXlDxbCoE9V2m
-         w9OE6hSFbUnzC9JaT5udukoltr3Z4Ph/q+vRrA/nfmo9laTJJ+8fvHzfIgOVQssxQWB/
-         yZug==
-X-Gm-Message-State: APjAAAXRJRPKWi5nICzQhht5cdq8121+f17Fm2brlW7A4HPE0yzMY7FS
-        BDrrPP3ktYps9xjDFHsuUObIQFcpkgvuv8EGTRU=
-X-Google-Smtp-Source: APXvYqxC0e4TyWaYo05PrHXasVR3WmtOxIS00iV6KcOJtMmVpMEPmJaaxStauoMEG+erOWUSPYztN8GVusxDIz1ppyA=
-X-Received: by 2002:a05:6830:91:: with SMTP id a17mr19596278oto.107.1575888409127;
- Mon, 09 Dec 2019 02:46:49 -0800 (PST)
+        Mon, 9 Dec 2019 05:50:33 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191209105032euoutp0286eb28ffc05102d0143d3b62c61c408d~erlymduAy3098730987euoutp02Y
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Dec 2019 10:50:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191209105032euoutp0286eb28ffc05102d0143d3b62c61c408d~erlymduAy3098730987euoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575888632;
+        bh=bcPn7XbAqvxY5Dgi7VEkZejGI3WMO327V8bJhV6vE2g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OIrzvWlmMEJHO/0zVf8sxhCEvmA30igvL9d+QRtkKQeJL1JupwFWW0nZ+xoUwvxKe
+         5Tj8bLwKnOW+4a3dlmEwNqvL+BkZZML+6cA3wPEDBPGcLlSzgAUhtyuHop73SG0vIh
+         qj6Ra132Fr3cTmuqfBSNnJkw5vnU9j2+9+qV0qmQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191209105032eucas1p26a6cdbbd340fbd5ac30c54cd23687ff6~erlyYZSUi1375713757eucas1p2G;
+        Mon,  9 Dec 2019 10:50:32 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B1.2E.60679.8F62EED5; Mon,  9
+        Dec 2019 10:50:32 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191209105031eucas1p137c3c5b0046570453e1ebed2dcd88277~erlx53plj0955109551eucas1p1d;
+        Mon,  9 Dec 2019 10:50:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191209105031eusmtrp134181cb24b58068e24635b8cb9bf67af~erlx5E9aV2135321353eusmtrp1Y;
+        Mon,  9 Dec 2019 10:50:31 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-4d-5dee26f8058a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 00.D6.08375.7F62EED5; Mon,  9
+        Dec 2019 10:50:31 +0000 (GMT)
+Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191209105030eusmtip1acf41eadd0fd3b90e317d87f9f1abd40~erlxDdNg43004330043eusmtip1e;
+        Mon,  9 Dec 2019 10:50:30 +0000 (GMT)
+From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, kgene@kernel.org, krzk@kernel.org,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        k.konieczny@samsung.com, leonard.crestez@nxp.com
+Subject: [PATCH v3 1/4] devfreq: exynos-bus: Extract
+ exynos_bus_profile_init()
+Date:   Mon,  9 Dec 2019 11:48:59 +0100
+Message-Id: <20191209104902.11904-2-a.swigon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191209104902.11904-1-a.swigon@samsung.com>
 MIME-Version: 1.0
-References: <20191208.012032.1258816267132319518.davem@redhat.com>
-In-Reply-To: <20191208.012032.1258816267132319518.davem@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 9 Dec 2019 11:46:37 +0100
-Message-ID: <CAMuHMdXKNMgAQHAE4f-0=srAZtDNUPB6Hmdm277XTgukrtiJ4Q@mail.gmail.com>
-Subject: Re: [GIT] Networking
-To:     David Miller <davem@redhat.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3d29u2qz27XoaYXZIikjrezH60f2QdGIIn8EgTBq5kUzXbWb
+        pv3IqWyVldYqmhY2w+bYKG2WqT/KzJxltlTQldhiFc2PJL8gM6Jt16h/53nOOc95D7w0wb4i
+        ZfQR9UlOo1ZlyalgcUP7jHPdj8gx5frrhSx2V+oQfmCsJXH/1FcSG9yXxdg0YSRx2acRAjud
+        dRLcVTQqwZbBcRLbP/WRuLf5FoUnL7UhbHQ+EeF7bYMSPFBoobDx6hC1lVHYrecpRX11geLB
+        WKNIUfrQihST9vBkMiU4MY3LOpLLaWKSDgVneL33xcdbI/I+VHVItKhWVoKCaGA2wXTlGFmC
+        gmmWsSBw1HWL/ATLTCF4/D1OICYReEu7xX8dDWV3KYGoQVBvLhcJg8/x8aItYKeYbWC4/lHi
+        JxYyOgTdzneEfyCYVyLw6otIvyqMSYaRIhPlx2JmFTQ5bIEMKRMHT723RULecrDVtRB+HMTE
+        w7i5SyJoFsDL8s8BPeHTFD+6GQgAxiMBy0CPRDDvgDbjNUrAYTDseDi3XwadVy/OFeLhS5Ob
+        FMxaBHZzGyEQCfDc0e0jaF/CGqhtjvFD8FVzV64UYCi4vi0QnhAKhoYbhLCWwjk9K0A5NJeH
+        CucAimx9c6cV4Hk2QV5GKyr+61LxX5eKf6kmRFjRYi6Hz07n+I1q7lQ0r8rmc9Tp0YePZduR
+        74d1/nZMNaLmX6mtiKGRfJ40Iv6bkiVVuXx+disCmpAvlFZfGVay0jRV/mlOc+ygJieL41vR
+        UlosXyyNvTOkZJl01UnuKMcd5zR/WREdJNOiA9BrujCzMbKpSxbr6o86M3HJpd+83nOWnp1e
+        s9N1gu8cah/PKwgZC1sie62XRWxRZO4eDU/Da+ePVL3eNZzQ07jvTHLxBsIc5VoUPZva4dmf
+        +ihxdM/2+rcvdFPaNHuMIeXnaqtpd2bIOevgXkdGTQn9faDlTWmN7nCLLem9tl0u5jNUG6II
+        Da/6A/X3Yk5dAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7rf1d7FGkzbqG1xf14ro8XGGetZ
+        La5/ec5qMen+BBaLBZ9msFr0P37NbHH+/AZ2i7NNb9gtVtz9yGqx6fE1VovLu+awWXzuPcJo
+        MeP8PiaLtUfuslvcblzBZjFj8ks2BwGPTas62Tw2L6n32PhuB5NH35ZVjB6fN8kFsEbp2RTl
+        l5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZbx4sY6l4JBC
+        xb2FJ9gbGNdLdTFyckgImEhs61/KBmILCSxllGhYwwwRl5D4uP4GK4QtLPHnWhdQDRdQzSdG
+        iZe979hBEmwCjhKTpj5gB0mICHQySqxfNp0JxGEWuMEk0bTlHQtIlbCAn8TJB+1go1gEVCV2
+        Hl8NFucVsJTY/2I+E8QKeYnVGw6AreYUsJL4uOwsO8RJlhJzF8LUC0qcnPkEyOYAWqAusX6e
+        EEiYGai1eets5gmMgrOQVM1CqJqFpGoBI/MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwNjc
+        duzn5h2MlzYGH2IU4GBU4uGtsHkbK8SaWFZcmXuIUYKDWUmEd8nEV7FCvCmJlVWpRfnxRaU5
+        qcWHGE2BXpvILCWanA9MG3kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqY
+        ODilGhiz2ua9v7u2yeOkREH1yfJNz9b/mP46K7PoYfnpFQn/A//Jv5R6fpCb3fFwsLFu0M9S
+        zhgRTe6iPy2xRcq6lm4Plni8V1qvs1/sZVbbxUplxZjZJ7cfOP9nWc56k+qXTMon+7PtPtzI
+        8L+/puOdxF39F9YHD6SWt7zwuvzh5fXnzCxz7Y9PE7ymxFKckWioxVxUnAgArShV2uMCAAA=
+X-CMS-MailID: 20191209105031eucas1p137c3c5b0046570453e1ebed2dcd88277
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191209105031eucas1p137c3c5b0046570453e1ebed2dcd88277
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191209105031eucas1p137c3c5b0046570453e1ebed2dcd88277
+References: <20191209104902.11904-1-a.swigon@samsung.com>
+        <CGME20191209105031eucas1p137c3c5b0046570453e1ebed2dcd88277@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, Komachi-san,
+This patch adds a new static function, exynos_bus_profile_init(), extracted
+from exynos_bus_probe().
 
-On Sun, Dec 8, 2019 at 10:25 AM David Miller <davem@redhat.com> wrote:
-> Yoshiki Komachi (1):
->       cls_flower: Fix the behavior using port ranges with hw-offload
+Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+---
+ drivers/devfreq/exynos-bus.c | 106 ++++++++++++++++++++---------------
+ 1 file changed, 60 insertions(+), 46 deletions(-)
 
-I have bisected the below boot warning on m68k/ARAnyM to commit
-8ffb055beae58574 ("cls_flower: Fix the behavior using port ranges with
-hw-offload").  Reverting the commit on top of v5.5-rc1 fixes the issue.
-
-WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x54/0x100
-refcount_t: underflow; use-after-free.
-Modules linked in:
-CPU: 0 PID: 7 Comm: ksoftirqd/0 Not tainted
-5.4.0-atari-10298-g8ffb055beae58574 #223
-Stack from 00c31e88:
-        00c31e88 0038237c 00023d0a 00395a16 0000001c 00000009 00a67c80 00023d4e
-        00395a16 0000001c 001a7c30 00000009 00000000 00c31ed0 00000001 00000000
-        04208040 0000000a 00395a51 00c31ef0 00c30000 001a7c30 00395a16 0000001c
-        00000009 00395a51 0026b1bc 0032253c 00000003 003224f8 0026c2be 00000001
-        0032253c 00000000 00a67c80 00241d8c 00a67c80 00000000 00000200 000ab192
-        0004859e 00a67c80 0000000a 003facd8 003f5b90 002f2b46 003facd8 002f2dfe
-Call Trace: [<00023d0a>] __warn+0xb2/0xb4
- [<00023d4e>] warn_slowpath_fmt+0x42/0x64
- [<001a7c30>] refcount_warn_saturate+0x54/0x100
- [<001a7c30>] refcount_warn_saturate+0x54/0x100
- [<0026b1bc>] refcount_sub_and_test.constprop.73+0x38/0x3e
- [<0026c2be>] ipv4_dst_destroy+0x24/0x42
- [<00241d8c>] dst_destroy+0x40/0xae
- [<000ab192>] kfree+0x0/0x3e
- [<0004859e>] rcu_process_callbacks+0x9a/0x9c
- [<002f2b46>] __do_softirq+0x146/0x182
- [<002f2dfe>] schedule+0x0/0xb4
- [<00035e76>] kthread_parkme+0x0/0x10
- [<000359be>] __init_completion+0x0/0x20
- [<00038308>] smpboot_thread_fn+0x0/0x100
- [<00035fda>] kthread_should_stop+0x0/0x12
- [<00035fce>] kthread_should_park+0x0/0xc
- [<00025b9c>] run_ksoftirqd+0x12/0x20
- [<00038402>] smpboot_thread_fn+0xfa/0x100
- [<00024888>] do_exit+0x0/0x6d4
- [<0003f590>] complete+0x0/0x34
- [<00036594>] kthread+0xb2/0xbc
- [<000359be>] __init_completion+0x0/0x20
- [<000364e2>] kthread+0x0/0xbc
- [<00002a1c>] ret_from_kernel_thread+0xc/0x14
----[ end trace 126b6dd25f47053b ]---
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index c832673273a2..b8ca6b9f4b82 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -287,12 +287,69 @@ static int exynos_bus_parse_of(struct device_node *np,
+ 	return ret;
+ }
+ 
++static int exynos_bus_profile_init(struct exynos_bus *bus,
++				   struct devfreq_dev_profile *profile)
++{
++	struct device *dev = bus->dev;
++	struct devfreq_simple_ondemand_data *ondemand_data;
++	int ret;
++
++	/* Initialize the struct profile and governor data for parent device */
++	profile->polling_ms = 50;
++	profile->target = exynos_bus_target;
++	profile->get_dev_status = exynos_bus_get_dev_status;
++	profile->exit = exynos_bus_exit;
++
++	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
++	if (!ondemand_data) {
++		ret = -ENOMEM;
++		goto err;
++	}
++	ondemand_data->upthreshold = 40;
++	ondemand_data->downdifferential = 5;
++
++	/* Add devfreq device to monitor and handle the exynos bus */
++	bus->devfreq = devm_devfreq_add_device(dev, profile,
++						DEVFREQ_GOV_SIMPLE_ONDEMAND,
++						ondemand_data);
++	if (IS_ERR(bus->devfreq)) {
++		dev_err(dev, "failed to add devfreq device\n");
++		ret = PTR_ERR(bus->devfreq);
++		goto err;
++	}
++
++	/* Register opp_notifier to catch the change of OPP  */
++	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
++	if (ret < 0) {
++		dev_err(dev, "failed to register opp notifier\n");
++		goto err;
++	}
++
++	/*
++	 * Enable devfreq-event to get raw data which is used to determine
++	 * current bus load.
++	 */
++	ret = exynos_bus_enable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable devfreq-event devices\n");
++		goto err;
++	}
++
++	ret = exynos_bus_set_event(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to set event to devfreq-event devices\n");
++		goto err;
++	}
++
++err:
++	return ret;
++}
++
+ static int exynos_bus_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node, *node;
+ 	struct devfreq_dev_profile *profile;
+-	struct devfreq_simple_ondemand_data *ondemand_data;
+ 	struct devfreq_passive_data *passive_data;
+ 	struct devfreq *parent_devfreq;
+ 	struct exynos_bus *bus;
+@@ -334,52 +391,9 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	if (passive)
+ 		goto passive;
+ 
+-	/* Initialize the struct profile and governor data for parent device */
+-	profile->polling_ms = 50;
+-	profile->target = exynos_bus_target;
+-	profile->get_dev_status = exynos_bus_get_dev_status;
+-	profile->exit = exynos_bus_exit;
+-
+-	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
+-	if (!ondemand_data) {
+-		ret = -ENOMEM;
++	ret = exynos_bus_profile_init(bus, profile);
++	if (ret < 0)
+ 		goto err;
+-	}
+-	ondemand_data->upthreshold = 40;
+-	ondemand_data->downdifferential = 5;
+-
+-	/* Add devfreq device to monitor and handle the exynos bus */
+-	bus->devfreq = devm_devfreq_add_device(dev, profile,
+-						DEVFREQ_GOV_SIMPLE_ONDEMAND,
+-						ondemand_data);
+-	if (IS_ERR(bus->devfreq)) {
+-		dev_err(dev, "failed to add devfreq device\n");
+-		ret = PTR_ERR(bus->devfreq);
+-		goto err;
+-	}
+-
+-	/* Register opp_notifier to catch the change of OPP  */
+-	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to register opp notifier\n");
+-		goto err;
+-	}
+-
+-	/*
+-	 * Enable devfreq-event to get raw data which is used to determine
+-	 * current bus load.
+-	 */
+-	ret = exynos_bus_enable_edev(bus);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to enable devfreq-event devices\n");
+-		goto err;
+-	}
+-
+-	ret = exynos_bus_set_event(bus);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to set event to devfreq-event devices\n");
+-		goto err;
+-	}
+ 
+ 	goto out;
+ passive:
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
