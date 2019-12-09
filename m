@@ -2,84 +2,145 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03E2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB66C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AB020721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575875622;
-	bh=Ls1BxSGCCmrksG+dUOE+ytDExKsdaPUzeME+nCny69U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wLD1fTDQ2M93vuOhBfECoXti+AWNlrGxw5PIsGWJCmc2j7tAKYBVzlLyZr3C+7n9K
-	 RNPgdVdAnC8xz+iNgJZc5TXZfjabfYnS9L28S0Y9+UzE1fLSrRfNPuG7m8eOue2Bel
-	 Yk6AqxI/y/tTr+XGwPaUyEJHq1A9yvSS+M+iuvGo=
+	by mail.kernel.org (Postfix) with ESMTP id A54F2206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfLIHNl (ORCPT
+        id S1727132AbfLIHVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:13:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfLIHNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:13:41 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE59D206D3;
-        Mon,  9 Dec 2019 07:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575875620;
-        bh=Ls1BxSGCCmrksG+dUOE+ytDExKsdaPUzeME+nCny69U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZKnEyEm9bTWvnOemkZIRhnikeZmDKsXl91uW7hVFn4q6spe5XS8lGQLevM8RZKei+
-         wFTMdWu+b+NLyJOVmHzPf480OFVudWtoHPL+SE82N1Hl45fm4JHWIBCwSr8ByKTnyT
-         2v6J9nYc15iILrvZSzjZve0Yn560bCRc0VB0MDAI=
-Date:   Mon, 9 Dec 2019 15:13:18 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: dts: imx8mq: Add eLCDIF controller
-Message-ID: <20191209071317.GE3365@dragon>
-References: <cover.1574693313.git.agx@sigxcpu.org>
+        Mon, 9 Dec 2019 02:21:43 -0500
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:17274
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726623AbfLIHVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 02:21:43 -0500
+Received: from mschiller01.dev.tdt.de (unknown [10.2.3.20])
+        by mail.dev.tdt.de (Postfix) with ESMTPSA id 8EB3D20942;
+        Mon,  9 Dec 2019 07:21:38 +0000 (UTC)
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     andrew.hendry@gmail.com, davem@davemloft.net
+Cc:     edumazet@google.com, linux-x25@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH v2] net/x25: add new state X25_STATE_5
+Date:   Mon,  9 Dec 2019 08:21:34 +0100
+Message-Id: <20191209072134.19746-1-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1574693313.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 25, 2019 at 03:50:05PM +0100, Guido Günther wrote:
-> With some minimal support on imx8mq we might as well add it to the DT
-> 
-> Changes from v1:
-> - Per review comments by Fabio Estevam
->   - Document compatible
->   - use lcd-controller instead of lcdif as node name
-> - Add Reviewed-by: from Fabio Estevam, thanks!
-> 
-> Guido Günther (2):
->   dt-bindings: mxsfb: Add compatible for iMX8MQ
->   arm64: dts: imx8mq: Add eLCDIF controller
+This is needed, because if the flag X25_ACCPT_APPRV_FLAG is not set on a
+socket (manual call confirmation) and the channel is cleared by remote
+before the manual call confirmation was sent, this situation needs to
+be handled.
 
-Applied both, thanks.
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+---
+ include/net/x25.h |  3 ++-
+ net/x25/af_x25.c  |  8 ++++++++
+ net/x25/x25_in.c  | 32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+), 1 deletion(-)
+
+diff --git a/include/net/x25.h b/include/net/x25.h
+index ed1acc3044ac..d7d6c2b4ffa7 100644
+--- a/include/net/x25.h
++++ b/include/net/x25.h
+@@ -62,7 +62,8 @@ enum {
+ 	X25_STATE_1,		/* Awaiting Call Accepted */
+ 	X25_STATE_2,		/* Awaiting Clear Confirmation */
+ 	X25_STATE_3,		/* Data Transfer */
+-	X25_STATE_4		/* Awaiting Reset Confirmation */
++	X25_STATE_4,		/* Awaiting Reset Confirmation */
++	X25_STATE_5		/* Call Accepted / Call Connected pending */
+ };
+ 
+ enum {
+diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
+index c34f7d077604..2efe44a34644 100644
+--- a/net/x25/af_x25.c
++++ b/net/x25/af_x25.c
+@@ -659,6 +659,12 @@ static int x25_release(struct socket *sock)
+ 			sock_set_flag(sk, SOCK_DEAD);
+ 			sock_set_flag(sk, SOCK_DESTROY);
+ 			break;
++
++		case X25_STATE_5:
++			x25_write_internal(sk, X25_CLEAR_REQUEST);
++			x25_disconnect(sk, 0, 0, 0);
++			__x25_destroy_socket(sk);
++			goto out;
+ 	}
+ 
+ 	sock_orphan(sk);
+@@ -1054,6 +1060,8 @@ int x25_rx_call_request(struct sk_buff *skb, struct x25_neigh *nb,
+ 	if (test_bit(X25_ACCPT_APPRV_FLAG, &makex25->flags)) {
+ 		x25_write_internal(make, X25_CALL_ACCEPTED);
+ 		makex25->state = X25_STATE_3;
++	} else {
++		makex25->state = X25_STATE_5;
+ 	}
+ 
+ 	/*
+diff --git a/net/x25/x25_in.c b/net/x25/x25_in.c
+index f97c43344e95..4d3bb46aaae0 100644
+--- a/net/x25/x25_in.c
++++ b/net/x25/x25_in.c
+@@ -382,6 +382,35 @@ static int x25_state4_machine(struct sock *sk, struct sk_buff *skb, int frametyp
+ 	return 0;
+ }
+ 
++/*
++ * State machine for state 5, Call Accepted / Call Connected pending (X25_ACCPT_APPRV_FLAG).
++ * The handling of the timer(s) is in file x25_timer.c
++ * Handling of state 0 and connection release is in af_x25.c.
++ */
++static int x25_state5_machine(struct sock *sk, struct sk_buff *skb, int frametype)
++{
++	struct x25_sock *x25 = x25_sk(sk);
++
++	switch (frametype) {
++		case X25_CLEAR_REQUEST:
++			if (!pskb_may_pull(skb, X25_STD_MIN_LEN + 2)) {
++				x25_write_internal(sk, X25_CLEAR_REQUEST);
++				x25->state = X25_STATE_2;
++				x25_start_t23timer(sk);
++				return 0;
++			}
++
++			x25_write_internal(sk, X25_CLEAR_CONFIRMATION);
++			x25_disconnect(sk, 0, skb->data[3], skb->data[4]);
++			break;
++
++		default:
++			break;
++	}
++
++	return 0;
++}
++
+ /* Higher level upcall for a LAPB frame */
+ int x25_process_rx_frame(struct sock *sk, struct sk_buff *skb)
+ {
+@@ -406,6 +435,9 @@ int x25_process_rx_frame(struct sock *sk, struct sk_buff *skb)
+ 	case X25_STATE_4:
+ 		queued = x25_state4_machine(sk, skb, frametype);
+ 		break;
++	case X25_STATE_5:
++		queued = x25_state5_machine(sk, skb, frametype);
++		break;
+ 	}
+ 
+ 	x25_kick(sk);
+-- 
+2.20.1
+
