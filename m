@@ -2,127 +2,81 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9764C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F6DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F9324653
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NxVpNJQP"
+	by mail.kernel.org (Postfix) with ESMTP id A0D462068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLIUMy (ORCPT
+        id S1726928AbfLIUNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:12:54 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58064 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIUMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:12:39 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCYeD127572;
-        Mon, 9 Dec 2019 14:12:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575922354;
-        bh=6vGHJhYH4z/ijV+8X0E6eHdnbtT9ZGzqFX7An5fC93k=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NxVpNJQP1YbKBroSf/JmiZql4K904CsBfjLy321EVRH/UZ+0M6Mab5sCzRbdW6INP
-         F9R7YhFMto7AmZWfn41Wn1EZVmAq+YBJz3Qeu7VzkSQMGot7gp/majOxNwRphVmEj8
-         ix5jAQWpHXt3o0EtRv7IRx9Uql1Uq7OzoTlgx3JU=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9KCY8a036582
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 14:12:34 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 14:12:34 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 14:12:34 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCYHs066381;
-        Mon, 9 Dec 2019 14:12:34 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>
-CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH net-next v3 1/2] dt-bindings: dp83867: Convert fifo-depth to common fifo-depth and make optional
-Date:   Mon, 9 Dec 2019 14:10:24 -0600
-Message-ID: <20191209201025.5757-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191209201025.5757-1-dmurphy@ti.com>
-References: <20191209201025.5757-1-dmurphy@ti.com>
+        Mon, 9 Dec 2019 15:13:15 -0500
+Received: from mga12.intel.com ([192.55.52.136]:20612 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLIUNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:13:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 12:05:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="387357088"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2019 12:05:18 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86: Add a WARN on TIF_NEED_FPU_LOAD in kvm_load_guest_fpu()
+Date:   Mon,  9 Dec 2019 12:05:17 -0800
+Message-Id: <20191209200517.13382-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the ti,fifo-depth from a TI specific property to the common
-tx-fifo-depth property.  Also add support for the rx-fifo-depth.
+WARN once in kvm_load_guest_fpu() if TIF_NEED_FPU_LOAD is observed, as
+that would mean that KVM is corrupting userspace's FPU by saving
+unknown register state into arch.user_fpu.  Add a comment to explain
+why KVM WARNs on TIF_NEED_FPU_LOAD instead of implementing logic
+similar to fpu__copy().
 
-These are optional properties for this device and if these are not
-available then the fifo depths are set to device default values.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Reported-by: Adrian Bunk <bunk@kernel.org>
-CC: Rob Herring <robh@kernel.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
+ arch/x86/kvm/x86.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-v3 - No changes
-v2 - Rebase on linux-net next as the patch would not apply
-
- Documentation/devicetree/bindings/net/ti,dp83867.txt | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-index 388ff48f53ae..44e2a4fab29e 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-+++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-@@ -8,8 +8,6 @@ Required properties:
- 	- ti,tx-internal-delay - RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
- 		for applicable values. Required only if interface type is
- 		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID
--	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
--		for applicable values
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3ed167e039e5..f2c8a053b017 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8474,6 +8474,13 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	fpregs_lock();
  
- Note: If the interface type is PHY_INTERFACE_MODE_RGMII the TX/RX clock delays
-       will be left at their default values, as set by the PHY's pin strapping.
-@@ -42,6 +40,14 @@ Optional property:
- 				    Some MACs work with differential SGMII clock.
- 				    See data manual for details.
- 
-+	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
-+		for applicable values (deprecated)
++	/*
++	 * Reloading userspace's FPU is handled by kvm_arch_vcpu_load(), both
++	 * for direct calls from userspace (via vcpu_load()) and if this task
++	 * is preempted (via kvm_arch_sched_in()) between vcpu_load() and now.
++	 */
++	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
 +
-+	-tx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
-+			 the depth can be found in dt-bindings/net/ti-dp83867.h
-+	-rx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
-+			 the depth can be found in dt-bindings/net/ti-dp83867.h
-+
- Note: ti,min-output-impedance and ti,max-output-impedance are mutually
-       exclusive. When both properties are present ti,max-output-impedance
-       takes precedence.
-@@ -55,7 +61,7 @@ Example:
- 		reg = <0>;
- 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
- 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_75_NS>;
--		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+		tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
- 	};
- 
- Datasheet can be found:
+ 	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
 -- 
-2.23.0
+2.24.0
 
