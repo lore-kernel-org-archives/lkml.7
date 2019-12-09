@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB61C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159502071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9281A20726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mNFpPPMj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lSwhsx3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLIEQm (ORCPT
+        id S1727000AbfLIEZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 23:16:42 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42852 "EHLO
+        Sun, 8 Dec 2019 23:25:25 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43684 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfLIEQl (ORCPT
+        with ESMTP id S1726826AbfLIEZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 23:16:41 -0500
+        Sun, 8 Dec 2019 23:25:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=m6ahlMt+Kd2tTBI1aH0mtOYUrtuS0vfuctXuJUFSEFU=; b=mNFpPPMj9nmB/M8V1a0Tvmchh
-        VoALfSB3jInmHM1kQVCKHAqWuI1I0FyzreS/7BbJf1w328lymBIQaSIJeHaplpbOKUUbD6zK1dowH
-        lJQHK3/IvhUuvGXP/bCbJz2VvLI5NSPjkZVu+HYTUNRPuQ645z58oQODehUbyU9MIYgEuDm0zmyZP
-        mgrLUeJrxna4ZFDPgm4TieulqgXq7ZFKgoJ9spHXjQKKamn3PnzxmkF/w5yffCCMWfYoi/Fmvxyi3
-        boVcrL5WflKRUH49VU1Fan7IO1GxXIbifsM/QxXawACkeRky1nSe9coPO8RuaOcNhfj6bINGZLKy/
-        LsWFU5XLA==;
+         bh=tOrB9EJaOTeggJU5chNmLVDTtPPvAaO8XlEQZ/DU1S4=; b=lSwhsx3RNJGqO/3wMlesz4FRO
+        oQZycmFPPON5bx/+AUDgtPSqpTw4XD03jHCzkwHPzI3IQNw5FH5VAOcvqSCP8nyT8HNbzFvalk8NU
+        VvuqSTQrxCWoiZvDYsruACh3n9aYKUwIV/7oJ7xMjjX3MfLaleKqpJdmfFM/PKKIngj7n49+xmCeW
+        Uk1+RqJYDd4IzKAZXqkzq1QxJ/qv4w+wJZwpdkM8nYbrKQtZJ7J0PaeOX9kjvbdJtYn97t+Ngw/6A
+        eAKuQwlk2TVvY8r4fncI/btQZYdTW8M2DowdngX61Zlm/SVsgFdTbH7/gcBjtdyHcqfwASKsObom6
+        lB6djK55g==;
 Received: from [2601:1c0:6280:3f0::3deb]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieATR-0005sI-86; Mon, 09 Dec 2019 04:16:41 +0000
-To:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        id 1ieAbf-0000cZ-2d; Mon, 09 Dec 2019 04:25:11 +0000
+To:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel Kiper <daniel.kiper@oracle.com>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation: fix Sphinx warning in xilinx_sdfec.rst
-Message-ID: <8d644cf1-fa7b-ec62-84cf-9b41d7c30eed@infradead.org>
-Date:   Sun, 8 Dec 2019 20:16:40 -0800
+Subject: [PATCH] Documentation: x86: fix boot.rst warning and format
+Message-ID: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+Date:   Sun, 8 Dec 2019 20:25:10 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -60,26 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix Sphinx format warning by adding a blank line.
+Fix a Sphinx documentation format warning by breaking a long line
+into 2 lines.
 
-Documentation/misc-devices/xilinx_sdfec.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
+Also drop the ':' usage after the Protocol version numbers since
+other Protocol versions don't use colons.
 
+Documentation/x86/boot.rst:72: WARNING: Malformed table.
+Text in column margin in table line 57.
+
+Fixes: 2c33c27fd603 ("x86/boot: Introduce kernel_info")
+Fixes: 00cd1c154d56 ("x86/boot: Introduce kernel_info.setup_type_max")
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Derek Kiernan <derek.kiernan@xilinx.com>
-Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- Documentation/misc-devices/xilinx_sdfec.rst |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/x86/boot.rst |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- linux-next-20191209.orig/Documentation/misc-devices/xilinx_sdfec.rst
-+++ linux-next-20191209/Documentation/misc-devices/xilinx_sdfec.rst
-@@ -1,4 +1,5 @@
- .. SPDX-License-Identifier: GPL-2.0+
-+
- ====================
- Xilinx SD-FEC Driver
- ====================
-
+--- linux-next-20191209.orig/Documentation/x86/boot.rst
++++ linux-next-20191209/Documentation/x86/boot.rst
+@@ -69,11 +69,12 @@ Protocol 2.13	(Kernel 3.14) Support 32-
+ 		xloadflags to support booting a 64-bit kernel from 32-bit
+ 		EFI
+ 
+-Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c1889
++Protocol 2.14	BURNT BY INCORRECT COMMIT
++                ae7e1238e68f2a472a125673ab506d49158c1889
+ 		(x86/boot: Add ACPI RSDP address to setup_header)
+ 		DO NOT USE!!! ASSUME SAME AS 2.13.
+ 
+-Protocol 2.15:	(Kernel 5.5) Added the kernel_info and kernel_info.setup_type_max.
++Protocol 2.15	(Kernel 5.5) Added the kernel_info and kernel_info.setup_type_max.
+ =============	============================================================
+ 
+ .. note::
 
