@@ -2,110 +2,104 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63222C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1E3C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FEA206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA09206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jpa16NEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfLIVTF (ORCPT
+        id S1726960AbfLIVTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:19:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726780AbfLIVTE (ORCPT
+        Mon, 9 Dec 2019 16:19:15 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35631 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfLIVTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:19:04 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9LHQaB062868
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 16:19:03 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt9xctb6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:19:02 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 9 Dec 2019 21:19:01 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Dec 2019 21:18:57 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9LIFHH44957952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Dec 2019 21:18:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE22F11C04C;
-        Mon,  9 Dec 2019 21:18:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3AEC011C050;
-        Mon,  9 Dec 2019 21:18:55 +0000 (GMT)
-Received: from dhcp-9-31-102-17.watson.ibm.com (unknown [9.31.102.17])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Dec 2019 21:18:55 +0000 (GMT)
-Subject: Re: One question about trusted key of keyring in Linux kernel.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>
-Cc:     "Zhao, Shirley" <shirley.zhao@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "Zhu, Bing" <bing.zhu@intel.com>,
-        "Chen, Luhai" <luhai.chen@intel.com>
-Date:   Mon, 09 Dec 2019 16:18:54 -0500
-In-Reply-To: <20191209194715.GD19243@linux.intel.com>
-References: <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
-         <1575057916.6220.7.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
-         <1575260220.4080.17.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
-         <1575267453.4080.26.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
-         <1575269075.4080.31.camel@linux.ibm.com>
-         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
-         <1575312932.24227.13.camel@linux.ibm.com>
-         <20191209194715.GD19243@linux.intel.com>
+        Mon, 9 Dec 2019 16:19:15 -0500
+Received: by mail-il1-f195.google.com with SMTP id g12so14120314ild.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:19:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V+fINYfX0WThUMVmPz7Se9rxOk/QEnp1Ar+VHOYBVxM=;
+        b=jpa16NEuZwY2KSfk6NP5RUXRbZTqhOxIOn2ULnB+NQIxcDKg4iwohsasp3jzuTuHAb
+         TgUg2VjcSreaaNF1TxupKHVp3rONn6ZriWLhvEyhlf3aIXKMvpmF2XG5Q6nzjYFXmXmb
+         QhT3AdjSQXpcBJmnXhpX20x8D9bYKVGNoen0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V+fINYfX0WThUMVmPz7Se9rxOk/QEnp1Ar+VHOYBVxM=;
+        b=AkJRhyknRIDdJj0m6VVVHmamrnY/jDAQiz0Q8BZj+ErDWMNWDXF8B+6InkRTUIIxQY
+         0BuT02Z7xvi4MbiCOMC3T7n9gLYB3TJv7xCqN6H9vg3vi9McPqsp/E7IaTk5Vng/KTTb
+         jo8lERSXWmCEQWIqj6GldhjkX55I3COChLkKBPfAH+kXs8MxK2bhJZc0hRnBQBG5GzYJ
+         iWIULd/oPqc0QcpyrxG6ss1Rj7rz1e8VK+ebVN+h3RV7sIqb7mT22KmjdYMaiOsBJ5Gk
+         mAvY8VJfRztQpLkDQpCWRuOiBWSAZFw72Xe9QAvm9hNCKOmNCnqmwhEt2dSJo3KuNkFS
+         xdCg==
+X-Gm-Message-State: APjAAAWl7ddRv65zibAJbfPjKiBc0AjgYUD7Wi3iP5knjazdrR+Q5h0n
+        QyQd20Un8rBVI7RmmRg02kaGqbXwR48=
+X-Google-Smtp-Source: APXvYqxmPzCdnnANb/BAmlBjNhUmbG+FKLnMKiUUkelpaGeslGo9VYtaktmWAxStpDIbEVb2hRDjHw==
+X-Received: by 2002:a92:8c90:: with SMTP id s16mr30927942ill.38.1575926354555;
+        Mon, 09 Dec 2019 13:19:14 -0800 (PST)
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
+        by smtp.gmail.com with ESMTPSA id y11sm204372ilp.46.2019.12.09.13.19.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 13:19:13 -0800 (PST)
+Received: by mail-il1-f181.google.com with SMTP id a7so14104758ild.6
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:19:13 -0800 (PST)
+X-Received: by 2002:a92:d581:: with SMTP id a1mr27952212iln.218.1575926352743;
+ Mon, 09 Dec 2019 13:19:12 -0800 (PST)
+MIME-Version: 1.0
+References: <lsq.1575813164.154362148@decadent.org.uk> <lsq.1575813165.830287385@decadent.org.uk>
+In-Reply-To: <lsq.1575813165.830287385@decadent.org.uk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 9 Dec 2019 13:19:01 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
+Message-ID: <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
+Subject: Re: [PATCH 3.16 10/72] video: of: display_timing: Add of_node_put()
+ in of_get_display_timing()
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        David Airlie <airlied@linux.ie>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19120921-0020-0000-0000-00000395FAE1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120921-0021-0000-0000-000021ED3888
-Message-Id: <1575926334.4557.17.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- suspectscore=0 mlxscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- adultscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=879 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912090167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-09 at 21:47 +0200, Jarkko Sakkinen wrote:
-> On Mon, Dec 02, 2019 at 10:55:32AM -0800, James Bottomley wrote:
-> > blob but it looks like we need to fix the API.  I suppose the good news
-> > is given this failure that we have the opportunity to rewrite the API
-> > since no-one else can have used it for anything because of this.  The
-> 
-> I did successfully run this test when I wrote it 5 years ago:
-> 
-> https://github.com/jsakkine-intel/tpm2-scripts/blob/master/keyctl-smoke.sh
+Hi,
 
-Thanks, Jarkko.  Is this test still working or is there a regression?
+On Sun, Dec 8, 2019 at 5:54 AM Ben Hutchings <ben@decadent.org.uk> wrote:
+>
+> 3.16.79-rc1 review patch.  If anyone has any objections, please let me know.
+>
+> ------------------
+>
+> From: Douglas Anderson <dianders@chromium.org>
+>
+> commit 4faba50edbcc1df467f8f308893edc3fdd95536e upstream.
+>
+> =46romcode inspection it can be seen that of_get_display_timing() is
+> lacking an of_node_put().  Add it.
 
-Mimi
-
+I don't object, but I am curious why "From code" got turned into
+"=46romcode" in the commit message.
