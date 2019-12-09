@@ -2,161 +2,168 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D4C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C471DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471A8206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9821B206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ma3N+JtK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfLIKPk (ORCPT
+        id S1727269AbfLIKTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:15:40 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41026 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfLIKPk (ORCPT
+        Mon, 9 Dec 2019 05:19:22 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:39762 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfLIKTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:15:40 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C67AD28EDB5
-Subject: Re: [resend PATCH v6 12/12] drm/mediatek: Add support for mmsys
- through a pdev
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
- <20191207224740.24536-13-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <96c850e0-9b12-a943-4e99-9aca7ce8ca8b@collabora.com>
-Date:   Mon, 9 Dec 2019 11:15:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 05:19:22 -0500
+Received: by mail-yw1-f68.google.com with SMTP id h126so5581545ywc.6;
+        Mon, 09 Dec 2019 02:19:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kfJJcbBCtP2J5q6yO63evUfynsnsxLvvCJ773MPUEuA=;
+        b=Ma3N+JtK7nruXZYsUdJNld9kFQdW2aBkcD1kjYbGBX9hAa2s7I+IUzxdCECHUvYuGF
+         zGpp/tU4+99lnfPkh34QEDnvnCFUxEgiLR6y805/D4WZF9OWa6InE9G2wEjoPmFZfO4m
+         mlUu7oC7sv3HtH7XDJl9eyL8N2Ueek0EBBEhk1/Uh/bsvkIRseP/PK4V9QlvS7x0r92R
+         7tUfFGLzdq3ERnzyVE/9QhH6wPByphkk/ZPxCYEl7xMY0jAO9AazE+PZLK+TFAnVS2F8
+         Op2HpFBJP0oh+v37w0IdOfio2G+AEHz+s2Kn46jjl2T3zHu+b/wvA5ZKE6OyxGLEIIOM
+         kQlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kfJJcbBCtP2J5q6yO63evUfynsnsxLvvCJ773MPUEuA=;
+        b=B9qZk2sbX64LYUhhojLvZfCrDs0k2Rs5q6ZYGC7ApV2TNb1/xJLY62Zo8PSXHHJHVg
+         BWemom+NnIypFt8q+AuMJuol2iqUejg5ErwfDxBKL+v2bzjGSl3EhECRmLepMekwd5af
+         BzRPjMymLtgB4VPiXRkGz8POHcXyVcU+aV7v25OU6wAut9FOz7dDPWKZ3K3vkONXyIOy
+         v5hUCrvpxD91AcPHEaJjjbwdLSIKE4RvDLb30xzrHnSWUYxhFvgd3QnA0vOTefLErtGc
+         jiiDz1Pc2PCIJKMB3T9ZI4sv169iIGnY4TXZdx0C+RS+0ugwbKMBwqrPtHbc2GKpyAwe
+         gR4Q==
+X-Gm-Message-State: APjAAAVoYySIJuklMVrnP3mVAgQNF6zO/qgsYb6c8hhIDNDyPYFwesfm
+        I369NCqhQtd1zhcjuYj9mVN4qlrc6i/k7g==
+X-Google-Smtp-Source: APXvYqybZF5QzKydT/LE1jUr5ytCmmr6NJnb7T7X1akDgzfB6NIg7H27WuB42i7MMYoUAhlqt7QAQA==
+X-Received: by 2002:a0d:db49:: with SMTP id d70mr19255094ywe.370.1575886760637;
+        Mon, 09 Dec 2019 02:19:20 -0800 (PST)
+Received: from karen ([2604:2d80:d68c:d900:c4d5:fc84:cce:f8b4])
+        by smtp.gmail.com with ESMTPSA id p133sm2400557ywb.71.2019.12.09.02.19.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 02:19:20 -0800 (PST)
+From:   Scott Schafer <schaferjscott@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Schafer <schaferjscott@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: qlge: Fix CamelCase in qlge.h and qlge_dbg.c
+Date:   Mon,  9 Dec 2019 04:19:08 -0600
+Message-Id: <20191209101908.23878-1-schaferjscott@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191207224740.24536-13-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+This patch addresses CamelCase warnings in qlge.h under struct
+mpi_coredump_global_header and mpi_coredump_segment_header. As
+well ass addresses CamelCase warnings in qlge_dbg.c when the
+structs are used.
 
-Just one nit below and LGTM
+Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+---
+ drivers/staging/qlge/qlge.h     | 14 +++++++-------
+ drivers/staging/qlge/qlge_dbg.c | 20 ++++++++++----------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> The MMSYS subsystem includes clocks and drm components.
-> This patch adds an initailization path through a platform device
-> for the clock part, so that both drivers get probed from the same
-> device tree compatible.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index 6ec7e3ce3863..57884aac308f 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -1627,18 +1627,18 @@ enum {
+ #define MPI_COREDUMP_COOKIE 0x5555aaaa
+ struct mpi_coredump_global_header {
+ 	u32	cookie;
+-	u8	idString[16];
+-	u32	timeLo;
+-	u32	timeHi;
+-	u32	imageSize;
+-	u32	headerSize;
++	u8	id_string[16];
++	u32	time_lo;
++	u32	time_hi;
++	u32	image_size;
++	u32	header_size;
+ 	u8	info[220];
+ };
+ 
+ struct mpi_coredump_segment_header {
+ 	u32	cookie;
+-	u32	segNum;
+-	u32	segSize;
++	u32	seg_num;
++	u32	seg_size;
+ 	u32	extra;
+ 	u8	description[16];
+ };
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 83f34ca43aa4..aac20db565fa 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -702,8 +702,8 @@ static void ql_build_coredump_seg_header(
+ {
+ 	memset(seg_hdr, 0, sizeof(struct mpi_coredump_segment_header));
+ 	seg_hdr->cookie = MPI_COREDUMP_COOKIE;
+-	seg_hdr->segNum = seg_number;
+-	seg_hdr->segSize = seg_size;
++	seg_hdr->seg_num = seg_number;
++	seg_hdr->seg_size = seg_size;
+ 	strncpy(seg_hdr->description, desc, (sizeof(seg_hdr->description)) - 1);
+ }
+ 
+@@ -741,12 +741,12 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
+ 	memset(&(mpi_coredump->mpi_global_header), 0,
+ 	       sizeof(struct mpi_coredump_global_header));
+ 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
+-	mpi_coredump->mpi_global_header.headerSize =
++	mpi_coredump->mpi_global_header.header_size =
+ 		sizeof(struct mpi_coredump_global_header);
+-	mpi_coredump->mpi_global_header.imageSize =
++	mpi_coredump->mpi_global_header.image_size =
+ 		sizeof(struct ql_mpi_coredump);
+-	strncpy(mpi_coredump->mpi_global_header.idString, "MPI Coredump",
+-		sizeof(mpi_coredump->mpi_global_header.idString));
++	strncpy(mpi_coredump->mpi_global_header.id_string, "MPI Coredump",
++		sizeof(mpi_coredump->mpi_global_header.id_string));
+ 
+ 	/* Get generic NIC reg dump */
+ 	ql_build_coredump_seg_header(&mpi_coredump->nic_regs_seg_hdr,
+@@ -1231,12 +1231,12 @@ static void ql_gen_reg_dump(struct ql_adapter *qdev,
+ 	memset(&(mpi_coredump->mpi_global_header), 0,
+ 	       sizeof(struct mpi_coredump_global_header));
+ 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
+-	mpi_coredump->mpi_global_header.headerSize =
++	mpi_coredump->mpi_global_header.header_size =
+ 		sizeof(struct mpi_coredump_global_header);
+-	mpi_coredump->mpi_global_header.imageSize =
++	mpi_coredump->mpi_global_header.image_size =
+ 		sizeof(struct ql_reg_dump);
+-	strncpy(mpi_coredump->mpi_global_header.idString, "MPI Coredump",
+-		sizeof(mpi_coredump->mpi_global_header.idString));
++	strncpy(mpi_coredump->mpi_global_header.id_string, "MPI Coredump",
++		sizeof(mpi_coredump->mpi_global_header.id_string));
+ 
+ 
+ 	/* segment 16 */
+-- 
+2.20.1
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 24 ++++++++++++++++++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h |  2 ++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index 210455e9f46c..5ada74d8d0c9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -186,6 +186,7 @@ static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
->  	.ext_path = mt2701_mtk_ddp_ext,
->  	.ext_len = ARRAY_SIZE(mt2701_mtk_ddp_ext),
->  	.shadow_register = true,
-> +	.clk_drv_name = "clk-mt2701-mm",
->  };
->  
->  static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
-> @@ -195,6 +196,7 @@ static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
->  	.ext_len = ARRAY_SIZE(mt2712_mtk_ddp_ext),
->  	.third_path = mt2712_mtk_ddp_third,
->  	.third_len = ARRAY_SIZE(mt2712_mtk_ddp_third),
-> +	.clk_drv_name = "clk-mt2712-mm",
->  };
->  
->  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
-> @@ -202,6 +204,7 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
->  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
->  	.ext_path = mt8173_mtk_ddp_ext,
->  	.ext_len = ARRAY_SIZE(mt8173_mtk_ddp_ext),
-> +	.clk_drv_name = "clk-mt8173-mm",
->  };
->  
->  static int mtk_drm_kms_init(struct drm_device *drm)
-> @@ -499,6 +502,24 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  	INIT_WORK(&private->commit.work, mtk_atomic_work);
->  	private->data = of_device_get_match_data(dev);
->  
-> +	/*
-> +	 * MMSYS includes apart from components management a block providing
-> +	 * clocks for the subsystem. We probe this clock driver via a platform
-> +	 * device.
-> +	 */
-> +	if (private->data->clk_drv_name) {
-> +		private->clk_dev = platform_device_register_data(dev,
-> +						private->data->clk_drv_name, -1,
-> +						NULL, 0);
-
-Replace -1 for PLATFORM_DEVID_NONE
-
-> +
-> +		if (IS_ERR(private->clk_dev)) {
-> +			dev_err(dev, "failed to register %s platform device\n",
-> +				private->data->clk_drv_name);
-> +
-> +			return PTR_ERR(private->clk_dev);
-> +		}
-> +	}
-> +
->  	private->config_regs = syscon_node_to_regmap(dev->of_node);
->  	if (IS_ERR(private->config_regs))
->  		return PTR_ERR(private->config_regs);
-> @@ -605,6 +626,9 @@ static int mtk_drm_remove(struct platform_device *pdev)
->  	for (i = 0; i < DDP_COMPONENT_ID_MAX; i++)
->  		of_node_put(private->comp_node[i]);
->  
-> +	if (private->clk_dev)
-> +		platform_device_unregister(private->clk_dev);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> index 63a121577dcb..8fe9136adc38 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> @@ -29,11 +29,13 @@ struct mtk_mmsys_driver_data {
->  	unsigned int third_len;
->  
->  	bool shadow_register;
-> +	const char *clk_drv_name;
->  };
->  
->  struct mtk_drm_private {
->  	struct drm_device *drm;
->  	struct device *dma_dev;
-> +	struct platform_device *clk_dev;
->  
->  	unsigned int num_pipes;
->  
-> 
