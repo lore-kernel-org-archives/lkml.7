@@ -2,92 +2,226 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A792C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08582068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45727206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eBzDFNJn"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rHPlgvWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfLIWfm (ORCPT
+        id S1727021AbfLIWig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:35:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45222 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfLIWfm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:35:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so7433596pgk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=DpEDnczTgLmUSLdSdUYrI+chr7EHogU/r3WqtZ4to3E=;
-        b=eBzDFNJnIO94AMgtEUzQcizLOePZOk9ymDnd7glk+21xbOY5st/iVlmzg31PmaX8If
-         nIQwr5BWKpHW6KEFvdiqB2uuXizK//53pmw061q0FwTlIBtDRlCkVqEy7GyIydGpGg6B
-         SAXqYXQOZIz6XwWOte5TdVpbtUpoW8cmxZIuqBpZt+FN4GKPuLLEQVHjJXZdjcrAVGv9
-         Gm2zbhS/g0j9Mu4lHwpnJyaSQ52xzffjzEvR/4VlPc8OsEwTBlf8rvau30/afqLye9rd
-         /iohDEY85cmNGxR+gH6wQpnDfWsl6jNyWeHrBa1exNXL/YIkBa22RgYi+5xYzq5sZDHc
-         jx4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=DpEDnczTgLmUSLdSdUYrI+chr7EHogU/r3WqtZ4to3E=;
-        b=NgkqVqZKTYawhDJtnuAMpzaZysTelErVu0qe/QRIqw9xoWOLFq+dkRqCWJaEM4t9R7
-         QImhS9pspCJBboZLPxkqYg7LxSnTESGyCivHYlZ9WoIHah3BodrxwHPKSrk0i5coawpc
-         ZNUJph9ACvSAm1OVX0zVqZlaOQqtcXHOT9rmVv7ZAafNhGHnvum7xFbR88C6sDAVDPqa
-         Kbjh2DXNjhmDNsIG76FPjDlEs5CpsT9DSTZ6iJ4v9zB+wUG+IjUFk9h108daq+thjIkl
-         cdJrWdEkGq8AfR8SVMjGKugcV+lC3r9dgzcDCvKS/eI2EoYbcj3/ggybGHZG0JbB28G0
-         +usw==
-X-Gm-Message-State: APjAAAVFFe+23taocdgKFqp2OYhp4qK9h6oYde794oCZa706866UHif3
-        DF1TTv3fbCeaAIPuSs8W2enNEg==
-X-Google-Smtp-Source: APXvYqzf9KQsOlR/3bHydft6MqOQT/ZvVC5FuQTsBmeouaIiaqFg1BNIjH9a/lbszhQIz2OsAmf7ZA==
-X-Received: by 2002:a63:5920:: with SMTP id n32mr10910399pgb.443.1575930941752;
-        Mon, 09 Dec 2019 14:35:41 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id h128sm480972pfe.172.2019.12.09.14.35.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 14:35:41 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
-In-Reply-To: <20191205131900.2059-1-glaroque@baylibre.com>
-References: <20191205131900.2059-1-glaroque@baylibre.com>
-Date:   Mon, 09 Dec 2019 14:35:40 -0800
-Message-ID: <7hy2vlqg8z.fsf@baylibre.com>
+        Mon, 9 Dec 2019 17:38:36 -0500
+Received: from mout.web.de ([212.227.15.3]:51455 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfLIWif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 17:38:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1575931108;
+        bh=hipcHuvDt9eDEE26o9CyI1wXasjR+ofQXYS0BLuJXas=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=rHPlgvWbhxhUejXaRk8saa7RjP1QPMIOGleFPpYq33v/HcFG/kqwrK1b02POQ1S6E
+         qr05IPU6OM2m/PkPf7lBONO0ifNeO6Ph1/GUE8cOkjudKnTahwWjOIEWVAFCQiG6K3
+         aupBoQeoFxvciAStVZy1y3DXGSuiR032sZCo5+Xg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from localhost.localdomain ([89.204.137.56]) by smtp.web.de
+ (mrweb004 [213.165.67.108]) with ESMTPSA (Nemesis) id
+ 0MhOpG-1iQe9J3DDG-00MaZJ; Mon, 09 Dec 2019 23:38:28 +0100
+From:   Soeren Moch <smoch@web.de>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Soeren Moch <smoch@web.de>, Wright Feng <wright.feng@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] brcmfmac: reset two D11 cores if chip has two D11 cores
+Date:   Mon,  9 Dec 2019 23:38:15 +0100
+Message-Id: <20191209223822.27236-1-smoch@web.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nMh6JTYQgSoTNLi0I6d+FrTc32tAPA/d8LYaIo5bLuzoFr8EVbX
+ 50FUXuYTk81yWWwn0OYXUMREg/zwoqjvZz943AaZtJfrWm1vedqiP+VbBuV5nCz3uopjFjc
+ UglSbpTRW27/f28QeRqRe5kOzkvzn9yFr9FykLWx3vAqsWST6TQrpYzoacjrmFnXCkcMRRa
+ w+tjNwWhxr4iH7OfgWlsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KV2RewuW+xc=:kyETITqTRSM7xyFhz4LSJ2
+ 4bV5x0wwWvANPB7nRHyipSpS8FWhqwskj5sRxI+bwF8NKXjoUAfSDg/eXD1zCTwzG/IQQboCN
+ UTMa1MQLLdd9heehcjoHlq3g/5NEnsEcZASFWBx092OG9ppgQ0f2m/fVEkTtlNIWgY8W/bkXa
+ +cIq00xKeA/YRGQW1vDX4P6a6R0FKsyM6t4gA1lLgRZ04RRHYVXZBn3gvVygWJq0O7CI3mHuf
+ aS2Dirsio2o51zX7Xc9c8EjC9qTloD2UCJcoSb2R7e3gnVMMa0c91jmgm+Kqmw07Mt5TzzUGv
+ aX0bqThsF74uvXjLUnuq38yXw7n62T3Rh1w/dRE9+woVHb7myfHr9IQMCqFI+D4rCBN8M0deo
+ k7ZaVgncBAnZVQd1gvvPcisKUitE6zuMaEkxnaxSlASKk7S1bTP+IDcC8qBAymPyYi3wg8R6P
+ bocwovn9FIDVoQ0UuEC5wTszCsjkMrbF2lml5VoYDpXckSDr0yJoU9ed8whTBpOzBYmlExvZT
+ TnlIkAL6qh9+1d0hYH/h13fAzJUyphfc29PvFkWcwopW5WxX4baVpriA2xtB4IJQqgwVJ/nxB
+ GdXrd2bC2HAMGz4L2joWjdnVy7+iCjYUezUq+uCjuZi62mutDyJ1RpiMwI52t4e2fknnER0Kt
+ FcYS7fIiN4wWDl0ASChSK3v0Zoejg5RaLMOZz5Tufj1D1PgBp+DplMpnIQB7sNrSp4VRMoFyD
+ BI6Dz1POCvCJFAX8+/dvQpwuyqnPZvX5Nv9MZuKZ1rFbs4PZ9j1S/oguzAVJraplEe1QLPF2w
+ hs3qRQcWDIn4svERK8SEe87RZc4BpbY1i+WEnZjovIOFzW5f0i4hxURtuNB6x3GfARikpsq13
+ NQWudv2hHXohFZSIIoU8qTacMF+G6ZWmeF2QPHW5jKdzUSE7rDX3EQQbJwmbI7mBrEDB0brF9
+ BtkIwKcU5dQ+oaFBV7WR4RD0dm6nEUoMdhPMuM7roCTyr+HLMuUVHo3jTsic39c41UfsgIBLS
+ zC/6NeF6S1/G54v2xP6OMIo1uMhNwsfcc8TILa1+HG8KcdMPjJWaGI/VNmKwgvseI70JSU0Cs
+ wwdcz+dUzxiKpcAlVpPzD8fJVWf9eQAKYV9GgP8yeOka8qDCmiHXRPFp4/gGLcHYJgX1u8xfN
+ pShVwTNZ0bGCMBsn2UbNmg4XcVECgao9xdEekMlemqFGLdyXLxSh99RzfGzd6sYsRMVb1qZfD
+ z3ZWlU1ilrq/EOHfJLFFccM4easMqond20lEJzQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+From: Wright Feng <wright.feng@cypress.com>
 
-> add gpio irq to support interrupt trigger mode.
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
-> hi,
->
-> this patch depends of 
-> https://lkml.org/lkml/2019/12/4/644
+There are two D11 cores in RSDB chips like 4359. We have to reset two
+D11 cores simutaneously before firmware download, or the firmware may
+not be initialized correctly and cause "fw initialized failed" error.
 
-Just to be clear on the dependency...  This DT patch will not change any
-behavior until the driver patch is merged, correct?
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+=2D--
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+=2D--
+ .../broadcom/brcm80211/brcmfmac/chip.c        | 50 +++++++++++++++++++
+ .../broadcom/brcm80211/brcmfmac/chip.h        |  1 +
+ .../broadcom/brcm80211/brcmfmac/pcie.c        |  2 +-
+ 3 files changed, 52 insertions(+), 1 deletion(-)
 
-But if this DT patch merges before the driver patch merges, we're not
-going to break anything, right?  We're just going to (continue) to not
-have working interrupts.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/dri=
+vers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
+index a795d781b4c5..0b5fbe5d8270 100644
+=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
+@@ -433,11 +433,25 @@ static void brcmf_chip_ai_resetcore(struct brcmf_cor=
+e_priv *core, u32 prereset,
+ {
+ 	struct brcmf_chip_priv *ci;
+ 	int count;
++	struct brcmf_core *d11core2 =3D NULL;
++	struct brcmf_core_priv *d11priv2 =3D NULL;
 
-Kevin
+ 	ci =3D core->chip;
+
++	/* special handle two D11 cores reset */
++	if (core->pub.id =3D=3D BCMA_CORE_80211) {
++		d11core2 =3D brcmf_chip_get_d11core(&ci->pub, 1);
++		if (d11core2) {
++			brcmf_dbg(INFO, "found two d11 cores, reset both\n");
++			d11priv2 =3D container_of(d11core2,
++						struct brcmf_core_priv, pub);
++		}
++	}
++
+ 	/* must disable first to work for arbitrary current core state */
+ 	brcmf_chip_ai_coredisable(core, prereset, reset);
++	if (d11priv2)
++		brcmf_chip_ai_coredisable(d11priv2, prereset, reset);
+
+ 	count =3D 0;
+ 	while (ci->ops->read32(ci->ctx, core->wrapbase + BCMA_RESET_CTL) &
+@@ -449,9 +463,30 @@ static void brcmf_chip_ai_resetcore(struct brcmf_core=
+_priv *core, u32 prereset,
+ 		usleep_range(40, 60);
+ 	}
+
++	if (d11priv2) {
++		count =3D 0;
++		while (ci->ops->read32(ci->ctx,
++				       d11priv2->wrapbase + BCMA_RESET_CTL) &
++				       BCMA_RESET_CTL_RESET) {
++			ci->ops->write32(ci->ctx,
++					 d11priv2->wrapbase + BCMA_RESET_CTL,
++					 0);
++			count++;
++			if (count > 50)
++				break;
++			usleep_range(40, 60);
++		}
++	}
++
+ 	ci->ops->write32(ci->ctx, core->wrapbase + BCMA_IOCTL,
+ 			 postreset | BCMA_IOCTL_CLK);
+ 	ci->ops->read32(ci->ctx, core->wrapbase + BCMA_IOCTL);
++
++	if (d11priv2) {
++		ci->ops->write32(ci->ctx, d11priv2->wrapbase + BCMA_IOCTL,
++				 postreset | BCMA_IOCTL_CLK);
++		ci->ops->read32(ci->ctx, d11priv2->wrapbase + BCMA_IOCTL);
++	}
+ }
+
+ char *brcmf_chip_name(u32 id, u32 rev, char *buf, uint len)
+@@ -1109,6 +1144,21 @@ void brcmf_chip_detach(struct brcmf_chip *pub)
+ 	kfree(chip);
+ }
+
++struct brcmf_core *brcmf_chip_get_d11core(struct brcmf_chip *pub, u8 unit=
+)
++{
++	struct brcmf_chip_priv *chip;
++	struct brcmf_core_priv *core;
++
++	chip =3D container_of(pub, struct brcmf_chip_priv, pub);
++	list_for_each_entry(core, &chip->cores, list) {
++		if (core->pub.id =3D=3D BCMA_CORE_80211) {
++			if (unit-- =3D=3D 0)
++				return &core->pub;
++		}
++	}
++	return NULL;
++}
++
+ struct brcmf_core *brcmf_chip_get_core(struct brcmf_chip *pub, u16 coreid=
+)
+ {
+ 	struct brcmf_chip_priv *chip;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h b/dri=
+vers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
+index 7b00f6a59e89..8fa38658e727 100644
+=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
+@@ -74,6 +74,7 @@ struct brcmf_chip *brcmf_chip_attach(void *ctx,
+ 				     const struct brcmf_buscore_ops *ops);
+ void brcmf_chip_detach(struct brcmf_chip *chip);
+ struct brcmf_core *brcmf_chip_get_core(struct brcmf_chip *chip, u16 corei=
+d);
++struct brcmf_core *brcmf_chip_get_d11core(struct brcmf_chip *pub, u8 unit=
+);
+ struct brcmf_core *brcmf_chip_get_chipcommon(struct brcmf_chip *chip);
+ struct brcmf_core *brcmf_chip_get_pmu(struct brcmf_chip *pub);
+ bool brcmf_chip_iscoreup(struct brcmf_core *core);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/dri=
+vers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+index f64ce5074a55..7ac72804e285 100644
+=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
+@@ -78,7 +78,7 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fw=
+names[] =3D {
+ 	BRCMF_FW_ENTRY(BRCM_CC_4371_CHIP_ID, 0xFFFFFFFF, 4371),
+ };
+
+-#define BRCMF_PCIE_FW_UP_TIMEOUT		2000 /* msec */
++#define BRCMF_PCIE_FW_UP_TIMEOUT		5000 /* msec */
+
+ #define BRCMF_PCIE_REG_MAP_SIZE			(32 * 1024)
+
+=2D-
+2.17.1
+
