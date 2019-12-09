@@ -2,102 +2,83 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D781C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82AC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611D6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:36:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575916603;
-	bh=hhbUlAid62Nmj6QnboRKYMrqoC20ui0184h6mt7BBVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v/oz7jXylrEcuiMoaFC0B9qzcPact6AGmbrH7htq6Gy9BJAFwWMBuufHf3iQfRKE6
-	 7345IQL6SX8bo8GbfiYDKkgAL1MHDMkklbmERdWYCPLCRCMGzc4V6azKphvM5iiEm3
-	 zC7uIFr7y+m6dEhQraINdCL46qCy+m3YhaoO7XOs=
+	by mail.kernel.org (Postfix) with ESMTP id B5103207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:37:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FDe0UB5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLISgm (ORCPT
+        id S1726769AbfLIShL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:36:42 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33655 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbfLISgm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:36:42 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ieNtd-0005gq-O4; Mon, 09 Dec 2019 19:36:37 +0100
-Date:   Mon, 9 Dec 2019 18:36:36 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] Add iProc IDM device support
-Message-ID: <20191209183636.6d708bfd@why>
-In-Reply-To: <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
-        <20191207173914.353f768d@why>
-        <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 9 Dec 2019 13:37:11 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:45724 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLIShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:37:11 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47WsL41VqKzCS;
+        Mon,  9 Dec 2019 19:34:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575916476; bh=or7Oj6xnUL/WDCELdOhIBVwh1AdCpOT9i9SKDT6ot5Y=;
+        h=Date:From:Subject:To:Cc:From;
+        b=FDe0UB5ceT51Pl4PG1WYMSGUL+PxNPgip6WXgT9/QRzRRYsdvHXw4n5/BTpKF0t+N
+         Aux17mYjRjlxjEBkXKeFqp2gBGKu6u+CyDX+9bk+c3c/0mz57OsqRWuFn01lmbVHL1
+         IEyyJ1ZcWCluRdTjLJtuY5iGdAesv2o0AKGIsUNxfPlOEMxg5AsiLkSXBLDJaKQwRw
+         2We52qw2vr0UO+YQ27mp+ngA5CJj3pojIQgZaAWd3DrO2h4YJegAxJiY6ENZHrjpLJ
+         7t9SqeQCbnXauSoWSiV0OGrYa3jt1k6Q89EwEW+r2z4dUgZsp7UvpF/S4yTKIExqQg
+         oASz5B8UKIDrA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 09 Dec 2019 19:37:05 +0100
+Message-Id: <3f12c2deaae9e77a5e7ab8415db7751a27bc3b98.1575916477.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] mmc: sdhci-s3c: remove unused ext_cd_gpio field
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: ray.jui@broadcom.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, rayagonda.kokatanur@broadcom.com, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-mmc@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 10:02:53 -0800
-Ray Jui <ray.jui@broadcom.com> wrote:
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/mmc/host/sdhci-s3c.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> On 12/7/19 9:39 AM, Marc Zyngier wrote:
-> > On Mon,  2 Dec 2019 15:31:25 -0800
-> > Ray Jui <ray.jui@broadcom.com> wrote:
-> >   
-> >> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
-> >> bus transactions. Most importantly, it can be configured to detect bus
-> >> transaction timeout. In such case, critical information such as transaction
-> >> address that caused the error, bus master ID of the transaction that caused
-> >> the error, and etc., are made available from the IDM device.  
-> > 
-> > This seems to have many of the features of an EDAC device reporting
-> > uncorrectable errors.
-> > 
-> > Is there any reason why it is not implemented as such?
-> > 
-> > Thanks,
-> > 
-> > 	M.
-> >   
-> 
-> I thought EDAC errors (in fact, in our case, that's fatal rather than
-> uncorrectable) are mostly for DDR. Is my understanding incorrect?
-
-No, they are for HW errors in general. There is no real limitation of
-scope, as far as I understand. Recently, the Annapurna guys came up
-with a similar HW block, and were convinced to make it an EDAC device.
-
-See [1] for details.
-
-Thanks,
-
-	M.
-
-[1] https://lore.kernel.org/linux-devicetree/1570707681-865-1-git-send-email-talel@amazon.com/
+diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+index 51e096f27388..8b15945dd499 100644
+--- a/drivers/mmc/host/sdhci-s3c.c
++++ b/drivers/mmc/host/sdhci-s3c.c
+@@ -117,7 +117,6 @@ struct sdhci_s3c {
+ 	struct s3c_sdhci_platdata *pdata;
+ 	int			cur_clk;
+ 	int			ext_cd_irq;
+-	int			ext_cd_gpio;
+ 
+ 	struct clk		*clk_io;
+ 	struct clk		*clk_bus[MAX_BUS_CLK];
+@@ -512,7 +511,6 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
+ 			goto err_pdata_io_clk;
+ 	} else {
+ 		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
+-		sc->ext_cd_gpio = -1; /* invalid gpio number */
+ 	}
+ 
+ 	drv_data = sdhci_s3c_get_driver_data(pdev);
 -- 
-Jazz is not dead. It just smells funny...
+2.20.1
+
