@@ -8,64 +8,66 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDB8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2243C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29902075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A11207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyTu6197"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fo27XehC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbfLII57 (ORCPT
+        id S1727349AbfLII6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:57:59 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37141 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLII57 (ORCPT
+        Mon, 9 Dec 2019 03:58:20 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45772 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLII6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:57:59 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s18so6872599pfm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 00:57:59 -0800 (PST)
+        Mon, 9 Dec 2019 03:58:20 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so6370910pgk.12;
+        Mon, 09 Dec 2019 00:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=wJ5N7Jirljd8jLW/XZ0r9Y6/RYhfpOU7K02lJrm8fcM=;
-        b=hyTu61975irxP9bn3UGpHOHL7Qkqq2SiDtYV1LljIZxPR4gjdO3lptLg+X/x+wliZH
-         BTJQzbrVJVz4CPFBoTH9tiSABZP0AlTPHR/CeOFh4gJbHRaGrFcpj/a9g5tUVCY8eBa7
-         ZMPetM3GCqq86RyqQINuYvmXgs5QsApn6Wnly7dRViLvYYhZ0s9jZGOKYylPiZBf0ecA
-         jWzM9moE/+x5LC3WPSap+UFuO7FjcLm3Ic8mplwUZ3J9XGmunxAKzRsigc62QIb1V9Pz
-         y4pUa4wKyQ6Fw6Uel00Qnr03YCGa57TfCGk4aoHrSh4NlBvzNt3ndGZP1OQRocZBrfNy
-         i/Pw==
+        bh=quNuOEA5nR90xmqWledAif7nMZZ8pn2xX9YiOvl0uw0=;
+        b=fo27XehCDDbswYaVMrVS3nFC5fQNhbJvjBxrxywhppJb1Zx38ogCnq4fjMo8KORfeJ
+         h8NFbK7iYONX1EbBDib/Jtt0rg7xRGJ2OaQtXkV9+dJ/SQjYAG02K/Gmv+IYLW2vlkky
+         QJbidaEb+oNlc//YsQ6fMZGWdpPvFky7dXVhEpTpIyZLmnDDcOdgHr307GzMq78GiFuT
+         e0KhZpanYNHBejQaYYzMp+cULfoE2ii15zS1R3qb/vTQ6U9/3u8TM0cKMjQsqwxILm8E
+         FvoWdQPP611RPWjDdcJzy1j4zSx+QD2bAV/tfB1hkx+ebyas5LApdiofRK2vQ7JQ8usg
+         TnSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=wJ5N7Jirljd8jLW/XZ0r9Y6/RYhfpOU7K02lJrm8fcM=;
-        b=exiEbN5OqYRVH1HW+EAi6xf6tHrDD97F9H3Gg9Zb+GQgoWbRaZ+eJr1LCeoCzxj8Ce
-         iJof/DafjiqmV8goxY+L+1SAX886NDIKIpJQA+sp2yx/oj++uG4hbjqA0uTdNjzKVDuX
-         wvyEKkDNN+smSXdzmB4j5GBy3zhx2acEJMl9fAzCGFmUFCLu7aopgv/ie/5s/8szgzUt
-         dTIZz7oh1rn69Lx3ARkCAsFGOzHRYQNvZx8APGSwLLSK3eM8ciqdR2D8RXb5RXklNKtd
-         uegNsDKXslb2qiAifLiVTuilXWYM78bPXZTIec74hRSJJ9RL4n3Fb2jK7Sgm9bpyOsCX
-         TQfA==
-X-Gm-Message-State: APjAAAVcuKzX26Wx2lR4gsqbvsTT5JLiwdxCfXvZcKos/j1TfMpH+3U/
-        0vmsntFL1VBOlfWWV9jU8PI=
-X-Google-Smtp-Source: APXvYqxd0SLOgya+bYBtfx1iTPjygnm9SV9Zl27E66O0G+xP4k1tbXOpBXnX4FXOFh4aSizzxJonSQ==
-X-Received: by 2002:aa7:961b:: with SMTP id q27mr28498150pfg.23.1575881879038;
-        Mon, 09 Dec 2019 00:57:59 -0800 (PST)
+        bh=quNuOEA5nR90xmqWledAif7nMZZ8pn2xX9YiOvl0uw0=;
+        b=mMvMBBjAaBc+TXOzUZOefmJEE9NsVcXDQQdEmqiyTo5UUi8Nm1YdLF0Lxu05nSKQmP
+         tNfJ05KgqSZqUPr9F+Vd+Kzqqr+Q3N9pSWTB2tjt/B91F/EzHbg8eB/nwMdRpdZUaEgc
+         66aoGvglqUrAazg7xXc+1/wLEFTaPUz+q8p7EsasJoiLK9lm0aRTe7akLBhxMlYshjq2
+         DHAIxCzQ9KbJlRRPx/wrW/iUnFQQBQN0ox0Q1nnoyL4TdstmEIWjrDGjtr9vBlGGPHZL
+         lzIadMYR5GNmjmihp4Z19iJbXNgPteA7P7ezmJN8SpT8kBV+AxcayLcxjMr/PrjC7ojC
+         oodg==
+X-Gm-Message-State: APjAAAXHGJq4JwSd+HneePee5e9sSRU0Ti5EzaCjbxMeERymzGwEXqjK
+        NR3OiZ9teI3OxzgMXtnX0gs=
+X-Google-Smtp-Source: APXvYqzbq2tEfloswSTy+xvQ5tNqSUT2de/+TYI91+6etQ4PkAsLeGZFrDwv+JrtVlf0dyvHnNxnzg==
+X-Received: by 2002:a63:d041:: with SMTP id s1mr17863747pgi.363.1575881899517;
+        Mon, 09 Dec 2019 00:58:19 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o17sm3474228pjq.1.2019.12.09.00.57.54
+        by smtp.gmail.com with ESMTPSA id m13sm23596045pga.70.2019.12.09.00.58.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:57:58 -0800 (PST)
+        Mon, 09 Dec 2019 00:58:18 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] drm/gma500: add a missed gma_power_end in error path
-Date:   Mon,  9 Dec 2019 16:57:47 +0800
-Message-Id: <20191209085747.16057-1-hslester96@gmail.com>
+Cc:     Michael Tretter <m.tretter@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] media: allegro: add the missed check for v4l2_m2m_ctx_init
+Date:   Mon,  9 Dec 2019 16:58:07 +0800
+Message-Id: <20191209085807.16126-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,25 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-oaktrail_lvds_mode_set() misses a gma_power_end() in an error path.
-Add the call to fix it.
+allegro_open() misses a check for v4l2_m2m_ctx_init().
+Add a check and error handling code to fix it.
 
+Fixes: f20387dfd065 ("media: allegro: add Allegro DVT video IP core driver")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/gma500/oaktrail_lvds.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/media/allegro-dvt/allegro-core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_lvds.c b/drivers/gpu/drm/gma500/oaktrail_lvds.c
-index 7390403ea1b7..582e09597500 100644
---- a/drivers/gpu/drm/gma500/oaktrail_lvds.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_lvds.c
-@@ -117,6 +117,7 @@ static void oaktrail_lvds_mode_set(struct drm_encoder *encoder,
+diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+index 6f0cd0784786..5f1d454b41bb 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@ -2341,6 +2341,13 @@ static int allegro_open(struct file *file)
+ 	channel->fh.m2m_ctx = v4l2_m2m_ctx_init(dev->m2m_dev, channel,
+ 						allegro_queue_init);
  
- 	if (!connector) {
- 		DRM_ERROR("Couldn't find connector when setting mode");
-+		gma_power_end(dev);
- 		return;
- 	}
++	if (IS_ERR(channel->fh.m2m_ctx)) {
++		v4l2_fh_del(&channel->fh);
++		v4l2_fh_exit(&channel->fh);
++		kfree(channel);
++		return PTR_ERR(channel->fh.m2m_ctx);
++	}
++
+ 	return 0;
+ }
  
 -- 
 2.24.0
