@@ -2,101 +2,141 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E351BC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466D6C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B780C20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iW/ZLijt"
+	by mail.kernel.org (Postfix) with ESMTP id 26F8320726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfLIN2Z (ORCPT
+        id S1727640AbfLIN3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:28:25 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51024 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727074AbfLIN2Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:28:25 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9DMhDR001394;
-        Mon, 9 Dec 2019 14:28:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=Cm28hvfhvY97v4kLNgG8xtvd1BicsLopvjHAPEFSsbc=;
- b=iW/ZLijtTxiPtXEIvr95+nezSEyelFNFdfdpVDlOjkRmru7D6/I84slTKT8OvgZEqADM
- 74RUhX+aFUUU+7nxsTxbiQYeVaoOIPM3O9C/DIDY/Rq5KJ8W7BAy7DKohQFTyONflp9p
- 8Hx0FTNDEl7XYv5eH45NuZKbxSLH/heIVOoY9QZPmIzOxbY/epY/JSdbJl8wmNOT/gE9
- nadw/+v7nNCqGhoIfl33WUYX4PfHQobi+jjiUpxkkD2qFdbk+UVyZB4eENy2D0veuanF
- Ub1UrWtjN5wZ9RU3gzsSJsQQ7hrqnX8jDnXj2Gq7JV5/uqh4xpiDbFxCXlRonVLVKlM0 Pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wradh7m4b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 14:28:17 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BE6C310002A;
-        Mon,  9 Dec 2019 14:28:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B119B2D3767;
-        Mon,  9 Dec 2019 14:28:16 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Dec
- 2019 14:28:16 +0100
-Subject: Re: [PATCH v2] ARM: dts: stm32: remove "@" and "_" from stm32f7
- pinmux groups
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191204155333.25401-1-benjamin.gaignard@st.com>
- <20191204155333.25401-2-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <a3738b5d-4ffb-4717-a910-73efe9bb52eb@st.com>
-Date:   Mon, 9 Dec 2019 14:28:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Mon, 9 Dec 2019 08:29:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:60532 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727200AbfLIN3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:29:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DC39328;
+        Mon,  9 Dec 2019 05:29:13 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F2943F718;
+        Mon,  9 Dec 2019 05:29:09 -0800 (PST)
+Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Daniel Schultz <d.schultz@phytec.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191206184536.2507-1-linux.amoon@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
+Date:   Mon, 9 Dec 2019 13:29:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191204155333.25401-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20191206184536.2507-1-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
+On 06/12/2019 6:45 pm, Anand Moon wrote:
+> Most of the RK3399 SBC boards do not perform clean
+> shutdown and clean reboot.
 
-On 12/4/19 4:53 PM, Benjamin Gaignard wrote:
-> Replace all "@" and "_" by "-" in pinmux groups for stm32f7 family.
-> This avoid errors when using yaml to check the bindings.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> changes in version 2:
-> - replace @ and _ by -
-> 
->   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 22 +++++++++++-----------
->   1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-> index 9314128df185..fe4cfda72a47 100644
-> --- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+FWIW reboot problems on RK3399 have been tracked down to issues in 
+upstream ATF, and are unrelated to the PMIC.
 
-Applied on stm32-next.
+> These patches try to help resolve the issue with proper
+> shutdown by turning off the PMIC.
 
-Thanks.
-Alex
+As mentioned elsewhere[1], although this is what the BSP kernel seems to 
+do, and in practice it's unlikely to matter for the majority of devboard 
+users like you and me, I still feel a bit uncomfortable with this 
+solution for systems using ATF as in principle the secure world might 
+want to know about orderly shutdowns, and this effectively makes every 
+shutdown an unexpected power loss from secure software's point of view.
+
+Robin.
+
+[1] 
+http://lists.infradead.org/pipermail/linux-rockchip/2019-December/028183.html
+
+> For reference
+> RK805 PMCI data sheet:
+> [0] http://rockchip.fr/RK805%20datasheet%20V1.3.pdf
+> RK808 PMIC data sheet:
+> [1] http://rockchip.fr/RK808%20datasheet%20V1.4.pdf
+> RK817 PMIC data sheet:
+> [2] http://rockchip.fr/RK817%20datasheet%20V1.01.pdf
+> RK818 PMIC data sheet:
+> [3] http://rockchip.fr/RK818%20datasheet%20V1.0.pdf
+> 
+> Reboot issue:
+> My guess is that we need to some proper sequence of
+> setting to PMCI to perform clean.
+> 
+> If you have any input please share them.
+> 
+> Tested on SBC
+> Rock960 Model A
+> Odroid N1
+> Rock64
+> 
+> -Anand Moon
+> 
+> Anand Moon (8):
+>    mfd: rk808: Refactor shutdown functions
+>    mfd: rk808: use syscore for RK805 PMIC shutdown
+>    mfd: rk808: use syscore for RK808 PMIC shutdown
+>    mfd: rk808: use syscore for RK818 PMIC shutdown
+>    mfd: rk808: cleanup unused function pointer
+>    mfd: rk808: use common syscore for all PMCI for clean shutdown
+>    arm64: rockchip: drop unused field from rk8xx i2c node
+>    arm: rockchip: drop unused field from rk8xx i2c node
+> 
+>   arch/arm/boot/dts/rk3036-kylin.dts            |   1 -
+>   arch/arm/boot/dts/rk3188-px3-evb.dts          |   1 -
+>   arch/arm/boot/dts/rk3288-evb-rk808.dts        |   1 -
+>   arch/arm/boot/dts/rk3288-phycore-som.dtsi     |   1 -
+>   arch/arm/boot/dts/rk3288-popmetal.dts         |   1 -
+>   arch/arm/boot/dts/rk3288-tinker.dtsi          |   1 -
+>   arch/arm/boot/dts/rk3288-veyron.dtsi          |   1 -
+>   arch/arm/boot/dts/rk3288-vyasa.dts            |   1 -
+>   arch/arm/boot/dts/rv1108-elgin-r1.dts         |   1 -
+>   arch/arm/boot/dts/rv1108-evb.dts              |   1 -
+>   arch/arm64/boot/dts/rockchip/px30-evb.dts     |   1 -
+>   arch/arm64/boot/dts/rockchip/rk3328-a1.dts    |   1 -
+>   arch/arm64/boot/dts/rockchip/rk3328-evb.dts   |   1 -
+>   .../arm64/boot/dts/rockchip/rk3328-roc-cc.dts |   1 -
+>   .../arm64/boot/dts/rockchip/rk3328-rock64.dts |   1 -
+>   .../boot/dts/rockchip/rk3368-geekbox.dts      |   1 -
+>   arch/arm64/boot/dts/rockchip/rk3368-lion.dtsi |   1 -
+>   .../boot/dts/rockchip/rk3368-px5-evb.dts      |   1 -
+>   .../boot/dts/rockchip/rk3399-firefly.dts      |   1 -
+>   .../boot/dts/rockchip/rk3399-hugsun-x99.dts   |   1 -
+>   .../boot/dts/rockchip/rk3399-khadas-edge.dtsi |   1 -
+>   .../boot/dts/rockchip/rk3399-leez-p710.dts    |   1 -
+>   .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |   1 -
+>   .../boot/dts/rockchip/rk3399-orangepi.dts     |   1 -
+>   arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi |   1 -
+>   .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |   1 -
+>   .../boot/dts/rockchip/rk3399-rock-pi-4.dts    |   1 -
+>   .../boot/dts/rockchip/rk3399-rock960.dtsi     |   1 -
+>   .../boot/dts/rockchip/rk3399-rockpro64.dts    |   1 -
+>   .../boot/dts/rockchip/rk3399-sapphire.dtsi    |   1 -
+>   drivers/mfd/rk808.c                           | 144 +++++-------------
+>   include/linux/mfd/rk808.h                     |   2 -
+>   32 files changed, 42 insertions(+), 134 deletions(-)
+> 
