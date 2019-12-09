@@ -2,78 +2,216 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C345C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1557BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2714420726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA81B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AOHPBOxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfLILBg (ORCPT
+        id S1727473AbfLILBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:01:36 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55140 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727143AbfLILBf (ORCPT
+        Mon, 9 Dec 2019 06:01:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37227 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727163AbfLILBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:01:35 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-195-oi3zS5NyMcuX2OLZVzunJg-1; Mon, 09 Dec 2019 11:01:31 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 9 Dec 2019 11:01:30 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 9 Dec 2019 11:01:30 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
-        network dev <netdev@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
-Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6AACUqqAAI3fO8A=
-Date:   Mon, 9 Dec 2019 11:01:30 +0000
-Message-ID: <efffc167eff1475f94f745f733171d59@AcuMS.aculab.com>
-References: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
- <dc10298d-4280-b9b4-9203-be4000e85c42@gmail.com>
-In-Reply-To: <dc10298d-4280-b9b4-9203-be4000e85c42@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 9 Dec 2019 06:01:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575889311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=mNbCk/qNXVD1T8xLfSQ5QWIZxin6oqeSzirotcoIEm8=;
+        b=AOHPBOxRAMuo30QKX3AgNkVN6SndjqR3EUZSwqntbCn0CE1rzn3AiHJtV9pkT1OxVQKV6U
+        TAC4TaHHakMnaXBPSTaWHvAmOxDRQKjX9sr8AIqsO1LLBry4gOdkkdgxT8lVWB8j+kG7qP
+        buhFp1vsmiYgDGx4jNL8Syum6SWlAaE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-Uu4JCfQlPxuKwZUapwtK-A-1; Mon, 09 Dec 2019 06:01:48 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D6B2107ACC4;
+        Mon,  9 Dec 2019 11:01:44 +0000 (UTC)
+Received: from [10.36.117.245] (ovpn-117-245.ams2.redhat.com [10.36.117.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EC2D6BF9A;
+        Mon,  9 Dec 2019 11:01:41 +0000 (UTC)
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Michal Hocko <mhocko@kernel.org>, Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <7fc610be-df56-c5ae-33fb-53b471aa76d1@suse.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <94aead35-1541-6c1a-d172-70dc613410c2@redhat.com>
+Date:   Mon, 9 Dec 2019 12:01:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MC-Unique: oi3zS5NyMcuX2OLZVzunJg-1
+In-Reply-To: <7fc610be-df56-c5ae-33fb-53b471aa76d1@suse.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Uu4JCfQlPxuKwZUapwtK-A-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDA2IERlY2VtYmVyIDIwMTkgMTQ6MjINCi4uLg0K
-PiBSZWFsIHF1ZXN0aW9uIGlzIDogRG8geW91IGFjdHVhbGx5IG5lZWQgdG8gdXNlIHJlY3Ztc2co
-KSBpbnN0ZWFkIG9mIHJlY3Zmcm9tKCkgPw0KPiBJZiByZWN2bXNnKCkgcHJvdmlkZXMgYWRkaXRp
-b25hbCBjbXNnLCB0aGlzIGlzIG5vdCBzdXJwcmlzaW5nIGl0IGlzIG1vcmUgZXhwZW5zaXZlLg0K
-DQpFeGNlcHQgSSdtIG5vdCBwYXNzaW5nIGluIGEgYnVmZmVyIGZvciBpdC4NClRoZSByZWFzb24g
-SSdtIGxvb2tpbmcgYXQgcmVjdm1zZyBpcyB0aGF0IEknZCBsaWtlIHRvIHVzZSByZWN2bW1zZyBp
-dCBvcmRlciB0bw0KcmVhZCBvdXQgbW9yZSB0aGFuIG9uZSBtZXNzYWdlIGZyb20gYSBzb2NrZXQg
-d2l0aG91dCBkb2luZyBhbiBleHRyYSBwb2xsKCkuDQpOb3RlIHRoYXQgSSBkb24ndCBleHBlY3Qg
-dGhlcmUgdG8gYmUgYSBzZWNvbmQgbWVzc2FnZSBtb3N0IG9mIHRoZSB0aW1lIGFuZA0KYWxtb3N0
-IG5ldmVyIGEgdGhpcmQgb25lLg0KDQpBbHRob3VnaCBJIHRoaW5rIHRoYXQgd2lsbCBvbmx5IGV2
-ZXIgJ3dpbicgaWYgcmVjdm1tc2coKSBjYWxsZWQgdmZzX3BvbGwoKSB0byBmaW5kDQppZiB0aGVy
-ZSB3YXMgbW9yZSBkYXRhIHRvIHJlYWQgYmVmb3JlIGRvaW5nIGFueSBvZiB0aGUgY29weV9mcm9t
-X3VzZXIoKSBldGMuDQoNCj4gcmVjdm1zZygpIGFsc28gdXNlcyBhbiBpbmRpcmVjdCBjYWxsLCBz
-byBDT05GSUdfUkVUUE9MSU5FPXkgaXMgcHJvYmFibHkgaHVydGluZy4NCg0KSSBkb24ndCBoYXZl
-IENPTkZJR19SRVRQT0xJTkUgZW5hYmxlZCwgdGhlIGNvbXBpbGVyIEknbSB1c2luZyBpcyB0b28g
-b2xkLg0KKGdjYyA0LjcuMykuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFr
-ZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwg
-VUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On 09.12.19 11:24, J=C3=BCrgen Gro=C3=9F wrote:
+> On 09.12.19 11:07, Michal Hocko wrote:
+>> On Fri 06-12-19 23:05:24, Baoquan He wrote:
+>>> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=3D
+>>> parameter") a global varialbe global max_mem_size is added to store
+>>> the value which is parsed from 'mem=3D '. This truly stops those
+>>> DIMM from being added into system memory during boot.
+>>>
+>>> However, it also limits the later memory hotplug functionality. Any
+>>> memory board can't be hot added any more if its region is beyond the
+>>> max_mem_size. System will print error like below:
+>>>
+>>> [  216.387164] acpi PNP0C80:02: add_memory failed
+>>> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+>>> [  216.392187] acpi PNP0C80:02: Enumeration failure
+>>>
+>>> >From document of 'mem =3D' parameter, it should be a restriction durin=
+g
+>>> boot, but not impact the system memory adding/removing after booting.
+>>>
+>>>    mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount of mem=
+ory
+>>>
+>>> So fix it by also checking if it's during SYSTEM_BOOTING stage when
+>>> restrict memory adding. Otherwise, skip the restriction.
+>>
+>> Could you be more specific about why the boot vs. later hotplug makes
+>> any difference? The documentation is explicit about the boot time but
+>> considering this seems to be like that since ever I strongly suspect
+>> that this is just an omission.
+>>
+>> Btw. how have you tested the situation fixed by 357b4da50a62?
+>=20
+> I guess he hasn't.
+>=20
+> The backtrace of the problem at that time was:
+>=20
+> [ 8321.876844]  [<ffffffff81019ab9>] dump_trace+0x59/0x340
+> [ 8321.882683]  [<ffffffff81019e8a>] show_stack_log_lvl+0xea/0x170
+> [ 8321.889298]  [<ffffffff8101ac31>] show_stack+0x21/0x40
+> [ 8321.895043]  [<ffffffff81319530>] dump_stack+0x5c/0x7c
+> [ 8321.900779]  [<ffffffff8107fbf1>] warn_slowpath_common+0x81/0xb0
+> [ 8321.907482]  [<ffffffff81009f54>] xen_alloc_pte+0x1d4/0x390
+> [ 8321.913718]  [<ffffffff81064950>]=20
+> pmd_populate_kernel.constprop.6+0x40/0x80
+> [ 8321.921498]  [<ffffffff815ef0a8>] phys_pmd_init+0x210/0x255
+> [ 8321.927724]  [<ffffffff815ef2c7>] phys_pud_init+0x1da/0x247
+> [ 8321.933951]  [<ffffffff815efb81>] kernel_physical_mapping_init+0xf5/0x=
+1d4
+> [ 8321.941533]  [<ffffffff815ebc7d>] init_memory_mapping+0x18d/0x380
+> [ 8321.948341]  [<ffffffff810647f9>] arch_add_memory+0x59/0xf0
+> [ 8321.954570]  [<ffffffff815eceed>] add_memory_resource+0x8d/0x160
+> [ 8321.961283]  [<ffffffff815ecff2>] add_memory+0x32/0xf0
+> [ 8321.967025]  [<ffffffff813e1c91>] acpi_memory_device_add+0x131/0x2e0
+> [ 8321.974128]  [<ffffffff8139f752>] acpi_bus_attach+0xe2/0x190
+> [ 8321.980453]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+> [ 8321.986778]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+> [ 8321.993103]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+> [ 8321.999428]  [<ffffffff813a1157>] acpi_bus_scan+0x37/0x70
+> [ 8322.005461]  [<ffffffff81fba955>] acpi_scan_init+0x77/0x1b4
+> [ 8322.011690]  [<ffffffff81fba70c>] acpi_init+0x297/0x2b3
+> [ 8322.017530]  [<ffffffff8100213a>] do_one_initcall+0xca/0x1f0
+> [ 8322.023855]  [<ffffffff81f74266>] kernel_init_freeable+0x194/0x226
+> [ 8322.030760]  [<ffffffff815eb1ba>] kernel_init+0xa/0xe0
+> [ 8322.036503]  [<ffffffff815f7bc5>] ret_from_fork+0x55/0x80
+>=20
+> So this patch would break it again.
+>=20
+> I'd recommend ...
+>=20
+>>
+>>> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem=3D para=
+meter")
+>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+>>> ---
+>>>   mm/memory_hotplug.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>>> index 55ac23ef11c1..5466a0a00901 100644
+>>> --- a/mm/memory_hotplug.c
+>>> +++ b/mm/memory_hotplug.c
+>>> @@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u6=
+4 start, u64 size)
+>>>   =09unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>>>   =09char *resource_name =3D "System RAM";
+>>>  =20
+>>> -=09if (start + size > max_mem_size)
+>>> +=09if (start + size > max_mem_size && system_state =3D=3D SYSTEM_BOOTI=
+NG)
+>=20
+> ... changing this to: ... && system_state !=3D SYSTEM_RUNNING
+
+I think we usually use system_state < SYSTEM_RUNNING
+
+--=20
+Thanks,
+
+David / dhildenb
 
