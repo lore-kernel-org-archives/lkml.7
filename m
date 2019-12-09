@@ -2,172 +2,130 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F68C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00590C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD31A2071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6A72071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:39:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QYPPLktd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8YU+qS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfLIWik (ORCPT
+        id S1727257AbfLIWjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:38:40 -0500
-Received: from mout.web.de ([212.227.15.3]:48313 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfLIWih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:38:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1575931113;
-        bh=HVbvbJ3Yi08NdEgn7oHls6p1yIJqKL0tjNOsiEe0cnU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=QYPPLktd7SuOBJ9KE2v0Nqu/z7+OS0VRjBEhJ/QfSL8Y8YeLz+5nN5TJKF/VPLqL/
-         vUAJrRNKAWjauBrFhowU0YDULFGZ4o+3E0WxdqNMONTMingHVK8AWwYlBD4b3drvP8
-         to4VgaikaDa7EgJqN8dw88/Z1LWfpBTqFES8xI8A=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from localhost.localdomain ([89.204.137.56]) by smtp.web.de
- (mrweb004 [213.165.67.108]) with ESMTPSA (Nemesis) id
- 0Lnmpz-1i5wTH3xJn-00hyT2; Mon, 09 Dec 2019 23:38:33 +0100
-From:   Soeren Moch <smoch@web.de>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Soeren Moch <smoch@web.de>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] brcmfmac: add support for BCM4359 SDIO chipset
-Date:   Mon,  9 Dec 2019 23:38:19 +0100
-Message-Id: <20191209223822.27236-5-smoch@web.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191209223822.27236-1-smoch@web.de>
-References: <20191209223822.27236-1-smoch@web.de>
+        Mon, 9 Dec 2019 17:39:07 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33901 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726665AbfLIWjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 17:39:05 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so13788214otf.1;
+        Mon, 09 Dec 2019 14:39:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vck/uz8o9EPjsxRkE6GQtWk8nbm1J4z1jJPNcEvOqWg=;
+        b=a8YU+qS++2knEHMlOc+nw3NJtqut3I8pGET8GO21Ff2xdG8dWyfqtbWNmgNw8NoKLb
+         nkrDfz5QgDLNYrvX3ONFX1LUfLHjiRtyF2IDMdlfz7ZlChFKT8ukVP7bn+5N9IWAg3Tj
+         bthKywChcRNJyUqMx3RfUmSyip5B2uwN2XkA+zU6NahPqvigsNNFIgtKl7O5DMRhk105
+         M6cPxt37Mb3q/fWqLbA10wakNOxe5nQGXzmHRlJfss4qN4DUpyFgA+X0ZpGA1SNnWeC5
+         BKYPnS7rAwobuaRvSPEm7HX1zNm6Hb/auGvFtexVEV4jAXcYBQ9Rnbxs+HYNN9dDv0ZX
+         vQZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vck/uz8o9EPjsxRkE6GQtWk8nbm1J4z1jJPNcEvOqWg=;
+        b=pPUo7VWV/xOOR2Xgism8CyRYGv0giRYLzWOzeEg0D8SstykeowTQZagCIvH5U5XIT0
+         8ENsemv9rRiUl1Tc5cBlpilkLkb9YTWnoinRjRBai0jEf6e03D/ijQEP819UaLbJlI6/
+         /+6mBLhfV5weW5N5rXHxyuh5hgbIX7lX6FYoZxSly1VPpW4lSrAU2X3zYsv9IvjYpaJk
+         0buusNbxiRb6j4GJycMY+hfdoQaU5YzRtQ0kMiYb8/j6lz9+wvGNLwKAgCm/bJ1QaV1m
+         4CoHpkJJEIzx55D1pWZkChZnO4Ij99uYhGSSThZNADlCIVNNwjawHk7CC9rzvlmy4uoO
+         1wRQ==
+X-Gm-Message-State: APjAAAX6AagO53mU+c+gtVS4tRpy39+QFNno9e2qHPSUryRQpQOebl9m
+        GC4IEj0oZftmwikie6PgAuQ=
+X-Google-Smtp-Source: APXvYqxh+Djr3wCr0RmQULGU3DV8YZikbsk/kXIuHXrcFJE9DOzbqaYQkElg7aLDkyEGoXTZBlPnzw==
+X-Received: by 2002:a9d:68ca:: with SMTP id i10mr22651207oto.178.1575931144149;
+        Mon, 09 Dec 2019 14:39:04 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w8sm504104ote.80.2019.12.09.14.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 14:39:03 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ppp: Adjust indentation into ppp_async_input
+Date:   Mon,  9 Dec 2019 15:38:59 -0700
+Message-Id: <20191209223859.19013-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GJs7KcSUGQtcSBqV23txnu685EcItFGhAPxjVA2qb51u72Wu277
- CJbK0lRLY2Yy00dvelvM7dIJEYRO0vEQrRX5AUQw4div8A8zOBUGqf8U5oYWMf1XZFXvnCl
- BhmUT3G7UtXTrXS8R+GjVALkyb1eBByBNudLFsmjwpQ7vZikVUSQ9pZb+YC2Dwf7GGtGZpw
- ifsIyIPNPAcXqvl1nVwuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HbO2lG62y+4=:v/o0OCqxJfS2DDbgjuGFIF
- 1S7B2KJ3QWU+t+sOWPL1ml4s/bJzXeo3JMBKdA1YXfYf9ew1KfWrqZoTOAEk3mW6r94fUDsps
- HF8kzVzvXs4kpVu4N08Q8KE/4d5+7kP5GvNEiRhYFvdXWHwZLx2yOFo9xsysA9KISCjdSz1fu
- GfiwHqe8cuVXPQ8G+xUdama5940oTTzb7cZNVfONH32Enk1dAu497X++zEvOf0NNctLL9BNVG
- 08aVXYZSksO2fNHO8nrhUmP4dTbpPFDK2NLpriNyoo5zSR5ZGOwMmF+LW+gjs6PeKURYu1ir+
- dUsO2gfJkFzKZYYESRWSYEcET9HcHhZ6kSXoF2aSQ7WJDyW5dcbm5A7wxJZkQJbydkGJaH/ma
- D4o1P195WKavu9LnN3AANRy3f++53C+ANCDS5G/EYfsKVpKdRGNnDMkpcg1EoGoiyqenUVywe
- xBER6CDPhvYxpiJJFeou0GOTtKebwRXGNRYxGmFAveZ+hrAi0v+EJy6hMHFxrrV3yZAn3sd2T
- b8UBmC4Bd4zTPw1fhH6iM0gLwr6zTleAyDuJqRz8WCUES/CHCZkCIUVN//UKTPtz/2D1hnRMo
- yOZdF5Q5PYsqCT5SSHrFFwiSMXKBK+TV5NYTZmqMyEZzrXiOx4SNBWqCpUlN6tkgeCDiEksJv
- jlAFEru1xDls2eH7T11KuxPIsC4c0gJSV8iMmRngIlnYkVL4y4RsfspUU/ngnUtZtFkODmScA
- iJUsJdu2AO++U8PBIQOvKm2crLj8WGZZv2M/u2TijQHPNLNdO+VKxSiapxI11iuD/NdybmWMb
- uCZ9Qa2KIYZKKkIqnUNluVGWeXEerKGLCA+5aW5ifnD5INpRefCKvYbRCvlKJqzANIIcqsJ+x
- hjmMYrLQX4x6S9JlRryLvXwgyz3ayk0dIZmwKyR9nXwMd8VIu1ck1BaQ+S0VjqePiCbkw4iuV
- vizptIVu6veLA6qZK2KBcTPIAUZ0Si3YNI3M270s3pgfi18VvCH+303FAaVBc8w4h9glP9lNm
- k82msJKsCPUuKFKrdohcvs/T/lImNNCSzEsOKeSX4wrGG9kuYJ4R8U4O8uUBfC1V00/zE+G/W
- dNwq651kCkBKHqbpwHWUDZnEEEoN67cGkKAET+3FT5bp96wWNaU+25Ja/rHjn+wrVBg+cZFhA
- eHB/h+VFoNVrizxypYIqOJW896vKYfliY2X0k2dayC/XBbr5U9zd+xRWO84dGwsaEit0bFRtj
- TXXIbhL/KcbSvU/G63o73r+iiuBQePMaJDxvAPQ==
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM4359 is a 2x2 802.11 abgn+ac Dual-Band HT80 combo chip and it
-supports Real Simultaneous Dual Band feature.
+Clang warns:
 
-Based on a similar patch by: Wright Feng <wright.feng@cypress.com>
+../drivers/net/ppp/ppp_async.c:877:6: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                                ap->rpkt = skb;
+                                ^
+../drivers/net/ppp/ppp_async.c:875:5: note: previous statement is here
+                                if (!skb)
+                                ^
+1 warning generated.
 
-Signed-off-by: Soeren Moch <smoch@web.de>
-=2D--
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Franky Lin <franky.lin@broadcom.com>
-Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Cc: Wright Feng <wright.feng@cypress.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: brcm80211-dev-list.pdl@broadcom.com
-Cc: brcm80211-dev-list@cypress.com
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-=2D--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 1 +
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c   | 1 +
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c   | 2 ++
- include/linux/mmc/sdio_ids.h                              | 1 +
- 4 files changed, 5 insertions(+)
+This warning occurs because there is a space before the tab on this
+line. Clean up this entire block's indentation so that it is consistent
+with the Linux kernel coding style and clang no longer warns.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/d=
-rivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index 68baf0189305..5b57d37caf17 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -973,6 +973,7 @@ static const struct sdio_device_id brcmf_sdmmc_ids[] =
-=3D {
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_43455),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4354),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4356),
-+	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4359),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_4373),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_43012),
- 	{ /* end: all zeroes */ }
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/dri=
-vers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-index baf72e3984fc..282d0bc14e8e 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-@@ -1408,6 +1408,7 @@ bool brcmf_chip_sr_capable(struct brcmf_chip *pub)
- 		addr =3D CORE_CC_REG(base, sr_control0);
- 		reg =3D chip->ops->read32(chip->ctx, addr);
- 		return (reg & CC_SR_CTL0_ENABLE_MASK) !=3D 0;
-+	case BRCM_CC_4359_CHIP_ID:
- 	case CY_CC_43012_CHIP_ID:
- 		addr =3D CORE_CC_REG(pmu->base, retention_ctl);
- 		reg =3D chip->ops->read32(chip->ctx, addr);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/dri=
-vers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 21e535072f3f..c4012ed58b9c 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -616,6 +616,7 @@ BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
- BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
- BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
- BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
-+BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
- BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
+Fixes: 6722e78c9005 ("[PPP]: handle misaligned accesses")
+Link: https://github.com/ClangBuiltLinux/linux/issues/800
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ppp/ppp_async.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-@@ -638,6 +639,7 @@ static const struct brcmf_firmware_mapping brcmf_sdio_=
-fwnames[] =3D {
- 	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
- 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
- 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
-+	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0xFFFFFFFF, 4359),
- 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
- 	BRCMF_FW_ENTRY(CY_CC_43012_CHIP_ID, 0xFFFFFFFF, 43012)
- };
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index 08b25c02b5a1..930ef2d8264a 100644
-=2D-- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -41,6 +41,7 @@
- #define SDIO_DEVICE_ID_BROADCOM_43455		0xa9bf
- #define SDIO_DEVICE_ID_BROADCOM_4354		0x4354
- #define SDIO_DEVICE_ID_BROADCOM_4356		0x4356
-+#define SDIO_DEVICE_ID_BROADCOM_4359		0x4359
- #define SDIO_DEVICE_ID_CYPRESS_4373		0x4373
- #define SDIO_DEVICE_ID_CYPRESS_43012		43012
-
-=2D-
-2.17.1
+diff --git a/drivers/net/ppp/ppp_async.c b/drivers/net/ppp/ppp_async.c
+index a7b9cf3269bf..29a0917a81e6 100644
+--- a/drivers/net/ppp/ppp_async.c
++++ b/drivers/net/ppp/ppp_async.c
+@@ -874,15 +874,15 @@ ppp_async_input(struct asyncppp *ap, const unsigned char *buf,
+ 				skb = dev_alloc_skb(ap->mru + PPP_HDRLEN + 2);
+ 				if (!skb)
+ 					goto nomem;
+- 				ap->rpkt = skb;
+- 			}
+- 			if (skb->len == 0) {
+- 				/* Try to get the payload 4-byte aligned.
+- 				 * This should match the
+- 				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
+- 				 * process_input_packet, but we do not have
+- 				 * enough chars here to test buf[1] and buf[2].
+- 				 */
++				ap->rpkt = skb;
++			}
++			if (skb->len == 0) {
++				/* Try to get the payload 4-byte aligned.
++				 * This should match the
++				 * PPP_ALLSTATIONS/PPP_UI/compressed tests in
++				 * process_input_packet, but we do not have
++				 * enough chars here to test buf[1] and buf[2].
++				 */
+ 				if (buf[0] != PPP_ALLSTATIONS)
+ 					skb_reserve(skb, 2 + (buf[0] & 1));
+ 			}
+-- 
+2.24.0
 
