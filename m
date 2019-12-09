@@ -2,96 +2,96 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEFEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AD7C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970F4205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C1C205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YG2txRg5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tY1B/g/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLIVvD (ORCPT
+        id S1726925AbfLIVwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:51:03 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55408 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIVu7 (ORCPT
+        Mon, 9 Dec 2019 16:52:17 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41975 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIVwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:50:59 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9Low0i005349;
-        Mon, 9 Dec 2019 15:50:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575928258;
-        bh=lUSdxRhD6XTC7WhbY0PYaGuAAuVAsloAEADwb1YGU8w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YG2txRg5aS6wPIGElxOMo+yKk+nel+Uqz2sJ8oERHhEWqhkRKE/hnhpvgdUvLlnNj
-         s3MeHF+KKqrQo0qRVK0N5meBLuDmfmZD3/4XO9D1z5Xru3pnLl5hcxXKQs4UvHtXC6
-         8pnvXC2ZBMH8TlY2rMwUiZStmlA18Vfx3rgP80RI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9Low3I114613;
-        Mon, 9 Dec 2019 15:50:58 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 15:50:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 15:50:57 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LovU2107056;
-        Mon, 9 Dec 2019 15:50:57 -0600
-Subject: Re: [PATCH v2 1/3] power_supply: Add additional health properties to
- the header
-To:     <sre@kernel.org>, <linux-pm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20191029200201.24483-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b1a00b89-b091-4526-fbd4-d42261f0d287@ti.com>
-Date:   Mon, 9 Dec 2019 15:48:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 16:52:17 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so7779055pgk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
+        b=tY1B/g/W6Gp0eDto/4M5qAgnEJFLIsacGgPoR131eRiJk7fUtWl4e5TQIlC1CAiwdY
+         b2TBMj1z/kkjZxyKSMYaCnnAel2maeSAGyyUqpShy5+reGnTxRvNPJnUa54b2HshK+sw
+         t+J0fkA28IJXOSml4Jbt+zWayFEF8JZiQi3qqIpF4RsKMh+2RK1GijtLBE9c5vl5ZJ2o
+         oK2ucjV+VnSS61VxdpB2OPot2SGhvHBBB+vFt9nNelUOZSqQIPhVC1ofDKm0wlM+tnbe
+         yYfDf7wS04Ibq9CrYi9EXfDHETyRs5qRNWbuNJ7rOu+M7/dQiZLDtmcjMWT9YUPboBG/
+         vJ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=i5+TnwHki7CwB9DGX3Mta0rJCHBm+w/ZGchbVbmsZYk=;
+        b=cKt2Wlex4pyyxpGsHrnTSUdFpEdL5+4fX9ASjqW28Zv8qXZkVGl0qs2mcLtkckTsea
+         Nl8S+3zgho4E/3jk3M+QTNmItLUCVHZHAGIB58JlsKbFLrocZFY4do6mFmDTvghVi0w1
+         RPHO1pA1x2wdNfhD/VRHDCgW+2DQxKkrfLXUhVwWPVpQ0a3k/3Km21EGRDWHwKPUkToL
+         MWhPu5PSoF7lXvdTZdqTXaPS+9F6rpeoXbM1b04jJA66XQ55u2dXvNsitSfmVE0bLhL2
+         za7p/GYsPwUPKQ9UJ0IKPGHYWhLYGehhwvRs3n9WpjR/0Mx8tzHH0mJ5BCVoYsAZpBRr
+         HouQ==
+X-Gm-Message-State: APjAAAXN83MRqHjTY9zF8hNJxi24z0olcI0/c8fGkw7Sxc2BdXgFYCXt
+        eJPtbUbb1OPbxfFk2ji9hYWZAg==
+X-Google-Smtp-Source: APXvYqwJ+lQOvhufrrs8iA3BVrUFuPSN7n3NPPeGKXKlHT1K24DHqB1iVmQmDkzXvU5fBntaC/ym1Q==
+X-Received: by 2002:a63:1624:: with SMTP id w36mr19463046pgl.404.1575928336235;
+        Mon, 09 Dec 2019 13:52:16 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id i127sm465841pfe.54.2019.12.09.13.52.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 13:52:15 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] arm64: dts: meson: add reset controller for Meson-A1 SoC
+In-Reply-To: <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com> <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+Date:   Mon, 09 Dec 2019 13:52:14 -0800
+Message-ID: <7hsgltrwtt.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029200201.24483-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bump
+Hi Xiangyu,
 
-On 10/29/19 3:01 PM, Dan Murphy wrote:
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+Xingyu Chen <xingyu.chen@amlogic.com> writes:
+
+> Add the reset controller device of Meson-A1 SoC family
 >
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->
-> v2 - No changes
->
->   include/linux/power_supply.h | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 28413f737e7d..bd0d3225f245 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -61,6 +61,9 @@ enum {
->   	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
->   	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->   	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->   };
->   
->   enum {
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+
+I just realized I missed the DT patch for this series.  Sorry about
+that.  Generally it helps if you (re)send the DT patches separate from
+the driver, and if if it's been a couple weeks and you haven't heard
+from me, don't hesitate to ping me.
+
+Queuing this up now, with Neils tag.  Sorry for the delay.
+
+Kevin
