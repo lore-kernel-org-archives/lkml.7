@@ -2,93 +2,137 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8165C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB14EC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E252206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/al3Bw8"
+	by mail.kernel.org (Postfix) with ESMTP id 96DBB206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfLINoa (ORCPT
+        id S1727778AbfLINqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:44:30 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39960 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLINoa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:44:30 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 6so6309734oix.7;
-        Mon, 09 Dec 2019 05:44:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
-        b=T/al3Bw8wn27lr3SLBgNIYFJs63fsI0DIaot21MQzkCVT4iZZT2NYjs5gJSJz4znGj
-         8uHbiqVU0MyxiterYKYbi0iazUDeDA71H4Z33DYgRMdbEvSygujbrg0L+QUVoTlbBtku
-         3oPvYqYbuFQUClKdzeI724fbXIX2lYSrVb+/EjYq20tF/8KPtPYcBh9VnhEVEvqVLpOe
-         JdJKgXwu57YIVoWXwI1UMSJ++EQBYdOWDDBxFfaSBTfSk9C2EU/RY2d5kxpJMGcMG91x
-         +zIev+3/ST2HH3ioHuzEMkQXsNzh2R8/XvEySepe1mr8h67Fs/EkyUwFEGNMBsO7bUkJ
-         kTnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pdtrpdD1TKIjvb8irx4vWJg8+w04giYZXMmV837pN2g=;
-        b=DWwnSvgS7H4pvng+8dRmoYSx/g4zEsHa63wRT29FeLB+elSVbiB7roZY4U+ghNprFk
-         ilkOLvg03vcQ8UcyYmoSY/8HMWgQO9rKDQP69K1xIel4U4OuOckZaFwDgkRk04TW36rj
-         kZ6oXoDLZzTSYKORUvO8aNUjgLHSp+5J04QvAAnk3JBfyatmT6tO6s1w16/sUKNQrs8M
-         iISlxK9UbBEBiRTPYrP+6afvu9X1em0ET1yxq0nvY9wP7B0oNVPAvrXoaLjc5rnh+OWL
-         8bIPOpNO2C6n1tqbDftwC5RTKc1ubTDo8Tgxu98CmD5htRMtXQ59GDQ1KKF/2/9W3AAW
-         YpRg==
-X-Gm-Message-State: APjAAAX/gC54HHfxsfe6cbYg7peut0M3aC1lKNlpzEcebyxYqAu11tS0
-        PVcsuVJJjTBMF03GULpLlvEejertypCzODAXnNE=
-X-Google-Smtp-Source: APXvYqwZ7NMEhCMa1CsGy9xOP12ehMUrB/FCbl2ilogCpY1zCGGz6MQ/XHN66Y9YL/Qw/iNI5SRd5y+Jfz0YzL7xQTQ=
-X-Received: by 2002:aca:3cc3:: with SMTP id j186mr23081279oia.169.1575899069062;
- Mon, 09 Dec 2019 05:44:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191121142726.22856-1-TheSven73@gmail.com> <20191121142726.22856-3-TheSven73@gmail.com>
- <20191209123206.GI3468@dell>
-In-Reply-To: <20191209123206.GI3468@dell>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 9 Dec 2019 08:44:18 -0500
-Message-ID: <CAGngYiX4hgEM7cjeLE-sRswDXTff92OqdBWNgx5WGNmPjuqsUA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Dec 2019 08:46:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:52814 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727665AbfLINqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:46:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 05:45:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
+   d="scan'208";a="414073956"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.104])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Dec 2019 05:45:58 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     like.xu@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>, stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/uncore: Fix missing marker for snr_uncore_imc_freerunning_events
+Date:   Mon,  9 Dec 2019 05:42:33 -0800
+Message-Id: <1575898953-85496-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee, thank you for the review.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-On Mon, Dec 9, 2019 at 7:32 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> > Tree: next-20191118
->
-> Why is this in your commit message?
+An Oops during the boot is found on some SNR machines.
 
-I have been posting patches against various maintainer trees lately, which
-will not apply to mainline or next. So I have been including base tree
-information in the patch itself.
+[   15.795410] BUG: unable to handle page fault for address:
+00000000000022b0
+[   15.795412] #PF: supervisor read access in kernel mode
+[   15.795413] #PF: error_code(0x0000) - not-present page
+[   15.795414] PGD 0 P4D 0
+[   15.795418] Oops: 0000 [#1] SMP NOPTI
+[   15.795420] CPU: 6 PID: 941 Comm: systemd-udevd Not tainted
+5.3.0-snr-v5.3 #292
+[   15.795421] Hardware name: Intel Corporation JACOBSVILLE/JACOBSVILLE,
+BIOS JBVLCRB1.86B.0011.D44.1909191126 09/19/2019
+[   15.795428] RIP: 0010:strlen+0x0/0x20
+[   15.795431] Code: 48 89 f9 74 09 48 83 c1 01 80 39 00 75 f7 31 d2 44
+0f
+b6 04 16 44 88 04 11 48 83 c2 01 45 84 c0 75 ee c3 0f 1f 80 00 00 00 00
+<80> 3f 00 74 10 48 89 f8 48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
+[   15.855395] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+[   15.858351] RSP: 0018:ffffaeb4812039c8 EFLAGS: 00010202
+[   15.858353] RAX: 0000000000000000 RBX: ffff9fec99c71300 RCX:
+0000000000008000
+[   15.858354] RDX: 00000000000022b0 RSI: 0000000000000cc0 RDI:
+00000000000022b0
+[   15.858355] RBP: 00000000000022b0 R08: 0000000000000000 R09:
+0000000000000000
+[   15.858356] R10: 0000000000000000 R11: 0000000000000000 R12:
+ffff9fec8583a800
+[   15.858357] R13: 0000000000000cc0 R14: ffff9fec94015648 R15:
+ffff9fec81f291a8
+[   15.858358] FS:  00007f89e7160940(0000) GS:ffff9fec9dc00000(0000)
+knlGS:0000000000000000
+[   15.858361] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   15.864343] i801_smbus 0000:00:1f.4: SMBus using polling
+[   15.869998] CR2: 00000000000022b0 CR3: 0000000842ca2000 CR4:
+0000000000340ee0
+[   15.870000] Call Trace:
+[   15.870006]  kstrdup+0x1a/0x60
+[   15.870012]  __kernfs_new_node+0x41/0x1f0
+[   15.870018]  ? __mutex_unlock_slowpath+0x4d/0x2a0
+[   15.895135] ioatdma 0000:00:01.3: enabling device (0004 -> 0006)
+[   15.899395]  kernfs_new_node+0x36/0x60
+[   15.899400]  __kernfs_create_file+0x2c/0xf3
+[   15.961374]  sysfs_add_file_mode_ns+0xa4/0x1a0
+[   15.961379]  internal_create_group+0x117/0x370
+[   15.972133]  ? sysfs_add_file_mode_ns+0xa4/0x1a0
+[   15.972138]  internal_create_groups.part.0+0x3d/0xa0
+[   15.982656]  device_add+0x625/0x690
+[   15.982662]  pmu_dev_alloc+0x93/0xf0
+[   15.982664]  perf_pmu_register+0x292/0x3e0
+[   15.982674]  uncore_pmu_register+0x76/0x120 [intel_uncore]
+[   15.982681]  intel_uncore_init+0x1fd/0xe2c [intel_uncore]
+[   15.982688]  ? uncore_types_init+0x1d4/0x1d4 [intel_uncore]
+[   16.013580]  do_one_initcall+0x5d/0x2e4
+[   16.013584]  ? do_init_module+0x23/0x230
+[   16.013586]  ? rcu_read_lock_sched_held+0x6b/0x80
+[   16.013589]  ? kmem_cache_alloc_trace+0x2c4/0x2f0
+[   16.013591]  ? do_init_module+0x23/0x230
+[   16.013594]  do_init_module+0x5c/0x230
+[   16.013597]  load_module+0x2779/0x2a90
+[   16.013605]  ? ima_post_read_file+0xfd/0x110
+[   16.026926] ioatdma 0000:00:01.4: enabling device (0004 -> 0006)
+[   16.028808]  ? __do_sys_finit_module+0xaa/0x110
+[   16.060527]  __do_sys_finit_module+0xaa/0x110
+[   16.060536]  do_syscall_64+0x5c/0xb0
+[   16.060540]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Base-tree info on patches is high on developers' wish list, but not yet
-standardized. This was discussed at the 2019 kernel maintainers
-summit:
-https://lwn.net/Articles/803619/
+This snr_uncore_imc_freerunning_events array was missing an end-marker.
+
+Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
+Reported-by: Like Xu <like.xu@linux.intel.com>
+Tested-by: Like Xu <like.xu@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/events/intel/uncore_snbep.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index b10a5ec..0116448 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -4536,6 +4536,7 @@ static struct uncore_event_desc snr_uncore_imc_freerunning_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(write,		"event=0xff,umask=0x21"),
+ 	INTEL_UNCORE_EVENT_DESC(write.scale,	"3.814697266e-6"),
+ 	INTEL_UNCORE_EVENT_DESC(write.unit,	"MiB"),
++	{ /* end: all zeroes */ },
+ };
+ 
+ static struct intel_uncore_ops snr_uncore_imc_freerunning_ops = {
+-- 
+2.7.4
+
