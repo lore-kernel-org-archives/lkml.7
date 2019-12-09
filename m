@@ -4,108 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD586C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F2DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908EF20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76122068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fluep6Cy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TtHK5BAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfLINQ1 (ORCPT
+        id S1727731AbfLINRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:16:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42830 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLINQ1 (ORCPT
+        Mon, 9 Dec 2019 08:17:55 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34767 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbfLINRz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:16:27 -0500
-Received: by mail-wr1-f66.google.com with SMTP id a15so16115138wrf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:16:25 -0800 (PST)
+        Mon, 9 Dec 2019 08:17:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id f4so15426768wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=6JKjS8ULGOzUFR7zV+Ndftoq/ev83XREiug0BBdNIeE=;
-        b=Fluep6Cy08Kzg9mPraMCdGJvXYVj7EnADOl1PYagnYKgrHsKt1Xsp9NRKUB+ooeph/
-         vP1+nnfyracffXp6R4IWPuaA7oCZWLkd6UpAvbwPT8oMhZKdDaZDYxR8YyhaW5CtdN0/
-         jQMOwkxHx0EfxlhkGxlS4Wm+dDO/tKc/uQdzSCJyN6rnJNfK3QiH4T3LcvbHymztIO/X
-         exCokdFITCA6+DJkwR6Z7p+pwf7cFCKcyxsQ3LPAyLO9rtDkjaFip8op45XbbJ62+Bnv
-         YtOSlyoy1OXRn487KoaySckqJh++QDJvxdhmXQLOe1XR0g1/u96bV0K5wTZYTF2bPDLS
-         2i4Q==
+        bh=4+QA/tgnnIgBecFWO74sIEulDFPFsySoDm6BKiBPuIs=;
+        b=TtHK5BAIe4p2p2E4v3xakR8r03HFNDQD5p0kmKz6BqeglB72D1LS8HQckhtJdHYF6s
+         UcCKoi/Z26YLLdKCJZO+HHHQL+HS9tRQPacXFHLuQgBYAD6Ge4fuqL4Xf50Up5kaFVaN
+         E80bJ/7qKJ6AT/ZB7OgrGuq10uBIRuE4u76wNjS+Lk13f9ERx82b9DEIdRszzMcWMBf1
+         9RxdH5SvcD+8Ckh8gCm1KGVOFlAdQ53hzYeh+wI21DlPY1gKU3CrvPgqWRV/DqnAKBmp
+         hS1dODN9nRn5R0AX6pWoVsavUa3k9tmYxyDfUiYCEImgVQi1CgqfeggiiOQiNHZ/L8m/
+         /Q8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=6JKjS8ULGOzUFR7zV+Ndftoq/ev83XREiug0BBdNIeE=;
-        b=twvbaANwlkMlZgAkfgBOCUVLxrOGnF0eBqcu+Iwnhp9L8UtUJezpSvv2i2/5Uw93J7
-         w/ImC/jBwOn7anZHqfW8s/WRZjOibh1exc/DFBt0S5cBbZQVhisfjnTdOxMnhVuuiDtE
-         ELzenk7Eq+rmlar0EsPrjWKVlWS0Ug8XG7oUsB7icfMqICTiG0wOq7HYjjNO0mS9nRS+
-         AOOKnKdPXFj/3/Ebz6wg5cBogB83smgtVzBk7xsLNKo5p4XUW/JlW8tifbTlN7FsD+uA
-         BEwrge+IlD1MrwLXKWfRSzlsV00VsDZDtBKXke1tNtoeYlcr6bP7Y6VN3d78+GcA/1Jz
-         LEsQ==
-X-Gm-Message-State: APjAAAVCgJwzT5/lmtbHjswL8NaIIblGipiyGhpPOalhjFnsvg7KXgXf
-        UZU+Dp3vBH7tPb1qVnkgvPFSHg==
-X-Google-Smtp-Source: APXvYqyfJb9ulY7eYGRni5x1EoiZ65N/w4IbXiFtTbTgqXufBVfAXngFIBRVWJ/guKS6mVh9b6EFmQ==
-X-Received: by 2002:adf:8041:: with SMTP id 59mr2019145wrk.257.1575897385263;
-        Mon, 09 Dec 2019 05:16:25 -0800 (PST)
+        bh=4+QA/tgnnIgBecFWO74sIEulDFPFsySoDm6BKiBPuIs=;
+        b=R+U0KvNGdIe5sJd/Y1dyHJfVkKDkItu7PI17jhCw1VqA8h23mex5C4PnAQ9p8Z35lw
+         yDBX/2OwAbnWOCIp19KTUic4mmnQm7mGLC00c5lqnQfH5YcnBg1P69kHJB+N5BxM+g1W
+         FM6o3INjGtUNpFyZoyVqIoVwh7ejx4GBfIlk2o3jIV3HofYOgB7dvdRLreLLVZGLZU4K
+         cS6YZK9cAJQnARiDAxys+tg+N6ZEolUaHoD+Jj6iIz+uF8MKxD/0CKk1jDMZilaGIA3O
+         E4C0j911YYSS5wMiqoubDpLneV5kYKMzOcWPP6iL0olAP3i6vU+fbNInrIIZqTSkAJKZ
+         OqSg==
+X-Gm-Message-State: APjAAAWslXuRNvP2MbTGKqYG0JM2i8/QjjxR1KeTvS1mz3pWP938rJX0
+        /XK/DqG0CTouP40dMpuX9Oa/jQ==
+X-Google-Smtp-Source: APXvYqyRDWEKFoDHnaCmaf2MHVbQ5xRPyxwdKLhtWp6mVWE70kvawyamBbCkIcnqRzgXhvTg64VXvw==
+X-Received: by 2002:a1c:49c3:: with SMTP id w186mr25635339wma.53.1575897473285;
+        Mon, 09 Dec 2019 05:17:53 -0800 (PST)
 Received: from dell ([2.27.35.145])
-        by smtp.gmail.com with ESMTPSA id d8sm26935218wre.13.2019.12.09.05.16.24
+        by smtp.gmail.com with ESMTPSA id u14sm26646505wrm.51.2019.12.09.05.17.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 05:16:24 -0800 (PST)
-Date:   Mon, 9 Dec 2019 13:16:18 +0000
+        Mon, 09 Dec 2019 05:17:51 -0800 (PST)
+Date:   Mon, 9 Dec 2019 13:17:45 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     robh@kernel.org, broonie@kernel.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 03/12] mfd: wcd934x: add support to wcd9340/wcd9341
- codec
-Message-ID: <20191209131618.GL3468@dell>
-References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
- <20191121170509.10579-4-srinivas.kandagatla@linaro.org>
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     enric.balletbo@collabora.com, Wolfram Sang <wsa@the-dreams.de>,
+        Akshu.Agrawal@amd.com, Guenter Roeck <groeck@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-i2c@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert
+ i2c tunnel to MFD Cell
+Message-ID: <20191209131745.GM3468@dell>
+References: <20191121211053.48861-1-rrangel@chromium.org>
+ <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121170509.10579-4-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019, Srinivas Kandagatla wrote:
+On Thu, 21 Nov 2019, Raul E Rangel wrote:
 
-> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> If the i2c-cros-ec-tunnel driver is compiled into the kernel, it is
+> possible that i2c-cros-ec-tunnel could be probed before cros_ec_XXX
+> has finished initializing and setting the drvdata. This would cause a
+> NULL pointer panic.
 > 
-> This codec has integrated SoundWire controller, pin controller and
-> interrupt controller.
+> Converting this driver over to an MFD solves the problem and aligns with
+> where the cros_ec is going.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 > ---
-> Change since v3:
->  Fixed lowcase usage of wcd934x as suggested by Lee.
->  Updated few if checks as recommended.
->  add defines for SLIM devic and Instance ID of WCD934x
->  Updated device name and compatible for gpio controller driver.
+> You can now see the device node lives under the mfd device.
 > 
->  drivers/mfd/Kconfig                   |  12 +
->  drivers/mfd/Makefile                  |   1 +
->  drivers/mfd/wcd934x.c                 | 306 +++++++++++++++
->  include/linux/mfd/wcd934x/registers.h | 531 ++++++++++++++++++++++++++
->  include/linux/mfd/wcd934x/wcd934x.h   |  31 ++
->  5 files changed, 881 insertions(+)
->  create mode 100644 drivers/mfd/wcd934x.c
->  create mode 100644 include/linux/mfd/wcd934x/registers.h
->  create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+> $ find /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/ -iname firmware_node -exec ls -l '{}' \;
+> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/firmware_node -> ../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
+> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/i2c-9/firmware_node -> ../../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
+> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/i2c-9/i2c-10EC5682:00/firmware_node -> ../../../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00/10EC5682:00
+> 
+>  drivers/i2c/busses/i2c-cros-ec-tunnel.c | 36 +++++++++----------------
+>  drivers/mfd/cros_ec_dev.c               | 19 +++++++++++++
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
