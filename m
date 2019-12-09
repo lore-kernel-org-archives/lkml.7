@@ -2,100 +2,145 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A893EC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC716C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7973520836
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="veU94l/2"
+	by mail.kernel.org (Postfix) with ESMTP id B9BFC206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLISND (ORCPT
+        id S1726841AbfLISNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:13:03 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42381 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLISND (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:13:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a15so17243230wrf.9;
-        Mon, 09 Dec 2019 10:13:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/Lzf1hIoDU/ZjVff0Ob50B/u4dz41ExonvLP+obnOrY=;
-        b=veU94l/2yneEs2+AYnPRfypLrEwv/lHOSPvX2FqK4ks4WOdsJkkhAm4704nkBZ/6Mi
-         lazIXl2B9ITEC8ee2XmyffCUC6U1UxH6gR89nd73H2hk9MND/KGz0gFcIDaoU59+mrNe
-         s4vvhZNA0EcQumdairxyFg8FSbETavWj4ki9o6CcpeoxWnWox79TQtPOcnpnJQek4G1R
-         WrFcNF+8ArAqMgIYmMiIF6YjptIwS/YnvFwU64wa67dKt4UvGQNRP3Oc1V+GG1r37M1p
-         dlLjbhoiVa8aQS2KZXvMnQga8nB+XqTaw/IdkyHaxjVt5G6qK6/Im8JtyYoUxV5L2iZm
-         YoqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/Lzf1hIoDU/ZjVff0Ob50B/u4dz41ExonvLP+obnOrY=;
-        b=WU8BM4CQ+wMzXkyp2S7ZTvyB0bmFLeXQl4QbkmvwgZgQLrGGk1ZvwX+UDerPpALiRT
-         cpZ2hOnluVBREy4Qz3wtmHNrc+Bhu5PchZU0hnS/KfIs9EVBR5ulFgReYtIVNbX6gUmk
-         PmIt5zNxFSePQrPfSmQFtwMpJeldKFlAsYwE6jZ2t3irlG2NEl6Cx8WrOPFfMKFZFG7Q
-         ahC7ShATXzEVuVZujwjk8wUonwfkc2fOeeQaZuCBxE7vVtZbgL8ousrLSF3H1kUa/bPB
-         WwlDkG8NLZc2NbFFE0IVaJFUqxcmpM3+s3Na4EQ3nsN73AyXLi0KM+r7VKWWcs1m6Wdk
-         BHLQ==
-X-Gm-Message-State: APjAAAXNvDzQvG5NE2DJerSdwNvmbvcMPm+VF7VW0apeQ9n4yyJpUPgg
-        vCTG//4g0tbTOspU1/ICEcI=
-X-Google-Smtp-Source: APXvYqz09GH7IbLXL1n86qn2SJ7Z7dx3lAnu4LcZ3gQ+++4bhQhZLSjmbqLnsv9mnd/KlGDUZHcj5A==
-X-Received: by 2002:a5d:5308:: with SMTP id e8mr3599909wrv.77.1575915181066;
-        Mon, 09 Dec 2019 10:13:01 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g21sm219800wmh.17.2019.12.09.10.12.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 10:13:00 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     mbrugger@suse.com, phil@raspberrypi.org,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
-Date:   Mon,  9 Dec 2019 10:12:56 -0800
-Message-Id: <20191209181256.5854-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191204125633.27696-1-nsaenzjulienne@suse.de>
-References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
+        Mon, 9 Dec 2019 13:13:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:40760 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLISNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:13:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A90081045;
+        Mon,  9 Dec 2019 10:13:20 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC9453F6CF;
+        Mon,  9 Dec 2019 10:13:19 -0800 (PST)
+Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <71417ba8-b844-ac96-bcad-4bf48fa8b869@arm.com>
+Date:   Mon, 9 Dec 2019 18:13:18 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  4 Dec 2019 13:56:33 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
-> Raspberry Pi's firmware has a feature to select how much memory to
-> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
-> to 944MB, with a default of 64MB. This memory resides in the topmost
-> part of the lower 1GB memory area and grows bigger expanding towards the
-> begging of memory.
-> 
-> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
-> the memory available to the system in the lower 1GB area can outgrow the
-> interconnect's dma-range as its size was selected based on the maximum
-> system memory available given the default gpu_mem configuration. This
-> makes that memory slice unavailable for DMA. And may cause nasty kernel
-> warnings if CMA happens to include it.
-> 
-> Change soc's dma-ranges to really reflect it's HW limitation, which is
-> being able to only DMA to the lower 1GB area.
-> 
-> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+Hi
 
-Applied to devicetree/fixes, thanks!
---
-Florian
+a one minor nit, and one question about scmi_desc usage in this new transport
+independent driver.
+
+On 29/11/2019 09:31, Viresh Kumar wrote:
+> The SCMI specification is fairly independent of the transport protocol,
+> which can be a simple mailbox (already implemented) or anything else.
+> The current Linux implementation however is very much dependent of the
+> mailbox transport layer.
+> 
+> This patch makes the SCMI core code (driver.c) independent of the
+> mailbox transport layer and moves all mailbox related code to a new
+> file: mailbox.c.
+> 
+> We can now implement more transport protocols to transport SCMI
+> messages.
+> 
+> The transport protocols just need to provide struct scmi_transport_ops,
+> with its version of the callbacks to enable exchange of SCMI messages.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/firmware/arm_scmi/Makefile  |   3 +-
+>  drivers/firmware/arm_scmi/common.h  |  39 ++++++++
+>  drivers/firmware/arm_scmi/driver.c  | 143 ++++++++++-----------------
+>  drivers/firmware/arm_scmi/mailbox.c | 146 ++++++++++++++++++++++++++++
+>  4 files changed, 236 insertions(+), 95 deletions(-)
+>  create mode 100644 drivers/firmware/arm_scmi/mailbox.c
+> 
+
+[snip]
+
+>  /**
+>   * struct scmi_info - Structure representing a SCMI instance
+>   *
+> @@ -128,6 +109,7 @@ struct scmi_chan_info {
+>  struct scmi_info {
+>  	struct device *dev;
+>  	const struct scmi_desc *desc;
+> +	struct scmi_transport_ops *transport_ops;
+>  	struct scmi_revision_info version;
+>  	struct scmi_handle handle;
+>  	struct scmi_xfers_info tx_minfo;
+> @@ -138,7 +120,6 @@ struct scmi_info {
+>  	int users;
+>  };
+>  
+
+Could we add also the related @transport_ops in the above comment block ?
+
+> -#define client_to_scmi_chan_info(c) container_of(c, struct scmi_chan_info, cl)
+>  #define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
+>  
+>  /*
+
+[snip]
+
+> +
+>  static int scmi_probe(struct platform_device *pdev)
+>  {
+>  	int ret;
+> @@ -833,12 +800,6 @@ static int scmi_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *child, *np = dev->of_node;
+>  
+> -	/* Only mailbox method supported, check for the presence of one */
+> -	if (scmi_mailbox_check(np, 0)) {
+> -		dev_err(dev, "no mailbox found in %pOF\n", np);
+> -		return -EINVAL;
+> -	}
+> -
+>  	desc = of_device_get_match_data(dev);
+>  	if (!desc)
+>  		return -EINVAL;
+
+This scmi_desc struct descriptor is retrieved from  of_match_table .data and points to
+the driver-provided scmi_generic_desc
+
+static const struct scmi_desc scmi_generic_desc = {
+        .max_rx_timeout_ms = 30,        /* We may increase this if required */
+        .max_msg = 20,          /* Limited by MBOX_TX_QUEUE_LEN */
+        .max_msg_size = 128,
+};
+
+Is not this kind of information possibly (maybe partially) related to the selected
+transport, and as such it should be also provided dynamically by the chosen transport
+layer at probe time, like the transport_ops, instead of being hard-coded in
+this driver ?
+
+Thanks
+
+Cristian
+
+
