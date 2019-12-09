@@ -2,87 +2,168 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0823EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9717C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8122077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFDF2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iyr3QIx/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxEmBkk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLIRnI (ORCPT
+        id S1726780AbfLIRnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:43:08 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36558 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIRnI (ORCPT
+        Mon, 9 Dec 2019 12:43:20 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40398 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIRnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:43:08 -0500
-Received: by mail-pl1-f193.google.com with SMTP id k20so6095461pls.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:43:07 -0800 (PST)
+        Mon, 9 Dec 2019 12:43:20 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so17174764wrn.7;
+        Mon, 09 Dec 2019 09:43:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=MHQW4be184f/yf/1QbvgrnCI9Q3h1KDp0e7s5WvOx80=;
-        b=iyr3QIx/LlLHFds2Y0VY7sk3AvbQjB8nonA4QpSaZ2DizI2XHJIFCO3R9xSwCWErm0
-         Veok7GkGvaf1ZaWsbm58BjFDKmNO0QW7VQbGK2OylGry81YPzyrOZ8ChIjo/HRyHe/9w
-         5W1ZydJDWdl05T2eFpBCbGFQxlo1jPJTBlIId49ZIYuUpBFgGDUgVaClVnykwG8QuPzB
-         nC4EbmZxgrZFm3oplSADQENMQ0nW4FYpTlo34zSTxSysd6qLFggv1PHFHIX8PK396mu/
-         FbMBDk4met2+Xkk5mbADRvUfFR6JZrioG9W0enUtz4GGnhZDHtRRx0/+fUfrAcJDdTwH
-         1hAA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=C8TlBCTzJ8R9+7Ovu0+GB3ZN7MCWzPCKO24ypqK2F+o=;
+        b=hxEmBkk+s9/itP46V5s5Vsrmn8iFeT423bz+J7vHgj3Y1bM8kITeaSp86kKAGiKXKm
+         /L9W004c2j3F/r6CtdpkEbIHWuHysyrh69njhty/rJwUMXRvBe3JqqawlPasDZKC+twL
+         OF3NpwothaqPm8A8mWrKJeghy0kOtowTHHCMixhPDrK6msz7v7qnGSuyY9QTCO+XJoOi
+         5A4CqeIzAg/GXntYrkJZVL37ybSWIVvV23hbGt5LKKuaRjJIUarWcLbnyDHe0yCh3eeK
+         35pI7ph2Mws1clV/X7h3st4UCIH8QbiZZM5bSHKxVm9YBA9iCuIuYjw22fk3zFn9KWpw
+         BQpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=MHQW4be184f/yf/1QbvgrnCI9Q3h1KDp0e7s5WvOx80=;
-        b=avE9wMR539wFAzQAI/9eA+CnQCTO24Yt17ZV80DaqYTMsnqSi5cjadv8fisLffzSZJ
-         Aeqy0Maj3YY9tFtJVuzK2r7rgHHQXwuYBcAvD8g6VMPthpTVC8srowMeIUJh5ORvC1V4
-         B3JBez21l1Y1ypagiX/9//OA8Lu03teCvz8QMXa//VHxA/NzEB3+v5KxFV16YT+pu1c4
-         x6vnHoZY9CbEQRTxE+WHT9n/oaAgqCHFBxVRMKAx6eZBLzT5eVhjujMnUn5qTgqKYgVO
-         RtVk6uk7RuIfWr7KEbxju3V4LgJUiyf+hfqFJ5CgNkgR+mTcpUXc7n6ZVs16zkJTKk1U
-         6hNQ==
-X-Gm-Message-State: APjAAAUuXrq7pWVYl7IQGVcl9tiM+m395fek5KL5KQgC5ptWR6wglC0d
-        qHfTp9iaJsTcqvwiiMUllUYqbw==
-X-Google-Smtp-Source: APXvYqzcC8oy+td3BTTUw+K1ObFMNnlnH7pe6d915LO+YFlwaA6F3N3fqTSMgG+B/hT7n6lxTQThDw==
-X-Received: by 2002:a17:90a:dc84:: with SMTP id j4mr235074pjv.70.1575913387367;
-        Mon, 09 Dec 2019 09:43:07 -0800 (PST)
-Received: from localhost (66.sub-174-194-147.myvzw.com. [174.194.147.66])
-        by smtp.gmail.com with ESMTPSA id k4sm106115pfa.25.2019.12.09.09.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 09:43:06 -0800 (PST)
-Date:   Mon, 9 Dec 2019 09:43:04 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org
-cc:     linux-kernel@vger.kernel.org, palmerdabbelt@google.com
-Subject: RISC-V v5.6 patches will be collected by Palmer
-Message-ID: <alpine.DEB.2.21.9999.1912090933500.308630@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=C8TlBCTzJ8R9+7Ovu0+GB3ZN7MCWzPCKO24ypqK2F+o=;
+        b=hw3FrQRph8xyCcVxzzRRds66OotAkMe6/SP5OZWxjIaStoWoVomjcGQUlPPxkKhkB8
+         PBMGeGGMO1Dre3Q3nNFoUNsDayb6gDB310tm6Tb5FSoGhRifs3Etw4fxfi0Al9FazuYv
+         4YIhOGhJqgNDABeJhF199J6eWOuz88oNXngfbbiz38Sg3fzcCusCaceDIwM9GrLGGKtP
+         s35B713+3MX2/3dNXwsApigSuTZmKuZKqvHSO5/yoxujpnwLNHJIHbRB+5dqFmFAR+C9
+         dMiRFfZLLRQ5chwCbo6bMikUCr18dTCScqfsuAvm32agZITEJ55g7VupV7Aj/15HkB9h
+         0ZiA==
+X-Gm-Message-State: APjAAAXsuLrgrCxVlkDdenV1BVbgdsmX9VzgtxjFjyI61+K8dCYR8gRp
+        gF1TAFj7802gyVh0GqB5YnLIG76t
+X-Google-Smtp-Source: APXvYqywc4NaCEnKSHeJEcYzeJORT8xHbqw2hIUsAZOUQHsgSE7SPMkwx+tbW2RS5rrl1XKCw8zukQ==
+X-Received: by 2002:adf:cd0a:: with SMTP id w10mr3364307wrm.107.1575913397943;
+        Mon, 09 Dec 2019 09:43:17 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id y20sm72147wmi.25.2019.12.09.09.43.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 09:43:16 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     will@kernel.org
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>, notify@kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [PATCH v2] Documentation/barriers/kokr: Remove references to [smp_]read_barrier_depends()
+Date:   Mon,  9 Dec 2019 18:43:07 +0100
+Message-Id: <20191209174307.23698-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191209170633.GC7489@willie-the-truck> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 9 Dec 2019 17:06:34 +0000 Will Deacon <will@kernel.org> wrote:
 
-Folks,
+>On Mon, Dec 09, 2019 at 09:00:57AM -0800, Paul E. McKenney wrote:
+>> On Mon, Dec 09, 2019 at 09:44:33AM +0000, Will Deacon wrote:
+>> > On Fri, Dec 06, 2019 at 02:51:56PM -0800, Paul E. McKenney wrote:
+>> > > On Fri, Dec 06, 2019 at 11:38:22PM +0100, SeongJae Park wrote:
+>> > > > On Fri, Dec 6, 2019 at 11:08 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>> > > > > But since Jon seems to be taking these in his capacity and Documentation
+>> > > > > maintainer, could you please resend CCing him?  If we have these changes
+>> > > > > scattered across too many trees, someone is going to get confused,
+>> > > > > and it probably will be me.  ;-)
+>> > > >
+>> > > > Agreed, CC-ing Jon to this mail.  That said, this is a followup of Will's
+>> > > > patch[1] and the patch is also not queued in Jon's tree.  So, I would like to
+>> > > > hear Will's opinion either, if possible.
+>> > > >
+>> > > > [1]  https://lore.kernel.org/lkml/20191108170120.22331-10-will@kernel.org/
+>> > >
+>> > > Ah, this one got caught out in the conversion from .html to .rst.
+>> > >
+>> > > I did get an ack on one of those, and thus queued it.  I clearly need to
+>> > > take another look at Will's series, and thank you for the reminder!
+>> >
+>> > I was planning to include this in the next posting of my series, but I was
+>> > waiting for the merge window to close first. Now that we have -rc1, I'll
+>> > post it this week, although the patches are also queued up in my tree here
+>> > [1] (warning -- rebasing development branch).
+>> >
+>> > I'll leave the patches that are unrelated to smp_read_barrier_depends() to
+>> > Paul and Jon, unless they indicate a preference to the contrary.
+>>
+>> I don't know about Jon, but I might need a reminder as to which patches
+>> those are.  ;-)
+>
+>https://lore.kernel.org/lkml/20191121234125.28032-1-sj38.park@gmail.com
+>
+>...but it actually looks like Jon picked those all up, so I think we're good.
+>
+>SeongJae -- please shout if we've missed something (the link above, plus
+>this patch).
 
-Most of the backlog of the RISC-V kernel patches from the past few months 
-have been cleared, and now Palmer has graciously volunteered to handle the 
-patch collection for v5.6 and to send those upstream to Linus.  
+Sorry for making things too complicated.  So, below is the timeline:
 
-I'll continue to handle the v5.5-rc patches and pull requests, and will 
-try to take care of some of the patches that have already been posted.  
-Anything that doesn't make it will be handed off to Palmer.
+2019-11-08
+----------
 
-So pretty much any non-fix patches posted from now on will go to v5.6.
+Will posted a patchset containing a patch removing references to
+[smp_]read_barrier_depends() from memory-barriers.txt.
+https://lore.kernel.org/lkml/20191108170120.22331-1-will@kernel.org/
 
-If anyone has any questions, feel free to discuss them here.
+2019-11-21
+----------
+
+I posted a translation of the patch (patchset 1):
+https://lore.kernel.org/lkml/20191121193209.15687-1-sj38.park@gmail.com/
+
+2019-11-22
+----------
+
+I posted another patchset for the Korean translations (patchset 2):
+https://lore.kernel.org/linux-doc/20191121234125.28032-1-sj38.park@gmail.com/
+
+2019-11-26
+----------
+
+Paul queued the `patchset 1` and `patchset 2`.  He also asked me to
+get a review from other Korean, if possible:
+https://lore.kernel.org/lkml/20191126222004.GV2889@paulmck-ThinkPad-P72/
+
+Same day, Jon queued the `patchset 2` (not `patchset 1`) and noticed the
+conflict.  Paul dropped both `patchset 1` and `patchset 2` from his tree.
+Maybe this is the start of the confusion.
+
+2019-11-29
+----------
+
+I got a review results from another Korean for both patchset 1 and patchset 2.
+Because patchset 1 has already merged in Linus's tree, I made another patchset
+containing fix of the patchset 1 (patchset 1-1):
+https://lore.kernel.org/linux-doc/20191129182823.8710-1-sjpark@amazon.de/
+
+Because patchset 2 is not merged in any tree, I made and posted the second
+version of the patchset 2 (patchset 2-1):
+https://lore.kernel.org/lkml/20191129180837.7233-1-sjpark@amazon.de/
 
 
-- Paul
+So, patchset 1 is already merged by Jon, and patchset 2 is abandoned.
+Patchset 1-1 is waiting for Jon's review, and patchset 2-1 is merged in Will's
+tree.  Will would send the patchset 2-1 with his patches again in near future.
+
+Sorry again for introducing messy confusion and hope this to finally make
+things clear.  If you have any problem, please let me know.
+
+
+>
+>Will
