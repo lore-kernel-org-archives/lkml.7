@@ -2,95 +2,136 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E6C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82701C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A66207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575910398;
-	bh=k3WgWl5UbXv5MieBdR01WsYTXtWFKoGPrB4Yk7jToYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FG1/wm+rim6YVb4Rg93bQ+D4u7sT08f8jjKrB5ZjiJJap3XOmGfGAGrLwE9GKNwWD
-	 g6QhyioAbGUPzK6/TyUM45Gt/mKLFwTh9kSesdW0aMbBlIW7pLzU/tnik09r4pQfkp
-	 sSXhk9A8dIr3IuM4booyJTuInrVeCHwDfmE0D4fc=
+	by mail.kernel.org (Postfix) with ESMTP id 57C5D2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="pv/qQ4oR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfLIQxR (ORCPT
+        id S1726619AbfLIQ4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:53:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 11:56:00 -0500
+Received: from onstation.org ([52.200.56.107]:39240 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfLIQxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:53:17 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        id S1725904AbfLIQz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:55:59 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A012207FD;
-        Mon,  9 Dec 2019 16:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575910396;
-        bh=k3WgWl5UbXv5MieBdR01WsYTXtWFKoGPrB4Yk7jToYk=;
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id C5F0A3E8F7;
+        Mon,  9 Dec 2019 16:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1575910558;
+        bh=IOou9TpV+L1zTliwsDvEweGpQGlqyMJMFaeFEvowmJk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kcq2/sSYcppBI8w2mxwBtMccK3ngl1WPRnkKmwdW/ZNj+vNMsr4mlmrcD5kWFhsVD
-         tgixkVrldVEmGq7NE1u1XEAcOAxFVrxzQHXfJ+Zo1Oq3LRhM6DZSJq0YcntMBv2ufG
-         hJMIrkWRlmrK3sD/SfqwRCLVOjmNvxT5iCZByjkE=
-Date:   Mon, 9 Dec 2019 17:53:14 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        b=pv/qQ4oRIKZXzsuVDiX+sBNfpA+09Ne97DInXCT6Wpym9V3Dt113bUDVb+iNGWMcJ
+         CGoTHeGIVsZudI8+KLLM3KRF6QLbX/a+6PX6nB4wzjlMD3QIs4wDD5pFGjCYtu8Zjd
+         tKkd8akm416FTOfVJRHg5lSyXOC4lRlSfm8c5MsA=
+Date:   Mon, 9 Dec 2019 11:55:58 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: Convert to new-style SPDX license
- identifiers
-Message-ID: <20191209165314.mostdak54qgo2r3y@gilmour.lan>
-References: <20191123132435.22093-1-peron.clem@gmail.com>
- <20191128174204.tbr5ldilkadw42gc@gilmour.lan>
- <CAJiuCccY7AFsd22bOxKZW=BAne5YEG0vmnVmUNFamU9cpW_vNA@mail.gmail.com>
- <20191202191205.2izimptezz5rf5kp@gilmour.lan>
- <CAJiuCcdKi9vedvCWz1BvCS8B0h9rEX1oafZzdok9noFsnvg1NA@mail.gmail.com>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        thierry.reding@gmail.com
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator
+ bindings
+Message-ID: <20191209165558.GA3212@onstation.org>
+References: <20191205002503.13088-1-masneyb@onstation.org>
+ <20191205002503.13088-5-masneyb@onstation.org>
+ <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com>
+ <20191209005436.GA13647@onstation.org>
+ <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJiuCcdKi9vedvCWz1BvCS8B0h9rEX1oafZzdok9noFsnvg1NA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 08:45:44PM +0100, Cl=E9ment P=E9ron wrote:
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.=
-dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > > > index f335f7482a73..84b7e9936300 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-> > > > > @@ -1,4 +1,4 @@
-> > > > > -// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > >  /*
-> > > > >   * Copyright (C) 2019 Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > > > >   */
-> > > >
-> > > > And I'm not sure what this one (and the next) is?
-> > >
-> > > The license expressions in dual licensed files is wrong here, "OR"
-> > > should be uppercase.
-> > > I can move it to a separate commit if you like.
+On Mon, Dec 09, 2019 at 10:16:26AM -0600, Rob Herring wrote:
+> On Sun, Dec 8, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
 > >
->
-> > Ah, right, indeed, this should be in a separate patch.
-> So how many patch do you recommend here ?
->
-> 1 for the or -> OR style fix.
-> 1 to change to SPDX.
-> and 1 to use the same // style everywhere ?
+> > On Thu, Dec 05, 2019 at 07:56:10AM -0600, Rob Herring wrote:
+> > > On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
+> > > >
+> > > > Add support for clock-based vibrator devices where the speed can be
+> > > > controlled by changing the duty cycle.
+> > > >
+> > > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > > ---
+> > > >  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
+> > > >  1 file changed, 60 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..2103a5694fad
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
+> > > > @@ -0,0 +1,60 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Clock vibrator
+> > > > +
+> > > > +maintainers:
+> > > > +  - Brian Masney <masneyb@onstation.org>
+> > > > +
+> > > > +description: |
+> > > > +  Support for clock-based vibrator devices where the speed can be controlled
+> > > > +  by changing the duty cycle.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: clk-vibrator
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clock-names:
+> > > > +    description: output clock that controls the speed
+> > > > +    items:
+> > > > +      - const: core
+> > >
+> > > No point in making up a name when there's only one clock, so drop.
+> >
+> > OK, will do.
+> >
+> > >
+> > > > +
+> > > > +  clock-frequency: true
+> > >
+> > > Given the frequency is variable, what does this mean in this case?
+> >
+> > The clock frequency is fixed. The duty cycle is what's variable.
+> 
+> That sounds like a PWM then...
 
-Yep :)
+Yes... See this message from Stephen with some more background
+information about why this is in the clk subsystem:
 
-Maxime
+https://lore.kernel.org/lkml/20190627234929.B78E520815@mail.kernel.org/
+
+Brian
