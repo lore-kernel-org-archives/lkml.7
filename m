@@ -2,167 +2,231 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BEFC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5854C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D2B206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575918027;
-	bh=FxwAu7aG5wfTQq8JyEzHp5ZfossH6ekj9jfs4/hmgeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jtaiLhNcUVgWvVyYtPm4uG9B9kgQlL7z/+PJhD2RetgRpSPrjsM2nY9/DWGXpD899
-	 cKG9b560QOF1Oh/bFxteV6MOF59W1bKGpz95xYe77anjkq0k0M8BtTqnZQANz9IkXV
-	 /SHPRQ0EMSypm43B/u9Fvb2iWQOfsGOSFM6oBaqs=
+	by mail.kernel.org (Postfix) with ESMTP id 97DAE206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TMSPry+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLITA0 (ORCPT
+        id S1726675AbfLITFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:00:26 -0500
-Received: from foss.arm.com ([217.140.110.172]:42674 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfLITAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:00:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19850113E;
-        Mon,  9 Dec 2019 11:00:25 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C6E73F6CF;
-        Mon,  9 Dec 2019 11:00:24 -0800 (PST)
-Date:   Mon, 09 Dec 2019 19:00:23 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, stable@vger.kernel.org
-Subject: Applied "spi: fsl: don't map irq during probe" to the spi tree
-In-Reply-To: <518cfb83347d5372748e7fe72f94e2e9443d0d4a.1575905123.git.christophe.leroy@c-s.fr>
-Message-Id: <applied-518cfb83347d5372748e7fe72f94e2e9443d0d4a.1575905123.git.christophe.leroy@c-s.fr>
-X-Patchwork-Hint: ignore
+        Mon, 9 Dec 2019 14:05:54 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46866 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfLITFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:05:54 -0500
+Received: by mail-pl1-f195.google.com with SMTP id k20so6164738pll.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:05:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=3tlsVBYGbbVzviApC4e4ev2YL4CetxanYMT0hBnciFg=;
+        b=TMSPry+nkDSDPSsbVJG78PyKqIwE046FyTj4lf9DUg54o9F3gPx8fpbRBziw7Es26b
+         Ztfzd5e0cPSZg1eirwoQbdwnAydx2Id5hsewBzOlLVL2PStZjLSaXMrwDizPT2CjBcGi
+         B3x0iOzlqLbxbS4qhOR2COYT4cuFSbLvHXOqA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=3tlsVBYGbbVzviApC4e4ev2YL4CetxanYMT0hBnciFg=;
+        b=NMwOLdId4pQ0z2QTBqWlsdAuwFx1KCvUPNOW6YyNiLjtsme6HNf9PP+v0M8BdHp7Qs
+         YcVbd16Mn0K2+lH2/+dB2EOjonEp5Ahyddu6eG6uIP5D0sCR2yPK2xIhnl+Kzb8vf8WU
+         nNsMpakftIET4hVMuKTl2g+WYG3LJCMZn6yCEfd78zYcoFp7utnTucwIAiAs2q2Bhtmt
+         FGZTHXE4b0fS2RDHHTb3FiUrRVjzu3iygI3r5dx7puH/dc1EV/UiUw+xvS2PSaz2UvCD
+         3QgxfhMYbi39+PkJVbvbfjz2aka3OfHo/eLUFNSt/8WKxz0V9n5GCiZBpXykWiI5WQXC
+         HvzA==
+X-Gm-Message-State: APjAAAW6ogp3KVI5+ebPiTqs3t0lXWj1eLSfKWIeY6wRUGMbBoksJW4f
+        0QaPPqnKqZsXTmTKbqO9kAmHhHSUYag=
+X-Google-Smtp-Source: APXvYqzvpwQ27TdzUSzid38nPoC0L2SyLmQJG3GF2KelnetdN4IYwxVjLEgceEQEMQd4mopSFfiQrw==
+X-Received: by 2002:a17:90b:150:: with SMTP id em16mr569787pjb.123.1575918353341;
+        Mon, 09 Dec 2019 11:05:53 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a17sm148559pjv.6.2019.12.09.11.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 11:05:52 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:05:51 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Joe Perches <joe@perches.com>
+Subject: [GIT PULL] treewide conversion to sizeof_field() for v5.5-rc2
+Message-ID: <201912091054.ECCE323A6@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Linus,
 
-   spi: fsl: don't map irq during probe
+Third time's the charm? Please pull this mostly mechanical treewide
+conversion from FIELD_SIZEOF() to sizeof_field(). This avoids the
+redundancy of having 2 macros (actually 3) doing the same thing, and
+consolidates on sizeof_field(). While "field" is not an accurate name,
+it is the common name used in the kernel, and doesn't result in any
+unintended innuendo.
 
-has been applied to the spi tree at
+As there are still users of FIELD_SIZEOF() in -next, I will clean up
+those during this coming development cycle and send the final old macro
+removal patch at that time. (Unless you'd rather have it be "completed"
+in your tree immediately?)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+Thanks!
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+-Kees
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+v2: https://lore.kernel.org/lkml/201912071144.768E249A4F@keescook/
+v1: https://lore.kernel.org/lkml/201909261026.6E3381876C@keescook/
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-Thanks,
-Mark
+are available in the Git repository at:
 
-From 3194d2533efffae8b815d84729ecc58b6a9000ab Mon Sep 17 00:00:00 2001
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Date: Mon, 9 Dec 2019 15:27:27 +0000
-Subject: [PATCH] spi: fsl: don't map irq during probe
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/sizeof_field-v5.5-rc2
 
-With lastest kernel, the following warning is observed at startup:
+for you to fetch changes up to c593642c8be046915ca3a4a300243a68077cd207:
 
-[    1.500609] ------------[ cut here ]------------
-[    1.505225] remove_proc_entry: removing non-empty directory 'irq/22', leaking at least 'fsl_spi'
-[    1.514234] WARNING: CPU: 0 PID: 1 at fs/proc/generic.c:682 remove_proc_entry+0x198/0x1c0
-[    1.522403] CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-s3k-dev-02248-g93532430a4ff #2564
-[    1.530724] NIP:  c0197694 LR: c0197694 CTR: c0050d80
-[    1.535762] REGS: df4a5af0 TRAP: 0700   Not tainted  (5.4.0-02248-g93532430a4ff)
-[    1.543818] MSR:  00029032 <EE,ME,IR,DR,RI>  CR: 22028222  XER: 00000000
-[    1.550524]
-[    1.550524] GPR00: c0197694 df4a5ba8 df4a0000 00000054 00000000 00000000 00004a38 00000010
-[    1.550524] GPR08: c07c5a30 00000800 00000000 00001032 22000208 00000000 c0004b14 00000000
-[    1.550524] GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0830000 c07fc078
-[    1.550524] GPR24: c08e8ca0 df665d10 df60ea98 c07c9db8 00000001 df5d5ae3 df5d5a80 df43f8e3
-[    1.585327] NIP [c0197694] remove_proc_entry+0x198/0x1c0
-[    1.590628] LR [c0197694] remove_proc_entry+0x198/0x1c0
-[    1.595829] Call Trace:
-[    1.598280] [df4a5ba8] [c0197694] remove_proc_entry+0x198/0x1c0 (unreliable)
-[    1.605321] [df4a5bd8] [c0067acc] unregister_irq_proc+0x5c/0x70
-[    1.611238] [df4a5bf8] [c005fbc4] free_desc+0x3c/0x80
-[    1.616286] [df4a5c18] [c005fe2c] irq_free_descs+0x70/0xa8
-[    1.621778] [df4a5c38] [c033d3fc] of_fsl_spi_probe+0xdc/0x3cc
-[    1.627525] [df4a5c88] [c02f0f64] platform_drv_probe+0x44/0xa4
-[    1.633350] [df4a5c98] [c02eee44] really_probe+0x1ac/0x418
-[    1.638829] [df4a5cc8] [c02ed3e8] bus_for_each_drv+0x64/0xb0
-[    1.644481] [df4a5cf8] [c02ef950] __device_attach+0xd4/0x128
-[    1.650132] [df4a5d28] [c02ed61c] bus_probe_device+0xa0/0xbc
-[    1.655783] [df4a5d48] [c02ebbe8] device_add+0x544/0x74c
-[    1.661096] [df4a5d88] [c0382b78] of_platform_device_create_pdata+0xa4/0x100
-[    1.668131] [df4a5da8] [c0382cf4] of_platform_bus_create+0x120/0x20c
-[    1.674474] [df4a5df8] [c0382d50] of_platform_bus_create+0x17c/0x20c
-[    1.680818] [df4a5e48] [c0382e88] of_platform_bus_probe+0x9c/0xf0
-[    1.686907] [df4a5e68] [c0751404] __machine_initcall_cmpcpro_cmpcpro_declare_of_platform_devices+0x74/0x1a4
-[    1.696629] [df4a5e98] [c072a4cc] do_one_initcall+0x8c/0x1d4
-[    1.702282] [df4a5ef8] [c072a768] kernel_init_freeable+0x154/0x204
-[    1.708455] [df4a5f28] [c0004b2c] kernel_init+0x18/0x110
-[    1.713769] [df4a5f38] [c00122ac] ret_from_kernel_thread+0x14/0x1c
-[    1.719926] Instruction dump:
-[    1.722889] 2c030000 4182004c 3863ffb0 3c80c05f 80e3005c 388436a0 3c60c06d 7fa6eb78
-[    1.730630] 7fe5fb78 38840280 38634178 4be8c611 <0fe00000> 4bffff6c 3c60c071 7fe4fb78
-[    1.738556] ---[ end trace 05d0720bf2e352e2 ]---
+  treewide: Use sizeof_field() macro (2019-12-09 10:36:44 -0800)
 
-The problem comes from the error path which calls
-irq_dispose_mapping() while the IRQ has been requested with
-devm_request_irq().
+----------------------------------------------------------------
+treewide conversion from FIELD_SIZEOF() to sizeof_field()
 
-IRQ doesn't need to be mapped with irq_of_parse_and_map(). The only
-need is to get the IRQ virtual number. For that, use
-of_irq_to_resource() instead of the
-irq_of_parse_and_map()/irq_dispose_mapping() pair.
+----------------------------------------------------------------
+Pankaj Bharadiya (2):
+      MIPS: OCTEON: Replace SIZEOF_FIELD() macro
+      treewide: Use sizeof_field() macro
 
-Fixes: 500a32abaf81 ("spi: fsl: Call irq_dispose_mapping in err path")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/518cfb83347d5372748e7fe72f94e2e9443d0d4a.1575905123.git.christophe.leroy@c-s.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-spi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ Documentation/process/coding-style.rst             |   2 +-
+ .../translations/it_IT/process/coding-style.rst    |   2 +-
+ .../translations/zh_CN/process/coding-style.rst    |   2 +-
+ arch/arc/kernel/unwind.c                           |   6 +-
+ arch/mips/cavium-octeon/executive/cvmx-bootmem.c   |   9 +-
+ arch/powerpc/net/bpf_jit32.h                       |   4 +-
+ arch/powerpc/net/bpf_jit_comp.c                    |  16 +--
+ arch/sparc/net/bpf_jit_comp_32.c                   |   8 +-
+ arch/x86/kernel/fpu/xstate.c                       |   2 +-
+ block/blk-core.c                                   |   4 +-
+ crypto/adiantum.c                                  |   4 +-
+ crypto/essiv.c                                     |   2 +-
+ drivers/firmware/efi/efi.c                         |   2 +-
+ drivers/infiniband/hw/efa/efa_verbs.c              |   2 +-
+ drivers/infiniband/hw/hfi1/sdma.c                  |   2 +-
+ drivers/infiniband/hw/hfi1/verbs.h                 |   4 +-
+ drivers/infiniband/ulp/opa_vnic/opa_vnic_ethtool.c |   2 +-
+ drivers/md/raid5-ppl.c                             |   2 +-
+ drivers/media/platform/omap3isp/isppreview.c       |  24 ++--
+ drivers/media/v4l2-core/v4l2-ioctl.c               |   2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c       |   4 +-
+ .../net/ethernet/cavium/liquidio/octeon_console.c  |  16 +--
+ drivers/net/ethernet/emulex/benet/be_ethtool.c     |   2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |   2 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |   2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_ethtool.c  |   8 +-
+ drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c   |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e_lan_hmc.c     |   2 +-
+ drivers/net/ethernet/intel/iavf/iavf_ethtool.c     |   2 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c       |  10 +-
+ drivers/net/ethernet/intel/ice/ice_lan_tx_rx.h     |   2 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c       |   4 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c       |   4 +-
+ drivers/net/ethernet/intel/ixgb/ixgb_ethtool.c     |   4 +-
+ drivers/net/ethernet/intel/ixgbevf/ethtool.c       |   4 +-
+ drivers/net/ethernet/marvell/mv643xx_eth.c         |   4 +-
+ drivers/net/ethernet/mellanox/mlx4/en_ethtool.c    |   2 +-
+ .../net/ethernet/mellanox/mlx5/core/fpga/ipsec.c   |   6 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c  |   4 +-
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c       |  10 +-
+ drivers/net/ethernet/netronome/nfp/bpf/main.c      |   2 +-
+ drivers/net/ethernet/netronome/nfp/bpf/offload.c   |   2 +-
+ drivers/net/ethernet/netronome/nfp/flower/main.h   |   2 +-
+ .../ethernet/oki-semi/pch_gbe/pch_gbe_ethtool.c    |   2 +-
+ drivers/net/ethernet/qlogic/qede/qede.h            |   2 +-
+ .../net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c    |   2 +-
+ drivers/net/ethernet/realtek/r8169_firmware.c      |   2 +-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c |   2 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   4 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c             |   6 +-
+ drivers/net/ethernet/ti/netcp_ethss.c              |  32 ++---
+ drivers/net/fjes/fjes_ethtool.c                    |   2 +-
+ drivers/net/geneve.c                               |   2 +-
+ drivers/net/hyperv/netvsc_drv.c                    |   2 +-
+ drivers/net/usb/sierra_net.c                       |   2 +-
+ drivers/net/usb/usbnet.c                           |   2 +-
+ drivers/net/vxlan.c                                |   4 +-
+ drivers/net/wireless/marvell/libertas/debugfs.c    |   2 +-
+ drivers/net/wireless/marvell/mwifiex/util.h        |   4 +-
+ drivers/s390/net/qeth_core_main.c                  |   2 +-
+ drivers/s390/net/qeth_core_mpc.h                   |  10 +-
+ drivers/scsi/aacraid/aachba.c                      |   4 +-
+ drivers/scsi/be2iscsi/be_cmds.h                    |   2 +-
+ drivers/scsi/cxgbi/libcxgbi.c                      |   2 +-
+ drivers/scsi/smartpqi/smartpqi_init.c              |   6 +-
+ drivers/staging/qlge/qlge_ethtool.c                |   2 +-
+ drivers/staging/wfx/data_tx.c                      |   2 +-
+ drivers/target/iscsi/cxgbit/cxgbit_main.c          |   2 +-
+ drivers/usb/atm/usbatm.c                           |   2 +-
+ drivers/usb/gadget/function/f_fs.c                 |   2 +-
+ fs/crypto/keyring.c                                |   2 +-
+ fs/verity/enable.c                                 |   2 +-
+ include/linux/filter.h                             |  12 +-
+ include/linux/kvm_host.h                           |   2 +-
+ include/linux/phy_led_triggers.h                   |   2 +-
+ include/net/garp.h                                 |   2 +-
+ include/net/ip_tunnels.h                           |   6 +-
+ include/net/mrp.h                                  |   2 +-
+ include/net/netfilter/nf_conntrack_helper.h        |   2 +-
+ include/net/netfilter/nf_tables_core.h             |   2 +-
+ include/net/sock.h                                 |   2 +-
+ ipc/util.c                                         |   2 +-
+ kernel/bpf/cgroup.c                                |   2 +-
+ kernel/bpf/local_storage.c                         |   4 +-
+ net/802/mrp.c                                      |   6 +-
+ net/batman-adv/main.c                              |   2 +-
+ net/bpf/test_run.c                                 |   8 +-
+ net/bridge/br.c                                    |   2 +-
+ net/core/dev.c                                     |   2 +-
+ net/core/filter.c                                  | 140 ++++++++++-----------
+ net/core/flow_dissector.c                          |  10 +-
+ net/core/xdp.c                                     |   4 +-
+ net/dccp/proto.c                                   |   2 +-
+ net/ipv4/ip_gre.c                                  |   4 +-
+ net/ipv4/ip_vti.c                                  |   4 +-
+ net/ipv4/tcp.c                                     |   2 +-
+ net/ipv6/ip6_gre.c                                 |   4 +-
+ net/iucv/af_iucv.c                                 |   2 +-
+ net/netfilter/nf_tables_api.c                      |   4 +-
+ net/netfilter/nfnetlink_cthelper.c                 |   2 +-
+ net/netfilter/nft_ct.c                             |  12 +-
+ net/netfilter/nft_masq.c                           |   2 +-
+ net/netfilter/nft_nat.c                            |   6 +-
+ net/netfilter/nft_redir.c                          |   2 +-
+ net/netfilter/nft_tproxy.c                         |   4 +-
+ net/netfilter/xt_RATEEST.c                         |   2 +-
+ net/netlink/af_netlink.c                           |   2 +-
+ net/openvswitch/datapath.c                         |   2 +-
+ net/openvswitch/flow.h                             |   4 +-
+ net/rxrpc/af_rxrpc.c                               |   2 +-
+ net/sched/act_ct.c                                 |   4 +-
+ net/sched/cls_flower.c                             |   2 +-
+ net/unix/af_unix.c                                 |   2 +-
+ security/integrity/ima/ima_policy.c                |   4 +-
+ sound/soc/codecs/hdmi-codec.c                      |   2 +-
+ 116 files changed, 299 insertions(+), 306 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 4b70887cf443..d0ad9709f4a6 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -746,8 +746,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 	if (ret)
- 		goto err;
- 
--	irq = irq_of_parse_and_map(np, 0);
--	if (!irq) {
-+	irq = of_irq_to_resource(np, 0, NULL);
-+	if (irq <= 0) {
- 		ret = -EINVAL;
- 		goto err;
- 	}
-@@ -761,7 +761,6 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 	return 0;
- 
- err:
--	irq_dispose_mapping(irq);
- 	return ret;
- }
- 
 -- 
-2.20.1
-
+Kees Cook
