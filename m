@@ -2,109 +2,59 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C70C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FD8C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DEA920828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575908813;
-	bh=XmMuS1tdYvjAP/dOf3MN6vwqugHg0P62ECl8srBnh14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B1Nwy2wNuyOuUibyjkQlpq2TmJCrXmi4818HEaA0Y/z50SLmHNmxPDLA5cJAjCZHB
-	 OKVj0S+4vlgUPIfWhW84HgE05FYOuvIFdrsJWui+NqqGAnrkYdw5VIGMY4YRZPka4p
-	 VUUdudFap41n1w6l203MBYOjKTB0gia3RjRtKvBE=
+	by mail.kernel.org (Postfix) with ESMTP id 2993D20692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfLIQ0w (ORCPT
+        id S1726687AbfLIQ1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:26:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32818 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 11:27:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46285 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfLIQ0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:26:52 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839772080D;
-        Mon,  9 Dec 2019 16:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575908811;
-        bh=XmMuS1tdYvjAP/dOf3MN6vwqugHg0P62ECl8srBnh14=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zOU+VVGKwRrsQ0D+daeQ+x/xsP+ATGq5Wl9RqLMP25OEiY225038UWy37UJhw427c
-         daPKborkT9vmKrlKEnjdHU05mgGRcG8eVRcpb/wMvX8g9vmrQcTXv0EFF7BeKw12Kf
-         l0lhHe8IOzGxUjarOFoGOoeadP8wDld7a054/8Sc=
-Date:   Mon, 9 Dec 2019 16:26:46 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-Message-ID: <20191209162645.GA7489@willie-the-truck>
-References: <20191209160638.141431-1-andre.przywara@arm.com>
+        id S1726477AbfLIQ1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:27:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 08:27:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="210139474"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Dec 2019 08:27:46 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5C1D4300DF5; Mon,  9 Dec 2019 08:27:46 -0800 (PST)
+Date:   Mon, 9 Dec 2019 08:27:46 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     kan.liang@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, like.xu@linux.intel.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix missing marker for
+ snr_uncore_imc_freerunning_events
+Message-ID: <20191209162746.GA814951@tassilo.jf.intel.com>
+References: <1575898953-85496-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209160638.141431-1-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1575898953-85496-1-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
-> From: Deepak Pandey <Deepak.Pandey@arm.com>
+> [   16.060540]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > 
-> The Arm N1SDP SoC suffers from some PCIe integration issues, most
-> prominently config space accesses to not existing BDFs being answered
-> with a bus abort, resulting in an SError.
+> This snr_uncore_imc_freerunning_events array was missing an end-marker.
 
-"Do as I say, not as I do"?
+We had this often enough now that it might be worth a checkpatch rule?
 
-> To mitigate this, the firmware scans the bus before boot (catching the
-> SErrors) and creates a table with valid BDFs, which acts as a filter for
-> Linux' config space accesses.
-> 
-> Add code consulting the table as an ACPI PCIe quirk, also register the
-> corresponding device tree based description of the host controller.
-> Also fix the other two minor issues on the way, namely not being fully
-> ECAM compliant and config space accesses being restricted to 32-bit
-> accesses only.
-> 
-> This allows the Arm Neoverse N1SDP board to boot Linux without crashing
-> and to access *any* devices (there are no platform devices except UART).
-> 
-> Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
-> [Sudipto: extend to cover the CCIX root port as well]
-> Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
-> [Andre: fix coding style issues, rewrite some parts, add DT support]
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  arch/arm64/configs/defconfig        |   1 +
->  drivers/acpi/pci_mcfg.c             |   7 +
->  drivers/pci/controller/Kconfig      |  11 ++
->  drivers/pci/controller/Makefile     |   1 +
->  drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
->  include/linux/pci-ecam.h            |   2 +
->  6 files changed, 218 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-n1sdp.c
-
-Where can I buy one of these? They're "unreleased" according to:
-
-https://community.arm.com/developer/tools-software/oss-platforms/w/docs/440/neoverse-n1-sdp
-
-and I don't think we should wreck upstream because of a platform that
-doesn't exist.
-
-Will
+-Andi
