@@ -2,102 +2,115 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C51C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB973C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225792071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F34205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tf11p4tj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7T9TU6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfLIVqW (ORCPT
+        id S1726718AbfLIVu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:46:22 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41614 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIVqW (ORCPT
+        Mon, 9 Dec 2019 16:50:58 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34669 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIVu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:46:22 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHWS027425;
-        Mon, 9 Dec 2019 15:46:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575927977;
-        bh=2YdLKsyCyc05eFGvNNX7LFuebeJYz2yZDq4ihEl6WgU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Tf11p4tjP6YY8lqfGi/xRmyK+JyBSd6r6xexwWZcKVn7v7g3TnR3xhpoYqNjE2p3G
-         N5r+jY775xXaJJjAxrP8cbATyTpLEC2p/v2gKPCBT098BecYtMdd6Jg0Lnd4yq4h+/
-         ViGVnsxcwWBbVDEGTEUp3E0K4OIbJYKFN8zx5hOo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHU1108452;
-        Mon, 9 Dec 2019 15:46:17 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 15:46:17 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 15:46:17 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LkHZl054583;
-        Mon, 9 Dec 2019 15:46:17 -0600
-Subject: Re: [PATCH] can: tcan4x5x: Turn on the power before parsing the
- config
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191209212351.27518-1-dmurphy@ti.com>
- <deabf78f-5b6a-f631-412d-49dd6f0c372a@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4ae989d0-dfa9-1b0c-0f3a-0a338605c3f1@ti.com>
-Date:   Mon, 9 Dec 2019 15:44:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 16:50:58 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a15so13675676otf.1;
+        Mon, 09 Dec 2019 13:50:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O/NLa7LG87/2ajh4S2U01kITyWo4HMhACFw0A24HFMA=;
+        b=N7T9TU6wfpVeEE9xx36zwVSppTMWw2e8gt5XhphUSf5cKJiGbOcV+7mbD5Yco3EbA6
+         qlSqFlwyLi/vXaNjFgj4+GjgRQNmHTDFNwDe1o5Yh7kUxFDgmL+kgF4PGT+7uqtHzlLs
+         w9W1CzutB1TFH3t0W4UsP0nTN3M6HavAFKY3h3iq/dMaJoyN7TBprJSzSs1I8HcGFNOW
+         9itE6ES5s1heBuEUf/0BvjgWWos1HQ0ZBgZpHo4Lp9rYW5QfkhvjJqtXhcZe3JlcBG4g
+         cyQnty7/gMQA6ot73DECnWSvI6TXTJGKkMUE2PLAg+RQBh4IKWB/Zf3hu2swAl8tZC7K
+         nuXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O/NLa7LG87/2ajh4S2U01kITyWo4HMhACFw0A24HFMA=;
+        b=ArRLwmY5qP3o9K9CJevL3Ne1VeirjxbnQ6dDoa5A5wV3N6ya76F/1hWPF6BccojSeD
+         iL4mmXWwsSZHtsCRAbcTifB2emItuOCvMu70lF9GsA+NsaciZC4sT3lw3VMOwwpjj13H
+         zYZkNFIrRjFn5uxbTcQ4QV6LJc7mA1t0oWMjnIdeYK0TKvIVb++3AdqpFMCs11Eezsv3
+         l5SdLzXDbhjbBhFK+seYCotraZ49cvvQeCnWLfOxKWi/YcKSyRLicrnA9FBlK54a7p8S
+         Wq7Y8s2SbxizAwplkyhtlUUkeRlqo/8zqGIyK2RC/szcrAAu9lhmUI2zocHIudZ63SCz
+         maCA==
+X-Gm-Message-State: APjAAAUxCiDivesEnXUYyN8T3cQKSUo8yTGBbZoAavbczpGJYXErSsrc
+        t3VhseEURDOerYg4DA7W5fG8FWazmsE=
+X-Google-Smtp-Source: APXvYqzIwTCJYyE3QPvIhgxJ4d2HxrbZsul1UcQgKJpJiopoXeZ60p2+m7cgoOCNdwxxjt/MqERwjQ==
+X-Received: by 2002:a05:6830:18e6:: with SMTP id d6mr24252454otf.170.1575928257168;
+        Mon, 09 Dec 2019 13:50:57 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 16sm469424otc.73.2019.12.09.13.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 13:50:56 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] net: smc911x: Adjust indentation in smc911x_phy_configure
+Date:   Mon,  9 Dec 2019 14:50:27 -0700
+Message-Id: <20191209215027.10222-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <deabf78f-5b6a-f631-412d-49dd6f0c372a@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+Clang warns:
 
-On 12/9/19 3:38 PM, Marc Kleine-Budde wrote:
-> On 12/9/19 10:23 PM, Dan Murphy wrote:
->> The parse config function now performs action on the device either
->> reading or writing and a reset.  If the regulator is managed it needs
->> to be turned on.  So turn on the regulator if available if the parsing
->> fails then turn off the regulator.
->>
->> Fixes: a5235f3c7c23 ("can: tcan45x: Make wake-up GPIO an optional GPIO")
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/can/m_can/tcan4x5x.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
->> index 4e1789ea2bc3..515486fcb150 100644
->> --- a/drivers/net/can/m_can/tcan4x5x.c
->> +++ b/drivers/net/can/m_can/tcan4x5x.c
->> @@ -451,11 +451,11 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
->>   	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
->>   					&spi->dev, &tcan4x5x_regmap);
->>   
->> +	tcan4x5x_power_enable(priv->power, 1);
-> please add error handling
+../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+         if (!lp->ctl_rfduplx)
+         ^
+../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
+is here
+        if (lp->ctl_rspeed != 100)
+        ^
+1 warning generated.
 
-Ack
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
 
+Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
+Link: https://github.com/ClangBuiltLinux/linux/issues/796
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/smsc/smc911x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Marc
->
+diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
+index 4cc679376c9a..186c0bddbe5f 100644
+--- a/drivers/net/ethernet/smsc/smc911x.c
++++ b/drivers/net/ethernet/smsc/smc911x.c
+@@ -936,7 +936,7 @@ static void smc911x_phy_configure(struct work_struct *work)
+ 	if (lp->ctl_rspeed != 100)
+ 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
+ 
+-	 if (!lp->ctl_rfduplx)
++	if (!lp->ctl_rfduplx)
+ 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
+ 
+ 	/* Update our Auto-Neg Advertisement Register */
+-- 
+2.24.0
+
