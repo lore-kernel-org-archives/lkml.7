@@ -2,130 +2,99 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BBBC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CB7C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DDE92077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28692073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLIS0b (ORCPT
+        id S1726637AbfLIS11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:26:31 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:37364 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726408AbfLIS0b (ORCPT
+        Mon, 9 Dec 2019 13:27:27 -0500
+Received: from sender4-op-o18.zoho.com ([136.143.188.18]:17863 "EHLO
+        sender4-op-o18.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfLIS10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:26:31 -0500
-Received: (qmail 4869 invoked by uid 2102); 9 Dec 2019 13:26:30 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 9 Dec 2019 13:26:30 -0500
-Date:   Mon, 9 Dec 2019 13:26:30 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jiri Kosina <jikos@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        <linux-input@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: rcu detected stall in hub_event
-In-Reply-To: <Pine.LNX.4.44L0.1911251216350.1565-100000@iolanthe.rowland.org>
-Message-ID: <Pine.LNX.4.44L0.1912091318210.1462-100000@iolanthe.rowland.org>
+        Mon, 9 Dec 2019 13:27:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1575916033; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=Uqeax3GWXw+lN2aiuuJ2WAdj6XJgf83shDkh4o75FqkeAl5csykPMHKyW4TQgimjl7U/UDhVIoUSh4vziZCAakMLOIYaF0zvEpDrlgJDyKMdpbVvsvDRYXVGyTNBr9NHYrPtnoNCCLelDAQvT5W7l89MYQdTzvP1nSfu2R9JMJg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1575916033; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=qST48LGbEeti0hVqrKe4JVhTVDhvY4DFmAgNm3h8veo=; 
+        b=E9VH1LQn7SoUzRt1ikBlGnECa3C35ZQVKcifJtkVMROrNZO1tS7iu2OcZS2NBXd+AMClI7pBPvL1ZmX/z8iZmu4r8HfBJHjxKc6/xJUy6uq8qlBEgFBNzoilmDcVVRtcmIGSxIFjD8agU+C8AOFZxqv4IE1x/hnnqDMcyFQynAw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 1575916032260346.62116454289855; Mon, 9 Dec 2019 10:27:12 -0800 (PST)
+Date:   Mon, 9 Dec 2019 18:11:53 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v5 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191209181153.GA13304@nessie>
+References: <20191209014320.13149-1-dan@dlrobertson.com>
+ <20191209014320.13149-3-dan@dlrobertson.com>
+ <cf3f2297-dc01-b2c9-657b-933f24b15594@infradead.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf3f2297-dc01-b2c9-657b-933f24b15594@infradead.org>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Nov 2019, Alan Stern wrote:
-
-> Jiri:
+On Sun, Dec 08, 2019 at 06:54:44PM -0800, Randy Dunlap wrote:
+> On 12/8/19 5:43 PM, Dan Robertson wrote:
+> > diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> > index d4ef35aeb579..dc9bc646d403 100644
+> > --- a/drivers/iio/accel/Kconfig
+> > +++ b/drivers/iio/accel/Kconfig
+> > @@ -112,6 +112,22 @@ config BMA220
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called bma220_spi.
+> >  
+> > +config BMA400
+> > +	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
+> > +	select REGMAP
+> > +	select BMA400_I2C if (I2C)
 > 
-> On Sat, 23 Nov 2019, Andrey Konovalov wrote:
+> What's with the parentheses?  I see that there are roughly 2700
+> "select ... if X" without parens and around 95 like
+> "select ... if ("  [using rough grep expressions].
+> The parens are unnecessary.  They are often used on complex
+> expressions, but certainly not on simple ones (except in iio).
+
+Good point. I'll remove it. I'll need the parentheses if/when SPI support is
+added, but I'll add it when it is needed.
+
+> > +	help
+> > +	  Say Y here if you want to build a driver for the Bosch BMA400
+> > +	  triaxial acceleration sensor.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called bma400_core and you will also get
+> > +	  bma400_i2c for I2C.
 > 
-> > I'm not sure, but the stack trace reminds me of this issue, so this
-> > report might be related:
-> > 
-> > https://groups.google.com/d/msg/syzkaller-bugs/X0zVbh8aFEM/NsPcshjxBgAJ
-> 
-> No, the issue is quite different, although it is also a bug in the HID
-> parser.  The big problem is that the parser assumes all usages will
-> belong to a collection.
-> 
-> There's also a second, smaller bug: hid_apply_multipler() assumes every
-> Resolution Multiplier control is associated with a Logical Collection
-> (i.e., there's no way the routine can ever set multiplier_collection to
-> NULL) even though there's a big quotation from the HID Usage Table
-> manual at the start of the function saying that they don't have to be.  
-> This bug can be fixed easily, though.
-> 
-> The first bug is more troublesome.  hid_add_usage() explicitly sets the 
-> parser->local.collection_index[] entry to 0 if the current collection 
-> stack is empty.  But there's no way to distinguish this 0 from a 
-> genuine index value that happens to point to the first collection!
-> 
-> So what should happen when a usage appears outside of all collections?  
-> Is it a bug in the report descriptor (the current code suggests that it 
-> is not)?
-> 
-> Or should we use a different sentinel value for the collection_index[]
-> entry, one that cannot be confused with a genuine value, such as
-> UINT_MAX?
+> iff I2C is set/enabled, so could be confusing.
 
-On Tue, 26 Nov 2019, Jiri Kosina wrote:
+Good catch.
 
-> Alan, did you get a test result from syzbot on this patch? My mailbox 
-> doesn't seem to have it.
+Cheers,
 
-On Tue, 26 Nov 2019, syzbot wrote:
-
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger
-> crash:
->
-> Reported-and-tested-by:
-> syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
-
-Jiri:
-
-Now we've got the answer.  The current question is: What should I do
-with the patch?  It seems rather ad-hoc, not a proper solution to the
-problem.
-
-To refresh your memory, here is the patch that syzbot tested:
-
- drivers/hid/hid-core.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
-Index: usb-devel/drivers/hid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/hid-core.c
-+++ usb-devel/drivers/hid/hid-core.c
-@@ -1057,6 +1057,8 @@ static void hid_apply_multiplier(struct
- 	while (multiplier_collection->parent_idx != -1 &&
- 	       multiplier_collection->type != HID_COLLECTION_LOGICAL)
- 		multiplier_collection = &hid->collection[multiplier_collection->parent_idx];
-+	if (multiplier_collection->type != HID_COLLECTION_LOGICAL)
-+		multiplier_collection = NULL;
- 
- 	effective_multiplier = hid_calculate_multiplier(hid, multiplier);
- 
-@@ -1191,6 +1193,9 @@ int hid_open_report(struct hid_device *d
- 	}
- 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
- 
-+	/* Needed for usages before the first collection */
-+	device->collection[0].parent_idx = -1;
-+
- 	ret = -EINVAL;
- 	while ((start = fetch_item(start, end, &item)) != NULL) {
- 
-Alan Stern
+ - Dan
 
