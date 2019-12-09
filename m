@@ -2,177 +2,121 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD25C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9ADC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB24207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD3B207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoxVbfAP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Mq4rx6xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLIMJD (ORCPT
+        id S1727437AbfLIMRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:09:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42096 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727311AbfLIMJD (ORCPT
+        Mon, 9 Dec 2019 07:17:53 -0500
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:49186 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfLIMRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 07:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575893341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OX+67ZmyIXVMB/vHTra+DNSxKSbnpWTCuPptcTimGIc=;
-        b=UoxVbfAP3vdd53gpPJ9JLo31ebuop2o9BKVh+ZA3cC3SGz0hp/faLRgWdZqSndtQAFaDhy
-        dXjmqEgcoY6hl/TBbfoT12VmdVSpkeFmxsGMlYeih4ClfmEZAwoLv7ZXXgI6QFaSWo+HGy
-        57INynqy2mbZX+D+NEFaphqxXfh5vTg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-eas5Il7rOry9-2VuAlTcLg-1; Mon, 09 Dec 2019 07:09:00 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C40721005502;
-        Mon,  9 Dec 2019 12:08:58 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-204-235.brq.redhat.com [10.40.204.235])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5972060BEC;
-        Mon,  9 Dec 2019 12:08:54 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon,  9 Dec 2019 13:08:58 +0100 (CET)
-Date:   Mon, 9 Dec 2019 13:08:53 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
- wakeups reliable
-Message-ID: <20191209120852.GA5388@redhat.com>
-References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
- <20191209091813.GA41320@gmail.com>
+        Mon, 9 Dec 2019 07:17:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1575893873;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IdHWmdL89AFTcNn7gde3T6zcfIwKQtkIaBfK83eXzJg=;
+  b=Mq4rx6xzOtoR+R+vK+h+2pJq/jbpfhX06PbZAtfUsnDvbM6V3OKjoa/k
+   /o/QVD3yW4TwVfTwTLaoCOVPr/qWkU4fWgn0Z/4DfND38Ard5MXWIQOh6
+   +fMXbbNpSFEv7xji3ZrmsD9AwejPY7vUpty9FqDTkSU49liDV2L8Q5rt3
+   E=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: Ey51vp+2KYMhnR/IHTgER0g3Mtxd0Qo8m927IbKqqJ3MMCfmZnXdP4SNrKUaLXuHmz9QoWHU7p
+ tcgVTLvgKK0WrLpkFPm32ByYJQUF0aBX+L3dxNhbw/jq1CrVXlCldWJ4ClvB/AwCl7LJq2Mh57
+ Ij4dLm6kkHCFszc9mKHAtDhxg974LO2iDrW0auUrHRxoJsqENg9/hBFwKwSWEu3aNn5Jycaace
+ KxcJ27/BOiwciiOK4shXPPIlNzZJnsDhqSQWezGKxmJoaDAcW/Q+YqgoBZY2NAAMPpi6FF1bhu
+ QL4=
+X-SBRS: 2.7
+X-MesageID: 9387524
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,294,1571716800"; 
+   d="scan'208";a="9387524"
+Date:   Mon, 9 Dec 2019 13:17:26 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     Paul Durrant <pdurrant@amazon.com>
+CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH 4/4] xen-blkback: support dynamic unbind/bind
+Message-ID: <20191209121726.GU980@Air-de-Roger>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-5-pdurrant@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20191209091813.GA41320@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: eas5Il7rOry9-2VuAlTcLg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <20191205140123.3817-5-pdurrant@amazon.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09, Ingo Molnar wrote:
->
-> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > The reason it is buggy is that wait_event_interruptible_exclusive()
-> > does this (inside the __wait_event() macro that it expands to):
-> >
-> >                 long __int =3D prepare_to_wait_event(&wq_head, &__wq_en=
-try, state);
-> >
-> >                 if (condition)
-> >                         break;
-> >                 if (___wait_is_interruptible(state) && __int) {
-> >                         __ret =3D __int;
-> >                         goto __out;
-> >
-> > and the thing is, if does that "__ret =3D __int" case and returns
-> > -ERESTARTSYS,
+On Thu, Dec 05, 2019 at 02:01:23PM +0000, Paul Durrant wrote:
+> By simply re-attaching to shared rings during connect_ring() rather than
+> assuming they are freshly allocated (i.e assuming the counters are zero)
+> it is possible for vbd instances to be unbound and re-bound from and to
+> (respectively) a running guest.
+> 
+> This has been tested by running:
+> 
+> while true; do dd if=/dev/urandom of=test.img bs=1M count=1024; done
+> 
+> in a PV guest whilst running:
+> 
+> while true;
+>   do echo vbd-$DOMID-$VBD >unbind;
+>   echo unbound;
+>   sleep 5;
+>   echo vbd-$DOMID-$VBD >bind;
+>   echo bound;
+>   sleep 3;
+>   done
 
-But note that it checks "condition" after prepare_to_wait_event(), if it is
-true then ___wait_is_interruptible() won't be even called.
+So this does unbind blkback while leaving the PV interface as
+connected?
 
-> it's possible that the wakeup event has already been
-> > consumed, because we've added ourselves as an exclusive writer to the
-> > queue. So it _says_ it was interrupted, not woken up, and the wait got
-> > cancelled, but because we were an exclusive waiter, we might be the
-> > _only_ thing that got woken up, and the wakeup basically got forgotten
-> > - all the other exclusive waiters will remain waiting.
->
-> So the place that detects interruption is prepare_to_wait_event():
-
-Yes,
-
-> long prepare_to_wait_event(struct wait_queue_head *wq_head, struct wait_q=
-ueue_entry *wq_entry, int state)
-> {
->         unsigned long flags;
->         long ret =3D 0;
->
->         spin_lock_irqsave(&wq_head->lock, flags);
->         if (signal_pending_state(state, current)) {
->                 /*
->                  * Exclusive waiter must not fail if it was selected by w=
-akeup,
->                  * it should "consume" the condition we were waiting for.
->                  *
->                  * The caller will recheck the condition and return succe=
-ss if
->                  * we were already woken up, we can not miss the event be=
-cause
->                  * wakeup locks/unlocks the same wq_head->lock.
->                  *
->                  * But we need to ensure that set-condition + wakeup afte=
-r that
->                  * can't see us, it should wake up another exclusive wait=
-er if
->                  * we fail.
->                  */
->                 list_del_init(&wq_entry->entry);
->                 ret =3D -ERESTARTSYS;
-
-...
-
-> I think we can indeed lose an exclusive event here, despite the comment
-> that argues that we shouldn't: if we were already removed from the list
-
-If we were already removed from the list and condition is true, we can't
-miss it, ret =3D -ERESTARTSYS won't be used. This is what this part of the
-comment above
-
-=09 * The caller will recheck the condition and return success if
-=09 * we were already woken up, we can not miss the event because
-=09 * wakeup locks/unlocks the same wq_head->lock.
-
-tries to explain.
-
-> then list_del_init() does nothing and loses the exclusive event AFAICS.
-
-list_del_init() ensures that wake_up() can't pick this task after
-prepare_to_wait_event() returns.
-
-IOW. Suppose that ___wait_event() races with
-
-=09condition =3D true;
-=09wake_up();
-
-if wake_up() happens before prepare_to_wait_event(), __wait_event() will
-see condition =3D=3D true, -ERESTARTSYS returned by prepare_to_wait_event()=
- has
-no effect.
-
-If wake_up() comes after prepare_to_wait_event(), the task was already remo=
-ved
-from the list, another exclusive waiter (if any) will be woken up. In this =
-case
-__wait_event() can return success or -ERESTARTSYS, both are correct.
-
-No?
-
-Oleg.
-
+Thanks, Roger.
