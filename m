@@ -2,146 +2,108 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BBCC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDBBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E350A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A6620726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:24:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RuAuAaWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfLITXy (ORCPT
+        id S1726974AbfLITYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:23:54 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:52478 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726916AbfLITXx (ORCPT
+        Mon, 9 Dec 2019 14:24:18 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52661 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfLITYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:23:53 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 9 Dec 2019 21:23:51 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id xB9JNjEd025071;
-        Mon, 9 Dec 2019 14:23:45 -0500
-Received: (from lsun@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id xB9JNdYW023594;
-        Mon, 9 Dec 2019 14:23:39 -0500
-From:   Liming Sun <lsun@mellanox.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>
-Cc:     Liming Sun <lsun@mellanox.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
-Date:   Mon,  9 Dec 2019 14:23:29 -0500
-Message-Id: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 9 Dec 2019 14:24:17 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so560792wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:24:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jyxu52lJ82wz6kUvOXMHO9X6LCKML6pCq+dZRSdiz3g=;
+        b=RuAuAaWNc4+4r15qBvDkEC8cXwqOvhP3j5BB4UPmrMpBsYLuHmZUNUMpcxR2Lvu7cu
+         DRtzPLrQRvqDzNj1qFoDc4YLkdfiALI3Qi0plhuM/iqG3mr9D1zOvQeAUV7m7XaMBhww
+         Tvtdz9GKICDtBJouWvb7QHknXYCB4wC0sEqhIrwjDDKENLFSO155m6feK6JeR66BRazC
+         zRDwWKpXavbCD7yVsgnOwEBYsTD7HMH4kU+a9zXe57Sc4992shwhCUNkDwGqkehz1WNy
+         D00Z5wPGnqj+mFr1w39OosPkE0EU5o5slb4TUwsv+QCGrl3fxGgP8c4ynrD08sql2JUo
+         Uc1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jyxu52lJ82wz6kUvOXMHO9X6LCKML6pCq+dZRSdiz3g=;
+        b=PWpbVfXIC8ZzhWz/AX1oUR/HqhYgM2/aOPIWHjfkXgDeH8PK2MPNtQyGHrsROt2nZj
+         FQ7XJy9EfWbqlE7r3yXFdXb2KXEAKMektTTFCNo4VbN3Zip7UIclmZRZpdUm8abY/fff
+         mZvstiT9KtCviE138edKLaosWusqCCPC9xcjjrN7Hy0DG95ZsQfZYBbxJ/Fl8yj/8dkx
+         ersWi8O6kO08gGQHeRpZi+lb2TMrXwnyidoyAadvyE3MRIiCLDQFi8vBoqs/p2sbq562
+         Xct2YbUbCNIaD4xGcQsvAG8eZa0pyThFSigaj6NaohAAQrioLgIj2HIvfajYln1Qm48t
+         SW2A==
+X-Gm-Message-State: APjAAAWPkGpRUSds/G12xtSTVG/97hFJ6MTBZFMt26hNLH6/qkTWNoNM
+        RQvGYi8RdJoWJP7Fhkw7nqrPi2pu9J103a3iikUFOQ==
+X-Google-Smtp-Source: APXvYqzw3L2TTghU6RShL3uFA+/NTaC1vOxlI6Z98m/WSY70sybkzPgyqmV8nSDV45bLdelQdjFjnWDSGmzOR7X5o2c=
+X-Received: by 2002:a05:600c:3ca:: with SMTP id z10mr677323wmd.148.1575919455265;
+ Mon, 09 Dec 2019 11:24:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20191206165542.31469-1-ardb@kernel.org> <20191206165542.31469-7-ardb@kernel.org>
+ <20191209191242.GA3075464@rani.riverdale.lan>
+In-Reply-To: <20191209191242.GA3075464@rani.riverdale.lan>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 9 Dec 2019 19:24:13 +0000
+Message-ID: <CAKv+Gu8QWcSwRajsO5voTQJxDHy613ugCd_R6=SStf9ABrmtfQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] efi/earlycon: Remap entire framebuffer after page initialization
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow-up commit for the sysfs attributes to change
-from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-In such case, it's better to point the sysfs path to the device
-itself instead of the driver. This commit adds the missing
-sysfs_create_group() so the attributes can be created under the
-device. The ABI document is also updated.
+On Mon, 9 Dec 2019 at 20:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Fri, Dec 06, 2019 at 04:55:42PM +0000, Ard Biesheuvel wrote:
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > When commit 69c1f396f25b
+> >
+> >   "efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation"
+> >
+> > moved the x86 specific EFI earlyprintk implementation to a shared location,
+> > it also tweaked the behaviour. In particular, it dropped a trick with full
+> > framebuffer remapping after page initialization, leading to two regressions:
+> > 1) very slow scrolling after page initialization,
+> > 2) kernel hang when the 'keep_bootcon' command line argument is passed.
+> >
+> > Putting the tweak back fixes #2 and mitigates #1, i.e., it limits the slow
+> > behavior to the early boot stages, presumably due to eliminating heavy
+> > map()/unmap() operations per each pixel line on the screen.
+> >
+>
+> Could the efi earlycon have an interaction with PCI resource allocation,
+> similar to what commit dcf8f5ce3165 ("drivers/fbdev/efifb: Allow BAR to
+> be moved instead of claiming it") fixed for efifb?
 
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
- Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
- drivers/platform/mellanox/mlxbf-bootctl.c                 | 15 +++++++++++++++
- 2 files changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-index c65a805..401d202 100644
---- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-+++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-@@ -1,4 +1,4 @@
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -10,7 +10,7 @@ Description:
- 		  GA Non-Secured - Non-Secure chip and not able to change state
- 		  RMA - Return Merchandise Authorization
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
-+What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -19,7 +19,7 @@ Description:
- 		to reboot the chip and recover it to the old state if the new
- 		boot partition fails.
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -30,7 +30,7 @@ Description:
- 		  emmc - boot from the onchip eMMC
- 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -44,7 +44,7 @@ Description:
- 		  swap_emmc - swap the primary / secondary boot partition
- 		  none - cancel the action
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 61753b6..9482eab 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -282,9 +282,16 @@ static bool mlxbf_bootctl_guid_match(const guid_t *guid,
- static int mlxbf_bootctl_probe(struct platform_device *pdev)
- {
- 	struct arm_smccc_res res = { 0 };
-+	struct device *dev = &pdev->dev;
- 	guid_t guid;
- 	int ret;
- 
-+	ret = sysfs_create_group(&dev->kobj, &mlxbf_bootctl_group);
-+	if (ret) {
-+		dev_err(dev, "failed to create attributes, err=%d\n", ret);
-+		return ret;
-+	}
-+
- 	/* Ensure we have the UUID we expect for this service. */
- 	arm_smccc_smc(MLXBF_BOOTCTL_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
- 	guid_parse(mlxbf_bootctl_svc_uuid_str, &guid);
-@@ -305,8 +312,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int mlxbf_bootctl_remove(struct platform_device *pdev)
-+{
-+	sysfs_remove_group(&pdev->dev.kobj, &mlxbf_bootctl_group);
-+
-+	return 0;
-+}
-+
- static struct platform_driver mlxbf_bootctl_driver = {
- 	.probe = mlxbf_bootctl_probe,
-+	.remove = mlxbf_bootctl_remove,
- 	.driver = {
- 		.name = "mlxbf-bootctl",
- 		.groups = mlxbf_bootctl_groups,
--- 
-1.8.3.1
-
+Yes. If the BAR gets moved, things will break. This is mostly an issue
+for the keep_bootcon case, but that is documented as being a debug
+feature specifically for addressing console initialization related
+issues. Earlycon itself is also a debug feature, so if you hit the BAR
+reallocation issue, you're simply out of luck. Note that this happens
+rarely in practice, only on non-x86 systems where the firmware and the
+kernel have very different policies regarding BAR allocation, and on
+DT based systems, you can force the OS to honour the existing
+allocation by using linux,pci-probe-only
