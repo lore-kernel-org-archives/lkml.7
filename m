@@ -2,193 +2,259 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF4C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56444C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9508520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JaeZoh7q"
+	by mail.kernel.org (Postfix) with ESMTP id 29C432071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfLIHDY (ORCPT
+        id S1727144AbfLIHD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:03:24 -0500
-Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:7564
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726170AbfLIHDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:03:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XGgm7uEyXNGNLNw5CwBucEBMZElK9hs8SuRBkmWU3c7dRR6FZ8QYDdSf5iDFSqV8NPCUENBvnTZM0sFshYRS23mcF8Cy2PummLIfmdtKE42MKcEE4CIxLLCCPSwFJ13qErcXASZjpaqRa90e78ZzBJDGsKMgpMgZQk9od9F+J5foH1bwk2+gRy1aSOjwv2yilWCk0hv0BeneNlQpIbxXdYcMYHr7JrS/LWie8xNewjwzpc9ukRua9dKLoidoEbErGNWqojHaQo7+mIZcqJkLNqUYvkaPD4QhoXUwUMADIz4DeQcjJBX/cde1nV+v3bY7qiICVNPMsTWv5WzdhAFR9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o8OawPnNTQf7VsXnUocLKILZlE77g5PGerT2bOivbnc=;
- b=FVV4rQkUAwKS+vCjCSPJuLjYO9DyS1qYGMYnm/C0tfPHfDQ3M3OenhQ2GY5YADqKWwMlsLUQthco+uGQnnASGcw2Bqwtbv6tsAiBbmWVtkt+atFdPMYbdd6CAotnT+Sz43EaVSQldLmUn/5jTUGSDcLZvKaGSJqCtMXoZenq2A5y1fW3h32C46Sizr2vkTP6MgcsIHQ8SnDrypLC3G11YuDalLZDE/g4ctwcfnTd4AVGoIthILLt28CUQV6GdGUD0ifPCTo51TiQFArOH/0ja4J9QOEU0xW/tlBEzniPJpZCyr3MNqvWbSIe4YJx6e9aJ3Bq1noZ9T+4tAZAMx+L8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o8OawPnNTQf7VsXnUocLKILZlE77g5PGerT2bOivbnc=;
- b=JaeZoh7qjgxyqrD1Whw1YblTUA6Xi0LqAlHyjhQ6wwBPtlso1PadxtdQc2aZZcMPcbeGMl8Rd5raq7ZFFpE5Dpc6iSA0UJBzzV8hryBV5gmjCRzr1E+6wPTYNO40OEaasF80O5l2I2uh0Irfd0+PmP18wyrFo1N+rleDeqwdlsM=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3025.eurprd04.prod.outlook.com (10.173.254.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Mon, 9 Dec 2019 07:03:17 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::a8a6:8d0d:aca4:7bf1]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::a8a6:8d0d:aca4:7bf1%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 07:03:17 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Marc Zyngier <maz@misterjones.org>
-CC:     Roy Zang <roy.zang@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "frowand.list@gmail.com" <frowand.list@gmail.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>
-Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
-Thread-Index: AQHVqP2nw3AoM5GAtUqPe+h1Ib8VVaemy2EAgADUbVCAA8AoAIAGCskg
-Date:   Mon, 9 Dec 2019 07:03:17 +0000
-Message-ID: <AM5PR04MB3299C3A0DCCCE86250BBC696F5580@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
- <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
- <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <VI1PR04MB5134FEB9AF2952E84E4C1179EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB5134FEB9AF2952E84E4C1179EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a901e769-403a-43da-1b38-08d77c75de51
-x-ms-traffictypediagnostic: AM5PR04MB3025:|AM5PR04MB3025:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB3025BDE6C5464C3AFEFDFF79F5580@AM5PR04MB3025.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(43544003)(189003)(13464003)(9686003)(561944003)(478600001)(8936002)(74316002)(33656002)(8676002)(71200400001)(81156014)(71190400001)(81166006)(7696005)(5660300002)(44832011)(55016002)(966005)(76176011)(305945005)(2906002)(316002)(99286004)(53546011)(6506007)(26005)(66476007)(102836004)(66446008)(64756008)(66556008)(76116006)(52536014)(186003)(66946007)(86362001)(4326008)(54906003)(110136005)(7416002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3025;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CQB2Z9sZszySHGShHWiYz5zhczD6c4pO14IYtg4dmEVJJvHbaLUVZXApcEdKT6MaWXK0L04YfXDb5ZY9wpDyWyCG60bKsPhoTbwrm7HEII4TVO7o2rj5CF9Ot/KsNrDU3j8yHo8V6kZAow7m8tCFjLg7Fpiuq1clm3trA950u3SsdGqrYeX3+/Bh+sOZ47H0O2upeSjOxjUoRoUgQ2s4j2ZNlWAkZCU/hcddHsuYG53alp5SIYDJR2vOSHxGxW5gsEi/3o8m1Lvvayg8NilADjGvFjRTOxG/sOl20f8fkDAp80yBpEyYyppS8PVi2yXzasL+XhNapKI1QYy+GcsAjzObNtymRRc49oWRK8LTIQDzyP0mhGJ66h7UgUV67ChNzPjC/tTtAqHuU6+R/Fgb7+ToUwXrJ5HiZJxBv5nXTGbdZ4c9RSYosjpi9M7dLFBX36zgNHERNpnl5azTBzOqtOcvlxOxFJB8vjO/vGHY2MTIh3+EERmxtkNMGa0hKkZhk+9m7OOizD5JTna1ndgh2fAj9idyzR1z9OLneWl/PeCCXuybnfqPAGtSsJhIfM44
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 9 Dec 2019 02:03:29 -0500
+Received: from twhmllg3.macronix.com ([211.75.127.131]:63391 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfLIHD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 02:03:28 -0500
+X-Greylist: delayed 1496 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 02:03:28 EST
+Received: from TWHMLLG3.macronix.com (localhost [127.0.0.2] (may be forged))
+        by TWHMLLG3.macronix.com with ESMTP id xB96cUFt082356
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 14:38:30 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id xB96cNWv082301;
+        Mon, 9 Dec 2019 14:38:23 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 83AF2D64DA588A20DB58;
+        Mon,  9 Dec 2019 14:38:23 +0800 (CST)
+In-Reply-To: <1f1a368a-e3d3-4e58-819e-b4dffc3212ef@ti.com>
+References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw> <1573808288-19365-4-git-send-email-masonccyang@mxic.com.tw> <1f1a368a-e3d3-4e58-819e-b4dffc3212ef@ti.com>
+To:     "Vignesh Raghavendra" <vigneshr@ti.com>
+Cc:     bbrezillon@kernel.org,
+        "Boris Brezillon" <boris.brezillon@bootlin.com>,
+        broonie@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        tudor.ambarus@microchip.com
+Subject: Re: [PATCH 3/4] mtd: spi-nor: Add Octal 8D-8D-8D mode support for Macronix
+ mx25uw51245g
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a901e769-403a-43da-1b38-08d77c75de51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 07:03:17.7870
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7B3QzX8qbVvGu5ATYHWhy4mptJ3sjkt+Jza12trXvXGMjf7o6Jk832Jof57Smi0UtVx1C80jriK+aSsDjYmYxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3025
+X-KeepSent: 5C924A21:8A6464DD-482584CB:00232656;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF5C924A21.8A6464DD-ON482584CB.00232656-482584CB.002479DE@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 9 Dec 2019 14:38:25 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/12/09 PM 02:38:23,
+        Serialize complete at 2019/12/09 PM 02:38:23
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com xB96cNWv082301
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGF1cmVudGl1IFR1ZG9y
-IDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4gU2VudDogMjAxOeW5tDEy5pyINeaXpSAxODo0
-NQ0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBNYXJjIFp5bmdpZXIN
-Cj4gPG1hekBtaXN0ZXJqb25lcy5vcmc+DQo+IENjOiBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNv
-bT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBaLnEuIEhvdQ0KPiA8emhpcWlhbmcuaG91
-QG54cC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBNLmguIExpYW4NCj4gPG1p
-bmdodWFuLmxpYW5AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiBhbmRyZXcu
-bXVycmF5QGFybS5jb207IGZyb3dhbmQubGlzdEBnbWFpbC5jb207IE1pbmdrYWkgSHUNCj4gPG1p
-bmdrYWkuaHVAbnhwLmNvbT47IERpYW5hIE1hZGFsaW5hIENyYWNpdW4gPGRpYW5hLmNyYWNpdW5A
-bnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhl
-IFNSSU9WIHN1cHBvcnQgaW4gaG9zdCBzaWRlDQo+IA0KPiBIaSBYaWFvd2VpLA0KPiANCj4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZyb206IGxpbnV4LWFybS1rZXJuZWwgPGxp
-bnV4LWFybS1rZXJuZWwtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnPg0KPiA+IE9uIEJlaGFs
-ZiBPZiBYaWFvd2VpIEJhbw0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-PiA+ID4gRnJvbTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0KPiA+ID4gU2Vu
-dDogMjAxOeW5tDEy5pyIMuaXpSAyMDo0OA0KPiA+ID4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2Vp
-LmJhb0BueHAuY29tPg0KPiA+ID4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJvd2FuZC5saXN0
-QGdtYWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWlu
-Z2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95DQo+IFphbmcNCj4gPiA+IDxyb3kuemFu
-Z0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gPiA+IGFuZHJldy5tdXJy
-YXlAYXJtLmNvbTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtcGNp
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiA+ID4gWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiA+ID4gU3ViamVjdDogUmU6
-IFtQQVRDSF0gUENJOiBsYXllcnNjYXBlOiBBZGQgdGhlIFNSSU9WIHN1cHBvcnQgaW4gaG9zdA0K
-PiA+ID4gc2lkZQ0KPiA+ID4NCj4gPiA+IE9uIDIwMTktMTItMDIgMTA6NDUsIFhpYW93ZWkgQmFv
-IHdyb3RlOg0KPiA+ID4gPiBHSUMgZ2V0IHRoZSBtYXAgcmVsYXRpb25zIG9mIGRldmlkIGFuZCBz
-dHJlYW0gaWQgZnJvbSB0aGUgbXNpLW1hcA0KPiA+ID4gPiBwcm9wZXJ0eSBvZiBEVFMsIG91ciBw
-bGF0Zm9ybSBhZGQgdGhpcyBwcm9wZXJ0eSBpbiB1LWJvb3QgYmFzZSBvbg0KPiA+ID4gPiB0aGUg
-UENJZSBkZXZpY2UgaW4gdGhlIGJ1cywgYnV0IGlmIGVuYWJsZSB0aGUgdmYgZGV2aWNlIGluIGtl
-cm5lbCwNCj4gPiA+ID4gdGhlIHZmIGRldmljZSBtc2ktbWFwIHdpbGwgbm90IHNldCwgc28gdGhl
-IHZmIGRldmljZSBjYW4ndCB3b3JrLA0KPiA+ID4gPiB0aGlzIHBhdGNoIHB1cnBvc2UgaXMgdGhh
-dCBtYW5hZ2UgdGhlIHN0cmVhbSBpZCBhbmQgZGV2aWNlIGlkIG1hcA0KPiA+ID4gPiByZWxhdGlv
-bnMgZHluYW1pY2FsbHkgaW4ga2VybmVsLCBhbmQgbWFrZSB0aGUgbmV3IFBDSWUgZGV2aWNlIHdv
-cmsgaW4NCj4ga2VybmVsLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBkcml2ZXJz
-L29mL2lycS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDkgKysrDQo+ID4gPiA+ICBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jIHwgOTQNCj4gPiA+ID4g
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ID4gIGRyaXZlcnMvcGNpL3Byb2Jl
-LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNiArKw0KPiA+ID4gPiAgZHJpdmVycy9wY2kv
-cmVtb3ZlLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICA2ICsrDQo+ID4gPiA+ICA0IGZpbGVz
-IGNoYW5nZWQsIDExNSBpbnNlcnRpb25zKCspDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL29mL2lycS5jIGIvZHJpdmVycy9vZi9pcnEuYyBpbmRleA0KPiA+ID4gPiBhMjk2
-ZWFmLi43OTFlNjA5IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL29mL2lycS5jDQo+ID4g
-PiA+ICsrKyBiL2RyaXZlcnMvb2YvaXJxLmMNCj4gPiA+ID4gQEAgLTU3Niw2ICs1NzYsMTEgQEAg
-dm9pZCBfX2luaXQgb2ZfaXJxX2luaXQoY29uc3Qgc3RydWN0DQo+ID4gPiA+IG9mX2RldmljZV9p
-ZA0KPiA+ID4gPiAqbWF0Y2hlcykNCj4gPiA+ID4gIAl9DQo+ID4gPiA+ICB9DQo+ID4gPiA+DQo+
-ID4gPiA+ICt1MzIgX193ZWFrIGxzX3BjaWVfc3RyZWFtaWRfZml4KHN0cnVjdCBkZXZpY2UgKmRl
-diwgdTMyIHJpZCkgew0KPiA+ID4gPiArCXJldHVybiByaWQ7DQo+ID4gPiA+ICt9DQo+ID4gPiA+
-ICsNCj4gPiA+ID4gIHN0YXRpYyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHN0cnVjdA0KPiA+ID4gPiBkZXZpY2Vfbm9kZSAqKm5wLA0KPiA+ID4gPiAgCQkJICAgIHUz
-MiByaWRfaW4pDQo+ID4gPiA+ICB7DQo+ID4gPiA+IEBAIC01OTAsNiArNTk1LDEwIEBAIHN0YXRp
-YyB1MzIgX19vZl9tc2lfbWFwX3JpZChzdHJ1Y3QgZGV2aWNlDQo+ID4gPiA+ICpkZXYsIHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqKm5wLA0KPiA+ID4gPiAgCQlpZiAoIW9mX21hcF9yaWQocGFyZW50X2Rl
-di0+b2Zfbm9kZSwgcmlkX2luLCAibXNpLW1hcCIsDQo+ID4gPiA+ICAJCQkJIm1zaS1tYXAtbWFz
-ayIsIG5wLCAmcmlkX291dCkpDQo+ID4gPiA+ICAJCQlicmVhazsNCj4gPiA+ID4gKw0KPiA+ID4g
-PiArCWlmIChyaWRfb3V0ID09IHJpZF9pbikNCj4gPiA+ID4gKwkJcmlkX291dCA9IGxzX3BjaWVf
-c3RyZWFtaWRfZml4KHBhcmVudF9kZXYsIHJpZF9pbik7DQo+ID4gPg0KPiA+ID4gT3ZlciBteSBk
-ZWFkIGJvZHkuIEdldCB5b3VyIGZpcm13YXJlIHRvIHByb3Blcmx5IHByb2dyYW0gdGhlIExVVCBz
-bw0KPiA+ID4gdGhhdA0KPiA+IGl0DQo+ID4gPiBwcmVzZW50cyB0aGUgSVRTIHdpdGggYSByZWFz
-b25hYmxlIHRvcG9sb2d5LiBUaGVyZSBpcyBhYnNvbHV0ZWx5IG5vDQo+ID4gPiB3YXkNCj4gPiB0
-aGlzDQo+ID4gPiBraW5kIG9mIGNoYW5nZSBtYWtlcyBpdCBpbnRvIHRoZSBrZXJuZWwuDQo+ID4N
-Cj4gPiBTb3JyeSBmb3IgdGhpcywgSSBrbm93IGl0IGlzIG5vdCByZWFzb25hYmxlLCBidXQgSSBo
-YXZlIG5vIG90aGVyIHdheSwNCj4gPiBhcyBJIGtub3csIEFSTSBnZXQgdGhlIG1hcHBpbmcgb2Yg
-c3RyZWFtIElEIHRvIHJlcXVlc3QgSUQgZnJvbSB0aGUNCj4gPiBtc2ktbWFwIHByb3BlcnR5IG9m
-IERUUywgaWYgYWRkIGEgbmV3IGRldmljZSB3aGljaCBuZWVkIHRoZSBzdHJlYW0gSUQNCj4gPiBh
-bmQgdHJ5IHRvIGdldCBpdCBmcm9tIHRoZSBtc2ktIG1hcCBvZiBEVFMsIGl0IHdpbGwgZmFpbGVk
-IGFuZCBub3QNCj4gPiB3b3JrLCB5ZXM/IFNvIGNvdWxkIHlvdSBnaXZlIG1lIGEgYmV0dGVyIGFk
-dmljZSB0byBmaXggdGhpcyBpc3N1ZSwgSQ0KPiA+IHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGFu
-eSBjb21tZW50cyBvciBzdWdnZXN0aW9ucywgdGhhbmtzIGEgbG90Lg0KPiA+DQo+IA0KPiBJIGFn
-cmVlIHdpdGggdGhlIGNvbW11bml0eSB0aGF0IHRoaXMgc2hvdWxkIGJlIHRhY2tsZWQgaW4gZmly
-bXdhcmUuIEkgYWN0dWFsbHkNCj4gc3VibWl0dGVkIChieSBtaXN0YWtlLCBidXQgbGV0J3MgZGlz
-cmVnYXJkIHRoYXQgOi0pKSBhIHNpbXBsZSBwcm9wb3NhbCBpbiB1LWJvb3QNCj4gWzFdIHRoYXQg
-c2hvdWxkIHRha2UgY2FyZSBvZiBpdC4gV2UgY2FuIGRpc2N1c3MgZnVydGhlciBvbiBpdCwgaWYg
-eW91IHdpc2guDQo+IA0KPiBbMV0gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8x
-MDMzNDY2Lw0KDQoNCkkgd2lsbCBkbyBhIGV4cGVyaW1lbnQgdG8gdmVyaWZ5IHdoZXRoZXIgYWxs
-IFBDSWUgcmVxdWVzdCBJRCBtYXAgb25lIHN0cmVhbSBJRCwNCmFuZCBJIHdpbGwgc2hvdyB0aGUg
-cmVzdWx0IHdoZW4gSSBjb21wbGV0ZSB0aGUgZXhwZXJpbWVudC4NCg0KVGhhbmtzIA0KWGlhb3dl
-aQ0KDQo+IA0KPiAtLS0NCj4gQmVzdCBSZWdhcmRzLCBMYXVyZW50aXUNCg==
+
+Hi Vignesh,
+
+> > 
+> >  /*
+> > + * Read configuration register 2, returning its value in the
+> > + * location. Return the configuration register 2 value.
+> > + * Returns negative if error occurred.
+> > + */
+> > +static int read_cr2(struct spi_nor *nor, u32 addr)
+> 
+> Please prefix spi_nor_* for all new functions. 
+> Also, include manf name if its vendor specific.
+
+okay, will fix it.
+
+> 
+> > +{
+> > +   int ret;
+> > +
+> > +   if (nor->spimem) {
+> > +      struct spi_mem_op op =
+> > +         SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDCR2, 1),
+> > +               SPI_MEM_OP_ADDR(4, addr, 1),
+> > +               SPI_MEM_OP_DUMMY(4, 1),
+> > +               SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
+> > +
+> > +      if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
+> > +         op.cmd.buswidth = 8;
+> > +         op.addr.buswidth = 8;
+> > +         op.dummy.buswidth = 8;
+> > +         op.data.buswidth = 8;
+> > +         op.cmd.nbytes = 2;
+> > +
+> > +         if (spi_nor_protocol_is_8D_8D_8D(nor->read_proto)) {
+> > +            op.dummy.nbytes *= 2;
+> > +            op.cmd.dtr = true;
+> > +            op.addr.dtr = true;
+> > +            op.dummy.dtr = true;
+> > +            op.data.dtr = true;
+> > +         }
+> > +
+> > +         if (nor->ext_cmd_mode == EXT_CMD_IS_INVERSE)
+> > +            op.cmd.ext_opcode = ~SPINOR_OP_RDCR2;
+> > +         else
+> > +            op.cmd.ext_opcode = SPINOR_OP_RDCR2;
+> > +      }
+> > +
+> > +      ret = spi_mem_exec_op(nor->spimem, &op);
+> > +   } else {
+> > +      ret = -ENOTSUPP;
+> > +   }
+> > +
+> > +   if (ret < 0) {
+> > +      dev_err(nor->dev, "error %d reading CR\n", ret);
+> > +      return ret;
+> > +   }
+> > +
+> > +   return nor->bouncebuf[0];
+> > +}
+> > +
+> > +/*
+> >   * Write configuration register 2 one byte
+> >   * Returns negative if error occurred.
+> >   */
+> > @@ -2275,10 +2325,72 @@ static int spi_nor_spansion_clear_sr_bp(struct 
+spi_nor *nor)
+> >     return 0;
+> >  }
+> > 
+> > +static void
+> > +spi_nor_set_read_settings(struct spi_nor_read_command *read,
+> > +           u8 num_mode_clocks,
+> > +           u8 num_wait_states,
+> > +           u8 opcode,
+> > +           enum spi_nor_protocol proto);
+> > +
+> > +static void
+> > +spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
+> > +         u8 opcode,
+> > +         enum spi_nor_protocol proto);
+> > +
+> > +static void
+> > +mx25uw51245g_default_init(struct spi_nor *nor)
+> > +{
+> > +   struct spi_nor_flash_parameter *params = &nor->params;
+> > +
+> > +   if (!(nor->spimem->spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL)))
+> > +      return;
+> > +
+> > +   /* Octal 8S-8S-8S mode */
+> > +   params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_STR;
+> > +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8],
+> > +              0, 20, SPINOR_OP_READ_8_8_8,
+> > +              SNOR_PROTO_8_8_8);
+> > +
+> > +   spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8_8_8],
+> > +            SPINOR_OP_PP_8_8_8, SNOR_PROTO_8_8_8);
+> > +
+> > +   /* Octal 8D-8D-8D mode */
+> > +   params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_DTR;
+> > +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8D_8D_8D],
+> > +              0, 20, SPINOR_OP_READ_8D_8D_8D,
+> > +              SNOR_PROTO_8_8_8_DTR);
+> > +
+> > + 
+spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8D_8D_8D],
+> > +            SPINOR_OP_PP_8D_8D_8D, SNOR_PROTO_8_8_8_DTR);
+> > +
+> > +   nor->ext_cmd_mode = EXT_CMD_IS_INVERSE;
+> > +}
+> 
+> I don't see anything that is macronix specific here.. Can this be moved 
+to
+> generic code with information parsed from SFDP table?
+
+This mx25uw51245g device support SFDP command but returns an empty SFDP 
+page.
+
+> 
+> > +
+> > +static void
+> > +mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
+> > +{
+> > +   struct spi_nor_flash_parameter *params = &nor->params;
+> > +   u8 cr2;
+> > +
+> > +   cr2 = read_cr2(nor, CR2_REG0) & CR2_REG0_MODE_MASK;
+> > +
+> > +   if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_DTR)
+> > +      cr2 |= CR2_REG0_MODE_OPI_DTR;
+> > +   else if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_STR)
+> > +      cr2 |= CR2_REG0_MODE_OPI_STR;
+> > +
+> > +   write_cr2(nor, CR2_REG0, cr2);
+> > +}
+> > +
+> 
+> I see this as a misuse of sfdp_fixups hook:
+> 
+>  * @post_sfdp: called after SFDP has been parsed (is also called for SPI 
+NORs
+>  *             that do not support RDSFDP). Typically used to tweak 
+various
+>  *             parameters that could not be extracted by other means 
+(i.e.
+>  *             when information provided by the SFDP/flash_info tables 
+are
+>  *             incomplete or wrong).
+>  *
+> 
+> 
+> This should only tweak options parsed by SFDP and not be used to
+> configure flash to a different mode. Please add a separate function 
+> to do so. See https://patchwork.kernel.org/patch/10638085/
+> 
+
+okay.
+My idea is that device changed to 8D-8D-8D stateful mode after SFDP 
+parsed. 
+But if SFDP page table is broken in device and driver will just configure 
+the device into 8D-8D-8D mode directly.
+
+
+thanks for your time & comments.
+
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
