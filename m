@@ -2,137 +2,119 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B3AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CE5C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533642077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F8524656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:10:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jCwHdkzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLIPJt (ORCPT
+        id S1726720AbfLIPKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:09:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48966 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbfLIPJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:09:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0FEA1AC3C;
-        Mon,  9 Dec 2019 15:09:46 +0000 (UTC)
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-To:     John Garry <john.garry@huawei.com>, Ming Lei <ming.lei@redhat.com>
-Cc:     tglx@linutronix.de, chenxiang66@hisilicon.com,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        maz@kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk,
-        bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <305198e5-f76f-ded4-946b-9cfade18f08c@suse.de>
-Date:   Mon, 9 Dec 2019 16:09:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 10:10:01 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37151 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfLIPKB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:10:01 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so15092556ioc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 07:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xcWrJCCDV9FLXdr0ZUztddjQSSx3x7+pXvp+/EC4d4s=;
+        b=jCwHdkzjuZXdAkFGt53WBUw98CEGScyc/VWwjQ7pxH+VWdtrquDNMCbo59WLI4gWmZ
+         FLY7q481NWsVYTxuLmnRDrwcP9ZTE64og3Ks1EYf96dttxJ8/fV+ab2gimu4+16zUtRn
+         FjTGKEqm7de1F01zLV4vmAsXOJm+fXN+FNgyg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xcWrJCCDV9FLXdr0ZUztddjQSSx3x7+pXvp+/EC4d4s=;
+        b=h8SI1FoPGkdoJ+/Dc//K1jWA2Qoy3vHZbhamfqUiSyTZmIySYuvu7XHmadgiCHzYiP
+         XriKyESXCaK0NVu+sYTtvjFqSMS/hJPP1Ot+AjnWZruiuWM0DzPDD1fxGUhF33KFw1Bz
+         5m7dUADxKvVKMXsIQuKsoaAqQpt0WnFy3wADUaDvPHfI0gENNoXklSaA+w1vuUksgF/f
+         Llz8pInTXCFXkDYt5oUKzbZvvyUGB5YA1PvKL3Cg0vEqnl/ydakBM19lM2D+oI8Fqx3g
+         5A7DrTeoAuHTRlonZvl/n8z1zc3d4BfPvrKaCkI3MeRNLskpuyUEuKdxsbaQSQ02ikw4
+         22xQ==
+X-Gm-Message-State: APjAAAUsVKpzyK4WIuy2SnG5En9saRPUPt/sw9fBOVLl0keT1y+uDCVX
+        e1UBNqu93bpbYp3vlxeYXcIr6G6Eh1rJSVBLsgvhvQ==
+X-Google-Smtp-Source: APXvYqzg3szTNJsFOs7seXieuvnWRJ9uISz+Z/GGKMgmwYIKFt9RhcKAORgRuxrGJQAz5EnB4PhlNDhQ7834VEmeZRc=
+X-Received: by 2002:a5e:c204:: with SMTP id v4mr21682825iop.106.1575904200419;
+ Mon, 09 Dec 2019 07:10:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191209145016.227784-1-hsinyi@chromium.org> <20191209145016.227784-4-hsinyi@chromium.org>
+ <20191209145552.GD12841@pendragon.ideasonboard.com>
+In-Reply-To: <20191209145552.GD12841@pendragon.ideasonboard.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 9 Dec 2019 23:09:34 +0800
+Message-ID: <CAJMQK-hNSF-Vu4CfTKiCUdBRmaONf=Lp3NN0-nFor6mxY1seJg@mail.gmail.com>
+Subject: Re: [PATCH RESEND 3/4] dt-bindings: drm/bridge: analogix-anx78xx:
+ support bypass GPIO
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Archit Taneja <architt@codeaurora.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/19 3:30 PM, John Garry wrote:
-> On 07/12/2019 08:03, Ming Lei wrote:
->> On Fri, Dec 06, 2019 at 10:35:04PM +0800, John Garry wrote:
->>> Currently the cpu allowed mask for the threaded part of a threaded irq
->>> handler will be set to the effective affinity of the hard irq.
->>>
->>> Typically the effective affinity of the hard irq will be for a single 
->>> cpu. As such,
->>> the threaded handler would always run on the same cpu as the hard irq.
->>>
->>> We have seen scenarios in high data-rate throughput testing that the cpu
->>> handling the interrupt can be totally saturated handling both the hard
->>> interrupt and threaded handler parts, limiting throughput.
->>
-> 
-> Hi Ming,
-> 
->> Frankly speaking, I never observed that single CPU is saturated by one 
->> storage
->> completion queue's interrupt load. Because CPU is still much quicker than
->> current storage device.
->>
->> If there are more drives, one CPU won't handle more than one 
->> queue(drive)'s
->> interrupt if (nr_drive * nr_hw_queues) < nr_cpu_cores.
-> 
-> Are things this simple? I mean, can you guarantee that fio processes are 
-> evenly distributed as such?
-> 
-I would assume that it does, seeing that that was the primary goal of 
-fio ...
+On Mon, Dec 9, 2019 at 10:55 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Hsin-Yi,
+>
+> Thank you for the patch.
+>
+> On Mon, Dec 09, 2019 at 10:50:15PM +0800, Hsin-Yi Wang wrote:
+> > Support optional feature: bypass GPIO.
+> >
+> > Some SoC (eg. mt8173) have a hardware mux that connects to 2 ports:
+> > anx7688 and hdmi. When the GPIO is active, the bridge is bypassed.
+>
+> This doesn't look like the right place to fix this, as the mux is
+> unrelated to the bridge. You would have to duplicate this logic in every
+> bridge driver otherwise.
+>
+> Could you describe the hardware topology in a bit more details ? I can
+> then try to advise on how to best support it.
+>
+Hi Laurent,
 
->>
->> So could you describe your case in a bit detail? Then we can confirm
->> if this change is really needed.
-> 
-> The issue is that the CPU is saturated in servicing the hard and 
-> threaded part of the interrupt together - here's the sort of thing which 
-> we saw previously:
-> Before:
-> CPU    %usr    %sys    %irq    %soft    %idle
-> all    2.9    13.1    1.2    4.6    78.2
-> 0    0.0    29.3    10.1    58.6    2.0
-> 1    18.2    39.4    0.0    1.0    41.4
-> 2    0.0    2.0    0.0    0.0    98.0
-> 
-> CPU0 has no effectively no idle.
-> 
-> Then, by allowing the threaded part to roam:
-> After:
-> CPU    %usr    %sys    %irq    %soft    %idle
-> all    3.5    18.4    2.7    6.8    68.6
-> 0    0.0    20.6    29.9    29.9    19.6
-> 1    0.0    39.8    0.0    50.0    10.2
-> 
-> Note: I think that I may be able to reduce the irq hard part load in the 
-> endpoint driver, but not that much such that we see still this issue.
-> 
-Well ... to get a _real_ comparison you would need to specify the number 
-of irqs handled (and the resulting IOPS) alongside the cpu load.
-It might well be that by spreading out the interrupts to other CPUs 
-we're increasing the latency, thus trivially reducing the load ...
+The mt8173 layout is:
 
-My idea here is slightly different: can't we leverage SMT?
-Most modern CPUs do SMT (I guess even ARM does it nowadays)
-(Yes, I know about spectre and things. We're talking performance here :-)
+MT8173 HDMI bridge-- hardware mux --- HDMI
+                                                   |
+                                                    ------------ anx7688
+There's a hardware mux that takes mt8173 hdmi as input and has 2
+output port: native hdmi and anx7688 bridge.
+If gpio is active, we would like it to go to HDMI.
 
-So for 2-way SMT one could move the submisson queue on one side, and the 
-completion queue handling (ie the irq handling) on the other side.
-Due to SMT we shouldn't suffer from cache misses (keep fingers crossed),
-and might even get better performance.
+Previous approach is to make hardware mux a generic gpio mux bridge,
+but this is probably a very rare use case that is only for
+mt8173.(https://lore.kernel.org/lkml/57723AD2.8020806@codeaurora.org/)
+We merge the mux and anx7688 to a single bridge and leave this as an
+optional feature in this time.
 
-John, would such a scenario work on your boxes?
-IE can we tweak the interrupt and queue assignment?
-
-Initially I would love to test things out, just to see what'll be 
-happening; might be that it doesn't bring any benefit at all, but it'd 
-be interesting to test out anyway.
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Thanks.
