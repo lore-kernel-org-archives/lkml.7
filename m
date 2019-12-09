@@ -2,122 +2,97 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D05EC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BA1C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C91E207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8877120726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfLIN3f convert rfc822-to-8bit (ORCPT
+        id S1727666AbfLINeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:29:35 -0500
-Received: from mail-oln040092254031.outbound.protection.outlook.com ([40.92.254.31]:6887
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        Mon, 9 Dec 2019 08:34:14 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43802 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727200AbfLIN3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:29:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NTOVKWDKC34nQuSCQUsaCBIFIb0jTl+rHm+flqh7VX6QEk56OZwjSrBEBmPuoJtSmxv4KmIoJdNFxHVvL+qq9fhf2kGpouzc4h7/DLGrWOiANzV77Wv3o3tV8MZVMkuwbEFZy+CJ23bjkWEb/A057BMeX899YXRFxRX4pd3xw//HUPxr0TDwWlOjkqlTbLrAPnmQ7ryifJGA+lvRD7qWxy8Am+BRXJ06Qbky+/oYO3bp6Vgfeli1Zz2IqMwWPpO12PZntUteoNGdF3XwjLyGQKdWDI89sfecXvf4aQuoozw+0mF72XSiyWC2O7F5QqPhfAzpYkgftRJKJtvvbqdEnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lFpM1/LjlwttsvtxF3epBLhvFitQ/9uvTZOw78C08ts=;
- b=OUO+9Eg6Zl6aPXqFHalXTQzORINwF0z/cchhgCk0zC5XM5350hlXsmMpBWOO6yiW7UBZkX11DUHoI9asaBfrn1eBy55hfQ7ySQvZcMJhgAUFMZFvcv2tSyhWjhLHvDUbXFP4vgakZwumxwJ8LjoDbnJHeA4WovojLFsnk4WgJ+XCJgj48eLEzQsUS0i1CEis1rGdiYlQomvqiLDg3UHrwCl6TFYzfcE/sHZEG1bws4Y9O0LMSdorcfuMo/JehI+gXoLvzSC3xOBNEuHJdkBs//arHZBWq9hZqJ8HilMFQEOtvAqYYmP0p7J2hQQqZNZdXaIT4dagHt2HaicOwkxVlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT053.eop-APC01.prod.protection.outlook.com
- (10.152.250.53) by SG2APC01HT185.eop-APC01.prod.protection.outlook.com
- (10.152.251.234) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Mon, 9 Dec
- 2019 13:29:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
- SG2APC01FT053.mail.protection.outlook.com (10.152.250.240) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.25 via Frontend Transport; Mon, 9 Dec 2019 13:29:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 13:29:30 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Linux v5.5 serious PCI bug
-Thread-Topic: Linux v5.5 serious PCI bug
-Thread-Index: AQHVrozxq7Q7SfMf80m5ItEmvTDCAqexx4+AgAAErAA=
-Date:   Mon, 9 Dec 2019 13:29:30 +0000
-Message-ID: <PSXP216MB043859B2FDA7F999BF88157080580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191209131239.GP2665@lahna.fi.intel.com>
-In-Reply-To: <20191209131239.GP2665@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY2PR01CA0005.ausprd01.prod.outlook.com
- (2603:10c6:1:14::17) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:BEB30873ABCC25B5565F5D3A6A36081768C3DD8669B47737EBFD0A309183371B;UpperCasedChecksum:8D1BC1703EE630EB29FDA5E04F4439190C7646E1C5BE41852E42BA12C1DBED6B;SizeAsReceived:7561;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [y7A3tuTwl0WLW6Q18MnKzshhVKbkEBF4gZPX2Tn4DjXarWvSp+XlWOfX69UKiTvf1Wku68q7XRc=]
-x-microsoft-original-message-id: <20191209132922.GA1911@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 43b09229-1e43-4caf-7604-08d77cabd1f7
-x-ms-traffictypediagnostic: SG2APC01HT185:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QkSNJJgEFuWe0zLghBrZizywqlWc2v9yCc6hqzWpO3u5LzBMbbGd6bUTcwoi33BXmQhMv7hHDv0lCN8aE35M+93n7NFbcPFtbcPa0hYk28+E762S3hmn7EfSe4hzg0+1mTbS5l6EYNrsFK8xPSbqqlOJ88/wEEgEivflMa7WGpHPzTCaZnh7nhyb/T2dr8oh
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8C52A66FC21E644BA769DF57BFC497B5@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        id S1727438AbfLINeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:34:14 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CEB9515513E7DF9DA6CA;
+        Mon,  9 Dec 2019 21:34:10 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 9 Dec 2019 21:34:02 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <loke.chetan@gmail.com>,
+        <willemb@google.com>, <edumazet@google.com>,
+        <maximmi@mellanox.com>, <nhorman@tuxdriver.com>,
+        <pabeni@redhat.com>, <maowenan@huawei.com>,
+        <yuehaibing@huawei.com>, <tglx@linutronix.de>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Xiao Jiangfeng <xiaojiangfeng@huawei.com>
+Subject: [PATCH net] af_packet: set defaule value for tmo
+Date:   Mon, 9 Dec 2019 21:31:25 +0800
+Message-ID: <20191209133125.59093-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43b09229-1e43-4caf-7604-08d77cabd1f7
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 13:29:30.4370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT185
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
-> On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
-> > Hi,
-> > 
-> > I have compiled Linux v5.5-rc1 and thought all was good until I 
-> > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
-> > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
-> > GPU driver.
-> > 
-> > We had:
-> > - kernel NULL pointer dereference
-> > - refcount_t: underflow; use-after-free.
-> > 
-> > Attaching dmesg for now; will bisect and come back with results.
-> 
-> Looks like something related to iommu. Does it work if you disable it?
-> (intel_iommu=off in the command line).
-I thought it could be that, too.
+There is softlockup when using TPACKET_V3:
+...
+NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
+(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
+(mod_timer) from [<c0549c30>]
+(prb_retire_rx_blk_timer_expired+0x68/0x11c)
+(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
+(call_timer_fn+0x90/0x17c)
+(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
+(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
+(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
+(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
+...
 
-The attachment "dmesg-4" from the original email is with iommu parameters.
-The attachment "dmesg-5" from the original email is with no iommu parameters.
-Attaching here "dmesg-6" with the iommu explicitly set off like you said.
+If __ethtool_get_link_ksettings() is failed in
+prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
+is zero and the timer expire for retire_blk_timer is turn to
+mod_timer(&pkc->retire_blk_timer, jiffies + 0),
+which will trigger cpu usage of softirq is 100%.
 
-No difference, still broken. Although, with iommu off, there are less stack traces.
+Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ net/packet/af_packet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Could it be sysfs-related?
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 53c1d41fb1c9..118cd66b7516 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
+ 			msec = 1;
+ 			div = ecmd.base.speed / 1000;
+ 		}
+-	}
++	} else
++		return DEFAULT_PRB_RETIRE_TOV;
+ 
+ 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+ 
+-- 
+2.20.1
 
-Kind regards,
-Nicholas
