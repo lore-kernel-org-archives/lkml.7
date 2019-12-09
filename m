@@ -2,138 +2,125 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431FCC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B927207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1413D207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="mR1y/P/b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="hWj2Es/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfLIRQm (ORCPT
+        id S1726665AbfLIRSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:16:42 -0500
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:43564 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIRQm (ORCPT
+        Mon, 9 Dec 2019 12:18:05 -0500
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:1068 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfLIRSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:16:42 -0500
-Received: by mail-lj1-f176.google.com with SMTP id a13so16520938ljm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:16:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6iI9lVnNH0UerpE1bqPQXNj2mhvS1xA7PcDef5F/gq4=;
-        b=mR1y/P/bsXVYdOXFe+gzP8Zx+TPszIIkDMmW+dwhMwGMkI7ExOmKWYaFMX8bN1t+F9
-         qj7X1paf5T8B09y3Tc2Guldv0ZAdxJ7YdOJnmFsohxFishgjq7UB6KGFhNm27tDnNy6b
-         59EPegpLJ3rDltgIz79c/aixut12eQtABsSvuz/l6gqVjXTkSzNotRwf2FY3uJpPe+nh
-         Ox8z2/3rOmSNjkaK3qlqt0RlB580fBFcwwKdSjlNg8FCWIpauBTR2kZNWptlVfAG3Okd
-         dlrCtNwGY7g3xe8YrGv+ArpF7ePEJY7ULSdDuqN9+gPz0AI4fTLBCKjy486Jfs9lwvKH
-         xdBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6iI9lVnNH0UerpE1bqPQXNj2mhvS1xA7PcDef5F/gq4=;
-        b=j2JayP7THQmZvHrPbiWLfkCefQA6XMbEbrqSXbnAHa7LxooQ7YDk3bMZuKaGzFkNzh
-         DOz6w21WGQY+6U9NUZ2+R/19amx/P7GZX+tkPSxBbp7Dn/Nthw/ZgEySSApK1/r9RISQ
-         X08E0okJFd/sgupcZMfVxfWSu2Ku8BkvWhSEvmPreYIj705TVO64YVmG4rlkBvqeYWz4
-         ntjtrAgOFW35f/Q2m3oOPeb8K07NyZhcaEWpRZ7NnDpP0YIRXVO2mFSIWTkotsMxs47v
-         W456OsfaPXvq7htAD9YT/XbcKJoDnNHuEXq4SjCze7nzPPBucjwjLilJKAo5jMEl3puZ
-         OoPQ==
-X-Gm-Message-State: APjAAAVyHl+ZoAXjH0OND3CIilsYl/Cfzq1lq5YnzJWEBkMm0uEpTR1f
-        6eC9/kIGrerkr3eUoxyzZ1BhDg==
-X-Google-Smtp-Source: APXvYqzl9cFxZSPvvpaQIXgXdff1sFs4hGHEOy5+qo4OsYmYemYSxedzspKdfjczzVboniC0F2/dCA==
-X-Received: by 2002:a2e:9e4c:: with SMTP id g12mr17287507ljk.15.1575911800327;
-        Mon, 09 Dec 2019 09:16:40 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id h24sm236983ljl.80.2019.12.09.09.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 09:16:39 -0800 (PST)
-Date:   Mon, 9 Dec 2019 18:16:39 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: Regulator probe on demand (or circular dependencies)
-Message-ID: <20191209171639.GA27340@bigcity.dyn.berto.se>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
- <20191209163755.GF5483@sirena.org.uk>
- <d7003d64-e838-9dcb-8c61-d6567ff6eb69@ideasonboard.com>
+        Mon, 9 Dec 2019 12:18:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1575911884;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rkXopByrwPp2sBcRHNchnOCKQcjWZBRVSMRnG3CKxxA=;
+  b=hWj2Es/EnaIz+WKozJcCLfhY0axG1VSn+G/PzTqOBMfKNc4hDaXAEwiV
+   XdRzUkF36/UPemDe4oWmdmENVjD91Z3RDbuYAoqfPs0ls4FApnJnyG2u6
+   kncNwE715PsONOk8yAjvE4L6vqrRVuVb58PwrLViYNB4/Y0oGwIE4zgxB
+   8=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: efnx41IuK1BLRB1YOurKYBC7JSe4UINc6kZ+B6IPVi21FZ7VsBIv5Q6cE+Wy0wcGrL//OeIUrf
+ gpJOuVyYbBevHPxeESHEL0VfDKk7oED4f1EZVjKZ+Cj4TDZx3GHic4MiuN5kQfXGgLR8Mo5Hkz
+ yTPp8TBbd8Rf5NY4UgBGWMnaMy/zHff5YF1+OE50DVUzxfQ7g4wgIwExOI3XHoABJK8S5jxz3Q
+ eFizofgeZYJ5QKZQt8RBSag3pjuqHIO3fWd8sOLVmePph/oZKu7p2BtWn+ROYek98hu+4e9RS+
+ gVQ=
+X-SBRS: 2.7
+X-MesageID: 9407797
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,296,1571716800"; 
+   d="scan'208";a="9407797"
+Date:   Mon, 9 Dec 2019 18:17:57 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     "Durrant, Paul" <pdurrant@amazon.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "Juergen Gross" <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
+ closed
+Message-ID: <20191209171757.GC980@Air-de-Roger>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-3-pdurrant@amazon.com>
+ <20191209113926.GS980@Air-de-Roger>
+ <19b5c2fa36b842e58bbdddd602c4e672@EX13D32EUC003.ant.amazon.com>
+ <20191209122537.GV980@Air-de-Roger>
+ <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
+ <20191209142852.GW980@Air-de-Roger>
+ <e026926b9aea4ffe868d41828c1f4721@EX13D32EUC003.ant.amazon.com>
+ <20191209151339.GZ980@Air-de-Roger>
+ <b9271df6222a4fba86ec54c81b09eace@EX13D32EUC003.ant.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d7003d64-e838-9dcb-8c61-d6567ff6eb69@ideasonboard.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b9271df6222a4fba86ec54c81b09eace@EX13D32EUC003.ant.amazon.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
-
-On 2019-12-09 17:03:38 +0000, Kieran Bingham wrote:
-> Hi Mark,
-> 
-> Thanks for getting back to me,
-> 
-> On 09/12/2019 16:37, Mark Brown wrote:
-> > On Fri, Dec 06, 2019 at 04:38:04PM +0000, Kieran Bingham wrote:
+On Mon, Dec 09, 2019 at 04:26:15PM +0000, Durrant, Paul wrote:
+> > > If you want unbind to actually do a proper unplug then that's extra work
+> > and not really something I want to tackle (and re-bind would still need to
+> > be toolstack initiated as something would have to re-create the xenstore
+> > area).
 > > 
-> >> The MAX9286 also exposes 2 GPIO pins, as such I have configured the
-> >> MAX9286 driver [1] to expose a gpio-chip [2].
+> > Why do you say the xenstore area would need to be recreated?
 > > 
-> > So this seems like a MFD then?  The nice thing about using the MFD
-> > subsystem is that it means that the drivers for the various subsystems
-> > on the device can instantiate in any order and defer separately without
-> > interfering with each other which seems like it's the issue here.
-> 
-> Well that's part of the problem... the V4L2 async framework can not
-> currently support the device performing a probe-defer at all, so it
-> *will* fail later (and crash currently).
-> 
-> I hope we can fix this sometime - but it's a recurring pain point it
-> seems. Unless it's just our video-capture driver, I'll have to dig
-> deeper here, and check with Niklas.
-
-The problem is that we can't register, unregister and re-regsiter a 
-video device in a sane way. One easy solution to this is to not register 
-the max9286 v4l2 subdevice until we know that the probe do not need to 
-be deferred as this would sidestep the whole v4l2 issue described above.
-
-> 
-> 
-> >>  - is there anything I can do here within regulator_dev_lookup() to
-> >>    attempt creating the regulator_dev 'on-demand' when
-> >>    of_find_regulator_by_node(node) returns empty? (or is that crazy, and
-> >>    just a rabbit-hole?)
+> > Setting state to closed shouldn't cause any cleanup of the xenstore
+> > area, as that should already happen for example when using pvgrub
+> > since in that case grub itself disconnects and already causes a
+> > transition to closed and a re-attachment afterwards by the guest
+> > kernel.
 > > 
-> > This seems like a terrible idea, you'll have a half baked regulator in
-> > the system which will need special casing all over the place and
-> > doubtless be an ongoing source of bugs.
 > 
-> Thanks - that's essentially what I'm glad to hear /before/ going down
-> some rabbit hole. I'll re-evaluate with the team, and see what the next
-> best steps are.
-> 
-> -- 
-> Regards
-> --
-> Kieran
+> For some reason, when I originally tested, the xenstore area disappeared. I checked again and it did not this time. I just ended up with a frontend stuck in state 5 (because it is the system disk and won't go offline) trying to talk to a non-existent backend. Upon re-bind the backend goes into state 5 (because it sees the 5 in the frontend) and leaves the guest wedged.
 
--- 
-Regards,
-Niklas Söderlund
+Likely blkfront should go back to init state, but anyway, that's not
+something that needs fixing as part of this series.
+
+Thanks, Roger.
