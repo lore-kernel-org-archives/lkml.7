@@ -2,92 +2,113 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02985C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8ECC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BA3205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2E7214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="jeOGNh1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfLISie (ORCPT
+        id S1726619AbfLISkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:38:34 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:37424 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726365AbfLISid (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:38:33 -0500
-Received: (qmail 5435 invoked by uid 2102); 9 Dec 2019 13:38:32 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 9 Dec 2019 13:38:32 -0500
-Date:   Mon, 9 Dec 2019 13:38:32 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
-        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in hid_field_extract
-In-Reply-To: <000000000000dd7e7e05990793c1@google.com>
-Message-ID: <Pine.LNX.4.44L0.1912091337050.1462-100000@iolanthe.rowland.org>
+        Mon, 9 Dec 2019 13:40:53 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:48569 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLISkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:40:53 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47WsQL1kDfzCS;
+        Mon,  9 Dec 2019 19:38:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575916698; bh=mP4IVsF26GolA/qoisGsW9KuB5321gAdX6Kb63gtye0=;
+        h=Date:From:Subject:To:Cc:From;
+        b=jeOGNh1PmUYaOWnTMdS5bJGwov6KUqbN4Z/HZPr59kqzhJHrCrEwSzxRDtj+yqOGp
+         oJ2HwCpZn8AERqQq/JerhZh8EXVm8iZmlUKyQ3kBqjl5vfnktoY99713MWmbCaM6sz
+         k6LOkBaCixjpzwHTUVdTDjkmsOF0mtqIDXjwMPzmhpn1hXfmTdRp/dqlLM47wJj55I
+         giYnSukMPAF2PFzVrIG9qGoZedCyryiBcd34LYuy7+rTKHHhTnfbkCee97huTmKZ3G
+         5vBK0XHn/nmGy8EljwFT1a9FCjZeUEQLzDIh0F9jF6jIyVN8uLBUS6W81xqdhLeOF9
+         UMGgxLIeh+btQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 09 Dec 2019 19:40:50 +0100
+Message-Id: <56d2568cd45a13c738e2804d04348566a8ee8d03.1575916778.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] gpio: add gpiod_toggle_active_low()
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Dec 2019, syzbot wrote:
+Add possibility to toggle active-low flag of a gpio descriptor. This is
+useful for compatibility code, where defaults are inverted vs DT gpio
+flags or the active-low flag is taken from elsewhere.
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11d12861e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=09ef48aa58261464b621
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101a781ee00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d71c2ae00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in __extract drivers/hid/hid-core.c:1345  
-> [inline]
-> BUG: KASAN: slab-out-of-bounds in hid_field_extract+0x150/0x170  
-> drivers/hid/hid-core.c:1365
-> Read of size 1 at addr ffff8881cf50f000 by task swapper/0/0
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/gpio/gpiolib.c        | 11 +++++++++++
+ include/linux/gpio/consumer.h |  7 +++++++
+ 2 files changed, 18 insertions(+)
 
-Diagnostic patch.
-
-#syz test: https://github.com/google/kasan.git 1f22d15c
-
-Index: usb-devel/drivers/hid/hid-core.c
-===================================================================
---- usb-devel.orig/drivers/hid/hid-core.c
-+++ usb-devel/drivers/hid/hid-core.c
-@@ -1488,6 +1488,7 @@ static void hid_input_field(struct hid_d
- 	if (!value)
- 		return;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 9913886ede90..6130691e2047 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3363,6 +3363,17 @@ int gpiod_is_active_low(const struct gpio_desc *desc)
+ }
+ EXPORT_SYMBOL_GPL(gpiod_is_active_low);
  
-+	hid_info(hid, "Field offset %u size %u count %u\n", offset, size, count);
- 	for (n = 0; n < count; n++) {
++/**
++ * gpiod_toggle_active_low - toggle whether a GPIO is active-low or not
++ * @desc: the gpio descriptor to change
++ */
++void gpiod_toggle_active_low(struct gpio_desc *desc)
++{
++	VALIDATE_DESC_VOID(desc);
++	change_bit(FLAG_ACTIVE_LOW, &desc->flags);
++}
++EXPORT_SYMBOL_GPL(gpiod_toggle_active_low);
++
+ /* I/O calls are only valid after configuration completed; the relevant
+  * "is this a valid GPIO" error checks should already have been done.
+  *
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 5215fdba6b9a..bf2d017dd7b7 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -158,6 +158,7 @@ int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
  
- 		value[n] = min < 0 ?
-@@ -1712,6 +1713,7 @@ int hid_report_raw_event(struct hid_devi
- 	}
+ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce);
+ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
++void gpiod_toggle_active_low(struct gpio_desc *desc);
  
- 	if (hid->claimed != HID_CLAIMED_HIDRAW && report->maxfield) {
-+		hid_info(hid, "Report rsize %u csize %u\n", rsize, csize);
- 		for (a = 0; a < report->maxfield; a++)
- 			hid_input_field(hid, report->field[a], cdata, interrupt);
- 		hdrv = hid->driver;
+ int gpiod_is_active_low(const struct gpio_desc *desc);
+ int gpiod_cansleep(const struct gpio_desc *desc);
+@@ -483,6 +484,12 @@ static inline int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
+ 	return -ENOSYS;
+ }
+ 
++static inline void gpiod_toggle_active_low(struct gpio_desc *desc)
++{
++	/* GPIO can never have been requested */
++	WARN_ON(desc);
++}
++
+ static inline int gpiod_is_active_low(const struct gpio_desc *desc)
+ {
+ 	/* GPIO can never have been requested */
+-- 
+2.20.1
 
