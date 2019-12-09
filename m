@@ -2,121 +2,140 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDC7C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF1DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF2020637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="glfGCYkY"
+	by mail.kernel.org (Postfix) with ESMTP id 9E2F22071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbfLIEs5 (ORCPT
+        id S1727064AbfLIE6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 23:48:57 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:33323 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726826AbfLIEs5 (ORCPT
+        Sun, 8 Dec 2019 23:58:39 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27278 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726988AbfLIE6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 23:48:57 -0500
-X-UUID: 7db8f50916fd4b488594c5170206f671-20191209
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YcgZtnqzg5VT3Hj1syPa/xCvJ6RF8xt8gpVFl7qpqMI=;
-        b=glfGCYkYNOGN2BY8rePw6TlmD+rXhi9x84TLt5gd7g8twW+mDutlcXvD5XlXPH08bgfg2ODPnpB19AtwcksCXZVQF0cTPMErgDUM14//VvalbDh2WG+t+wLFqFUFXUNNSm3Gk09ffGTyGVRCt37DfFas2+16hPUfP3jR/iH8dVc=;
-X-UUID: 7db8f50916fd4b488594c5170206f671-20191209
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 75638292; Mon, 09 Dec 2019 12:48:41 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 9 Dec 2019 12:47:46 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 9 Dec 2019 12:48:31 +0800
-Message-ID: <1575866920.32541.4.camel@mtksdaap41>
-Subject: Re: [PATCH v4 0/7] drm/mediatek: fix cursor issue and apply CMDQ in
- MTK DRM
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Mon, 9 Dec 2019 12:48:40 +0800
-In-Reply-To: <20191205092749.4021-1-bibby.hsieh@mediatek.com>
-References: <20191205092749.4021-1-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 55801605C57CA610921F609EFECE446D43442399BAEEDB01006B5353DB3550B02000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 8 Dec 2019 23:58:39 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB94uql8087014
+        for <linux-kernel@vger.kernel.org>; Sun, 8 Dec 2019 23:58:37 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt58t5e7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 23:58:37 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Mon, 9 Dec 2019 04:58:35 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 04:58:32 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB94wVT357475116
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 04:58:31 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0C1CA404D;
+        Mon,  9 Dec 2019 04:58:30 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B274A4040;
+        Mon,  9 Dec 2019 04:58:29 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.249])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Dec 2019 04:58:29 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        gregkh@linuxfoundation.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH v5 0/6] reorganize and add FADump sysfs files
+Date:   Mon,  9 Dec 2019 10:28:20 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 19120904-0020-0000-0000-00000395B171
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120904-0021-0000-0000-000021ECEA2E
+Message-Id: <20191209045826.30076-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 suspectscore=1
+ lowpriorityscore=0 clxscore=1015 phishscore=0 mlxlogscore=837 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJpYmJ5Og0KDQpJJ3ZlIHRyaWVkIHRvIGFwcGx5IHRoaXMgc2VyaWVzIHRvIDUuNS1yYzEs
-IGJ1dCB0aGVyZSBhcmUgbWFueQ0KY29uZmxpY3RzLiBQbGVhc2UgcmVzZW5kIHRoaXMgc2VyaWVz
-IGJhc2VkIG9uIDUuNS1yYzEuDQoNCkFuZCBJJ3ZlIGZvdW5kIHRoYXQgaWYgSSBjb25maWcgQ09O
-RklHX01US19DTURRPW0sIHRoZSBjb2RlIGluc2lkZQ0KJyNpZmRlZiBDT05GSUdfTVRLX0NNRFEn
-IHdvdWxkIG5vdCBiZSBidWlsdC4gSSB0aGluayB5b3Ugc2hvdWxkIGNoYW5nZQ0KdGhpcyB0byAn
-I2lmIElTX0VOQUJMRUQoQ09ORklHX01US19DTURRKScuDQoNClJlZ2FyZHMsDQpDSw0KDQpPbiBU
-aHUsIDIwMTktMTItMDUgYXQgMTc6MjcgKzA4MDAsIEJpYmJ5IEhzaWVoIHdyb3RlOg0KPiBUaGUg
-Q01EUSAoQ29tbWFuZCBRdWV1ZSkgaW4gTVQ4MTgzIGlzIHVzZWQgdG8gaGVscCB1cGRhdGUgYWxs
-DQo+IHJlbGV2YW50IGRpc3BsYXkgY29udHJvbGxlciByZWdpc3RlcnMgd2l0aCBjcml0aWNhbCB0
-aW1lIGxpbWF0aW9uLg0KPiBUaGlzIHBhdGNoIGFkZCBjbWRxIGludGVyZmFjZSBpbiBkZHBfY29t
-cCBpbnRlcmZhY2UsIGxldCBhbGwNCj4gZGRwX2NvbXAgaW50ZXJmYWNlIGNhbiBzdXBwb3J0IGNw
-dS9jbWRxIGZ1bmN0aW9uIGF0IHRoZSBzYW1lIHRpbWUuDQo+IA0KPiBUaGVzZSBwYXRjaGVzIGFs
-c28gY2FuIGZpeHVwIGN1cnNvciBtb3ZpbmcgaXMgbm90IHNtb290aA0KPiB3aGVuIGhlYXZ5IGxv
-YWQgaW4gd2ViZ2wuDQo+IA0KPiBUaGlzIHBhdGNoIGRlcGVuZHMgb24gcHRhY2g6DQo+IGFkZCBk
-cm0gc3VwcG9ydCBmb3IgTVQ4MTgzDQo+IChodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2Nv
-dmVyLzExMTIxNTE5LykNCj4gc3VwcG9ydCBnY2Ugb24gbXQ4MTgzIHBsYXRmb3JtDQo+IChodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzExMjU1MTQ3KQ0KPiBkcm0vbWVkaWF0ZWs6
-IFJlZmFjdG9yIHBsYW5lIGluaXQvY2hlY2sgYW5kIHN1cHBvcnQgcm90YXRpb24NCj4gKGh0dHBz
-Oi8vcHctZW1lcmlsLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjkwMTUvKQ0KPiBkcm0vbWVkaWF0
-ZWs6IENoZWNrIHJldHVybiB2YWx1ZSBvZiBtdGtfZHJtX2RkcF9jb21wX2Zvcl9wbGFuZQ0KPiAo
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzExNTQ1MTcvKQ0KPiANCj4g
-Q2hhbmdlcyBzaW5jZSB2MzoNCj4gIC0gcmVtb3ZlIHJlZHVuZGFudCBjb2RlIGFuZCB2YXJpYWJs
-ZQ0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2MjoNCj4gIC0gbW92ZSBzb21lIGNoYW5nZXMgdG8gYW5v
-dGhlciBwYXRjaA0KPiAgLSBkaXNhYmxlIGxheWVyIGluIGF0b21pY19kaXNhYmxlKCkNCj4gDQo+
-IENoYW5nZXMgc2luY2UgdjE6DQo+ICAtIHJlbW92ZSByZWR1bmRhbnQgY29kZQ0KPiAgLSBtZXJn
-ZSB0aGUgZHVwbGljYXRlIGNvZGUNCj4gIC0gdXNlIGFzeW5jIGluc3RlYWQgb2YgY3Vyc29yDQo+
-IA0KPiBDaGFuZ2VzIHNpbmNlIHYwOg0KPiAgLSByZW1vdmUgcmVkdW5kYW50IGNvZGUNCj4gIC0g
-cmVtb3ZlIHBhdGNoDQo+ICAgICJkcm0vbWVkaWF0ZWs6IGZpeCBhdG9taWNfc3RhdGUgcmVmZXJl
-bmNlIGNvdW50aW5nIg0KPiAgICBBZnRlciByZW1vdmUgdGhpcyBwYXRjaCwgdGhlIGlzc3VlIHdl
-IG1ldCBiZWZvcmUgaXMgZ29uZS4NCj4gICAgU28gSSBkbyBub3QgYWRkIGFueSBleHRyYSBjb2Rl
-IHRvIGRvIHNvbWV0aGluZy4NCj4gDQo+IEJpYmJ5IEhzaWVoICg3KToNCj4gICBkcm0vbWVkaWF0
-ZWs6IHVzZSBEUk0gY29yZSdzIGF0b21pYyBjb21taXQgaGVscGVyDQo+ICAgZHJtL21lZGlhdGVr
-OiBoYW5kbGUgZXZlbnRzIHdoZW4gZW5hYmxpbmcvZGlzYWJsaW5nIGNydGMNCj4gICBkcm0vbWVk
-aWF0ZWs6IHVwZGF0ZSBjdXJzb3JzIGJ5IHVzaW5nIGFzeW5jIGF0b21pYyB1cGRhdGUNCj4gICBk
-cm0vbWVkaWF0ZWs6IGRpc2FibGUgYWxsIHRoZSBwbGFuZXMgaW4gYXRvbWljX2Rpc2FibGUNCj4g
-ICBkcm0vbWVkaWF0ZWs6IHJlbW92ZSB1bnVzZWQgZXh0ZXJuYWwgZnVuY3Rpb24NCj4gICBkcm0v
-bWVkaWF0ZWs6IHN1cHBvcnQgQ01EUSBpbnRlcmZhY2UgaW4gZGRwIGNvbXBvbmVudA0KPiAgIGRy
-bS9tZWRpYXRlazogYXBwbHkgQ01EUSBjb250cm9sIGZsb3cNCj4gDQo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2Rpc3BfY29sb3IuYyAgIHwgICA3ICstDQo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgICAgIHwgIDY3ICsrKystLS0tDQo+ICBkcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgIHwgIDQzICsrLS0tDQo+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAgIHwgMTY1ICsrKysrKysrKysr
-KysrKystLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmggICAg
-IHwgICAyICsNCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMg
-fCAxMzIgKysrKysrKysrKysrLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwX2NvbXAuaCB8ICA0NyArKystLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHJtX2Rydi5jICAgICAgfCAgODYgKy0tLS0tLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZHJ2LmggICAgICB8ICAgNyAtDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9wbGFuZS5jICAgIHwgIDQ3ICsrKysrKw0KPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fcGxhbmUuaCAgICB8ICAgMiArDQo+ICAxMSBmaWxlcyBjaGFuZ2Vk
-LCAzODEgaW5zZXJ0aW9ucygrKSwgMjI0IGRlbGV0aW9ucygtKQ0KPiANCg0K
+Currently, FADump sysfs files are present inside /sys/kernel directory.
+But as the number of FADump sysfs file increases it is not a good idea to
+push all of them in /sys/kernel directory. It is better to have separate
+directory to keep all the FADump sysfs files.
+
+Patch series reorganizes the FADump sysfs files and avail all the existing
+FADump sysfs files present inside /sys/kernel into a new directory
+/sys/kernel/fadump. The backward compatibility is maintained by adding a
+symlink for every sysfs file that has moved to new location. Also a new
+FADump sys interface is added to get the amount of memory reserved by FADump
+for saving the crash dump.
+
+Changelog:
+v1 -> v2:
+ - Move fadump_release_opalcore sysfs to FADump Kobject instead of
+   replicating.
+ - Changed the patch order 1,2,3,4 -> 2,1,3,4 (First add the ABI doc for
+   exisiting sysfs file then replicate them under FADump kobject).
+
+v2 -> v3:
+ - Remove the fadump_ prefix from replicated FADump sysfs file names.
+
+ v3 -> v4:
+ - New patch that adds a wrapper function to create symlink with
+   custom symlink file name.
+ - Add symlink instead of replicating the FADump sysfs files.
+ - Move the OPAL core rel
+
+v4 -> v5:
+ - Changed the wrapper function name in 2/6.
+ - Defined FADump kobject attributes using __ATTR_* macros.
+ - Replace individual FADump sysfs file creation with group.
+ - Added a macro to create symlink.
+
+Sourabh Jain (6):
+  Documentation/ABI: add ABI documentation for /sys/kernel/fadump_*
+  sysfs: wrap __compat_only_sysfs_link_entry_to_kobj function to change
+    the symlink name
+  powerpc/fadump: reorganize /sys/kernel/fadump_* sysfs files
+  powerpc/powernv: move core and fadump_release_opalcore under new
+    kobject
+  Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
+  powerpc/fadump: sysfs for fadump memory reservation
+
+ .../ABI/obsolete/sysfs-kernel-fadump_enabled  |   9 ++
+ .../obsolete/sysfs-kernel-fadump_registered   |  10 ++
+ .../obsolete/sysfs-kernel-fadump_release_mem  |  10 ++
+ .../sysfs-kernel-fadump_release_opalcore      |   9 ++
+ Documentation/ABI/testing/sysfs-kernel-fadump |  40 +++++++
+ .../powerpc/firmware-assisted-dump.rst        |  28 ++++-
+ arch/powerpc/kernel/fadump.c                  | 104 ++++++++++++------
+ arch/powerpc/platforms/powernv/opal-core.c    |  55 ++++++---
+ fs/sysfs/group.c                              |  28 ++++-
+ include/linux/sysfs.h                         |  12 ++
+ 10 files changed, 247 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
+ create mode 100644 Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
+
+-- 
+2.17.2
 
