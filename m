@@ -2,81 +2,92 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17C3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A792C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55FD20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08582068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:35:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eBzDFNJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfLIWbL (ORCPT
+        id S1726970AbfLIWfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:31:11 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36536 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfLIWbL (ORCPT
+        Mon, 9 Dec 2019 17:35:42 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45222 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfLIWfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:31:11 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4AC1A15492874;
-        Mon,  9 Dec 2019 14:31:10 -0800 (PST)
-Date:   Mon, 09 Dec 2019 14:31:09 -0800 (PST)
-Message-Id: <20191209.143109.1010404838982057668.davem@davemloft.net>
-To:     maowenan@huawei.com
-Cc:     loke.chetan@gmail.com, willemb@google.com, edumazet@google.com,
-        maximmi@mellanox.com, nhorman@tuxdriver.com, pabeni@redhat.com,
-        yuehaibing@huawei.com, tglx@linutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        xiaojiangfeng@huawei.com
-Subject: Re: [PATCH net] af_packet: set defaule value for tmo
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191209133125.59093-1-maowenan@huawei.com>
-References: <20191209133125.59093-1-maowenan@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Dec 2019 14:31:10 -0800 (PST)
+        Mon, 9 Dec 2019 17:35:42 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so7433596pgk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:35:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=DpEDnczTgLmUSLdSdUYrI+chr7EHogU/r3WqtZ4to3E=;
+        b=eBzDFNJnIO94AMgtEUzQcizLOePZOk9ymDnd7glk+21xbOY5st/iVlmzg31PmaX8If
+         nIQwr5BWKpHW6KEFvdiqB2uuXizK//53pmw061q0FwTlIBtDRlCkVqEy7GyIydGpGg6B
+         SAXqYXQOZIz6XwWOte5TdVpbtUpoW8cmxZIuqBpZt+FN4GKPuLLEQVHjJXZdjcrAVGv9
+         Gm2zbhS/g0j9Mu4lHwpnJyaSQ52xzffjzEvR/4VlPc8OsEwTBlf8rvau30/afqLye9rd
+         /iohDEY85cmNGxR+gH6wQpnDfWsl6jNyWeHrBa1exNXL/YIkBa22RgYi+5xYzq5sZDHc
+         jx4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=DpEDnczTgLmUSLdSdUYrI+chr7EHogU/r3WqtZ4to3E=;
+        b=NgkqVqZKTYawhDJtnuAMpzaZysTelErVu0qe/QRIqw9xoWOLFq+dkRqCWJaEM4t9R7
+         QImhS9pspCJBboZLPxkqYg7LxSnTESGyCivHYlZ9WoIHah3BodrxwHPKSrk0i5coawpc
+         ZNUJph9ACvSAm1OVX0zVqZlaOQqtcXHOT9rmVv7ZAafNhGHnvum7xFbR88C6sDAVDPqa
+         Kbjh2DXNjhmDNsIG76FPjDlEs5CpsT9DSTZ6iJ4v9zB+wUG+IjUFk9h108daq+thjIkl
+         cdJrWdEkGq8AfR8SVMjGKugcV+lC3r9dgzcDCvKS/eI2EoYbcj3/ggybGHZG0JbB28G0
+         +usw==
+X-Gm-Message-State: APjAAAVFFe+23taocdgKFqp2OYhp4qK9h6oYde794oCZa706866UHif3
+        DF1TTv3fbCeaAIPuSs8W2enNEg==
+X-Google-Smtp-Source: APXvYqzf9KQsOlR/3bHydft6MqOQT/ZvVC5FuQTsBmeouaIiaqFg1BNIjH9a/lbszhQIz2OsAmf7ZA==
+X-Received: by 2002:a63:5920:: with SMTP id n32mr10910399pgb.443.1575930941752;
+        Mon, 09 Dec 2019 14:35:41 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id h128sm480972pfe.172.2019.12.09.14.35.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 14:35:41 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>,
+        devicetree@vger.kernel.org
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
+In-Reply-To: <20191205131900.2059-1-glaroque@baylibre.com>
+References: <20191205131900.2059-1-glaroque@baylibre.com>
+Date:   Mon, 09 Dec 2019 14:35:40 -0800
+Message-ID: <7hy2vlqg8z.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
-Date: Mon, 9 Dec 2019 21:31:25 +0800
+Guillaume La Roque <glaroque@baylibre.com> writes:
 
-> There is softlockup when using TPACKET_V3:
-> ...
-> NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-> (__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-> (_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-> (mod_timer) from [<c0549c30>]
-> (prb_retire_rx_blk_timer_expired+0x68/0x11c)
-> (prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-> (call_timer_fn+0x90/0x17c)
-> (call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-> (run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-> (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-> (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-> (msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-> (handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-> (gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-> ...
-> 
-> If __ethtool_get_link_ksettings() is failed in
-> prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-> is zero and the timer expire for retire_blk_timer is turn to
-> mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-> which will trigger cpu usage of softirq is 100%.
-> 
-> Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-> Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> add gpio irq to support interrupt trigger mode.
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+> hi,
+>
+> this patch depends of 
+> https://lkml.org/lkml/2019/12/4/644
 
-Applied, thanks.
+Just to be clear on the dependency...  This DT patch will not change any
+behavior until the driver patch is merged, correct?
+
+But if this DT patch merges before the driver patch merges, we're not
+going to break anything, right?  We're just going to (continue) to not
+have working interrupts.
+
+Kevin
