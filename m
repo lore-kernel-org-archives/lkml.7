@@ -2,114 +2,125 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A48C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142DCC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF3D20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFB620637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lCdRbY8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLITeD (ORCPT
+        id S1726835AbfLITef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:34:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:43610 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfLITeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:34:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64E69328;
-        Mon,  9 Dec 2019 11:34:02 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF67D3F6CF;
-        Mon,  9 Dec 2019 11:34:01 -0800 (PST)
-Subject: Re: [PATCH V2] iommu/iova: Init the struct iova to fix the possible
- memleak
-To:     Xiaotao Yin <xiaotao.yin@windriver.com>, joro@8bytes.org,
-        iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Kexin.Hao@windriver.com
-References: <20191209082404.40166-1-xiaotao.yin@windriver.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <977971ed-f77f-847a-89ab-0ddf45abf24d@arm.com>
-Date:   Mon, 9 Dec 2019 19:33:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 14:34:35 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35463 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLITee (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:34:34 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s10so6220690plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:34:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZXNGLW7mFianPc1VWLK8THUd4ZKwccb4YrTIuoMnGk0=;
+        b=lCdRbY8AJYLHMjRur+qXl1k3An/CDtGgqw6W8jfX9s8665NNeVLR4dOHO7yRDfyr78
+         GdGOWIaxq9afq2lFh621TEzdsn6+HdWl24evVkKZhm7dI+0z6KB6jK9Bln9LT2lPDllA
+         snBmS3jLAwtnY78Mxg1+BhZUa2o3YY9qILbnU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZXNGLW7mFianPc1VWLK8THUd4ZKwccb4YrTIuoMnGk0=;
+        b=DPzHLl/nD++lYU9JyIjuMalCIWDXmic1V6i6WqSvcE21MX/UzUg5ZmfIwh7kf/zjOD
+         Rk2vbYOrEVQ0MxCNnnB7/yklRJzIiBNTAGbldOYRfQBZCsEv22ACl3ssOsxZLXBGRTyt
+         pF5zfDCxC/X6Vd3OeBbR8IYaN9dtbQs0gclVvMr2dHURziUcu+WedEa0+DBZ/Nk8oi76
+         j3MpqS1c/CtVxexfLajsHd5Z60dX2ODRbeRCZ8XJHpnbt0zgP/f6K2qLqx2ebf2QUZzh
+         S/VajZr2rNaksiD/TjM0RdTgKfk2fI9Xw4v+chQrU/Hi3xp9xM+FnEjQ+qNP5RzCH+fd
+         EK2g==
+X-Gm-Message-State: APjAAAXKtYKYXjel0oIdJoPem8unTUzM31btVgW6sOokrrEq+XhGNH32
+        LLBHXI94EtxpDOSHIPUpTS2ayA==
+X-Google-Smtp-Source: APXvYqyyadS5sS/1VnJWvbDbKx1ZcI7p3t0CLn71BLe7STUeHfSNIWMnpEdjyK8JcF/LTYJeq9PVpQ==
+X-Received: by 2002:a17:902:363:: with SMTP id 90mr9706773pld.71.1575920074056;
+        Mon, 09 Dec 2019 11:34:34 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id e11sm155563pjj.26.2019.12.09.11.34.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 11:34:33 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:34:32 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH 3/4] PM / devfreq: Kconfig: add DEVFREQ_DELAYED_TIMER
+ option
+Message-ID: <20191209193432.GQ228856@google.com>
+References: <20191209144425.13321-1-k.konieczny@samsung.com>
+ <CGME20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91@eucas1p1.samsung.com>
+ <20191209144425.13321-4-k.konieczny@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20191209082404.40166-1-xiaotao.yin@windriver.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191209144425.13321-4-k.konieczny@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/12/2019 8:24 am, Xiaotao Yin wrote:
-> During ethernet(Marvell octeontx2) set ring buffer test:
-> ethtool -G eth1 rx <rx ring size> tx <tx ring size>
-> following kmemleak will happen sometimes:
+On Mon, Dec 09, 2019 at 03:44:24PM +0100, Kamil Konieczny wrote:
+> Add Kconfig option DEVFREQ_DELAYED_TIMER. If set, devfreq workqueue
+> will use delayed timer from its start.
+
+s/from its start/by default/
+
 > 
-> unreferenced object 0xffff000b85421340 (size 64):
->    comm "ethtool", pid 867, jiffies 4295323539 (age 550.500s)
->    hex dump (first 64 bytes):
->      80 13 42 85 0b 00 ff ff ff ff ff ff ff ff ff ff  ..B.............
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->      ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->    backtrace:
->      [<000000001b204ddf>] kmem_cache_alloc+0x1b0/0x350
->      [<00000000d9ef2e50>] alloc_iova+0x3c/0x168
->      [<00000000ea30f99d>] alloc_iova_fast+0x7c/0x2d8
->      [<00000000b8bb2f1f>] iommu_dma_alloc_iova.isra.0+0x12c/0x138
->      [<000000002f1a43b5>] __iommu_dma_map+0x8c/0xf8
->      [<00000000ecde7899>] iommu_dma_map_page+0x98/0xf8
->      [<0000000082004e59>] otx2_alloc_rbuf+0xf4/0x158
->      [<000000002b107f6b>] otx2_rq_aura_pool_init+0x110/0x270
->      [<00000000c3d563c7>] otx2_open+0x15c/0x734
->      [<00000000a2f5f3a8>] otx2_dev_open+0x3c/0x68
->      [<00000000456a98b5>] otx2_set_ringparam+0x1ac/0x1d4
->      [<00000000f2fbb819>] dev_ethtool+0xb84/0x2028
->      [<0000000069b67c5a>] dev_ioctl+0x248/0x3a0
->      [<00000000af38663a>] sock_ioctl+0x280/0x638
->      [<000000002582384c>] do_vfs_ioctl+0x8b0/0xa80
->      [<000000004e1a2c02>] ksys_ioctl+0x84/0xb8
-> 
-> The reason:
-> When alloc_iova_mem() without initial with Zero, sometimes fpn_lo will equal to
-> IOVA_ANCHOR by chance, so when return from __alloc_and_insert_iova_range() with
-> -ENOMEM(iova32_full), the new_iova will not be freed in free_iova_mem().
-
-Ooh, subtle... nice catch!
-
-I suppose we could also open-code the kmem_cache_free() call in 
-alloc_iova() to bypass the check entirely because "we know what we're 
-doing", but only if the zeroing proves to have a measurable overhead.
-
-> Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
-> Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
 > ---
->   drivers/iommu/iova.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/devfreq/Kconfig | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> index 41c605b0058f..2c27a661632c 100644
-> --- a/drivers/iommu/iova.c
-> +++ b/drivers/iommu/iova.c
-> @@ -233,7 +233,7 @@ static DEFINE_MUTEX(iova_cache_mutex);
->   
->   struct iova *alloc_iova_mem(void)
->   {
-> -	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
-> +	return kmem_cache_alloc(iova_cache, GFP_ATOMIC | __GFP_ZERO);
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 38a94df749a2..c799917c34c9 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -74,6 +74,18 @@ config DEVFREQ_GOV_PASSIVE
+>  	  through sysfs entries. The passive governor recommends that
+>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>  
+> +comment "DEVFREQ Options"
+> +
+> +config DEVFREQ_DELAYED_TIMER
+> +	bool "Use delayed timer in Simple Ondemand Governor"
 
-FWIW there is a kmem_cache_zalloc() helper, which seems fairly 
-well-established. Either way, though,
+Is the use really limited to the Simple Ondemand Governor? I don't think
+so, at least the Tegra devfreq driver also does monitoring and others
+might follow.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
->   }
->   EXPORT_SYMBOL(alloc_iova_mem);
->   
-> 
+> +	default false
+> +	help
+> +	  Simple Ondemand Governor uses polling for reading buses counters.
+> +	  A default timer used is deferred, which saves power, but can
+> +	  miss increased demand for higher bus frequency if timer was
+> +	  assigned to idle cpu. If you want to change this to delayed
+> +	  timer at the cost of more power used, say Yes here.
+> +
+>  comment "DEVFREQ Drivers"
+>  
+>  config ARM_EXYNOS_BUS_DEVFREQ
+
+
+This patch on it's own does nothing. Squash it with '[4/4] PM / devfreq:
+use delayed work if DEVFREQ_DELAYED_TIMER set'.
