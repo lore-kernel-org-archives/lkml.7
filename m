@@ -2,337 +2,196 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CDFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7827206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05202206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="DmYJXSqo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R8fe3KSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfLIHGy (ORCPT
+        id S1727188AbfLIHJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:06:54 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43845 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfLIHGx (ORCPT
+        Mon, 9 Dec 2019 02:09:03 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39821 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfLIHJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:06:53 -0500
-Received: by mail-io1-f65.google.com with SMTP id s2so13596524iog.10
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 23:06:52 -0800 (PST)
+        Mon, 9 Dec 2019 02:09:02 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c16so3751590qko.6
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 23:09:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=yIxXYG1YTWqah7KHNRVeSjqJgD6uhzEhEyRg4kk5RV8=;
-        b=DmYJXSqoXIPZuTIXFp8vraozHx7BwI0R2pioNaaS278xlAiCJOGNC1W8GSHTyOai4i
-         NefzvQyXwmeQCIwPo8vkLyBBJADfJye02qR5gSicDw60lfTlpOA6ZoIBHzy8TDN2hbmt
-         3IYOG0e9+e5WXoImrYVcDkfzezP6KYj/QSBc0=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=acPdwX4RR6D9eurdBV6vmv1n2rLJNB+twNd7iWdWOgA=;
+        b=R8fe3KSvuyjJ8wnh1yvCdj+K+HkNGhJDuufs8lZAHM5Lpt8xFiXunSs/ZKw9s/c6se
+         +mqBSLIYRjSiq4+x/p1D1HSi+rDYfaxyrUPJy8cuc6uDLIp7XGEN8fYONerJYkOVRsKc
+         kOtEjBkjRm35F2aYgC8UDuKO6xQwXm3vv+HGAsiae7TsP6+M04ACDBojTyOqeQ9kJUw9
+         zbxQNsyvdLX6C7AJwBVp6Debkl8pzKSjnW19zhpIPfQiSkmJs8wqkRBpWpF0ubtLVlXP
+         jadauy5PvRRqBGtvrmB3jFwd9TZcWXdCtfpo8xB7pH8zk73ycv13YDpNM2SZSEe9h5Y/
+         Z0wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=yIxXYG1YTWqah7KHNRVeSjqJgD6uhzEhEyRg4kk5RV8=;
-        b=RlFTCd/E9pj1dftrc4lfiPlwcsVqxac93nCQRaOJ0N2paHY4xMOttO4Ov3NpuZWj8B
-         6pKfupV8Yip60GsUAUugMVMstGkTtZmlfh0Q9jMDLZnAGb61sh6EGWyqFlfMhyWB8dIK
-         uCw9Dy+hOPQk5xh8/+CsnteqITOTwM2vsuediHCMhHtLXmlSGBTU/5hPtI6EDdnbRcE5
-         kDCw+rwpUhD0dp+ebEevNpIlqoTwt4sJpqcVVfPxJyox2+0X/rnpYjHSzaL9SVrP16Dj
-         thP5Xcs3MLNB+p2Bue1luy1MIE5MpYztnEeZMiE7gtscBpa2uApw6L8pyi7QnWFdPL/B
-         mD/Q==
-X-Gm-Message-State: APjAAAV717BLEL2CieHB+ig9kyMevLClGU8+Rfg8CzCI4zuYTKlhKcW/
-        Ixu0C3WJBFwMqfUyJmMSrLbSBrKGAC/GZw==
-X-Google-Smtp-Source: APXvYqyNz9gr9z8RBM1I8ttENofoW7KGGplVpf7ZnnsDxfp3uZFvu65tigRIs7Pq5n5ydDX0OV3SQA==
-X-Received: by 2002:a02:cdd9:: with SMTP id m25mr25419197jap.123.1575875211378;
-        Sun, 08 Dec 2019 23:06:51 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id y11sm6519521ilp.46.2019.12.08.23.06.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 08 Dec 2019 23:06:51 -0800 (PST)
-Date:   Mon, 9 Dec 2019 07:06:49 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
-        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk
-Subject: [PATCH v2 4/4] samples: Add example of using PTRACE_GETFD in
- conjunction with user trap
-Message-ID: <20191209070646.GA32477@ircssh-2.c.rugged-nimbus-611.internal>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=acPdwX4RR6D9eurdBV6vmv1n2rLJNB+twNd7iWdWOgA=;
+        b=OTAnqA3cDSUHUWIjlF8Mj4AKe1ch4r4J3OzOqkmnYEeCbxKL83HTr0jy1X2c0ZoQJz
+         gvJHozAvpncNSi6Onf6WZuW4NdmVav5DH7VTBV3C51KUCY6aGyh4TQP6NI9nYAE1eiRT
+         YjQloWIYPjad64W5Py+SXAFcI8Aj27lsxhmBDN+L5cHP9Rny8e1nPs0/WeAZTpb/ubIx
+         ChTGvBAIG4tY9X9VKDsfXVsTJaD/iYXjybZCxNx11sA65/lsT+tPw39uOg/tL0rZqYiG
+         AKlq/kokq/WQM4MueiQAjbYkEnXx7uE3V0KGN4K9bM8kBy2UfUSewPLzcKaSP+4N3L8W
+         f/vA==
+X-Gm-Message-State: APjAAAVV+xHQgwlJCv/5wTvB6sDPQWSihLe0o/4W+QyS/V3rdxGfvHgd
+        PMuAGkX5HvgRtTK0qnBfMe8WNTzRx1b6jhZ8asI=
+X-Google-Smtp-Source: APXvYqzEhY1weRee2E5uV0RoeR2aMsIzSVlLeNcjwk+gLGbYLBIE8Rw/YISOsOPCg3QXQSv0QNMGFbLsYVqqZ363vRo=
+X-Received: by 2002:a37:8505:: with SMTP id h5mr25588045qkd.281.1575875341187;
+ Sun, 08 Dec 2019 23:09:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <201912060818.dgGGxpRK%lkp@intel.com> <CAK8P3a23_rWdmjyZNezd9k=-KL4VZyV+DCLvh-UgCQUQTsysyw@mail.gmail.com>
+ <CAEbi=3fN83s1sp6Yt2B6d5M-uJ+TGz_a7-mWTt2LAfrX8B3JmA@mail.gmail.com>
+ <CAEbi=3cojt1shc84zH3tGtxK98rQ=PbGhkirWCe7C+JSj5jpFw@mail.gmail.com> <CAEbi=3fJM9B_UnkuVOKW2oD8AcdvOYh1ozheGi9pAGvm7MjtFw@mail.gmail.com>
+In-Reply-To: <CAEbi=3fJM9B_UnkuVOKW2oD8AcdvOYh1ozheGi9pAGvm7MjtFw@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Mon, 9 Dec 2019 15:08:24 +0800
+Message-ID: <CAEbi=3cX1g6cJhXPRp6bP2fT4Q=LJ38YuCBCrunU6sR-5mo+pQ@mail.gmail.com>
+Subject: Re: drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* and
+ *UND* sections) for `^'
+To:     Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>,
+        nelson.chu1990@gmail.com
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sample adds the usage of SECCOMP_RET_USER_NOTIF together with ptrace
-PTRACE_GETFD. It shows trapping a syscall, and handling it by extracting
-the FD into the parent process without stopping the child process.
-Although, in this example, there's no explicit policy separation in
-the two processes, it can be generalized into the example of a transparent
-proxy.
+Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:15=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:38=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Greentime Hu <green.hu@gmail.com> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:19=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Arnd Bergmann <arnd@arndb.de> =E6=96=BC 2019=E5=B9=B412=E6=9C=886=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:00=E5=AF=AB=E9=81=93=EF=BC=9A
+> > > >
+> > > > On Fri, Dec 6, 2019 at 2:05 AM kbuild test robot <lkp@intel.com> wr=
+ote:
+> > > > >
+> > > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/=
+linux.git master
+> > > > > head:   2f13437b8917627119d163d62f73e7a78a92303a
+> > > > > commit: 1207045da5a7c94344e0ea9a9e7495985eef499a compat_ioctl: mo=
+ve tape handling into drivers
+> > > > > date:   6 weeks ago
+> > > > > config: nds32-allyesconfig (attached as .config)
+> > > > > compiler: nds32le-linux-gcc (GCC) 9.2.0
+> > > > > reproduce:
+> > > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/ma=
+ster/sbin/make.cross -O ~/bin/make.cross
+> > > > >         chmod +x ~/bin/make.cross
+> > > > >         git checkout 1207045da5a7c94344e0ea9a9e7495985eef499a
+> > > > >         # save the attached .config to linux build tree
+> > > > >         GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> > > > >
+> > > > > If you fix the issue, kindly add following tag
+> > > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > >
+> > > > > All errors (new ones prefixed by >>):
+> > > > >
+> > > > >    drivers/scsi/.tmp_mc_st.s: Assembler messages:
+> > > > > >> drivers/scsi/.tmp_mc_st.s:3: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:4: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:5: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:6: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:7: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:8: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > > >    drivers/scsi/.tmp_mc_st.s:9: Error: invalid operands (*UND* an=
+d *UND* sections) for `^'
+> > > >
+> > > > Adding nds32 maintainers to Cc:
+> > > >
+> > > > It looks like a regression caused by my patch, but I don't think it=
+'s something
+> > > > I did wrong, but rather a toolchain bug being uncovered by the modi=
+fied sources.
+> > > >
+> > > > Are you able to reproduce this?
+> > >
+> > > Hi Arnd,
+> > >
+> > > I am trying to reproduce this problem, but it happened to me.
+> > >
+> > > greentimeh@gamma07:/scratch/greentimeh/nds32/linux <(1207045da5a7...)=
+>
+> > > $ GCC_VERSION=3D9.2.0 make.cross ARCH=3Dnds32
+> > > cd: received redirection to `https://download.01.org/0day-ci/cross-pa=
+ckage/'
+> > > Cannot find nds32-linux under
+> > > https://download.01.org/0day-ci/cross-package check
+> > > /tmp/crosstool-files
+> > >
+> > > Can you reproduce it?
+> >
+> > I can reproduce it now by adding these 2 lines to make.cross.
+> > 177                 nds32)
+> > 178                         gcc_arch=3Dnds32le-linux
+> >
+> > It will be built failed with gcc-9.2.0-nolibc toolchain, but it can be
+> > built pass with gcc-8.1.0-nolibc toolchain.
+>
+> It seems nds32le-linux-objdump -hdr xxx.o will generate different strings=
+.
+> For example:
+> 00000050 <.L2^B1>:
+> This string is different when generated by 9.2 toolchain and 8.1 toolchai=
+n.
+> "^B" is treated as 2 character in 9.2 toolchain
+> "^B" is treated as 1 character in 8.1 toolchain
+>
+> This causes ./scripts/recordmcount.pl to call `$cc -o $mcount_o -c
+> $mcount_s`; failed to cause this issue.
+> I have a quick patch to fix this build error, but I am not sure if it
+> is a good solution.
+> Maybe Nick could have a look at it?
+>
+> diff --git a/scripts/recordmcount.pl b/scripts/recordmcount.pl
+> index 3f77a5d695c1..807b61fc5f5d 100755
+> --- a/scripts/recordmcount.pl
+> +++ b/scripts/recordmcount.pl
+> @@ -551,7 +551,8 @@ while (<IN>) {
+>         # if this is either a local function or a weak function
+>         # keep looking for functions that are global that
+>         # we can use safely.
+> -       if (!defined($locals{$text}) && !defined($weak{$text})) {
+> +       if (!defined($locals{$text}) && !defined($weak{$text}) &&
+> +           $text !~ /^\.L/) {
+>             $ref_func =3D $text;
+>             $read_function =3D 0;
+>             $offset =3D hex $1;
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- samples/seccomp/.gitignore         |   1 +
- samples/seccomp/Makefile           |   9 +-
- samples/seccomp/user-trap-ptrace.c | 193 +++++++++++++++++++++++++++++
- 3 files changed, 202 insertions(+), 1 deletion(-)
- create mode 100644 samples/seccomp/user-trap-ptrace.c
-
-diff --git a/samples/seccomp/.gitignore b/samples/seccomp/.gitignore
-index d1e2e817d556..169bc130ec39 100644
---- a/samples/seccomp/.gitignore
-+++ b/samples/seccomp/.gitignore
-@@ -2,3 +2,4 @@ bpf-direct
- bpf-fancy
- dropper
- user-trap
-+user-trap-ptrace
-diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
-index 82b7347318d1..c0f3ef713f5b 100644
---- a/samples/seccomp/Makefile
-+++ b/samples/seccomp/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef CROSS_COMPILE
--hostprogs-y := bpf-fancy dropper bpf-direct user-trap
-+hostprogs-y := bpf-fancy dropper bpf-direct user-trap user-trap-ptrace
- 
- HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
- HOSTCFLAGS_bpf-fancy.o += -idirafter $(objtree)/include
-@@ -24,6 +24,11 @@ HOSTCFLAGS_user-trap.o += -I$(objtree)/usr/include
- HOSTCFLAGS_user-trap.o += -idirafter $(objtree)/include
- user-trap-objs := user-trap.o user-trap-helper.o
- 
-+HOSTCFLAGS_user-trap-ptrace.o += -I$(objtree)/usr/include
-+HOSTCFLAGS_user-trap-ptrace.o += -idirafter $(objtree)/include
-+user-trap-ptrace-objs := user-trap-ptrace.o user-trap-helper.o
-+
-+
- # Try to match the kernel target.
- ifndef CONFIG_64BIT
- 
-@@ -39,10 +44,12 @@ HOSTCFLAGS_dropper.o += $(MFLAG)
- HOSTCFLAGS_bpf-helper.o += $(MFLAG)
- HOSTCFLAGS_bpf-fancy.o += $(MFLAG)
- HOSTCFLAGS_user-trap.o += $(MFLAG)
-+HOSTCFLAGS_user-trap-ptrace.o += $(MFLAG)
- HOSTLDLIBS_bpf-direct += $(MFLAG)
- HOSTLDLIBS_bpf-fancy += $(MFLAG)
- HOSTLDLIBS_dropper += $(MFLAG)
- HOSTLDLIBS_user-trap += $(MFLAG)
-+HOSTLDLIBS_user-trap-ptrace += $(MFLAG)
- endif
- always := $(hostprogs-y)
- endif
-diff --git a/samples/seccomp/user-trap-ptrace.c b/samples/seccomp/user-trap-ptrace.c
-new file mode 100644
-index 000000000000..5cca1cb4916c
---- /dev/null
-+++ b/samples/seccomp/user-trap-ptrace.c
-@@ -0,0 +1,193 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/seccomp.h>
-+#include <linux/ptrace.h>
-+#include <linux/prctl.h>
-+#include <sys/socket.h>
-+#include <sys/prctl.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <sys/ioctl.h>
-+#include <assert.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <netinet/in.h>
-+#include "user-trap-helper.h"
-+
-+#define CHILD_PORT_TRY_BIND	80
-+#define CHILD_PORT_ACTUAL_BIND	4998
-+
-+static int ptrace(long request, long pid, void *addr, unsigned long data)
-+{
-+	errno = 0;
-+	return syscall(__NR_ptrace, request, pid, addr, data);
-+}
-+
-+static int ptrace_getfd(long pid, struct ptrace_getfd_args *args)
-+{
-+	errno = 0;
-+	return syscall(__NR_ptrace, PTRACE_GETFD, pid, sizeof(*args), args);
-+}
-+
-+static int tracee(void)
-+{
-+	struct sockaddr_in addr = {
-+		.sin_family	= AF_INET,
-+		.sin_port	= htons(CHILD_PORT_TRY_BIND),
-+		.sin_addr	= {
-+			.s_addr	= htonl(INADDR_ANY)
-+		}
-+	};
-+	socklen_t addrlen = sizeof(addr);
-+	int sock, ret = 1;
-+
-+	sock = socket(AF_INET, SOCK_STREAM, 0);
-+	if (sock == -1) {
-+		perror("socket");
-+		goto out;
-+	}
-+
-+
-+	if (bind(sock, (struct sockaddr *) &addr, sizeof(addr))) {
-+		perror("bind");
-+		goto out;
-+	}
-+
-+	printf("Child successfully performed bind operation\n");
-+	if (getsockname(sock, (struct sockaddr *) &addr, &addrlen)) {
-+		perror("getsockname");
-+		goto out;
-+	}
-+
-+
-+	printf("Socket bound to port %d\n", ntohs(addr.sin_port));
-+	assert(ntohs(addr.sin_port) == CHILD_PORT_ACTUAL_BIND);
-+
-+	ret = 0;
-+out:
-+	return ret;
-+}
-+
-+static int handle_req(int listener)
-+{
-+	struct sockaddr_in addr = {
-+		.sin_family	= AF_INET,
-+		.sin_port	= htons(4998),
-+		.sin_addr	= {
-+			.s_addr	= htonl(INADDR_LOOPBACK)
-+		}
-+	};
-+	struct ptrace_getfd_args getfd_args = {
-+		.options = PTRACE_GETFD_O_CLOEXEC
-+	};
-+	struct seccomp_notif_sizes sizes;
-+	struct seccomp_notif_resp *resp;
-+	struct seccomp_notif *req;
-+	int fd, ret = 1;
-+
-+	if (seccomp(SECCOMP_GET_NOTIF_SIZES, 0, &sizes) < 0) {
-+		perror("seccomp(GET_NOTIF_SIZES)");
-+		goto out;
-+	}
-+	req = malloc(sizes.seccomp_notif);
-+	if (!req)
-+		goto out;
-+	memset(req, 0, sizeof(*req));
-+
-+	resp = malloc(sizes.seccomp_notif_resp);
-+	if (!resp)
-+		goto out_free_req;
-+	memset(resp, 0, sizeof(*resp));
-+
-+	if (ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, req)) {
-+		perror("ioctl recv");
-+		goto out;
-+	}
-+	printf("Child tried to call bind with fd: %lld\n", req->data.args[0]);
-+	getfd_args.fd = req->data.args[0];
-+	fd = ptrace_getfd(req->pid, &getfd_args);
-+	if (fd == -1) {
-+		perror("ptrace_getfd");
-+		goto out_free_resp;
-+	}
-+	if (bind(fd, (struct sockaddr *) &addr, sizeof(addr))) {
-+		perror("bind");
-+		goto out_free_resp;
-+	}
-+
-+	resp->id = req->id;
-+	resp->error = 0;
-+	resp->val = 0;
-+	if (ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, resp) < 0) {
-+		perror("ioctl send");
-+		goto out_free_resp;
-+	}
-+
-+	ret = 0;
-+out_free_resp:
-+	free(resp);
-+out_free_req:
-+	free(req);
-+out:
-+	return ret;
-+}
-+
-+int main(void)
-+{
-+	int listener, sk_pair[2], ret = 1;
-+	pid_t pid;
-+
-+	if (socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair) < 0) {
-+		perror("socketpair");
-+		goto out;
-+	}
-+
-+	pid = fork();
-+	if (pid < 0) {
-+		perror("fork");
-+		goto close_pair;
-+	}
-+	if (pid == 0) {
-+		if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-+			perror("prctl(NO_NEW_PRIVS)");
-+			exit(1);
-+		}
-+		listener = user_trap_syscall(__NR_bind,
-+					     SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+		if (listener < 0) {
-+			perror("seccomp");
-+			exit(1);
-+		}
-+		if (send_fd(sk_pair[1], listener) < 0)
-+			exit(1);
-+		close(listener);
-+		exit(tracee());
-+	}
-+
-+	if (ptrace(PTRACE_SEIZE, pid, 0, PTRACE_O_EXITKILL)) {
-+		perror("ptrace(PTRACE_SEIZE)");
-+		goto kill_child;
-+	}
-+
-+	listener = recv_fd(sk_pair[0]);
-+	if (listener < 0)
-+		goto kill_child;
-+
-+	if (handle_req(listener))
-+		goto kill_child;
-+
-+	/* Wait for child to finish */
-+	waitpid(pid, NULL, 0);
-+
-+	ret = 0;
-+	goto close_pair;
-+
-+kill_child:
-+	kill(pid, SIGKILL);
-+close_pair:
-+	close(sk_pair[0]);
-+	close(sk_pair[1]);
-+out:
-+	return ret;
-+}
--- 
-2.20.1
-
+Add Nelson Chu to Cc.
+He found this commit in binutil to cause the different "^B".
+91d6fa6a (Nick Clifton 2009-12-11 13:42:17 +0000 1273)
+(*inf->fprintf_func) (inf->stream, " <%s",
+fd361982 (Alan Modra 2019-09-16 20:25:17 +0930 1274) sanitize_string
+(bfd_section_name (sec)));
