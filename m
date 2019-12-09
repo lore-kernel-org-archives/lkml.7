@@ -2,96 +2,99 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365B8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9779DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1609924683
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CC724683
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575885032;
+	bh=kK/I1htj5iKmRP2SOIMYrpp9j8JAcrd7L6geivuOKJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LKbFqWezLKuO9zmrwNaCqiG3AW4GMJdIbEyLnZo5j6s7pgCd189ilQ1x3FUwfsOOu
+	 Fc8eKaYHGWJokT/VuKswQr09VBrlinFQbf9HpDmtLuN0SuC6Y2DHqFrpsm9gQ4F9uf
+	 OlXRHSfHBlWujX4OEjs9M9NlEh2C4/x+1z5fHDoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLIJuJ (ORCPT
+        id S1727368AbfLIJub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:50:09 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40512 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfLIJuI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:50:08 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D519528BA69
-Subject: Re: [resend PATCH v6 05/12] media: mtk-mdp: Check return value of
- of_clk_get
-To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
-Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
-        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
-        frank-w@public-files.de, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, mbrugger@suse.com
-References: <20191207224740.24536-1-matthias.bgg@kernel.org>
- <20191207224740.24536-6-matthias.bgg@kernel.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <8d0b7ac3-abb5-2a05-32a6-648830632a74@collabora.com>
-Date:   Mon, 9 Dec 2019 10:50:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 9 Dec 2019 04:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfLIJub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 04:50:31 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 393F324680;
+        Mon,  9 Dec 2019 09:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575885030;
+        bh=kK/I1htj5iKmRP2SOIMYrpp9j8JAcrd7L6geivuOKJ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pd3bkAeCwLsfknhYLwW5D5ACMrJir0Nd8fxBEHXzX23+IvhzeXMqC795QiGC6ii+t
+         Ab/ujdrOpc5MkZkjlFcuehhQsp+UtrbtsuVAZXR09sVyu3LXeVIzUPJJ/QlVWw25Lg
+         p9/gl1rc3XARVg/MwzOjTm7CT9xzPxo9/fE4NTOw=
+Date:   Mon, 9 Dec 2019 10:50:27 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] rtc: sun6i: Add support for RTC clocks on R40
+Message-ID: <20191209095027.ivvatpcmft6357hs@gilmour.lan>
+References: <20191205085054.6049-1-wens@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191207224740.24536-6-matthias.bgg@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="adfqrlv2c7xcdepi"
+Content-Disposition: inline
+In-Reply-To: <20191205085054.6049-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
 
-On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> Check the return value of of_clk_get and print an error
-> message if not EPROBE_DEFER.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> index 9afe8161a8c0..4e2fc1337b80 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> @@ -110,6 +110,12 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->  
->  	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
->  		comp->clk[i] = of_clk_get(node, i);
-> +		if (IS_ERR(comp->clk[i])i) {
+--adfqrlv2c7xcdepi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Oops                                    ^
+On Thu, Dec 05, 2019 at 04:50:54PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> When support for the R40 in the rtc-sun6i driver was split out for a
+> separate compatible string, only the RTC half was covered, and not the
+> clock half. Unfortunately this results in the whole driver not working,
+> as the RTC half expects the clock half to have been initialized.
+>
+> Add support for the clock part as well. The clock part is like the H3,
+> but does not need to export the internal oscillator, nor does it have
+> a gateable LOSC external output.
+>
+> This fixes issues with WiFi and Bluetooth not working on the BPI M2U.
+>
+> Fixes: d6624cc75021 ("rtc: sun6i: Add R40 compatible")
+> Cc: <stable@vger.kernel.org> # 5.3.x
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-> +			if (PTR_ERR(comp->clk[i] != -EPROBE_DEFER)
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-and missing closing )
+Maxime
 
-> +					dev_err(dev, "Failed to get clock\n");
+--adfqrlv2c7xcdepi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Like the previous patch I think that the clk core will print a message if the
-clock is not found and you can just this redundand dev_err.
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +			return PTR_ERR(comp->clk[i]);
-> +		}
->  
->  		/* Only RDMA needs two clocks */
->  		if (comp->type != MTK_MDP_RDMA)
-> 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXe4Y4wAKCRDj7w1vZxhR
+xYNaAQCetuw+MBQxkDVO9bmDf8kmcwTq+uA3DS6rDGX1p7rgGwD/SEy8iOesX8M3
+XURC17yL4C6iJ4kO/yUvMDP24FhMpg0=
+=FAWR
+-----END PGP SIGNATURE-----
+
+--adfqrlv2c7xcdepi--
