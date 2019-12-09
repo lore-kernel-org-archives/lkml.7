@@ -2,128 +2,107 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B012C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AF7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD52207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0C0208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575914758;
-	bh=4Tiwn+vOanX6VoEEg918KRKbn6cy8IHjhRhssNZygkE=;
+	s=default; t=1575914841;
+	bh=ohH8zduCKM5iKFuWC84pzcG6Huw5EBpjWoLp0eAIqfM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uKm4FH9EN96U+luqkycUvBNO0sqKKrE7mQEknMu34Tm7RODBrHtRJQh+MbW2aU79z
-	 0QGiez0J+Y4ek70AhTdcG7QsUN20TJYJ95ItWY0K6IjoDP/WeLptM2XAcUytfz/8x2
-	 EkcBuTK/bjQjq6NArMHG/aUrXzXh2dGVEqsOB4yo=
+	b=D8J0M377TdC+ZElS6aT5uHQ4EM9VmwBmlKkToGUgngcP+oQOaE7BVGgvVNu02PATX
+	 HjkvqD/TJLNZbVQdwBKPqgYFPd8H0YRUC7wu+WzXijEzOIUB8ZwkFnDCbePXeMdY9s
+	 GbNPLdkwfMwKPFnHObjb5CO1Av13xUNIbWKLAfu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLISF5 (ORCPT
+        id S1726522AbfLISHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:05:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbfLISF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:05:56 -0500
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F813207FF;
-        Mon,  9 Dec 2019 18:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575914755;
-        bh=4Tiwn+vOanX6VoEEg918KRKbn6cy8IHjhRhssNZygkE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SFdINz0ynQImL0tk9EB5fi8ytIGSUuDqOOYuA7Rs3thOooTVfWMMD92r6kYTm+141
-         9mprDm7Hsz9E04D52FrYRii1lJwQeEZ8XHKT/VTbtNfXkdgv+1t51MwmnqYK1vz15H
-         az+0Axd0XwXhTOFq3CEFcupSeMesdBc7Z3Otx3eU=
-Received: by mail-lj1-f174.google.com with SMTP id r19so16741793ljg.3;
-        Mon, 09 Dec 2019 10:05:55 -0800 (PST)
-X-Gm-Message-State: APjAAAVJ/qTUXnInh2PUgN2FXhYK+oLrSWPcZZSzKX+a4+lf/ZOAJrmU
-        qTx7PqQ8fgz1pYtat3LW3WGrfmJHqxTuNWTM5oA=
-X-Google-Smtp-Source: APXvYqw83XhliSCNEUuMHvHHzMeUdnvH5X4suB7IaLFNC3HKulskeEunmRve/1IH26yOI6m30Pg4bLtY3IujXGJlf0U=
-X-Received: by 2002:a2e:9d9a:: with SMTP id c26mr294597ljj.225.1575914753603;
- Mon, 09 Dec 2019 10:05:53 -0800 (PST)
+        Mon, 9 Dec 2019 13:07:20 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:47006 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLISHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:07:20 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so10641492lfl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:07:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AGi/ifhcVcI/E7pSJWWfjvPUeH7vDYT4NuvZCBxi0tA=;
+        b=b6hKlGMRX7yTmceZ+5D7sqF0IFlNCKrzfcCnpql1G/S92AqZQAUm3hh5oDzaZhut4n
+         YYRCBGTP1bICBVQ/a7TLGl5T/VHNpGlobuD9h8sO1/Fn4bPUtFRvFuqe+JLo1wi0yAcQ
+         XsNnYHAD+bu6DBKVSe3Zer0X0ALtsv6uXA184=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AGi/ifhcVcI/E7pSJWWfjvPUeH7vDYT4NuvZCBxi0tA=;
+        b=hRrlPuWxPEL4hGK1krWi5Fqvj5AOSyOVlkjDw9Xhekd2W9INVkiqKrAM/gcx2SMwHn
+         al/8DQ410P6JGD74WTOgdxznz9UXXSKqGMzPculZB1gnVPnNPGUX8JfCIdfB2FoDqt/D
+         Y/GC3pUeOkBRD8vrwPSO7AX/f7wk868I856FVYhhXpKHsFVCxuJ0+F6Qz/tI4NaPJ5lN
+         BjlJAuKHecC4KroqZf6D4NGTBVqXkvtOpXP3+O+2CfnXt6wiibKcRCLGLP0RqcTG9UVq
+         dawy1Uvp3VBfmPycxduWIrctW28YTvY9gNT8neu3R37zPtx3hHQK3kXkGGZXkdHvyyvG
+         RLtQ==
+X-Gm-Message-State: APjAAAW3NIQjm28eqBFQXwgXTxRKxa6sIdUwGs+sMuwzCT3sAXkYSY1/
+        BjDfkcw7bviBqcGzFPxA5lFpn6wgf5M=
+X-Google-Smtp-Source: APXvYqwau80/qVxVKlXOS63SpJS42tYpttQD8S2JG6BsPZeGnTNHMFhCvEndVqitNb6kI+5dn/Q+4A==
+X-Received: by 2002:a19:ca59:: with SMTP id h25mr16028978lfj.27.1575914837223;
+        Mon, 09 Dec 2019 10:07:17 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id s22sm325949ljm.41.2019.12.09.10.07.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 10:07:16 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id n12so11477584lfe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:07:16 -0800 (PST)
+X-Received: by 2002:ac2:4946:: with SMTP id o6mr16222969lfi.170.1575914835885;
+ Mon, 09 Dec 2019 10:07:15 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20191206125123eucas1p1c1652484cbccef8d8df37e09affe4e25@eucas1p1.samsung.com>
- <20191206125112.11006-1-m.szyprowski@samsung.com> <CAMuHMdUsRa2QTDw4oM8SGUqfmsGt3-Mc=AnZoPV8RSqehUxyrg@mail.gmail.com>
- <CAOesGMiC+_ouDdFecV-2DvVzmBkeE=JjrwNyTgcr81=cBhhoAw@mail.gmail.com>
-In-Reply-To: <CAOesGMiC+_ouDdFecV-2DvVzmBkeE=JjrwNyTgcr81=cBhhoAw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 9 Dec 2019 19:05:42 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPccvtbmvZKdR3OJu4ZVkgBmKhqt1jR36DCZvxWcmt46yQ@mail.gmail.com>
-Message-ID: <CAJKOXPccvtbmvZKdR3OJu4ZVkgBmKhqt1jR36DCZvxWcmt46yQ@mail.gmail.com>
-Subject: Re: [PATCH] arm: multi_v7_config: Restore debugfs support
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
+ <20191209091813.GA41320@gmail.com> <20191209102759.GA123769@gmail.com>
+In-Reply-To: <20191209102759.GA123769@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 9 Dec 2019 10:06:59 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whpfd2cmuGj4NYjJ-UoJnoGPyaTZH-dA0xEAeTvgYZFZA@mail.gmail.com>
+Message-ID: <CAHk-=whpfd2cmuGj4NYjJ-UoJnoGPyaTZH-dA0xEAeTvgYZFZA@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
+ wakeups reliable
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kusanagi Kouichi <slash@ac.auone-net.jp>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kevin Hilman <khilman@kernel.org>
+        Felipe Balbi <balbi@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 at 18:45, Olof Johansson <olof@lixom.net> wrote:
+On Mon, Dec 9, 2019 at 2:28 AM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> +Kevin, since this seems like something ideally we would see some
-> coverage of from Kernel CI at some point.
->
->
-> On Mon, Dec 9, 2019 at 1:29 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > Hi Marek,
-> >
-> > On Fri, Dec 6, 2019 at 1:51 PM Marek Szyprowski
-> > <m.szyprowski@samsung.com> wrote:
-> > > Commit fd7d58f0dbc3 ("ARM: multi_v7_defconfig: renormalize based on recent
-> > > additions") removed explicit enable line for CONFIG_DEBUG_FS, because
-> > > that feature has been selected by other enabled options: CONFIG_TRACING,
-> > > which were enabled by CONFIG_PERF_EVENTS.
-> > >
-> > > In meantime, commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
-> > > dependency") removed the dependency between CONFIG_DEBUG_FS and
-> > > CONFIG_TRACING, so CONFIG_DEBUG_FS is no longer enabled in default builds.
-> > >
-> > > Enable it again explicitly, as debugfs support is essential for various
-> > > automated testing tools.
-> >
-> > ... and for systemd :-(
-> >
-> > E.g. with Debian 9 nfsroot:
-> >
-> >     [FAILED] Failed to mount /sys/kernel/debug.
-> >     See 'systemctl status sys-kernel-debug.mount' for details.
-> >     [DEPEND] Dependency failed for Local File Systems.
-> >     ...
-> >     You are in emergGive root password for maintenance
-> >     (or press Control-D to continue):
-> >
-> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >
-> > Thank you!
-> >
-> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > This is gonna bite lots of people (and defconfigs)...
->
-> Looks like the in-tree affected defconfigs are:
->
-> olof@quad:~/work/arm-soc/arch/arm/configs (for-next) $ fgrep -L
-> CONFIG_DEBUG_FS $(fgrep -l CONFIG_PERF_EVENTS *)
-> aspeed_g4_defconfig
-> aspeed_g5_defconfig
-> exynos_defconfig
+> Totally untested, but shows the principle: I believe interrupted
+> exclusive waits should not auto-cleanup in prepare_to_wait_event().
 
-I picked up already Marek's patch for exynos_defconfig.
+Oleg convinced me I was wrong, and that there is no bug, so I don't
+think we need anything after all.
 
-Best regards,
-Krzysztof
+Yes, there's a "race" between wakeup and returning the error, but
+since any correct code already relies on the condition having become
+true before the wakeup (and it needs to be a stable condition -
+otherwise the exclusive waiters wouldn't work in the first place), the
+code that returns the error will never get reached because of the
+
+>                 if (condition)
+>                         break;
+
+part of the ___wait_event() macro.
+
+            Linus
