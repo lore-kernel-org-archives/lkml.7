@@ -2,85 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE320C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE9C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51082073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E742073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DprpQ0o3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLIQkx (ORCPT
+        id S1726631AbfLIQmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:40:53 -0500
-Received: from mga04.intel.com ([192.55.52.120]:32749 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfLIQkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:40:53 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 08:40:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="206950895"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 09 Dec 2019 08:40:49 -0800
-Received: from andy by smile with local (Exim 4.93-RC5)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ieM5Z-00013h-HF; Mon, 09 Dec 2019 18:40:49 +0200
-Date:   Mon, 9 Dec 2019 18:40:49 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v2 4/4] usb: host: xhci-tegra: Switch to use %ptT
-Message-ID: <20191209164049.GM32742@smile.fi.intel.com>
-References: <20191001134717.81282-1-andriy.shevchenko@linux.intel.com>
- <20191001134717.81282-5-andriy.shevchenko@linux.intel.com>
- <20191002113923.GP3716706@ulmo>
+        Mon, 9 Dec 2019 11:42:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48753 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:42:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575909720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IOIs+T0JPjFAhSLIWFD9VPKRUMGW1/PSSpZsJupmtqs=;
+        b=DprpQ0o346JRQYdLWSffallMBtaM231p6ge3GrPx+cCa6Bj8GZ560u9NcD2BwessbufJUd
+        KlrEr1JYPYYU17IkFGv8rziiVqOk+hary0q5+dZQyXa+skbKgmGTMybA356V1MJQgOimKG
+        WHFZuDZDncqI/ehJTrlEalxoKrL/3Ik=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-ozR-9nQwNPK11AmK3iSQFA-1; Mon, 09 Dec 2019 11:41:58 -0500
+Received: by mail-yb1-f197.google.com with SMTP id o85so6312968yba.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 08:41:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7O3guB7wOY3MrLnldmdm9BIXXTqe2JfD4cDZWNKwU28=;
+        b=ZMu0ekQeUSwpgGuMGC8d6eNdN+pylnmktb5/XLgYkx9YH5podqAKnph7nAZgyEnIQ0
+         ddFWhzlJJYKTbwPAp1hKDRCi5v6sqNN9GWagzeTxS83QWQTkVgOJqnxsavZA/pT/SsiS
+         zjnfT2abHqRz0pfsjZEdffg/uMev9WYGb1hCy1QrCnoMCA7nvy9bAWSzoUFc3hIklzJ0
+         6/c3cgAwzi/HTbdYg+IwfMTGvoeXUJhS/Hq7lbl+TsRG78MfdPAty9jlmVMzldwyCz63
+         Zq3bY5srOSK76VBB0kNaUpdyegn8UHXPyH+2abp3g0YUcJIxbAKBtK2P9PsBAj29p3KO
+         EsyA==
+X-Gm-Message-State: APjAAAV9/CUwa75UmnUmo6vb2jo4QaFK8M7GvG8CH/B9WJbSuhZaCaC2
+        h8qcgPVoUxVKjIqmo+qH+kX7GPMzWV/TfY5FjjwiKKE77BFJ99GxUY7AdnAgEWgPBn69eOAU1Pn
+        FWpCW8fgIU7jxF9Hycd2J7T77
+X-Received: by 2002:a81:2781:: with SMTP id n123mr22719234ywn.70.1575909717689;
+        Mon, 09 Dec 2019 08:41:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx/ZUHMqp43x8Abr0QbypV4zplr0Lxd2ECWn2wddcNUn2SzoWt0sz3QIsRsKZxWbketkY9G9w==
+X-Received: by 2002:a81:2781:: with SMTP id n123mr22719219ywn.70.1575909717409;
+        Mon, 09 Dec 2019 08:41:57 -0800 (PST)
+Received: from dev.jcline.org ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id d186sm144163ywe.0.2019.12.09.08.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 08:41:56 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:41:55 -0500
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: s390 depending on cc-options makes it difficult to configure
+Message-ID: <20191209164155.GA78160@dev.jcline.org>
 MIME-Version: 1.0
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MC-Unique: ozR-9nQwNPK11AmK3iSQFA-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191002113923.GP3716706@ulmo>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 01:39:23PM +0200, Thierry Reding wrote:
-> On Tue, Oct 01, 2019 at 04:47:17PM +0300, Andy Shevchenko wrote:
-> > Use %ptT instead of open coded variant to print content of
-> > time64_t type in human readable format.
+Hi folks,
 
-> >  	timestamp = le32_to_cpu(header->fwimg_created_time);
-> > -	time64_to_tm(timestamp, 0, &time);
-> >  
-> > -	dev_info(dev, "Firmware timestamp: %ld-%02d-%02d %02d:%02d:%02d UTC\n",
-> > -		 time.tm_year + 1900, time.tm_mon + 1, time.tm_mday,
-> > -		 time.tm_hour, time.tm_min, time.tm_sec);
-> > +	dev_info(dev, "Firmware timestamp: %ptT UTC\n", &timestamp);
-> 
-> Can you please switch this to "Firmware timestamp: %ptTd %ptTt UTC\n" so
-> that the string stays the same? As discussed earlier there may be issues
-> if this string is changed. It may be unwise for someone to rely on the
-> exact format of this kernel log string, but why risk potentially causing
-> annoying changes in behaviour if we can easily avoid it?
+Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
+makes it difficult to produce an s390 configuration for Fedora and Red
+Hat kernels.
 
-I don't think it's worth to do, though if you are insisting...
+The issue is I have the following configurations:
 
--- 
-With Best Regards,
-Andy Shevchenko
+CONFIG_MARCH_Z13=3Dy
+CONFIG_TUNE_Z14=3Dy
+# CONFIG_TUNE_DEFAULT is not set
 
+When the configuration is prepared on a non-s390x host without a
+compiler with -march=3Dz* it changes CONFIG_TUNE_DEFAULT to y which, as
+far as I can tell, leads to a kernel tuned for z13 instead of z14.
+Fedora and Red Hat build processes produce complete configurations from
+snippets on any available host in the build infrastructure which very
+frequently is *not* s390.
+
+I did a quick search and couldn't find any other examples of Kconfigs
+depending on march or mtune compiler flags and it seems like it'd
+generally problematic for people preparing configurations.
+
+Regards,
+Jeremy
 
