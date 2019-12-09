@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E05C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEDDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30992077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A99E206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575917963;
-	bh=0Bg4tHNcGNM3XzS1LzW/bvcp2K+III7OF7XNvDQ2UAs=;
+	s=default; t=1575917970;
+	bh=V60pYPrKjZfeaB7V4ppkx//CAhtwJRjoT17F2ZOIcNo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1sGjggD5A0JskpdefXOtRAbm41ext/2rAP/4X61xj0syd0I386eicx5Ql98Dmvs0l
-	 mAWNKbx6cw7LiYMdQr3JCYppn/mAqekvXxJgatScVA9mhLObeArGrDW4StXD4dTMd+
-	 +syh3R2RLMeq/N9GPG24P24zlB+zjA1X/Zx47ivs=
+	b=rKKySFQ/3VTLWdvzFWZO724aic6Z4LBQKn90wsyF+z2pAy6F42r330V/S6JbeC2Nf
+	 3+Q6wriJpjn16ChvLXVCodo5viB3jyYY2+l6OoqNZESdkVRs3/NJf/7dyIlyDTdXan
+	 VV1BfEx1fg1FgUfgqovpfX2pVkGJxnxKH0Bp+q1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfLIS7W (ORCPT
+        id S1726932AbfLIS73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:59:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:42334 "EHLO foss.arm.com"
+        Mon, 9 Dec 2019 13:59:29 -0500
+Received: from foss.arm.com ([217.140.110.172]:42416 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfLIS7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:59:19 -0500
+        id S1726619AbfLIS73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:59:29 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 706BA11D4;
-        Mon,  9 Dec 2019 10:59:18 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83963328;
+        Mon,  9 Dec 2019 10:59:28 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E354C3F6CF;
-        Mon,  9 Dec 2019 10:59:17 -0800 (PST)
-Date:   Mon, 09 Dec 2019 18:59:16 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04BB93F6CF;
+        Mon,  9 Dec 2019 10:59:27 -0800 (PST)
+Date:   Mon, 09 Dec 2019 18:59:26 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        apatard@mandriva.com, broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: cs42l51: add dac mux widget in codec routes" to the asoc tree
-In-Reply-To: <20191203141627.29471-1-olivier.moysan@st.com>
-Message-Id: <applied-20191203141627.29471-1-olivier.moysan@st.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     alsa-devel@alsa-project.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mark Brown <broonie@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>
+Subject: Applied "ASoC: fsl_sai: add IRQF_SHARED" to the asoc tree
+In-Reply-To: <20191128223802.18228-1-michael@walle.cc>
+Message-Id: <applied-20191128223802.18228-1-michael@walle.cc>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -53,7 +56,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs42l51: add dac mux widget in codec routes
+   ASoC: fsl_sai: add IRQF_SHARED
 
 has been applied to the asoc tree at
 
@@ -78,57 +81,38 @@ to this mail.
 Thanks,
 Mark
 
-From abe3b6727b653307c27870a2d4ecbf9de4e914a5 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Tue, 3 Dec 2019 15:16:27 +0100
-Subject: [PATCH] ASoC: cs42l51: add dac mux widget in codec routes
+From 2eb2d314a80eb8bb1a6faf2a74321d4497e1687d Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael@walle.cc>
+Date: Thu, 28 Nov 2019 23:38:02 +0100
+Subject: [PATCH] ASoC: fsl_sai: add IRQF_SHARED
 
-Add "DAC mux" DAPM widget in CS42l51 audio codec routes,
-to support DAC mux control and to remove error trace
-"DAC Mux has no paths" at widget creation.
-Note: ADC path of DAC mux is not routed in this patch.
+The LS1028A SoC uses the same interrupt line for adjacent SAIs. Use
+IRQF_SHARED to be able to use these SAIs simultaneously.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191203141627.29471-1-olivier.moysan@st.com
+Signed-off-by: Michael Walle <michael@walle.cc>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Acked-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20191128223802.18228-1-michael@walle.cc
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs42l51.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index 55408c8fcb4e..e47758e4fb36 100644
---- a/sound/soc/codecs/cs42l51.c
-+++ b/sound/soc/codecs/cs42l51.c
-@@ -214,12 +214,10 @@ static const struct snd_soc_dapm_widget cs42l51_dapm_widgets[] = {
- 	SND_SOC_DAPM_ADC_E("Right ADC", "Right HiFi Capture",
- 		CS42L51_POWER_CTL1, 2, 1,
- 		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
--	SND_SOC_DAPM_DAC_E("Left DAC", "Left HiFi Playback",
--		CS42L51_POWER_CTL1, 5, 1,
--		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
--	SND_SOC_DAPM_DAC_E("Right DAC", "Right HiFi Playback",
--		CS42L51_POWER_CTL1, 6, 1,
--		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
-+	SND_SOC_DAPM_DAC_E("Left DAC", NULL, CS42L51_POWER_CTL1, 5, 1,
-+			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
-+	SND_SOC_DAPM_DAC_E("Right DAC", NULL, CS42L51_POWER_CTL1, 6, 1,
-+			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index b517e4bc1b87..8c3ea7300972 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -958,7 +958,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
  
- 	/* analog/mic */
- 	SND_SOC_DAPM_INPUT("AIN1L"),
-@@ -255,6 +253,12 @@ static const struct snd_soc_dapm_route cs42l51_routes[] = {
- 	{"HPL", NULL, "Left DAC"},
- 	{"HPR", NULL, "Right DAC"},
- 
-+	{"Right DAC", NULL, "DAC Mux"},
-+	{"Left DAC", NULL, "DAC Mux"},
-+
-+	{"DAC Mux", "Direct PCM", "Playback"},
-+	{"DAC Mux", "DSP PCM", "Playback"},
-+
- 	{"Left ADC", NULL, "Left PGA"},
- 	{"Right ADC", NULL, "Right PGA"},
- 
+-	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, 0, np->name, sai);
++	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, IRQF_SHARED,
++			       np->name, sai);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to claim irq %u\n", irq);
+ 		return ret;
 -- 
 2.20.1
 
