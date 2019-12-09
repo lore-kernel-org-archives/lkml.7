@@ -2,154 +2,200 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C80EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A75EC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02802206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F227206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="Fm8zp0Xq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNfU25Hd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfLITRa (ORCPT
+        id S1726881AbfLITUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:17:30 -0500
-Received: from mail-bn8nam11on2071.outbound.protection.outlook.com ([40.107.236.71]:33555
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726819AbfLITR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:17:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cPsbqamz008su5SKjyONAGtStuo1pNJ3Am0bVYvvWIXfgBeSigiTAAuQ0n5Vm13r+Nu0ae2bQjpZ5ynd3WUcqCKvplCg/2bxrBDbOSIf5X8/GIecUv/p0SELVORMfAZMawQ7ZgzCJZ2g1hkZLLDPzdRP2E/izLGtRySmOnv8pv1VkMzTuVJZd3s2Ya1dll+8BV8WKUFN+C/Xhsmwb9nYi2jI1qPKug+2OoxYP904PJKhNtRCod4+yJmvyK34s5or6Mn4FHkSgtJWJUG8+uBVS3e4+MFnq1FCEkivddrOitbY3ERMo6niWI9oR7BMfZWB26obftNVUN+ftodOix4u6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxQpBbCaBdYdeeTMM0HiLrpDt/1vEpZSZywQUTQ48k0=;
- b=Ov0q1/zuJmxTZ7LMSvJ25U0s93cWvtx4LMG3An0bz+h/KBXt7Nfs4yE78U42LbhH5ucnDUFqGGs717ki7ZlQ4FJ22HoyCYCZ7qw6w039j8KRuuI6Mmm+0ucsdjcH2fKi7tvJA4Szla1XbkbPnOI2wNixNjpRQKPgBlNvmTLRkm/Z2g+mQLf7YtGTOHQae3j38h6PCsewJMcPmJhqHPoPWKG21N92XJvMHCPayFHPnYi1Xz7mpLd1QrWlCHcoGSkZn1Hn/MD6JLj4wsSIk2WMn/xLlJguXUwlun+X+n9xMY7+bcJHAbWcroIFDrQ8C9rl9KV26C1ev5LIoJe6VLVsuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Mon, 9 Dec 2019 14:20:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34759 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLITUv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:20:51 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n13so7729784pff.1;
+        Mon, 09 Dec 2019 11:20:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mxQpBbCaBdYdeeTMM0HiLrpDt/1vEpZSZywQUTQ48k0=;
- b=Fm8zp0Xqrs/X1XWc9AFSOUWTbjUs51Ohh5RY+DSJ6FmyJuQeoBwR5Pe3fTo+utfHmaLjTBp6DHmUinLsOzsiSdghCwbrJUQBGn1g/VW3BClguMCeIxgOs0TWWU0bfk6EMoUyM8c97OH6Rd9OsiWHx+Ax5s/ExVGJLxb4l4fvdS0=
-Received: from BL0PR11MB3297.namprd11.prod.outlook.com (10.167.235.29) by
- BL0PR11MB3249.namprd11.prod.outlook.com (10.167.235.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.16; Mon, 9 Dec 2019 19:17:26 +0000
-Received: from BL0PR11MB3297.namprd11.prod.outlook.com
- ([fe80::529:e8b:5e30:87a3]) by BL0PR11MB3297.namprd11.prod.outlook.com
- ([fe80::529:e8b:5e30:87a3%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 19:17:26 +0000
-From:   Brant Merryman <Brant.Merryman@silabs.com>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Brant Merryman <Brant.Merryman@silabs.com>
-Subject: [PATCH] Proper RTS control when buffers fill
-Thread-Topic: [PATCH] Proper RTS control when buffers fill
-Thread-Index: AQHVrsVK8PotWc8F5k2Pc+4Ew0PTFA==
-Date:   Mon, 9 Dec 2019 19:17:26 +0000
-Message-ID: <E0F3E0D5-4652-4DF0-B576-3FDB0274A5CD@silabs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Brant.Merryman@silabs.com; 
-x-originating-ip: [207.207.39.84]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b231a20-193d-4cef-846d-08d77cdc6d30
-x-ms-traffictypediagnostic: BL0PR11MB3249:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR11MB3249B7E8B15A7A0B2163F661E5580@BL0PR11MB3249.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:820;
-x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(39860400002)(396003)(189003)(199004)(186003)(76116006)(26005)(36756003)(91956017)(5660300002)(316002)(305945005)(66946007)(6506007)(66446008)(2616005)(71190400001)(64756008)(71200400001)(66476007)(86362001)(110136005)(66556008)(478600001)(6512007)(2906002)(33656002)(6486002)(8936002)(8676002)(81156014)(4326008)(107886003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR11MB3249;H:BL0PR11MB3297.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0OWU2YUldQIVQI+Swk7xP5KDr/6GPFZUwv3aTt47aDZj1Q+npQkOgb58bJKiRpiEt3ybV/vukIcnjCBQrvlKscfkNWu9DhmpwuMLk42UeZx9qJ/R41j3oynm3rhSGaZ7R5kDEidI0e+wmwnC/n7n4SrN0VYfc3zKXxtUaFuWOcEFIXK++yd6u5m08bzy6Tki8RBhLovRjg9VVj5mB6JUh1vILKDe43nQwfYtgnK9G9cTb16UdAjPrZ253ammjL8+0+anwYfcQWm5Q7RoTP2eomUN9Z0FM8pnqiEt46+rTTh+sgStulIMyXh8zY0meC315mStE2H+I1psxFkMkyYP9tgG7p19//VbMARhfDRQ39ELJmRBe7P29DOhJ9wuCg2ef5Al0BjChrsQOdYmttoITxHcW7AEQ7gm0mq9JB+hldbYCAiC59Oz02Zgy/HRrXuX
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <98A695EA9A4F45459DC76174B7080ED4@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rwYNDINDXq4jLd1x+8nU4LIDCr1YuplCHBB7nDAmKY0=;
+        b=jNfU25HdEKxQCWoJPPnTJV5FQTl1ykEeFjgu/IrwfBDmb/gGE36lmT4G+CeMu5GXzP
+         C2IQ+vHVCSjTwaZg1SaQGx93q3D2CONkIBykdkldCrJRcl67MkxkMwnyfx7nQTvf5TNw
+         LgUUAWYwid7bmiyrLyAOQuitQxo43v+FJlCCnZ0wojHy7H/mwfdqp3UeCb9OwaTUFKm2
+         i2lBALE2o0IyFxK1Rbc9MQ+PDpGlaM07iOP61LSOow0Kjml6Zj2KTTumZfFksIiSrsQs
+         EFoHe+DdOUUXkZOB5pMuUzmmkt8YMXhXfoN8OYvMeoxWaXr3opsDN1qa/uXBHICMJKAf
+         1fNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rwYNDINDXq4jLd1x+8nU4LIDCr1YuplCHBB7nDAmKY0=;
+        b=rKKK3ZBwh1O2bHrlmeCyya7aorZht/5HHsRbaJIvK107Gs+pARe8hP5eGoOuAWZKlX
+         uM1+l7EjPPXntJZTCL0G/ZXHidKTIGh2ku6vcwwZqDN36bydQoXlpQ/qFX812EgpQaLL
+         jhUG/5d0goRQWQuWlAyRuxQDRZKKJi+6opnO8y62nH6fK4kIVUcKcaYgWmcNKWjCC6M9
+         BGG2YazYZ/r1Q7lkqoMKuCkqw6asNXqKALBX4GDA3JakdScFQvEA4WMtD0zRQcCTi9Zo
+         5r39wJ7VlULfveeVTM1rBkf96NXX+wKJk5x7wP1rvThMlpOpgsn3jYOvF4YhDz+A6ZcS
+         0NVQ==
+X-Gm-Message-State: APjAAAXRb/ls7grwTehugUFQgP2DhJyWy1BqZJdPB5y8vwy0k/ce1use
+        h7L04AyrAWvzsW6twkgBSDE=
+X-Google-Smtp-Source: APXvYqxNJDmMkFYNFwR7LU9gMhYklkWtWIvsDuK8TS1k4tbXiILagz7/PEbn0kJHAIK2QNkfbNXhxw==
+X-Received: by 2002:a63:d351:: with SMTP id u17mr19924290pgi.84.1575919250376;
+        Mon, 09 Dec 2019 11:20:50 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i127sm265933pfe.54.2019.12.09.11.20.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 11:20:49 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:20:48 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
+Message-ID: <20191209192048.GA3940@roeck-us.net>
+References: <20191209052119.32072-1-linux@roeck-us.net>
+ <20191209052119.32072-2-linux@roeck-us.net>
+ <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
 MIME-Version: 1.0
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b231a20-193d-4cef-846d-08d77cdc6d30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 19:17:26.0541
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7ejUrLhVUQLiMUX2z1lwRY9sDVDrkQlgpncfhnLxaALCpBPSDUJoAYYZDj4RugTXrUM+MadZ7hsoRJfcJrDv+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB3249
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enables usb generic functions for throttle/unthrottle to prevent USB data
-loss. CP210x hardware disables RTS but leaves CTS when in hardware flow
-control mode and port is closed. When re-opening the serial port, if CTS
-is enabled, then RTS must be re-enabled inside the driver.
+On Mon, Dec 09, 2019 at 09:08:13AM -0800, Bart Van Assche wrote:
+> On 12/8/19 9:21 PM, Guenter Roeck wrote:
+> > +static int satatemp_scsi_command(struct satatemp_data *st,
+> > +				 u8 ata_command, u8 feature,
+> > +				 u8 lba_low, u8 lba_mid, u8 lba_high)
+> > +{
+> > +	static u8 scsi_cmd[MAX_COMMAND_SIZE];
+> > +	int data_dir;
+> 
+> Declaring scsi_cmd[] static makes an otherwise thread-safe function
+> thread-unsafe. Has it been considered to allocate scsi_cmd[] on the stack?
+> 
+No idea why I declared that variable 'static'. I removed it.
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
----
- drivers/usb/serial/cp210x.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> > +	/*
+> > +	 * Inquiry data sanity checks (per SAT-5):
+> > +	 * - peripheral qualifier must be 0
+> > +	 * - peripheral device type must be 0x0 (Direct access block device)
+> > +	 * - SCSI Vendor ID is "ATA     "
+> > +	 */
+> > +	if (sdev->inquiry[0] ||
+> > +	    strncmp(&sdev->inquiry[8], "ATA     ", 8))
+> > +		return -ENODEV;
+> 
+> It's possible that we will need a quirk mechanism to disable temperature
+> monitoring for certain ATA devices. Has it been considered to make
+> scsi_add_lun() set a flag that indicates whether or not temperatures
+> should be monitored and to check that flag from inside this function?
+> I'm asking this because an identical strncmp() check exists in
+> scsi_add_lun().
+> 
+I am aware that we may at some point need quirks for some SATA devices.
+From my perspective, the place for such quirks would be this driver,
+possibly using the ATA ID string in the inquiry data structure and,
+if needed, the firmware revision as identifier.
 
-diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-index f5143eedbc48..fd54181e741b 100644
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -272,6 +272,8 @@ static struct usb_serial_driver cp210x_device =3D {
- 	.break_ctl		=3D cp210x_break_ctl,
- 	.set_termios		=3D cp210x_set_termios,
- 	.tx_empty		=3D cp210x_tx_empty,
-+	.throttle		=3D usb_serial_generic_throttle,
-+	.unthrottle		=3D usb_serial_generic_unthrottle,
- 	.tiocmget		=3D cp210x_tiocmget,
- 	.tiocmset		=3D cp210x_tiocmset,
- 	.attach			=3D cp210x_attach,
-@@ -915,6 +917,7 @@ static void cp210x_get_termios_port(struct usb_serial_p=
-ort *port,
- 	u32 baud;
- 	u16 bits;
- 	u32 ctl_hs;
-+	u32 flow_repl;
-=20
- 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
-=20
-@@ -1013,8 +1016,24 @@ static void cp210x_get_termios_port(struct usb_seria=
-l_port *port,
- 	cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
- 			sizeof(flow_ctl));
- 	ctl_hs =3D le32_to_cpu(flow_ctl.ulControlHandshake);
-+	flow_repl =3D le32_to_cpu(flow_ctl.ulFlowReplace);
-+	/* CP210x hardware disables RTS but leaves CTS when in hardware
-+	 * flow control mode and port is closed.
-+	 * This allows data to flow out, but new data will not come into
-+	 * the port. When re-opening the port, if CTS is enabled, then RTS
-+	 * must be re-enabled. in the driver
-+	 */
- 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
- 		dev_dbg(dev, "%s - flow control =3D CRTSCTS\n", __func__);
-+		flow_repl &=3D ~CP210X_SERIAL_RTS_MASK;
-+		flow_repl |=3D CP210X_SERIAL_RTS_SHIFT(
-+			CP210X_SERIAL_RTS_FLOW_CTL);
-+
-+		flow_ctl.ulControlHandshake =3D cpu_to_le32(ctl_hs);
-+		flow_ctl.ulFlowReplace =3D cpu_to_le32(flow_repl);
-+		cp210x_write_reg_block(port, CP210X_SET_FLOW,
-+			&flow_ctl, sizeof(flow_ctl));
-+
- 		cflag |=3D CRTSCTS;
- 	} else {
- 		dev_dbg(dev, "%s - flow control =3D NONE\n", __func__);
--- =
+> > +static int satatemp_read(struct device *dev, enum hwmon_sensor_types type,
+> > +			 u32 attr, int channel, long *val)
+> > +{
+> > +	struct satatemp_data *st = dev_get_drvdata(dev);
+> 
+> Which device does 'dev' represent? What guarantees that the drvdata
+> won't be used for another purpose, e.g. by the SCSI core?
+> 
+'dev' is the hardware monitoring device. The driver data is set in
+hwmon_device_register_with_info(); it is the third argument of that
+function. It won't be used outside the context of this driver.
+
+> > +/*
+> > + * The device argument points to sdev->sdev_dev. Its parent is
+> > + * sdev->sdev_gendev, which we can use to get the scsi_device pointer.
+> > + */
+> > +static int satatemp_add(struct device *dev, struct class_interface *intf)
+> > +{
+> > +	struct scsi_device *sdev = to_scsi_device(dev->parent);
+> > +	struct satatemp_data *st;
+> > +	int err;
+> > +
+> > +	st = kzalloc(sizeof(*st), GFP_KERNEL);
+> > +	if (!st)
+> > +		return -ENOMEM;
+> > +
+> > +	st->sdev = sdev;
+> > +	st->dev = dev;
+> > +	mutex_init(&st->lock);
+> > +
+> > +	if (satatemp_identify(st)) {
+> > +		err = -ENODEV;
+> > +		goto abort;
+> > +	}
+> > +
+> > +	st->hwdev = hwmon_device_register_with_info(dev->parent, "satatemp",
+> > +						    st, &satatemp_chip_info,
+> > +						    NULL);
+> > +	if (IS_ERR(st->hwdev)) {
+> > +		err = PTR_ERR(st->hwdev);
+> > +		goto abort;
+> > +	}
+> > +
+> > +	list_add(&st->list, &satatemp_devlist);
+> > +	return 0;
+> > +
+> > +abort:
+> > +	kfree(st);
+> > +	return err;
+> > +}
+> 
+> How much does synchronously submitting SCSI commands from inside the
+> device probing call back slow down SCSI device discovery? What is the
+> impact of this code on systems with a large number of ATA devices?
+> 
+
+Interesting question. In general, any SCSI commands would only be executed
+for SATA drives since the very first check in satatemp_identify() uses
+sdev->inquiriy and aborts if the drive in question is not an ATA drive.
+When connected to SATA drives, I measured the execution time of
+satatemp_identify() to be between ~900 uS and 1,700 uS on a system with
+Ryzen 3900 CPU.
+
+In more detail:
+- Time to read VPD page: ~10-20 uS
+- Time to execute SMART_READ_LOG/SCT_STATUS_REQ_ADDR: ~140-150 uS
+- Time to execute SMART_WRITE_LOG/SCT_STATUS_REQ_ADDR: ~600-1,500 uS
+- Time to execute SMART_READ_LOG/SCT_READ_LOG_ADDR: ~100-130 uS
+
+Does that answer your question ?
+
+Please note that I think that this is irrelevant in this context.
+The driver is only instantiated if loaded explicitly, so whoever uses it
+will be in a position to decide if the benefit of using it will outweigh
+its cost.
+
+If instantiation time ever becomes a real problem, for example if someone
+with a large number of SATA drives in a system wants to use the driver
+and is concerned about instantiation time, we can make the second part
+of its registration (ie everything after identifying SATA drives)
+asynchronous. That would, however, add a substantial amount of complexity
+to the driver, and we should only do it if it is really warranted.
+
+Thanks,
+Guenter
