@@ -2,200 +2,118 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A75EC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A000C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F227206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E92205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNfU25Hd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gern8aRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLITUw (ORCPT
+        id S1726847AbfLITWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:20:52 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34759 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLITUv (ORCPT
+        Mon, 9 Dec 2019 14:22:30 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:52420 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLITWa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:20:51 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n13so7729784pff.1;
-        Mon, 09 Dec 2019 11:20:50 -0800 (PST)
+        Mon, 9 Dec 2019 14:22:30 -0500
+Received: by mail-pj1-f74.google.com with SMTP id b22so7244142pjp.19
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:22:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rwYNDINDXq4jLd1x+8nU4LIDCr1YuplCHBB7nDAmKY0=;
-        b=jNfU25HdEKxQCWoJPPnTJV5FQTl1ykEeFjgu/IrwfBDmb/gGE36lmT4G+CeMu5GXzP
-         C2IQ+vHVCSjTwaZg1SaQGx93q3D2CONkIBykdkldCrJRcl67MkxkMwnyfx7nQTvf5TNw
-         LgUUAWYwid7bmiyrLyAOQuitQxo43v+FJlCCnZ0wojHy7H/mwfdqp3UeCb9OwaTUFKm2
-         i2lBALE2o0IyFxK1Rbc9MQ+PDpGlaM07iOP61LSOow0Kjml6Zj2KTTumZfFksIiSrsQs
-         EFoHe+DdOUUXkZOB5pMuUzmmkt8YMXhXfoN8OYvMeoxWaXr3opsDN1qa/uXBHICMJKAf
-         1fNA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KvC0u7VAHQ2xfNCKqFfggoTr2hcV06Kdgwlw8hh9MO0=;
+        b=Gern8aRQLFovPJ6OwOkeRDvXgezARFO0bi6QIfk1RUy/EbFz25LyASGNgBRSqXol+7
+         qpTvC+VhPcgKAqxuwnowU80CYAmbtVw06RINw0Zorun5Un0CvvwCbUgI9NJDW65KUJLc
+         MqlHKGs6zeJXXCzbq61BbwiGKVE0kqBRO/3q6BlvkRmt5bJ6KDCu9G3wD7vufJVwaDAy
+         rVhgvFYbHKz1Fu/ht9QQZkE6NxHhy8QFo36lC2s6jrXL9sBTGfFS+B/YAhJClujiXKta
+         zt429kyW1dip5uQ+El2Cb/EEEEkVR6usByu+XvS/C6TqoloJYOfnX9nOoUmsICNvTIQD
+         OnRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rwYNDINDXq4jLd1x+8nU4LIDCr1YuplCHBB7nDAmKY0=;
-        b=rKKK3ZBwh1O2bHrlmeCyya7aorZht/5HHsRbaJIvK107Gs+pARe8hP5eGoOuAWZKlX
-         uM1+l7EjPPXntJZTCL0G/ZXHidKTIGh2ku6vcwwZqDN36bydQoXlpQ/qFX812EgpQaLL
-         jhUG/5d0goRQWQuWlAyRuxQDRZKKJi+6opnO8y62nH6fK4kIVUcKcaYgWmcNKWjCC6M9
-         BGG2YazYZ/r1Q7lkqoMKuCkqw6asNXqKALBX4GDA3JakdScFQvEA4WMtD0zRQcCTi9Zo
-         5r39wJ7VlULfveeVTM1rBkf96NXX+wKJk5x7wP1rvThMlpOpgsn3jYOvF4YhDz+A6ZcS
-         0NVQ==
-X-Gm-Message-State: APjAAAXRb/ls7grwTehugUFQgP2DhJyWy1BqZJdPB5y8vwy0k/ce1use
-        h7L04AyrAWvzsW6twkgBSDE=
-X-Google-Smtp-Source: APXvYqxNJDmMkFYNFwR7LU9gMhYklkWtWIvsDuK8TS1k4tbXiILagz7/PEbn0kJHAIK2QNkfbNXhxw==
-X-Received: by 2002:a63:d351:: with SMTP id u17mr19924290pgi.84.1575919250376;
-        Mon, 09 Dec 2019 11:20:50 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i127sm265933pfe.54.2019.12.09.11.20.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 11:20:49 -0800 (PST)
-Date:   Mon, 9 Dec 2019 11:20:48 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
-Message-ID: <20191209192048.GA3940@roeck-us.net>
-References: <20191209052119.32072-1-linux@roeck-us.net>
- <20191209052119.32072-2-linux@roeck-us.net>
- <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KvC0u7VAHQ2xfNCKqFfggoTr2hcV06Kdgwlw8hh9MO0=;
+        b=gch+p6WFuQ6lpatkwylJo1SGwer6YdU+NXHTsLvqtBXW/qjXU5x2sFh3YwXL/rgnoD
+         qL9gfTwcbince/fwOjym81UEpn1KOnvByMjSJF8cmMx+haI+b0e5rT5pMuQFY2BuA++F
+         X5nfKu/nMesO+yhKYoJ/xBN3zElWetuAjLnAccZ5q9fX3ejdDkr6IJLu/xw7PEoxlMNb
+         fr0PzXOA2fJjgThUkGWtJOcngI1cRtRW2tlYoocZZky5Ct+jKKziMIqzJ/vfSpMBCNRp
+         Ro/XjDJZhPA5lloFHYPvJW3gTwvNdO63OH3rmkTMudsPFJyTf3MqbNYrGt5QQnow+RWb
+         kepg==
+X-Gm-Message-State: APjAAAWj4smbwyFg4OcEVd9vqAOpVp+XnQ5U+IcEMvi+crk0PLYwedbf
+        1f/jlk2HDqbn/oB4C4m9P817NI29p6VpTWI=
+X-Google-Smtp-Source: APXvYqy0X8mnqLfEq6D6hLuFnJ9MbnQw7/eACLLFm4DrjDmsJ8rR+mjl83k64FESLF/FDyElUwdR8+I0xVP3xCI=
+X-Received: by 2002:a63:4f5c:: with SMTP id p28mr19965327pgl.409.1575919349328;
+ Mon, 09 Dec 2019 11:22:29 -0800 (PST)
+Date:   Mon,  9 Dec 2019 11:22:21 -0800
+Message-Id: <20191209192221.143379-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+Subject: [PATCH v2] of/platform: Unconditionally pause/resume sync state
+ during kernel init
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     kernel test robot <lkp@intel.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 09:08:13AM -0800, Bart Van Assche wrote:
-> On 12/8/19 9:21 PM, Guenter Roeck wrote:
-> > +static int satatemp_scsi_command(struct satatemp_data *st,
-> > +				 u8 ata_command, u8 feature,
-> > +				 u8 lba_low, u8 lba_mid, u8 lba_high)
-> > +{
-> > +	static u8 scsi_cmd[MAX_COMMAND_SIZE];
-> > +	int data_dir;
-> 
-> Declaring scsi_cmd[] static makes an otherwise thread-safe function
-> thread-unsafe. Has it been considered to allocate scsi_cmd[] on the stack?
-> 
-No idea why I declared that variable 'static'. I removed it.
+Commit 5e6669387e22 ("of/platform: Pause/resume sync state during init
+and of_platform_populate()") paused/resumed sync state during init only
+if Linux had parsed and populated a devicetree.
 
-> > +	/*
-> > +	 * Inquiry data sanity checks (per SAT-5):
-> > +	 * - peripheral qualifier must be 0
-> > +	 * - peripheral device type must be 0x0 (Direct access block device)
-> > +	 * - SCSI Vendor ID is "ATA     "
-> > +	 */
-> > +	if (sdev->inquiry[0] ||
-> > +	    strncmp(&sdev->inquiry[8], "ATA     ", 8))
-> > +		return -ENODEV;
-> 
-> It's possible that we will need a quirk mechanism to disable temperature
-> monitoring for certain ATA devices. Has it been considered to make
-> scsi_add_lun() set a flag that indicates whether or not temperatures
-> should be monitored and to check that flag from inside this function?
-> I'm asking this because an identical strncmp() check exists in
-> scsi_add_lun().
-> 
-I am aware that we may at some point need quirks for some SATA devices.
-From my perspective, the place for such quirks would be this driver,
-possibly using the ATA ID string in the inquiry data structure and,
-if needed, the firmware revision as identifier.
+However, the check for that (of_have_populated_dt()) can change after
+of_platform_default_populate_init() executes.  One example of this is
+when devicetree unittests are enabled.  This causes an unmatched
+pause/resume of sync state. To avoid this, just unconditionally
+pause/resume sync state during init.
 
-> > +static int satatemp_read(struct device *dev, enum hwmon_sensor_types type,
-> > +			 u32 attr, int channel, long *val)
-> > +{
-> > +	struct satatemp_data *st = dev_get_drvdata(dev);
-> 
-> Which device does 'dev' represent? What guarantees that the drvdata
-> won't be used for another purpose, e.g. by the SCSI core?
-> 
-'dev' is the hardware monitoring device. The driver data is set in
-hwmon_device_register_with_info(); it is the third argument of that
-function. It won't be used outside the context of this driver.
+Fixes: 5e6669387e22 ("of/platform: Pause/resume sync state during init and of_platform_populate()")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+---
+ drivers/of/platform.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> > +/*
-> > + * The device argument points to sdev->sdev_dev. Its parent is
-> > + * sdev->sdev_gendev, which we can use to get the scsi_device pointer.
-> > + */
-> > +static int satatemp_add(struct device *dev, struct class_interface *intf)
-> > +{
-> > +	struct scsi_device *sdev = to_scsi_device(dev->parent);
-> > +	struct satatemp_data *st;
-> > +	int err;
-> > +
-> > +	st = kzalloc(sizeof(*st), GFP_KERNEL);
-> > +	if (!st)
-> > +		return -ENOMEM;
-> > +
-> > +	st->sdev = sdev;
-> > +	st->dev = dev;
-> > +	mutex_init(&st->lock);
-> > +
-> > +	if (satatemp_identify(st)) {
-> > +		err = -ENODEV;
-> > +		goto abort;
-> > +	}
-> > +
-> > +	st->hwdev = hwmon_device_register_with_info(dev->parent, "satatemp",
-> > +						    st, &satatemp_chip_info,
-> > +						    NULL);
-> > +	if (IS_ERR(st->hwdev)) {
-> > +		err = PTR_ERR(st->hwdev);
-> > +		goto abort;
-> > +	}
-> > +
-> > +	list_add(&st->list, &satatemp_devlist);
-> > +	return 0;
-> > +
-> > +abort:
-> > +	kfree(st);
-> > +	return err;
-> > +}
-> 
-> How much does synchronously submitting SCSI commands from inside the
-> device probing call back slow down SCSI device discovery? What is the
-> impact of this code on systems with a large number of ATA devices?
-> 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index d93891a05f60..3371e4a06248 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -518,10 +518,11 @@ static int __init of_platform_default_populate_init(void)
+ {
+ 	struct device_node *node;
+ 
++	device_links_supplier_sync_state_pause();
++
+ 	if (!of_have_populated_dt())
+ 		return -ENODEV;
+ 
+-	device_links_supplier_sync_state_pause();
+ 	/*
+ 	 * Handle certain compatibles explicitly, since we don't want to create
+ 	 * platform_devices for every node in /reserved-memory with a
+@@ -545,8 +546,7 @@ arch_initcall_sync(of_platform_default_populate_init);
+ 
+ static int __init of_platform_sync_state_init(void)
+ {
+-	if (of_have_populated_dt())
+-		device_links_supplier_sync_state_resume();
++	device_links_supplier_sync_state_resume();
+ 	return 0;
+ }
+ late_initcall_sync(of_platform_sync_state_init);
+-- 
+2.24.0.393.g34dc348eaf-goog
 
-Interesting question. In general, any SCSI commands would only be executed
-for SATA drives since the very first check in satatemp_identify() uses
-sdev->inquiriy and aborts if the drive in question is not an ATA drive.
-When connected to SATA drives, I measured the execution time of
-satatemp_identify() to be between ~900 uS and 1,700 uS on a system with
-Ryzen 3900 CPU.
-
-In more detail:
-- Time to read VPD page: ~10-20 uS
-- Time to execute SMART_READ_LOG/SCT_STATUS_REQ_ADDR: ~140-150 uS
-- Time to execute SMART_WRITE_LOG/SCT_STATUS_REQ_ADDR: ~600-1,500 uS
-- Time to execute SMART_READ_LOG/SCT_READ_LOG_ADDR: ~100-130 uS
-
-Does that answer your question ?
-
-Please note that I think that this is irrelevant in this context.
-The driver is only instantiated if loaded explicitly, so whoever uses it
-will be in a position to decide if the benefit of using it will outweigh
-its cost.
-
-If instantiation time ever becomes a real problem, for example if someone
-with a large number of SATA drives in a system wants to use the driver
-and is concerned about instantiation time, we can make the second part
-of its registration (ie everything after identifying SATA drives)
-asynchronous. That would, however, add a substantial amount of complexity
-to the driver, and we should only do it if it is really warranted.
-
-Thanks,
-Guenter
