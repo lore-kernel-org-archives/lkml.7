@@ -2,131 +2,124 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF8CC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525B1C47409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630C020726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A4720828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575885715;
-	bh=kHHNh2vtHDg1QcMi2qrAlj0yMfrUU8jwcsr59WRVM+A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JEQo5T08o7OlRBrbFYou0rbQQkysyIMmWR7z8SLhP9VA1Jh2JxabCol1mdxzkI53v
-	 Q8a4/80qOtDLEJ+RAPKH+ob00LuI/nFR9xEle+t5sJto2IImQaVIT+pk3kTG5xRD+U
-	 +S7KSNbzbcPv9Aq7yDyLJYCCmt2L7sbUjgXnVPWA=
+	s=default; t=1575886042;
+	bh=ixusleWnEq735tjJ8lQG3ERZ+bntGGILzSuUvZg7D3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IRgEO5oh5V4Q1ZS5Fsv+jRvYnjaPo3RiaC/3/ZVnM6IB2lJ8hJSxidHQgyuC6Yz9G
+	 AOdSSC96eLBAbnkV0vlV4E/5zBsGx8T+rzEWmI+8l9JPJuncEUB4ftYDX9EwpDLxDq
+	 LLVmWrUChBhwsejspzqzzf+Ae4bQdV4h1LyZqNfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLIKBy (ORCPT
+        id S1727300AbfLIKHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:01:54 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38568 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfLIKBy (ORCPT
+        Mon, 9 Dec 2019 05:07:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53648 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfLIKHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:01:54 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b8so5795351oiy.5;
-        Mon, 09 Dec 2019 02:01:53 -0800 (PST)
+        Mon, 9 Dec 2019 05:07:20 -0500
+Received: by mail-wm1-f65.google.com with SMTP id n9so14261028wmd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 02:07:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+FtaHC/0W+/eC6v7DNQkqqYp4JgH05lJ8TyIqrizDhU=;
-        b=NXhB4U1v2RcMbAr52Bglnu2G25EYrw/SUnwq0SjKtTGfl5r1fbl8H6mXKCSPHyM4ke
-         rg9zfs+5WzN0t2e5g2YIKDQud8cCv8LrHvGyEIyMYDopW5j0V1x9oDkeqg6mD41EtQKJ
-         /EUBPzNYeLxUfmKvqQsBFVhRkXn3GkvphX8FOSg0Wb59J+8fi4+Htv1qk0ct/WEdwNX1
-         F5a9W6igHgRm01O0psme+kv+0+Q+AXGqGv7N0UubqcjnvBFfH+W6GJZNgStxVem/Td3A
-         DFXqJSMtYd7D4e2vX7qNmvAN7LdvwLXduV3W5v0Dt+lgeRdEPEWIuzcze+vHQ2WOVBYX
-         yuAQ==
-X-Gm-Message-State: APjAAAXdtJTkRnW2CSV/z46k4JBqrSV+smQJUxp6AaGcDM/qGGuWLzbk
-        cZovQuGcxpkVoCl5wk/Cl4Is2AJjwpWDXSUt8nY=
-X-Google-Smtp-Source: APXvYqx/zqoTfacR4nFj7pWLFpqF9WOA4QsBoywpKgDTlpakrgxkJT6WBi296tGo6aqd8joGAParb+DeUWEQTCDS0lk=
-X-Received: by 2002:a05:6808:b38:: with SMTP id t24mr18479690oij.110.1575885713344;
- Mon, 09 Dec 2019 02:01:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZK01xO2VHFn+IEu/N2yJTe1AAJ2Ih5XXg9yHN17A9sE=;
+        b=D7601d8weQa7Gu1WIKVejDlYat4+gEkYQnsEI/LYzxwxZq4g0yCOC1dKdKqnCAGRic
+         T97zYBzJmwxGJNIhxV8W+S8NbZmI8z/rakAODWQEmkMLc6Sx1ZJgqdmozeUj5IIxp9JX
+         dXpAFS95j9Hv8kA92KP9p77scWxmA+yGQwbbPPUI9y894fs0zPo7XMuYaPbikgmbtClx
+         xwxkjnGoOVpW79gsYQzY3nRD41cJlk1oufp2Ltk2Set4/Mqj2o/Pevk2GjxDvYwp7RAQ
+         gkvHIGiGn6T22rwrSe3qQ3+Gsg92L7vAWIEPYwKSU86wKHoz66ktpPNxbfYKD3DpoTJK
+         IQmQ==
+X-Gm-Message-State: APjAAAXMtlW0aiJsVNcDBhwhtE/P/fFhwHGoJBflKQ6IYsPFPkcVosht
+        qLx+DAzpgN3MmJS7v/v2x7T/QIdM
+X-Google-Smtp-Source: APXvYqxFkqWC+BhtSyCb9+jQbv4vLo/72RGm6Rz/bOhvzh38nITpvs1G+YEkejn2rSWpaKrxrmyPNg==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr23890833wmj.96.1575886039073;
+        Mon, 09 Dec 2019 02:07:19 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id n12sm13092152wmd.1.2019.12.09.02.07.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 02:07:18 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:07:17 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Message-ID: <20191209100717.GC6156@dhcp22.suse.cz>
+References: <20191206150524.14687-1-bhe@redhat.com>
 MIME-Version: 1.0
-References: <20191202070348.32148-1-tao3.xu@intel.com>
-In-Reply-To: <20191202070348.32148-1-tao3.xu@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 9 Dec 2019 11:01:42 +0100
-Message-ID: <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
- Write Policy
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206150524.14687-1-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
->
-> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
-> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
-> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
-> 2 is "Write Through" for Write Policy.
+On Fri 06-12-19 23:05:24, Baoquan He wrote:
+> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+> parameter") a global varialbe global max_mem_size is added to store
+> the value which is parsed from 'mem= '. This truly stops those
+> DIMM from being added into system memory during boot.
+> 
+> However, it also limits the later memory hotplug functionality. Any
+> memory board can't be hot added any more if its region is beyond the
+> max_mem_size. System will print error like below:
+> 
+> [  216.387164] acpi PNP0C80:02: add_memory failed
+> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+> [  216.392187] acpi PNP0C80:02: Enumeration failure
+> 
+> >From document of 'mem =' parameter, it should be a restriction during
+> boot, but not impact the system memory adding/removing after booting.
+> 
+>   mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
+> 
+> So fix it by also checking if it's during SYSTEM_BOOTING stage when
+> restrict memory adding. Otherwise, skip the restriction.
 
-Well, I'm not sure what the connection between the above statement,
-which is correct AFAICS, and the changes made by the patch is.
+Could you be more specific about why the boot vs. later hotplug makes
+any difference? The documentation is explicit about the boot time but
+considering this seems to be like that since ever I strongly suspect
+that this is just an omission.
 
-Is that the *_OTHER symbol names are confusing or something deeper?
+Btw. how have you tested the situation fixed by 357b4da50a62?
 
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem= parameter")
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  drivers/acpi/numa/hmat.c | 4 ++--
->  include/linux/node.h     | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 2c32cfb72370..719d0279563d 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -383,7 +383,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->                 break;
->         case ACPI_HMAT_CA_NONE:
->         default:
-> -               tcache->cache_attrs.indexing = NODE_CACHE_OTHER;
-> +               tcache->cache_attrs.indexing = NODE_CACHE_NONE;
->                 break;
->         }
->
-> @@ -396,7 +396,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
->                 break;
->         case ACPI_HMAT_CP_NONE:
->         default:
-> -               tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
-> +               tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_NONE;
->                 break;
->         }
->         list_add_tail(&tcache->node, &target->caches);
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 4866f32a02d8..6dbd764d09ce 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -36,15 +36,15 @@ struct node_hmem_attrs {
->  };
->
->  enum cache_indexing {
-> +       NODE_CACHE_NONE,
->         NODE_CACHE_DIRECT_MAP,
->         NODE_CACHE_INDEXED,
-> -       NODE_CACHE_OTHER,
->  };
->
->  enum cache_write_policy {
-> +       NODE_CACHE_WRITE_NONE,
->         NODE_CACHE_WRITE_BACK,
->         NODE_CACHE_WRITE_THROUGH,
-> -       NODE_CACHE_WRITE_OTHER,
->  };
->
->  /**
+>  mm/memory_hotplug.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 55ac23ef11c1..5466a0a00901 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
+>  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>  	char *resource_name = "System RAM";
+>  
+> -	if (start + size > max_mem_size)
+> +	if (start + size > max_mem_size && system_state == SYSTEM_BOOTING)
+>  		return ERR_PTR(-E2BIG);
+>  
+>  	/*
+> -- 
+> 2.17.2
+
+-- 
+Michal Hocko
+SUSE Labs
