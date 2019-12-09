@@ -2,113 +2,115 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFB6C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8153C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40400206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SnYpIJZa"
+	by mail.kernel.org (Postfix) with ESMTP id 91DD3206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLITyj (ORCPT
+        id S1726819AbfLITz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:54:39 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19955 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLITyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:54:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5deea6770001>; Mon, 09 Dec 2019 11:54:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 09 Dec 2019 11:54:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 11:54:37 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 19:54:37 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
- 19:54:37 +0000
-Subject: Re: [PATCH v2 1/2] mm/gup: allow FOLL_FORCE for get_user_pages_fast()
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20191204213603.464373-1-jhubbard@nvidia.com>
- <20191204213603.464373-2-jhubbard@nvidia.com> <20191209182536.GC67461@unreal>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7ceb9a54-6e2f-6d1f-70ba-f6ad5ba0b37f@nvidia.com>
-Date:   Mon, 9 Dec 2019 11:54:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20191209182536.GC67461@unreal>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575921271; bh=aYYf+3MgNx882/6bWA0YHWVT6GLALSpA6F24y/9AlO0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SnYpIJZa36DGx3o90G2KZqfxdnVww5TQO7kjIc3RDrtpF/iyFp2WoOL6Yz2JLgp37
-         Vhjgo48MYabYW7yhYCN/bPjnZAs/EZJgAH2u5TtH+05tdTxM/H3tAFtmYZETQ8PYuB
-         qAB1nLeSN+ROLL4dEdqKgJkiuriINbvQyu0gCzeaFRrQJrAlrlBBYxhnFkMMLU3mMJ
-         h1epTVMihjJIV9dv9Fa+7Z2z33mn71vAU1s0XcMnB6brv+gco7gWPN2vInCq+e4xs+
-         1GvK0+aUaComW80KYf6KZcqAa5BBR2jqqE1Lpx4nUm091EZ2LH9C7IaGxgIrAMXbuH
-         Xy83MRJlaAAPg==
+        Mon, 9 Dec 2019 14:55:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43356 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726354AbfLITz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:55:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E2BA2AD75;
+        Mon,  9 Dec 2019 19:55:25 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id E9D83E03B3; Mon,  9 Dec 2019 20:55:24 +0100 (CET)
+Message-Id: <0f4b780d5dd38109768d863781b0ce6de9ef4fbb.1575920565.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1575920565.git.mkubecek@suse.cz>
+References: <cover.1575920565.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 1/5] rtnetlink: provide permanent hardware address in
+ RTM_NEWLINK
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Date:   Mon,  9 Dec 2019 20:55:24 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/19 10:25 AM, Leon Romanovsky wrote:
-> On Wed, Dec 04, 2019 at 01:36:02PM -0800, John Hubbard wrote:
->> Commit 817be129e6f2 ("mm: validate get_user_pages_fast flags") allowed
->> only FOLL_WRITE and FOLL_LONGTERM to be passed to get_user_pages_fast().
->> This, combined with the fact that get_user_pages_fast() falls back to
->> "slow gup", which *does* accept FOLL_FORCE, leads to an odd situation:
->> if you need FOLL_FORCE, you cannot call get_user_pages_fast().
->>
->> There does not appear to be any reason for filtering out FOLL_FORCE.
->> There is nothing in the _fast() implementation that requires that we
->> avoid writing to the pages. So it appears to have been an oversight.
->>
->> Fix by allowing FOLL_FORCE to be set for get_user_pages_fast().
->>
->> Fixes: 817be129e6f2 ("mm: validate get_user_pages_fast flags")
->> Cc: Christoph Hellwig <hch@lst.de>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->> ---
->>  mm/gup.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
-> 
-> Thanks,
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-> 
+Permanent hardware address of a network device was traditionally provided
+via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
+ethtool netlink interface, rtnetlink is much more suitable for it so let's
+add it to the RTM_NEWLINK message.
 
-Hi Leon, thanks for the reviews, great timing! I'll add the tags to
-the commits, which I'm just about to post as part of the larger 
-"pin user pages" patchset.
+Add IFLA_PERM_ADDRESS attribute to RTM_NEWLINK messages unless the
+permanent address is all zeros (i.e. device driver did not fill it). As
+permanent address is not modifiable, reject userspace requests containing
+IFLA_PERM_ADDRESS attribute.
 
+Note: we already provide permanent hardware address for bond slaves;
+unfortunately we cannot drop that attribute for backward compatibility
+reasons.
 
-thanks,
+v5 -> v6: only add the attribute if permanent address is not zero
+
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Stephen Hemminger <stephen@networkplumber.org>
+---
+ include/uapi/linux/if_link.h | 1 +
+ net/core/rtnetlink.c         | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+index 8aec8769d944..1d69f637c5d6 100644
+--- a/include/uapi/linux/if_link.h
++++ b/include/uapi/linux/if_link.h
+@@ -169,6 +169,7 @@ enum {
+ 	IFLA_MAX_MTU,
+ 	IFLA_PROP_LIST,
+ 	IFLA_ALT_IFNAME, /* Alternative ifname */
++	IFLA_PERM_ADDRESS,
+ 	__IFLA_MAX
+ };
+ 
+diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+index 02916f43bf63..20bc406f3871 100644
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -1041,6 +1041,7 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
+ 	       + nla_total_size(4)  /* IFLA_MIN_MTU */
+ 	       + nla_total_size(4)  /* IFLA_MAX_MTU */
+ 	       + rtnl_prop_list_size(dev)
++	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
+ 	       + 0;
+ }
+ 
+@@ -1757,6 +1758,9 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
+ 	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
+ 		goto nla_put_failure;
+ 
++	if (memchr_inv(dev->perm_addr, '\0', dev->addr_len) &&
++	    nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
++		goto nla_put_failure;
+ 
+ 	rcu_read_lock();
+ 	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
+@@ -1822,6 +1826,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+ 	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
+ 	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
+ 				    .len = ALTIFNAMSIZ - 1 },
++	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+ };
+ 
+ static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
 -- 
-John Hubbard
-NVIDIA
+2.24.0
+
