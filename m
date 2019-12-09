@@ -2,146 +2,226 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C0FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E18207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:19:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eahQoYb+"
+	by mail.kernel.org (Postfix) with ESMTP id 4236A2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfLILTj (ORCPT
+        id S1727385AbfLILX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:19:39 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39744 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfLILTi (ORCPT
+        Mon, 9 Dec 2019 06:23:28 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42379 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfLILX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:19:38 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9BJYUx006659;
-        Mon, 9 Dec 2019 05:19:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575890374;
-        bh=+4EO/NsAw2RgbWjYhRyxHxpmpge6Xvm/DKhl549Ugmo=;
-        h=From:To:CC:Subject:Date;
-        b=eahQoYb+ehrqIVyc+qP5XXs1TfjeODXB9dl3pYQixMfKTLy+kO607GGpfecA1pfaQ
-         jl5qL5XqVmY+8Zf0QedqC7Kf7R0Gh0IhWFlTNSyOAMCEHTJ4gZ41iF06LEni+SP75S
-         oMnXTTH8NZgnHn+i+VAN+24fxWy2PQSu/s0P8hYQ=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9BJYdF049373
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 05:19:34 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 05:19:34 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 05:19:33 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9BJWMs124889;
-        Mon, 9 Dec 2019 05:19:33 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] net: ethernet: ti: davinci_cpdma: fix warning "device driver frees DMA memory with different size"
-Date:   Mon, 9 Dec 2019 13:19:24 +0200
-Message-ID: <20191209111924.22555-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Dec 2019 06:23:28 -0500
+Received: from [79.140.120.104] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ieH8O-0002iR-E9; Mon, 09 Dec 2019 11:23:24 +0000
+Date:   Mon, 9 Dec 2019 12:23:23 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        Jann Horn <jannh@google.com>, cyphar@cyphar.com,
+        oleg@redhat.com, Andy Lutomirski <luto@amacapital.net>,
+        viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v2 2/4] ptrace: add PTRACE_GETFD request to fetch file
+ descriptors from tracees
+Message-ID: <20191209112323.crydahewnjxejizq@wittgenstein>
+References: <20191209070621.GA32450@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191209093944.g6lgt2cqkec7eaym@wittgenstein>
+ <CAMp4zn8_CxB6C=4Myw7DrmWg5w3Qm+FwYVTQLnbCEBJXL4UKzg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn8_CxB6C=4Myw7DrmWg5w3Qm+FwYVTQLnbCEBJXL4UKzg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TI CPSW(s) driver produces warning with DMA API debug options enabled:
+On Mon, Dec 09, 2019 at 02:55:40AM -0800, Sargun Dhillon wrote:
+> On Mon, Dec 9, 2019 at 1:39 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > Hey Sargun,
+> >
+> > Thanks for the patch!
+> Thanks for your review.
+> 
+> >
+> > Why not simply accept O_CLOEXEC as flag? If that's not possible for some
+> > reason I'd say
+> >
+> I did this initially. My plan is to use this options field for other
+> (future) things as well, like
+> clearing (cgroup) metadata on sockets (assuming we figure out a safe
+> way to do it).
+> If we use O_CLOEXEC, it takes up an arbitrary bit which is different
+> on different
+> platforms, and working around that seems messy
+> 
+> Another way around this would be to have two members. One member which
+> is something
+> like fdflags, that just takes the fd flags, like O_CLOEXEC, and then
+> later on, we can add
+> an options member to enable these future use cases.
 
-WARNING: CPU: 0 PID: 1033 at kernel/dma/debug.c:1025 check_unmap+0x4a8/0x968
-DMA-API: cpsw 48484000.ethernet: device driver frees DMA memory with different size
- [device address=0x00000000abc6aa02] [map size=64 bytes] [unmap size=42 bytes]
-CPU: 0 PID: 1033 Comm: ping Not tainted 5.3.0-dirty #41
-Hardware name: Generic DRA72X (Flattened Device Tree)
-[<c0112c60>] (unwind_backtrace) from [<c010d270>] (show_stack+0x10/0x14)
-[<c010d270>] (show_stack) from [<c09bc564>] (dump_stack+0xd8/0x110)
-[<c09bc564>] (dump_stack) from [<c013b93c>] (__warn+0xe0/0x10c)
-[<c013b93c>] (__warn) from [<c013b9ac>] (warn_slowpath_fmt+0x44/0x6c)
-[<c013b9ac>] (warn_slowpath_fmt) from [<c01e0368>] (check_unmap+0x4a8/0x968)
-[<c01e0368>] (check_unmap) from [<c01e08a8>] (debug_dma_unmap_page+0x80/0x90)
-[<c01e08a8>] (debug_dma_unmap_page) from [<c0752414>] (__cpdma_chan_free+0x114/0x16c)
-[<c0752414>] (__cpdma_chan_free) from [<c07525c4>] (__cpdma_chan_process+0x158/0x17c)
-[<c07525c4>] (__cpdma_chan_process) from [<c0753690>] (cpdma_chan_process+0x3c/0x5c)
-[<c0753690>] (cpdma_chan_process) from [<c0758660>] (cpsw_tx_mq_poll+0x48/0x94)
-[<c0758660>] (cpsw_tx_mq_poll) from [<c0803018>] (net_rx_action+0x108/0x4e4)
-[<c0803018>] (net_rx_action) from [<c010230c>] (__do_softirq+0xec/0x598)
-[<c010230c>] (__do_softirq) from [<c0143914>] (do_softirq.part.4+0x68/0x74)
-[<c0143914>] (do_softirq.part.4) from [<c0143a44>] (__local_bh_enable_ip+0x124/0x17c)
-[<c0143a44>] (__local_bh_enable_ip) from [<c0871590>] (ip_finish_output2+0x294/0xb7c)
-[<c0871590>] (ip_finish_output2) from [<c0875440>] (ip_output+0x210/0x364)
-[<c0875440>] (ip_output) from [<c0875e2c>] (ip_send_skb+0x1c/0xf8)
-[<c0875e2c>] (ip_send_skb) from [<c08a7fd4>] (raw_sendmsg+0x9a8/0xc74)
-[<c08a7fd4>] (raw_sendmsg) from [<c07d6b90>] (sock_sendmsg+0x14/0x24)
-[<c07d6b90>] (sock_sendmsg) from [<c07d8260>] (__sys_sendto+0xbc/0x100)
-[<c07d8260>] (__sys_sendto) from [<c01011ac>] (__sys_trace_return+0x0/0x14)
-Exception stack(0xea9a7fa8 to 0xea9a7ff0)
-...
+That honestly sounds cleaner to me. I really don't like this flag
+explosion for CLOEXEC. Every new kernel api we add that deals with fds
+comes with their own set of CLOEXEC flags. The minimal thing to do is
+to make sure that at least
+NEW_CLOEXEC_THINGY == O_CLOEXEC.
 
-The reason is that cpdma_chan_submit_si() now stores original buffer length
-(sw_len) in CPDMA descriptor instead of adjusted buffer length (hw_len)
-used to map the buffer.
+> 
+> What do you think?
+> > #define PTRACE_GETFD_O_CLOEXEC  O_CLOEXEC       /* open the fd with cloexec */
+> >
+> > is the right thing to do. This is fairly common:
+> >
+> > include/uapi/linux/timerfd.h:#define TFD_CLOEXEC O_CLOEXEC
+> > include/uapi/drm/drm.h:#define DRM_CLOEXEC O_CLOEXEC
+> > include/linux/userfaultfd_k.h:#define UFFD_CLOEXEC O_CLOEXEC
+> > include/linux/eventfd.h:#define EFD_CLOEXEC O_CLOEXEC
+> > include/uapi/linux/eventpoll.h:#define EPOLL_CLOEXEC O_CLOEXEC
+> > include/uapi/linux/inotify.h:/* For O_CLOEXEC and O_NONBLOCK */
+> > include/uapi/linux/inotify.h:#define IN_CLOEXEC O_CLOEXEC
+> > include/uapi/linux/mount.h:#define OPEN_TREE_CLOEXEC    O_CLOEXEC       /* Close the file on execve() */
+> >
+> > You can also add a compile-time assert to ptrace like we did for
+> > fs/namespace.c's OPEN_TREE_CLOEXEC:
+> >         BUILD_BUG_ON(OPEN_TREE_CLOEXEC != O_CLOEXEC);
+> >
+> > And I'd remove the  _O if you go with a separate flag, i.e.:
+> >
+> > #define PTRACE_GETFD_CLOEXEC    O_CLOEXEC       /* open the fd with cloexec */
+> >
+> > > +
+> > > +struct ptrace_getfd_args {
+> > > +     __u32 fd;       /* the tracee's file descriptor to get */
+> > > +     __u32 options;
+> >
+> > Nit and I'm not set on it at all but "flags" might just be better.
+> >
+> > > +} __attribute__((packed));
+> >
+> > What's the benefit in using __attribute__((packed)) here? Seems to me that:
+> >
+> 1) Are we always to assume that the compiler will give us 4-byte
+> alignment (paranoia)
+> 2) If we're to add new non-4-byte aligned members later on, is it
+> kosher to add packed
+> later on?
 
-Hence, fix an issue by passing correct buffer length in CPDMA descriptor.
+Using explicit padding is the more common way we do this (e.g. struct
+open_how, struct statx and a lot more add explicit padding to guarantee
+alignment.).
 
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Fixes: 6670acacd59e ("net: ethernet: ti: davinci_cpdma: add dma mapped submit")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
-changes in v3:
- - removed swlen local var
+> 
+> > +struct ptrace_getfd_args {
+> > +       __u32 fd;       /* the tracee's file descriptor to get */
+> > +       __u32 options;
+> > +};
+> >
+> > would just work fine.
+> >
+> > > +
+> > >  /*
+> > >   * These values are stored in task->ptrace_message
+> > >   * by tracehook_report_syscall_* to describe the current syscall-stop.
+> > > diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+> > > index cb9ddcc08119..8f619dceac6f 100644
+> > > --- a/kernel/ptrace.c
+> > > +++ b/kernel/ptrace.c
+> > > @@ -31,6 +31,7 @@
+> > >  #include <linux/cn_proc.h>
+> > >  #include <linux/compat.h>
+> > >  #include <linux/sched/signal.h>
+> > > +#include <linux/fdtable.h>
+> > >
+> > >  #include <asm/syscall.h>     /* for syscall_get_* */
+> > >
+> > > @@ -994,6 +995,33 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
+> > >  }
+> > >  #endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
+> > >
+> > > +static int ptrace_getfd(struct task_struct *child, unsigned long user_size,
+> > > +                     void __user *datavp)
+> > > +{
+> > > +     struct ptrace_getfd_args args;
+> > > +     unsigned int fd_flags = 0;
+> > > +     struct file *file;
+> > > +     int ret;
+> > > +
+> > > +     ret = copy_struct_from_user(&args, sizeof(args), datavp, user_size);
+> > > +     if (ret)
+> > > +             goto out;
+> >
+> > Why is this goto out and not just return ret?
+> >
+> > > +     if ((args.options & ~(PTRACE_GETFD_O_CLOEXEC)) != 0)
+> > > +             return -EINVAL;
+> > > +     if (args.options & PTRACE_GETFD_O_CLOEXEC)
+> > > +             fd_flags &= O_CLOEXEC;
+> > > +     file = get_task_file(child, args.fd);
+> > > +     if (!file)
+> > > +             return -EBADF;
+> > > +     ret = get_unused_fd_flags(fd_flags);
+> >
+> > Why isn't that whole thing just:
+> >
+> > ret = get_unused_fd_flags(fd_flags & {PTRACE_GETFD_}O_CLOEXEC);
+> >
+> > > +     if (ret >= 0)
+> > > +             fd_install(ret, file);
+> > > +     else
+> > > +             fput(file);
+> > > +out:
+> > > +     return ret;
+> > > +}
+> >
+> > So sm like:
+> >
+> > static int ptrace_getfd(struct task_struct *child, unsigned long user_size,
+> >                         void __user *datavp)
+> > {
+> >         struct ptrace_getfd_args args;
+> >         unsigned int fd_flags = 0;
+> >         struct file *file;
+> >         int ret;
+> >
+> >         ret = copy_struct_from_user(&args, sizeof(args), datavp, user_size);
+> >         if (ret)
+> >                 return ret;
+> >
+> >         if ((args.options & ~(PTRACE_GETFD_O_CLOEXEC)) != 0)
+> >                 return -EINVAL;
+> >
+> >         file = get_task_file(child, args.fd);
+> >         if (!file)
+> >                 return -EBADF;
+> >
+> >         /* PTRACE_GETFD_CLOEXEC == O_CLOEXEC */
+> >         ret = get_unused_fd_flags(fd_flags & PTRACE_GETFD_O_CLOEXEC);
+> Wouldn't this always be 0, since fd_flags is always 0?
 
- drivers/net/ethernet/ti/davinci_cpdma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+You're right, I missed this. Maybe rather:
 
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 37ba708ac781..6614fa3089b2 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1018,7 +1018,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
- 	int				len = si->len;
--	int				swlen = len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
- 	u32				mode;
-@@ -1046,7 +1045,6 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	if (si->data_dma) {
- 		buffer = si->data_dma;
- 		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
--		swlen |= CPDMA_DMA_EXT_MAP;
- 	} else {
- 		buffer = dma_map_single(ctlr->dev, si->data_virt, len, chan->dir);
- 		ret = dma_mapping_error(ctlr->dev, buffer);
-@@ -1065,7 +1063,8 @@ static int cpdma_chan_submit_si(struct submit_info *si)
- 	writel_relaxed(mode | len, &desc->hw_mode);
- 	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
--	writel_relaxed(swlen, &desc->sw_len);
-+	writel_relaxed(si->data_dma ? len | CPDMA_DMA_EXT_MAP : len,
-+		       &desc->sw_len);
- 	desc_read(desc, sw_len);
- 
- 	__cpdma_chan_submit(chan, desc);
--- 
-2.17.1
+if (args.options & PTRACE_GETFD_O_CLOEXEC)
+        fd_flags |= O_CLOEXEC;
 
+Another question is if we shouldn't just make them cloexec by default?
+The notifier fds and pidfds already are.
+
+Christian
