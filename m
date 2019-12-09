@@ -6,143 +6,107 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52E5C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F93FC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF8620836
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="HzQkCsPq"
+	by mail.kernel.org (Postfix) with ESMTP id E309D206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575915560;
+	bh=djUQp1rD3P9simCFASBFGrEYHBJock4D0LmZwbJCh7c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m+hOf7cQ/UcM20VQuqibhiZ+nd/FkgEAu2XWsu3Bb3UOgvf84sE4wQHPjl2toV1Ub
+	 OTiuzBgYv+GYxHUWbVquFRJr1RFAF4JvoWugXWhXp8+iM4Qzo48XPzMFHuHeCyk8+T
+	 HnaebFTo/9ZY/mpmBk71V6PdFGhzH5HuI31hz5jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfLISRF (ORCPT
+        id S1726683AbfLISTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:17:05 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:60923 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfLISRE (ORCPT
+        Mon, 9 Dec 2019 13:19:18 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35995 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfLISTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:17:04 -0500
+        Mon, 9 Dec 2019 13:19:18 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n12so11507065lfe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1575915423; x=1607451423;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=ZsrJIfoheFM0e6F9jrbre1s0mUeRj/O7QTO1xJ/UMO0=;
-  b=HzQkCsPqKQeA75YOmgN2gAX2lffC8iYib7XXd6GgP0O37FBKHDZSq7qP
-   mWK1Bz/cuV5skKCVOZbs1KbV550Vo/YNx2ClxGyZAllitIyvEBrvjhVOy
-   pEqnxRVv5xo6KkM6h7fUFleyxPFJV1zFQEHGKVwM7/fe8JQvtZ3Rsib+Q
-   Y=;
-IronPort-SDR: poYUXFAkYxlfuxAnK/437nmg01EYPxWrILmlUmy/1mStT19yQh0SaonRiNNUZwlBfBCFPMSKUa
- IUt1f4Mn2iFQ==
-X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
-   d="scan'208";a="8301554"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Dec 2019 18:17:00 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 55387A1DF4;
-        Mon,  9 Dec 2019 18:16:58 +0000 (UTC)
-Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 18:16:57 +0000
-Received: from EX13D07EUB004.ant.amazon.com (10.43.166.234) by
- EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 18:16:56 +0000
-Received: from EX13D07EUB004.ant.amazon.com ([10.43.166.234]) by
- EX13D07EUB004.ant.amazon.com ([10.43.166.234]) with mapi id 15.00.1367.000;
- Mon, 9 Dec 2019 18:16:56 +0000
-From:   "Nuernberger, Stefan" <snu@amazon.de>
-To:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "Seidel, Conny" <consei@amazon.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
-        "Dannowski, Uwe" <uwed@amazon.de>
-Subject: Re: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-Thread-Topic: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-Thread-Index: AQHVrDvmewMicN/JcUO9mDMvMIw7UKetNk+AgAAx6YCAACMwAIAElc4A
-Date:   Mon, 9 Dec 2019 18:16:56 +0000
-Message-ID: <1575915416.21160.49.camel@amazon.de>
-References: <20191206134804.4537-1-snu@amazon.com>
-         <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
-         <1575655787.7257.42.camel@amazon.de>
-         <4bc83b82-427f-2215-3161-5776867675a1@oracle.com>
-In-Reply-To: <4bc83b82-427f-2215-3161-5776867675a1@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.171]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <93A5DB49B5DE764399A41F55F536FE14@amazon.com>
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mZMqRZp9+bilXh0HGL9oR0MxLWgnBMeIphYWvOmpL9Q=;
+        b=Yz+/sjhUXKZEs+qhSFKklhR8o2h6HC5lgJKoaBnwRJo1Isv/EBY7iJV3WCU91qirAQ
+         rRDf37sKOK/pgKTHy0SWhM3EOI126l1pcn5N4S1fNR+CVqdFzl9hLpVim3R+/okkvArl
+         qPaSO1elURSaIoUN1kgalqzaKSAFOCIOmIgKw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mZMqRZp9+bilXh0HGL9oR0MxLWgnBMeIphYWvOmpL9Q=;
+        b=tG8qCtLMrErdago/0l8tDTJC+/KRx1CM/W12oC1ojzNtaqJEAzLjNigJB44HJI9IP6
+         lVnh8/Kq58iWVOF+uA/jJNaKss8pv5FLh5QwFiob++ynceUdE56oh/8vaBszhpTcpPu+
+         WE4/dlrhR/PPgc0BgCuPTKSziNqCRMoH/YtosWyS60w4eFeIEXmMvPsEcZNxrc6cvuFf
+         yK05gG6cs9lEYzAVek0H2/ounez+2+IZ9mhIoGupNRIFN6qE3UOaf2zfRVmaxazCvcn9
+         Q3A0dWT73iLimz5PNANxAeB0NOZ5fhoeeyQAJfy/skpTvu77VRQR9RKOCTkAxu/1aCWZ
+         glug==
+X-Gm-Message-State: APjAAAUYvCHPfLaeYIDeeB3tfSUmi2lZtiOwF1BC4ii9LdRKJ/EbTZmI
+        e02uyToxvb0mn0kdzeMgt19JPRKINKc=
+X-Google-Smtp-Source: APXvYqzlhv+/3unfuKSA3FwJsr9KdW4Ckh0FpsuivRTu/XyXZbm4AEnirPuN1hAd6s1f/MAsEzItTQ==
+X-Received: by 2002:a19:2389:: with SMTP id j131mr14873980lfj.86.1575915554848;
+        Mon, 09 Dec 2019 10:19:14 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id c23sm316943ljj.78.2019.12.09.10.19.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 10:19:14 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id k8so16733192ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:19:13 -0800 (PST)
+X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr15150725ljj.148.1575915553079;
+ Mon, 09 Dec 2019 10:19:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <CAKfTPtDBtPuvK0NzYC0VZgEhh31drCDN=o+3Hd3fUwoffQg0fw@mail.gmail.com>
+ <CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com> <CABA31DqGSycoE2hxk92NZ8qb47DqTR0+UGMQN_or1zpoGCg9fw@mail.gmail.com>
+In-Reply-To: <CABA31DqGSycoE2hxk92NZ8qb47DqTR0+UGMQN_or1zpoGCg9fw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 9 Dec 2019 10:18:57 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjnXUUbYikSFba5QqvJoFnO8c_ykXrw9Zz2Lt4SeyeZUQ@mail.gmail.com>
+Message-ID: <CAHk-=wjnXUUbYikSFba5QqvJoFnO8c_ykXrw9Zz2Lt4SeyeZUQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Akemi Yagi <toracat@elrepo.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        DJ Delorie <dj@redhat.com>, David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTEyLTA2IGF0IDE1OjE1IC0wNTAwLCBCb3JpcyBPc3Ryb3Zza3kgd3JvdGU6
-DQo+IE9uIDEyLzYvMTkgMTowOSBQTSwgTnVlcm5iZXJnZXIsIFN0ZWZhbiB3cm90ZToNCj4gPiAN
-Cj4gPiBPbiBGcmksIDIwMTktMTItMDYgYXQgMTA6MTEgLTA1MDAsIEJvcmlzIE9zdHJvdnNreSB3
-cm90ZToNCj4gPiA+IA0KPiA+ID4gT24gMTIvNi8xOSA4OjQ4IEFNLCBTdGVmYW4gTnVlcm5iZXJn
-ZXIgd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiBGcm9tOiBVd2UgRGFubm93c2tpIDx1d2VkQGFt
-YXpvbi5kZT4NCj4gPiA+ID4gwqANCj4gPiA+ID4gwqAJCWxpc3RfZm9yX2VhY2hfZW50cnkoY2Zn
-X2VudHJ5LCAmZGV2X2RhdGEtDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gY29uZmlnX2ZpZWxkcywg
-bGlzdCkgew0KPiA+ID4gQ291bGRuJ3QgeW91IGhhdmUgdGhlIHNhbWUgcmFjZSBoZXJlPw0KPiA+
-IE5vdCBxdWl0ZSB0aGUgc2FtZSwgYnV0IGl0IG1pZ2h0IG5vdCBiZSBlbnRpcmVseSBzYWZlIHll
-dC4gVGhlDQo+ID4gJ3F1aXJrc19zaG93JyB0YWtlcyB0aGUgJ2RldmljZV9pZHNfbG9jaycgYW5k
-IHJhY2VzIHdpdGggdW5iaW5kIC8NCj4gPiAncGNpc3R1Yl9kZXZpY2VfcmVsZWFzZScgIndoaWNo
-IHRha2VzIGRldmljZV9sb2NrIG11dGV4Ii4gU28gdGhpcw0KPiA+IG1pZ2h0DQo+ID4gbm93IGJl
-IGEgVUFGIHJlYWQgYWNjZXNzIGluc3RlYWQgb2YgYSBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2Uu
-DQo+IFllcywgdGhhdCdzIHdoYXQgSSBtZWFudCAoYWx0aG91Z2ggSSBkb24ndCBzZWUgbXVjaCBk
-aWZmZXJlbmNlIGluDQo+IHRoaXMNCj4gY29udGV4dCkuDQoNCldlbGwsIHRoZSBOVUxMIHB0ciBh
-Y2Nlc3MgY2F1c2VzIGFuIGluc3RhbnQga2VybmVsIHBhbmljIHdoZXJlYXMgd2UNCmhhdmUgbm90
-IGF0dHJpYnV0ZWQgY3Jhc2hlcyB0byB0aGUgcG9zc2libGUgVUFGIHJlYWQgdW50aWwgbm93Lg0K
-DQo+ID4gDQo+ID4gwqBXZSBoYXZlDQo+ID4gbm90IG9ic2VydmVkIGFkdmVyc2FyaWFsIGVmZmVj
-dHMgaW4gb3VyIHRlc3RpbmcgKGNvbXBhcmVkIHRvIHRoZQ0KPiA+IG9idmlvdXMgaXNzdWVzIHdp
-dGggTlVMTCBwb2ludGVyKSBidXQgdGhhdCdzIG5vdCBhIGd1YXJhbnRlZSBvZg0KPiA+IGNvdXJz
-ZS4NCj4gPiANCj4gPiBTbyBzaG91bGQgcXVpcmtzX3Nob3cgYWN0dWFsbHkgYmUgcHJvdGVjdGVk
-IGJ5IHBjaXN0dWJfZGV2aWNlc19sb2NrDQo+ID4gaW5zdGVhZCBhcyBhcmUgb3RoZXIgZnVuY3Rp
-b25zIHRoYXQgYWNjZXNzIGRldl9kYXRhPyBEb2VzIGl0IG5lZWQNCj4gPiBib3RoDQo+ID4gbG9j
-a3MgaW4gdGhhdCBjYXNlPw0KPiBkZXZpY2VfaWRzX2xvY2sgcHJvdGVjdHMgZGV2aWNlX2lkcyBs
-aXN0LCB3aGljaCBpcyBub3Qgd2hhdCB5b3UgYXJlDQo+IHRyeWluZyB0byBhY2Nlc3MsIHNvIHRo
-YXQgZG9lc24ndCBsb29rIGxpa2UgcmlnaHQgbG9jayB0byBob2xkLiBBbmQNCj4gQUZBSUNUIHBj
-aXN0dWJfZGV2aWNlc19sb2NrIGlzIG5vdCBoZWxkIHdoZW4gZGV2aWNlIGRhdGEgaXMgY2xlYXJl
-ZA0KPiBpbg0KPiBwY2lzdHViX2RldmljZV9yZWxlYXNlKCkgKHdoaWNoIEkgdGhpbmsgaXMgd2hl
-cmUgd2UgYXJlIHJhY2luZykuDQoNCkluZGVlZC4gVGhlIHhlbl9wY2lia19xdWlya3MgbGlzdCBk
-b2VzIG5vdCBoYXZlIGEgc2VwYXJhdGUgbG9jayB0bw0KcHJvdGVjdCBpdC4gSXQncyBlaXRoZXIg
-bW9kaWZpZWQgdW5kZXIgJ3BjaXN0dWJfZGV2aWNlc19sb2NrJywgZnJvbQ0KcGNpc3R1Yl9yZW1v
-dmUoKSwgb3IgaXRlcmF0ZWQgb3ZlciB3aXRoIHRoZSAnZGV2aWNlX2lkc19sb2NrJyBoZWxkIGlu
-DQpxdWlya3Nfc2hvdygpLiBBbHNvIHRoZSBxdWlya3MgbGlzdCBpcyBhbWVuZGVkIGZyb20NCsKg
-IHBjaXN0dWJfaW5pdF9kZXZpY2UoKQ0KwqAgwqAgLT4geGVuX3BjaWJrX2NvbmZpZ19pbml0X2Rl
-digpDQrCoCDCoCDCoCAtPiB4ZW5fcGNpYmtfY29uZmlnX3F1aXJrc19pbml0KCkNCndpdGhvdXQg
-aG9sZGluZyBhbnkgbG9jayBhdCBhbGwuIEluIGZhY3QgdGhlDQpwY2lzdHViX2luaXRfZGV2aWNl
-c19sYXRlKCkgYW5kIHBjaXN0dWJfc2VpemUoKSBmdW5jdGlvbnMgZGVsaWJlcmF0ZWx5DQpyZWxl
-YXNlIHRoZSBwY2lzdHViX2RldmljZXNfbG9jayBiZWZvcmUgY2FsbGluZyBwY2lzdHViX2luaXRf
-ZGV2aWNlKCkuDQpUaGlzIGxvb2tzIGJyb2tlbi4NCg0KVGhlIHJhY2UgaXMgYmV0d2Vlbg0KwqAg
-cGNpc3R1Yl9yZW1vdmUoKQ0KwqAgwqAgLT4gcGNpc3R1Yl9kZXZpY2VfcHV0KCkNCsKgIMKgIMKg
-IC0+IHBjaXN0dWJfZGV2aWNlX3JlbGVhc2UoKQ0Kb24gb25lIHNpZGUgYW5kIHRoZSBxdWlya3Nf
-c2hvdygpIG9uIHRoZSBvdGhlciBzaWRlLiBUaGUgcHJvYmxlbWF0aWMNCnF1aXJrIGlzIGZyZWVk
-IGZyb20gdGhlIHhlbl9wY2lia19xdWlya3MgbGlzdCBpbiBwY2lzdHViX3JlbW92ZSgpIGVhcmx5
-DQpvbiB1bmRlciBwY2lzdHViX2RldmljZXNfbG9jayBiZWZvcmUgdGhlIGFzc29jaWF0ZWQgZGV2
-X2RhdGEgaXMgZnJlZWQNCmV2ZW50dWFsbHkuIFNvIHN3aXRjaGluZyBmcm9tIGRldmljZV9pZHNf
-bG9jayB0byBwY2lzdHViX2RldmljZXNfbG9jaw0KaW4gcXVpcmtzX3Nob3coKSBjb3VsZCBiZSBz
-dWZmaWNpZW50IHRvIGFsd2F5cyBoYXZlIHZhbGlkIGRldl9kYXRhIGZvcg0KYWxsIHF1aXJrcyBp
-biB0aGUgbGlzdC4NCg0KVGhlcmUgaXMgYWxzbyBwY2lzdHViX3B1dF9wY2lfZGV2KCkgcG9zc2li
-bHkgaW4gdGhlIHJhY2UsIGNhbGxlZCBmcm9tDQp4ZW5fcGNpYmtfcmVtb3ZlX2RldmljZSgpLCBv
-ciB4ZW5fcGNpYmtfeGVuYnVzX3JlbW92ZSgpLCBvcg0KcGNpc3R1Yl9yZW1vdmUoKS4gVGhlIHBj
-aXN0dWJfcmVtb3ZlKCkgY2FsbCBzaXRlIGlzIHNhZmUgd2hlbiB3ZSBzd2l0Y2gNCnRvIHBjaXN0
-dWJfZGV2aWNlc19sb2NrIChzYW1lIHJlYXNvbmluZyBhcyBhYm92ZSkuIEZvciB0aGUgb3RoZXJz
-IEkNCmN1cnJlbnRseSBkbyBub3Qgc2VlIHdoZW4gdGhlIHF1aXJrcyBhcmUgZXZlciBmcmVlZD8N
-Cg0KLSBTdGVmYW4NCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICkty
-YXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBT
-Y2hsYWVnZXIsIFJhbGYgSGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxv
-dHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAy
-MzcgODc5CgoK
+On Mon, Dec 9, 2019 at 9:57 AM Akemi Yagi <toracat@elrepo.org> wrote:
+>
+> In addition to the Fedora make-4.2.1-4.fc27 (1) mentioned by Linus,
+> RHEL 8 make-4.2.1-9.el8 (2) is affected. The patch applied to Fedora
+> make (3) has been confirmed to fix the issue in RHEL's make.
+>
+> Those are the only real-world examples I know of. I have no idea how
+> widespread this thing is...
 
+Looks like opensuse and ubuntu are also on 4.2.1 according to
+
+   https://software.opensuse.org/package/make
+   https://packages.ubuntu.com/cosmic/make
+
+so apparently the bug is almost universal with the big three sharing
+this buggy version.
+
+               Linus
