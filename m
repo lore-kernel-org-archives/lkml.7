@@ -2,259 +2,121 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56444C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE47C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C432071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739332071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="HSu8OsTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfLIHD3 (ORCPT
+        id S1727165AbfLIHEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:03:29 -0500
-Received: from twhmllg3.macronix.com ([211.75.127.131]:63391 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfLIHD2 (ORCPT
+        Mon, 9 Dec 2019 02:04:53 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39144 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbfLIHEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:03:28 -0500
-X-Greylist: delayed 1496 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 02:03:28 EST
-Received: from TWHMLLG3.macronix.com (localhost [127.0.0.2] (may be forged))
-        by TWHMLLG3.macronix.com with ESMTP id xB96cUFt082356
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 14:38:30 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id xB96cNWv082301;
-        Mon, 9 Dec 2019 14:38:23 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 83AF2D64DA588A20DB58;
-        Mon,  9 Dec 2019 14:38:23 +0800 (CST)
-In-Reply-To: <1f1a368a-e3d3-4e58-819e-b4dffc3212ef@ti.com>
-References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw> <1573808288-19365-4-git-send-email-masonccyang@mxic.com.tw> <1f1a368a-e3d3-4e58-819e-b4dffc3212ef@ti.com>
-To:     "Vignesh Raghavendra" <vigneshr@ti.com>
-Cc:     bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@bootlin.com>,
-        broonie@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        tudor.ambarus@microchip.com
-Subject: Re: [PATCH 3/4] mtd: spi-nor: Add Octal 8D-8D-8D mode support for Macronix
- mx25uw51245g
+        Mon, 9 Dec 2019 02:04:53 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so13606369ioh.6
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Dec 2019 23:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=8VrpkdgQrnMuSOUeurvVW4z5wWNDdr+43CeOmu+R6D8=;
+        b=HSu8OsTo4/VtQt5rmELSu4Joyw16NEM5RVv/RNBtEfBSy/DpLzQ+ESzqWonDFjw5ry
+         iuBBg7SqksIqsJ2MJ9s0w3T8lk5KE7eh/5C7XChjfLivhhGUdegPB8z+1csZwHzyiiYy
+         ultBTBS3b3I4zQa2RRZ7jnW+qaQKJdD6sBwQ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8VrpkdgQrnMuSOUeurvVW4z5wWNDdr+43CeOmu+R6D8=;
+        b=Gqfz5Ks696F/RF4j4DrxP+1JKaSoK54ZICFpPIz+UVb63uzVA47sgA2aYt96t4MfOM
+         Wd4gebTnVzrmrKUH3dZLMA3jgtGk6s4zwMVKoDr3n79VLJeSrchKmbgeL/9a6ZX4hrwf
+         EcE7uLzFgOFiIi2VeHsNoPeo1Ze0+tnkYYAtNxp6KuG4jvCNKeK/h7lP9JVbbYnjsyVj
+         5G8enRDNYx9R/SfQEfHdHvzB6sXUHri5gjSYkq7JV0yS7rUUkzk2D3883OnbV+QTT/pb
+         NTj0ZTbAJoofXaZJ9inWxRFQJuyfhEq2FMOzHc1n4gdnel34c6mAcsBuWpOrw/sMCXCB
+         CC/Q==
+X-Gm-Message-State: APjAAAWMjYkx7t4ARPecYtkJUFMOneD7A+lLUrclAk43QxmMQRPL0buJ
+        Ci/cnMfKOsoFIhzvtZ7Quy6R8OrunBR4ig==
+X-Google-Smtp-Source: APXvYqwsZDjYTujGClfn7hASFQzQ3ywZgbD8A/L942G+ugOls0cc0a4XwERFsQxcrrOTYvGtbyueng==
+X-Received: by 2002:a6b:7316:: with SMTP id e22mr20331932ioh.205.1575875092332;
+        Sun, 08 Dec 2019 23:04:52 -0800 (PST)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id f76sm6543960ild.82.2019.12.08.23.04.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 08 Dec 2019 23:04:51 -0800 (PST)
+Date:   Mon, 9 Dec 2019 07:04:50 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk
+Subject: [PATCH v2 0/4] Add ptrace get_fd request
+Message-ID: <20191209070446.GA32336@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-X-KeepSent: 5C924A21:8A6464DD-482584CB:00232656;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF5C924A21.8A6464DD-ON482584CB.00232656-482584CB.002479DE@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 9 Dec 2019 14:38:25 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/12/09 PM 02:38:23,
-        Serialize complete at 2019/12/09 PM 02:38:23
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com xB96cNWv082301
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchest introduces a mechanism to capture file descriptors from other
+processes via ptrace. Although this can be achieved using SCM_RIGHTS, and
+parasitic code injection, this offers a slightly more straightforward
+mechainsm. It also does not mutate the tracee in any way, nor does it
+require that the tracee is stopped, as to avoid causing issues with
+attaching debuggers or runtimes that expect syscalls to be preemptible, or
+return within a specific amount of time.
 
-Hi Vignesh,
+It has an options mechanism that's only usable to set CLOEXEC on the fd,
+but I'm thinking that it could be extended to other aspects. For example,
+for sockets, one could want to scrub the cgroup information.
 
-> > 
-> >  /*
-> > + * Read configuration register 2, returning its value in the
-> > + * location. Return the configuration register 2 value.
-> > + * Returns negative if error occurred.
-> > + */
-> > +static int read_cr2(struct spi_nor *nor, u32 addr)
-> 
-> Please prefix spi_nor_* for all new functions. 
-> Also, include manf name if its vendor specific.
+In the future, the API may not require ptrace attachment, or seizing, but
+right now it does as a matter of safety.
 
-okay, will fix it.
+Changes since the RFC v1:
 
-> 
-> > +{
-> > +   int ret;
-> > +
-> > +   if (nor->spimem) {
-> > +      struct spi_mem_op op =
-> > +         SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_RDCR2, 1),
-> > +               SPI_MEM_OP_ADDR(4, addr, 1),
-> > +               SPI_MEM_OP_DUMMY(4, 1),
-> > +               SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
-> > +
-> > +      if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
-> > +         op.cmd.buswidth = 8;
-> > +         op.addr.buswidth = 8;
-> > +         op.dummy.buswidth = 8;
-> > +         op.data.buswidth = 8;
-> > +         op.cmd.nbytes = 2;
-> > +
-> > +         if (spi_nor_protocol_is_8D_8D_8D(nor->read_proto)) {
-> > +            op.dummy.nbytes *= 2;
-> > +            op.cmd.dtr = true;
-> > +            op.addr.dtr = true;
-> > +            op.dummy.dtr = true;
-> > +            op.data.dtr = true;
-> > +         }
-> > +
-> > +         if (nor->ext_cmd_mode == EXT_CMD_IS_INVERSE)
-> > +            op.cmd.ext_opcode = ~SPINOR_OP_RDCR2;
-> > +         else
-> > +            op.cmd.ext_opcode = SPINOR_OP_RDCR2;
-> > +      }
-> > +
-> > +      ret = spi_mem_exec_op(nor->spimem, &op);
-> > +   } else {
-> > +      ret = -ENOTSUPP;
-> > +   }
-> > +
-> > +   if (ret < 0) {
-> > +      dev_err(nor->dev, "error %d reading CR\n", ret);
-> > +      return ret;
-> > +   }
-> > +
-> > +   return nor->bouncebuf[0];
-> > +}
-> > +
-> > +/*
-> >   * Write configuration register 2 one byte
-> >   * Returns negative if error occurred.
-> >   */
-> > @@ -2275,10 +2325,72 @@ static int spi_nor_spansion_clear_sr_bp(struct 
-spi_nor *nor)
-> >     return 0;
-> >  }
-> > 
-> > +static void
-> > +spi_nor_set_read_settings(struct spi_nor_read_command *read,
-> > +           u8 num_mode_clocks,
-> > +           u8 num_wait_states,
-> > +           u8 opcode,
-> > +           enum spi_nor_protocol proto);
-> > +
-> > +static void
-> > +spi_nor_set_pp_settings(struct spi_nor_pp_command *pp,
-> > +         u8 opcode,
-> > +         enum spi_nor_protocol proto);
-> > +
-> > +static void
-> > +mx25uw51245g_default_init(struct spi_nor *nor)
-> > +{
-> > +   struct spi_nor_flash_parameter *params = &nor->params;
-> > +
-> > +   if (!(nor->spimem->spi->mode & (SPI_RX_OCTAL | SPI_TX_OCTAL)))
-> > +      return;
-> > +
-> > +   /* Octal 8S-8S-8S mode */
-> > +   params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_STR;
-> > +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8],
-> > +              0, 20, SPINOR_OP_READ_8_8_8,
-> > +              SNOR_PROTO_8_8_8);
-> > +
-> > +   spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8_8_8],
-> > +            SPINOR_OP_PP_8_8_8, SNOR_PROTO_8_8_8);
-> > +
-> > +   /* Octal 8D-8D-8D mode */
-> > +   params->hwcaps.mask |= SNOR_HWCAPS_OPI_FULL_DTR;
-> > +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8D_8D_8D],
-> > +              0, 20, SPINOR_OP_READ_8D_8D_8D,
-> > +              SNOR_PROTO_8_8_8_DTR);
-> > +
-> > + 
-spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_8D_8D_8D],
-> > +            SPINOR_OP_PP_8D_8D_8D, SNOR_PROTO_8_8_8_DTR);
-> > +
-> > +   nor->ext_cmd_mode = EXT_CMD_IS_INVERSE;
-> > +}
-> 
-> I don't see anything that is macronix specific here.. Can this be moved 
-to
-> generic code with information parsed from SFDP table?
+ * Introduce a new helper to fs/file.c to fetch a file descriptor from
+   any process. It largely uses the code suggested by Oleg, with a few
+   changes to fix locking
+ * It uses an extensible options struct to supply the FD, and option.
+ * I added a sample, using the code from the user-ptrace sample
 
-This mx25uw51245g device support SFDP command but returns an empty SFDP 
-page.
+Sargun Dhillon (4):
+  vfs, fdtable: Add get_task_file helper
+  ptrace: add PTRACE_GETFD request to fetch file descriptors from
+    tracees
+  samples: split generalized user-trap code into helper file
+  samples: Add example of using PTRACE_GETFD in conjunction with user
+    trap
 
-> 
-> > +
-> > +static void
-> > +mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-> > +{
-> > +   struct spi_nor_flash_parameter *params = &nor->params;
-> > +   u8 cr2;
-> > +
-> > +   cr2 = read_cr2(nor, CR2_REG0) & CR2_REG0_MODE_MASK;
-> > +
-> > +   if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_DTR)
-> > +      cr2 |= CR2_REG0_MODE_OPI_DTR;
-> > +   else if (params->hwcaps.mask & SNOR_HWCAPS_OPI_FULL_STR)
-> > +      cr2 |= CR2_REG0_MODE_OPI_STR;
-> > +
-> > +   write_cr2(nor, CR2_REG0, cr2);
-> > +}
-> > +
-> 
-> I see this as a misuse of sfdp_fixups hook:
-> 
->  * @post_sfdp: called after SFDP has been parsed (is also called for SPI 
-NORs
->  *             that do not support RDSFDP). Typically used to tweak 
-various
->  *             parameters that could not be extracted by other means 
-(i.e.
->  *             when information provided by the SFDP/flash_info tables 
-are
->  *             incomplete or wrong).
->  *
-> 
-> 
-> This should only tweak options parsed by SFDP and not be used to
-> configure flash to a different mode. Please add a separate function 
-> to do so. See https://patchwork.kernel.org/patch/10638085/
-> 
+ fs/file.c                          |  19 +++
+ include/linux/fdtable.h            |  10 ++
+ include/uapi/linux/ptrace.h        |  15 +++
+ kernel/ptrace.c                    |  35 +++++-
+ samples/seccomp/.gitignore         |   1 +
+ samples/seccomp/Makefile           |  15 ++-
+ samples/seccomp/user-trap-helper.c |  84 +++++++++++++
+ samples/seccomp/user-trap-helper.h |  13 ++
+ samples/seccomp/user-trap-ptrace.c | 193 +++++++++++++++++++++++++++++
+ samples/seccomp/user-trap.c        |  85 +------------
+ 10 files changed, 382 insertions(+), 88 deletions(-)
+ create mode 100644 samples/seccomp/user-trap-helper.c
+ create mode 100644 samples/seccomp/user-trap-helper.h
+ create mode 100644 samples/seccomp/user-trap-ptrace.c
 
-okay.
-My idea is that device changed to 8D-8D-8D stateful mode after SFDP 
-parsed. 
-But if SFDP page table is broken in device and driver will just configure 
-the device into 8D-8D-8D mode directly.
-
-
-thanks for your time & comments.
-
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+-- 
+2.20.1
 
