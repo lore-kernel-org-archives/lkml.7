@@ -2,157 +2,218 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B294C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A2DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B152072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1A02072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575883099;
+	bh=QPhCQGgPlsZoF+9Uo4UxgRWRQ4YiRdtsJ2G+EEfINjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WyxkRahA+kzm9M89WI1ST28VJHe9/1FdTM4lJze/sL3sg2fYdb1EeXECWkULkdf5m
+	 eRZ0JhUA/4R4P0tf3aGSTU6VSypoldxo8UkmhbN4IhS9u5sk7Fu+cvSGrH9EhQoEaP
+	 ojyW/iLum7MUq3rv0ChYi4z3hkgQPMDRN3OdBnlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfLIJR7 (ORCPT
+        id S1727516AbfLIJSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:17:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbfLIJR7 (ORCPT
+        Mon, 9 Dec 2019 04:18:18 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32970 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:17:59 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99HK9J126637
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 04:17:58 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtgyj225-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:17:58 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Mon, 9 Dec 2019 09:17:56 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Dec 2019 09:17:53 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB99HqdJ50855956
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Dec 2019 09:17:52 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41CD042041;
-        Mon,  9 Dec 2019 09:17:52 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C41E14203F;
-        Mon,  9 Dec 2019 09:17:49 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.109.247.23])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  9 Dec 2019 09:17:49 +0000 (GMT)
-Date:   Mon, 9 Dec 2019 14:47:46 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     guro@fb.com
-Cc:     mhocko@kernel.org, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        shakeelb@google.com, vdavydov.dev@gmail.com, longman@redhat.com
-Subject: Re: [PATCH 00/16] The new slab memory controller
-Reply-To: bharata@linux.ibm.com
+        Mon, 9 Dec 2019 04:18:18 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so15325416wrq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:18:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IS3pzt+Ib31mmxy98sFHUkI7fZbLlkAMt9njzwJQhPY=;
+        b=hQK8QkZWR50NbK/dup+4H7Q9lZeQzbkYHPSNEAVLW4mNs1x0EoKHiTJjsCQpkwH8At
+         CReqpLPbfM3H8I6zZ7MKVMmtfrTFa8ExF6dVuNpKEHKEdofAiDdZyVAF5QAbfdeap+j3
+         oBzdnyeohChP7jPWlKJfr9Y5IPpBF8/dJtFmuXZHV+FVGvmnalof57hStCm/VyQV2C58
+         BhJUQkT3jC/se9gpGWZc2p475HqDoE1iQVDjjAxOUia3O7mdaMj5rAOi2CTB8IxjqW9S
+         OprvGaLMKsZjLoBBmMgwm2Qw462wXM77LQL64bBffN9GclwHdI4S2GAmKDFGrAeFd2IL
+         vmHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IS3pzt+Ib31mmxy98sFHUkI7fZbLlkAMt9njzwJQhPY=;
+        b=iN0PVtKdhPHT/OmkB5dzV0fSxUuJ7Kw/urssFVZ5prNhQT2vnTySQCvERqQ203+f4i
+         eiMYvLNoqhrpfSiuQlLRT0t4N1e4S5ZM/7W1Ro7v1dP8z7BijRJb6FozQcpx7In84TYi
+         68vaNxpwutQXQJ5eygMGozxLGz8r8nD+tPJOA8zD3rBMSAOmovj6IMhGc/o5E+GV2GGp
+         qsgbz6IhpgM5SqXc/nuMO+OK6QNkW5Z9yLNCr1lva64eTZjlXJFNtFJtu6wt/rF1F8fi
+         pRpZ41HkaMYgAss6aJxfqWKqIbuidhKfWy7z70fQmZ24N4rZR2A8s00yA2m/iRdni9Lq
+         0GqQ==
+X-Gm-Message-State: APjAAAVWXWd+fnh2CazAMBoh3yCBS9QtGKd0pRNDYtY5tKQwq3SPqXfg
+        vk7A6tuGUNEdjKgVkSC7OqA=
+X-Google-Smtp-Source: APXvYqzxl732HSaQK64bPM/+v7BWairgiSkB15NhNiWmPCKWS1PvYeFtTMnJNMgbu4fVHMThi0DfMQ==
+X-Received: by 2002:adf:fc08:: with SMTP id i8mr990862wrr.82.1575883096213;
+        Mon, 09 Dec 2019 01:18:16 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v4sm11240657wml.2.2019.12.09.01.18.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 01:18:15 -0800 (PST)
+Date:   Mon, 9 Dec 2019 10:18:13 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
+ wakeups reliable
+Message-ID: <20191209091813.GA41320@gmail.com>
+References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19120909-0016-0000-0000-000002D30E58
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120909-0017-0000-0000-000033351ECC
-Message-Id: <20191209091746.GA16989@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- priorityscore=1501 lowpriorityscore=0 suspectscore=1 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 spamscore=0 mlxlogscore=746
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912090081
+In-Reply-To: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-I see the below crash during early boot when I try this patchset on
-PowerPC host. I am on new_slab.rfc.v5.3 branch.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-BUG: Unable to handle kernel data access at 0x81030236d1814578
-Faulting instruction address: 0xc0000000002cc314
-Oops: Kernel access of bad area, sig: 11 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA PowerNV
-Modules linked in: ip_tables x_tables autofs4 sr_mod cdrom usbhid bnx2x crct10dif_vpmsum crct10dif_common mdio libcrc32c crc32c_vpmsum
-CPU: 31 PID: 1752 Comm: keyboard-setup. Not tainted 5.3.0-g9bd85fd72a0c #155
-NIP:  c0000000002cc314 LR: c0000000002cc2e8 CTR: 0000000000000000
-REGS: c000001e40f378b0 TRAP: 0380   Not tainted  (5.3.0-g9bd85fd72a0c)
-MSR:  900000010280b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44022224  XER: 00000000
-CFAR: c0000000002c6ad4 IRQMASK: 1 
-GPR00: c0000000000b8a40 c000001e40f37b40 c000000000ed9600 0000000000000000 
-GPR04: 0000000000000023 0000000000000010 c000001e40f37b24 c000001e3cba3400 
-GPR08: 0000000000000020 81030218815f4578 0000001e50220000 0000000000000030 
-GPR12: 0000000000002200 c000001fff774d80 0000000000000000 00000001072600d8 
-GPR16: 0000000000000000 c0000000000bbaac 0000000000000000 0000000000000000 
-GPR20: c000001e40f37c48 0000000000000001 0000000000000000 c000001e3cba3400 
-GPR24: c000001e40f37dd8 0000000000000000 c000000000fa0d58 0000000000000000 
-GPR28: c000001e3a080080 c000001e32da0100 0000000000000118 0000000000000010 
-NIP [c0000000002cc314] __mod_memcg_state+0x58/0xd0
-LR [c0000000002cc2e8] __mod_memcg_state+0x2c/0xd0
-Call Trace:
-[c000001e40f37b90] [c0000000000b8a40] account_kernel_stack+0xa4/0xe4
-[c000001e40f37bd0] [c0000000000ba4a4] copy_process+0x2b4/0x16f0
-[c000001e40f37cf0] [c0000000000bbaac] _do_fork+0x9c/0x3e4
-[c000001e40f37db0] [c0000000000bc030] sys_clone+0x74/0xa8
-[c000001e40f37e20] [c00000000000bb34] ppc_clone+0x8/0xc
-Instruction dump:
-4bffa7e9 2fa30000 409e007c 395efffb 3d000020 2b8a0001 409d0008 39000020 
-e93d0718 e94d0028 7bde1f24 7d29f214 <7ca9502a> 7fff2a14 7fe9fe76 7d27fa78 
+> The reason it is buggy is that wait_event_interruptible_exclusive()
+> does this (inside the __wait_event() macro that it expands to):
+> 
+>                 long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);
+> 
+>                 if (condition)
+>                         break;
+>                 if (___wait_is_interruptible(state) && __int) {
+>                         __ret = __int;
+>                         goto __out;
+> 
+> and the thing is, if does that "__ret = __int" case and returns
+> -ERESTARTSYS, it's possible that the wakeup event has already been
+> consumed, because we've added ourselves as an exclusive writer to the
+> queue. So it _says_ it was interrupted, not woken up, and the wait got
+> cancelled, but because we were an exclusive waiter, we might be the
+> _only_ thing that got woken up, and the wakeup basically got forgotten
+> - all the other exclusive waiters will remain waiting.
 
-Looks like page->mem_cgroup_vec is allocated but not yet initialized
-with memcg pointers when we try to access them.
+So the place that detects interruption is prepare_to_wait_event():
 
-I did get past the crash by initializing the pointers like this
-in account_kernel_stack(), but I am pretty sure that this is not the
-place to do this:
+long prepare_to_wait_event(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry, int state)
+{
+        unsigned long flags;
+        long ret = 0;
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 541fd805fb88..be21419feae2 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -380,13 +380,26 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
-                 * All stack pages are in the same zone and belong to the
-                 * same memcg.
+        spin_lock_irqsave(&wq_head->lock, flags);
+        if (signal_pending_state(state, current)) {
+                /*
+                 * Exclusive waiter must not fail if it was selected by wakeup,
+                 * it should "consume" the condition we were waiting for.
+                 *
+                 * The caller will recheck the condition and return success if
+                 * we were already woken up, we can not miss the event because
+                 * wakeup locks/unlocks the same wq_head->lock.
+                 *
+                 * But we need to ensure that set-condition + wakeup after that
+                 * can't see us, it should wake up another exclusive waiter if
+                 * we fail.
                  */
--               struct page *first_page = virt_to_page(stack);
-+               struct page *first_page = virt_to_head_page((stack));
-+               unsigned long off;
-+               struct mem_cgroup_ptr *memcg_ptr;
-+               struct mem_cgroup *memcg;
- 
-                mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
-                                    THREAD_SIZE / 1024 * account);
- 
--               mod_memcg_page_state(first_page, MEMCG_KERNEL_STACK_KB,
-+               if (!first_page->mem_cgroup_vec)
-+                       return;
-+               off = obj_to_index(task_struct_cachep, first_page, stack);
-+               memcg_ptr = first_page->mem_cgroup_vec[off];
-+               if (!memcg_ptr)
-+                       return;
-+               rcu_read_lock();
-+               memcg = memcg_ptr->memcg;
-+               if (memcg)
-+                       __mod_memcg_state(memcg, MEMCG_KERNEL_STACK_KB,
-                                     account * (THREAD_SIZE / 1024));
-+               rcu_read_unlock();
+                list_del_init(&wq_entry->entry);
+                ret = -ERESTARTSYS;
+        } else {
+                if (list_empty(&wq_entry->entry)) {
+                        if (wq_entry->flags & WQ_FLAG_EXCLUSIVE)
+                                __add_wait_queue_entry_tail(wq_head, wq_entry);
+                        else
+                                __add_wait_queue(wq_head, wq_entry);
+                }
+                set_current_state(state);
         }
- }
+        spin_unlock_irqrestore(&wq_head->lock, flags);
 
-Regards,
-Bharata.
+        return ret;
+}
 
+I think we can indeed lose an exclusive event here, despite the comment 
+that argues that we shouldn't: if we were already removed from the list 
+then list_del_init() does nothing and loses the exclusive event AFAICS.
+
+This logic was introduced in this commit 3 years ago:
+
+  b1ea06a90f52: ("sched/wait: Avoid abort_exclusive_wait() in ___wait_event()")
+  eaf9ef52241b: ("sched/wait: Avoid abort_exclusive_wait() in __wait_on_bit_lock()")
+
+Before that commit we simply did this:
+
+ long prepare_to_wait_event(wait_queue_head_t *q, wait_queue_t *wait, int state)
+ {
+        unsigned long flags;
+-
+-       if (signal_pending_state(state, current))
+-               return -ERESTARTSYS;
+
+Which was safe in the sense that it didn't touch the waitqueue in case of 
+interruption. Then it used abort_exclusive_wait(), which got removed in 
+eaf9ef52241b, to pass on any leftover wakeups:
+
+-void abort_exclusive_wait(wait_queue_head_t *q, wait_queue_t *wait, void *key)
+-{
+-       unsigned long flags;
+-
+-       __set_current_state(TASK_RUNNING);
+-       spin_lock_irqsave(&q->lock, flags);
+-       if (!list_empty(&wait->task_list))
+-               list_del_init(&wait->task_list);
+-       else if (waitqueue_active(q))
+-               __wake_up_locked_key(q, TASK_NORMAL, key);
+-       spin_unlock_irqrestore(&q->lock, flags);
+-}
+-EXPORT_SYMBOL(abort_exclusive_wait);
+
+Note how the wakeup is passed along to another exclusive waiter (if any) 
+via the __wake_up_locked_key() call.
+
+Oleg?
+
+> I dunno. Maybe this is fundamental to the interface? We do not have a 
+> lot of users that mix "interruptible" and "exclusive". In fact, I see 
+> only two cases that care about the return value, but at least the fuse 
+> use does seem to have exactly this problem with potentially lost 
+> wakeups because the ERESTARTSYS case ends up eating a wakeup without 
+> doing anything about it.
+
+I don't think it's fundamental to the interface.
+
+In fact I'd argue that it's fundamental to the interface to *not* lose 
+exclusive events.
+
+> Looks like the other user - the USB gadget HID thing - also has this
+> buggy pattern of believing the return value, and losing a wakeup
+> event.
+> 
+> Adding Miklos and Felipe to the cc just because of the fuse and USB
+> gadget potential issues, but this is mainly a scheduler maintainer
+> question.
+> 
+> It's possible that I've misread the wait-event code. PeterZ?
+
+I think your analysis is correct, and I think the statistical evidence is 
+also overwhelming that the interface is buggy: if we include your new 
+usecase then 3 out of 3 attempts got it wrong. :-)
+
+So I'd argue we should fix the interface and allow the 'simple' use of 
+reliable interruptible-exclusive waitqueues - i.e. reintroduce the 
+abort_exclusive_wait() logic?
+
+Thanks,
+
+	Ingo
