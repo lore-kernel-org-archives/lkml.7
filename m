@@ -2,103 +2,70 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34705C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB3C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046E8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB38B205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575922827;
+	bh=R+HJtlDi28oVqztaFS/7tgnt/ODcDIx25ZAkKNGiTJM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=PX/W6a0676eaKjb8ujIUtKEbQBE+TDzErvXiei28jLKuhUMrGhWcy59vwP9COJlcM
+	 T5+ZS1ufT40Ihji2SPSklaIFyK7HM7IYhFXM0aTHxFR5DHIw1hjbElyxBXWPB4w6nn
+	 YmpfJrIngrc0ot3rMJ6BV60h4j7EiBB+6X4+1RAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLIUTi (ORCPT
+        id S1726689AbfLIUU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:19:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:34016 "EHLO mga05.intel.com"
+        Mon, 9 Dec 2019 15:20:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfLIUTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:19:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 12:19:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="220053131"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Dec 2019 12:19:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] KVM: x86: Fix potential put_fpu() w/o load_fpu() on MPX platform
-Date:   Mon,  9 Dec 2019 12:19:31 -0800
-Message-Id: <20191209201932.14259-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191209201932.14259-1-sean.j.christopherson@intel.com>
-References: <20191209201932.14259-1-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726502AbfLIUU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:20:26 -0500
+Subject: Re: [GIT PULL] Thermal management updates for v5.5-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575922825;
+        bh=R+HJtlDi28oVqztaFS/7tgnt/ODcDIx25ZAkKNGiTJM=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ApBd5r2k40UczLle4G9MGxiT+lCgrY2Z2+2KpmlHlReUDaY/nH24cmwWWI4/9zM9w
+         AyUKqiteJN8JDTKAOh3yNO5MxMQIMWj91NKVrirQ5aLQw44szD8sL0hBmq3D7BH235
+         EztQ9YoolJxjDAUF/5PqQ2V00jATphLmcMhtfHjI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
+References: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+ tags/thermal-5.5-rc2
+X-PR-Tracked-Commit-Id: 6e456dca47c5e3b8d8c6bbc4edd1377985d793b5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 316eaf170252f3b50e0d7d5d17ac1f0ee8ae70ef
+Message-Id: <157592282581.794.1452620589164632828.pr-tracker-bot@kernel.org>
+Date:   Mon, 09 Dec 2019 20:20:25 +0000
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike most state managed by XSAVE, MPX is initialized to zero on INIT.
-Because INITs are usually recognized in the context of a VCPU_RUN call,
-kvm_vcpu_reset() puts the guest's FPU so that the FPU state is resident
-in memory, zeros the MPX state, and reloads FPU state to hardware.  But,
-in the unlikely event that an INIT is recognized during
-kvm_arch_vcpu_ioctl_get_mpstate() via kvm_apic_accept_events(),
-kvm_vcpu_reset() will call kvm_put_guest_fpu() without a preceding
-kvm_load_guest_fpu() and corrupt the guest's FPU state (and possibly
-userspace's FPU state as well).
+The pull request you sent on Mon, 09 Dec 2019 14:18:21 +0800:
 
-Given that MPX is being removed from the kernel[*], fix the bug with the
-simple-but-ugly approach of loading the guest's FPU during
-KVM_GET_MP_STATE.
+> git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-5.5-rc2
 
-[*] See commit f240652b6032b ("x86/mpx: Remove MPX APIs").
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/316eaf170252f3b50e0d7d5d17ac1f0ee8ae70ef
 
-Fixes: f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+Thank you!
 
-Tagged for stable since failure would trigger a WARN in the FPU subsystem.
-I highly doubt anything outside of syzkaller would actually hit this.
-
- arch/x86/kvm/x86.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3ed167e039e5..854ae27bb021 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8712,6 +8712,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
- 				    struct kvm_mp_state *mp_state)
- {
- 	vcpu_load(vcpu);
-+	if (kvm_mpx_supported())
-+		kvm_load_guest_fpu(vcpu);
- 
- 	kvm_apic_accept_events(vcpu);
- 	if (vcpu->arch.mp_state == KVM_MP_STATE_HALTED &&
-@@ -8720,6 +8722,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
- 	else
- 		mp_state->mp_state = vcpu->arch.mp_state;
- 
-+	if (kvm_mpx_supported())
-+		kvm_put_guest_fpu(vcpu);
- 	vcpu_put(vcpu);
- 	return 0;
- }
 -- 
-2.24.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
