@@ -2,89 +2,91 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B2FC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F5CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D917B20836
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9290F206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:15:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZepRliXo"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NHTs/w8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfLISO5 (ORCPT
+        id S1726881AbfLISPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:14:57 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37955 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLISO4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:14:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so17294828wrh.5;
-        Mon, 09 Dec 2019 10:14:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FnJ75Uhb5jjpHnizeaX4CsLk/OHrkbiFhcnav79oqNs=;
-        b=ZepRliXoJjh18TG0DzXYrDGdNUZ4IzAb77TKuwgOsSvPJaDz1TcDeZjX6wInGkCRVG
-         ZkCL/tISTqSfi8mtaj94QzFCEVEJwUuYgPaEEugEb1Y2PZFP+9AJbuGLaqpp4H3EKwRb
-         vVFHbyPM3bCNgWYTfZYzVqXJpWb6wvmgwzDLarUmlDXVP2oQZ4mTrBmx86Tsg9VZK1kg
-         MKk7guwLpdHdO4FBDKB1jbt6NG8+DWARLOhEzy6OgZpMhsE93uez4hcOqiHgJ8s+oY9B
-         0bCj4MBLeAgFynAfFteGsmUd5c0qK+nLz9Pm6Ia9P1/IeAcqxfsCJ+atrVhbYwZ+LWmP
-         Ge5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FnJ75Uhb5jjpHnizeaX4CsLk/OHrkbiFhcnav79oqNs=;
-        b=iAans2X7FoNfRfjwOTkeLn08ALr9PuTjYdPtvTwv8OSGvXXY/tpybeubcRYkXEkqp6
-         lH2zogrEQ84uDbQYyHzkcoh9pHukVLIqDNUedrbE4UStW+2h7Ohk7nGfGn5CIrnsb3zF
-         z1I2sIFmHowH/udPFwNqZNjUjJ0xpHkh+emFZxpvmMjDdqkbr8/kE6pMwmj2cNBW68zU
-         jdpPXfeQtVxLTERU4iDHq1f8S3Pv6rN6vYWqX+8KCcDzJ4YCoV+BUZAzJQHeLrWXhle4
-         vh4lzVbVQvvNjtY2lgnmWIHKbXbBx974FvuOJk+qEwE4dj1KSQO3wiK+b0t45fSSB96G
-         vznA==
-X-Gm-Message-State: APjAAAVWvLscO5iQU2TL75TaPivyIlrreTZVQk7WE6bekriIkHAfW4cl
-        jsTZ8y9v3rgAG4eab6BY8og=
-X-Google-Smtp-Source: APXvYqxanq81MjQQ/vCG8zEAT+l265qBKg7/XDRbvi4ifBvuFeVo9EKUzboncgcnArLlYX31z3RcAw==
-X-Received: by 2002:adf:ffc7:: with SMTP id x7mr3541896wrs.159.1575915294194;
-        Mon, 09 Dec 2019 10:14:54 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q3sm327849wrn.33.2019.12.09.10.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 10:14:53 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     grygorii.strashko@ti.com, simon.horman@netronome.com,
-        robh+dt@kernel.org, rafal@milecki.pl, davem@davemloft.net,
-        andrew@lunn.ch, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Mon,  9 Dec 2019 10:14:49 -0800
-Message-Id: <20191209181449.6307-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191206181909.10962-1-f.fainelli@gmail.com>
-References: <20191206181909.10962-1-f.fainelli@gmail.com>
+        Mon, 9 Dec 2019 13:15:01 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:59892 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLISO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:14:59 -0500
+Received: from zn.tnic (p200300EC2F07FE0004E849530B6CB65A.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:fe00:4e8:4953:b6c:b65a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BF58A1EC0C1A;
+        Mon,  9 Dec 2019 19:14:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1575915297;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=+9J74HXPXpQjfbF2S3fh6rnuCytPtwdJt13WO1twBN0=;
+        b=NHTs/w8MEJOPRg50hPLzRPJTUTyg8r9wTHsIhelmre51ttoi7UDpI5XVbfKZdfr/zborta
+        6t6DQc6qA5iMtOUm0CcRqMCjPJ6Z2MqtgdmwoPuEijlMSoEnmCr3lmCUvPfMCBbDNECxrJ
+        Myn+YN+7suQjtFv3veVaKSEy9IRTYo8=
+Date:   Mon, 9 Dec 2019 19:14:49 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH] edac: Fix Kconfig indentation
+Message-ID: <20191209181449.GB32641@zn.tnic>
+References: <20191120134206.15588-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191120134206.15588-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  6 Dec 2019 10:19:09 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> The MDIO node on Cygnus had an reversed #address-cells and
->  #size-cells properties, correct those.
+On Wed, Nov 20, 2019 at 09:42:06PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-> Reported-by: Simon Horman <simon.horman@netronome.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
+>  drivers/edac/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 417dad635526..c49f6bc39716 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -492,7 +492,7 @@ config EDAC_TI
+>  	depends on ARCH_KEYSTONE || SOC_DRA7XX
+>  	help
+>  	  Support for error detection and correction on the
+> -          TI SoCs.
+> +	  TI SoCs.
+>  
+>  config EDAC_QCOM
+>  	tristate "QCOM EDAC Controller"
+> -- 
 
-Applied to devicetree/fixes, thanks!
---
-Florian
+Applied, thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
