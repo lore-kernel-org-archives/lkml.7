@@ -2,138 +2,151 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EBBC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1421FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA7A20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MUTVDb8M"
+	by mail.kernel.org (Postfix) with ESMTP id E670E20692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLIRIP (ORCPT
+        id S1726856AbfLIRIU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:08:15 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32601 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726522AbfLIRIP (ORCPT
+        Mon, 9 Dec 2019 12:08:20 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42250 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfLIRIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:08:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575911294;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=waScVUeDSycUf+PrN96I4z+R7/A+aBcxkketQWg+fiM=;
-        b=MUTVDb8Mq7su+VKR8Opr9YvbQQfX4hY7c9mi+VRdMTcxvpbddqPCkEx/DHijNummt/6xUV
-        YgvRkU2uG6EVeUs6XOhf2FVQPnIweqqW+Ble/s2NYThGRnzpVOcFf0EaDZO3F7VcMB39Hu
-        JwjBdCddo9y5Fs5pBW/qkbzRyMoyHUM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-EQSvobaJO0S_WUDWy8kurA-1; Mon, 09 Dec 2019 12:08:10 -0500
-X-MC-Unique: EQSvobaJO0S_WUDWy8kurA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 847F91090B62;
-        Mon,  9 Dec 2019 17:08:09 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-42.rdu2.redhat.com [10.10.112.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2DB279AC;
-        Mon,  9 Dec 2019 17:08:08 +0000 (UTC)
-Message-ID: <fcbf09317ccf0c3662616f38f1c0c3e874ec0c15.camel@redhat.com>
-Subject: Re: [PATCH v2] RDMA/cma: add missed unregister_pernet_subsys in
- init failure
-From:   Doug Ledford <dledford@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 09 Dec 2019 12:08:05 -0500
-In-Reply-To: <005ae1f8-3241-4a7e-aa1e-eb26275d15a9@mellanox.com>
-References: <20191206012426.12744-1-hslester96@gmail.com>
-         <005ae1f8-3241-4a7e-aa1e-eb26275d15a9@mellanox.com>
-Organization: Red Hat, Inc.
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30)
+        Mon, 9 Dec 2019 12:08:16 -0500
+Received: by mail-pg1-f195.google.com with SMTP id s64so709651pgb.9;
+        Mon, 09 Dec 2019 09:08:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pPjzbV+XoAtiNq1c5fnVV7Us4zipQoGWT7Qul1cJyng=;
+        b=ffaJjSqJSiRVtvv352eTQohYdXE+ft52Bfkez4Tjv8dNz5/VsuxocjJwBBZsMDnwp6
+         FffcmkHM4+TGDNtyE5MwkNi0KZ9Q5qeLhrAzbi4dKS0ZBUMrUQkJbANFoz++ikq7J18G
+         t69eSJsqtWvM9rtR/Auviw14ClMgUNgrdl3KQ5U3DAV5qgjnhFBZf2ZTKFk8im97Trj0
+         Szc3ztW4nxbzhXROF4ibtGSqUcjjlZoBIPEy29mfWBISUYlRa9XLFp+CevQua6xw4jvL
+         1N2b0BueTTVBpe82Yoms+UVtJCklOEsGdB+7Hn68AQLvId/iQzFwl2n75Kn4p+gTFbpk
+         0MAQ==
+X-Gm-Message-State: APjAAAXpZ8ENbsXXspHEb/tkWgVGjmotOD2GtvNPGaHYHUUZ+aYSKThK
+        EE07nzXskbWPyjRHmu7z5jQ=
+X-Google-Smtp-Source: APXvYqxLZEJRTdaKTvd+1D3aFVyOayeVhezMkQ+DuhC85xm2Fqahw6g5npYOtg5jcKeoWnsdtMVLpA==
+X-Received: by 2002:a65:6914:: with SMTP id s20mr19419027pgq.44.1575911295347;
+        Mon, 09 Dec 2019 09:08:15 -0800 (PST)
+Received: from [172.31.133.107] ([216.9.110.1])
+        by smtp.gmail.com with ESMTPSA id g191sm43969pfb.19.2019.12.09.09.08.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 09:08:14 -0800 (PST)
+Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
+To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-ide@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20191209052119.32072-1-linux@roeck-us.net>
+ <20191209052119.32072-2-linux@roeck-us.net>
+From:   Bart Van Assche <bvanassche@acm.org>
+X-Pep-Version: 2.0
+Message-ID: <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
+Date:   Mon, 9 Dec 2019 09:08:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-PkZpq8e+oUxr9ZBOflcr"
+In-Reply-To: <20191209052119.32072-2-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-PkZpq8e+oUxr9ZBOflcr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 12/8/19 9:21 PM, Guenter Roeck wrote:
+> +static int satatemp_scsi_command(struct satatemp_data *st,
+> +				 u8 ata_command, u8 feature,
+> +				 u8 lba_low, u8 lba_mid, u8 lba_high)
+> +{
+> +	static u8 scsi_cmd[MAX_COMMAND_SIZE];
+> +	int data_dir;
 
-On Fri, 2019-12-06 at 04:32 +0000, Parav Pandit wrote:
-> On 12/5/2019 7:24 PM, Chuhong Yuan wrote:
-> > The driver forgets to call unregister_pernet_subsys() in the error
-> > path
-> > of cma_init().
-> > Add the missed call to fix it.
-> >=20
-> > Fixes: 4be74b42a6d0 ("IB/cma: Separate port allocation to network
-> > namespaces")
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - Add fixes tag.
-> >=20
-> >  drivers/infiniband/core/cma.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/drivers/infiniband/core/cma.c
-> > b/drivers/infiniband/core/cma.c
-> > index 25f2b70fd8ef..43a6f07e0afe 100644
-> > --- a/drivers/infiniband/core/cma.c
-> > +++ b/drivers/infiniband/core/cma.c
-> > @@ -4763,6 +4763,7 @@ static int __init cma_init(void)
-> >  err:
-> >  =09unregister_netdevice_notifier(&cma_nb);
-> >  =09ib_sa_unregister_client(&sa_client);
-> > +=09unregister_pernet_subsys(&cma_pernet_operations);
-> >  err_wq:
-> >  =09destroy_workqueue(cma_wq);
-> >  =09return ret;
-> >=20
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
+Declaring scsi_cmd[] static makes an otherwise thread-safe function
+thread-unsafe. Has it been considered to allocate scsi_cmd[] on the stack?
 
-Thanks, applied to for-rc.
+> +	/*
+> +	 * Inquiry data sanity checks (per SAT-5):
+> +	 * - peripheral qualifier must be 0
+> +	 * - peripheral device type must be 0x0 (Direct access block device)
+> +	 * - SCSI Vendor ID is "ATA     "
+> +	 */
+> +	if (sdev->inquiry[0] ||
+> +	    strncmp(&sdev->inquiry[8], "ATA     ", 8))
+> +		return -ENODEV;
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+It's possible that we will need a quirk mechanism to disable temperature
+monitoring for certain ATA devices. Has it been considered to make
+scsi_add_lun() set a flag that indicates whether or not temperatures
+should be monitored and to check that flag from inside this function?
+I'm asking this because an identical strncmp() check exists in
+scsi_add_lun().
 
---=-PkZpq8e+oUxr9ZBOflcr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> +static int satatemp_read(struct device *dev, enum hwmon_sensor_types type,
+> +			 u32 attr, int channel, long *val)
+> +{
+> +	struct satatemp_data *st = dev_get_drvdata(dev);
 
------BEGIN PGP SIGNATURE-----
+Which device does 'dev' represent? What guarantees that the drvdata
+won't be used for another purpose, e.g. by the SCSI core?
 
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl3uf3UACgkQuCajMw5X
-L9389A//XLWJPE7g6hqtjC/3TatYIkTJLtyosceKCgRgYpear/j1W49VM+EnC3aS
-7nWsEyffVueWMDdorNzXnwAlSUWzxwQNJZ92u17uABb6bUOvWjO2ccaSIprgEHQg
-RnCDKsderPFMkfH9EsA8uZk5wXtci8Vu1wzl7oHZfQzyjhznwCVIjtV4SGYGhgMO
-XtsZCrvWxPdpHn50d3WSrf6jKCOtCUDLBxW/1mM48h3svwk2u30wmmzwftKCH6db
-bODbTchBbiJ8SKbGuuezHQPeU2rSQiXJC8w+ENrgmVmFeTjgjTVfithviLU+snp8
-lh9r/TvpCuq+qcseL2hDr8tsayTteyi7+ORIeZM+yk+jIRATxeYN/8O00Og2qwLn
-e0M46dtpSOAD9NiGmPaW62KSNsenhLqRh4QDY9CztbUe/2bgfu9URrrEpC6yZPSz
-5AqIVER07cEtjncBopvueHuMWNZzrynfevdykjZGXsMvqhbVpfpYlrh886VosbZ+
-ytD97uMajUnmxIjmnGBMd6yLpquG2c6O4zyW9HITfrj4EDzB0ntZW7hRnLUVhpse
-7EpLfT1KKm6c5buD+1n6okvuDg0l13b7qr1AhP8Cu2sMvAHLZ6t1NpKGOfr6tbQd
-uzYh5pDZJzyvmRTXdteHBEUBwVICqxJG0ORFgEz+pwhnt/2xAaE=
-=iVCy
------END PGP SIGNATURE-----
+> +/*
+> + * The device argument points to sdev->sdev_dev. Its parent is
+> + * sdev->sdev_gendev, which we can use to get the scsi_device pointer.
+> + */
+> +static int satatemp_add(struct device *dev, struct class_interface *intf)
+> +{
+> +	struct scsi_device *sdev = to_scsi_device(dev->parent);
+> +	struct satatemp_data *st;
+> +	int err;
+> +
+> +	st = kzalloc(sizeof(*st), GFP_KERNEL);
+> +	if (!st)
+> +		return -ENOMEM;
+> +
+> +	st->sdev = sdev;
+> +	st->dev = dev;
+> +	mutex_init(&st->lock);
+> +
+> +	if (satatemp_identify(st)) {
+> +		err = -ENODEV;
+> +		goto abort;
+> +	}
+> +
+> +	st->hwdev = hwmon_device_register_with_info(dev->parent, "satatemp",
+> +						    st, &satatemp_chip_info,
+> +						    NULL);
+> +	if (IS_ERR(st->hwdev)) {
+> +		err = PTR_ERR(st->hwdev);
+> +		goto abort;
+> +	}
+> +
+> +	list_add(&st->list, &satatemp_devlist);
+> +	return 0;
+> +
+> +abort:
+> +	kfree(st);
+> +	return err;
+> +}
 
---=-PkZpq8e+oUxr9ZBOflcr--
+How much does synchronously submitting SCSI commands from inside the
+device probing call back slow down SCSI device discovery? What is the
+impact of this code on systems with a large number of ATA devices?
+
+Thanks,
+
+Bart.
 
