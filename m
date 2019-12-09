@@ -2,216 +2,278 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568BDC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2937BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D168206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97DE20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LKkHOX01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLIWtV (ORCPT
+        id S1727145AbfLIWxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:49:21 -0500
-Received: from mga17.intel.com ([192.55.52.151]:20294 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfLIWtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:49:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 14:34:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="363078147"
-Received: from laumelis-mobl1.amr.corp.intel.com ([10.251.26.176])
-  by orsmga004.jf.intel.com with ESMTP; 09 Dec 2019 14:34:55 -0800
-Message-ID: <7cc9a74a0e16b8e3583401f6be43820377a8f875.camel@linux.intel.com>
-Subject: Re: [PATCH] ACPI: PM: Avoid attaching ACPI PM domain to certain
- devices
-From:   Todd Brandt <todd.e.brandt@linux.intel.com>
-Reply-To: todd.e.brandt@linux.intel.com
-To:     Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Brandt, Todd E" <todd.e.brandt@intel.com>
-Date:   Mon, 09 Dec 2019 14:34:54 -0800
-In-Reply-To: <56a33219fc336c26b8ef9d8de1a3d50893a7b7d1.camel@linux.intel.com>
-References: <1773028.iBGNyVBcMc@kreacher>
-         <2991d01601fdbcf25d745a387eda74926f1192b2.camel@intel.com>
-         <56a33219fc336c26b8ef9d8de1a3d50893a7b7d1.camel@linux.intel.com>
+        Mon, 9 Dec 2019 17:53:55 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10131 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfLIWxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 17:53:54 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5deed0780003>; Mon, 09 Dec 2019 14:53:45 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 14:53:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 09 Dec 2019 14:53:51 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
+ 2019 22:53:50 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 9 Dec 2019 22:53:50 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5deed07d0000>; Mon, 09 Dec 2019 14:53:50 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v8 00/26] mm/gup: track dma-pinned pages: FOLL_PIN
+Date:   Mon, 9 Dec 2019 14:53:18 -0800
+Message-ID: <20191209225344.99740-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575932025; bh=wxsTm/nUQAgyXOXiekXNWJzX7DswluWndSLLkdWyNsU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=LKkHOX01qLpN5I/n8Lng/OWQGwEhr76195x23RkvMppTWIJJbS3i9pwYiPoY5/bc5
+         e5lZ2j6HDv1RxnFlDmf+27mvJqvICyI/9swSG0NVHC7BwY7bXQWssErtwvybFU+CPO
+         u+kFPOfd8BvFfqgkKvp99lbQIa4c8BLOMS5cIDbAEudwg6i2UIf/2UaPnt13+Iyjzn
+         0sbdp/2T7n7O7UyZ8N4n4miN8mogBm7OLnJzyzBlGrnY7d1eAMUlVAD7K5+Ep8IXKR
+         QYsDxSG9vHnZW79dgiLsJtnrvvr42XAJPkYuzOsfQ7GjYxUczB56WLiKZW6qxNViGb
+         CnldVfIf5duTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-05 at 09:32 -0800, Todd Brandt wrote:
-> On Wed, 2019-12-04 at 22:04 +0800, Zhang Rui wrote:
-> > On Wed, 2019-12-04 at 02:54 +0100, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > 
-> > > Certain ACPI-enumerated devices represented as platform devices
-> > > in
-> > > Linux, like fans, require special low-level power management
-> > > handling
-> > > implemented by their drivers that is not in agreement with the
-> > > ACPI
-> > > PM domain behavior.  That leads to problems with managing ACPI
-> > > fans
-> > > during system-wide suspend and resume.
-> > > 
-> > > For this reason, make acpi_dev_pm_attach() skip the affected
-> > > devices
-> > > by adding a list of device IDs to avoid to it and putting the IDs
-> > > of
-> > > the affected devices into that list.
-> > > 
-> > > Fixes: e5cc8ef31267 (ACPI / PM: Provide ACPI PM callback routines
-> > > for
-> > > subsystems)
-> > > Reported-by: Zhang Rui <rui.zhang@intel.com>
-> > > Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > > 
-> > > Rui,
-> > > 
-> > > Please test this on the machine(s) affected by the fan
-> > > suspend/resume
-> > > issues.
-> > 
-> > Sure, Todd and I will re-run stress test with this patch applied
-> > when
-> > 5.5-rc1 released.
-> 
-> I've applied it 5.4.0 and will do a full stress test run this weekend
-> in the lab (where 7 out of 20 machines have this issue). The kernel
-> will be called "5.4.0-acpifanfix", and the data should be ready
-> Sunday
-> Dec 8.
-> 
-> This is the issue I'll test for:
-> https://bugzilla.kernel.org/show_bug.cgi?id=204321
-> 
+Hi,
 
-The test data is in and I'm very happy to report that the patch works
-extremely well. Here's the data gathered on the bugzilla issue 204321:
-ACPI fan resume is too long.
+This implements an API naming change (put_user_page*() -->
+unpin_user_page*()), and also implements tracking of FOLL_PIN pages. It
+extends that tracking to a few select subsystems. More subsystems will
+be added in follow up work.
 
-[With the patch]
+Christoph Hellwig, a couple of points of interest:
 
-Kernel              Host                      Test Run    Count Rate
-5.4.0-acpifanfix    otcpl-whl-u-clear         mem-x2351    1    0.04%
-5.4.0-acpifanfix    otcpl-z170x-ud5           mem-x2369    0    0%
-5.4.0-acpifanfix    otcpl-z170x-ud5           freeze-x2492 0    0%
-5.4.0-acpifanfix    otcpl-whl-u-clear         freeze-x2411 0    0%
-5.4.0-acpifanfix    otcpl-whl-u               mem-x2289    0    0%
-5.4.0-acpifanfix    otcpl-whl-u               freeze-x2389 0    0%
-5.4.0-acpifanfix    otcpl-icl-u-2             mem-x2273    0    0%
-5.4.0-acpifanfix    otcpl-icl-u-2             freeze-x817  0    0%
-5.4.0-acpifanfix    otcpl-glk-rvp-1           freeze-x122  0    0%
-5.4.0-acpifanfix    otcpl-dell-p5510-xeon-1   mem-x1851    0    0%
-5.4.0-acpifanfix    otcpl-dell-p5510-xeon-1   freeze-x1994 0    0%
-5.4.0-acpifanfix    otcpl-dell-inspiron-3493  mem-x1722    0    0%
-5.4.0-acpifanfix    otcpl-dell-inspiron-3493  freeze-x2102 0    0%
-5.4.0-acpifanfix    otcpl-cfl-u-01            mem-x39      0    0%
-5.4.0-acpifanfix    otcpl-cfl-u-01            freeze-x2091 0    0%
-5.4.0-acpifanfix    otcpl-cfl-h               mem-x415     0    0%
-5.4.0-acpifanfix    otcpl-cfl-h               freeze-x2265 0    0%
-5.4.0-acpifanfix    otcpl-aml-y               mem-x3126    0    0%
-5.4.0-acpifanfix    otcpl-aml-y               freeze-x2288 0    0%
+a) I've moved the bulk of the code out of the inline functions, as
+   requested, for the devmap changes (patch 4: "mm: devmap: refactor
+   1-based refcounting for ZONE_DEVICE pages").
 
-[Without the patch]
+b) Contrary to my earlier response to your review, I have not actually
+   merged patch 23 ("mm/gup: pass flags arg to __gup_device_*
+   functions") into patch 24 ("mm/gup: track FOLL_PIN pages"). This is
+   because I suspect that it's better to avoid making patch 24 any larger
+   and worse to review than it already is. But if you feel strongly
+   about it, I'll combine them anyway.
 
-Kernel    Host                      Test Run    Count Rate
-5.3.0+    otcpl-icl-u-2             mem-x2571    2571 100.00%
-5.3.0+    otcpl-whl-u               mem-x2497    2497 100.00%
-5.3.0+    otcpl-cfl-h               mem-x2068    2068 100.00%
-5.3.0+    otcpl-glk-rvp-1           mem-x75      74   98.67%
-5.3.0+    otcpl-cfl-u-01            mem-x1074    1050 97.77%
-5.3.0+    otcpl-glk-rvp-1           freeze-x45   12   26.67%
-5.3.0+    otcpl-whl-u               freeze-x2649 428  16.16%
-5.3.0+    otcpl-aml-y               freeze-x2434 373  15.32%
-5.3.0+    otcpl-cfl-u-01            freeze-x2419 123  5.08%
-5.3.0+    otcpl-latexo-ivb-cpt      freeze-x1914 97   5.07%
-5.3.0+    otcpl-whl-u-clear         mem-x2640    69   2.61%
-5.3.0+    otcpl-icl-u-2             freeze-x2757 59   2.14%
-5.3.0+    otcpl-whl-u-clear         freeze-x2830 53   1.87%
-5.3.0+    otcpl-tgl-rvp             freeze-x2086 20   0.96%
-5.3.0+    otcpl-cfl-h               freeze-x2457 8    0.33%
-5.3.0+    otcpl-latexo-ivb-cpt      mem-x2000    4    0.20%
-5.3.0+    otcpl-aml-y               mem-x2727    2    0.07%
-5.3.0+    otcpl-z170x-ud5           mem-x2669    0    0%    
-5.3.0+    otcpl-z170x-ud5           freeze-x2881 0    0%    
-5.3.0+    otcpl-lenovo-ideapad-130  mem-x2000    0    0%    
-5.3.0+    otcpl-lenovo-ideapad-130  freeze-x2000 0    0%    
-5.3.0+    otcpl-dell-p5510-xeon-2   mem-x570     0    0%    
-5.3.0+    otcpl-dell-p5510-xeon-2   freeze-x1093 0    0%    
-5.3.0+    otcpl-dell-p5510-xeon-1   mem-x2209    0    0%    
-5.3.0+    otcpl-dell-p5510-xeon-1   freeze-x2431 0    0%    
-5.3.0+    otcpl-dell-inspiron-3493  freeze-x1170 0    0%    
-5.3.0+    otcpl-chromebook-hsw      freeze-x1305 0    0%    
-5.3.0+    otcpl-chromebook-hsw      freeze-x368  0    0%    
+Changes since v7:
 
-> > 
-> > thanks,
-> > rui
-> > 
-> > > 
-> > > I don't really see any cleaner way to address this problem,
-> > > because
-> > > the
-> > > ACPI PM domain should not be used with the devices in question
-> > > even
-> > > if
-> > > the driver that binds to them is not loaded.
-> > > 
-> > > Cheers,
-> > > Rafael
-> > > 
-> > > ---
-> > >  drivers/acpi/device_pm.c |   12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > > 
-> > > Index: linux-pm/drivers/acpi/device_pm.c
-> > > =================================================================
-> > > ==
-> > > --- linux-pm.orig/drivers/acpi/device_pm.c
-> > > +++ linux-pm/drivers/acpi/device_pm.c
-> > > @@ -1314,9 +1314,19 @@ static void acpi_dev_pm_detach(struct de
-> > >   */
-> > >  int acpi_dev_pm_attach(struct device *dev, bool power_on)
-> > >  {
-> > > +	/*
-> > > +	 * Skip devices whose ACPI companions match the device IDs
-> > > below,
-> > > +	 * because they require special power management handling
-> > > incompatible
-> > > +	 * with the generic ACPI PM domain.
-> > > +	 */
-> > > +	static const struct acpi_device_id special_pm_ids[] = {
-> > > +		{"PNP0C0B", }, /* Generic ACPI fan */
-> > > +		{"INT3404", }, /* Fan */
-> > > +		{}
-> > > +	};
-> > >  	struct acpi_device *adev = ACPI_COMPANION(dev);
-> > >  
-> > > -	if (!adev)
-> > > +	if (!adev || !acpi_match_device_ids(adev, special_pm_ids))
-> > >  		return 0;
-> > >  
-> > >  	/*
-> > > 
-> > > 
-> > > 
-> > 
-> > 
+* Rebased onto Linux 5.5-rc1
+
+* Reworked the grab_page() and try_grab_compound_head(), for API
+  consistency and less diffs (thanks to Jan Kara's reviews).
+
+* Added Leon Romanovsky's reviewed-by tags for two of the IB-related
+  patches.
+
+* patch 4 refactoring changes, as mentioned above.
+
+There is a git repo and branch, for convenience:
+
+    git@github.com:johnhubbard/linux.git pin_user_pages_tracking_v8
+
+For the remaining list of "changes since version N", those are all in
+v7, which is here:
+
+  https://lore.kernel.org/r/20191121071354.456618-1-jhubbard@nvidia.com
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Overview:
+
+This is a prerequisite to solving the problem of proper interactions
+between file-backed pages, and [R]DMA activities, as discussed in [1],
+[2], [3], and in a remarkable number of email threads since about
+2017. :)
+
+A new internal gup flag, FOLL_PIN is introduced, and thoroughly
+documented in the last patch's Documentation/vm/pin_user_pages.rst.
+
+I believe that this will provide a good starting point for doing the
+layout lease work that Ira Weiny has been working on. That's because
+these new wrapper functions provide a clean, constrained, systematically
+named set of functionality that, again, is required in order to even
+know if a page is "dma-pinned".
+
+In contrast to earlier approaches, the page tracking can be
+incrementally applied to the kernel call sites that, until now, have
+been simply calling get_user_pages() ("gup"). In other words, opt-in by
+changing from this:
+
+    get_user_pages() (sets FOLL_GET)
+    put_page()
+
+to this:
+    pin_user_pages() (sets FOLL_PIN)
+    unpin_user_page()
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Testing:
+
+* I've done some overall kernel testing (LTP, and a few other goodies),
+  and some directed testing to exercise some of the changes. And as you
+  can see, gup_benchmark is enhanced to exercise this. Basically, I've
+  been able to runtime test the core get_user_pages() and
+  pin_user_pages() and related routines, but not so much on several of
+  the call sites--but those are generally just a couple of lines
+  changed, each.
+
+  Not much of the kernel is actually using this, which on one hand
+  reduces risk quite a lot. But on the other hand, testing coverage
+  is low. So I'd love it if, in particular, the Infiniband and PowerPC
+  folks could do a smoke test of this series for me.
+
+  Runtime testing for the call sites so far is pretty light:
+
+    * io_uring: Some directed tests from liburing exercise this, and
+                they pass.
+    * process_vm_access.c: A small directed test passes.
+    * gup_benchmark: the enhanced version hits the new gup.c code, and
+                     passes.
+    * infiniband: ran "ib_write_bw", which exercises the umem.c changes,
+                  but not the other changes.
+    * VFIO: compiles (I'm vowing to set up a run time test soon, but it's
+                      not ready just yet)
+    * powerpc: it compiles...
+    * drm/via: compiles...
+    * goldfish: compiles...
+    * net/xdp: compiles...
+    * media/v4l2: compiles...
+
+[1] Some slow progress on get_user_pages() (Apr 2, 2019): https://lwn.net/A=
+rticles/784574/
+[2] DMA and get_user_pages() (LPC: Dec 12, 2018): https://lwn.net/Articles/=
+774411/
+[3] The trouble with get_user_pages() (Apr 30, 2018): https://lwn.net/Artic=
+les/753027/
+
+Dan Williams (1):
+  mm: Cleanup __put_devmap_managed_page() vs ->page_free()
+
+John Hubbard (25):
+  mm/gup: factor out duplicate code from four routines
+  mm/gup: move try_get_compound_head() to top, fix minor issues
+  mm: devmap: refactor 1-based refcounting for ZONE_DEVICE pages
+  goldish_pipe: rename local pin_user_pages() routine
+  mm: fix get_user_pages_remote()'s handling of FOLL_LONGTERM
+  vfio: fix FOLL_LONGTERM use, simplify get_user_pages_remote() call
+  mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+  IB/umem: use get_user_pages_fast() to pin DMA pages
+  mm/gup: introduce pin_user_pages*() and FOLL_PIN
+  goldish_pipe: convert to pin_user_pages() and put_user_page()
+  IB/{core,hw,umem}: set FOLL_PIN via pin_user_pages*(), fix up ODP
+  mm/process_vm_access: set FOLL_PIN via pin_user_pages_remote()
+  drm/via: set FOLL_PIN via pin_user_pages_fast()
+  fs/io_uring: set FOLL_PIN via pin_user_pages()
+  net/xdp: set FOLL_PIN via pin_user_pages()
+  media/v4l2-core: set pages dirty upon releasing DMA buffers
+  media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page()
+    conversion
+  vfio, mm: pin_user_pages (FOLL_PIN) and put_user_page() conversion
+  powerpc: book3s64: convert to pin_user_pages() and put_user_page()
+  mm/gup_benchmark: use proper FOLL_WRITE flags instead of hard-coding
+    "1"
+  mm, tree-wide: rename put_user_page*() to unpin_user_page*()
+  mm/gup: pass flags arg to __gup_device_* functions
+  mm/gup: track FOLL_PIN pages
+  mm/gup_benchmark: support pin_user_pages() and related calls
+  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
+    coverage
+
+ Documentation/core-api/index.rst            |   1 +
+ Documentation/core-api/pin_user_pages.rst   | 233 ++++++++
+ arch/powerpc/mm/book3s64/iommu_api.c        |  12 +-
+ drivers/gpu/drm/via/via_dmablit.c           |   6 +-
+ drivers/infiniband/core/umem.c              |  19 +-
+ drivers/infiniband/core/umem_odp.c          |  13 +-
+ drivers/infiniband/hw/hfi1/user_pages.c     |   4 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.c |   8 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c  |   4 +-
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |   8 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |   4 +-
+ drivers/infiniband/sw/siw/siw_mem.c         |   4 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c   |   8 +-
+ drivers/nvdimm/pmem.c                       |   6 -
+ drivers/platform/goldfish/goldfish_pipe.c   |  35 +-
+ drivers/vfio/vfio_iommu_type1.c             |  35 +-
+ fs/io_uring.c                               |   6 +-
+ include/linux/mm.h                          | 145 ++++-
+ include/linux/mmzone.h                      |   2 +
+ include/linux/page_ref.h                    |  10 +
+ mm/gup.c                                    | 595 +++++++++++++++-----
+ mm/gup_benchmark.c                          |  74 ++-
+ mm/huge_memory.c                            |  23 +-
+ mm/hugetlb.c                                |  15 +-
+ mm/memremap.c                               |  76 ++-
+ mm/process_vm_access.c                      |  28 +-
+ mm/swap.c                                   |  24 +
+ mm/vmstat.c                                 |   2 +
+ net/xdp/xdp_umem.c                          |   4 +-
+ tools/testing/selftests/vm/gup_benchmark.c  |  21 +-
+ tools/testing/selftests/vm/run_vmtests      |  22 +
+ 31 files changed, 1093 insertions(+), 354 deletions(-)
+ create mode 100644 Documentation/core-api/pin_user_pages.rst
+
+--=20
+2.24.0
 
