@@ -2,190 +2,144 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E4C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1623DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED166214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD30C2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="L/h6M840"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cHa1zJrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLIL0a (ORCPT
+        id S1727542AbfLIL0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:26:30 -0500
-Received: from mail-bn7nam10on2053.outbound.protection.outlook.com ([40.107.92.53]:36064
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726297AbfLIL03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:26:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KylRiIV7tE5JBKbkxk7tgGbB327tpEQOIj8bSDwgeVBbC0SmVldk5pXmuM4VpDfn+bD5gMMCNNPqQMij7fGaDIB8VXa7I8h7pBfWY7NkinJ1dR3jaKM/3bbkxE/Il6kdLGpSml2VSwuf38+juB4kwEbfBn5VYKbp+gUGkBdXFPag26Aqxvm9F1MN5M8tWyPu+0RQadfqTOwmy0WQYRc0b5a4Vl8dxFSiklhiMpfvWHsDEJT+7CKrS7E59OYTLd1dZdic6THzsKKulaaZ4T3N7cuwRoRkAyY7xRmyCBrrYBRP64HBt81BvujRZ6A5RIG1OK2ruLIcBr29rF5mcCq76A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZnzEye4mDUndjZtkD5HwLujVqlcczl4F5lMO8haL74=;
- b=TCporg3uK9f+o7UQY7EeqKRazEOrgynbdzwBIB5QiL5RxWoUGG4u95iU8Bs0xQ+j8s8KDUs5DAAfc6yl7SDHN5gegX2Sxn3pyKvjCvIXT01uWmPvW1Y0sYv2hwjSjPrv5uujU4T6FlivmpBDKbVnpNiCEx8a8/q3VhZsTtYN1CuLVlbZGIFtKi0MlKoa7a3o5XxEG4W9UXxCq/sfgOAochnsidvtEPpiUhg+22yg/roYdzdzXC4s4MfeNAU5XCnGKbpa57r1gddOdV2yg7Z/QVay5CfJvRIvqQTfGpxJlASxBJfMAx7pozJHlYuSJOm44siLfC302be1oJOYWB2Mbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZnzEye4mDUndjZtkD5HwLujVqlcczl4F5lMO8haL74=;
- b=L/h6M840lM2Vo4X1J2P1tHyd6Ui4BE991y2h7joXbUtfVklOvmrAVUO/BP0Sk2IOvKZrbZCA/Sz6B56McU2WxQqYt/E82Z4VypTEH+5O9ErTKuoKoY4Wxkk1rYWsI0VlObjyIqPXhaKtq+JETkyW8SO7UtHWglRBxsDVGmRilJQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3894.namprd13.prod.outlook.com (20.180.12.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.4; Mon, 9 Dec 2019 11:25:47 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2538.012; Mon, 9 Dec 2019
- 11:25:47 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
-Cc:     palmer@dabbelt.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com,
-        allison@lohutok.net, alexios.zavras@intel.com, atish.patra@wdc.com,
-        tglx@linutronix.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 2/2] riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
-Date:   Mon,  9 Dec 2019 16:55:06 +0530
-Message-Id: <1575890706-36162-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
-References: <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16)
- To CH2PR13MB3368.namprd13.prod.outlook.com (2603:10b6:610:2c::26)
+        Mon, 9 Dec 2019 06:26:34 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60494 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfLIL0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=akxLL3oKZDIODtU4VaGq10g2omBsTahFa+R881Y8Vxk=; b=cHa1zJrSDM8jCsFEqJZZS1zc9
+        fSSyVrt5QBMYMHprM3+HcLnRmCAABT6+Lz++QkBu3MonINXQ5f1jdK8WG5xdelxgRzfSXzkEcxDNA
+        ZxbIb3Dh+c991zK3J46SFKMLWndRpDSYrqclEbKYGyfu43TWzrTfx8okAu/S9xBN9qh5Sps1w58zT
+        y7zTr94vM2V53ApHnYW5ikyTm1/CSbg8bjAbVPzfGsjhHc1w5VlHSPn/BoNyACBPj/Ns19+orGzym
+        GNQRlaXLITgJ0vjrhkMGGKjhj5HB9JeOR4X6FyiVTyoaQtpUgGJsmDTykiRIKxHFOKaaywN0jjK+T
+        puBIc4uMQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50572)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ieHBF-0002dl-Ab; Mon, 09 Dec 2019 11:26:21 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ieHB9-0003aj-GO; Mon, 09 Dec 2019 11:26:15 +0000
+Date:   Mon, 9 Dec 2019 11:26:15 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Milind Parab <mparab@cadence.com>
+Cc:     nicolas.nerre@microchip.com, andrew@lunn.ch,
+        antoine.tenart@bootlin.com, f.fainelli@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, dkangude@cadence.com,
+        a.fatoum@pengutronix.de, brad.mouring@ni.com, pthombar@cadence.com
+Subject: Re: [PATCH 1/3] net: macb: fix for fixed-link mode
+Message-ID: <20191209112615.GE25745@shell.armlinux.org.uk>
+References: <1575890033-23846-1-git-send-email-mparab@cadence.com>
+ <1575890061-24250-1-git-send-email-mparab@cadence.com>
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 9 Dec 2019 11:25:43 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [114.143.65.226]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: af14bfad-b06f-4412-fc9a-08d77c9a89cd
-X-MS-TrafficTypeDiagnostic: CH2PR13MB3894:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB389476550D77DA3C015758758C580@CH2PR13MB3894.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 02462830BE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(396003)(39850400004)(136003)(189003)(199004)(6636002)(81166006)(6506007)(81156014)(6666004)(1006002)(6486002)(7416002)(44832011)(305945005)(316002)(478600001)(2906002)(26005)(2616005)(956004)(16526019)(186003)(52116002)(8676002)(4326008)(8936002)(86362001)(66946007)(107886003)(6512007)(5660300002)(36756003)(66556008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3894;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VXZxdTve3fcLLFVlt4G6qqAapD9CzZclPwfYaSCVMA6Gfer4jgpxgcyuBjS645EcG2AkMeXBRwajBXceqWBVbl8Jge+1b0Sm8R/E07Mbcc3GCPlHk194X2qFBh8rssDyWgJJzLVjwUPNPngi6DrMNJxateGWsEvS1ejpT5969UvdASPfk3dyYlEH1OiRXl0z4X4t4CpFg1bku4TMM1Is3tkUl64/oJIHWfTTuu9TkM86OYHsCTw6CX75cGRJh2o3ijWUMDEq9RbGh0siRISgXuNYi7cMqvaXjhDuSgkM/HjFdK1TKgI+DYBYBQSWEHFDI+B5K6h8KesdDmMJR2cygzrh7OiEwbHx8rgfiymzHqYrTvNiD4RLdv9zx/P8UrnplexJt5tRhzS57mRRNL9ULEvholQa4v/0OXOky3v6gM+lW1x3+e8n55ZBzg62wMqF
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af14bfad-b06f-4412-fc9a-08d77c9a89cd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 11:25:47.6709
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SDpdVQEJBs0L3iN6sADQRrCKkV7ztpdb/rEA0pChLybypMU3+WOo3CDSTSZwGJqj7OliWfdZRwwrtsBpIX26PA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3894
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575890061-24250-1-git-send-email-mparab@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to determine the number of L2 cache ways enabled at runtime,
-implement a private attribute using cache_get_priv_group() in cacheinfo
-framework. Reading this attribute ("number_of_ways_enabled") will return
-the number of enabled L2 cache ways at runtime.
+On Mon, Dec 09, 2019 at 11:14:21AM +0000, Milind Parab wrote:
+> This patch fix the issue with fixed link. With fixed-link
+> device opening fails due to macb_phylink_connect not
+> handling fixed-link mode, in which case no MAC-PHY connection
+> is needed and phylink_connect return success (0), however
+> in current driver attempt is made to search and connect to
+> PHY even for fixed-link.
+> 
+> Signed-off-by: Milind Parab <mparab@cadence.com>
+> ---
+>  drivers/net/ethernet/cadence/macb_main.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index 9c767ee252ac..6b68ef34ab19 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -615,17 +615,13 @@ static int macb_phylink_connect(struct macb *bp)
+>  {
+>  	struct net_device *dev = bp->dev;
+>  	struct phy_device *phydev;
+> +	struct device_node *dn = bp->pdev->dev.of_node;
+>  	int ret;
+>  
+> -	if (bp->pdev->dev.of_node &&
+> -	    of_parse_phandle(bp->pdev->dev.of_node, "phy-handle", 0)) {
+> -		ret = phylink_of_phy_connect(bp->phylink, bp->pdev->dev.of_node,
+> -					     0);
+> -		if (ret) {
+> -			netdev_err(dev, "Could not attach PHY (%d)\n", ret);
+> -			return ret;
+> -		}
+> -	} else {
+> +	if (dn)
+> +		ret = phylink_of_phy_connect(bp->phylink, dn, 0);
+> +
+> +	if (!dn || (ret && !of_parse_phandle(dn, "phy-handle", 0))) {
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
- arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
- drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
- 3 files changed, 38 insertions(+)
+Hi,
 
-diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-index 04f6748..217a42f 100644
---- a/arch/riscv/include/asm/sifive_l2_cache.h
-+++ b/arch/riscv/include/asm/sifive_l2_cache.h
-@@ -10,6 +10,8 @@
- extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
- extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
- 
-+int sifive_l2_largest_wayenabled(void);
-+
- #define SIFIVE_L2_ERR_TYPE_CE 0
- #define SIFIVE_L2_ERR_TYPE_UE 1
- 
-diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-index 4c90c07..29bdb21 100644
---- a/arch/riscv/kernel/cacheinfo.c
-+++ b/arch/riscv/kernel/cacheinfo.c
-@@ -7,6 +7,7 @@
- #include <linux/cpu.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <asm/sifive_l2_cache.h>
- 
- static void ci_leaf_init(struct cacheinfo *this_leaf,
- 			 struct device_node *node,
-@@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
- 	this_leaf->type = type;
- }
- 
-+#ifdef CONFIG_SIFIVE_L2
-+static ssize_t number_of_ways_enabled_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
-+}
-+
-+static DEVICE_ATTR_RO(number_of_ways_enabled);
-+
-+static struct attribute *priv_attrs[] = {
-+	&dev_attr_number_of_ways_enabled.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group priv_attr_group = {
-+	.attrs = priv_attrs,
-+};
-+
-+const struct attribute_group *
-+cache_get_priv_group(struct cacheinfo *this_leaf)
-+{
-+	/* We want to use private group for L2 cache only */
-+	if (this_leaf->level == 2)
-+		return &priv_attr_group;
-+	else
-+		return NULL;
-+}
-+#endif /* CONFIG_SIFIVE_L2 */
-+
- static int __init_cache_level(unsigned int cpu)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
-index a9ffff3..f1a5f2c 100644
---- a/drivers/soc/sifive/sifive_l2_cache.c
-+++ b/drivers/soc/sifive/sifive_l2_cache.c
-@@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
- 
-+int sifive_l2_largest_wayenabled(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_WAYENABLE);
-+}
-+
- static irqreturn_t l2_int_handler(int irq, void *device)
- {
- 	unsigned int add_h, add_l;
+If of_parse_phandle() returns non-null, the device_node it returns will
+have its reference count increased by one.  That reference needs to be
+put.
+
+I assume you're trying to determine whether phylink_of_phy_connect()
+failed because of a missing phy-handle rather than of_phy_attach()
+failing?  Maybe those two failures ought to be distinguished by errno
+return value?
+
+of_phy_attach() may fail due to of_phy_find_device() failing to find
+the PHY, or phy_attach_direct() failing.  We could switch from using
+of_phy_attach(), to using of_phy_find_device() directly so we can then
+propagate phy_attach_direct()'s error code back, rather than losing it.
+That would then leave the case of of_phy_find_device() failure to be
+considered in terms of errno return value.
+
+>  		phydev = phy_find_first(bp->mii_bus);
+>  		if (!phydev) {
+>  			netdev_err(dev, "no PHY found\n");
+> @@ -638,6 +634,9 @@ static int macb_phylink_connect(struct macb *bp)
+>  			netdev_err(dev, "Could not attach to PHY (%d)\n", ret);
+>  			return ret;
+>  		}
+> +	} else if (ret) {
+> +		netdev_err(dev, "Could not attach PHY (%d)\n", ret);
+> +		return ret;
+>  	}
+>  
+>  	phylink_start(bp->phylink);
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-2.7.4
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
