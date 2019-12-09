@@ -2,227 +2,201 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E832FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30215C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBBB205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:04:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X46QNUSA"
+	by mail.kernel.org (Postfix) with ESMTP id 0344E20692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLIVE0 (ORCPT
+        id S1726605AbfLIVGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:04:26 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43979 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfLIVE0 (ORCPT
+        Mon, 9 Dec 2019 16:06:53 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50453 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIVGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:04:26 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so13502614oth.10
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:04:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pGb2jQwRPhzwodYrTfgDTOY1jH/OdtdmucALKLbjZgQ=;
-        b=X46QNUSAMf2aCBnyDWqbXjy0zSk83BHGnvoyov1rRrVk0vQXrGHufQbP1NI6RddmLr
-         onKh01djZe3Nz5hWeNNXiJU3tVDJQmg362U3b8N2PNJpU6mAayyHlqD/yLfwh6TOgdO6
-         yCdOY26RKfJzZOJS+y1szy9KKmDv5YH5zVHEI8+3V4LxgLSepewO4gSGHZBW2r0uuXBW
-         XtCxVg2LKHSaXBR+OaKMf4fISAV4uY6cOQwNAL0sFMhBAzSmnrW+GEhVGL35o5lmzxpb
-         h7RB9cCnyBxaU2zbzFwtFHXj/cqlM3FQdL6//vhmqqQHcy8aAcDlPW669BzbGHl3O4hK
-         /y3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pGb2jQwRPhzwodYrTfgDTOY1jH/OdtdmucALKLbjZgQ=;
-        b=UhLSw0sU16opRmfwlVRd+426kxvF8XDyhanDeCVT6OYsGI73JYpRCnwTfBYfebkG2/
-         CFM4C4+aQDt0PEjLjCPxb6gKqi5JxYZpNG3ZcGtlk9hdej8MKMIPHgLxpJ07c584p16O
-         a+jIyvkgQ58sTZIfRJCsBkX6M7MvICsGRUYfe6QEV1FgCjCoRD8RtXkD5HwIX6GKznlU
-         TUY1qkE4RSgmj9V8JXOjYHFOxUxeolrRIDI3Bj3n9n+ihrcCdCVou6xjNRkdNUND4tum
-         Uwqa/4PWo6+w5ddaoh+Qcb68wwvfxJ8Jez9hdvBec/rw/H/Q49Z+bOvOUwA1BIBlTJiR
-         lYRA==
-X-Gm-Message-State: APjAAAU6DuQQyQBbNj6AnYfYd6Xg9JwSAC//jVLLtlVspF7rSR8T1kMl
-        QK+iHAypfHDmxyboa6YlSaE=
-X-Google-Smtp-Source: APXvYqy1kxOeUTOltHpl9zsNhkVn6zALXx1nG5J+7EfQ1UHlBkS4TV07pDkLNQ/6tQo0iDTasnP04Q==
-X-Received: by 2002:a9d:798e:: with SMTP id h14mr22513469otm.257.1575925464850;
-        Mon, 09 Dec 2019 13:04:24 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id b206sm464959oif.30.2019.12.09.13.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 13:04:24 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
-Date:   Mon,  9 Dec 2019 14:03:29 -0700
-Message-Id: <20191209210328.18866-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191209205010.4115-1-natechancellor@gmail.com>
-References: <20191209205010.4115-1-natechancellor@gmail.com>
+        Mon, 9 Dec 2019 16:06:52 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1ieQEw-0003IL-Sc; Mon, 09 Dec 2019 22:06:46 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id DAE6148C309;
+        Mon,  9 Dec 2019 21:06:45 +0000 (UTC)
+Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+To:     Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20191204175112.7308-1-dmurphy@ti.com>
+ <20191204175112.7308-2-dmurphy@ti.com>
+ <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
+ <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+ <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+ <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
+Date:   Mon, 9 Dec 2019 22:06:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="qysqqwlioj7jMLPUF8owRfsrQmF1Y7tcU"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--qysqqwlioj7jMLPUF8owRfsrQmF1Y7tcU
+Content-Type: multipart/mixed; boundary="OVM2iTg6o7PLxhTFgsGZyv8P50q7QxeHW";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-ID: <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
+Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+References: <20191204175112.7308-1-dmurphy@ti.com>
+ <20191204175112.7308-2-dmurphy@ti.com>
+ <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
+ <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+ <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+ <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
+In-Reply-To: <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
 
-../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        while (!ret) {
-        ^
-../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
-statement is here
-        if (column + thislen > writesize)
-        ^
-1 warning generated.
+--OVM2iTg6o7PLxhTFgsGZyv8P50q7QxeHW
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-This warning occurs because there is a space before the tab of the while
-loop. There are spaces at the beginning of a lot of the lines in this
-block, remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+On 12/9/19 10:01 PM, Dan Murphy wrote:
+>>>> I would add tcan4x5x to the subject of this patch ->
+>>>> "net: m_can: tcan4x5x Make wake-up gpio an optional"
+>>>>
+>>> Do you want me to submit v2 with the $subject change?
+>>>
+>>> Or would you fix it up when committing it?
+>> I'll change the subject while applying.
+>>
+>> Dan, what about maintainerchip of the tcan4x5?
+>=20
+> Do you know when you will be applying these?
 
-Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
-Link: https://github.com/ClangBuiltLinux/linux/issues/794
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+The patch is already upstream. See linux-can/mater:
 
-v1 -> v2:
+https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/log/
 
-* Clean up the block before the one that warns, which was added as part
-  of the fixes commit (Nick). 
+https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/commit/=
+?id=3D2de497356955ce58cd066fb03d2da5235f3c7c23
 
- drivers/mtd/nand/onenand/onenand_base.c | 80 ++++++++++++-------------
- 1 file changed, 40 insertions(+), 40 deletions(-)
+> I have 2 patches I need to put on top.
 
-diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
-index 77bd32a683e1..13c69eb021a6 100644
---- a/drivers/mtd/nand/onenand/onenand_base.c
-+++ b/drivers/mtd/nand/onenand/onenand_base.c
-@@ -1248,44 +1248,44 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
- 
- 	stats = mtd->ecc_stats;
- 
-- 	/* Read-while-load method */
-+	/* Read-while-load method */
- 
-- 	/* Do first load to bufferRAM */
-- 	if (read < len) {
-- 		if (!onenand_check_bufferram(mtd, from)) {
-+	/* Do first load to bufferRAM */
-+	if (read < len) {
-+		if (!onenand_check_bufferram(mtd, from)) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			ret = this->wait(mtd, FL_READING);
-- 			onenand_update_bufferram(mtd, from, !ret);
-+			ret = this->wait(mtd, FL_READING);
-+			onenand_update_bufferram(mtd, from, !ret);
- 			if (mtd_is_eccerr(ret))
- 				ret = 0;
-- 		}
-- 	}
-+		}
-+	}
- 
- 	thislen = min_t(int, writesize, len - read);
- 	column = from & (writesize - 1);
- 	if (column + thislen > writesize)
- 		thislen = writesize - column;
- 
-- 	while (!ret) {
-- 		/* If there is more to load then start next load */
-- 		from += thislen;
-- 		if (read + thislen < len) {
-+	while (!ret) {
-+		/* If there is more to load then start next load */
-+		from += thislen;
-+		if (read + thislen < len) {
- 			this->command(mtd, ONENAND_CMD_READ, from, writesize);
-- 			/*
-- 			 * Chip boundary handling in DDP
-- 			 * Now we issued chip 1 read and pointed chip 1
-+			/*
-+			 * Chip boundary handling in DDP
-+			 * Now we issued chip 1 read and pointed chip 1
- 			 * bufferram so we have to point chip 0 bufferram.
-- 			 */
-- 			if (ONENAND_IS_DDP(this) &&
-- 			    unlikely(from == (this->chipsize >> 1))) {
-- 				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-- 				boundary = 1;
-- 			} else
-- 				boundary = 0;
-- 			ONENAND_SET_PREV_BUFFERRAM(this);
-- 		}
-- 		/* While load is going, read from last bufferRAM */
-- 		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
-+			 */
-+			if (ONENAND_IS_DDP(this) &&
-+			    unlikely(from == (this->chipsize >> 1))) {
-+				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
-+				boundary = 1;
-+			} else
-+				boundary = 0;
-+			ONENAND_SET_PREV_BUFFERRAM(this);
-+		}
-+		/* While load is going, read from last bufferRAM */
-+		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
- 
- 		/* Read oob area if needed */
- 		if (oobbuf) {
-@@ -1302,23 +1302,23 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
- 		}
- 
-  		/* See if we are done */
-- 		read += thislen;
-- 		if (read == len)
-- 			break;
-- 		/* Set up for next read from bufferRAM */
-- 		if (unlikely(boundary))
-- 			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-- 		ONENAND_SET_NEXT_BUFFERRAM(this);
-- 		buf += thislen;
-+		read += thislen;
-+		if (read == len)
-+			break;
-+		/* Set up for next read from bufferRAM */
-+		if (unlikely(boundary))
-+			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
-+		ONENAND_SET_NEXT_BUFFERRAM(this);
-+		buf += thislen;
- 		thislen = min_t(int, writesize, len - read);
-- 		column = 0;
-- 		cond_resched();
-- 		/* Now wait for load */
-- 		ret = this->wait(mtd, FL_READING);
-- 		onenand_update_bufferram(mtd, from, !ret);
-+		column = 0;
-+		cond_resched();
-+		/* Now wait for load */
-+		ret = this->wait(mtd, FL_READING);
-+		onenand_update_bufferram(mtd, from, !ret);
- 		if (mtd_is_eccerr(ret))
- 			ret = 0;
-- 	}
-+	}
- 
- 	/*
- 	 * Return success, if no ECC failures, else -EBADMSG
--- 
-2.24.0
+Please post them as linux-can/master as base.
 
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--OVM2iTg6o7PLxhTFgsGZyv8P50q7QxeHW--
+
+--qysqqwlioj7jMLPUF8owRfsrQmF1Y7tcU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3ut2EACgkQWsYho5Hk
+nSA/mwf+PnpSx6nJ85whf2CchaP6BN5HAtOlBfQebV3OC/5+SHeAQP8+Lxsf0y61
+XYUKhK/GPwwxIU2KdzeANWnePnxx++p8XqK9prbzQTcS1Ve5RqHxABN8XqIR97ff
+od/frSwh4e1Dv4KVx39kEtMnVHVKFAMVdVYs+i+VMXJcsqONq4pFUmIsr5gUDL91
+c44BKIfbXuYpSN7cKH+iDPtu7IA0rkfPKT+PYv7DW8+G0KWTpg/cmuBOHnLiaM+y
+QXlwg7GLDrSloEW3IdabpIEo1/r92d0B4zUVTN2VBpephsFYliVxqJlFqUONT1u+
+Yu5QD6yFRnG3bRx1O9d+5m/ezswUdw==
+=sENz
+-----END PGP SIGNATURE-----
+
+--qysqqwlioj7jMLPUF8owRfsrQmF1Y7tcU--
