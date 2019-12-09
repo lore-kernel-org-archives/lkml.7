@@ -2,135 +2,115 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97065C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BECD20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575908202;
-	bh=l4AhqF+61Jiy/j68RJXORhPY3suI4I2IVJ52J64y4Zk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hPVbuD7KbuUTm4cDrI1eMMVL+Mxx1VPFDQQK0ZIbXTkK1k6tDJaMM6CxND1MVMSgq
-	 iDPQMCabXeGSuYU82SEXKFkpG/5GwqrlOmFLz5oK2+TkJUEXAIBdbqRt83dxm71kDo
-	 rusX+2lG1NPmHmdzwCIM+qfff4mMO5kl2kPP29fE=
+	by mail.kernel.org (Postfix) with ESMTP id 97DB320692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oKkKM8vX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLIQQl (ORCPT
+        id S1726720AbfLIQRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:16:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfLIQQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:16:41 -0500
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B251920828;
-        Mon,  9 Dec 2019 16:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575908199;
-        bh=l4AhqF+61Jiy/j68RJXORhPY3suI4I2IVJ52J64y4Zk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0wDWFAoulgr5XplI38skCakA+bNiEcj2Wxof1qA3rXeM9rIeY4K0yEcqH3yvjr05P
-         QIGUWPh6AIJCl7capcigI94Qpb2MYx7Ja+ANKu/yNtAKWaChuWo/kjXO4LCf5i+dRa
-         XHkcsS0d1WFvuMnWFd56LGf7qF4UGCmZm6SHt7lg=
-Received: by mail-qk1-f180.google.com with SMTP id v23so13563567qkg.2;
-        Mon, 09 Dec 2019 08:16:39 -0800 (PST)
-X-Gm-Message-State: APjAAAXIAKnW6A0hfaI7t6Vh7HPGUTtMSOfFxMYyg+r5j7Ny+cAqXnz7
-        IZAA+SUip30trvJbj/39EdOrnC+EgoPZ8doxng==
-X-Google-Smtp-Source: APXvYqzm+y1a+nHLIKKviHPGNroxVtdzzfAl0KJk/UiMX5C7PNHWL6f86VHVl/ycQZQyz1jGTdzQuSJozTV+lWFQMio=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr28125112qkd.223.1575908198803;
- Mon, 09 Dec 2019 08:16:38 -0800 (PST)
+        Mon, 9 Dec 2019 11:17:02 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59974 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQRC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:17:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yTSggCUrDnLDOq0j19tc29s50NlGdHpCrc0hkMGDCws=; b=oKkKM8vX6ltfuE7C/RHqu7s45
+        2R0H1nP6XZlEUXWu6zUV/lka8GDXccwYSLYAaJ+Xm5Z4iAG21GtfyFXkw2NfuHmzWFkHeYQtnb0k/
+        KjRBKIjY/BLVVhrv7d5owpPEXe8TZ0Wg0KQRQDWwxIVWBF+T3J1yfN3mObxnnPmXEG4vpox1X5TFN
+        Ly4v6yA2jH9xJ6H1bi3XIizSM1XM8fhCIiiuK/yhAqG4AbrLv7CNWqYgfwP4MDtxgT1ic4SshlbY5
+        rESHN3OhCjLLALp+9JWgc60UrBAyHS4mFCjGNO9gztcEPk7R5f+r0pWo8waFclQJMjkfqMoRpFi6f
+        WSZIIreKA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ieLi3-0003jH-0b; Mon, 09 Dec 2019 16:16:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7748430025A;
+        Mon,  9 Dec 2019 17:15:08 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 84C8928719325; Mon,  9 Dec 2019 17:16:27 +0100 (CET)
+Date:   Mon, 9 Dec 2019 17:16:27 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Peng Wang <rocking@linux.alibaba.com>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] schied/fair: Skip updating "contrib" without load
+Message-ID: <20191209161627.GJ2810@hirez.programming.kicks-ass.net>
+References: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20191205002503.13088-1-masneyb@onstation.org> <20191205002503.13088-5-masneyb@onstation.org>
- <CAL_Jsq+jpz6_N18sChREC_xGYt9sSFZFtWr3omb_6o7+MFxuHg@mail.gmail.com> <20191209005436.GA13647@onstation.org>
-In-Reply-To: <20191209005436.GA13647@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 9 Dec 2019 10:16:26 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
-Message-ID: <CAL_JsqJ2v1fL7gkAg7C3GjokV7WD87S3P5HCwi-ZJ7EOjds8Pw@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575648862-12095-1-git-send-email-rocking@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 6:54 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Thu, Dec 05, 2019 at 07:56:10AM -0600, Rob Herring wrote:
-> > On Wed, Dec 4, 2019 at 6:25 PM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > Add support for clock-based vibrator devices where the speed can be
-> > > controlled by changing the duty cycle.
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  .../bindings/input/clk-vibrator.yaml          | 60 +++++++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/input/clk-vibrator.yaml b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > > new file mode 100644
-> > > index 000000000000..2103a5694fad
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/clk-vibrator.yaml
-> > > @@ -0,0 +1,60 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/bindings/input/clk-vibrator.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Clock vibrator
-> > > +
-> > > +maintainers:
-> > > +  - Brian Masney <masneyb@onstation.org>
-> > > +
-> > > +description: |
-> > > +  Support for clock-based vibrator devices where the speed can be controlled
-> > > +  by changing the duty cycle.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: clk-vibrator
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +
-> > > +  clock-names:
-> > > +    description: output clock that controls the speed
-> > > +    items:
-> > > +      - const: core
-> >
-> > No point in making up a name when there's only one clock, so drop.
->
-> OK, will do.
->
-> >
-> > > +
-> > > +  clock-frequency: true
-> >
-> > Given the frequency is variable, what does this mean in this case?
->
-> The clock frequency is fixed. The duty cycle is what's variable.
+On Sat, Dec 07, 2019 at 12:14:22AM +0800, Peng Wang wrote:
+> We only update load_sum/runnable_load_sum/util_sum with
+> decayed old sum when load is clear.
 
-That sounds like a PWM then...
+What you're saying is that because of the:
 
-Rob
+	if (!load)
+		runnable = running = 0;
+
+clause in ___update_load_sum(), all the actual users of @contrib in
+accumulate_sum():
+
+	if (load)
+		sa->load_sum += load * contrib;
+	if (runnable)
+		sa->runnable_load_sum += runnable * contrib;
+	if (running)
+		sa->util_sum += contrib << SCHED_CAPACITY_SHIFT;
+
+don't happen, and therefore we don't care what @contrib actually is and
+calculating it is pointless.
+
+I suppose that is so. did you happen to have performance numbers? Also,
+I'm thinking this wants a comment.
+
+> Signed-off-by: Peng Wang <rocking@linux.alibaba.com>
+> ---
+>  kernel/sched/pelt.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index a96db50..4392953 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -129,8 +129,9 @@ static u32 __accumulate_pelt_segments(u64 periods, u32 d1, u32 d3)
+>  		 * Step 2
+>  		 */
+>  		delta %= 1024;
+> -		contrib = __accumulate_pelt_segments(periods,
+> -				1024 - sa->period_contrib, delta);
+> +		if (load)
+> +			contrib = __accumulate_pelt_segments(periods,
+> +					1024 - sa->period_contrib, delta);
+>  	}
+>  	sa->period_contrib = delta;
+>  
+> -- 
+> 1.8.3.1
+> 
