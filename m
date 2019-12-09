@@ -2,176 +2,195 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3432EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703D2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0118D206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3341C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575917951;
-	bh=ywzw/kfFxKX8avo/qkAzyXsiS36U4avwxr44yjfIoqw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=I1ecu47FUUgdaHSIhcT6qlWR+RcxDCYf5IXrilOEettDD4R9Xhbd3v0JSMwgV6Oil
-	 ZK0I3y/PN1tUBxWLE//iBj1iTAxM8vbW9piYZACXDXrL1l/h/ZI7q3efzG4V3bUA97
-	 oRCTYUO5DundBXMT3NZi04+44NaBy/D/mY2PN3Ik=
+	s=default; t=1575917957;
+	bh=7ajHhqLPRSdhijGUTDGrfPaimYZfeDzD4uktbE6S/BI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=V6B4hbr9832FKlznm42mwOTD0Ob1FXwCuEt8WyM3Ps3xTLkEmmLnw4ZEW4VG0f5sl
+	 pidvHbcn/wHaRI9TsHKZdquqIo1vHK3tHG1CoY0zZOts28BuzLsh4zfBPJTT9zOcGP
+	 HcmWGy5dtY6t/3gxR2PRdt71ajzuR5PgKFyEHy6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbfLIS7J (ORCPT
+        id S1726818AbfLIS7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:59:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:42294 "EHLO foss.arm.com"
+        Mon, 9 Dec 2019 13:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfLIS7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:59:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B4B311D4;
-        Mon,  9 Dec 2019 10:59:08 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B7B63F6CF;
-        Mon,  9 Dec 2019 10:59:07 -0800 (PST)
-Date:   Mon, 09 Dec 2019 18:59:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: hdmi-codec: re-introduce mutex locking again" to the asoc tree
-In-Reply-To: <20191206103542.485224-1-jbrunet@baylibre.com>
-Message-Id: <applied-20191206103542.485224-1-jbrunet@baylibre.com>
-X-Patchwork-Hint: ignore
+        id S1726602AbfLIS7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:59:10 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75DF4205C9;
+        Mon,  9 Dec 2019 18:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575917949;
+        bh=7ajHhqLPRSdhijGUTDGrfPaimYZfeDzD4uktbE6S/BI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PCXMJjPxKyI6EGqlYmAB0QWzvgOt7Uwl8SJqbKiC3aPvMYqPrN3IjC1KVBhmlPw5y
+         RAEzCQIiVc8PCkmIajEDA+xudwyx1+jGf/yNHsD4OAowqLXzUcq6PJbnuUMc+WSokd
+         lIz5ItX0BqESfTxcRNGHU3ZZ4j8ALyDZVaKhrOh4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 023343522769; Mon,  9 Dec 2019 10:59:08 -0800 (PST)
+Date:   Mon, 9 Dec 2019 10:59:08 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191209185908.GA8470@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191129155850.GA17002@paulmck-ThinkPad-P72>
+ <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+ <20191204201150.GA14040@paulmck-ThinkPad-P72>
+ <20191205102928.GG2810@hirez.programming.kicks-ass.net>
+ <20191205103213.GB2871@hirez.programming.kicks-ass.net>
+ <20191205144805.GR2889@paulmck-ThinkPad-P72>
+ <20191206185208.GA25636@paulmck-ThinkPad-P72>
+ <20191206220020.GA27511@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206220020.GA27511@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Fri, Dec 06, 2019 at 02:00:20PM -0800, Paul E. McKenney wrote:
+> On Fri, Dec 06, 2019 at 10:52:08AM -0800, Paul E. McKenney wrote:
+> > On Thu, Dec 05, 2019 at 06:48:05AM -0800, Paul E. McKenney wrote:
+> > > On Thu, Dec 05, 2019 at 11:32:13AM +0100, Peter Zijlstra wrote:
+> > > > On Thu, Dec 05, 2019 at 11:29:28AM +0100, Peter Zijlstra wrote:
+> > > > > On Wed, Dec 04, 2019 at 12:11:50PM -0800, Paul E. McKenney wrote:
+> > > > > 
+> > > > > > And the good news is that I didn't see the workqueue splat, though my
+> > > > > > best guess is that I had about a 13% chance of not seeing it due to
+> > > > > > random chance (and I am currently trying an idea that I hope will make
+> > > > > > it more probable).  But I did get a couple of new complaints about RCU
+> > > > > > being used illegally from an offline CPU.  Splats below.
+> > > > > 
+> > > > > Shiny!
+> > > 
+> > > And my attempt to speed things up did succeed, but the success was limited
+> > > to finding more places where rcutorture chokes on CPUs being slow to boot.
+> > > Fixing those and trying again...
+> > 
+> > And I finally did manage to get a clean run.  There are probably a few
+> > more things that a large slow-booting hyperthreaded system can do to
+> > confuse rcutorture, but it is at least down to a dull roar.
+> > 
+> > > > > > Your patch did rearrange the CPU-online sequence, so let's see if I
+> > > > > > can piece things together...
+> > > > > > 
+> > > > > > RCU considers a CPU to be online at rcu_cpu_starting() time.  This is
+> > > > > > called from notify_cpu_starting(), which is called from the arch-specific
+> > > > > > CPU-bringup code.  Any RCU readers before rcu_cpu_starting() will trigger
+> > > > > > the warning I am seeing.
+> > > > > 
+> > > > > Right.
+> > > > > 
+> > > > > > The original location of the stop_machine_unpark() was in
+> > > > > > bringup_wait_for_ap(), which is called from bringup_cpu(), which is in
+> > > > > > the CPUHP_BRINGUP_CPU entry of cpuhp_hp_states[].  Which, if I am not
+> > > > > > too confused, is invoked by some CPU other than the to-be-incoming CPU.
+> > > > > 
+> > > > > Correct.
+> > > > > 
+> > > > > > The new location of the stop_machine_unpark() is in cpuhp_online_idle(),
+> > > > > > which is called from cpu_startup_entry(), which is invoked from
+> > > > > > the arch-specific bringup code that runs on the incoming CPU.
+> > > > > 
+> > > > > The new place is the final piece of bringup, it is right before where
+> > > > > the freshly woken CPU will drop into the idle loop and start scheduling
+> > > > > (for the first time).
+> > > > > 
+> > > > > > Which
+> > > > > > is the same code that invokes notify_cpu_starting(), so we need
+> > > > > > notify_cpu_starting() to be invoked before cpu_startup_entry().
+> > > > > 
+> > > > > Right, that is right before we run what used to be the CPU_STARTING
+> > > > > notifiers. This is in fact (on x86) before the CPU is marked
+> > > > > cpu_online(). It has to be before cpu_startup_entry(), before this is
+> > > > > ran with IRQs disabled, while cpu_startup_entry() demands IRQs are
+> > > > > enabled.
+> > > > > 
+> > > > > > The order is not immediately obvious on IA64.  But it looks like
+> > > > > > everything else does it in the required order, so I am a bit confused
+> > > > > > about this.
+> > > > > 
+> > > > > That makes two of us, afaict we have RCU up and running when we get to
+> > > > > the idle loop.
+> > > > 
+> > > > Or did we need rcutree_online_cpu() to have ran? Because that is ran
+> > > > much later than this...
+> > > 
+> > > No, rcu_cpu_starting() does the trick.  So I remain confused.
+> > > 
+> > > My thought is to add some printk()s or tracing to rcu_cpu_starting()
+> > > and its counterpart, rcu_report_dead().  But is there a better way?
+> > 
+> > And the answer is...
+> > 
+> > This splat happens even without your fix!
+> > 
+> > Which goes a long way to explaining why neither of us could figure out
+> > how your fix could have caused it.  It apparently was the increased
+> > stress required to reproduce quickly rather than your fix that made it
+> > happen more frequently.  Though there are few enough occurrences that
+> > it might just be random chance.
+> > 
+> > Thoughts?
+> 
+> I now have 12 of these, and my best guess is that this is happening
+> from kvm_guest_cpu_init() when it prints "KVM setup async PF for cpu",
+> given that this message is always either the line immediately
+> following the splat or the one after that.  So let's see if I can
+> connect the dots between kvm_guest_cpu_init() and start_secondary().
+> The "? slow_virt_to_phys()" makes sense, as it is invoked by
+> kvm_guest_cpu_init() just before the suspect printk().
+> 
+> kvm_guest_cpu_init() is invoked by kvm_smp_prepare_boot_cpu(),
+> kvm_cpu_online(), and kvm_guest_init().  Since the boot CPU came
+> up long ago and since rcutorture CPU hotplug should be on the job
+> at the time of all of these splats, I am guessing kvm_cpu_online().
+> But kvm_cpu_online() is invoked by kvm_guest_init(), so all non-boot-CPU
+> roads lead to kvm_guest_init() anyway.
+> 
+> But kvm_guest_init() is an postcore_initcall() function.
+> It is also placed in x86_hyper_kvm.init.guest_late_init().
+> The postcore_initcall() looks unconditional, but does not appear in
+> dmesg.  Besides which, at the time of the splat, boot is working on
+> late_initcall()s rather than postcore_initcalls().  So let's look at
+> x86_hyper_kvm.init.guest_late_init(), which is invoked in setup_arch(),
+> which is in turn invoked way early in boot, before rcu_init().
+> 
+> So neither seem to make much sense here.
+> 
+> On the other hand, rcutorture's exercising of CPU hotplug before init
+> has been spawned might not make the most sense, either.  So I will queue
+> a patch that makes rcutorture hold off on the hotplug until boot is a
+> bit further along.
+> 
+> And then hammer this a bit over the weekend, this time with Peter's
+> alleged fix.  ;-)
 
-   ASoC: hdmi-codec: re-introduce mutex locking again
+And it survived!  ;-)
 
-has been applied to the asoc tree at
+Peter, could I please have your Signed-off-by?  Or take my Tested-by if
+you would prefer to send it up some other way.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1442842952ccfe4178602c7a8459ac2ecb9d9e1a Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 6 Dec 2019 11:35:42 +0100
-Subject: [PATCH] ASoC: hdmi-codec: re-introduce mutex locking again
-
-The dai codec needs to ensure that on one dai is used at any time.
-This is currently protected by bit atomic operation. With this change,
-it done with a mutex instead.
-
-This change is not about functionality or efficiency. It is done with
-the hope that it help maintainability in the future.
-
-Suggested-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20191206103542.485224-1-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/hdmi-codec.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
-
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index f8b5b960e597..543363102d03 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -274,7 +274,8 @@ struct hdmi_codec_priv {
- 	uint8_t eld[MAX_ELD_BYTES];
- 	struct snd_pcm_chmap *chmap_info;
- 	unsigned int chmap_idx;
--	unsigned long busy;
-+	struct mutex lock;
-+	bool busy;
- 	struct snd_soc_jack *jack;
- 	unsigned int jack_status;
- };
-@@ -390,9 +391,10 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	int ret = 0;
- 
--	ret = test_and_set_bit(0, &hcp->busy);
--	if (ret) {
-+	mutex_lock(&hcp->lock);
-+	if (hcp->busy) {
- 		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
-+		mutex_unlock(&hcp->lock);
- 		return -EINVAL;
- 	}
- 
-@@ -405,21 +407,21 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 	if (hcp->hcd.ops->get_eld) {
- 		ret = hcp->hcd.ops->get_eld(dai->dev->parent, hcp->hcd.data,
- 					    hcp->eld, sizeof(hcp->eld));
-+		if (ret)
-+			goto err;
-+
-+		ret = snd_pcm_hw_constraint_eld(substream->runtime, hcp->eld);
-+		if (ret)
-+			goto err;
- 
--		if (!ret) {
--			ret = snd_pcm_hw_constraint_eld(substream->runtime,
--							hcp->eld);
--			if (ret)
--				goto err;
--		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
- 	}
--	return 0;
-+
-+	hcp->busy = true;
- 
- err:
--	/* Release the exclusive lock on error */
--	clear_bit(0, &hcp->busy);
-+	mutex_unlock(&hcp->lock);
- 	return ret;
- }
- 
-@@ -431,7 +433,9 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
- 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
- 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
- 
--	clear_bit(0, &hcp->busy);
-+	mutex_lock(&hcp->lock);
-+	hcp->busy = false;
-+	mutex_unlock(&hcp->lock);
- }
- 
- static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
-@@ -811,6 +815,8 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	hcp->hcd = *hcd;
-+	mutex_init(&hcp->lock);
-+
- 	daidrv = devm_kcalloc(dev, dai_count, sizeof(*daidrv), GFP_KERNEL);
- 	if (!daidrv)
- 		return -ENOMEM;
--- 
-2.20.1
-
+							Thanx, Paul
