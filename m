@@ -2,102 +2,79 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5261CC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70968C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CEB2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575916397;
-	bh=PzahWwtA6K6WkU342K07lvpv8VhPjHQjg5sJaUv03vk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=yPcr8N7Spc9Udmium1krIVXp9M41ruiOs43HEFqFMXcyt3Gbh3K2/Cv+t+j3gRUb0
-	 5o2/XFUMSp7olznyg6XoFauPtKQ4GbmqiQ3258s3Y8plB3Koo60zUYS68JmzzHgyCw
-	 r2wvMKM+3KKZ3SiCzL+qzZ71+1Jyre4K7h5NVFag=
+	by mail.kernel.org (Postfix) with ESMTP id 38D852077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNqP4p7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLISdP (ORCPT
+        id S1726819AbfLISdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:33:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbfLISdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:33:14 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB4742077B;
-        Mon,  9 Dec 2019 18:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575916393;
-        bh=PzahWwtA6K6WkU342K07lvpv8VhPjHQjg5sJaUv03vk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ysYVaXkQCshut8JuLNzNQJ9tT7W/P39aAhGL2xDQd8zB5xnMDtfNmSWWJK1ber59S
-         qaseNdO03e+O5jyuijIF3Vvj9xFcgXFbrao+2sjlOBXfkfRNlqlvmz1aQtt5fJepal
-         IZcv9jE+9Wsn+N4+1m3Qfp9/+TZPAch3LGqZQ6hI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 62AD43522769; Mon,  9 Dec 2019 10:33:13 -0800 (PST)
-Date:   Mon, 9 Dec 2019 10:33:13 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] rculist.h: Add list_tail_rcu()
-Message-ID: <20191209183313.GL2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191209075043.17947-1-madhuparnabhowmik04@gmail.com>
+        Mon, 9 Dec 2019 13:33:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55824 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfLISdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:33:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8zgmO8yIumpWTktN/WLnCjKv5dav9LhhmBQXS3TWUg8=; b=eNqP4p7owxWNWsbfq6onLxwlig
+        lmiOYyGS8vCUjkzr+ed5MFL4EZw8QPfltFoMQAMkTBGeglMNlCLuOkhY9HqyAN4GSkY0Vgva0cjJh
+        dmWKgQJXVQkyShp0GMPCz88nmEUCKdZIw7nghIelP7W3hYTXFI5RcPOmgPuyskrv8V8XxTaSPrVxg
+        LrdyC0smjo6V5/ylW+B1b70NTBYQWYdajHbKZGXMMJ2827jh/pnwREcdhyW7upbnOzab/uwTty5dV
+        MP3jnbgpGMQS4xifzcHuAgqGSySIt3EjNsS+HfsYY2ijlI/clx0qtibK0EJC9SjDZmwf9XRjOKTAi
+        rvapDXwg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ieNqg-0000pS-2A; Mon, 09 Dec 2019 18:33:34 +0000
+Date:   Mon, 9 Dec 2019 10:33:33 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: add support for folded p4d page tables
+Message-ID: <20191209183333.GG32169@bombadil.infradead.org>
+References: <20191209150908.6207-1-rppt@kernel.org>
+ <7f4c038d-e971-b61f-3d3a-60a5faddfc0a@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191209075043.17947-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7f4c038d-e971-b61f-3d3a-60a5faddfc0a@c-s.fr>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 01:20:43PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Mon, Dec 09, 2019 at 06:46:36PM +0100, Christophe Leroy wrote:
 > 
-> This patch adds the macro list_tail_rcu() and document it.
 > 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> Le 09/12/2019 à 16:09, Mike Rapoport a écrit :
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > Implement primitives necessary for the 4th level folding, add walks of p4d
+> > level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Tested on 8xx and 83xx, no problem observed (ie book3s/32 and nohash/32)
+> 
+> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+> Christophe
 
-Queued with slight edits, thank you very much!
-
-							Thanx, Paul
-
-> ---
->  include/linux/rculist.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-> index 4b7ae1bf50b3..9f21efa525ab 100644
-> --- a/include/linux/rculist.h
-> +++ b/include/linux/rculist.h
-> @@ -40,6 +40,16 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
->   */
->  #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
->  
-> +/**
-> + * list_tail_rcu - returns the prev pointer of the head of the list
-> + * @head: the head of the list
-> + *
-> + * Note: This should only be used with the list header,
-> + * but only if list_del() and similar primitives are not
-> + * also used on the list header.
-> + */
-> +#define list_tail_rcu(head)	(*((struct list_head __rcu **)(&(head)->prev)))
-> +
->  /*
->   * Check during list traversal that we are within an RCU reader
->   */
-> -- 
-> 2.17.1
-> 
+Did you add anything else to the next 1100 lines that you didn't bother
+to snip?  I can't be arsed to scroll through them all looking.
