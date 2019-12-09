@@ -2,108 +2,143 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7893BC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E746C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFCA20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70DDC206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 22:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SBqfoDW1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AzLikofF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLIWA3 (ORCPT
+        id S1726901AbfLIWFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 17:00:29 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46144 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLIWA2 (ORCPT
+        Mon, 9 Dec 2019 17:05:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20708 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726743AbfLIWFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 17:00:28 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y14so7899295pfm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:00:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YmSFLr+tHs6Mw5x0YoU7ewKo0pzNEADd7F+PT0RTF9w=;
-        b=SBqfoDW1wHdULJCkfeE9+tHwFn8CKdjjeNWENWvFyiBDueWh6zgCqYioruFUb1g4J9
-         mppx6PrU7iTgEge5oCEubOcOrrtxe0r1fJhvMGsTAKabZfJKPdhNDm4IYCYup6Dc47R6
-         wgbwlUeqBELwn12H2+nT3NJytfhZ6jbgfo6xE=
+        Mon, 9 Dec 2019 17:05:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575929117;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=foPomkZZHn+fl/+k/LBQXwFbzjdsSjHkkGqYwk6TqkM=;
+        b=AzLikofF8C3Iytx4YNwACrDKLEE5Q+8aM4arrtDh807TwcKCmY4zuT2RiY683nziVfY47y
+        64u7RWtaLn4kaAX09BIZ088A0c1S+icpM5o28u+AcI0rrg7NJRwTPJW4pKnB7p6FaKe69v
+        EOgEcxUM7iBViwSYnOj1AAo62euKv4o=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-F1kAscUePPqZ0fj6ctg55g-1; Mon, 09 Dec 2019 17:05:13 -0500
+Received: by mail-qt1-f198.google.com with SMTP id o24so487804qtr.17
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 14:05:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YmSFLr+tHs6Mw5x0YoU7ewKo0pzNEADd7F+PT0RTF9w=;
-        b=UvgJIIiU9aQoOw/K/04xI2AXmzykQLy9ibyu89x4WSDSdRs/iH7kecWooKmz8Z1UY5
-         +2zuUJgRW2DfqoClArHN49BzOoPNBuDqLFqnCH6dcrZbFQQUVDNUTmSdHu3/LVid31PZ
-         6nC72Thp8KB9AAgmwuwc2v/lKxjBbomtJVVp+1aBMlXWhxJ27Yn6T0zlRTjYmgcpSwiH
-         yyH5Q0ZO6zGZd9+wOOA6RV84TFksbZcz/XN2OLX8o73kNywX2oD/X/L/Yz7njaqpwMU5
-         NBqyDxCBFG4I6rErsf5WcEtu7A2ka+wXsGIPlQHF6JkwxIJiu8yJ/P3h8iMTiCbZ3f2l
-         Vosw==
-X-Gm-Message-State: APjAAAW8MGSoOVEnc6eyutbkrx2AiPrNe2FKK0kyLhseuKDqDLv/HmkP
-        EjIo2FLpJy8NOlDKp4wSunEUSw==
-X-Google-Smtp-Source: APXvYqyORjj+Abls7PjxItJE0P59u54wNgNM9bKPcftHXnslnyLl1+eNOLqLpY8Z5oMIlGV/ViZuRg==
-X-Received: by 2002:aa7:9118:: with SMTP id 24mr32973317pfh.182.1575928827975;
-        Mon, 09 Dec 2019 14:00:27 -0800 (PST)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id f13sm450355pfa.57.2019.12.09.14.00.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 09 Dec 2019 14:00:27 -0800 (PST)
-From:   Evan Green <evgreen@chromium.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Can Guo <cang@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] phy: ufs-qcom: Invert PCS ready logic for SDM845 UFS
-Date:   Mon,  9 Dec 2019 14:00:12 -0800
-Message-Id: <20191209135934.1.Iaaf3ad8a27b00f2f2bc333486a1ecc9985bb5170@changeid>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nx7/jgy/0hqWMwbx9WXuS3LtbNfgu/8UAt4zNXzHNaM=;
+        b=cZNIX5RRIdFKbi/EfQckny+9Z9NQcfeuCeodpFVnPTyg4c70QpxH45kNkS+0Q2MNFK
+         oQ7fwduOjErIpcyhyCpscH7DcJQ5n1LAEf0OId97l+nuMLJevdQidyXUG5O1P9twbhHx
+         1ogl6ONnpTAEP2o2hDKJFjwFBJHtJLJmX2a8LgT0tRNam8CCvpvXn7wSRNf9+4PH9ItD
+         eOXJOwo1ib92L9oHsE5emVyfiRk+MoISk2X/xTC3WEV/8l59F9xpAHbfJllQI7iIl885
+         uCvQp36cSCbBGqP8VqkvEANfrqmCoW+S/dOh2K2WMnjF7YftIi8Q1wjkyDVlDYwoAo7F
+         Xu/g==
+X-Gm-Message-State: APjAAAXRl6sPJr/i4XK694QmDcHzPBmM9ISXa5uNURHGxz9hrM3Ua0Zq
+        OxCQlSmXC1IVD1W7es31iacuhmQLyVBLWyqNGk1wNy2/WTxdzGpvPB+l5miHK588VfKtxXeI/4N
+        9uYqYiN90Xn7S0uGSJtIGfs3X
+X-Received: by 2002:a37:794:: with SMTP id 142mr6911041qkh.348.1575929112524;
+        Mon, 09 Dec 2019 14:05:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwxwnec2wNeIpqiKODeEI2N6KwumS+V0HMESm4wg/+r3zeVfUjC0y3kANOIn7fAvQZWAunnvg==
+X-Received: by 2002:a37:794:: with SMTP id 142mr6910997qkh.348.1575929111957;
+        Mon, 09 Dec 2019 14:05:11 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id z4sm280179qkz.62.2019.12.09.14.05.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 14:05:11 -0800 (PST)
+Date:   Mon, 9 Dec 2019 17:05:10 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 01/15] KVM: Move running VCPU from ARM to common code
+Message-ID: <20191209220510.GB3352@xz-x1>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-2-peterx@redhat.com>
+ <20191203190126.GC19877@linux.intel.com>
+ <a9d3301c-4c2f-9624-dc52-1033b940ef06@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9d3301c-4c2f-9624-dc52-1033b940ef06@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MC-Unique: F1kAscUePPqZ0fj6ctg55g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDM845 UFS phy seems to want to do a low transition to become
-ready, rather than a high transition. Without this, I am unable to
-enumerate UFS on SDM845 when booted from USB.
+On Wed, Dec 04, 2019 at 10:42:27AM +0100, Paolo Bonzini wrote:
+> On 03/12/19 20:01, Sean Christopherson wrote:
+> > In case it was clear, I strongly dislike adding kvm_get_running_vcpu().
+> > IMO, it's a unnecessary hack.  The proper change to ensure a valid vCPU=
+ is
+> > seen by mark_page_dirty_in_ring() when there is a current vCPU is to
+> > plumb the vCPU down through the various call stacks.  Looking up the ca=
+ll
+> > stacks for mark_page_dirty() and mark_page_dirty_in_slot(), they all
+> > originate with a vcpu->kvm within a few functions, except for the rare
+> > case where the write is coming from a non-vcpu ioctl(), in which case
+> > there is no current vCPU.
+> >=20
+> > The proper change is obviously much bigger in scope and would require
+> > touching gobs of arch specific code, but IMO the end result would be wo=
+rth
+> > the effort.  E.g. there's a decent chance it would reduce the API betwe=
+en
+> > common KVM and arch specific code by eliminating the exports of variant=
+s
+> > that take "struct kvm *" instead of "struct kvm_vcpu *".
+>=20
+> It's not that simple.  In some cases, the "struct kvm *" cannot be
+> easily replaced with a "struct kvm_vcpu *" without making the API less
+> intuitive; for example think of a function that takes a kvm_vcpu pointer
+> but then calls gfn_to_hva(vcpu->kvm) instead of the expected
+> kvm_vcpu_gfn_to_hva(vcpu).
+>=20
+> That said, looking at the code again after a couple years I agree that
+> the usage of kvm_get_running_vcpu() is ugly.  But I don't think it's
+> kvm_get_running_vcpu()'s fault, rather it's the vCPU argument in
+> mark_page_dirty_in_slot and mark_page_dirty_in_ring that is confusing
+> and we should not be adding.
+>=20
+> kvm_get_running_vcpu() basically means "you can use the per-vCPU ring
+> and avoid locking", nothing more.  Right now we need the vCPU argument
+> in mark_page_dirty_in_ring for kvm_arch_vcpu_memslots_id(vcpu), but that
+> is unnecessary and is the real source of confusion (possibly bugs too)
+> if it gets out of sync.
+>=20
+> Instead, let's add an as_id field to struct kvm_memory_slot (which is
+> trivial to initialize in __kvm_set_memory_region), and just do
+>=20
+> =09as_id =3D slot->as_id;
+> =09vcpu =3D kvm_get_running_vcpu();
+>=20
+> in mark_page_dirty_in_ring.
 
-Fixes: 14ced7e3a1a ('phy: qcom-qmp: Correct ready status, again')
+Looks good.  I'm adding another patch for it, and dropping patch 2 then.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+Thanks,
 
-Bjorn,
-At this point I'm super confused on what the correct behavior
-should be. Lack of documentation doesn't help. I'm worried that this
-change breaks UFS on some other platforms, so I'm hoping you or some
-PHY folks might have some advice on what the right thing to do is.
-
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 091e20303a14d..c4f4294360b6e 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1657,7 +1657,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 	if (cfg->type == PHY_TYPE_UFS) {
- 		status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 		mask = PCS_READY;
--		ready = PCS_READY;
-+		ready = 0;
- 	} else {
- 		status = pcs + cfg->regs[QPHY_PCS_STATUS];
- 		mask = PHYSTATUS;
--- 
-2.21.0
+--=20
+Peter Xu
 
