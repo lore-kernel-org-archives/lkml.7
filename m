@@ -7,84 +7,104 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD130C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB53C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3D2207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401402080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lQE4WZOW"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Sz+/fCjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfLISCd (ORCPT
+        id S1726956AbfLISC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:02:33 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35850 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLISCc (ORCPT
+        Mon, 9 Dec 2019 13:02:59 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37135 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfLISC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:02:32 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9I2Qqg010003;
-        Mon, 9 Dec 2019 12:02:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575914546;
-        bh=p27ngScByZibHh+gUZ0Szuc+RoIApKBQAaSxjbTsJLg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lQE4WZOWRq74OR6Koq9eFvfT32do9jUsbVpFnnMW/iJ86zlShka2i6GjS38WH9ZZg
-         av/0H/1+Gu0jSCsb+VERXKmRsb/HJlhSwJjhRKT4fFTPm4NdPzDblxdOOJGvBZwtld
-         gVUcjWt6Cez4X5y8DEPOPEjAj9rI+YIQSKfuJhRk=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9I2QoM025315;
-        Mon, 9 Dec 2019 12:02:26 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 12:02:26 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 12:02:26 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9I2Qr4052252;
-        Mon, 9 Dec 2019 12:02:26 -0600
-Subject: Re: [PATCH 1/2] dt-bindings: dp83867: Convert fifo-depth to common
- fifo-depth and make optional
-To:     David Miller <davem@davemloft.net>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <bunk@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <robh@kernel.org>
-References: <20191206164516.2702-1-dmurphy@ti.com>
- <20191209.094356.813138131056263064.davem@davemloft.net>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d9418bb2-6726-f352-0636-96c0ff0848c4@ti.com>
-Date:   Mon, 9 Dec 2019 12:00:18 -0600
+        Mon, 9 Dec 2019 13:02:58 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so828487plz.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0YsPAtOD2B97kYz+aPx1oxns46408201TPj5O/tIazQ=;
+        b=Sz+/fCjqYOiJDd/7AcP5OSR6UajygLGcCbKT5Stg6Oz8XAY2WmjrCBd/m1SYfnEEnQ
+         Luf4Qn4e2hwf+WkdL15QyOYY1iVTaWzz1KevnrW4qtzYHKf6a4LyKSwXUu4niXhRVQmh
+         sjoLhkzMwb2ozNPJAIJsygJ6dLZ8T+Peg0Xb0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0YsPAtOD2B97kYz+aPx1oxns46408201TPj5O/tIazQ=;
+        b=GZyMevfNw0cm87D+B3yRsdDs9Gm63cbc60ORxw/aBKJAz77Iq5szVHFtUB2UZ1F7Vk
+         447BqqwDtdHUKkl9BiOQpLRcJWO+fWJEk7kgQsvdQN+U9df+7RxC46kipMNDqY5zvBR5
+         AqioeAiYAyNBKuD6WflHVL9rtzSwie2OUMeChy1TDEspoHezCguk25iRlcpV7/v6my5K
+         dGznuXmRI/hGyrnJQo6CyNnXZv4OREjIdyfX4l2Mg75/cqLH39joR6wFQl1dslvj6Fla
+         +Xa1Y0fBA52YPfnXWSrdSKpMQtjQ73ly0i/n1bP2IgU58weg32SKNVP4xnN6zDD7yYji
+         n7tg==
+X-Gm-Message-State: APjAAAUvbVmhYSBUUcBvMON6v5uC/Cdkx7vG1ozodiR2pXFK7nmpVN5K
+        PGyaP9chl1thzz8yNQM4wFaIIQ==
+X-Google-Smtp-Source: APXvYqxsvzB6CFv06nZv5X+fP4cX+FzYXhiKJAS60N31poBuk0qfyxhmyAij3weEl98sWCL57RWQFg==
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr31305945plq.325.1575914577974;
+        Mon, 09 Dec 2019 10:02:57 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id h128sm114062pfe.172.2019.12.09.10.02.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 10:02:56 -0800 (PST)
+Subject: Re: [PATCH 0/2] Add iProc IDM device support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+ <20191207173914.353f768d@why>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
+Date:   Mon, 9 Dec 2019 10:02:53 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191209.094356.813138131056263064.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191207173914.353f768d@why>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David
 
-On 12/9/19 11:43 AM, David Miller wrote:
-> These patches don't apply cleanly to my networking trees.
->
-> Please also properly supply an appropriate "[PATCH 0/N]" header posting
-> and clearly indicate the target GIT tree as in "[PATCH net-next 0/N]"
-> as well as the patch series version "[PATCH v2 net-next 0/N]" when you
-> repsin this.
->
-> Thanks.
 
-Ack and resent
+On 12/7/19 9:39 AM, Marc Zyngier wrote:
+> On Mon,  2 Dec 2019 15:31:25 -0800
+> Ray Jui <ray.jui@broadcom.com> wrote:
+> 
+>> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+>> bus transactions. Most importantly, it can be configured to detect bus
+>> transaction timeout. In such case, critical information such as transaction
+>> address that caused the error, bus master ID of the transaction that caused
+>> the error, and etc., are made available from the IDM device.
+> 
+> This seems to have many of the features of an EDAC device reporting
+> uncorrectable errors.
+> 
+> Is there any reason why it is not implemented as such?
+> 
+> Thanks,
+> 
+> 	M.
+> 
 
-Dan
+I thought EDAC errors (in fact, in our case, that's fatal rather than 
+uncorrectable) are mostly for DDR. Is my understanding incorrect?
 
+Thanks,
+
+Ray
