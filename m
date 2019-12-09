@@ -2,78 +2,78 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F1EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C345C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AAB20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aiVkVI9m";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IFNNQ/DQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2714420726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLIK6l (ORCPT
+        id S1727352AbfLILBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:58:41 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:36916
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbfLIK6k (ORCPT
+        Mon, 9 Dec 2019 06:01:36 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55140 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727143AbfLILBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:58:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575889120;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=zI4zJKd1PPcjys8X5dTXS/39xMIkO/LpYF9YUSljaM0=;
-        b=aiVkVI9mjroZBkGrR2RTA+/aeMQi+hJMFtJDBenZZu0kxID1dNuYa9b0AlEXRT6T
-        5+mt8/OBbTTB1sgvbkzGJt+qSkIJQ5j+eiec/hZYRQKI+lpY7hrs7Zx975QMmCpKTmp
-        NpUyuQHSG4hA9EeSduhx7OKKjojp/bDnOY4CMVv4=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575889120;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=zI4zJKd1PPcjys8X5dTXS/39xMIkO/LpYF9YUSljaM0=;
-        b=IFNNQ/DQvdLKjdr/CQyqOMPp1gJM2b8PfIlaEnF8eOe4e0CQjScMke8cU5d7VUb8
-        td8HG+Tg6RNfDc4T8GDpuY3uwXtYacFkyoa33HxmmOmggpdxdjw8omh9NxiR4eokTEW
-        4XT3XUCi/hQGZGjkzRi0/N+ZwERE88gn6aSIlWCI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4AD06C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>, dan.carpenter@oracle.com,
-        solar@openwall.com, wangqize888888888@gmail.com
-Subject: Re: [PATCH] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
-References: <20191206194535.150179-1-briannorris@chromium.org>
-Date:   Mon, 9 Dec 2019 10:58:40 +0000
-In-Reply-To: <20191206194535.150179-1-briannorris@chromium.org> (Brian
-        Norris's message of "Fri, 6 Dec 2019 11:45:35 -0800")
-Message-ID: <0101016eea4faad7-ffccbda4-deee-456f-9e01-cd4a52bc9fd1-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Dec 2019 06:01:35 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-195-oi3zS5NyMcuX2OLZVzunJg-1; Mon, 09 Dec 2019 11:01:31 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 9 Dec 2019 11:01:30 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 9 Dec 2019 11:01:30 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Eric Dumazet' <eric.dumazet@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Topic: recvfrom/recvmsg performance and CONFIG_HARDENED_USERCOPY
+Thread-Index: AdWsNynavvs+VRwOQ6mSStk+IzVA6AACUqqAAI3fO8A=
+Date:   Mon, 9 Dec 2019 11:01:30 +0000
+Message-ID: <efffc167eff1475f94f745f733171d59@AcuMS.aculab.com>
+References: <23db23416d3148fa86e54dccc6152266@AcuMS.aculab.com>
+ <dc10298d-4280-b9b4-9203-be4000e85c42@gmail.com>
+In-Reply-To: <dc10298d-4280-b9b4-9203-be4000e85c42@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2019.12.09-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-MC-Unique: oi3zS5NyMcuX2OLZVzunJg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+RnJvbTogRXJpYyBEdW1hemV0DQo+IFNlbnQ6IDA2IERlY2VtYmVyIDIwMTkgMTQ6MjINCi4uLg0K
+PiBSZWFsIHF1ZXN0aW9uIGlzIDogRG8geW91IGFjdHVhbGx5IG5lZWQgdG8gdXNlIHJlY3Ztc2co
+KSBpbnN0ZWFkIG9mIHJlY3Zmcm9tKCkgPw0KPiBJZiByZWN2bXNnKCkgcHJvdmlkZXMgYWRkaXRp
+b25hbCBjbXNnLCB0aGlzIGlzIG5vdCBzdXJwcmlzaW5nIGl0IGlzIG1vcmUgZXhwZW5zaXZlLg0K
+DQpFeGNlcHQgSSdtIG5vdCBwYXNzaW5nIGluIGEgYnVmZmVyIGZvciBpdC4NClRoZSByZWFzb24g
+SSdtIGxvb2tpbmcgYXQgcmVjdm1zZyBpcyB0aGF0IEknZCBsaWtlIHRvIHVzZSByZWN2bW1zZyBp
+dCBvcmRlciB0bw0KcmVhZCBvdXQgbW9yZSB0aGFuIG9uZSBtZXNzYWdlIGZyb20gYSBzb2NrZXQg
+d2l0aG91dCBkb2luZyBhbiBleHRyYSBwb2xsKCkuDQpOb3RlIHRoYXQgSSBkb24ndCBleHBlY3Qg
+dGhlcmUgdG8gYmUgYSBzZWNvbmQgbWVzc2FnZSBtb3N0IG9mIHRoZSB0aW1lIGFuZA0KYWxtb3N0
+IG5ldmVyIGEgdGhpcmQgb25lLg0KDQpBbHRob3VnaCBJIHRoaW5rIHRoYXQgd2lsbCBvbmx5IGV2
+ZXIgJ3dpbicgaWYgcmVjdm1tc2coKSBjYWxsZWQgdmZzX3BvbGwoKSB0byBmaW5kDQppZiB0aGVy
+ZSB3YXMgbW9yZSBkYXRhIHRvIHJlYWQgYmVmb3JlIGRvaW5nIGFueSBvZiB0aGUgY29weV9mcm9t
+X3VzZXIoKSBldGMuDQoNCj4gcmVjdm1zZygpIGFsc28gdXNlcyBhbiBpbmRpcmVjdCBjYWxsLCBz
+byBDT05GSUdfUkVUUE9MSU5FPXkgaXMgcHJvYmFibHkgaHVydGluZy4NCg0KSSBkb24ndCBoYXZl
+IENPTkZJR19SRVRQT0xJTkUgZW5hYmxlZCwgdGhlIGNvbXBpbGVyIEknbSB1c2luZyBpcyB0b28g
+b2xkLg0KKGdjYyA0LjcuMykuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFr
+ZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwg
+VUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-> AFAICT, the existing commit (1e58252e334d) isn't wrong, per se -- just
-> very poorly styled -- so this probably doesn't need to go to -stable.
-> Not sure if it's a candidate for wireless-drivers (where the original
-> commit currently sites) vs. wireless-drivers-next.
-
-I'll try to do so that I'll put this patch to "Awaiting Upstream" state
-and apply it to w-d-next once 1e58252e334d is merged to w-d-next. Feel
-free to remind me then that happens :)
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
