@@ -2,161 +2,146 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEABC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81214C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25722206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDDD206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhCalqlm"
+	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="PQllKqhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfLINqm (ORCPT
+        id S1727796AbfLINs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:46:42 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35266 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfLINql (ORCPT
+        Mon, 9 Dec 2019 08:48:28 -0500
+Received: from mickerik.phytec.de ([195.145.39.210]:59458 "EHLO
+        mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbfLINs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:46:41 -0500
-Received: by mail-qt1-f193.google.com with SMTP id s8so15611117qte.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:46:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rKY8nQ/36ZYIRL43SesLbBNstgqfPCGGmMTonTZ2il8=;
-        b=hhCalqlm3yqxnVlbPMkN+bqjjPU1bLUwUu3cuuoLZLdYXudklunO0/Cy7XlY6y/hiO
-         x4IgOw3ukPGPAyzgTOcs+D4SDsU4GHbqhhhPNtM/mnp1IGFP9VncVld5dJRpCCuvKXEO
-         cCSQmfPxl0a6iker/1a+SnLv1Ke4zYEK4dOfZk0cPOldAgFySxnl62XwrgGhpo7d1DSI
-         jNzpeaL9Nf/LdrrfoDm1iM3jrZYyniYmCF+HfzAFDILzUtqo+HYu5O7O8l4V/9HtJKAA
-         65iHaf1v9+OA4h0TqaOwmx9K3TZdEN/riUkRfFD3fP0Q9CJnS0V4D40WXdHslPUASTU7
-         PlCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rKY8nQ/36ZYIRL43SesLbBNstgqfPCGGmMTonTZ2il8=;
-        b=PGcGpbZo1PVfkjvF9nnxCmgZ7B6s4IyKr3rvQmKnQ8WLCHpa1GziOdUB3fPyADN3/z
-         PTCOuqAyQ0TvZBLKZRc4AhQPL1r7atZ2JMo4TICsWYzqBUum04YOzDnFdc5JP0DRrs/z
-         A4YQ1NCdqf1i1+Sml3Lxh0LVeeZfK07IAcMgmirhK1R2yoC9oc04aL/N2zhgGEtLlFRQ
-         8dYjJ1cT7j2wKLporHGOKTEvPzTq6KPfLGGD2WTSY3JLF4T5ea3Qhpxs0mGgAiLYzMle
-         i1LLUm+jSWONQBJibbvIuFv0YTR+wkhbOTZnaLxUgyB5CfSN1PkBv71PaN7DqDhKlZOB
-         dPSA==
-X-Gm-Message-State: APjAAAWACCHbJ/FssVLv3u4oQXrLT7LPakeKZygdGp5gg+i2DYkBh2oh
-        AcW35XqhEVNmXFnJSuhSLFsjtLHiz/aVmGzoJ6aDjQ==
-X-Google-Smtp-Source: APXvYqwOoj3Iq7H9MPlRC6Alm7SDeJtbsGl5BNZVmlYeK7ddFNdnLC8TuI2UoS45aEwChxo5375NC80kUhkvzKtCHnw=
-X-Received: by 2002:ac8:2489:: with SMTP id s9mr25022912qts.257.1575899199309;
- Mon, 09 Dec 2019 05:46:39 -0800 (PST)
+        Mon, 9 Dec 2019 08:48:28 -0500
+X-Greylist: delayed 915 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 08:48:27 EST
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
+        q=dns/txt; i=@phytec.de; t=1575898389; x=1578490389;
+        h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZvMCSjdJbVZac2F8bcYMul/sOO8A2aMaXq5Bl5ynDSM=;
+        b=PQllKqhqFuqpazx3wP6CWciKQz6FIX8bGLb+BFM+6vqxpltgk0ZUQHNjHtfTZt2L
+        NHN8S+7EHwKLIb1RD5p6EXnd+jcbtXuQXuUmUldCrGGcYCjhri0mlbzBqT6L7PmA
+        UqWrHkCla85x1YgmAOmIvGeti+EqP834ZoleWhijArE=;
+X-AuditID: c39127d2-df9ff7000000408f-4e-5dee4d0e35f1
+Received: from idefix.phytec.de (Unknown_Domain [172.16.0.10])
+        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id E1.83.16527.E0D4EED5; Mon,  9 Dec 2019 14:33:07 +0100 (CET)
+Received: from [172.16.23.108] ([172.16.23.108])
+          by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
+          with ESMTP id 2019120914330285-69242 ;
+          Mon, 9 Dec 2019 14:33:02 +0100 
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: fsl: Add PHYTEC i.MX6 UL/ULL
+ devicetree bindings
+To:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org,
+        Andrew Smirnov <andrew.smirnov@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-imx@nxp.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <1568980346-385840-1-git-send-email-s.riedmueller@phytec.de>
+From:   =?UTF-8?Q?Stefan_Riedm=c3=bcller?= <s.riedmueller@phytec.de>
+Message-ID: <f2084e4d-8e62-80fc-e578-d3d4be50af2f@phytec.de>
+Date:   Mon, 9 Dec 2019 14:33:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20171219215906.GA12465@gmail.com> <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
-In-Reply-To: <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 9 Dec 2019 14:46:27 +0100
-Message-ID: <CACT4Y+YtpOZ1c0QV4-q_b-CrGMGRALwoFTNPgxZuUC9S9J3gfA@mail.gmail.com>
-Subject: Re: ppc64el kernel access of bad area (ext4_htree_store_dirent->rb_insert_color)
-To:     Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
-Cc:     Eric Biggers <ebiggers3@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        syzbot 
-        <bot+eb13811afcefe99cfe45081054e7883f569f949d@syzkaller.appspotmail.com>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1568980346-385840-1-git-send-email-s.riedmueller@phytec.de>
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 09.12.2019 14:33:02,
+        Serialize by Router on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
+ 09.12.2019 14:33:07,
+        Serialize complete at 09.12.2019 14:33:07
+X-TNEFEvaluated: 1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42JZI8DApSvq+y7WoPMyv0Vzh63F/CPnWC0e
+        XvW32PT4GqtF16+VzBaXd81hs7jb0slqsfT6RSaL1r1H2C3+bt/EYvFii7gDt8eaeWsYPXbO
+        usvusWlVJ5vHnWt72Dw2L6n32PhuB5NH/18Dj8+b5AI4orhsUlJzMstSi/TtErgyJi/cwVhw
+        UKBi0rqgBsZH3F2MnBwSAiYSW79fYu1i5OIQEtjKKLFv7xkmCOcUo8T6Z2sYQaqEBRIk5h/f
+        xA5iiwj4Slxf0cgCYjMLHGKSeNkGNklIwEOi6dApsDibgJPE4vMdbCA2r4CNxJZLW8FsFgEV
+        ifntk8DmiApESDzffoMRokZQ4uTMJ2C9nAKeEu+vL2YHOUJCoJFJYnvjQxaIU4UkTi8+ywyx
+        WF5i+9s5ULaZxLzND6FscYlbT+YzTWAUmoVk7iwkLbOQtMxC0rKAkWUVo1BuZnJ2alFmtl5B
+        RmVJarJeSuomRmCUHZ6ofmkHY98cj0OMTByMhxglOJiVRHiXTHwVK8SbklhZlVqUH19UmpNa
+        fIhRmoNFSZx3A29JmJBAemJJanZqakFqEUyWiYNTqoExYMKi50xf/pz7bb3efW9mmW6ZxrKC
+        nfyTVgpsbGb6+G5TfpXHGt0zy7f91Oc5EHPf8PFmWbHps498O8Wi2Wc3NSTRQjEl/KSstOs8
+        JRVDrutu9i8F7v1bq3i1QbDl/V1Hs3I/m4XrE0uVWE0a1z/dt8ZUIFEhRnd78bIejj/PVHzF
+        10tdm3pYiaU4I9FQi7moOBEACOJCtqACAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 2:29 PM Rafael David Tinoco
-<rafaeldtinoco@ubuntu.com> wrote:
->
-> It looks like the same stacktrace that was reported in this thread. This =
-has
-> been reported to ppc64el AND we got a reproducer (ocfs2-tools autopkgtest=
-s).
->
-> [ 85.605850] Faulting instruction address: 0xc000000000e81168
-> [ 85.605901] Oops: Kernel access of bad area, sig: 11 [#1]
-> [ 85.605970] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSerie=
-s
-> [ 85.606029] Modules linked in: ocfs2 quota_tree ocfs2_dlmfs ocfs2_stack_=
-o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue iptable_mangle xt_TCPMSS x=
-t_tcpudp bpfilter dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua vmx_cr=
-ypto crct10dif_vpmsum sch_fq_codel ip_tables x_tables autofs4 btrfs xor zst=
-d_compress raid6_pq libcrc32c crc32c_vpmsum virtio_net virtio_blk net_failo=
-ver failover
-> [ 85.606291] CPU: 0 PID: 1 Comm: systemd Not tainted 5.3.0-18-generic #19=
--Ubuntu
-> [ 85.606350] NIP: c000000000e81168 LR: c00000000054f240 CTR: 000000000000=
-0000
-> [ 85.606410] REGS: c00000005a3e3700 TRAP: 0300 Not tainted (5.3.0-18-gene=
-ric)
-> [ 85.606469] MSR: 8000000000009033 <SF,EE,ME,IR,DR,RI,LE> CR: 28024448 XE=
-R: 00000000
-> [ 85.606531] CFAR: 0000701f9806f638 DAR: 0000000001744098 DSISR: 40000000=
- IRQMASK: 0
-> [ 85.606531] GPR00: 0000000000007374 c00000005a3e3990 c0000000019c9100 c0=
-0000004fe462a8
-> [ 85.606531] GPR04: c00000005856d840 000000000000000e 0000000074656772 c0=
-0000004fe4a568
-> [ 85.606531] GPR08: 0000000000000000 c000000058568004 0000000001744090 00=
-00000000000000
-> [ 85.606531] GPR12: 00000000e8086002 c000000001d60000 00007fffddd522d0 00=
-00000000000000
-> [ 85.606531] GPR16: 0000000000000000 0000000000000000 0000000000000000 c0=
-0000000755e07c
-> [ 85.606531] GPR20: c0000000598caca8 c00000005a3e3a58 0000000000000000 c0=
-00000058292f00
-> [ 85.606531] GPR24: c000000000eea710 0000000000000000 c00000005856d840 c0=
-0000000755e074
-> [ 85.606531] GPR28: 000000006518907d c00000005a3e3a68 c00000004fe4b160 00=
-000000027c47b6
-> [ 85.607079] NIP [c000000000e81168] rb_insert_color+0x18/0x1c0
-> [ 85.607137] LR [c00000000054f240] ext4_htree_store_dirent+0x140/0x1c0
-> [ 85.607186] Call Trace:
-> [ 85.607208] [c00000005a3e3990] [c00000000054f158] ext4_htree_store_diren=
-t+0x58/0x1c0 (unreliable)
-> [ 85.607279] [c00000005a3e39e0] [c000000000594cd8] htree_dirblock_to_tree=
-+0x1b8/0x380
-> [ 85.607340] [c00000005a3e3b00] [c0000000005962c0] ext4_htree_fill_tree+0=
-xc0/0x3f0
-> [ 85.607401] [c00000005a3e3c00] [c00000000054ebe4] ext4_readdir+0x814/0xc=
-e0
-> [ 85.607459] [c00000005a3e3d40] [c000000000472d6c] iterate_dir+0x1fc/0x28=
-0
-> [ 85.607511] [c00000005a3e3d90] [c0000000004746f0] ksys_getdents64+0xa0/0=
-x1f0
-> [ 85.607572] [c00000005a3e3e00] [c000000000474868] sys_getdents64+0x28/0x=
-130
-> [ 85.607622] [c00000005a3e3e20] [c00000000000b388] system_call+0x5c/0x70
-> [ 85.607672] Instruction dump:
-> [ 85.607703] 4082ffe8 4e800020 38600000 4e800020 60000000 60000000 e92300=
-00 2c290000
-> [ 85.607764] 4182018c e9490000 71480001 4c820020 <e90a0008> 7c284840 2fa8=
-0000 4182006c
-> [ 85.607827] ---[ end trace cfc53af0f8d62cef ]---
-> [ 85.610600]
-> [ 86.611522] BUG: Unable to handle kernel data access at 0xc000030058567e=
-ff
-> [ 86.611604] Faulting instruction address: 0xc000000000403aa8
-> [ 86.611656] Oops: Kernel access of bad area, sig: 11 [#2]
-> [ 86.611697] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSerie=
-s
-> [ 86.611748] Modules linked in: ocfs2 quota_tr
->
-> Thread from beginning 2018, so I guess this issue is pretty intermittent =
-but
-> might exist, and, perhaps, its related to specific arches/machines ?
+Hi,
 
-FTR, here is the original thread/bug (at least my email client did not
-thread them together):
-https://groups.google.com/g/syzkaller-bugs/c/YBhhSkrImIM/m/3HMv_dFUCwAJ
-https://syzkaller.appspot.com/bug?extid=3Deb13811afcefe99cfe45081054e7883f5=
-69f949d
+I just wanted to send a gentle ping for these two patches.
+
+Regards,
+Stefan
+
+
+On 20.09.19 13:52, Stefan Riedmueller wrote:
+> Add devicetree bindings for i.MX6 UL/ULL based phyCORE-i.MX6 UL/ULL and
+> phyBOARD-Segin.
+> 
+> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+> ---
+> Changes in v2:
+>   - Use seperate description for each board instead of squashing them into
+>     the standard board.
+> ---
+>   Documentation/devicetree/bindings/arm/fsl.yaml | 18 ++++++++++++++++++
+>   1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 1b4b4e6573b5..c926ff6eac67 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -164,6 +164,15 @@ properties:
+>                 - kontron,imx6ul-n6310-som  # Kontron N6310 SOM
+>             - const: fsl,imx6ul
+>   
+> +      - description: i.MX6UL PHYTEC phyBOARD-Segin
+> +        items:
+> +          - enum:
+> +              - phytec,imx6ul-pbacd10-emmc
+> +              - phytec,imx6ul-pbacd10-nand
+> +          - const: phytec,imx6ul-pbacd10  # PHYTEC phyBOARD-Segin with i.MX6 UL
+> +          - const: phytec,imx6ul-pcl063   # PHYTEC phyCORE-i.MX 6UL
+> +          - const: fsl,imx6ul
+> +
+>         - description: Kontron N6310 S Board
+>           items:
+>             - const: kontron,imx6ul-n6310-s
+> @@ -183,6 +192,15 @@ properties:
+>                 - fsl,imx6ull-14x14-evk     # i.MX6 UltraLiteLite 14x14 EVK Board
+>             - const: fsl,imx6ull
+>   
+> +      - description: i.MX6ULL PHYTEC phyBOARD-Segin
+> +        items:
+> +          - enum:
+> +              - phytec,imx6ull-pbacd10-emmc
+> +              - phytec,imx6ull-pbacd10-nand
+> +          - const: phytec,imx6ull-pbacd10 # PHYTEC phyBOARD-Segin with i.MX6 ULL
+> +          - const: phytec,imx6ull-pcl063  # PHYTEC phyCORE-i.MX 6ULL
+> +          - const: fsl,imx6ull
+> +
+>         - description: i.MX6ULZ based Boards
+>           items:
+>             - enum:
+> 
