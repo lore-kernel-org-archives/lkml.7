@@ -2,105 +2,66 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024FAC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B13C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB63920637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:28:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QrzkL5Vg"
+	by mail.kernel.org (Postfix) with ESMTP id 4BE5720637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfLIF22 (ORCPT
+        id S1727068AbfLIF27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 00:28:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51366 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfLIF22 (ORCPT
+        Mon, 9 Dec 2019 00:28:59 -0500
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:1550
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726014AbfLIF26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 00:28:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4Z1NZMDltVAwA0hJxCsesvavrWXAqJG384PzoA7CdXA=; b=QrzkL5VgqOxbZoKXf8QU9NCRv
-        KNCVzrIszwSvzJkOpcraw85pgPE1FKeM/P0TQ4D9e9oQ/BdtJC2tKuqX0MBIgHDQckHHZwk0arXxH
-        R7ioJ0MJwiv8K9jr3KWbLpBVHs0b2ACNxDpNrTgaKe3DVklvu8N9ae7fwsZmNdRayDBVTmAQ9Dbey
-        irA+1HN/3qddZkin23JELDQkZn78rFpGNjpnpt8aRCUv1pIsxm7leAtpOIkYl1Vjbyg5YrF7GsPMg
-        LZ6t8OGeh0b5u8L6xHoqS2PucPGWTHFRpuQTIidWBXT9kSIPbQsIT5TBbvAH4u0f9QNGfIuYqBW2M
-        l/Vp8XprA==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieBar-0002fD-O3; Mon, 09 Dec 2019 05:28:25 +0000
-Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
-To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-ide@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20191209052119.32072-1-linux@roeck-us.net>
- <20191209052119.32072-2-linux@roeck-us.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <dc914b45-961c-a1d1-bc25-f6922004f6f4@infradead.org>
-Date:   Sun, 8 Dec 2019 21:28:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 00:28:58 -0500
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 212E820942;
+        Mon,  9 Dec 2019 05:28:53 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20191209052119.32072-2-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Dec 2019 06:28:53 +0100
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     andrew.hendry@gmail.com, edumazet@google.com,
+        linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/x25: add new state X25_STATE_5
+Organization: TDT AG
+In-Reply-To: <20191207.115922.532322440743611081.davem@davemloft.net>
+References: <20191206133418.14075-1-ms@dev.tdt.de>
+ <20191207.115922.532322440743611081.davem@davemloft.net>
+Message-ID: <3841dcf6dab454445da7b225e0d45212@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2019-12-07 20:59, David Miller wrote:
+> From: Martin Schiller <ms@dev.tdt.de>
+> Date: Fri,  6 Dec 2019 14:34:18 +0100
+> 
+>> +	switch (frametype) {
+>> +
+>> +		case X25_CLEAR_REQUEST:
+> 
+> Please remove this unnecessary empty line.
+> 
+>> +			if (!pskb_may_pull(skb, X25_STD_MIN_LEN + 2))
+>> +				goto out_clear;
+> 
+> A goto path for a single call site?  Just inline the operations here.
 
-On 12/8/19 9:21 PM, Guenter Roeck wrote:
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 13a6b4afb4b3..4c63eb7ba96a 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1346,6 +1346,16 @@ config SENSORS_RASPBERRYPI_HWMON
->  	  This driver can also be built as a module. If so, the module
->  	  will be called raspberrypi-hwmon.
->  
-> +config SENSORS_SATATEMP
-> +	tristate "SATA hard disk drives with temperature sensors"
-> +	depends on SCSI && ATA
-> +	help
-> +	  If you say yes you get support for the temperature sensor on
-> +	  SATA hard disk drives.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called smarttemp.
+Well, I was guided by the code style of the other states.
+I could add a patch to also clean up the other states.
+What do you think?
 
-Makefile seems to say satatemp.
-
-> +
->  config SENSORS_SHT15
->  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
->  	depends on GPIOLIB || COMPILE_TEST
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 40c036ea45e6..fe55b8f76af9 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -148,6 +148,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
->  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
->  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
-> +obj-$(CONFIG_SENSORS_SATATEMP)	+= satatemp.o
->  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
->  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
->  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
-
-
--- 
-~Randy
