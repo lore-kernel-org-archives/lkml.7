@@ -2,198 +2,126 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09145C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DC3C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BE2206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D25A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iU40j6wD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="BPe1bK9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLIThC (ORCPT
+        id S1726623AbfLITnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:37:02 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40372 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLIThB (ORCPT
+        Mon, 9 Dec 2019 14:43:40 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:7685 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfLITnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:37:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so544292wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:36:59 -0800 (PST)
+        Mon, 9 Dec 2019 14:43:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zmqax0rgyAWC+d0MKn8dpu7C8uXUBR1wj65v7FkLLfg=;
-        b=iU40j6wDFtZaNz83EasI9S0Clig3JsPw/SRhJcWHm394DoMRJktwvwSydnr98v8+C8
-         /HJ+Jt5PHnwDK7ihO5FSWYi/1fb+2PSjbLkVxIPRRK45lLLPeZPoebY4s58+56oz8HS3
-         BUATkC5RDFVuvFS8/K6L/pvds0XLJ/3llF+O2X/VME5gUjQe7FxiGAWy9Ih57UgnSXp+
-         EbGko7dZCYeqzuE+q4nJeJHZwqp2DU7x8Cf5f2/WyJg1AXZP/6WYJ0iEYotv1+tKQqt0
-         i6ObV0iN6xVgLx0AjzVXTb0CZqxde1PWm35m4oOQrW1b9/mBEHURRx+SJnLTO6QEtldm
-         nXGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zmqax0rgyAWC+d0MKn8dpu7C8uXUBR1wj65v7FkLLfg=;
-        b=gC/9KXRBS1pmmVxO2PboPFncWaaobANyv47Z86M58DO2n0p5jluWMEHn685k9uKKO3
-         NvRUq8+kR6ItEtjequ9fvFOhM4T8d2fhl1mj2j+r/pXRcNXbdTbhX4tLfJGr/m2NO6UQ
-         NTq9DbtkkXgFpUFrFktWLGeh0tcmHtZjx8fJvA6tED2do7IC/L/cF21qvGhLjdtqJMOj
-         kqLRKWIJ86RyRVugYx2tfCCFLqGzSH6EdBbOO34L5NPc9IHpLaqV5hmlUIv+L79UCH91
-         ZeYNxg4pB/7MglyItDZsyEttSBYhU+kRlR75Fjz/yCLeh3uFw9dnxzrEQcptutDjrcEI
-         VHAQ==
-X-Gm-Message-State: APjAAAUykN5x/ftcgBwsAlLHFN6Keb6IaIXtP4CTuzUeivZih0YhOz1I
-        xYlMQqdmVt5XHb3fse2rx/HJpJkVhMM=
-X-Google-Smtp-Source: APXvYqzT+/mu0cNWmolJAqHDWWf2k0igLLT0UG2H8lpAVnARmI7v+Ee5euQ+IIv/wZvr+7+LJxyxsA==
-X-Received: by 2002:a1c:49c3:: with SMTP id w186mr732466wma.53.1575920218708;
-        Mon, 09 Dec 2019 11:36:58 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:683a:fee4:9950:e8ce? ([2a01:e34:ed2f:f020:683a:fee4:9950:e8ce])
-        by smtp.googlemail.com with ESMTPSA id c15sm565572wrt.1.2019.12.09.11.36.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 11:36:58 -0800 (PST)
-Subject: Re: [PATCH v3 1/3] thermal: prevent cooling device with no type to be
- registered
-To:     Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191205071953.121511-1-wvw@google.com>
- <20191205071953.121511-2-wvw@google.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <92311e54-8ae8-d9a5-2597-f2b9b447cfb5@linaro.org>
-Date:   Mon, 9 Dec 2019 20:36:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575920618; x=1607456618;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=btD2JRZhVDkxSHuvs58naEsL/hzccbUCmnMRHNEsydY=;
+  b=BPe1bK9eR5pDXLan+nGUnUoTRVpbHW9Rnu974cz3PTe2lrVJTStSyaeG
+   6pZ/cxKSpZZY0wkOcUS3b6jKWFGVALebEJ+sFw/aueDIUrKtYnseDo6bm
+   cSp5PgOR6gACvFAcF9SzEL2rhqxo38VB+bAa8JPUqOs068gfhdSINmZse
+   s=;
+IronPort-SDR: LWb51GX+9fpQvb/S+Gumgfr5Hv6hVjPPlu5WQ4w5c4OnFTkUArSEPtKULLgbgEscFCGd9SzGr9
+ QaTjsTV+T5BQ==
+X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
+   d="scan'208";a="7798298"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Dec 2019 19:43:35 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (Postfix) with ESMTPS id 6D939A1764;
+        Mon,  9 Dec 2019 19:43:34 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 19:43:33 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.179) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 19:43:29 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <sjpark@amazon.com>
+CC:     <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pdurrant@amazon.com>, <roger.pau@citrix.com>,
+        <sj38.park@gmail.com>, <xen-devel@lists.xenproject.org>
+Subject: [PATCH v4 0/2] xenbus/backend: Add a memory pressure handler callback
+Date:   Mon, 9 Dec 2019 20:43:03 +0100
+Message-ID: <20191209194305.20828-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191205071953.121511-2-wvw@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.179]
+X-ClientProxiedBy: EX13D30UWC003.ant.amazon.com (10.43.162.122) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/2019 08:19, Wei Wang wrote:
-> commit 54fa38cc2eda ("thermal: core: prevent zones with no types to be
-> registered") added logic to prevent thermal zone with empty type to be
-> registered. Similarly, there are APIs that rely on cdev->type.
-> This patch prevents cooling device without valid type to be registered.
-> 
-> Signed-off-by: Wei Wang <wvw@google.com>
-> ---
->  drivers/thermal/thermal_core.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index d4481cc8958f..974e2d91c30b 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -954,12 +954,22 @@ __thermal_cooling_device_register(struct device_node *np,
->  	struct thermal_zone_device *pos = NULL;
->  	int result;
->  
-> -	if (type && strlen(type) >= THERMAL_NAME_LENGTH)
-> +	if (!type || !type[0]) {
+Granting pages consumes backend system memory.  In systems configured
+with insufficient spare memory for those pages, it can cause a memory
+pressure situation.  However, finding the optimal amount of the spare
+memory is challenging for large systems having dynamic resource
+utilization patterns.  Also, such a static configuration might lacks a
+flexibility.
 
-Why not use strlen(type) == 0 ?
+To mitigate such problems, this patchset adds a memory reclaim callback
+to 'xenbus_driver' (patch 1) and use it to mitigate the problem in
+'xen-blkback' (patch 2).
 
-> +		pr_err("Error: No cooling device type defined\n");
->  		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	if (strlen(type) >= THERMAL_NAME_LENGTH) {
-> +		pr_err("Error: Cooling device name over %d chars: %s\n",
-> +			THERMAL_NAME_LENGTH, type);
-> +		return ERR_PTR(-EINVAL);
-> +	}
->  
->  	if (!ops || !ops->get_max_state || !ops->get_cur_state ||
-> -	    !ops->set_cur_state)
-> +	    !ops->set_cur_state) {
-> +		pr_err("Error: Cooling device missing callbacks: %s\n", type);
->  		return ERR_PTR(-EINVAL);
-> +	}
->  
->  	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
->  	if (!cdev)
-> @@ -972,7 +982,7 @@ __thermal_cooling_device_register(struct device_node *np,
->  	}
->  
->  	cdev->id = result;
-> -	strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
-> +	strlcpy(cdev->type, type, sizeof(cdev->type));
->  	mutex_init(&cdev->lock);
->  	INIT_LIST_HEAD(&cdev->thermal_instances);
->  	cdev->np = np;
-> 
+Base Version
+------------
 
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/blkback_squeezing_v4
+
+
+Patch History
+-------------
+
+Changes from v3 (https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
+ - Add general callback in xen_driver and use it (suggested by Juergen
+   Gross)
+
+Changes from v2 (https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity (aggressive
+   shrinking -> squeezing)
+
+Changes from v1 (https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily` (suggested
+   by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+SeongJae Park (1):
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+
+ drivers/block/xen-blkback/blkback.c | 35 +++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
+
+SeongJae Park (2):
+  xenbus/backend: Add memory pressure handler callback
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+
+ drivers/block/xen-blkback/blkback.c       | 23 +++++++++++++++--
+ drivers/block/xen-blkback/common.h        |  1 +
+ drivers/block/xen-blkback/xenbus.c        |  3 ++-
+ drivers/xen/xenbus/xenbus_probe_backend.c | 31 +++++++++++++++++++++++
+ include/xen/xenbus.h                      |  1 +
+ 5 files changed, 56 insertions(+), 3 deletions(-)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
 
