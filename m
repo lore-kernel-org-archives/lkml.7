@@ -2,109 +2,122 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECEDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E312EC2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580B32068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF5420721
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FogYBJaC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BUJ79T52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfLIXws (ORCPT
+        id S1727459AbfLIXyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:52:48 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44791 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfLIXwr (ORCPT
+        Mon, 9 Dec 2019 18:54:31 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:54022 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbfLIXyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:52:47 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so7911421pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 15:52:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GY/+1o1zLdYfvCqb5s+Ly8hX35JVekQIGLz3reNdQ0w=;
-        b=FogYBJaCrQ5GcvCWjiTFxrHKEneYcAB8vY4Tjhcat7UFdWay6/83ZOXe9McWW+X5ig
-         Y7813rzWdHgwZpJFd1S09IEXMnWvL3d8TJj4M4sMXrBlbYm2CNcAHMtEmWDl/1ZIltZJ
-         qyHpBdGQAXi96ky96uVlmQYgqidE40eTHqsyg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GY/+1o1zLdYfvCqb5s+Ly8hX35JVekQIGLz3reNdQ0w=;
-        b=N5+wQSK3KzdSLjGx982IUIKqk0eu5gWQ+/FLkJbmyTBa22gRtwpLIOe96C3BqMAYI2
-         ECdGCNgPWOOiWi/d41wMQ8igLx6QiQCz2zZoZKgBsyJqrDa2D9DmFEN583SJFk8x4tsI
-         FeCKUUFFvrI/FCaLWtmhx1vQK1WwB2+cVv37nCvzalkzHLxVYZj0eV2jeCSymkLjuhay
-         vPEG/h3MT/6pK63yJRK+PYXT7bQ9hz07W2bwgOiSurn9pHgZnOkchVsk5WnNvth7to2A
-         BEv0R5wZFVGs8j3UPU9EfyeTzIQaBhyUjCgtgBmGXfmOvgCiJwhReJqVg4WGjKf4Ihlm
-         Hq8g==
-X-Gm-Message-State: APjAAAWEx6eGgWobtFQpZlfU1Z/8QngxEBFFW1Fg/NVhnJJBA9HtWk0w
-        Dfcp07ZqfWc7CBzlCau53IoyXw==
-X-Google-Smtp-Source: APXvYqy9TUL5rqDcp/B/qy16AJcabYQBNLq0iyZvX4GNbmTFLCh8dcHod2fiqqveCZmOOIunkNEaxw==
-X-Received: by 2002:a05:6a00:5b:: with SMTP id i27mr32641625pfk.112.1575935567260;
-        Mon, 09 Dec 2019 15:52:47 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id k66sm635587pgk.16.2019.12.09.15.52.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 15:52:46 -0800 (PST)
-From:   Brian Norris <briannorris@chromium.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] mwifiex: start out with BSS type ANY, not STA
-Date:   Mon,  9 Dec 2019 15:51:16 -0800
-Message-Id: <20191209235116.142692-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
+        Mon, 9 Dec 2019 18:54:31 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9Ns6Da020005;
+        Mon, 9 Dec 2019 23:54:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=XzMqQu7kZ/XxO7GcqW1UhqKiq2YGQamaLJHgV1aUj4A=;
+ b=BUJ79T52cDW4n1P8RLQUbsdp0de7pmKKaTsUye1zSFXJjYWEPXRQDZ3igTUiOVof8GhQ
+ 8V/rePW0u3psBfzdk0MHrxYjp5RpA79+I9lFdaH7lA9smBfwdh40tDlIkXfsRmb7RSgL
+ O9fey1kcfVqRxm5icxNfBZcOch3Eu0OaDhGHXcr3AwU2OiyFO2wZXJhk9o1jPWOVu6N0
+ TGPexbF0lpz48d9BE6iVVohIKdSwEOke783Gdk1NUTT/UIfwmZypI0A6SW8QDM0eNmrm
+ YeLYDdd+aTFfmJLNDC7qfiCHHJUZ0YiyZ0Nd/eZwIrz6tx6iJWJqD4Vl3pU75eAmkpVL +Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2wr4qrarss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 23:54:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9Ns9C2037866;
+        Mon, 9 Dec 2019 23:54:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2wsru838s5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 23:54:15 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB9Nrkjb027569;
+        Mon, 9 Dec 2019 23:53:48 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Dec 2019 15:53:46 -0800
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Evan Green <evgreen@chromium.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] scsi: ufs: Give an unique ID to each ufs-bsg
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <0101016eca8dc8ee-d58c2ce0-2c25-40ee-8ae0-237fce4fa82d-000000@us-west-2.amazonses.com>
+Date:   Mon, 09 Dec 2019 18:53:43 -0500
+In-Reply-To: <0101016eca8dc8ee-d58c2ce0-2c25-40ee-8ae0-237fce4fa82d-000000@us-west-2.amazonses.com>
+        (Can Guo's message of "Tue, 3 Dec 2019 06:58:40 +0000")
+Message-ID: <yq1y2vloy2g.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=630
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912090189
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=683 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912090189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mwifiex starts out by setting up 3 possible interfaces, but usually only
-1 of them gets initialized later. Currently, we leave the
-"uninitialized" interfaces with bss_type==0, which means
-MWIFIEX_BSS_TYPE_STA. This gives misleading results for things like
-mwifiex_get_intf_num(..., MWIFIEX_BSS_TYPE_STA), giving the answer "3"
-even when we only have 1 initialized STA.
 
-This bug doesn't affect functions like mwifiex_get_unused_bss_num(),
-which are looking at the bss_mode field instead (to see
-NL80211_IFTYPE_UNSPECIFIED, which happens to be 0...) for finding
-uninitialized interfaces.
+Can,
 
-Let's make mwifiex_get_intf_num() give a proper answer, by making its
-initial value the proper uninitialized value -- ANY.
+You seem to be sending duplicates of almost every mail which makes it
+hard for me (and patchwork) to track your series. The mails are
+identical except for Message-Id:.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+Also, don't resubmit patches just to add Reviewed-by: tags. Patchwork
+will pick up the tags. Only resubmit if you are making changes. And if
+you do, use -vN to bump the version.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index a9657ae6d782..a9063411d243 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -97,6 +97,8 @@ static int mwifiex_register(void *card, struct device *dev,
- 
- 		adapter->priv[i]->adapter = adapter;
- 		adapter->priv_num++;
-+		/* Start out as uninitialized. */
-+		adapter->priv[i]->bss_type = MWIFIEX_BSS_TYPE_ANY;
- 	}
- 	mwifiex_init_lock_list(adapter);
- 
+> Considering there can be multiple UFS hosts in SoC, give each ufs-bsg an
+> unique ID by appending the scsi host number to its device name.
+>
+> Fixes: df032bf27 (scsi: ufs: Add a bsg endpoint that supports UPIUs)
+
+Please use 12-char SHA and enclose commit summary in quotes. See:
+
+	Documentation/process/submitting-patches.rst
+
+Fixes: df032bf27a41 ("scsi: ufs: Add a bsg endpoint that supports UPIUs")
+
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> Reviewed-by: Avri Altman <avri.altman@wdc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Applied to 5.5/scsi-fixes, thanks!
+
 -- 
-2.24.0.393.g34dc348eaf-goog
-
+Martin K. Petersen	Oracle Linux Engineering
