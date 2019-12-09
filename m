@@ -4,994 +4,1957 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C61BC2D0BE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB949C2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8E52077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8128E2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfLIPNZ (ORCPT
+        id S1726892AbfLIPNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:13:25 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:59003 "EHLO
+        Mon, 9 Dec 2019 10:13:23 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:36535 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfLIPNW (ORCPT
+        with ESMTP id S1726080AbfLIPNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:13:22 -0500
+        Mon, 9 Dec 2019 10:13:19 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MsI0K-1hkrko1pne-00tmSX; Mon, 09 Dec 2019 16:13:04 +0100
+ 1MGQax-1iWteM1SzF-00Goys; Mon, 09 Dec 2019 16:13:03 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Krzysztof Halasa <khc@pm.waw.pl>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
-        "R.J.Dunlop" <bob.dunlop@farsite.com>,
-        Zhao Qiang <qiang.zhao@nxp.com>,
-        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
-        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Subject: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
-Date:   Mon,  9 Dec 2019 16:12:56 +0100
-Message-Id: <20191209151256.2497534-4-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] [net-next] wan: remove sbni/granch driver
+Date:   Mon,  9 Dec 2019 16:12:54 +0100
+Message-Id: <20191209151256.2497534-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191209151256.2497534-1-arnd@arndb.de>
 References: <20191209151256.2497534-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:axqQdPSgl83A4LQAeLmE7KNfPfPliwry7FdaQPchJD58gpeh1U3
- 6A9wUy/UB95zkMQKB6U6a0D0fDHQmgCPZGdf7wllVR0ZZ75pvVxWAGXAgUBeTjOhFcqhO53
- fjn81/AswbI32ZP2V7kAnyimkYqoNlHGHyc6TFghgfAS0vSS+R5IudprdlowFmBfXjwD62u
- ekn4hihPiYJMmKLeW1xdA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aPRwnT+S5Ik=:fbrPcaDEFeOzu3kQC9V6Pm
- wGEnsFVpdz9CcV8ZS/cDjjEAzk9lP4ZmqlQ0urXEBwuE4e3IGGp5IxGEytVqI38mGyDQamO38
- 2lq3dwt8yyAz6MA52q5OzXuVhX9VlPyoFuDcKy58ipo3liJ+kFkN740yh3qXoiJQt+Pc0cYFi
- bjRfDeVMy1k6f5nEipu3jb30PBONml5DaRSqFDc3T0dB2cwa97JdbvSNtTKW5stSlwrbFsQKV
- kV856sNOee4jTwTdchcUqzLjohQ66XZVhjX+qO+muyVrUEbR5jrreqlRCTx9HY7JB+05aaXBN
- uKVkwFaRCYq/TktU9mm6BfB8xM/bmqN6EfZd15WzUOpBHrhX/RbYSQIQ3noSlVgbSJGjL35U4
- 0+fW6wNdy1ojAfeTp60psFMzyaodE6oDu0oE10rKLyw9/OpOWhg7Tvnkb9MhYXzYqRUEYwr/n
- IFeLjm4+FMHuZajzf3pCjxmsx+RaAk9MuAsg9iX5w8Gn1kWoN1NxzR/ppAYV1SHKh8F7gqc2g
- 1T6heSIWIDjdcDXj7h8iq4orGw+pOtpRgapiVA2GbUdj8hwqE3URNHOcMuaDlfLlQv5aDJWWa
- OayDfUEahq/gIIGD9Mz5x46POdB5KfQuw5J7YvbQyFCGLOx3xTFKM+grxmNbSZdd9biF2F9/s
- krTTIjuJg3FT+pEPKo3MZLuKuY/th3luETI89e3cinuTytjMjExbfVTTPu1/vr6EiF+OBai54
- BCwstXkK4+yAqfSDLfUdU9JrarEi8MBI6AF6rRDEXkMjdW/Q+sDcmvk8HydbgL7CS+Cfx5x+1
- GqaBNuAWFOaWihI3wSLafI4BGXLZjEoGfREv6wLkBLB535NRnyR7iuMvpgRB8Wg5xdrjD46FY
- IaeEdzPxfNHqqqEiScjQ==
+X-Provags-ID: V03:K1:2duUSfGG8rtV2eiPn2Zq1e0EmF+sVp1t4mJMydBsW6O3qXbOBhb
+ XDY3drW0YilQzIugGj0iAhA1dLhpXbXq2tR3dxfZCdrB3kAExGhlXSUyvfhuDwI2UF+MhVh
+ L/7nwC23WXyc+VSOE+FVR3x2KaQVVCkM556ho5uI5T79jGjQtZ6iA7yFOzi4lVlgxpIBrpH
+ ndxiyp9XfCg217jPUdqRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QBU+a+VlDDs=:4g0iHma8jrI1cIDuYEJCAN
+ 6YhY8C2MOYsWUeXutuwVrRaaolGN6sRP6B4VXrQiexMY2G3bibCAKRUr17QvC1gJJNVjIOOow
+ Dpfs+088FtO/gdWfrwJyonCbUqJ4Tdbzb+UhUAge8TGE4H9HOQa7qi0SPcyF2YvX+/+X4b2C+
+ gZeOe3rj/nLSHNQXxfsk0vNBNcgZpGxIqaInzAkKNseIVJAZztQXiqhhZr15BPZt7mK6QqZkm
+ EzKG9PqXy2fpcP9Zlovmd3b8SguRtFiF9bOt+7zlD6Jc5b6kXWIPtLeZVLQd+LqFPU6/S3EvO
+ TmwUmB9sS7Tv/ivu1s9ve1YaqcbtIN3Ol3eIUFCQKHq5yZKlMMFLTOkWeobO2h3mCzTNG6XWU
+ WRrOZ32Zwkf4cRnvcjCl7DBUKYUIBtGjJccCU3UyoM4VEEpis7SPl6T4YeUJmabxwZVRJSzgZ
+ RdDt2TfAgro7a95a2/jhkRtNRpWd/CziVdqeD8szadEy44dnkfu1uVf3J9T70dPpo4y9u3K4A
+ owFoIERSABRJfP2G/StDYPjwvbhgP8uh39bpmgxtK02gkMAOLXbKxCEAURjgkaMPQNY58JM8S
+ NmrTY9nNyGiQBPe+jczUDa97rEWOVPQEMYlBWF/YvZCs21vzljWNbFc6Y+L/cnRFXPeihFtwA
+ WubJxnYuISNo0OVsc7jB+xkqzY/PlhqdIn/e2FEvwF4Y8mxGGrgbQKOOTlSoox3dxLjxvB7Ho
+ 1S4NveIbuInEY7dsZPFLV3nJQYdmDT/qGmhBbZAqnjTIwZUPbrnekfQFZ2fuWLD9swVGta6IY
+ jVBXcadbVX4dei6RR/fJqiX3En1Gv+OSFgo1W8kTN4ro71OGBJzk7SsXUzyWbPcxeqx+TOsND
+ x4D3o1ZJ9OODswUnukrQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot keeps finding issues in the X.25 implementation that nobody is
-interested in fixing.  Given that all the x25 patches of the past years
-that are not global cleanups tend to fix user-triggered oopses, is it
-time to just retire the subsystem?
+The driver was merged in 1999 and has only ever seen treewide cleanups
+since then, with no indication whatsoever that anyone has actually
+had access to hardware for testing the patches.
 
-I looked a bit closer and found:
+From the information in the link below, it appears that the hardware
+is for some leased line system in Russia that has since been
+discontinued.
 
-- we used to support x25 hardware in linux, but with WAN_ROUTER
-  removed in linux-3.9 and isdn4linux removed in 5.3, there is only hdlc,
-  ethernet and the N_X25 tty ldisc left. Out of these, only HDLC_X25 made
-  it beyond the experimental stage, so this is probably what everyone
-  uses if there are users at all.
+As the driver still feels like a Linux-2.2 era artifact today, it
+appears that the best way forward is to just delete it.
 
-- The most common hdlc hardware that people seem to be using are
-  the "farsync" PCIe and USB adapters. Linux only has drivers for the
-  older PCI devices from that series, but no hardware that works on
-  modern systems.
-
-- The manufacturer still updates their own kernel drivers and provides
-  support, but ships that with a fork or rewrite of the subsystem
-  code now.  Kevin Curtis is also listed as maintainer, but appears to
-  have given up in 2013 after [1].
-
-- The most popular software implementation appears to be X25 over TCP
-  (XOT), which is supported by Farsite and other out-of-tree stacks but
-  never had an implementation in mainline.
-
-- Most other supported HDLC hardware that we supoprt is for the ISA or
-  PCI buses. There are newer PCIe or USB devices, but those all require
-  a custom device driver and often a custom subsystem, none of which got
-  submitted for mainline inclusion. This includes hardware from Microgate
-  (SyncLink), Comtrol (RocketPort Express) and Sealevel (SeaMAC).
-
-- The X.25 subsystem is listed as "odd fixes", but the last reply on
-  the netdev mailing list from the maintainer was also in 2013[2].
-
-- The HDLC subsystem itself is listed as maintained by Krzysztof Halasa,
-  and there were new drivers merged for SoC based devices as late as
-  2016 by Zhao Qiang: Freescale/NXP QUICC Engine and Maxim ds26522.
-  There has not been much work on HDLC or drivers/net/wan recently,
-  but both developers are still responsive on the mailing list and
-  work on other parts of the kernel.
-
-Based on the above, I would conclude that X.25 can probably get moved
-to staging as keeping it in the kernel seems to do more harm than good,
-but HDLC below it should probably stay as there it seems there are still
-users of a small subset of the mainline drivers.
-
-Move all of X.25 into drivers/staging for now, with a projected removal
-date set for Linux-5.8.
-
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Andrew Hendry <andrew.hendry@gmail.com>
-Cc: linux-x25@vger.kernel.org
-Cc: Kevin Curtis <kevin.curtis@farsite.com>
-Cc: "R.J.Dunlop" <bob.dunlop@farsite.com>
-Cc: Zhao Qiang <qiang.zhao@nxp.com>
-Cc: Krzysztof Halasa <khc@pm.waw.pl>
-Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
-Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=5b0ecf0386f56be7fe7210a14d0f62df765c0c39
+Link: https://www.tms.ru/%D0%90%D0%B4%D0%B0%D0%BF%D1%82%D0%B5%D1%80_%D0%B4%D0%BB%D1%8F_%D0%B2%D1%8B%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D1%85_%D0%BB%D0%B8%D0%BD%D0%B8%D0%B9_Granch_SBNI12-10
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-----
-
-If anyone has different views or additional information, let us know.
-
-If you agree with the above, please Ack.
 ---
- MAINTAINERS                                   |  8 +-
- drivers/net/wan/Kconfig                       | 43 --------
- drivers/net/wan/Makefile                      |  3 -
- drivers/staging/Kconfig                       |  2 +
- drivers/staging/Makefile                      |  2 +
- .../x25/Documentation}/lapb-module.txt        |  0
- .../staging/x25/Documentation}/x25-iface.txt  |  0
- .../staging/x25/Documentation}/x25.txt        |  0
- drivers/staging/x25/Kconfig                   | 97 +++++++++++++++++++
- {net => drivers/staging}/x25/Makefile         |  8 ++
- drivers/staging/x25/TODO                      | 15 +++
- {net => drivers/staging}/x25/af_x25.c         |  2 +-
- drivers/{net/wan => staging/x25}/hdlc_x25.c   |  2 +-
- {include/net => drivers/staging/x25}/lapb.h   |  2 +-
- .../lapb => drivers/staging/x25}/lapb_iface.c |  2 +-
- {net/lapb => drivers/staging/x25}/lapb_in.c   |  2 +-
- {net/lapb => drivers/staging/x25}/lapb_out.c  |  2 +-
- {net/lapb => drivers/staging/x25}/lapb_subr.c |  2 +-
- .../lapb => drivers/staging/x25}/lapb_timer.c |  2 +-
- drivers/{net/wan => staging/x25}/lapbether.c  |  2 +-
- .../staging/x25/linux-lapb.h                  |  0
- {net => drivers/staging}/x25/sysctl_net_x25.c |  2 +-
- .../x25.h => drivers/staging/x25/uapi-x25.h   |  0
- {include/net => drivers/staging/x25}/x25.h    |  2 +-
- drivers/{net/wan => staging/x25}/x25_asy.c    |  2 +-
- drivers/{net/wan => staging/x25}/x25_asy.h    |  0
- {net => drivers/staging}/x25/x25_dev.c        |  2 +-
- {net => drivers/staging}/x25/x25_facilities.c |  2 +-
- {net => drivers/staging}/x25/x25_forward.c    |  2 +-
- {net => drivers/staging}/x25/x25_in.c         |  2 +-
- {net => drivers/staging}/x25/x25_link.c       |  2 +-
- {net => drivers/staging}/x25/x25_out.c        |  2 +-
- {net => drivers/staging}/x25/x25_proc.c       |  2 +-
- {net => drivers/staging}/x25/x25_route.c      |  2 +-
- {net => drivers/staging}/x25/x25_subr.c       |  2 +-
- {net => drivers/staging}/x25/x25_timer.c      |  2 +-
- include/Kbuild                                |  2 -
- net/Kconfig                                   |  2 -
- net/Makefile                                  |  2 -
- net/lapb/Kconfig                              | 22 -----
- net/lapb/Makefile                             |  8 --
- net/x25/Kconfig                               | 34 -------
- 42 files changed, 148 insertions(+), 144 deletions(-)
- rename {Documentation/networking => drivers/staging/x25/Documentation}/lapb-module.txt (100%)
- rename {Documentation/networking => drivers/staging/x25/Documentation}/x25-iface.txt (100%)
- rename {Documentation/networking => drivers/staging/x25/Documentation}/x25.txt (100%)
- create mode 100644 drivers/staging/x25/Kconfig
- rename {net => drivers/staging}/x25/Makefile (58%)
- create mode 100644 drivers/staging/x25/TODO
- rename {net => drivers/staging}/x25/af_x25.c (99%)
- rename drivers/{net/wan => staging/x25}/hdlc_x25.c (99%)
- rename {include/net => drivers/staging/x25}/lapb.h (99%)
- rename {net/lapb => drivers/staging/x25}/lapb_iface.c (99%)
- rename {net/lapb => drivers/staging/x25}/lapb_in.c (99%)
- rename {net/lapb => drivers/staging/x25}/lapb_out.c (99%)
- rename {net/lapb => drivers/staging/x25}/lapb_subr.c (99%)
- rename {net/lapb => drivers/staging/x25}/lapb_timer.c (99%)
- rename drivers/{net/wan => staging/x25}/lapbether.c (99%)
- rename include/linux/lapb.h => drivers/staging/x25/linux-lapb.h (100%)
- rename {net => drivers/staging}/x25/sysctl_net_x25.c (98%)
- rename include/uapi/linux/x25.h => drivers/staging/x25/uapi-x25.h (100%)
- rename {include/net => drivers/staging/x25}/x25.h (99%)
- rename drivers/{net/wan => staging/x25}/x25_asy.c (99%)
- rename drivers/{net/wan => staging/x25}/x25_asy.h (100%)
- rename {net => drivers/staging}/x25/x25_dev.c (99%)
- rename {net => drivers/staging}/x25/x25_facilities.c (99%)
- rename {net => drivers/staging}/x25/x25_forward.c (99%)
- rename {net => drivers/staging}/x25/x25_in.c (99%)
- rename {net => drivers/staging}/x25/x25_link.c (99%)
- rename {net => drivers/staging}/x25/x25_out.c (99%)
- rename {net => drivers/staging}/x25/x25_proc.c (99%)
- rename {net => drivers/staging}/x25/x25_route.c (99%)
- rename {net => drivers/staging}/x25/x25_subr.c (99%)
- rename {net => drivers/staging}/x25/x25_timer.c (99%)
- delete mode 100644 net/lapb/Kconfig
- delete mode 100644 net/lapb/Makefile
- delete mode 100644 net/x25/Kconfig
+ .../admin-guide/kernel-parameters.txt         |    2 -
+ drivers/net/Space.c                           |    4 -
+ drivers/net/wan/Kconfig                       |   28 -
+ drivers/net/wan/Makefile                      |    1 -
+ drivers/net/wan/sbni.c                        | 1623 -----------------
+ drivers/net/wan/sbni.h                        |  147 --
+ include/net/Space.h                           |    3 -
+ 7 files changed, 1808 deletions(-)
+ delete mode 100644 drivers/net/wan/sbni.c
+ delete mode 100644 drivers/net/wan/sbni.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32fab6fbd301..5f0786bd8e22 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9155,9 +9155,7 @@ F:	drivers/soc/lantiq
- LAPB module
- L:	linux-x25@vger.kernel.org
- S:	Orphan
--F:	Documentation/networking/lapb-module.txt
--F:	include/*/lapb.h
--F:	net/lapb/
-+F:	drivers/staging/x25/
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a84a83f8881e..2161e4f93e17 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4264,8 +4264,6 @@
+ 	sa1100ir	[NET]
+ 			See drivers/net/irda/sa1100_ir.c.
  
- LASI 53c700 driver for PARISC
- M:	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-@@ -17645,9 +17643,7 @@ X.25 NETWORK LAYER
- M:	Andrew Hendry <andrew.hendry@gmail.com>
- L:	linux-x25@vger.kernel.org
- S:	Odd Fixes
--F:	Documentation/networking/x25*
--F:	include/net/x25*
--F:	net/x25/
-+F:	drivers/staging/x25/
+-	sbni=		[NET] Granch SBNI12 leased line adapter
+-
+ 	sched_debug	[KNL] Enables verbose scheduler debug messages.
  
- X86 ARCHITECTURE (32-BIT AND 64-BIT)
- M:	Thomas Gleixner <tglx@linutronix.de>
+ 	schedstats=	[KNL,X86] Enable or disable scheduled statistics.
+diff --git a/drivers/net/Space.c b/drivers/net/Space.c
+index 890c86e11bcc..7bb699d7c422 100644
+--- a/drivers/net/Space.c
++++ b/drivers/net/Space.c
+@@ -133,10 +133,6 @@ static int __init net_olddevs_init(void)
+ {
+ 	int num;
+ 
+-#ifdef CONFIG_SBNI
+-	for (num = 0; num < 8; ++num)
+-		sbni_probe(num);
+-#endif
+ 	for (num = 0; num < 8; ++num)
+ 		ethif_probe2(num);
+ 
 diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
-index 74f2bd639b07..931457129b3b 100644
+index 59b25d7e13e8..e9ad63115144 100644
 --- a/drivers/net/wan/Kconfig
 +++ b/drivers/net/wan/Kconfig
-@@ -156,17 +156,6 @@ config HDLC_PPP
+@@ -374,32 +374,4 @@ config X25_ASY
  
  	  If unsure, say N.
  
--config HDLC_X25
--	tristate "X.25 protocol support"
--	depends on HDLC && (LAPB=m && HDLC=m || LAPB=y)
+-config SBNI
+-	tristate "Granch SBNI12 Leased Line adapter support"
+-	depends on X86
+-	---help---
+-	  Driver for ISA SBNI12-xx cards which are low cost alternatives to
+-	  leased line modems.
+-
+-	  You can find more information and last versions of drivers and
+-	  utilities at <http://www.granch.ru/>. If you have any question you
+-	  can send email to <sbni@granch.ru>.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called sbni.
+-
+-	  If unsure, say N.
+-
+-config SBNI_MULTILINE
+-	bool "Multiple line feature support"
+-	depends on SBNI
 -	help
--	  Generic HDLC driver supporting X.25 over WAN connections.
+-	  Schedule traffic for some parallel lines, via SBNI12 adapters.
 -
--	  If unsure, say N.
--
--comment "X.25/LAPB support is disabled"
--	depends on HDLC && (LAPB!=m || HDLC!=m) && LAPB!=y
--
- config PCI200SYN
- 	tristate "Goramo PCI200SYN support"
- 	depends on HDLC && PCI
-@@ -297,36 +286,4 @@ config IXP4XX_HSS
- 	  Say Y here if you want to use built-in HSS ports
- 	  on IXP4xx processor.
- 
--# X.25 network drivers
--config LAPBETHER
--	tristate "LAPB over Ethernet driver"
--	depends on LAPB && X25
--	---help---
--	  Driver for a pseudo device (typically called /dev/lapb0) which allows
--	  you to open an LAPB point-to-point connection to some other computer
--	  on your Ethernet network.
--
--	  In order to do this, you need to say Y or M to the driver for your
--	  Ethernet card as well as to "LAPB Data Link Driver".
--
--	  To compile this driver as a module, choose M here: the
--	  module will be called lapbether.
--
--	  If unsure, say N.
--
--config X25_ASY
--	tristate "X.25 async driver"
--	depends on LAPB && X25 && TTY
--	---help---
--	  Send and receive X.25 frames over regular asynchronous serial
--	  lines such as telephone lines equipped with ordinary modems.
--
--	  Experts should note that this driver doesn't currently comply with
--	  the asynchronous HDLS framing protocols in CCITT recommendation X.25.
--
--	  To compile this driver as a module, choose M here: the
--	  module will be called x25_asy.
+-	  If you have two computers connected with two parallel lines it's
+-	  possible to increase transfer rate nearly twice. You should have
+-	  a program named 'sbniconfig' to configure adapters.
 -
 -	  If unsure, say N.
 -
  endif # WAN
 diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
-index 4438a0c4a272..1eb30941a445 100644
+index 701f5d2fe3b6..3059b9a279b3 100644
 --- a/drivers/net/wan/Makefile
 +++ b/drivers/net/wan/Makefile
-@@ -12,17 +12,14 @@ obj-$(CONFIG_HDLC_RAW_ETH)	+= hdlc_raw_eth.o
- obj-$(CONFIG_HDLC_CISCO)	+= hdlc_cisco.o
- obj-$(CONFIG_HDLC_FR)		+= hdlc_fr.o
- obj-$(CONFIG_HDLC_PPP)		+= hdlc_ppp.o
--obj-$(CONFIG_HDLC_X25)		+= hdlc_x25.o
- 
- obj-$(CONFIG_HOSTESS_SV11)	+= z85230.o	hostess_sv11.o
- obj-$(CONFIG_SEALEVEL_4021)	+= z85230.o	sealevel.o
- obj-$(CONFIG_COSA)		+= cosa.o
- obj-$(CONFIG_FARSYNC)		+= farsync.o
--obj-$(CONFIG_X25_ASY)		+= x25_asy.o
- 
- obj-$(CONFIG_LANMEDIA)		+= lmc/
- 
--obj-$(CONFIG_LAPBETHER)		+= lapbether.o
+@@ -25,7 +25,6 @@ obj-$(CONFIG_LANMEDIA)		+= lmc/
+ obj-$(CONFIG_DLCI)		+= dlci.o 
+ obj-$(CONFIG_SDLA)		+= sdla.o
+ obj-$(CONFIG_LAPBETHER)		+= lapbether.o
+-obj-$(CONFIG_SBNI)		+= sbni.o
  obj-$(CONFIG_N2)		+= n2.o
  obj-$(CONFIG_C101)		+= c101.o
  obj-$(CONFIG_WANXL)		+= wanxl.o
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index ab83326f4b7e..e2edb29ccb42 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -123,4 +123,6 @@ source "drivers/staging/exfat/Kconfig"
- 
- source "drivers/staging/qlge/Kconfig"
- 
-+source "drivers/staging/x25/Kconfig"
-+
- endif # STAGING
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index dfddb9864b2e..0576784f1f11 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -52,3 +52,5 @@ obj-$(CONFIG_UWB)		+= uwb/
- obj-$(CONFIG_USB_WUSB)		+= wusbcore/
- obj-$(CONFIG_EXFAT_FS)		+= exfat/
- obj-$(CONFIG_QLGE)		+= qlge/
-+obj-$(CONFIG_X25)		+= x25/
-+obj-$(CONFIG_LAPB)		+= x25/
-diff --git a/Documentation/networking/lapb-module.txt b/drivers/staging/x25/Documentation/lapb-module.txt
-similarity index 100%
-rename from Documentation/networking/lapb-module.txt
-rename to drivers/staging/x25/Documentation/lapb-module.txt
-diff --git a/Documentation/networking/x25-iface.txt b/drivers/staging/x25/Documentation/x25-iface.txt
-similarity index 100%
-rename from Documentation/networking/x25-iface.txt
-rename to drivers/staging/x25/Documentation/x25-iface.txt
-diff --git a/Documentation/networking/x25.txt b/drivers/staging/x25/Documentation/x25.txt
-similarity index 100%
-rename from Documentation/networking/x25.txt
-rename to drivers/staging/x25/Documentation/x25.txt
-diff --git a/drivers/staging/x25/Kconfig b/drivers/staging/x25/Kconfig
-new file mode 100644
-index 000000000000..18724b747a9e
---- /dev/null
-+++ b/drivers/staging/x25/Kconfig
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# CCITT X.25 Packet Layer
-+#
-+
-+config X25
-+	tristate "CCITT X.25 Packet Layer"
-+	depends on NET
-+	---help---
-+	  X.25 is a set of standardized network protocols, similar in scope to
-+	  frame relay; the one physical line from your box to the X.25 network
-+	  entry point can carry several logical point-to-point connections
-+	  (called "virtual circuits") to other computers connected to the X.25
-+	  network. Governments, banks, and other organizations tend to use it
-+	  to connect to each other or to form Wide Area Networks (WANs). Many
-+	  countries have public X.25 networks. X.25 consists of two
-+	  protocols: the higher level Packet Layer Protocol (PLP) (say Y here
-+	  if you want that) and the lower level data link layer protocol LAPB
-+	  (say Y to "LAPB Data Link Driver" below if you want that).
-+
-+	  You can read more about X.25 at <http://www.sangoma.com/tutorials/x25/> and
-+	  <http://docwiki.cisco.com/wiki/X.25>.
-+	  Information about X.25 for Linux is contained in the files
-+	  <file:Documentation/networking/x25.txt> and
-+	  <file:Documentation/networking/x25-iface.txt>.
-+
-+	  One connects to an X.25 network either with a dedicated network card
-+	  using the X.21 protocol (not yet supported by Linux) or one can do
-+	  X.25 over a standard telephone line using an ordinary modem (say Y
-+	  to "X.25 async driver" below) or over Ethernet using an ordinary
-+	  Ethernet card and the LAPB over Ethernet (say Y to "LAPB Data Link
-+	  Driver" and "LAPB over Ethernet driver" below).
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called x25. If unsure, say N.
-+
-+config LAPB
-+	tristate "LAPB  Data Link Driver"
-+	depends on NET
-+	---help---
-+	  Link Access Procedure, Balanced (LAPB) is the data link layer (i.e.
-+	  the lower) part of the X.25 protocol. It offers a reliable
-+	  connection service to exchange data frames with one other host, and
-+	  it is used to transport higher level protocols (mostly X.25 Packet
-+	  Layer, the higher part of X.25, but others are possible as well).
-+	  Usually, LAPB is used with specialized X.21 network cards, but Linux
-+	  currently supports LAPB only over Ethernet connections. If you want
-+	  to use LAPB connections over Ethernet, say Y here and to "LAPB over
-+	  Ethernet driver" below. Read
-+	  <file:Documentation/networking/lapb-module.txt> for technical
-+	  details.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called lapb.  If unsure, say N.
-+
-+config HDLC_X25
-+	tristate "X.25 protocol support"
-+	depends on HDLC && (LAPB=m && HDLC=m || LAPB=y)
-+	help
-+	  Generic HDLC driver supporting X.25 over WAN connections.
-+
-+	  If unsure, say N.
-+
-+comment "X.25/LAPB support is disabled"
-+	depends on HDLC && (LAPB!=m || HDLC!=m) && LAPB!=y
-+
-+# X.25 network drivers
-+config LAPBETHER
-+	tristate "LAPB over Ethernet driver"
-+	depends on LAPB && X25
-+	---help---
-+	  Driver for a pseudo device (typically called /dev/lapb0) which allows
-+	  you to open an LAPB point-to-point connection to some other computer
-+	  on your Ethernet network.
-+
-+	  In order to do this, you need to say Y or M to the driver for your
-+	  Ethernet card as well as to "LAPB Data Link Driver".
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called lapbether.
-+
-+	  If unsure, say N.
-+
-+config X25_ASY
-+	tristate "X.25 async driver"
-+	depends on LAPB && X25 && TTY
-+	---help---
-+	  Send and receive X.25 frames over regular asynchronous serial
-+	  lines such as telephone lines equipped with ordinary modems.
-+
-+	  Experts should note that this driver doesn't currently comply with
-+	  the asynchronous HDLS framing protocols in CCITT recommendation X.25.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called x25_asy.
-+
-+	  If unsure, say N.
-diff --git a/net/x25/Makefile b/drivers/staging/x25/Makefile
-similarity index 58%
-rename from net/x25/Makefile
-rename to drivers/staging/x25/Makefile
-index 5dd544a231f2..d8235ac6b015 100644
---- a/net/x25/Makefile
-+++ b/drivers/staging/x25/Makefile
-@@ -9,3 +9,11 @@ x25-y			:= af_x25.o x25_dev.o x25_facilities.o x25_in.o \
- 			   x25_link.o x25_out.o x25_route.o x25_subr.o \
- 			   x25_timer.o x25_proc.o x25_forward.o
- x25-$(CONFIG_SYSCTL)	+= sysctl_net_x25.o
-+
-+obj-$(CONFIG_LAPB) += lapb.o
-+
-+lapb-y := lapb_in.o lapb_out.o lapb_subr.o lapb_timer.o lapb_iface.o
-+
-+obj-$(CONFIG_HDLC_X25)		+= hdlc_x25.o
-+obj-$(CONFIG_X25_ASY)		+= x25_asy.o
-+obj-$(CONFIG_LAPBETHER)		+= lapbether.o
-diff --git a/drivers/staging/x25/TODO b/drivers/staging/x25/TODO
-new file mode 100644
-index 000000000000..bb42cf474ca1
---- /dev/null
-+++ b/drivers/staging/x25/TODO
-@@ -0,0 +1,15 @@
-+Staging out of X.25
-+===================
-+
-+It appears that the X.25 socket family is not used any more with the
-+mainline kernel, and the git log shows a series of user-triggerable
-+Oopses.
-+
-+https://www.farsite.com/ still makes hardware that is being used in the
-+field, but that uses a custom out of tree protocol stack in place of
-+the kernel's AF_X25.
-+
-+If there are remaining users of this code that I missed, it can be moved
-+out back out of staging, otherwise it will be removed in linux-5.8.
-+
-+    Arnd Bergmann <arnd@arndb.de>
-diff --git a/net/x25/af_x25.c b/drivers/staging/x25/af_x25.c
-similarity index 99%
-rename from net/x25/af_x25.c
-rename to drivers/staging/x25/af_x25.c
-index 6aee9f5e8e71..be950682209d 100644
---- a/net/x25/af_x25.c
-+++ b/drivers/staging/x25/af_x25.c
-@@ -54,7 +54,7 @@
- #include <linux/compat.h>
- #include <linux/ctype.h>
- 
--#include <net/x25.h>
-+#include "x25.h"
- #include <net/compat.h>
- 
- int sysctl_x25_restart_request_timeout = X25_DEFAULT_T20;
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/staging/x25/hdlc_x25.c
-similarity index 99%
-rename from drivers/net/wan/hdlc_x25.c
-rename to drivers/staging/x25/hdlc_x25.c
-index 5643675ff724..32ccf0c8e040 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/staging/x25/hdlc_x25.c
-@@ -13,7 +13,7 @@
- #include <linux/inetdevice.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
--#include <linux/lapb.h>
-+#include "linux-lapb.h"
- #include <linux/module.h>
- #include <linux/pkt_sched.h>
- #include <linux/poll.h>
-diff --git a/include/net/lapb.h b/drivers/staging/x25/lapb.h
-similarity index 99%
-rename from include/net/lapb.h
-rename to drivers/staging/x25/lapb.h
-index ccc3d1f020b0..2abab6266caf 100644
---- a/include/net/lapb.h
-+++ b/drivers/staging/x25/lapb.h
-@@ -1,8 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _LAPB_H
- #define _LAPB_H 
--#include <linux/lapb.h>
- #include <linux/refcount.h>
-+#include "linux-lapb.h"
- 
- #define	LAPB_HEADER_LEN	20		/* LAPB over Ethernet + a bit more */
- 
-diff --git a/net/lapb/lapb_iface.c b/drivers/staging/x25/lapb_iface.c
-similarity index 99%
-rename from net/lapb/lapb_iface.c
-rename to drivers/staging/x25/lapb_iface.c
-index 3c03f6512c5f..1231ae28ec64 100644
---- a/net/lapb/lapb_iface.c
-+++ b/drivers/staging/x25/lapb_iface.c
-@@ -34,7 +34,7 @@
- #include <linux/interrupt.h>
- #include <linux/stat.h>
- #include <linux/init.h>
--#include <net/lapb.h>
-+#include "lapb.h"
- 
- static LIST_HEAD(lapb_list);
- static DEFINE_RWLOCK(lapb_list_lock);
-diff --git a/net/lapb/lapb_in.c b/drivers/staging/x25/lapb_in.c
-similarity index 99%
-rename from net/lapb/lapb_in.c
-rename to drivers/staging/x25/lapb_in.c
-index 38ae23c09e83..210f8c743b39 100644
---- a/net/lapb/lapb_in.c
-+++ b/drivers/staging/x25/lapb_in.c
-@@ -30,7 +30,7 @@
- #include <linux/fcntl.h>
- #include <linux/mm.h>
- #include <linux/interrupt.h>
--#include <net/lapb.h>
-+#include "lapb.h"
- 
- /*
-  *	State machine for state 0, Disconnected State.
-diff --git a/net/lapb/lapb_out.c b/drivers/staging/x25/lapb_out.c
-similarity index 99%
-rename from net/lapb/lapb_out.c
-rename to drivers/staging/x25/lapb_out.c
-index 7a4d0715d1c3..d4ba7a5ebd33 100644
---- a/net/lapb/lapb_out.c
-+++ b/drivers/staging/x25/lapb_out.c
-@@ -28,7 +28,7 @@
- #include <linux/fcntl.h>
- #include <linux/mm.h>
- #include <linux/interrupt.h>
--#include <net/lapb.h>
-+#include "lapb.h"
- 
- /*
-  *  This procedure is passed a buffer descriptor for an iframe. It builds
-diff --git a/net/lapb/lapb_subr.c b/drivers/staging/x25/lapb_subr.c
-similarity index 99%
-rename from net/lapb/lapb_subr.c
-rename to drivers/staging/x25/lapb_subr.c
-index 592a22d86a97..f5ec7868c5a4 100644
---- a/net/lapb/lapb_subr.c
-+++ b/drivers/staging/x25/lapb_subr.c
-@@ -27,7 +27,7 @@
- #include <linux/fcntl.h>
- #include <linux/mm.h>
- #include <linux/interrupt.h>
--#include <net/lapb.h>
-+#include "lapb.h"
- 
- /*
-  *	This routine purges all the queues of frames.
-diff --git a/net/lapb/lapb_timer.c b/drivers/staging/x25/lapb_timer.c
-similarity index 99%
-rename from net/lapb/lapb_timer.c
-rename to drivers/staging/x25/lapb_timer.c
-index 8f5b17001a07..0b46163593e5 100644
---- a/net/lapb/lapb_timer.c
-+++ b/drivers/staging/x25/lapb_timer.c
-@@ -28,7 +28,7 @@
- #include <linux/fcntl.h>
- #include <linux/mm.h>
- #include <linux/interrupt.h>
--#include <net/lapb.h>
-+#include "lapb.h"
- 
- static void lapb_t1timer_expiry(struct timer_list *);
- static void lapb_t2timer_expiry(struct timer_list *);
-diff --git a/drivers/net/wan/lapbether.c b/drivers/staging/x25/lapbether.c
-similarity index 99%
-rename from drivers/net/wan/lapbether.c
-rename to drivers/staging/x25/lapbether.c
-index 0f1217b506ad..6ff971705dca 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/staging/x25/lapbether.c
-@@ -36,7 +36,7 @@
- #include <linux/notifier.h>
- #include <linux/stat.h>
- #include <linux/module.h>
--#include <linux/lapb.h>
-+#include "linux-lapb.h"
- #include <linux/init.h>
- 
- #include <net/x25device.h>
-diff --git a/include/linux/lapb.h b/drivers/staging/x25/linux-lapb.h
-similarity index 100%
-rename from include/linux/lapb.h
-rename to drivers/staging/x25/linux-lapb.h
-diff --git a/net/x25/sysctl_net_x25.c b/drivers/staging/x25/sysctl_net_x25.c
-similarity index 98%
-rename from net/x25/sysctl_net_x25.c
-rename to drivers/staging/x25/sysctl_net_x25.c
-index e9802afa43d0..e8530a4e4856 100644
---- a/net/x25/sysctl_net_x25.c
-+++ b/drivers/staging/x25/sysctl_net_x25.c
-@@ -11,7 +11,7 @@
- #include <linux/socket.h>
- #include <linux/netdevice.h>
- #include <linux/init.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- static int min_timer[] = {   1 * HZ };
- static int max_timer[] = { 300 * HZ };
-diff --git a/include/uapi/linux/x25.h b/drivers/staging/x25/uapi-x25.h
-similarity index 100%
-rename from include/uapi/linux/x25.h
-rename to drivers/staging/x25/uapi-x25.h
-diff --git a/include/net/x25.h b/drivers/staging/x25/x25.h
-similarity index 99%
-rename from include/net/x25.h
-rename to drivers/staging/x25/x25.h
-index ed1acc3044ac..dfbc0188e47d 100644
---- a/include/net/x25.h
-+++ b/drivers/staging/x25/x25.h
-@@ -10,10 +10,10 @@
- 
- #ifndef _X25_H
- #define _X25_H 
--#include <linux/x25.h>
- #include <linux/slab.h>
- #include <linux/refcount.h>
- #include <net/sock.h>
-+#include "uapi-x25.h"
- 
- #define	X25_ADDR_LEN			16
- 
-diff --git a/drivers/net/wan/x25_asy.c b/drivers/staging/x25/x25_asy.c
-similarity index 99%
-rename from drivers/net/wan/x25_asy.c
-rename to drivers/staging/x25/x25_asy.c
-index 914be5847386..3986a1160fc1 100644
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/staging/x25/x25_asy.c
-@@ -31,7 +31,7 @@
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include <linux/if_arp.h>
--#include <linux/lapb.h>
-+#include "linux-lapb.h"
- #include <linux/init.h>
- #include <linux/rtnetlink.h>
- #include <linux/slab.h>
-diff --git a/drivers/net/wan/x25_asy.h b/drivers/staging/x25/x25_asy.h
-similarity index 100%
-rename from drivers/net/wan/x25_asy.h
-rename to drivers/staging/x25/x25_asy.h
-diff --git a/net/x25/x25_dev.c b/drivers/staging/x25/x25_dev.c
-similarity index 99%
-rename from net/x25/x25_dev.c
-rename to drivers/staging/x25/x25_dev.c
-index 00e782335cb0..dbdce9c62abd 100644
---- a/net/x25/x25_dev.c
-+++ b/drivers/staging/x25/x25_dev.c
-@@ -20,7 +20,7 @@
- #include <linux/slab.h>
- #include <net/sock.h>
- #include <linux/if_arp.h>
--#include <net/x25.h>
-+#include "x25.h"
- #include <net/x25device.h>
- 
- static int x25_receive_data(struct sk_buff *skb, struct x25_neigh *nb)
-diff --git a/net/x25/x25_facilities.c b/drivers/staging/x25/x25_facilities.c
-similarity index 99%
-rename from net/x25/x25_facilities.c
-rename to drivers/staging/x25/x25_facilities.c
-index 7fb327632272..17e41049cb2b 100644
---- a/net/x25/x25_facilities.c
-+++ b/drivers/staging/x25/x25_facilities.c
-@@ -22,7 +22,7 @@
- #include <linux/string.h>
- #include <linux/skbuff.h>
- #include <net/sock.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- /**
-  * x25_parse_facilities - Parse facilities from skb into the facilities structs
-diff --git a/net/x25/x25_forward.c b/drivers/staging/x25/x25_forward.c
-similarity index 99%
-rename from net/x25/x25_forward.c
-rename to drivers/staging/x25/x25_forward.c
-index c82999941d3f..4328f0e31482 100644
---- a/net/x25/x25_forward.c
-+++ b/drivers/staging/x25/x25_forward.c
-@@ -9,7 +9,7 @@
- #include <linux/if_arp.h>
- #include <linux/init.h>
- #include <linux/slab.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- LIST_HEAD(x25_forward_list);
- DEFINE_RWLOCK(x25_forward_list_lock);
-diff --git a/net/x25/x25_in.c b/drivers/staging/x25/x25_in.c
-similarity index 99%
-rename from net/x25/x25_in.c
-rename to drivers/staging/x25/x25_in.c
-index f97c43344e95..e0c1f1484d8c 100644
---- a/net/x25/x25_in.c
-+++ b/drivers/staging/x25/x25_in.c
-@@ -27,7 +27,7 @@
- #include <linux/skbuff.h>
- #include <net/sock.h>
- #include <net/tcp_states.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- static int x25_queue_rx_frame(struct sock *sk, struct sk_buff *skb, int more)
- {
-diff --git a/net/x25/x25_link.c b/drivers/staging/x25/x25_link.c
-similarity index 99%
-rename from net/x25/x25_link.c
-rename to drivers/staging/x25/x25_link.c
-index 7d02532aad0d..5c07143e557d 100644
---- a/net/x25/x25_link.c
-+++ b/drivers/staging/x25/x25_link.c
-@@ -26,7 +26,7 @@
- #include <linux/skbuff.h>
- #include <linux/uaccess.h>
- #include <linux/init.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- LIST_HEAD(x25_neigh_list);
- DEFINE_RWLOCK(x25_neigh_list_lock);
-diff --git a/net/x25/x25_out.c b/drivers/staging/x25/x25_out.c
-similarity index 99%
-rename from net/x25/x25_out.c
-rename to drivers/staging/x25/x25_out.c
-index dbc0940bf35f..8f4d55e378ee 100644
---- a/net/x25/x25_out.c
-+++ b/drivers/staging/x25/x25_out.c
-@@ -23,7 +23,7 @@
- #include <linux/string.h>
- #include <linux/skbuff.h>
- #include <net/sock.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- static int x25_pacsize_to_bytes(unsigned int pacsize)
- {
-diff --git a/net/x25/x25_proc.c b/drivers/staging/x25/x25_proc.c
-similarity index 99%
-rename from net/x25/x25_proc.c
-rename to drivers/staging/x25/x25_proc.c
-index 3bddcbdf2e40..4c36e64a719a 100644
---- a/net/x25/x25_proc.c
-+++ b/drivers/staging/x25/x25_proc.c
-@@ -18,7 +18,7 @@
- #include <linux/export.h>
- #include <net/net_namespace.h>
- #include <net/sock.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- #ifdef CONFIG_PROC_FS
- 
-diff --git a/net/x25/x25_route.c b/drivers/staging/x25/x25_route.c
-similarity index 99%
-rename from net/x25/x25_route.c
-rename to drivers/staging/x25/x25_route.c
-index b8e94d58d0f1..60f18964be0f 100644
---- a/net/x25/x25_route.c
-+++ b/drivers/staging/x25/x25_route.c
-@@ -15,7 +15,7 @@
- #include <linux/if_arp.h>
- #include <linux/init.h>
- #include <linux/slab.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- LIST_HEAD(x25_route_list);
- DEFINE_RWLOCK(x25_route_list_lock);
-diff --git a/net/x25/x25_subr.c b/drivers/staging/x25/x25_subr.c
-similarity index 99%
-rename from net/x25/x25_subr.c
-rename to drivers/staging/x25/x25_subr.c
-index 8aa415a38814..7004ee53a6b0 100644
---- a/net/x25/x25_subr.c
-+++ b/drivers/staging/x25/x25_subr.c
-@@ -26,7 +26,7 @@
- #include <linux/skbuff.h>
- #include <net/sock.h>
- #include <net/tcp_states.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- /*
-  *	This routine purges all of the queues of frames.
-diff --git a/net/x25/x25_timer.c b/drivers/staging/x25/x25_timer.c
-similarity index 99%
-rename from net/x25/x25_timer.c
-rename to drivers/staging/x25/x25_timer.c
-index 9376365cdcc9..3edcae15f897 100644
---- a/net/x25/x25_timer.c
-+++ b/drivers/staging/x25/x25_timer.c
-@@ -19,7 +19,7 @@
- #include <linux/timer.h>
- #include <net/sock.h>
- #include <net/tcp_states.h>
--#include <net/x25.h>
-+#include "x25.h"
- 
- static void x25_heartbeat_expiry(struct timer_list *t);
- static void x25_timer_expiry(struct timer_list *t);
-diff --git a/include/Kbuild b/include/Kbuild
-index 64ab3aac7379..e26750d6ec96 100644
---- a/include/Kbuild
-+++ b/include/Kbuild
-@@ -276,7 +276,6 @@ header-test-			+= linux/kvm_host.h
- header-test-			+= linux/kvm_irqfd.h
- header-test-			+= linux/kvm_para.h
- header-test-			+= linux/lantiq.h
--header-test-			+= linux/lapb.h
- header-test-			+= linux/latencytop.h
- header-test-			+= linux/led-lm3530.h
- header-test-			+= linux/leds-bd2802.h
-@@ -835,7 +834,6 @@ header-test-			+= net/ipcomp.h
- header-test-			+= net/ipconfig.h
- header-test-			+= net/iucv/af_iucv.h
- header-test-			+= net/iucv/iucv.h
--header-test-			+= net/lapb.h
- header-test-			+= net/llc_c_ac.h
- header-test-			+= net/llc_c_st.h
- header-test-			+= net/llc_s_ac.h
-diff --git a/net/Kconfig b/net/Kconfig
-index 3101bfcbdd7a..50681046ec03 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -220,8 +220,6 @@ source "net/8021q/Kconfig"
- source "net/decnet/Kconfig"
- source "net/llc/Kconfig"
- source "drivers/net/appletalk/Kconfig"
--source "net/x25/Kconfig"
--source "net/lapb/Kconfig"
- source "net/phonet/Kconfig"
- source "net/6lowpan/Kconfig"
- source "net/ieee802154/Kconfig"
-diff --git a/net/Makefile b/net/Makefile
-index 449fc0b221f8..3473e68e7abe 100644
---- a/net/Makefile
-+++ b/net/Makefile
-@@ -26,8 +26,6 @@ obj-$(CONFIG_NET_KEY)		+= key/
- obj-$(CONFIG_BRIDGE)		+= bridge/
- obj-$(CONFIG_NET_DSA)		+= dsa/
- obj-$(CONFIG_ATALK)		+= appletalk/
--obj-$(CONFIG_X25)		+= x25/
--obj-$(CONFIG_LAPB)		+= lapb/
- obj-$(CONFIG_NETROM)		+= netrom/
- obj-$(CONFIG_ROSE)		+= rose/
- obj-$(CONFIG_AX25)		+= ax25/
-diff --git a/net/lapb/Kconfig b/net/lapb/Kconfig
+diff --git a/drivers/net/wan/sbni.c b/drivers/net/wan/sbni.c
 deleted file mode 100644
-index 6acfc999c952..000000000000
---- a/net/lapb/Kconfig
+index 40c04ea1200a..000000000000
+--- a/drivers/net/wan/sbni.c
 +++ /dev/null
-@@ -1,22 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# LAPB Data Link Drive
--#
+@@ -1,1623 +0,0 @@
+-/* sbni.c:  Granch SBNI12 leased line adapters driver for linux
+- *
+- *	Written 2001 by Denis I.Timofeev (timofeev@granch.ru)
+- *
+- *	Previous versions were written by Yaroslav Polyakov,
+- *	Alexey Zverev and Max Khon.
+- *
+- *	Driver supports SBNI12-02,-04,-05,-10,-11 cards, single and
+- *	double-channel, PCI and ISA modifications.
+- *	More info and useful utilities to work with SBNI12 cards you can find
+- *	at http://www.granch.com (English) or http://www.granch.ru (Russian)
+- *
+- *	This software may be used and distributed according to the terms
+- *	of the GNU General Public License.
+- *
+- *
+- *  5.0.1	Jun 22 2001
+- *	  - Fixed bug in probe
+- *  5.0.0	Jun 06 2001
+- *	  - Driver was completely redesigned by Denis I.Timofeev,
+- *	  - now PCI/Dual, ISA/Dual (with single interrupt line) models are
+- *	  - supported
+- *  3.3.0	Thu Feb 24 21:30:28 NOVT 2000 
+- *        - PCI cards support
+- *  3.2.0	Mon Dec 13 22:26:53 NOVT 1999
+- * 	  - Completely rebuilt all the packet storage system
+- * 	  -    to work in Ethernet-like style.
+- *  3.1.1	just fixed some bugs (5 aug 1999)
+- *  3.1.0	added balancing feature	(26 apr 1999)
+- *  3.0.1	just fixed some bugs (14 apr 1999).
+- *  3.0.0	Initial Revision, Yaroslav Polyakov (24 Feb 1999)
+- *        - added pre-calculation for CRC, fixed bug with "len-2" frames, 
+- *        - removed outbound fragmentation (MTU=1000), written CRC-calculation 
+- *        - on asm, added work with hard_headers and now we have our own cache 
+- *        - for them, optionally supported word-interchange on some chipsets,
+- * 
+- *	Known problem: this driver wasn't tested on multiprocessor machine.
+- */
 -
--config LAPB
--	tristate "LAPB Data Link Driver"
--	---help---
--	  Link Access Procedure, Balanced (LAPB) is the data link layer (i.e.
--	  the lower) part of the X.25 protocol. It offers a reliable
--	  connection service to exchange data frames with one other host, and
--	  it is used to transport higher level protocols (mostly X.25 Packet
--	  Layer, the higher part of X.25, but others are possible as well).
--	  Usually, LAPB is used with specialized X.21 network cards, but Linux
--	  currently supports LAPB only over Ethernet connections. If you want
--	  to use LAPB connections over Ethernet, say Y here and to "LAPB over
--	  Ethernet driver" below. Read
--	  <file:Documentation/networking/lapb-module.txt> for technical
--	  details.
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -
--	  To compile this driver as a module, choose M here: the
--	  module will be called lapb.  If unsure, say N.
-diff --git a/net/lapb/Makefile b/net/lapb/Makefile
+-#include <linux/module.h>
+-#include <linux/kernel.h>
+-#include <linux/ptrace.h>
+-#include <linux/fcntl.h>
+-#include <linux/ioport.h>
+-#include <linux/interrupt.h>
+-#include <linux/string.h>
+-#include <linux/errno.h>
+-#include <linux/netdevice.h>
+-#include <linux/etherdevice.h>
+-#include <linux/pci.h>
+-#include <linux/skbuff.h>
+-#include <linux/timer.h>
+-#include <linux/init.h>
+-#include <linux/delay.h>
+-
+-#include <net/net_namespace.h>
+-#include <net/arp.h>
+-#include <net/Space.h>
+-
+-#include <asm/io.h>
+-#include <asm/types.h>
+-#include <asm/byteorder.h>
+-#include <asm/irq.h>
+-#include <linux/uaccess.h>
+-
+-#include "sbni.h"
+-
+-/* device private data */
+-
+-struct net_local {
+-	struct timer_list	watchdog;
+-	struct net_device	*watchdog_dev;
+-
+-	spinlock_t	lock;
+-	struct sk_buff  *rx_buf_p;		/* receive buffer ptr */
+-	struct sk_buff  *tx_buf_p;		/* transmit buffer ptr */
+-	
+-	unsigned int	framelen;		/* current frame length */
+-	unsigned int	maxframe;		/* maximum valid frame length */
+-	unsigned int	state;
+-	unsigned int	inppos, outpos;		/* positions in rx/tx buffers */
+-
+-	/* transmitting frame number - from frames qty to 1 */
+-	unsigned int	tx_frameno;
+-
+-	/* expected number of next receiving frame */
+-	unsigned int	wait_frameno;
+-
+-	/* count of failed attempts to frame send - 32 attempts do before
+-	   error - while receiver tunes on opposite side of wire */
+-	unsigned int	trans_errors;
+-
+-	/* idle time; send pong when limit exceeded */
+-	unsigned int	timer_ticks;
+-
+-	/* fields used for receive level autoselection */
+-	int	delta_rxl;
+-	unsigned int	cur_rxl_index, timeout_rxl;
+-	unsigned long	cur_rxl_rcvd, prev_rxl_rcvd;
+-
+-	struct sbni_csr1	csr1;		/* current value of CSR1 */
+-	struct sbni_in_stats	in_stats; 	/* internal statistics */ 
+-
+-	struct net_device		*second;	/* for ISA/dual cards */
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	struct net_device		*master;
+-	struct net_device		*link;
+-#endif
+-};
+-
+-
+-static int  sbni_card_probe( unsigned long );
+-static int  sbni_pci_probe( struct net_device  * );
+-static struct net_device  *sbni_probe1(struct net_device *, unsigned long, int);
+-static int  sbni_open( struct net_device * );
+-static int  sbni_close( struct net_device * );
+-static netdev_tx_t sbni_start_xmit(struct sk_buff *,
+-					 struct net_device * );
+-static int  sbni_ioctl( struct net_device *, struct ifreq *, int );
+-static void  set_multicast_list( struct net_device * );
+-
+-static irqreturn_t sbni_interrupt( int, void * );
+-static void  handle_channel( struct net_device * );
+-static int   recv_frame( struct net_device * );
+-static void  send_frame( struct net_device * );
+-static int   upload_data( struct net_device *,
+-			  unsigned, unsigned, unsigned, u32 );
+-static void  download_data( struct net_device *, u32 * );
+-static void  sbni_watchdog(struct timer_list *);
+-static void  interpret_ack( struct net_device *, unsigned );
+-static int   append_frame_to_pkt( struct net_device *, unsigned, u32 );
+-static void  indicate_pkt( struct net_device * );
+-static void  card_start( struct net_device * );
+-static void  prepare_to_send( struct sk_buff *, struct net_device * );
+-static void  drop_xmit_queue( struct net_device * );
+-static void  send_frame_header( struct net_device *, u32 * );
+-static int   skip_tail( unsigned int, unsigned int, u32 );
+-static int   check_fhdr( u32, u32 *, u32 *, u32 *, u32 *, u32 * );
+-static void  change_level( struct net_device * );
+-static void  timeout_change_level( struct net_device * );
+-static u32   calc_crc32( u32, u8 *, u32 );
+-static struct sk_buff *  get_rx_buf( struct net_device * );
+-static int  sbni_init( struct net_device * );
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-static int  enslave( struct net_device *, struct net_device * );
+-static int  emancipate( struct net_device * );
+-#endif
+-
+-static const char  version[] =
+-	"Granch SBNI12 driver ver 5.0.1  Jun 22 2001  Denis I.Timofeev.\n";
+-
+-static bool skip_pci_probe	__initdata = false;
+-static int  scandone	__initdata = 0;
+-static int  num		__initdata = 0;
+-
+-static unsigned char  rxl_tab[];
+-static u32  crc32tab[];
+-
+-/* A list of all installed devices, for removing the driver module. */
+-static struct net_device  *sbni_cards[ SBNI_MAX_NUM_CARDS ];
+-
+-/* Lists of device's parameters */
+-static u32	io[   SBNI_MAX_NUM_CARDS ] __initdata =
+-	{ [0 ... SBNI_MAX_NUM_CARDS-1] = -1 };
+-static u32	irq[  SBNI_MAX_NUM_CARDS ] __initdata;
+-static u32	baud[ SBNI_MAX_NUM_CARDS ] __initdata;
+-static u32	rxl[  SBNI_MAX_NUM_CARDS ] __initdata =
+-	{ [0 ... SBNI_MAX_NUM_CARDS-1] = -1 };
+-static u32	mac[  SBNI_MAX_NUM_CARDS ] __initdata;
+-
+-#ifndef MODULE
+-typedef u32  iarr[];
+-static iarr *dest[5] __initdata = { &io, &irq, &baud, &rxl, &mac };
+-#endif
+-
+-/* A zero-terminated list of I/O addresses to be probed on ISA bus */
+-static unsigned int  netcard_portlist[ ] __initdata = { 
+-	0x210, 0x214, 0x220, 0x224, 0x230, 0x234, 0x240, 0x244, 0x250, 0x254,
+-	0x260, 0x264, 0x270, 0x274, 0x280, 0x284, 0x290, 0x294, 0x2a0, 0x2a4,
+-	0x2b0, 0x2b4, 0x2c0, 0x2c4, 0x2d0, 0x2d4, 0x2e0, 0x2e4, 0x2f0, 0x2f4,
+-	0 };
+-
+-#define NET_LOCAL_LOCK(dev) (((struct net_local *)netdev_priv(dev))->lock)
+-
+-/*
+- * Look for SBNI card which addr stored in dev->base_addr, if nonzero.
+- * Otherwise, look through PCI bus. If none PCI-card was found, scan ISA.
+- */
+-
+-static inline int __init
+-sbni_isa_probe( struct net_device  *dev )
+-{
+-	if( dev->base_addr > 0x1ff &&
+-	    request_region( dev->base_addr, SBNI_IO_EXTENT, dev->name ) &&
+-	    sbni_probe1( dev, dev->base_addr, dev->irq ) )
+-
+-		return  0;
+-	else {
+-		pr_err("base address 0x%lx is busy, or adapter is malfunctional!\n",
+-		       dev->base_addr);
+-		return  -ENODEV;
+-	}
+-}
+-
+-static const struct net_device_ops sbni_netdev_ops = {
+-	.ndo_open		= sbni_open,
+-	.ndo_stop		= sbni_close,
+-	.ndo_start_xmit		= sbni_start_xmit,
+-	.ndo_set_rx_mode	= set_multicast_list,
+-	.ndo_do_ioctl		= sbni_ioctl,
+-	.ndo_set_mac_address 	= eth_mac_addr,
+-	.ndo_validate_addr	= eth_validate_addr,
+-};
+-
+-static void __init sbni_devsetup(struct net_device *dev)
+-{
+-	ether_setup( dev );
+-	dev->netdev_ops = &sbni_netdev_ops;
+-}
+-
+-int __init sbni_probe(int unit)
+-{
+-	struct net_device *dev;
+-	int err;
+-
+-	dev = alloc_netdev(sizeof(struct net_local), "sbni",
+-			   NET_NAME_UNKNOWN, sbni_devsetup);
+-	if (!dev)
+-		return -ENOMEM;
+-
+-	dev->netdev_ops = &sbni_netdev_ops;
+-
+-	sprintf(dev->name, "sbni%d", unit);
+-	netdev_boot_setup_check(dev);
+-
+-	err = sbni_init(dev);
+-	if (err) {
+-		free_netdev(dev);
+-		return err;
+-	}
+-
+-	err = register_netdev(dev);
+-	if (err) {
+-		release_region( dev->base_addr, SBNI_IO_EXTENT );
+-		free_netdev(dev);
+-		return err;
+-	}
+-	pr_info_once("%s", version);
+-	return 0;
+-}
+-
+-static int __init sbni_init(struct net_device *dev)
+-{
+-	int  i;
+-	if( dev->base_addr )
+-		return  sbni_isa_probe( dev );
+-	/* otherwise we have to perform search our adapter */
+-
+-	if( io[ num ] != -1 )
+-		dev->base_addr	= io[ num ],
+-		dev->irq	= irq[ num ];
+-	else if( scandone  ||  io[ 0 ] != -1 )
+-		return  -ENODEV;
+-
+-	/* if io[ num ] contains non-zero address, then that is on ISA bus */
+-	if( dev->base_addr )
+-		return  sbni_isa_probe( dev );
+-
+-	/* ...otherwise - scan PCI first */
+-	if( !skip_pci_probe  &&  !sbni_pci_probe( dev ) )
+-		return  0;
+-
+-	if( io[ num ] == -1 ) {
+-		/* Auto-scan will be stopped when first ISA card were found */
+-		scandone = 1;
+-		if( num > 0 )
+-			return  -ENODEV;
+-	}
+-
+-	for( i = 0;  netcard_portlist[ i ];  ++i ) {
+-		int  ioaddr = netcard_portlist[ i ];
+-		if( request_region( ioaddr, SBNI_IO_EXTENT, dev->name ) &&
+-		    sbni_probe1( dev, ioaddr, 0 ))
+-			return 0;
+-	}
+-
+-	return  -ENODEV;
+-}
+-
+-
+-static int __init
+-sbni_pci_probe( struct net_device  *dev )
+-{
+-	struct pci_dev  *pdev = NULL;
+-
+-	while( (pdev = pci_get_class( PCI_CLASS_NETWORK_OTHER << 8, pdev ))
+-	       != NULL ) {
+-		int  pci_irq_line;
+-		unsigned long  pci_ioaddr;
+-
+-		if( pdev->vendor != SBNI_PCI_VENDOR &&
+-		    pdev->device != SBNI_PCI_DEVICE )
+-			continue;
+-
+-		pci_ioaddr = pci_resource_start( pdev, 0 );
+-		pci_irq_line = pdev->irq;
+-
+-		/* Avoid already found cards from previous calls */
+-		if( !request_region( pci_ioaddr, SBNI_IO_EXTENT, dev->name ) ) {
+-			if (pdev->subsystem_device != 2)
+-				continue;
+-
+-			/* Dual adapter is present */
+-			if (!request_region(pci_ioaddr += 4, SBNI_IO_EXTENT,
+-							dev->name ) )
+-				continue;
+-		}
+-
+-		if (pci_irq_line <= 0 || pci_irq_line >= nr_irqs)
+-			pr_warn(
+-"WARNING: The PCI BIOS assigned this PCI card to IRQ %d, which is unlikely to work!.\n"
+-"You should use the PCI BIOS setup to assign a valid IRQ line.\n",
+-				pci_irq_line );
+-
+-		/* avoiding re-enable dual adapters */
+-		if( (pci_ioaddr & 7) == 0  &&  pci_enable_device( pdev ) ) {
+-			release_region( pci_ioaddr, SBNI_IO_EXTENT );
+-			pci_dev_put( pdev );
+-			return  -EIO;
+-		}
+-		if( sbni_probe1( dev, pci_ioaddr, pci_irq_line ) ) {
+-			SET_NETDEV_DEV(dev, &pdev->dev);
+-			/* not the best thing to do, but this is all messed up 
+-			   for hotplug systems anyway... */
+-			pci_dev_put( pdev );
+-			return  0;
+-		}
+-	}
+-	return  -ENODEV;
+-}
+-
+-
+-static struct net_device * __init
+-sbni_probe1( struct net_device  *dev,  unsigned long  ioaddr,  int  irq )
+-{
+-	struct net_local  *nl;
+-
+-	if( sbni_card_probe( ioaddr ) ) {
+-		release_region( ioaddr, SBNI_IO_EXTENT );
+-		return NULL;
+-	}
+-
+-	outb( 0, ioaddr + CSR0 );
+-
+-	if( irq < 2 ) {
+-		unsigned long irq_mask;
+-
+-		irq_mask = probe_irq_on();
+-		outb( EN_INT | TR_REQ, ioaddr + CSR0 );
+-		outb( PR_RES, ioaddr + CSR1 );
+-		mdelay(50);
+-		irq = probe_irq_off(irq_mask);
+-		outb( 0, ioaddr + CSR0 );
+-
+-		if( !irq ) {
+-			pr_err("%s: can't detect device irq!\n", dev->name);
+-			release_region( ioaddr, SBNI_IO_EXTENT );
+-			return NULL;
+-		}
+-	} else if( irq == 2 )
+-		irq = 9;
+-
+-	dev->irq = irq;
+-	dev->base_addr = ioaddr;
+-
+-	/* Fill in sbni-specific dev fields. */
+-	nl = netdev_priv(dev);
+-	if( !nl ) {
+-		pr_err("%s: unable to get memory!\n", dev->name);
+-		release_region( ioaddr, SBNI_IO_EXTENT );
+-		return NULL;
+-	}
+-
+-	memset( nl, 0, sizeof(struct net_local) );
+-	spin_lock_init( &nl->lock );
+-
+-	/* store MAC address (generate if that isn't known) */
+-	*(__be16 *)dev->dev_addr = htons( 0x00ff );
+-	*(__be32 *)(dev->dev_addr + 2) = htonl( 0x01000000 |
+-		((mac[num] ?
+-		mac[num] :
+-		(u32)((long)netdev_priv(dev))) & 0x00ffffff));
+-
+-	/* store link settings (speed, receive level ) */
+-	nl->maxframe  = DEFAULT_FRAME_LEN;
+-	nl->csr1.rate = baud[ num ];
+-
+-	if( (nl->cur_rxl_index = rxl[ num ]) == -1 )
+-		/* autotune rxl */
+-		nl->cur_rxl_index = DEF_RXL,
+-		nl->delta_rxl = DEF_RXL_DELTA;
+-	else
+-		nl->delta_rxl = 0;
+-	nl->csr1.rxl  = rxl_tab[ nl->cur_rxl_index ];
+-	if( inb( ioaddr + CSR0 ) & 0x01 )
+-		nl->state |= FL_SLOW_MODE;
+-
+-	pr_notice("%s: ioaddr %#lx, irq %d, MAC: 00:ff:01:%02x:%02x:%02x\n",
+-		  dev->name, dev->base_addr, dev->irq,
+-		  ((u8 *)dev->dev_addr)[3],
+-		  ((u8 *)dev->dev_addr)[4],
+-		  ((u8 *)dev->dev_addr)[5]);
+-
+-	pr_notice("%s: speed %d",
+-		  dev->name,
+-		  ((nl->state & FL_SLOW_MODE) ? 500000 : 2000000)
+-		  / (1 << nl->csr1.rate));
+-
+-	if( nl->delta_rxl == 0 )
+-		pr_cont(", receive level 0x%x (fixed)\n", nl->cur_rxl_index);
+-	else
+-		pr_cont(", receive level (auto)\n");
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	nl->master = dev;
+-	nl->link   = NULL;
+-#endif
+-   
+-	sbni_cards[ num++ ] = dev;
+-	return  dev;
+-}
+-
+-/* -------------------------------------------------------------------------- */
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-
+-static netdev_tx_t
+-sbni_start_xmit( struct sk_buff  *skb,  struct net_device  *dev )
+-{
+-	struct net_device  *p;
+-
+-	netif_stop_queue( dev );
+-
+-	/* Looking for idle device in the list */
+-	for( p = dev;  p; ) {
+-		struct net_local  *nl = netdev_priv(p);
+-		spin_lock( &nl->lock );
+-		if( nl->tx_buf_p  ||  (nl->state & FL_LINE_DOWN) ) {
+-			p = nl->link;
+-			spin_unlock( &nl->lock );
+-		} else {
+-			/* Idle dev is found */
+-			prepare_to_send( skb, p );
+-			spin_unlock( &nl->lock );
+-			netif_start_queue( dev );
+-			return NETDEV_TX_OK;
+-		}
+-	}
+-
+-	return NETDEV_TX_BUSY;
+-}
+-
+-#else	/* CONFIG_SBNI_MULTILINE */
+-
+-static netdev_tx_t
+-sbni_start_xmit( struct sk_buff  *skb,  struct net_device  *dev )
+-{
+-	struct net_local  *nl  = netdev_priv(dev);
+-
+-	netif_stop_queue( dev );
+-	spin_lock( &nl->lock );
+-
+-	prepare_to_send( skb, dev );
+-
+-	spin_unlock( &nl->lock );
+-	return NETDEV_TX_OK;
+-}
+-
+-#endif	/* CONFIG_SBNI_MULTILINE */
+-
+-/* -------------------------------------------------------------------------- */
+-
+-/* interrupt handler */
+-
+-/*
+- * 	SBNI12D-10, -11/ISA boards within "common interrupt" mode could not
+- * be looked as two independent single-channel devices. Every channel seems
+- * as Ethernet interface but interrupt handler must be common. Really, first
+- * channel ("master") driver only registers the handler. In its struct net_local
+- * it has got pointer to "slave" channel's struct net_local and handles that's
+- * interrupts too.
+- *	dev of successfully attached ISA SBNI boards is linked to list.
+- * While next board driver is initialized, it scans this list. If one
+- * has found dev with same irq and ioaddr different by 4 then it assumes
+- * this board to be "master".
+- */ 
+-
+-static irqreturn_t
+-sbni_interrupt( int  irq,  void  *dev_id )
+-{
+-	struct net_device	  *dev = dev_id;
+-	struct net_local  *nl  = netdev_priv(dev);
+-	int	repeat;
+-
+-	spin_lock( &nl->lock );
+-	if( nl->second )
+-		spin_lock(&NET_LOCAL_LOCK(nl->second));
+-
+-	do {
+-		repeat = 0;
+-		if( inb( dev->base_addr + CSR0 ) & (RC_RDY | TR_RDY) )
+-			handle_channel( dev ),
+-			repeat = 1;
+-		if( nl->second  && 	/* second channel present */
+-		    (inb( nl->second->base_addr+CSR0 ) & (RC_RDY | TR_RDY)) )
+-			handle_channel( nl->second ),
+-			repeat = 1;
+-	} while( repeat );
+-
+-	if( nl->second )
+-		spin_unlock(&NET_LOCAL_LOCK(nl->second));
+-	spin_unlock( &nl->lock );
+-	return IRQ_HANDLED;
+-}
+-
+-
+-static void
+-handle_channel( struct net_device  *dev )
+-{
+-	struct net_local	*nl    = netdev_priv(dev);
+-	unsigned long		ioaddr = dev->base_addr;
+-
+-	int  req_ans;
+-	unsigned char  csr0;
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	/* Lock the master device because we going to change its local data */
+-	if( nl->state & FL_SLAVE )
+-		spin_lock(&NET_LOCAL_LOCK(nl->master));
+-#endif
+-
+-	outb( (inb( ioaddr + CSR0 ) & ~EN_INT) | TR_REQ, ioaddr + CSR0 );
+-
+-	nl->timer_ticks = CHANGE_LEVEL_START_TICKS;
+-	for(;;) {
+-		csr0 = inb( ioaddr + CSR0 );
+-		if( ( csr0 & (RC_RDY | TR_RDY) ) == 0 )
+-			break;
+-
+-		req_ans = !(nl->state & FL_PREV_OK);
+-
+-		if( csr0 & RC_RDY )
+-			req_ans = recv_frame( dev );
+-
+-		/*
+-		 * TR_RDY always equals 1 here because we have owned the marker,
+-		 * and we set TR_REQ when disabled interrupts
+-		 */
+-		csr0 = inb( ioaddr + CSR0 );
+-		if( !(csr0 & TR_RDY)  ||  (csr0 & RC_RDY) )
+-			netdev_err(dev, "internal error!\n");
+-
+-		/* if state & FL_NEED_RESEND != 0 then tx_frameno != 0 */
+-		if( req_ans  ||  nl->tx_frameno != 0 )
+-			send_frame( dev );
+-		else
+-			/* send marker without any data */
+-			outb( inb( ioaddr + CSR0 ) & ~TR_REQ, ioaddr + CSR0 );
+-	}
+-
+-	outb( inb( ioaddr + CSR0 ) | EN_INT, ioaddr + CSR0 );
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	if( nl->state & FL_SLAVE )
+-		spin_unlock(&NET_LOCAL_LOCK(nl->master));
+-#endif
+-}
+-
+-
+-/*
+- * Routine returns 1 if it needs to acknowledge received frame.
+- * Empty frame received without errors won't be acknowledged.
+- */
+-
+-static int
+-recv_frame( struct net_device  *dev )
+-{
+-	struct net_local  *nl   = netdev_priv(dev);
+-	unsigned long  ioaddr	= dev->base_addr;
+-
+-	u32  crc = CRC32_INITIAL;
+-
+-	unsigned  framelen = 0, frameno, ack;
+-	unsigned  is_first, frame_ok = 0;
+-
+-	if( check_fhdr( ioaddr, &framelen, &frameno, &ack, &is_first, &crc ) ) {
+-		frame_ok = framelen > 4
+-			?  upload_data( dev, framelen, frameno, is_first, crc )
+-			:  skip_tail( ioaddr, framelen, crc );
+-		if( frame_ok )
+-			interpret_ack( dev, ack );
+-	}
+-
+-	outb( inb( ioaddr + CSR0 ) ^ CT_ZER, ioaddr + CSR0 );
+-	if( frame_ok ) {
+-		nl->state |= FL_PREV_OK;
+-		if( framelen > 4 )
+-			nl->in_stats.all_rx_number++;
+-	} else
+-		nl->state &= ~FL_PREV_OK,
+-		change_level( dev ),
+-		nl->in_stats.all_rx_number++,
+-		nl->in_stats.bad_rx_number++;
+-
+-	return  !frame_ok  ||  framelen > 4;
+-}
+-
+-
+-static void
+-send_frame( struct net_device  *dev )
+-{
+-	struct net_local  *nl    = netdev_priv(dev);
+-
+-	u32  crc = CRC32_INITIAL;
+-
+-	if( nl->state & FL_NEED_RESEND ) {
+-
+-		/* if frame was sended but not ACK'ed - resend it */
+-		if( nl->trans_errors ) {
+-			--nl->trans_errors;
+-			if( nl->framelen != 0 )
+-				nl->in_stats.resend_tx_number++;
+-		} else {
+-			/* cannot xmit with many attempts */
+-#ifdef CONFIG_SBNI_MULTILINE
+-			if( (nl->state & FL_SLAVE)  ||  nl->link )
+-#endif
+-			nl->state |= FL_LINE_DOWN;
+-			drop_xmit_queue( dev );
+-			goto  do_send;
+-		}
+-	} else
+-		nl->trans_errors = TR_ERROR_COUNT;
+-
+-	send_frame_header( dev, &crc );
+-	nl->state |= FL_NEED_RESEND;
+-	/*
+-	 * FL_NEED_RESEND will be cleared after ACK, but if empty
+-	 * frame sended then in prepare_to_send next frame
+-	 */
+-
+-
+-	if( nl->framelen ) {
+-		download_data( dev, &crc );
+-		nl->in_stats.all_tx_number++;
+-		nl->state |= FL_WAIT_ACK;
+-	}
+-
+-	outsb( dev->base_addr + DAT, (u8 *)&crc, sizeof crc );
+-
+-do_send:
+-	outb( inb( dev->base_addr + CSR0 ) & ~TR_REQ, dev->base_addr + CSR0 );
+-
+-	if( nl->tx_frameno )
+-		/* next frame exists - we request card to send it */
+-		outb( inb( dev->base_addr + CSR0 ) | TR_REQ,
+-		      dev->base_addr + CSR0 );
+-}
+-
+-
+-/*
+- * Write the frame data into adapter's buffer memory, and calculate CRC.
+- * Do padding if necessary.
+- */
+-
+-static void
+-download_data( struct net_device  *dev,  u32  *crc_p )
+-{
+-	struct net_local  *nl    = netdev_priv(dev);
+-	struct sk_buff    *skb	 = nl->tx_buf_p;
+-
+-	unsigned  len = min_t(unsigned int, skb->len - nl->outpos, nl->framelen);
+-
+-	outsb( dev->base_addr + DAT, skb->data + nl->outpos, len );
+-	*crc_p = calc_crc32( *crc_p, skb->data + nl->outpos, len );
+-
+-	/* if packet too short we should write some more bytes to pad */
+-	for( len = nl->framelen - len;  len--; )
+-		outb( 0, dev->base_addr + DAT ),
+-		*crc_p = CRC32( 0, *crc_p );
+-}
+-
+-
+-static int
+-upload_data( struct net_device  *dev,  unsigned  framelen,  unsigned  frameno,
+-	     unsigned  is_first,  u32  crc )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	int  frame_ok;
+-
+-	if( is_first )
+-		nl->wait_frameno = frameno,
+-		nl->inppos = 0;
+-
+-	if( nl->wait_frameno == frameno ) {
+-
+-		if( nl->inppos + framelen  <=  ETHER_MAX_LEN )
+-			frame_ok = append_frame_to_pkt( dev, framelen, crc );
+-
+-		/*
+-		 * if CRC is right but framelen incorrect then transmitter
+-		 * error was occurred... drop entire packet
+-		 */
+-		else if( (frame_ok = skip_tail( dev->base_addr, framelen, crc ))
+-			 != 0 )
+-			nl->wait_frameno = 0,
+-			nl->inppos = 0,
+-#ifdef CONFIG_SBNI_MULTILINE
+-			nl->master->stats.rx_errors++,
+-			nl->master->stats.rx_missed_errors++;
+-#else
+-		        dev->stats.rx_errors++,
+-			dev->stats.rx_missed_errors++;
+-#endif
+-			/* now skip all frames until is_first != 0 */
+-	} else
+-		frame_ok = skip_tail( dev->base_addr, framelen, crc );
+-
+-	if( is_first  &&  !frame_ok )
+-		/*
+-		 * Frame has been broken, but we had already stored
+-		 * is_first... Drop entire packet.
+-		 */
+-		nl->wait_frameno = 0,
+-#ifdef CONFIG_SBNI_MULTILINE
+-		nl->master->stats.rx_errors++,
+-		nl->master->stats.rx_crc_errors++;
+-#else
+-		dev->stats.rx_errors++,
+-		dev->stats.rx_crc_errors++;
+-#endif
+-
+-	return  frame_ok;
+-}
+-
+-
+-static inline void
+-send_complete( struct net_device *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	nl->master->stats.tx_packets++;
+-	nl->master->stats.tx_bytes += nl->tx_buf_p->len;
+-#else
+-	dev->stats.tx_packets++;
+-	dev->stats.tx_bytes += nl->tx_buf_p->len;
+-#endif
+-	dev_consume_skb_irq(nl->tx_buf_p);
+-
+-	nl->tx_buf_p = NULL;
+-
+-	nl->outpos = 0;
+-	nl->state &= ~(FL_WAIT_ACK | FL_NEED_RESEND);
+-	nl->framelen   = 0;
+-}
+-
+-
+-static void
+-interpret_ack( struct net_device  *dev,  unsigned  ack )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	if( ack == FRAME_SENT_OK ) {
+-		nl->state &= ~FL_NEED_RESEND;
+-
+-		if( nl->state & FL_WAIT_ACK ) {
+-			nl->outpos += nl->framelen;
+-
+-			if( --nl->tx_frameno )
+-				nl->framelen = min_t(unsigned int,
+-						   nl->maxframe,
+-						   nl->tx_buf_p->len - nl->outpos);
+-			else
+-				send_complete( dev ),
+-#ifdef CONFIG_SBNI_MULTILINE
+-				netif_wake_queue( nl->master );
+-#else
+-				netif_wake_queue( dev );
+-#endif
+-		}
+-	}
+-
+-	nl->state &= ~FL_WAIT_ACK;
+-}
+-
+-
+-/*
+- * Glue received frame with previous fragments of packet.
+- * Indicate packet when last frame would be accepted.
+- */
+-
+-static int
+-append_frame_to_pkt( struct net_device  *dev,  unsigned  framelen,  u32  crc )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	u8  *p;
+-
+-	if( nl->inppos + framelen  >  ETHER_MAX_LEN )
+-		return  0;
+-
+-	if( !nl->rx_buf_p  &&  !(nl->rx_buf_p = get_rx_buf( dev )) )
+-		return  0;
+-
+-	p = nl->rx_buf_p->data + nl->inppos;
+-	insb( dev->base_addr + DAT, p, framelen );
+-	if( calc_crc32( crc, p, framelen ) != CRC32_REMAINDER )
+-		return  0;
+-
+-	nl->inppos += framelen - 4;
+-	if( --nl->wait_frameno == 0 )		/* last frame received */
+-		indicate_pkt( dev );
+-
+-	return  1;
+-}
+-
+-
+-/*
+- * Prepare to start output on adapter.
+- * Transmitter will be actually activated when marker is accepted.
+- */
+-
+-static void
+-prepare_to_send( struct sk_buff  *skb,  struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	unsigned int  len;
+-
+-	/* nl->tx_buf_p == NULL here! */
+-	if( nl->tx_buf_p )
+-		netdev_err(dev, "memory leak!\n");
+-
+-	nl->outpos = 0;
+-	nl->state &= ~(FL_WAIT_ACK | FL_NEED_RESEND);
+-
+-	len = skb->len;
+-	if( len < SBNI_MIN_LEN )
+-		len = SBNI_MIN_LEN;
+-
+-	nl->tx_buf_p	= skb;
+-	nl->tx_frameno	= DIV_ROUND_UP(len, nl->maxframe);
+-	nl->framelen	= len < nl->maxframe  ?  len  :  nl->maxframe;
+-
+-	outb( inb( dev->base_addr + CSR0 ) | TR_REQ,  dev->base_addr + CSR0 );
+-#ifdef CONFIG_SBNI_MULTILINE
+-	netif_trans_update(nl->master);
+-#else
+-	netif_trans_update(dev);
+-#endif
+-}
+-
+-
+-static void
+-drop_xmit_queue( struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	if( nl->tx_buf_p )
+-		dev_kfree_skb_any( nl->tx_buf_p ),
+-		nl->tx_buf_p = NULL,
+-#ifdef CONFIG_SBNI_MULTILINE
+-		nl->master->stats.tx_errors++,
+-		nl->master->stats.tx_carrier_errors++;
+-#else
+-		dev->stats.tx_errors++,
+-		dev->stats.tx_carrier_errors++;
+-#endif
+-
+-	nl->tx_frameno	= 0;
+-	nl->framelen	= 0;
+-	nl->outpos	= 0;
+-	nl->state &= ~(FL_WAIT_ACK | FL_NEED_RESEND);
+-#ifdef CONFIG_SBNI_MULTILINE
+-	netif_start_queue( nl->master );
+-	netif_trans_update(nl->master);
+-#else
+-	netif_start_queue( dev );
+-	netif_trans_update(dev);
+-#endif
+-}
+-
+-
+-static void
+-send_frame_header( struct net_device  *dev,  u32  *crc_p )
+-{
+-	struct net_local  *nl  = netdev_priv(dev);
+-
+-	u32  crc = *crc_p;
+-	u32  len_field = nl->framelen + 6;	/* CRC + frameno + reserved */
+-	u8   value;
+-
+-	if( nl->state & FL_NEED_RESEND )
+-		len_field |= FRAME_RETRY;	/* non-first attempt... */
+-
+-	if( nl->outpos == 0 )
+-		len_field |= FRAME_FIRST;
+-
+-	len_field |= (nl->state & FL_PREV_OK) ? FRAME_SENT_OK : FRAME_SENT_BAD;
+-	outb( SBNI_SIG, dev->base_addr + DAT );
+-
+-	value = (u8) len_field;
+-	outb( value, dev->base_addr + DAT );
+-	crc = CRC32( value, crc );
+-	value = (u8) (len_field >> 8);
+-	outb( value, dev->base_addr + DAT );
+-	crc = CRC32( value, crc );
+-
+-	outb( nl->tx_frameno, dev->base_addr + DAT );
+-	crc = CRC32( nl->tx_frameno, crc );
+-	outb( 0, dev->base_addr + DAT );
+-	crc = CRC32( 0, crc );
+-	*crc_p = crc;
+-}
+-
+-
+-/*
+- * if frame tail not needed (incorrect number or received twice),
+- * it won't store, but CRC will be calculated
+- */
+-
+-static int
+-skip_tail( unsigned int  ioaddr,  unsigned int  tail_len,  u32 crc )
+-{
+-	while( tail_len-- )
+-		crc = CRC32( inb( ioaddr + DAT ), crc );
+-
+-	return  crc == CRC32_REMAINDER;
+-}
+-
+-
+-/*
+- * Preliminary checks if frame header is correct, calculates its CRC
+- * and split it to simple fields
+- */
+-
+-static int
+-check_fhdr( u32  ioaddr,  u32  *framelen,  u32  *frameno,  u32  *ack,
+-	    u32  *is_first,  u32  *crc_p )
+-{
+-	u32  crc = *crc_p;
+-	u8   value;
+-
+-	if( inb( ioaddr + DAT ) != SBNI_SIG )
+-		return  0;
+-
+-	value = inb( ioaddr + DAT );
+-	*framelen = (u32)value;
+-	crc = CRC32( value, crc );
+-	value = inb( ioaddr + DAT );
+-	*framelen |= ((u32)value) << 8;
+-	crc = CRC32( value, crc );
+-
+-	*ack = *framelen & FRAME_ACK_MASK;
+-	*is_first = (*framelen & FRAME_FIRST) != 0;
+-
+-	if( (*framelen &= FRAME_LEN_MASK) < 6 ||
+-	    *framelen > SBNI_MAX_FRAME - 3 )
+-		return  0;
+-
+-	value = inb( ioaddr + DAT );
+-	*frameno = (u32)value;
+-	crc = CRC32( value, crc );
+-
+-	crc = CRC32( inb( ioaddr + DAT ), crc );	/* reserved byte */
+-	*framelen -= 2;
+-
+-	*crc_p = crc;
+-	return  1;
+-}
+-
+-
+-static struct sk_buff *
+-get_rx_buf( struct net_device  *dev )
+-{
+-	/* +2 is to compensate for the alignment fixup below */
+-	struct sk_buff  *skb = dev_alloc_skb( ETHER_MAX_LEN + 2 );
+-	if( !skb )
+-		return  NULL;
+-
+-	skb_reserve( skb, 2 );		/* Align IP on longword boundaries */
+-	return  skb;
+-}
+-
+-
+-static void
+-indicate_pkt( struct net_device  *dev )
+-{
+-	struct net_local  *nl  = netdev_priv(dev);
+-	struct sk_buff    *skb = nl->rx_buf_p;
+-
+-	skb_put( skb, nl->inppos );
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	skb->protocol = eth_type_trans( skb, nl->master );
+-	netif_rx( skb );
+-	++nl->master->stats.rx_packets;
+-	nl->master->stats.rx_bytes += nl->inppos;
+-#else
+-	skb->protocol = eth_type_trans( skb, dev );
+-	netif_rx( skb );
+-	++dev->stats.rx_packets;
+-	dev->stats.rx_bytes += nl->inppos;
+-#endif
+-	nl->rx_buf_p = NULL;	/* protocol driver will clear this sk_buff */
+-}
+-
+-
+-/* -------------------------------------------------------------------------- */
+-
+-/*
+- * Routine checks periodically wire activity and regenerates marker if
+- * connect was inactive for a long time.
+- */
+-
+-static void
+-sbni_watchdog(struct timer_list *t)
+-{
+-	struct net_local   *nl  = from_timer(nl, t, watchdog);
+-	struct net_device  *dev = nl->watchdog_dev;
+-	unsigned long	   flags;
+-	unsigned char	   csr0;
+-
+-	spin_lock_irqsave( &nl->lock, flags );
+-
+-	csr0 = inb( dev->base_addr + CSR0 );
+-	if( csr0 & RC_CHK ) {
+-
+-		if( nl->timer_ticks ) {
+-			if( csr0 & (RC_RDY | BU_EMP) )
+-				/* receiving not active */
+-				nl->timer_ticks--;
+-		} else {
+-			nl->in_stats.timeout_number++;
+-			if( nl->delta_rxl )
+-				timeout_change_level( dev );
+-
+-			outb( *(u_char *)&nl->csr1 | PR_RES,
+-			      dev->base_addr + CSR1 );
+-			csr0 = inb( dev->base_addr + CSR0 );
+-		}
+-	} else
+-		nl->state &= ~FL_LINE_DOWN;
+-
+-	outb( csr0 | RC_CHK, dev->base_addr + CSR0 ); 
+-
+-	mod_timer(t, jiffies + SBNI_TIMEOUT);
+-
+-	spin_unlock_irqrestore( &nl->lock, flags );
+-}
+-
+-
+-static unsigned char  rxl_tab[] = {
+-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x08,
+-	0x0a, 0x0c, 0x0f, 0x16, 0x18, 0x1a, 0x1c, 0x1f
+-};
+-
+-#define SIZE_OF_TIMEOUT_RXL_TAB 4
+-static unsigned char  timeout_rxl_tab[] = {
+-	0x03, 0x05, 0x08, 0x0b
+-};
+-
+-/* -------------------------------------------------------------------------- */
+-
+-static void
+-card_start( struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	nl->timer_ticks = CHANGE_LEVEL_START_TICKS;
+-	nl->state &= ~(FL_WAIT_ACK | FL_NEED_RESEND);
+-	nl->state |= FL_PREV_OK;
+-
+-	nl->inppos = nl->outpos = 0;
+-	nl->wait_frameno = 0;
+-	nl->tx_frameno	 = 0;
+-	nl->framelen	 = 0;
+-
+-	outb( *(u_char *)&nl->csr1 | PR_RES, dev->base_addr + CSR1 );
+-	outb( EN_INT, dev->base_addr + CSR0 );
+-}
+-
+-/* -------------------------------------------------------------------------- */
+-
+-/* Receive level auto-selection */
+-
+-static void
+-change_level( struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	if( nl->delta_rxl == 0 )	/* do not auto-negotiate RxL */
+-		return;
+-
+-	if( nl->cur_rxl_index == 0 )
+-		nl->delta_rxl = 1;
+-	else if( nl->cur_rxl_index == 15 )
+-		nl->delta_rxl = -1;
+-	else if( nl->cur_rxl_rcvd < nl->prev_rxl_rcvd )
+-		nl->delta_rxl = -nl->delta_rxl;
+-
+-	nl->csr1.rxl = rxl_tab[ nl->cur_rxl_index += nl->delta_rxl ];
+-	inb( dev->base_addr + CSR0 );	/* needs for PCI cards */
+-	outb( *(u8 *)&nl->csr1, dev->base_addr + CSR1 );
+-
+-	nl->prev_rxl_rcvd = nl->cur_rxl_rcvd;
+-	nl->cur_rxl_rcvd  = 0;
+-}
+-
+-
+-static void
+-timeout_change_level( struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	nl->cur_rxl_index = timeout_rxl_tab[ nl->timeout_rxl ];
+-	if( ++nl->timeout_rxl >= 4 )
+-		nl->timeout_rxl = 0;
+-
+-	nl->csr1.rxl = rxl_tab[ nl->cur_rxl_index ];
+-	inb( dev->base_addr + CSR0 );
+-	outb( *(unsigned char *)&nl->csr1, dev->base_addr + CSR1 );
+-
+-	nl->prev_rxl_rcvd = nl->cur_rxl_rcvd;
+-	nl->cur_rxl_rcvd  = 0;
+-}
+-
+-/* -------------------------------------------------------------------------- */
+-
+-/*
+- *	Open/initialize the board. 
+- */
+-
+-static int
+-sbni_open( struct net_device  *dev )
+-{
+-	struct net_local	*nl = netdev_priv(dev);
+-	struct timer_list	*w  = &nl->watchdog;
+-
+-	/*
+-	 * For double ISA adapters within "common irq" mode, we have to
+-	 * determine whether primary or secondary channel is initialized,
+-	 * and set the irq handler only in first case.
+-	 */
+-	if( dev->base_addr < 0x400 ) {		/* ISA only */
+-		struct net_device  **p = sbni_cards;
+-		for( ;  *p  &&  p < sbni_cards + SBNI_MAX_NUM_CARDS;  ++p )
+-			if( (*p)->irq == dev->irq &&
+-			    ((*p)->base_addr == dev->base_addr + 4 ||
+-			     (*p)->base_addr == dev->base_addr - 4) &&
+-			    (*p)->flags & IFF_UP ) {
+-
+-				((struct net_local *) (netdev_priv(*p)))
+-					->second = dev;
+-				netdev_notice(dev, "using shared irq with %s\n",
+-					      (*p)->name);
+-				nl->state |= FL_SECONDARY;
+-				goto  handler_attached;
+-			}
+-	}
+-
+-	if( request_irq(dev->irq, sbni_interrupt, IRQF_SHARED, dev->name, dev) ) {
+-		netdev_err(dev, "unable to get IRQ %d\n", dev->irq);
+-		return  -EAGAIN;
+-	}
+-
+-handler_attached:
+-
+-	spin_lock( &nl->lock );
+-	memset( &dev->stats, 0, sizeof(struct net_device_stats) );
+-	memset( &nl->in_stats, 0, sizeof(struct sbni_in_stats) );
+-
+-	card_start( dev );
+-
+-	netif_start_queue( dev );
+-
+-	/* set timer watchdog */
+-	nl->watchdog_dev = dev;
+-	timer_setup(w, sbni_watchdog, 0);
+-	w->expires	= jiffies + SBNI_TIMEOUT;
+-	add_timer( w );
+-   
+-	spin_unlock( &nl->lock );
+-	return 0;
+-}
+-
+-
+-static int
+-sbni_close( struct net_device  *dev )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-
+-	if( nl->second  &&  nl->second->flags & IFF_UP ) {
+-		netdev_notice(dev, "Secondary channel (%s) is active!\n",
+-			      nl->second->name);
+-		return  -EBUSY;
+-	}
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	if( nl->state & FL_SLAVE )
+-		emancipate( dev );
+-	else
+-		while( nl->link )	/* it's master device! */
+-			emancipate( nl->link );
+-#endif
+-
+-	spin_lock( &nl->lock );
+-
+-	nl->second = NULL;
+-	drop_xmit_queue( dev );	
+-	netif_stop_queue( dev );
+-   
+-	del_timer( &nl->watchdog );
+-
+-	outb( 0, dev->base_addr + CSR0 );
+-
+-	if( !(nl->state & FL_SECONDARY) )
+-		free_irq( dev->irq, dev );
+-	nl->state &= FL_SECONDARY;
+-
+-	spin_unlock( &nl->lock );
+-	return 0;
+-}
+-
+-
+-/*
+-	Valid combinations in CSR0 (for probing):
+-
+-	VALID_DECODER	0000,0011,1011,1010
+-
+-				    	; 0   ; -
+-				TR_REQ	; 1   ; +
+-			TR_RDY	    	; 2   ; -
+-			TR_RDY	TR_REQ	; 3   ; +
+-		BU_EMP		    	; 4   ; +
+-		BU_EMP	     	TR_REQ	; 5   ; +
+-		BU_EMP	TR_RDY	    	; 6   ; -
+-		BU_EMP	TR_RDY	TR_REQ	; 7   ; +
+-	RC_RDY 		     		; 8   ; +
+-	RC_RDY			TR_REQ	; 9   ; +
+-	RC_RDY		TR_RDY		; 10  ; -
+-	RC_RDY		TR_RDY	TR_REQ	; 11  ; -
+-	RC_RDY	BU_EMP			; 12  ; -
+-	RC_RDY	BU_EMP		TR_REQ	; 13  ; -
+-	RC_RDY	BU_EMP	TR_RDY		; 14  ; -
+-	RC_RDY	BU_EMP	TR_RDY	TR_REQ	; 15  ; -
+-*/
+-
+-#define VALID_DECODER (2 + 8 + 0x10 + 0x20 + 0x80 + 0x100 + 0x200)
+-
+-
+-static int
+-sbni_card_probe( unsigned long  ioaddr )
+-{
+-	unsigned char  csr0;
+-
+-	csr0 = inb( ioaddr + CSR0 );
+-	if( csr0 != 0xff  &&  csr0 != 0x00 ) {
+-		csr0 &= ~EN_INT;
+-		if( csr0 & BU_EMP )
+-			csr0 |= EN_INT;
+-      
+-		if( VALID_DECODER & (1 << (csr0 >> 4)) )
+-			return  0;
+-	}
+-   
+-	return  -ENODEV;
+-}
+-
+-/* -------------------------------------------------------------------------- */
+-
+-static int
+-sbni_ioctl( struct net_device  *dev,  struct ifreq  *ifr,  int  cmd )
+-{
+-	struct net_local  *nl = netdev_priv(dev);
+-	struct sbni_flags  flags;
+-	int  error = 0;
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-	struct net_device  *slave_dev;
+-	char  slave_name[ 8 ];
+-#endif
+-  
+-	switch( cmd ) {
+-	case  SIOCDEVGETINSTATS :
+-		if (copy_to_user( ifr->ifr_data, &nl->in_stats,
+-					sizeof(struct sbni_in_stats) ))
+-			error = -EFAULT;
+-		break;
+-
+-	case  SIOCDEVRESINSTATS :
+-		if (!capable(CAP_NET_ADMIN))
+-			return  -EPERM;
+-		memset( &nl->in_stats, 0, sizeof(struct sbni_in_stats) );
+-		break;
+-
+-	case  SIOCDEVGHWSTATE :
+-		flags.mac_addr	= *(u32 *)(dev->dev_addr + 3);
+-		flags.rate	= nl->csr1.rate;
+-		flags.slow_mode	= (nl->state & FL_SLOW_MODE) != 0;
+-		flags.rxl	= nl->cur_rxl_index;
+-		flags.fixed_rxl	= nl->delta_rxl == 0;
+-
+-		if (copy_to_user( ifr->ifr_data, &flags, sizeof flags ))
+-			error = -EFAULT;
+-		break;
+-
+-	case  SIOCDEVSHWSTATE :
+-		if (!capable(CAP_NET_ADMIN))
+-			return  -EPERM;
+-
+-		spin_lock( &nl->lock );
+-		flags = *(struct sbni_flags*) &ifr->ifr_ifru;
+-		if( flags.fixed_rxl )
+-			nl->delta_rxl = 0,
+-			nl->cur_rxl_index = flags.rxl;
+-		else
+-			nl->delta_rxl = DEF_RXL_DELTA,
+-			nl->cur_rxl_index = DEF_RXL;
+-
+-		nl->csr1.rxl = rxl_tab[ nl->cur_rxl_index ];
+-		nl->csr1.rate = flags.rate;
+-		outb( *(u8 *)&nl->csr1 | PR_RES, dev->base_addr + CSR1 );
+-		spin_unlock( &nl->lock );
+-		break;
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-
+-	case  SIOCDEVENSLAVE :
+-		if (!capable(CAP_NET_ADMIN))
+-			return  -EPERM;
+-
+-		if (copy_from_user( slave_name, ifr->ifr_data, sizeof slave_name ))
+-			return -EFAULT;
+-		slave_dev = dev_get_by_name(&init_net, slave_name );
+-		if( !slave_dev  ||  !(slave_dev->flags & IFF_UP) ) {
+-			netdev_err(dev, "trying to enslave non-active device %s\n",
+-				   slave_name);
+-			if (slave_dev)
+-				dev_put(slave_dev);
+-			return  -EPERM;
+-		}
+-
+-		return  enslave( dev, slave_dev );
+-
+-	case  SIOCDEVEMANSIPATE :
+-		if (!capable(CAP_NET_ADMIN))
+-			return  -EPERM;
+-
+-		return  emancipate( dev );
+-
+-#endif	/* CONFIG_SBNI_MULTILINE */
+-
+-	default :
+-		return  -EOPNOTSUPP;
+-	}
+-
+-	return  error;
+-}
+-
+-
+-#ifdef CONFIG_SBNI_MULTILINE
+-
+-static int
+-enslave( struct net_device  *dev,  struct net_device  *slave_dev )
+-{
+-	struct net_local  *nl  = netdev_priv(dev);
+-	struct net_local  *snl = netdev_priv(slave_dev);
+-
+-	if( nl->state & FL_SLAVE )	/* This isn't master or free device */
+-		return  -EBUSY;
+-
+-	if( snl->state & FL_SLAVE )	/* That was already enslaved */
+-		return  -EBUSY;
+-
+-	spin_lock( &nl->lock );
+-	spin_lock( &snl->lock );
+-
+-	/* append to list */
+-	snl->link = nl->link;
+-	nl->link  = slave_dev;
+-	snl->master = dev;
+-	snl->state |= FL_SLAVE;
+-
+-	/* Summary statistics of MultiLine operation will be stored
+-	   in master's counters */
+-	memset( &slave_dev->stats, 0, sizeof(struct net_device_stats) );
+-	netif_stop_queue( slave_dev );
+-	netif_wake_queue( dev );	/* Now we are able to transmit */
+-
+-	spin_unlock( &snl->lock );
+-	spin_unlock( &nl->lock );
+-	netdev_notice(dev, "slave device (%s) attached\n", slave_dev->name);
+-	return  0;
+-}
+-
+-
+-static int
+-emancipate( struct net_device  *dev )
+-{
+-	struct net_local   *snl = netdev_priv(dev);
+-	struct net_device  *p   = snl->master;
+-	struct net_local   *nl  = netdev_priv(p);
+-
+-	if( !(snl->state & FL_SLAVE) )
+-		return  -EINVAL;
+-
+-	spin_lock( &nl->lock );
+-	spin_lock( &snl->lock );
+-	drop_xmit_queue( dev );
+-
+-	/* exclude from list */
+-	for(;;) {	/* must be in list */
+-		struct net_local  *t = netdev_priv(p);
+-		if( t->link == dev ) {
+-			t->link = snl->link;
+-			break;
+-		}
+-		p = t->link;
+-	}
+-
+-	snl->link = NULL;
+-	snl->master = dev;
+-	snl->state &= ~FL_SLAVE;
+-
+-	netif_start_queue( dev );
+-
+-	spin_unlock( &snl->lock );
+-	spin_unlock( &nl->lock );
+-
+-	dev_put( dev );
+-	return  0;
+-}
+-
+-#endif
+-
+-static void
+-set_multicast_list( struct net_device  *dev )
+-{
+-	return;		/* sbni always operate in promiscuos mode */
+-}
+-
+-
+-#ifdef MODULE
+-module_param_hw_array(io, int, ioport, NULL, 0);
+-module_param_hw_array(irq, int, irq, NULL, 0);
+-module_param_array(baud, int, NULL, 0);
+-module_param_array(rxl, int, NULL, 0);
+-module_param_array(mac, int, NULL, 0);
+-module_param(skip_pci_probe, bool, 0);
+-
+-MODULE_LICENSE("GPL");
+-
+-
+-int __init init_module( void )
+-{
+-	struct net_device  *dev;
+-	int err;
+-
+-	while( num < SBNI_MAX_NUM_CARDS ) {
+-		dev = alloc_netdev(sizeof(struct net_local), "sbni%d",
+-				   NET_NAME_UNKNOWN, sbni_devsetup);
+-		if( !dev)
+-			break;
+-
+-		sprintf( dev->name, "sbni%d", num );
+-
+-		err = sbni_init(dev);
+-		if (err) {
+-			free_netdev(dev);
+-			break;
+-		}
+-
+-		if( register_netdev( dev ) ) {
+-			release_region( dev->base_addr, SBNI_IO_EXTENT );
+-			free_netdev( dev );
+-			break;
+-		}
+-	}
+-
+-	return  *sbni_cards  ?  0  :  -ENODEV;
+-}
+-
+-void
+-cleanup_module(void)
+-{
+-	int i;
+-
+-	for (i = 0;  i < SBNI_MAX_NUM_CARDS;  ++i) {
+-		struct net_device *dev = sbni_cards[i];
+-		if (dev != NULL) {
+-			unregister_netdev(dev);
+-			release_region(dev->base_addr, SBNI_IO_EXTENT);
+-			free_netdev(dev);
+-		}
+-	}
+-}
+-
+-#else	/* MODULE */
+-
+-static int __init
+-sbni_setup( char  *p )
+-{
+-	int  n, parm;
+-
+-	if( *p++ != '(' )
+-		goto  bad_param;
+-
+-	for( n = 0, parm = 0;  *p  &&  n < 8; ) {
+-		(*dest[ parm ])[ n ] = simple_strtol( p, &p, 0 );
+-		if( !*p  ||  *p == ')' )
+-			return 1;
+-		if( *p == ';' )
+-			++p, ++n, parm = 0;
+-		else if( *p++ != ',' )
+-			break;
+-		else
+-			if( ++parm >= 5 )
+-				break;
+-	}
+-bad_param:
+-	pr_err("Error in sbni kernel parameter!\n");
+-	return 0;
+-}
+-
+-__setup( "sbni=", sbni_setup );
+-
+-#endif	/* MODULE */
+-
+-/* -------------------------------------------------------------------------- */
+-
+-static u32
+-calc_crc32( u32  crc,  u8  *p,  u32  len )
+-{
+-	while( len-- )
+-		crc = CRC32( *p++, crc );
+-
+-	return  crc;
+-}
+-
+-static u32  crc32tab[] __attribute__ ((aligned(8))) = {
+-	0xD202EF8D,  0xA505DF1B,  0x3C0C8EA1,  0x4B0BBE37,
+-	0xD56F2B94,  0xA2681B02,  0x3B614AB8,  0x4C667A2E,
+-	0xDCD967BF,  0xABDE5729,  0x32D70693,  0x45D03605,
+-	0xDBB4A3A6,  0xACB39330,  0x35BAC28A,  0x42BDF21C,
+-	0xCFB5FFE9,  0xB8B2CF7F,  0x21BB9EC5,  0x56BCAE53,
+-	0xC8D83BF0,  0xBFDF0B66,  0x26D65ADC,  0x51D16A4A,
+-	0xC16E77DB,  0xB669474D,  0x2F6016F7,  0x58672661,
+-	0xC603B3C2,  0xB1048354,  0x280DD2EE,  0x5F0AE278,
+-	0xE96CCF45,  0x9E6BFFD3,  0x0762AE69,  0x70659EFF,
+-	0xEE010B5C,  0x99063BCA,  0x000F6A70,  0x77085AE6,
+-	0xE7B74777,  0x90B077E1,  0x09B9265B,  0x7EBE16CD,
+-	0xE0DA836E,  0x97DDB3F8,  0x0ED4E242,  0x79D3D2D4,
+-	0xF4DBDF21,  0x83DCEFB7,  0x1AD5BE0D,  0x6DD28E9B,
+-	0xF3B61B38,  0x84B12BAE,  0x1DB87A14,  0x6ABF4A82,
+-	0xFA005713,  0x8D076785,  0x140E363F,  0x630906A9,
+-	0xFD6D930A,  0x8A6AA39C,  0x1363F226,  0x6464C2B0,
+-	0xA4DEAE1D,  0xD3D99E8B,  0x4AD0CF31,  0x3DD7FFA7,
+-	0xA3B36A04,  0xD4B45A92,  0x4DBD0B28,  0x3ABA3BBE,
+-	0xAA05262F,  0xDD0216B9,  0x440B4703,  0x330C7795,
+-	0xAD68E236,  0xDA6FD2A0,  0x4366831A,  0x3461B38C,
+-	0xB969BE79,  0xCE6E8EEF,  0x5767DF55,  0x2060EFC3,
+-	0xBE047A60,  0xC9034AF6,  0x500A1B4C,  0x270D2BDA,
+-	0xB7B2364B,  0xC0B506DD,  0x59BC5767,  0x2EBB67F1,
+-	0xB0DFF252,  0xC7D8C2C4,  0x5ED1937E,  0x29D6A3E8,
+-	0x9FB08ED5,  0xE8B7BE43,  0x71BEEFF9,  0x06B9DF6F,
+-	0x98DD4ACC,  0xEFDA7A5A,  0x76D32BE0,  0x01D41B76,
+-	0x916B06E7,  0xE66C3671,  0x7F6567CB,  0x0862575D,
+-	0x9606C2FE,  0xE101F268,  0x7808A3D2,  0x0F0F9344,
+-	0x82079EB1,  0xF500AE27,  0x6C09FF9D,  0x1B0ECF0B,
+-	0x856A5AA8,  0xF26D6A3E,  0x6B643B84,  0x1C630B12,
+-	0x8CDC1683,  0xFBDB2615,  0x62D277AF,  0x15D54739,
+-	0x8BB1D29A,  0xFCB6E20C,  0x65BFB3B6,  0x12B88320,
+-	0x3FBA6CAD,  0x48BD5C3B,  0xD1B40D81,  0xA6B33D17,
+-	0x38D7A8B4,  0x4FD09822,  0xD6D9C998,  0xA1DEF90E,
+-	0x3161E49F,  0x4666D409,  0xDF6F85B3,  0xA868B525,
+-	0x360C2086,  0x410B1010,  0xD80241AA,  0xAF05713C,
+-	0x220D7CC9,  0x550A4C5F,  0xCC031DE5,  0xBB042D73,
+-	0x2560B8D0,  0x52678846,  0xCB6ED9FC,  0xBC69E96A,
+-	0x2CD6F4FB,  0x5BD1C46D,  0xC2D895D7,  0xB5DFA541,
+-	0x2BBB30E2,  0x5CBC0074,  0xC5B551CE,  0xB2B26158,
+-	0x04D44C65,  0x73D37CF3,  0xEADA2D49,  0x9DDD1DDF,
+-	0x03B9887C,  0x74BEB8EA,  0xEDB7E950,  0x9AB0D9C6,
+-	0x0A0FC457,  0x7D08F4C1,  0xE401A57B,  0x930695ED,
+-	0x0D62004E,  0x7A6530D8,  0xE36C6162,  0x946B51F4,
+-	0x19635C01,  0x6E646C97,  0xF76D3D2D,  0x806A0DBB,
+-	0x1E0E9818,  0x6909A88E,  0xF000F934,  0x8707C9A2,
+-	0x17B8D433,  0x60BFE4A5,  0xF9B6B51F,  0x8EB18589,
+-	0x10D5102A,  0x67D220BC,  0xFEDB7106,  0x89DC4190,
+-	0x49662D3D,  0x3E611DAB,  0xA7684C11,  0xD06F7C87,
+-	0x4E0BE924,  0x390CD9B2,  0xA0058808,  0xD702B89E,
+-	0x47BDA50F,  0x30BA9599,  0xA9B3C423,  0xDEB4F4B5,
+-	0x40D06116,  0x37D75180,  0xAEDE003A,  0xD9D930AC,
+-	0x54D13D59,  0x23D60DCF,  0xBADF5C75,  0xCDD86CE3,
+-	0x53BCF940,  0x24BBC9D6,  0xBDB2986C,  0xCAB5A8FA,
+-	0x5A0AB56B,  0x2D0D85FD,  0xB404D447,  0xC303E4D1,
+-	0x5D677172,  0x2A6041E4,  0xB369105E,  0xC46E20C8,
+-	0x72080DF5,  0x050F3D63,  0x9C066CD9,  0xEB015C4F,
+-	0x7565C9EC,  0x0262F97A,  0x9B6BA8C0,  0xEC6C9856,
+-	0x7CD385C7,  0x0BD4B551,  0x92DDE4EB,  0xE5DAD47D,
+-	0x7BBE41DE,  0x0CB97148,  0x95B020F2,  0xE2B71064,
+-	0x6FBF1D91,  0x18B82D07,  0x81B17CBD,  0xF6B64C2B,
+-	0x68D2D988,  0x1FD5E91E,  0x86DCB8A4,  0xF1DB8832,
+-	0x616495A3,  0x1663A535,  0x8F6AF48F,  0xF86DC419,
+-	0x660951BA,  0x110E612C,  0x88073096,  0xFF000000
+-};
+-
+diff --git a/drivers/net/wan/sbni.h b/drivers/net/wan/sbni.h
 deleted file mode 100644
-index 7be91b4c0ca0..000000000000
---- a/net/lapb/Makefile
+index 84264510a8ed..000000000000
+--- a/drivers/net/wan/sbni.h
 +++ /dev/null
-@@ -1,8 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# Makefile for the Linux LAPB layer.
--#
+@@ -1,147 +0,0 @@
+-/* sbni.h:  definitions for a Granch SBNI12 driver, version 5.0.0
+- * Written 2001 Denis I.Timofeev (timofeev@granch.ru)
+- * This file is distributed under the GNU GPL
+- */
 -
--obj-$(CONFIG_LAPB) += lapb.o
+-#ifndef SBNI_H
+-#define SBNI_H
 -
--lapb-y := lapb_in.o lapb_out.o lapb_subr.o lapb_timer.o lapb_iface.o
-diff --git a/net/x25/Kconfig b/net/x25/Kconfig
-deleted file mode 100644
-index 2ecb2e5e241e..000000000000
---- a/net/x25/Kconfig
-+++ /dev/null
-@@ -1,34 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--#
--# CCITT X.25 Packet Layer
--#
+-#ifdef SBNI_DEBUG
+-#define DP( A ) A
+-#else
+-#define DP( A )
+-#endif
 -
--config X25
--	tristate "CCITT X.25 Packet Layer"
--	---help---
--	  X.25 is a set of standardized network protocols, similar in scope to
--	  frame relay; the one physical line from your box to the X.25 network
--	  entry point can carry several logical point-to-point connections
--	  (called "virtual circuits") to other computers connected to the X.25
--	  network. Governments, banks, and other organizations tend to use it
--	  to connect to each other or to form Wide Area Networks (WANs). Many
--	  countries have public X.25 networks. X.25 consists of two
--	  protocols: the higher level Packet Layer Protocol (PLP) (say Y here
--	  if you want that) and the lower level data link layer protocol LAPB
--	  (say Y to "LAPB Data Link Driver" below if you want that).
 -
--	  You can read more about X.25 at <http://www.sangoma.com/tutorials/x25/> and
--	  <http://docwiki.cisco.com/wiki/X.25>.
--	  Information about X.25 for Linux is contained in the files
--	  <file:Documentation/networking/x25.txt> and
--	  <file:Documentation/networking/x25-iface.txt>.
+-/* We don't have official vendor id yet... */
+-#define SBNI_PCI_VENDOR 	0x55 
+-#define SBNI_PCI_DEVICE 	0x9f
 -
--	  One connects to an X.25 network either with a dedicated network card
--	  using the X.21 protocol (not yet supported by Linux) or one can do
--	  X.25 over a standard telephone line using an ordinary modem (say Y
--	  to "X.25 async driver" below) or over Ethernet using an ordinary
--	  Ethernet card and the LAPB over Ethernet (say Y to "LAPB Data Link
--	  Driver" and "LAPB over Ethernet driver" below).
+-#define ISA_MODE 0x00
+-#define PCI_MODE 0x01
 -
--	  To compile this driver as a module, choose M here: the module
--	  will be called x25. If unsure, say N.
+-#define	SBNI_IO_EXTENT	4
+-
+-enum sbni_reg {
+-	CSR0 = 0,
+-	CSR1 = 1,
+-	DAT  = 2
+-};
+-
+-/* CSR0 mapping */
+-enum {
+-	BU_EMP = 0x02,
+-	RC_CHK = 0x04,
+-	CT_ZER = 0x08,
+-	TR_REQ = 0x10,
+-	TR_RDY = 0x20,
+-	EN_INT = 0x40,
+-	RC_RDY = 0x80
+-};
+-
+-
+-/* CSR1 mapping */
+-#define PR_RES 0x80
+-
+-struct sbni_csr1 {
+-#ifdef __LITTLE_ENDIAN_BITFIELD
+-	u8 rxl	: 5;
+-	u8 rate	: 2;
+-	u8 	: 1;
+-#else
+-	u8 	: 1;
+-	u8 rate	: 2;
+-	u8 rxl	: 5;
+-#endif
+-};
+-
+-/* fields in frame header */
+-#define FRAME_ACK_MASK  (unsigned short)0x7000
+-#define FRAME_LEN_MASK  (unsigned short)0x03FF
+-#define FRAME_FIRST     (unsigned short)0x8000
+-#define FRAME_RETRY     (unsigned short)0x0800
+-
+-#define FRAME_SENT_BAD  (unsigned short)0x4000
+-#define FRAME_SENT_OK   (unsigned short)0x3000
+-
+-
+-/* state flags */
+-enum {
+-	FL_WAIT_ACK    = 0x01,
+-	FL_NEED_RESEND = 0x02,
+-	FL_PREV_OK     = 0x04,
+-	FL_SLOW_MODE   = 0x08,
+-	FL_SECONDARY   = 0x10,
+-#ifdef CONFIG_SBNI_MULTILINE
+-	FL_SLAVE       = 0x20,
+-#endif
+-	FL_LINE_DOWN   = 0x40
+-};
+-
+-
+-enum {
+-	DEFAULT_IOBASEADDR = 0x210,
+-	DEFAULT_INTERRUPTNUMBER = 5,
+-	DEFAULT_RATE = 0,
+-	DEFAULT_FRAME_LEN = 1012
+-};
+-
+-#define DEF_RXL_DELTA	-1
+-#define DEF_RXL		0xf
+-
+-#define SBNI_SIG 0x5a
+-
+-#define	SBNI_MIN_LEN	60	/* Shortest Ethernet frame without FCS */
+-#define SBNI_MAX_FRAME	1023
+-#define ETHER_MAX_LEN	1518
+-
+-#define SBNI_TIMEOUT	(HZ/10)
+-
+-#define TR_ERROR_COUNT	32
+-#define CHANGE_LEVEL_START_TICKS 4
+-
+-#define SBNI_MAX_NUM_CARDS	16
+-
+-/* internal SBNI-specific statistics */
+-struct sbni_in_stats {
+-	u32	all_rx_number;
+-	u32	bad_rx_number;
+-	u32	timeout_number;
+-	u32	all_tx_number;
+-	u32	resend_tx_number;
+-};
+-
+-/* SBNI ioctl params */
+-#define SIOCDEVGETINSTATS 	SIOCDEVPRIVATE
+-#define SIOCDEVRESINSTATS 	SIOCDEVPRIVATE+1
+-#define SIOCDEVGHWSTATE   	SIOCDEVPRIVATE+2
+-#define SIOCDEVSHWSTATE   	SIOCDEVPRIVATE+3
+-#define SIOCDEVENSLAVE  	SIOCDEVPRIVATE+4
+-#define SIOCDEVEMANSIPATE  	SIOCDEVPRIVATE+5
+-
+-
+-/* data packet for SIOCDEVGHWSTATE/SIOCDEVSHWSTATE ioctl requests */
+-struct sbni_flags {
+-	u32	rxl		: 4;
+-	u32	rate		: 2;
+-	u32	fixed_rxl	: 1;
+-	u32	slow_mode	: 1;
+-	u32	mac_addr	: 24;
+-};
+-
+-/*
+- * CRC-32 stuff
+- */
+-#define CRC32(c,crc) (crc32tab[((size_t)(crc) ^ (c)) & 0xff] ^ (((crc) >> 8) & 0x00FFFFFF))
+-      /* CRC generator 0xEDB88320 */
+-      /* CRC remainder 0x2144DF1C */
+-      /* CRC initial value 0x00000000 */
+-#define CRC32_REMAINDER 0x2144DF1C
+-#define CRC32_INITIAL 0x00000000
+-
+-#ifndef __initdata
+-#define __initdata
+-#endif
+-
+-#endif
+-
+diff --git a/include/net/Space.h b/include/net/Space.h
+index 9cce0d80d37a..475fe96574e5 100644
+--- a/include/net/Space.h
++++ b/include/net/Space.h
+@@ -25,6 +25,3 @@ struct net_device *ltpc_probe(void);
+ 
+ /* Fibre Channel adapters */
+ int iph5526_probe(struct net_device *dev);
+-
+-/* SBNI adapters */
+-int sbni_probe(int unit);
 -- 
 2.20.0
 
