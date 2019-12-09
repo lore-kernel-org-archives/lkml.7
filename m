@@ -2,178 +2,186 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB78CC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA951C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13C52077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C532077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfLINA5 convert rfc822-to-8bit (ORCPT
+        id S1727734AbfLINBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:00:57 -0500
-Received: from mail-oln040092254048.outbound.protection.outlook.com ([40.92.254.48]:44146
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727038AbfLINA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:00:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ghPnSiS2bR3slrAQz625jnpVwX7oyzb4sIMrn2qCcIrFF58h/ZjUAwgdostbOzQ8Wd2sPVipDrRGh/J9qkUwp+Xdfp5c5jCdFB3+Y+9eBq15ZOlzERuj4qoxV5RgjfBnWVKD0Pg5Kcgf17hBDf9xTPTUpSyoyQgvGaXrp1oWsEXvlAA3tgmzZFrzl4d5tus85jRU/YIS+45hf0tBWCipyXBW39DJV7KpXn6EaNnXxD+sKE6NLP5Yilu7BADMNakWVMqKHeZDmVaRmaGz/LJLqccISQzLnVTri4HvMHbTPy5bG/Gnau5x5UFcgPi+ogHHSHCYY1l0biP788FzHpForw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yfiqzN34SYKlgEbvFx+4dvp3h00h3Xf+NeQ/xHHE9uM=;
- b=SFGm/scm/vV+dpopVyd+0P0cLXmROs10hYcqDaSJONPFLZv/z2fm/cbjy3PGtQHxeFUC4O8zN8j51NKb9hnWubpfsVWDHKOZKENGNdtSFiknaPRbcN66o8Z50iOUbPqbKO6NMI2XQN8JJ0eLJxGPmo/fc5Y2if4ifBpCNSKHPXCxbvojXt43xG1lEN1xUMrVZyh7XKJY5NF75bVLNGmq3jAD8eRpKq3YQYS+0ADZjukHJ34vC/fSCl4I6JRmhPnjPw9/q1r7AdvLHKD/1OZZzoHsbhss07lVkemptt45YeWhzTEsrTM03cqGLJQ98ZYGsmr5aWXmWjmWYzmFVspWpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT003.eop-APC01.prod.protection.outlook.com
- (10.152.248.55) by HK2APC01HT194.eop-APC01.prod.protection.outlook.com
- (10.152.249.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Mon, 9 Dec
- 2019 13:00:51 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
- HK2APC01FT003.mail.protection.outlook.com (10.152.248.173) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.25 via Frontend Transport; Mon, 9 Dec 2019 13:00:51 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 13:00:51 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v12 4/4] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v12 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVrpCvPIyPLGgIT0aVKrLx85Jowg==
-Date:   Mon, 9 Dec 2019 13:00:51 +0000
-Message-ID: <PSXP216MB04384D7A7F321A0BED323CB180580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYYP282CA0016.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:b4::26) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:80C3EB2F81A8A468B085D06868FAF549D412D6C83B2D184D939604642F70FED3;UpperCasedChecksum:B054872A94759315DC83A89DBF2A2B9094D459A0DE929939226AAA364F3471BD;SizeAsReceived:7612;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [dZOOw6rEfqlkSrUq9vgwc/up2qRoE85kXEKEMPfX2be8l5KRbuIu2JBqqxWmaaOJel9LMrlLFD4=]
-x-microsoft-original-message-id: <20191209130042.GA3017@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: dffdd2b2-3743-4042-8d71-08d77ca7d162
-x-ms-exchange-slblob-mailprops: Zv/SX2iM+5WBO+Hzd/SDavkKHBOvnksd01hJFr3iXCJtXVv218tmSHREHPLp5PjzMFrUVa9edh5xVOtuh1IlKnrhyx/eqMfwjLS45pH+hQA/H+lSCBDm67k1PVziUdpQat3HZ+VKpUgdLP32raZf6L9cYpfy52l4Lw7oie0Garzi5vuSPyj3/2JicpUM8lg2kk/UpY4q8p6py2MGjNT67Ydt/JhjqYcHA92bDSpwPFjC69Qvclf0AYzMz8xTDadV/7i7RhPOa2BzGayTr0gA9YDL18S3pIYwwIC5hReEMO1bQdzmYV4jfnN+6icvmglqlOotTtJkPpmGOgrK/qNuLqTrWTmRnfJPMF+3HrhVT3BGPRV8fT2L2LJZSwgkXvLIPXcBUQvUb64JsNiWtIVsXfS/0+vgNzx6yMLZl0ysaq8HrtZNKhx9iULSposG9PDZrxrn7OP57Kj3PqdaLBn+kVnPA9ExlHM2Jd1j5mj8Dd67xOXY4swkV2yyZmD113Yck7yHFQGGhAIKf4voiHILDFLyik9yaTmKetIYaX1gbjEJ7EgGt7Tx1pwkoDAqg3zpphFrMrMkIgBKLbvOxaJj1BIycQGdGZ+d9vIbQO4lDJM2gx9qV6HqSEabEef9wE7T+3SZQhCf3rT4Vg9yBAQEIzdWA2xoxN+4kkLzWBXdLQUIFmYgi2Ut/udTgXuBwftauC6a8Onr9Yc=
-x-ms-traffictypediagnostic: HK2APC01HT194:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GElS8eutZGp8lfwKE1ZwpGLLCi+dKHJhFycZD6CAm0QImSIANV87AbtVWRaK5llTTxngFB2wQmrRfMZWMlUOv3If4fG0sF8eeErugvdKfqgcHgs9Gmp0tptDEmTVHYq5t491UjUCWKYI0+zszDS491Q08ohIvsfmPPADTzsOMi32RB5cME/Wn3Grio4OOCHS
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DDC4DA17C837A94799C56ED7E180746A@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Dec 2019 08:01:09 -0500
+Received: from out28-220.mail.aliyun.com ([115.124.28.220]:59178 "EHLO
+        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727567AbfLINBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:01:09 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07732261|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.424408-0.0111602-0.564432;DS=CONTINUE|ham_system_inform|0.144077-0.000892893-0.85503;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.GDcmOki_1575896441;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GDcmOki_1575896441)
+          by smtp.aliyun-inc.com(10.147.41.138);
+          Mon, 09 Dec 2019 21:01:02 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, ebiederm@xmission.com, ralf@linux-mips.org,
+        heiko@sntech.de, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, krzk@kernel.org,
+        geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+Subject: [PATCH v7 5/6] MIPS: X1000: Add missing X1000 nodes.
+Date:   Mon,  9 Dec 2019 21:00:37 +0800
+Message-Id: <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: dffdd2b2-3743-4042-8d71-08d77ca7d162
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 13:00:51.5042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT194
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with non-zero size Y into parent hotplug bridge with
-size X is impossible, and hence the downstream hotplug bridge needs to
-shrink to fit into its parent.
+Add the appropriate DT node to probe pdma/msc/rtc/watchdog/ethernet
+driver using the devicetree.
 
-Add check for if bridge is extended or shrunken and adjust pci_dbg to
-reflect this.
-
-Reset the resource if its new size is zero (if we have run out of a
-bridge window resource) to prevent the PCI resource assignment code from
-attempting to assign a zero-sized resource.
-
-Rename extend_bridge_window() to adjust_bridge_window() to reflect the
-fact that the window can now shrink.
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- drivers/pci/setup-bus.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 0e0c8b677..22aed6cdb 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1832,22 +1832,29 @@ void __init pci_assign_unassigned_resources(void)
- 	}
- }
+Notes:
+    v7:
+    New patch, merge[05/12],[07/12],[09/12],[11/12] in v6.
+
+ arch/mips/boot/dts/ingenic/x1000.dtsi | 96 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 13a6c9ff..398a756 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dt-bindings/clock/x1000-cgu.h>
++#include <dt-bindings/dma/x1000-dma.h>
  
--static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-+static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	resource_size_t add_size;
-+	resource_size_t add_size, size = resource_size(res);
+ / {
+ 	#address-cells = <1>;
+@@ -68,6 +69,25 @@
+ 		interrupts = <27 26 25>;
+ 	};
  
- 	if (res->parent)
- 		return;
++	wdt: watchdog@10002000 {
++		compatible = "ingenic,x1000-watchdog", "ingenic,jz4780-watchdog";
++		reg = <0x10002000 0x10>;
++
++		clocks = <&cgu X1000_CLK_RTCLK>;
++		clock-names = "rtc";
++	};
++
++	rtc: rtc@10003000 {
++		compatible = "ingenic,x1000-rtc", "ingenic,jz4780-rtc";
++		reg = <0x10003000 0x4c>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <32>;
++
++		clocks = <&cgu X1000_CLK_RTCLK>;
++		clock-names = "rtc";
++	};
++
+ 	pinctrl: pin-controller@10010000 {
+ 		compatible = "ingenic,x1000-pinctrl";
+ 		reg = <0x10010000 0x800>;
+@@ -173,4 +193,80 @@
  
--	if (resource_size(res) >= new_size)
--		return;
-+	if (new_size > size) {
-+		add_size = new_size - size;
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < size) {
-+		add_size = size - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
- 
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
-+	if (!new_size)
-+		reset_resource(res);
- }
- 
- static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-@@ -1883,9 +1890,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
- 	 * Update the resources to fill as much remaining resource space in the
- 	 * parent bridge as possible, whilst considering alignment.
- 	 */
--	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
--	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
--	extend_bridge_window(bridge, mmio_pref_res, add_list,
-+	adjust_bridge_window(bridge, io_res, add_list, resource_size(&io));
-+	adjust_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-+	adjust_bridge_window(bridge, mmio_pref_res, add_list,
- 			     resource_size(&mmio_pref));
- 
- 	/*
+ 		status = "disabled";
+ 	};
++
++	pdma: dma-controller@13420000 {
++		compatible = "ingenic,x1000-dma";
++		reg = <0x13420000 0x400
++			   0x13421000 0x40>;
++		#dma-cells = <2>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <10>;
++
++		clocks = <&cgu X1000_CLK_PDMA>;
++	};
++
++	mac: mac@134b0000 {
++		compatible = "ingenic,x1000-mac", "snps,dwmac";
++		reg = <0x134b0000 0x2000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <55>;
++		interrupt-names = "macirq";
++
++		clocks = <&cgu X1000_CLK_MAC>;
++		clock-names = "stmmaceth";
++
++		status = "disabled";
++
++		mdio: mdio {
++			compatible = "snps,dwmac-mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++		};
++	};
++
++	msc0: msc@13450000 {
++		compatible = "ingenic,x1000-mmc";
++		reg = <0x13450000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <37>;
++
++		clocks = <&cgu X1000_CLK_MSC0>;
++		clock-names = "mmc";
++
++		cap-sd-highspeed;
++		cap-mmc-highspeed;
++		cap-sdio-irq;
++
++		dmas = <&pdma X1000_DMA_MSC0_RX 0xffffffff>,
++			   <&pdma X1000_DMA_MSC0_TX 0xffffffff>;
++		dma-names = "rx", "tx";
++
++		status = "disabled";
++	};
++
++	msc1: msc@13460000 {
++		compatible = "ingenic,x1000-mmc";
++		reg = <0x13460000 0x1000>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <36>;
++
++		clocks = <&cgu X1000_CLK_MSC1>;
++		clock-names = "mmc";
++
++		cap-sd-highspeed;
++		cap-mmc-highspeed;
++		cap-sdio-irq;
++
++		dmas = <&pdma X1000_DMA_MSC1_RX 0xffffffff>,
++			   <&pdma X1000_DMA_MSC1_TX 0xffffffff>;
++		dma-names = "rx", "tx";
++
++		status = "disabled";
++	};
+ };
 -- 
-2.24.0
+2.7.4
 
