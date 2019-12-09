@@ -2,102 +2,104 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363ABC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AF5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078262073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 927DE2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1ABfhM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfLIJfT (ORCPT
+        id S1727513AbfLIJg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:35:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38054 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfLIJfT (ORCPT
+        Mon, 9 Dec 2019 04:36:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38190 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727160AbfLIJg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:35:19 -0500
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1ieFRV-0005eV-BF; Mon, 09 Dec 2019 10:35:01 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer implementation (writer)
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
-        <20191128015235.12940-2-john.ogness@linutronix.de>
-        <20191209092756.GH88619@google.com>
-Date:   Mon, 09 Dec 2019 10:34:59 +0100
-In-Reply-To: <20191209092756.GH88619@google.com> (Sergey Senozhatsky's message
-        of "Mon, 9 Dec 2019 18:27:56 +0900")
-Message-ID: <87muc1zvss.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Mon, 9 Dec 2019 04:36:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id o8so5566375pls.5;
+        Mon, 09 Dec 2019 01:36:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pETZ4CibeP0YCb58ZGv2YCw0xeRD6VlQA38o4DT/lXo=;
+        b=d1ABfhM9pbHlHmcr8qboRgUeErg+kOipi+ttbNVZXOZ/ClflbuFye++XDsWz5icQFC
+         pgVH/bD1aakZ8HF1stw8tYKxpUjrI5dU62OUgV0OcuYMF45oklxHA/+prsLoyijJ4eUJ
+         U1qD6kCQ68VXVdkv6Y0um0zB6f9MyeC+umE9B8pAeuWyNHCfQXyFBxW8lsv4kj8qoptl
+         3bOtZACYO+yOyT5FGV3O5CAaa0wQPAKz20cKLVkEGVLdhQKOJfG698RX+XURs7+HjRqs
+         N+DGS/8VA2kOj90rTF9oJMiL+AoFo1GFviM7wN5Vj+g1zJbhb2X/U/MA+Tc1UZ92Ox23
+         ItDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pETZ4CibeP0YCb58ZGv2YCw0xeRD6VlQA38o4DT/lXo=;
+        b=B68+L1nTlcvFfyA1RAoAoM2OnGPiCXjLYpK6wVCXD7aPqn+iRYgPMgM2UinXAwt28E
+         KpbrDomgMJYz4C28ZKIRg98BM+WE1Q3T1Q5CR1d0pdTjXvjf93A5GhaTbS6K9UFl/qtO
+         HP64FTDdk8nIQkBNqrR9P7OKmXFYsEwAcFahJQPqK/lEFb1W10lawD5P4ulMkenouaa9
+         LqB5UgPJZjpEfI1UAU+kHl15i/I7eO2Ss7PHTbekhxMDaekIBf1PzvhtKBLV3RnSy8DR
+         v9Uj2vaAEFUwb+n7wIJ4QNowbOuKp90cEK1mGjLGkEtJX4SqdGD0Uwe8cMh9enrL3CmV
+         i+Cw==
+X-Gm-Message-State: APjAAAXdzEvRLn8p31MBpc4THMCmrmIrci133MVPZ+nwEugoVgk/p0W6
+        GIrOMlZZMeuWnYAg6W+qhvUQC3nB
+X-Google-Smtp-Source: APXvYqw8XXjTPUZkYWrEdJNdbogtS/K2qEMV6M/kszxNMIYzF3sDABSoESBKujIUr5SG17GZ5wQ3XA==
+X-Received: by 2002:a17:902:322:: with SMTP id 31mr28852177pld.244.1575884188836;
+        Mon, 09 Dec 2019 01:36:28 -0800 (PST)
+Received: from localhost.localdomain ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id m14sm12431975pjf.10.2019.12.09.01.36.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 01:36:28 -0800 (PST)
+From:   zhuguangqing83@gmail.com
+To:     rjw@rjwysocki.net
+Cc:     pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhuguangqing <zhuguangqing@xiaomi.com>
+Subject: [PATCH v2]PM/wakeup: Add print_wakeup_source_stats(m, &deleted_ws)
+Date:   Mon,  9 Dec 2019 17:35:23 +0800
+Message-Id: <20191209093523.15752-1-zhuguangqing83@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-09, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->> + * Sample reader code::
->> + *
->> + *	struct printk_info info;
->> + *	char text_buf[32];
->> + *	char dict_buf[32];
->> + *	u64 next_seq = 0;
->> + *	struct printk_record r = {
->> + *		.info		= &info,
->> + *		.text_buf	= &text_buf[0],
->> + *		.dict_buf	= &dict_buf[0],
->> + *		.text_buf_size	= sizeof(text_buf),
->> + *		.dict_buf_size	= sizeof(dict_buf),
->> + *	};
->> + *
->> + *	while (prb_read_valid(&rb, next_seq, &r)) {
->> + *		if (info.seq != next_seq)
->> + *			pr_warn("lost %llu records\n", info.seq - next_seq);
->> + *
->> + *		if (info.text_len > r.text_buf_size) {
->> + *			pr_warn("record %llu text truncated\n", info.seq);
->> + *			text_buf[sizeof(text_buf) - 1] = 0;
->> + *		}
->> + *
->> + *		if (info.dict_len > r.dict_buf_size) {
->> + *			pr_warn("record %llu dict truncated\n", info.seq);
->> + *			dict_buf[sizeof(dict_buf) - 1] = 0;
->> + *		}
->> + *
->> + *		pr_info("%llu: %llu: %s;%s\n", info.seq, info.ts_nsec,
->> + *			&text_buf[0], info.dict_len ? &dict_buf[0] : "");
->> + *
->> + *		next_seq = info.seq + 1;
->> + *	}
->> + */
->
-> Will this loop ever end? :)
->
-> pr_info() adds data to ringbuffer, which prb_read_valid() reads, so
-> pr_info() can add more data, which prb_read_valid() will read, so
-> pr_info()...
+From: zhuguangqing <zhuguangqing@xiaomi.com>
 
-The sample code is assuming that @rb is not the same ringbuffer used by
-kernel/printk/printk.c. (For example, the test module is doing that to
-stress test the ringbuffer code without actually affecting printk.) I
-can add a sentence to clarify that.
+After commit 00ee22c28915 (PM / wakeup: Use seq_open()
+to show wakeup stats), print_wakeup_source_stats(m, &deleted_ws)
+is deleted in function wakeup_sources_stats_seq_show().
 
-John Ogness
+Because deleted_ws is one of wakeup sources, so it should
+also be showed. This patch add it to the end of all other
+wakeup sources.
+
+Signed-off-by: zhuguangqing <zhuguangqing@xiaomi.com>
+---
+v2: modify judegment condition according to the advice of Rafael J.
+
+ drivers/base/power/wakeup.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 5817b51d2b15..53c0519da1e4 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1071,6 +1071,9 @@ static void *wakeup_sources_stats_seq_next(struct seq_file *m,
+ 		break;
+ 	}
+ 
++	if (!next_ws)
++		print_wakeup_source_stats(m, &deleted_ws);
++
+ 	return next_ws;
+ }
+ 
+-- 
+2.17.1
+
