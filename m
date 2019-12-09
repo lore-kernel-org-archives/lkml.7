@@ -2,97 +2,134 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BA1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E77EC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8877120726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAF82073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLINeO (ORCPT
+        id S1727720AbfLINeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:34:14 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727438AbfLINeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:34:14 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CEB9515513E7DF9DA6CA;
-        Mon,  9 Dec 2019 21:34:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 9 Dec 2019 21:34:02 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <davem@davemloft.net>, <loke.chetan@gmail.com>,
-        <willemb@google.com>, <edumazet@google.com>,
-        <maximmi@mellanox.com>, <nhorman@tuxdriver.com>,
-        <pabeni@redhat.com>, <maowenan@huawei.com>,
-        <yuehaibing@huawei.com>, <tglx@linutronix.de>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Subject: [PATCH net] af_packet: set defaule value for tmo
-Date:   Mon, 9 Dec 2019 21:31:25 +0800
-Message-ID: <20191209133125.59093-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 9 Dec 2019 08:34:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:60694 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727438AbfLINeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:34:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E694328;
+        Mon,  9 Dec 2019 05:34:14 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5B0F3F718;
+        Mon,  9 Dec 2019 05:34:12 -0800 (PST)
+Subject: Re: [RFCv1 2/8] mfd: rk808: use syscore for RK805 PMIC shutdown
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Daniel Schultz <d.schultz@phytec.de>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191206184536.2507-1-linux.amoon@gmail.com>
+ <20191206184536.2507-3-linux.amoon@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
+Date:   Mon, 9 Dec 2019 13:34:09 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191206184536.2507-3-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+On 06/12/2019 6:45 pm, Anand Moon wrote:
+> Use common syscore_shutdown for RK805 PMIC to do
+> clean I2C shutdown, drop the unused pm_pwroff_prep_fn
+> and pm_pwroff_fn function pointers.
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
+Coincidentally, I've also been looking at RK805 for the sake of trying 
+to get suspend to behave on my RK3328 box, and I've ended up with some 
+slightly different cleanup patches - I'll tidy them up and post them for 
+comparison as soon as I can.
 
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- net/packet/af_packet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>   drivers/mfd/rk808.c | 33 +++++++++++++++++----------------
+>   1 file changed, 17 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index e637f5bcc8bb..713d989064ba 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -467,16 +467,6 @@ static void rk808_update_bits(unsigned int reg, unsigned int mask,
+>   			"can't write to register 0x%x: %x!\n", reg, ret);
+>   }
+>   
+> -static void rk805_device_shutdown(void)
+> -{
+> -	rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
+> -}
+> -
+> -static void rk805_device_shutdown_prepare(void)
+> -{
+> -	rk808_update_bits(RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SHUTDOWN_FUN);
+> -}
+> -
+>   static void rk808_device_shutdown(void)
+>   {
+>   	rk808_update_bits(RK808_DEVCTRL_REG, DEV_OFF_RST, DEV_OFF_RST);
+> @@ -491,10 +481,23 @@ static void rk8xx_syscore_shutdown(void)
+>   {
+>   	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+>   
+> -	if (system_state == SYSTEM_POWER_OFF &&
+> -	    (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
+> -		rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK,
+> -				SLPPIN_DN_FUN);
+> +	if (system_state == SYSTEM_POWER_OFF) {
+> +		dev_info(&rk808_i2c_client->dev, "System Shutdown Event\n");
+> +
+> +		switch (rk808->variant) {
+> +		case RK805_ID:
+> +			rk808_update_bits(RK805_GPIO_IO_POL_REG,
+> +					SLP_SD_MSK, SHUTDOWN_FUN);
+> +			rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 53c1d41fb1c9..118cd66b7516 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
- 			msec = 1;
- 			div = ecmd.base.speed / 1000;
- 		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
- 
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
- 
--- 
-2.20.1
+Why this change? Shutdown via the SLEEP pin is working just fine on my 
+box :/
 
+Robin.
+
+> +			break;
+> +		case RK809_ID:
+> +		case RK817_ID:
+> +			rk808_update_bits(RK817_SYS_CFG(3),
+> +					RK817_SLPPIN_FUNC_MSK, SLPPIN_DN_FUN);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+>   	}
+>   }
+>   
+> @@ -565,8 +568,6 @@ static int rk808_probe(struct i2c_client *client,
+>   		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
+>   		cells = rk805s;
+>   		nr_cells = ARRAY_SIZE(rk805s);
+> -		rk808->pm_pwroff_fn = rk805_device_shutdown;
+> -		rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
+>   		break;
+>   	case RK808_ID:
+>   		rk808->regmap_cfg = &rk808_regmap_config;
+> 
