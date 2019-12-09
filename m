@@ -2,115 +2,96 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB973C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEFEC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F34205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970F4205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7T9TU6w"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YG2txRg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfLIVu6 (ORCPT
+        id S1726901AbfLIVvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:50:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34669 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIVu6 (ORCPT
+        Mon, 9 Dec 2019 16:51:03 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55408 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIVu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:50:58 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so13675676otf.1;
-        Mon, 09 Dec 2019 13:50:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O/NLa7LG87/2ajh4S2U01kITyWo4HMhACFw0A24HFMA=;
-        b=N7T9TU6wfpVeEE9xx36zwVSppTMWw2e8gt5XhphUSf5cKJiGbOcV+7mbD5Yco3EbA6
-         qlSqFlwyLi/vXaNjFgj4+GjgRQNmHTDFNwDe1o5Yh7kUxFDgmL+kgF4PGT+7uqtHzlLs
-         w9W1CzutB1TFH3t0W4UsP0nTN3M6HavAFKY3h3iq/dMaJoyN7TBprJSzSs1I8HcGFNOW
-         9itE6ES5s1heBuEUf/0BvjgWWos1HQ0ZBgZpHo4Lp9rYW5QfkhvjJqtXhcZe3JlcBG4g
-         cyQnty7/gMQA6ot73DECnWSvI6TXTJGKkMUE2PLAg+RQBh4IKWB/Zf3hu2swAl8tZC7K
-         nuXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O/NLa7LG87/2ajh4S2U01kITyWo4HMhACFw0A24HFMA=;
-        b=ArRLwmY5qP3o9K9CJevL3Ne1VeirjxbnQ6dDoa5A5wV3N6ya76F/1hWPF6BccojSeD
-         iL4mmXWwsSZHtsCRAbcTifB2emItuOCvMu70lF9GsA+NsaciZC4sT3lw3VMOwwpjj13H
-         zYZkNFIrRjFn5uxbTcQ4QV6LJc7mA1t0oWMjnIdeYK0TKvIVb++3AdqpFMCs11Eezsv3
-         l5SdLzXDbhjbBhFK+seYCotraZ49cvvQeCnWLfOxKWi/YcKSyRLicrnA9FBlK54a7p8S
-         Wq7Y8s2SbxizAwplkyhtlUUkeRlqo/8zqGIyK2RC/szcrAAu9lhmUI2zocHIudZ63SCz
-         maCA==
-X-Gm-Message-State: APjAAAUxCiDivesEnXUYyN8T3cQKSUo8yTGBbZoAavbczpGJYXErSsrc
-        t3VhseEURDOerYg4DA7W5fG8FWazmsE=
-X-Google-Smtp-Source: APXvYqzIwTCJYyE3QPvIhgxJ4d2HxrbZsul1UcQgKJpJiopoXeZ60p2+m7cgoOCNdwxxjt/MqERwjQ==
-X-Received: by 2002:a05:6830:18e6:: with SMTP id d6mr24252454otf.170.1575928257168;
-        Mon, 09 Dec 2019 13:50:57 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 16sm469424otc.73.2019.12.09.13.50.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 13:50:56 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] net: smc911x: Adjust indentation in smc911x_phy_configure
-Date:   Mon,  9 Dec 2019 14:50:27 -0700
-Message-Id: <20191209215027.10222-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 16:50:59 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9Low0i005349;
+        Mon, 9 Dec 2019 15:50:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575928258;
+        bh=lUSdxRhD6XTC7WhbY0PYaGuAAuVAsloAEADwb1YGU8w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YG2txRg5aS6wPIGElxOMo+yKk+nel+Uqz2sJ8oERHhEWqhkRKE/hnhpvgdUvLlnNj
+         s3MeHF+KKqrQo0qRVK0N5meBLuDmfmZD3/4XO9D1z5Xru3pnLl5hcxXKQs4UvHtXC6
+         8pnvXC2ZBMH8TlY2rMwUiZStmlA18Vfx3rgP80RI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9Low3I114613;
+        Mon, 9 Dec 2019 15:50:58 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 15:50:57 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 15:50:57 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9LovU2107056;
+        Mon, 9 Dec 2019 15:50:57 -0600
+Subject: Re: [PATCH v2 1/3] power_supply: Add additional health properties to
+ the header
+To:     <sre@kernel.org>, <linux-pm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20191029200201.24483-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b1a00b89-b091-4526-fbd4-d42261f0d287@ti.com>
+Date:   Mon, 9 Dec 2019 15:48:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191029200201.24483-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Bump
 
-../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (!lp->ctl_rfduplx)
-         ^
-../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
-is here
-        if (lp->ctl_rspeed != 100)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
-Link: https://github.com/ClangBuiltLinux/linux/issues/796
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/smsc/smc911x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/smsc/smc911x.c b/drivers/net/ethernet/smsc/smc911x.c
-index 4cc679376c9a..186c0bddbe5f 100644
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -936,7 +936,7 @@ static void smc911x_phy_configure(struct work_struct *work)
- 	if (lp->ctl_rspeed != 100)
- 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
- 
--	 if (!lp->ctl_rfduplx)
-+	if (!lp->ctl_rfduplx)
- 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
- 
- 	/* Update our Auto-Neg Advertisement Register */
--- 
-2.24.0
-
+On 10/29/19 3:01 PM, Dan Murphy wrote:
+> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>
+> v2 - No changes
+>
+>   include/linux/power_supply.h | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 28413f737e7d..bd0d3225f245 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -61,6 +61,9 @@ enum {
+>   	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+>   	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+>   	POWER_SUPPLY_HEALTH_OVERCURRENT,
+> +	POWER_SUPPLY_HEALTH_WARM,
+> +	POWER_SUPPLY_HEALTH_COOL,
+> +	POWER_SUPPLY_HEALTH_HOT,
+>   };
+>   
+>   enum {
