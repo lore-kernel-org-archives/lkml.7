@@ -2,159 +2,110 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1C6C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D90C2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEBA205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575863563;
-	bh=T6eTdZa2KInqaliZcJnFreUxOtLRdpEUkDDuak+e3zs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=q2Y14vR7Pu90tR14lYh5vA1l9o63JMUzwl6g3Z4uVpwyzJAGzQygboh3c0BDB0neL
-	 DrrDCgPnRfearLfQ13OTJU8Flq5+qF7ilWZJ0645vhNPsmE/54LiLMDOJ/r7+W8NeA
-	 dJXu87BwR3TJ3USLVWCWOl9xT4gczr6jzrWZOPsg=
+	by mail.kernel.org (Postfix) with ESMTP id 643D2206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 03:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNZv0zOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfLIDwm (ORCPT
+        id S1727076AbfLID5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 22:52:42 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:21112 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfLIDwl (ORCPT
+        Sun, 8 Dec 2019 22:57:14 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35390 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfLID5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 22:52:41 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id xB93q5xf026282;
-        Mon, 9 Dec 2019 12:52:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com xB93q5xf026282
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575863526;
-        bh=J4iM+2tRSGMAQWxhDFlX1MjDEl1t3wECpLumrWJGNrU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xCazK7KFE0CPUrpla9BovDQH4c7OGI7LDzhIWlodaDFyt63a9jWDeMrKIu+WxC5Zy
-         TDYCuycPoJzySTgcUtX4tpr9pxQQIeP3e5Wd/sA6xWUY1szc3kKceF55JwfukQ2qd6
-         ezeTrMGcg1K+iXJynSUWnoA9B4lRWjFErcDD+TWMM6poxIgwSQgesSVeo90TxyU5fu
-         YxlmiFEz2xi2sLZfLiB+OoMZwp4fY/RM2BPg50zNx0BUvNCxwDrNSed1hxwGLeO7so
-         YcIS/fEIeE3WTxn41BFeswVI8n34xZJHw6mxjRVFBVfWQIjwPRz9cAhW3xXoMHyzKH
-         oiFy9V74or1UA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Olof Johansson <olof@lixom.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/kallsyms: fix offset overflow of kallsyms_relative_base
-Date:   Mon,  9 Dec 2019 12:51:48 +0900
-Message-Id: <20191209035148.17048-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Dec 2019 22:57:14 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so5221215plp.2;
+        Sun, 08 Dec 2019 19:57:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=b2DE6cCWenynH+3sM3YT1LF1L+GzZk/gsLFYvvT9TE4=;
+        b=HNZv0zOE8dpgtmk2B3oPwnIYgyQaFVErECx5/4bdBiR8MXCFWi7cnDnB6wk1zX0432
+         nc/LL9IaTGj24zce2GNyO6UDhOCmu7dbcYU+HUpNzizf1HSwMnQobBH1MkvKet8hIWiL
+         gwgtgfr53bpBQ0FdymlUQDhdWSZTvkcJVZ+jlE3QTAKEcwTBne/ixmHeoN5vucOZbnDz
+         QzXzt3vCBFTI88xqVhiZePxfZFKsL3wni9ThR5hTTkiUG70YIeUNtzPC2prm+RdAGb0a
+         AGaZyP+40RX0jO+hNPe9FGzvMg7AbTdmtEjHTNQ+r96akB9V5R7N2G9vHEE9jk9E5pIK
+         5tog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b2DE6cCWenynH+3sM3YT1LF1L+GzZk/gsLFYvvT9TE4=;
+        b=bWpmwZcQmGJaXBCD2miDm32kEpZUzfZmDhy3UENISXDYi/v91Kk+Ifvzd7EJToslEC
+         Lq8wppypojRmenSeokIkUyEn5kdq0yHfryCBzhy7qGttecLixOj/TE9j7+LVMFZufL2u
+         QtbKZZVeYDXBKrNKGqITPFRWyiJpGEEebelgjM8dJYuhRup8I8+3qDusrRbxHXUu1/e+
+         hRYtYEJWrcZ2t3IXurVwRJdVJb3Hw95wKx1ZJfbiEYrwlcxU1fb2XwnnGxHVn7UVv8U1
+         9EnXECJQD+QBqhjYmyAEsMb01rAiLzSKOwvVAJVKAqhINhY8qCH738JUSOjWh0BM80XZ
+         9xdA==
+X-Gm-Message-State: APjAAAWH0nQWUkZf9e69R6mTV99nsd0NMbdEGekIhHvGZX3FFkc9qWOd
+        3fcjwbO2Mwdj3gPZBO8gQmA=
+X-Google-Smtp-Source: APXvYqwCF8D/r1Qlk/+Xkao8PBRqa0aJvcYqEdYhDMbqWDnlAhDlI7G1GRZOja+9HFrESJ6AdzouhA==
+X-Received: by 2002:a17:90a:21ee:: with SMTP id q101mr30050690pjc.94.1575863833276;
+        Sun, 08 Dec 2019 19:57:13 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id b129sm24606111pfb.147.2019.12.08.19.57.09
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 08 Dec 2019 19:57:12 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Subject: [PATCH v3 0/5] Improve the SC27XX fuel gauge controller
+Date:   Mon,  9 Dec 2019 11:56:20 +0800
+Message-Id: <cover.1575863274.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 5e5c4fa78745 ("scripts/kallsyms: shrink table before
-sorting it"), kallsyms_relative_base can be larger than _text, which
-causes overflow when building the 32-bit kernel.
+Hi,
 
-https://lkml.org/lkml/2019/12/7/156
+This patch set adds one battery resistance-temperature table to optimize
+the real battery internal resistance in different tempertures, and
+calibrates the resistance of coulomb counter to improve the accuracy
+of the coulomb counter.
 
-This is because _text is, unless --all-symbols is specified, now
-trimmed from the symbol table before record_relative_base() is called.
+Any comments are welcome. Thanks.
 
-Handle the offset signedness also for kallsyms_relative_base. Introduce
-a new helper, output_address(), to reduce the code duplication.
+Changes from v2:
+ - Add reviewed tag from Rob.
+ - Rebased.
 
-Fixes: 5e5c4fa78745 ("scripts/kallsyms: shrink table before sorting it")
-Reported-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Changes from v1:
+ - Fix the order of values in resistance-temp-table property's description.
+ - Add an unit suffix for FGU resistance property.
 
- scripts/kallsyms.c | 38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+Baolin Wang (4):
+  dt-bindings: power: Introduce one property to describe the battery
+    resistance with temperature changes
+  power: supply: core: Add battery internal resistance temperature
+    table support
+  dt-bindings: power: sc27xx: Add a new property to describe the real
+    resistance of coulomb counter chip
+  power: supply: sc27xx: Calibrate the resistance of coulomb counter
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index fb55f262f42d..94153732ec00 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -310,6 +310,15 @@ static void output_label(const char *label)
- 	printf("%s:\n", label);
- }
- 
-+/* Provide proper symbols relocatability by their '_text' relativeness. */
-+static void output_address(unsigned long long addr)
-+{
-+	if (_text <= addr)
-+		printf("\tPTR\t_text + %#llx\n", addr - _text);
-+	else
-+		printf("\tPTR\t_text - %#llx\n", _text - addr);
-+}
-+
- /* uncompress a compressed symbol. When this function is called, the best table
-  * might still be compressed itself, so the function needs to be recursive */
- static int expand_symbol(const unsigned char *data, int len, char *result)
-@@ -360,19 +369,6 @@ static void write_src(void)
- 
- 	printf("\t.section .rodata, \"a\"\n");
- 
--	/* Provide proper symbols relocatability by their relativeness
--	 * to a fixed anchor point in the runtime image, either '_text'
--	 * for absolute address tables, in which case the linker will
--	 * emit the final addresses at build time. Otherwise, use the
--	 * offset relative to the lowest value encountered of all relative
--	 * symbols, and emit non-relocatable fixed offsets that will be fixed
--	 * up at runtime.
--	 *
--	 * The symbol names cannot be used to construct normal symbol
--	 * references as the list of symbols contains symbols that are
--	 * declared static and are private to their .o files.  This prevents
--	 * .tmp_kallsyms.o or any other object from referencing them.
--	 */
- 	if (!base_relative)
- 		output_label("kallsyms_addresses");
- 	else
-@@ -380,6 +376,13 @@ static void write_src(void)
- 
- 	for (i = 0; i < table_cnt; i++) {
- 		if (base_relative) {
-+			/*
-+			 * Use the offset relative to the lowest value
-+			 * encountered of all relative symbols, and emit
-+			 * non-relocatable fixed offsets that will be fixed
-+			 * up at runtime.
-+			 */
-+
- 			long long offset;
- 			int overflow;
- 
-@@ -402,12 +405,7 @@ static void write_src(void)
- 			}
- 			printf("\t.long\t%#x\n", (int)offset);
- 		} else if (!symbol_absolute(&table[i])) {
--			if (_text <= table[i].addr)
--				printf("\tPTR\t_text + %#llx\n",
--					table[i].addr - _text);
--			else
--				printf("\tPTR\t_text - %#llx\n",
--					_text - table[i].addr);
-+			output_address(table[i].addr);
- 		} else {
- 			printf("\tPTR\t%#llx\n", table[i].addr);
- 		}
-@@ -416,7 +414,7 @@ static void write_src(void)
- 
- 	if (base_relative) {
- 		output_label("kallsyms_relative_base");
--		printf("\tPTR\t_text - %#llx\n", _text - relative_base);
-+		output_address(relative_base);
- 		printf("\n");
- 	}
- 
+Yuanjiang Yu (1):
+  power: supply: sc27xx: Optimize the battery resistance with measuring
+    temperature
+
+ .../devicetree/bindings/power/supply/battery.txt   |    5 ++
+ .../devicetree/bindings/power/supply/sc27xx-fg.txt |    3 +
+ drivers/power/supply/power_supply_core.c           |   67 +++++++++++++++++++-
+ drivers/power/supply/sc27xx_fuel_gauge.c           |   49 +++++++++++++-
+ include/linux/power_supply.h                       |   10 +++
+ 5 files changed, 130 insertions(+), 4 deletions(-)
+
 -- 
-2.17.1
+1.7.9.5
 
