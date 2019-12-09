@@ -2,115 +2,63 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD9DC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE633C2BD09
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ED92068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii5EIKHB"
+	by mail.kernel.org (Postfix) with ESMTP id B8EDE206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLIUcl (ORCPT
+        id S1726877AbfLIUdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:32:41 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33797 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfLIUcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:32:41 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so7656075oig.1;
-        Mon, 09 Dec 2019 12:32:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QcDMXx7JLbsJ2UCoZNJKLtfB+ZkWm+OkWxKRuqwbsNs=;
-        b=ii5EIKHBMaUVjEe/pz16DIxXm7wIOI19PiJzZ/jRWPQdu6FJoVjJ0CDB9uIbNL4bhT
-         B+rmUwsjdnM2DJtFKideItEvY2CMBK4T3nHz780Don2HA/9AaYPso9dyQbR5SUcHq3JX
-         DNgFjgLNLcjaMR44m6YmsQZWcYZ+y8sobtakx0B+rV8O9haEKPhcG+p0HcED+hMfw42b
-         2Ci7tVAleD761wJTbclrhtNiWcs1HAkGMLdIOXbXzYElCdYa3Z8DM9A4XPGaD8On7uqS
-         th3RknfkyGEL09MbE6gt382YWYtvPpxrUVO0vcp8hRazfg5L+22guUXO3hfiasrzmIHZ
-         aVqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QcDMXx7JLbsJ2UCoZNJKLtfB+ZkWm+OkWxKRuqwbsNs=;
-        b=Ztm024coPL41NjmNmntXMUozDBQBjGV6N6tPXbQ+PhR8xMK68JwMrCh5lh5B+hkvXy
-         I5s5A5i3+TN3C+ulJj1uTvco9r+SC3cprnA43z/tpQEYlsL/fd+7f1py/8nYY7/m3Ivq
-         a+tRCiAt5vdpsJ6FRKvBnfCDuigYTsXqILD5MzQzfQBLgkwEISCosoRPvAkIsc8SFRps
-         n+yEL3xcIbkD6kMufN/jgIw79q0cynW4UIVaylUmKuFE9/aRpnom7gmdUoLKMNOGKv9+
-         w3F4x5jQajHcWdeAnbWmENOnuSpSLCY87m8fqRHFm6MlfuNhKpDGKnvVlIvliTTzmzEN
-         +QcA==
-X-Gm-Message-State: APjAAAXHYg6gV9fVfzgXmVxUdVqGrXJcWdscrzX0KG+zIh048ic26yXY
-        k6gECv7X8ntAqw5Gc5lc+bI=
-X-Google-Smtp-Source: APXvYqwQiJRdqznvLkCjZMRsuRjsUdi2zEVecgF+rxwnBIHpEw9DLBMn1AR7VjFqiDCXnvZTVFexsg==
-X-Received: by 2002:aca:570f:: with SMTP id l15mr917514oib.120.1575923559992;
-        Mon, 09 Dec 2019 12:32:39 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id f3sm368332oto.57.2019.12.09.12.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 12:32:39 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm: msm: mdp4: Adjust indentation in mdp4_dsi_encoder_enable
-Date:   Mon,  9 Dec 2019 13:32:30 -0700
-Message-Id: <20191209203230.1593-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 15:33:14 -0500
+Received: from gentwo.org ([3.19.106.255]:47336 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726595AbfLIUdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:33:14 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id B1FD53EEC7; Mon,  9 Dec 2019 20:33:13 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id B06213ED44;
+        Mon,  9 Dec 2019 20:33:13 +0000 (UTC)
+Date:   Mon, 9 Dec 2019 20:33:13 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Daniel Wagner <dwagner@suse.de>
+cc:     Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: lockdep warns: cpu_hotplug_lock.rw_sem --> slab_mutex -->
+ kn->count#39
+In-Reply-To: <20191209182418.7vxer6vmre67ewvt@beryllium.lan>
+Message-ID: <alpine.DEB.2.21.1912092029080.6020@www.lameter.com>
+References: <20191209182418.7vxer6vmre67ewvt@beryllium.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Mon, 9 Dec 2019, Daniel Wagner wrote:
 
-../drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c:124:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         mdp4_crtc_set_config(encoder->crtc,
-         ^
-../drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c:121:2: note:
-previous statement is here
-        if (mdp4_dsi_encoder->enabled)
-        ^
+> [    5.038862]
+> [    5.038862] -> #2 (kn->count#39){++++}:
+> [    5.039329]        __kernfs_remove+0x240/0x2e0
+> [    5.039717]        kernfs_remove_by_name_ns+0x3c/0x80
+> [    5.040159]        sysfs_slab_add+0x184/0x250
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
+sysfs_slab_add should not be called under any lock. But it happens during
+an initcall (sysfs_slab_init) when the kmalloc slab array is being set up.
 
-Fixes: 776638e73a19 ("drm/msm/dsi: Add a mdp4 encoder for DSI")
-Link: https://github.com/ClangBuiltLinux/linux/issues/792
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And the problems results from a hotplug event? During system bringup when
+the slab caches have not been setup yet?
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c
-index 772f0753ed38..aaf2f26f8505 100644
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c
-@@ -121,7 +121,7 @@ static void mdp4_dsi_encoder_enable(struct drm_encoder *encoder)
- 	if (mdp4_dsi_encoder->enabled)
- 		return;
- 
--	 mdp4_crtc_set_config(encoder->crtc,
-+	mdp4_crtc_set_config(encoder->crtc,
- 			MDP4_DMA_CONFIG_PACK_ALIGN_MSB |
- 			MDP4_DMA_CONFIG_DEFLKR_EN |
- 			MDP4_DMA_CONFIG_DITHER_EN |
--- 
-2.24.0
+Is this really something that can happen?
 
