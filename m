@@ -6,39 +6,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E0C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F639C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D215A2071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCA12071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLIHn2 convert rfc822-to-8bit (ORCPT
+        id S1727294AbfLIHnc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:43:28 -0500
-Received: from mail5.windriver.com ([192.103.53.11]:56368 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfLIHn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:43:28 -0500
+        Mon, 9 Dec 2019 02:43:32 -0500
+Received: from mail1.windriver.com ([147.11.146.13]:58702 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfLIHnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 02:43:31 -0500
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xB97hJIj019132
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id xB97hRk7000195
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 8 Dec 2019 23:43:20 -0800
+        Sun, 8 Dec 2019 23:43:27 -0800 (PST)
 Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.163]) by
  ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0468.000; Sun, 8
- Dec 2019 23:43:19 -0800
+ Dec 2019 23:43:27 -0800
 From:   "Yin, Xiaotao" <Xiaotao.Yin@windriver.com>
-To:     "Yin, Xiaotao" <Xiaotao.Yin@windriver.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
+To:     "joro@8bytes.org" <joro@8bytes.org>,
         "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "Hao, Kexin" <Kexin.Hao@windriver.com>
-Subject: RE: [PATCH] iommu/iova: kmemleak when pfn_lo equals IOVA_ANCHOR
-Thread-Topic: [PATCH] iommu/iova: kmemleak when pfn_lo equals IOVA_ANCHOR
-Thread-Index: AQHVrmCJeJQaOQWxzUyaXwOpMaGc4aexakGw
-Date:   Mon, 9 Dec 2019 07:43:18 +0000
-Message-ID: <47B7036B26F82C43B9F7EAE984D54CB459DB3C@ALA-MBD.corp.ad.wrs.com>
-References: <20191209071609.35690-1-xiaotao.yin@windriver.com>
-In-Reply-To: <20191209071609.35690-1-xiaotao.yin@windriver.com>
+Subject: RE: [PATCH] iommu/iova: Init the struct iova to fix the possible
+ memleak
+Thread-Topic: [PATCH] iommu/iova: Init the struct iova to fix the possible
+ memleak
+Thread-Index: AdWuYWhN+RMb9/KAQCCIN3aLHnhZIQAAuwdA
+Date:   Mon, 9 Dec 2019 07:43:26 +0000
+Message-ID: <47B7036B26F82C43B9F7EAE984D54CB459DB4D@ALA-MBD.corp.ad.wrs.com>
+References: <47B7036B26F82C43B9F7EAE984D54CB459DB0C@ALA-MBD.corp.ad.wrs.com>
+In-Reply-To: <47B7036B26F82C43B9F7EAE984D54CB459DB0C@ALA-MBD.corp.ad.wrs.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -57,11 +59,22 @@ Please ignore this one, I'll send v2.
 Br.
 
 -----Original Message-----
+From: Yin, Xiaotao <Xiaotao.Yin@windriver.com> 
+Sent: Monday, December 9, 2019 3:24 PM
+To: Yin, Xiaotao <Xiaotao.Yin@windriver.com>; joro@8bytes.org; iommu@lists.linux-foundation.org
+Cc: linux-kernel@vger.kernel.org; Hao, Kexin <Kexin.Hao@windriver.com>
+Subject: RE: [PATCH] iommu/iova: Init the struct iova to fix the possible memleak
+
+Changed the title to "Init the struct iova to fix the possible memleak".
+
+Thanks~
+Br.
+-----Original Message-----
 From: Xiaotao Yin <xiaotao.yin@windriver.com> 
 Sent: Monday, December 9, 2019 3:16 PM
 To: joro@8bytes.org; iommu@lists.linux-foundation.org
 Cc: linux-kernel@vger.kernel.org; Hao, Kexin <Kexin.Hao@windriver.com>; Yin, Xiaotao <Xiaotao.Yin@windriver.com>
-Subject: [PATCH] iommu/iova: kmemleak when pfn_lo equals IOVA_ANCHOR
+Subject: [PATCH] iommu/iova: Init the struct iova to fix the possible memleak
 
 During ethernet(Marvell octeontx2) set ring buffer test:
 ethtool -G eth1 rx <rx ring size> tx <tx ring size> following kmemleak will happen sometimes:
