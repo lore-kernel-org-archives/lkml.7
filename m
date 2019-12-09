@@ -2,189 +2,196 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA96C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15579C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DEA206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZMEWpsrl"
+	by mail.kernel.org (Postfix) with ESMTP id DBE92206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfLIVJp (ORCPT
+        id S1726823AbfLIVKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:09:45 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:1047 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbfLIVJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:09:39 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Wwjz6PsDzLy;
-        Mon,  9 Dec 2019 22:07:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575925623; bh=/Q8V7b4XtlcY8lKdF87f/JxToMPNmVy8zIttRxB4xw0=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=ZMEWpsrlv65Z/N0OHs39QwlikU3uXO2wymuYx07y56Ffu5bxRcF4bsXoG49E+yZU9
-         Xa363iySJjZMcq7ndYpwarjoddox0ohpOOH9O/2n8sHp223XkSibMZ+0+bwsuLMmF0
-         b1eVgKrBCyDJ8rrQW0bkXUDQxinjcgonSsQD4oI9GWRhpKriCjkTmpV8UCZ2/43MJp
-         9wOS8ZO0YxVJAFi8ZhEjr9micrwXE9EW0Gw7lAG3EEGRkq/hO/AFTKjpIIbWvJLjC2
-         r2djh4ocbVGf10Ng8TuPLTmhYWNr3qLbLw4A5YG4Yp//aAldChTbwnI+t2N1YkIzE0
-         /X+ddb/xxjlfQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 09 Dec 2019 22:09:36 +0100
-Message-Id: <ec36b8af793239ad744ecabdb0828f931d2c95c8.1575925023.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 2/4] mmc: rework wp-gpio handling
+        Mon, 9 Dec 2019 16:10:46 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43223 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIVKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:10:46 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1ieQIj-0003Wk-Fc; Mon, 09 Dec 2019 22:10:41 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 86F5148C316;
+        Mon,  9 Dec 2019 21:10:40 +0000 (UTC)
+Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+To:     Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20191204175112.7308-1-dmurphy@ti.com>
+ <20191204175112.7308-2-dmurphy@ti.com>
+ <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
+ <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+ <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+ <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
+ <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
+ <cc310081-1855-958b-fbe4-529937ff941c@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cdb10440-b599-a6a5-5aa0-a7598086f6fa@pengutronix.de>
+Date:   Mon, 9 Dec 2019 22:10:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>
+In-Reply-To: <cc310081-1855-958b-fbe4-529937ff941c@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="p4lqAcromnNRRkcHxQkBKd2GE9PCjaCyX"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use MMC_CAP2_RO_ACTIVE_HIGH flag as indicator if GPIO line is to be
-inverted compared to DT/platform-specified polarity. The flag is not
-used after init in GPIO mode anyway. No functional changes intended.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--p4lqAcromnNRRkcHxQkBKd2GE9PCjaCyX
+Content-Type: multipart/mixed; boundary="BHQVwyeJqnSjP3B8lw0V6Rp4wsosrgIk8";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Dan Murphy <dmurphy@ti.com>, Sean Nyekjaer <sean@geanix.com>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-ID: <cdb10440-b599-a6a5-5aa0-a7598086f6fa@pengutronix.de>
+Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
+References: <20191204175112.7308-1-dmurphy@ti.com>
+ <20191204175112.7308-2-dmurphy@ti.com>
+ <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
+ <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
+ <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
+ <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
+ <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
+ <cc310081-1855-958b-fbe4-529937ff941c@ti.com>
+In-Reply-To: <cc310081-1855-958b-fbe4-529937ff941c@ti.com>
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/gpio/gpiolib-of.c          |  4 ----
- drivers/mmc/core/host.c            | 11 ++++-------
- drivers/mmc/core/slot-gpio.c       |  3 +++
- drivers/mmc/host/pxamci.c          |  8 ++++----
- drivers/mmc/host/sdhci-esdhc-imx.c | 13 +++++++------
- 5 files changed, 18 insertions(+), 21 deletions(-)
+--BHQVwyeJqnSjP3B8lw0V6Rp4wsosrgIk8
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index dc27b1a88e93..b0b77e52e261 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -120,10 +120,6 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			if (of_property_read_bool(np, "cd-inverted"))
- 				*flags ^= OF_GPIO_ACTIVE_LOW;
- 		}
--		if (!strcmp(propname, "wp-gpios")) {
--			if (of_property_read_bool(np, "wp-inverted"))
--				*flags ^= OF_GPIO_ACTIVE_LOW;
--		}
- 	}
- 	/*
- 	 * Some GPIO fixed regulator quirks.
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 105b7a7c0251..b3484def0a8b 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -176,7 +176,6 @@ int mmc_of_parse(struct mmc_host *host)
- 	u32 bus_width, drv_type, cd_debounce_delay_ms;
- 	int ret;
- 	bool cd_cap_invert, cd_gpio_invert = false;
--	bool ro_cap_invert, ro_gpio_invert = false;
- 
- 	if (!dev || !dev_fwnode(dev))
- 		return 0;
-@@ -255,9 +254,11 @@ int mmc_of_parse(struct mmc_host *host)
- 	}
- 
- 	/* Parse Write Protection */
--	ro_cap_invert = device_property_read_bool(dev, "wp-inverted");
- 
--	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, &ro_gpio_invert);
-+	if (device_property_read_bool(dev, "wp-inverted"))
-+		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
-+	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, NULL);
- 	if (!ret)
- 		dev_info(host->parent, "Got WP GPIO\n");
- 	else if (ret != -ENOENT && ret != -ENOSYS)
-@@ -266,10 +267,6 @@ int mmc_of_parse(struct mmc_host *host)
- 	if (device_property_read_bool(dev, "disable-wp"))
- 		host->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
- 
--	/* See the comment on CD inversion above */
--	if (ro_cap_invert ^ ro_gpio_invert)
--		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
--
- 	if (device_property_read_bool(dev, "cap-sd-highspeed"))
- 		host->caps |= MMC_CAP_SD_HIGHSPEED;
- 	if (device_property_read_bool(dev, "cap-mmc-highspeed"))
-diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-index da2596c5fa28..582ec3d720f6 100644
---- a/drivers/mmc/core/slot-gpio.c
-+++ b/drivers/mmc/core/slot-gpio.c
-@@ -241,6 +241,9 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
- 			return ret;
- 	}
- 
-+	if (host->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
-+		gpiod_toggle_active_low(desc);
-+
- 	if (gpio_invert)
- 		*gpio_invert = !gpiod_is_active_low(desc);
- 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 024acc1b0a2e..b2bbcb09a49e 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -740,16 +740,16 @@ static int pxamci_probe(struct platform_device *pdev)
- 			goto out;
- 		}
- 
-+		if (!host->pdata->gpio_card_ro_invert)
-+			mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
- 		ret = mmc_gpiod_request_ro(mmc, "wp", 0, 0, NULL);
- 		if (ret && ret != -ENOENT) {
- 			dev_err(dev, "Failed requesting gpio_ro\n");
- 			goto out;
- 		}
--		if (!ret) {
-+		if (!ret)
- 			host->use_ro_gpio = true;
--			mmc->caps2 |= host->pdata->gpio_card_ro_invert ?
--				0 : MMC_CAP2_RO_ACTIVE_HIGH;
--		}
- 
- 		if (host->pdata->init)
- 			host->pdata->init(dev, pxamci_detect_irq, mmc);
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 1c988d6a2433..f1b21d87ecea 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1381,13 +1381,14 @@ static int sdhci_esdhc_imx_probe_nondt(struct platform_device *pdev,
- 				host->mmc->parent->platform_data);
- 	/* write_protect */
- 	if (boarddata->wp_type == ESDHC_WP_GPIO) {
--		err = mmc_gpiod_request_ro(host->mmc, "wp", 0, 0, NULL);
--		if (err) {
--			dev_err(mmc_dev(host->mmc),
--				"failed to request write-protect gpio!\n");
--			return err;
--		}
- 		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
-+		err = mmc_gpiod_request_ro(host->mmc, "wp", 0, 0);
-+		if (err) {
-+			dev_err(mmc_dev(host->mmc),
-+				"failed to request write-protect gpio!\n");
-+			return err;
-+		}
- 	}
- 
- 	/* card_detect */
--- 
-2.20.1
+On 12/9/19 10:07 PM, Dan Murphy wrote:
+>>> Do you know when you will be applying these?
+>> The patch is already upstream. See linux-can/mater:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/log/=
 
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/comm=
+it/?id=3D2de497356955ce58cd066fb03d2da5235f3c7c23
+>=20
+> Ah I was looking here
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git
+
+Bugfixes go to linux-can. New features to linux-can-next.
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+
+--BHQVwyeJqnSjP3B8lw0V6Rp4wsosrgIk8--
+
+--p4lqAcromnNRRkcHxQkBKd2GE9PCjaCyX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3uuEwACgkQWsYho5Hk
+nSCOZwf/YOGF+4BjJItncdFEN5gr5yU6CysXSMGoG9LyvUcdk7SR6X0qQZZO1l/q
+uSNKSMOG22iwkiMpNhWPrK7plwDj8B2AdR4iuk1yTkyzOcuhPf/KZ5x3wdV+HBou
+gOzehE93W/VKJDwfxzPho8oMoA2EwKFAhHW0+Kj8UnaEpR+eanBJ2CscYzIYoQBz
+pdUod5U+Y1My1nrsjuIZ8bBolnJAEHwBaZln6aZTMuvQmqbziFcY4P/7zS00hUDo
+EfPcZLJp8iWpOL/FvX4hpJuqXKUjIJkwo7PuBckxXivTgfaks7diqMta3GgEipf7
+npftzFPY0N4m8EMd0/eXdETPJ7QnWQ==
+=Aj07
+-----END PGP SIGNATURE-----
+
+--p4lqAcromnNRRkcHxQkBKd2GE9PCjaCyX--
