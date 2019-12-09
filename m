@@ -2,61 +2,97 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C329C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3982CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD37206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2537206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:25:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd5s6RgD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfLIXVq (ORCPT
+        id S1727178AbfLIXZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:21:46 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:47048 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfLIXVp (ORCPT
+        Mon, 9 Dec 2019 18:25:11 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38686 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfLIXZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:21:45 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1ieSLO-00GuTC-19; Tue, 10 Dec 2019 00:21:34 +0100
-Message-ID: <c64e986c976b6b647b86c1243d356a8b78483c36.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next 1/5] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Mon, 9 Dec 2019 18:25:11 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so18027572wrh.5;
+        Mon, 09 Dec 2019 15:25:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2UnKFwMpc84ugnaUJy14wn/3dEflKg0s3Bahp4zLtUo=;
+        b=Zd5s6RgD+wfVI3nxtONZ3Ipkko96qdozsMd8iVL5UhK7FUqOSao3l0KVLLtTIgZAaD
+         nwLArRRH/RTkQHFwhirWcJLgtrgfcY+AnFaVALtEgtfLEAL8BS4H2PhxvrGroN2Qkojw
+         1Ri2K5Y0EeRm3Pks51xa4UtW/LlaN54xJgpx227BTWrlz9lryOmDs2i0hQYLeVb4Pk2c
+         R6kAyqSbHgZ92LHufwZKZg1YmH/Lkc5wJ4b+atqJaKmnOtbRlkkbLv/afZ2p0rCEYkV6
+         ewX3yDO6cp31eZfhIBfI3N++YQw+3ye4oIFs2p9FotxK1U4APPM4jcKVNMsBpVJguVFj
+         9u3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2UnKFwMpc84ugnaUJy14wn/3dEflKg0s3Bahp4zLtUo=;
+        b=Gy5wWobgZ8+UL3E32cd3zL4p8gPONDZJATzENEDUAUl30VB9rZfJHhc+VndWXPuo04
+         ytQZPv46UjR+HE+cqs71ChrEpPSlKDH0s1CzBkDUqoPTP5SMlX6FJdUINAstLbwfPLF8
+         Ja9H549EuUfoWWjKowJCJjaUlsXXNf9alF6CzINNqTI6tWdE59RX1bCOjAjPgECYbtxt
+         1bMh7Xmt7NpnVmqC9HFRvF9WXCRpWbsTf6Rthb2IRVo+Hl0/fD+T6ba6TkzSz4PWAH+/
+         BDnuYa2Ay8GD1muwR2rCU5hGdjdUgxQ7epYcZMZ64LZ67Obmpmo/v/tC/lQs3gnHHbtL
+         jvIQ==
+X-Gm-Message-State: APjAAAXPTZJCjyYkr7fB6GhRZGCc/PoFNROOKSPGQQ0HyXJOBjYfRsiJ
+        SjFlknXc6pdJjUDaifhQCiLUxdFH
+X-Google-Smtp-Source: APXvYqx4LacA0KBDaWsN4g+1NMZnd7gCeOWmfV53dINCk4vBMNBgyCrSUcwbe3Zby1ffpwLz5CB9Ew==
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr4681436wru.181.1575933908744;
+        Mon, 09 Dec 2019 15:25:08 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id e8sm1129260wrt.7.2019.12.09.15.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 15:25:08 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
         Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 10 Dec 2019 00:21:33 +0100
-In-Reply-To: <54d6f040b283ad19e739d3b5a05d249285231c54.camel@sipsolutions.net>
-References: <cover.1575920565.git.mkubecek@suse.cz>
-         <0f4b780d5dd38109768d863781b0ce6de9ef4fbb.1575920565.git.mkubecek@suse.cz>
-         <54d6f040b283ad19e739d3b5a05d249285231c54.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM)
+Subject: [PATCH] pwm: bcm2835: Allow building for ARCH_BRCMSTB
+Date:   Mon,  9 Dec 2019 15:25:03 -0800
+Message-Id: <20191209232503.7252-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-10 at 00:20 +0100, Johannes Berg wrote:
-> On Mon, 2019-12-09 at 20:55 +0100, Michal Kubecek wrote:
-> > +	if (memchr_inv(dev->perm_addr, '\0', dev->addr_len) &&
-> 
-> Why not simply !is_zero_ether_addr()?
+BCM7211 is supported using ARCH_BRCMSTB and uses this PWM controller
+driver, make it possible to build it.
 
-Ugh, sorry, ignore me. I need to go sleep instead of looking at patches.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pwm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-johannes
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index bd21655c37a6..0bb8a40c8d6c 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -100,7 +100,7 @@ config PWM_BCM_KONA
+ 
+ config PWM_BCM2835
+ 	tristate "BCM2835 PWM support"
+-	depends on ARCH_BCM2835
++	depends on ARCH_BCM2835 || ARCH_BRCMSTB
+ 	help
+ 	  PWM framework driver for BCM2835 controller (Raspberry Pi)
+ 
+-- 
+2.17.1
 
