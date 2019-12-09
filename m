@@ -2,113 +2,122 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE2FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEB4C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2E02068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19DD2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pxeQmvsd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NIR//USz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLIOCT (ORCPT
+        id S1727682AbfLIOCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:02:19 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:7886 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfLIOCT (ORCPT
+        Mon, 9 Dec 2019 09:02:39 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37291 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfLIOCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:02:19 -0500
+        Mon, 9 Dec 2019 09:02:39 -0500
+Received: by mail-qt1-f194.google.com with SMTP id w47so15627992qtk.4;
+        Mon, 09 Dec 2019 06:02:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575900138; x=1607436138;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+i/b4CFSEFHJeiq4trv8xtJuqigVv7Z2IWBdQyD0XN8=;
-  b=pxeQmvsd6fFlCSgLzx8k9O2cHbz4WvTrqWVct4kt56nzxTMuYzeaMfJb
-   AQiHNuSYJD3fKhjX9UOWo9Jso/iRXv52bQt9ElKLOw9VRaBdTuUpSH8pM
-   Z5tm5XpDvjP1WMcXIV/SDCrIIMMoT4YnsI9/YRDZUGEnDUb+W1JCVDKkt
-   8=;
-IronPort-SDR: ZtjWxqRUb6zVEKInpl8mlFv42ZyzVIRguM0rDek4yp66JehlC7VoQgT6RqBV2588FDLhStBdC5
- 3qfwaWE0MNzw==
-X-IronPort-AV: E=Sophos;i="5.69,294,1571702400"; 
-   d="scan'208";a="4027420"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 09 Dec 2019 14:01:47 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id 4569AA22B3;
-        Mon,  9 Dec 2019 14:01:44 +0000 (UTC)
-Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 14:01:44 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 14:01:44 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Mon, 9 Dec 2019 14:01:43 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-CC:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: RE: [PATCH 4/4] xen-blkback: support dynamic unbind/bind
-Thread-Topic: [PATCH 4/4] xen-blkback: support dynamic unbind/bind
-Thread-Index: AQHVq3SGozEa3lNeXkCoixgttFczb6ex2l+AgAAA6dA=
-Date:   Mon, 9 Dec 2019 14:01:43 +0000
-Message-ID: <158cb2845bec457fa54c6dfbd5a9efac@EX13D32EUC003.ant.amazon.com>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-5-pdurrant@amazon.com>
- <bbf958af-d435-3a56-1e91-e068125a9ce7@suse.com>
-In-Reply-To: <bbf958af-d435-3a56-1e91-e068125a9ce7@suse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.211]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FS4GdxXu7/QfDNL7uDYbRfkUTYRCZcMTRaDIlBmOHhE=;
+        b=NIR//USzARfjaib/j+FaNjU5EJFI57vjLwO/c/ZHkLa2+Bfm4UMI324rEdZ/Gdp3ly
+         kDvv+zkgqy7DLmjUALOgmjtHwRAWVBOWewKpBaaGRyUXj0fZuyTBZWMuzZ7HyYPB6Cc4
+         8m2wJi29Rsplx7Bwvttw2nYCPbvAPQTJ4btUVJ3lOoX/OdIawCs2SSd8REm5coH6OfE9
+         DSefBUeEYd2mgVON+3VR6Si8EMcJ0mO1sY75LLvqmcE6ZhACKG9JEAJQ0XDRrFGv4Ie2
+         BwIlFpEQeV+vk8E0lyT2Pi9hLmgcIg75VyLT1476Yqe6NhiqzJReFaCYLti/pAWhjAcp
+         l6mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FS4GdxXu7/QfDNL7uDYbRfkUTYRCZcMTRaDIlBmOHhE=;
+        b=jYwvZxZp+P1svsqFiXElpYuVIWCd4kOcrvIrr3mbZCiEOS2+xysU+oTpszKg/5F+Io
+         cqLGvU1u+kGXybpheuMDIn9BNrEzucM8Jcw7kbhOWfJEoeVV0RdGbWHja1JIkYgASxEk
+         lXSb8iRXlIOWjS6NfnLQAiOiGE6FBzTYfZnkbg0I4WvcEW7CJduykH8S8ar99v8KK6iP
+         HfZ9HOrwcym7fUUvxrt5fna/BC0w8Afm/5+S86uuhLOx368j1nqUzuyWUGAqtf1UWC95
+         jU9a6iZk3zwpf8cSbn7jZuwxl6nxqvh31+WSae149ZRQLAgH84bkiUzXIgbwGUXj/Evy
+         dLOg==
+X-Gm-Message-State: APjAAAVGh1ON5aYA3D7Stx2y9Lo6vTATS9xgorOrkt0fJmW5MAsEHrvg
+        uz74uS/WTzLzGufo/R0wxF5kYsOL
+X-Google-Smtp-Source: APXvYqw02zHBpMFCOAfyakZVuDIk8pCl6TASpy/ZWVs4rrmP6otr86I7hisTCLFDwvpRpKVMwU94Hw==
+X-Received: by 2002:aed:2b07:: with SMTP id p7mr24996770qtd.180.1575900157988;
+        Mon, 09 Dec 2019 06:02:37 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id h28sm10128023qte.54.2019.12.09.06.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 06:02:37 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v5 0/2] tps6105x add devicetree and leds support
+Date:   Mon,  9 Dec 2019 09:02:32 -0500
+Message-Id: <20191209140234.6558-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKw7xyZ2VuIEdyb8OfIDxqZ3Jv
-c3NAc3VzZS5jb20+DQo+IFNlbnQ6IDA5IERlY2VtYmVyIDIwMTkgMTM6NTgNCj4gVG86IER1cnJh
-bnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOw0KPiB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcNCj4gQ2M6IEtvbnJhZCBSemVz
-enV0ZWsgV2lsayA8a29ucmFkLndpbGtAb3JhY2xlLmNvbT47IFJvZ2VyIFBhdSBNb25uw6kNCj4g
-PHJvZ2VyLnBhdUBjaXRyaXguY29tPjsgSmVucyBBeGJvZSA8YXhib2VAa2VybmVsLmRrPjsgQm9y
-aXMgT3N0cm92c2t5DQo+IDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT47IFN0ZWZhbm8gU3Rh
-YmVsbGluaSA8c3N0YWJlbGxpbmlAa2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCA0
-LzRdIHhlbi1ibGtiYWNrOiBzdXBwb3J0IGR5bmFtaWMgdW5iaW5kL2JpbmQNCj4gDQo+IE9uIDA1
-LjEyLjE5IDE1OjAxLCBQYXVsIER1cnJhbnQgd3JvdGU6DQo+ID4gQnkgc2ltcGx5IHJlLWF0dGFj
-aGluZyB0byBzaGFyZWQgcmluZ3MgZHVyaW5nIGNvbm5lY3RfcmluZygpIHJhdGhlciB0aGFuDQo+
-ID4gYXNzdW1pbmcgdGhleSBhcmUgZnJlc2hseSBhbGxvY2F0ZWQgKGkuZSBhc3N1bWluZyB0aGUg
-Y291bnRlcnMgYXJlIHplcm8pDQo+ID4gaXQgaXMgcG9zc2libGUgZm9yIHZiZCBpbnN0YW5jZXMg
-dG8gYmUgdW5ib3VuZCBhbmQgcmUtYm91bmQgZnJvbSBhbmQgdG8NCj4gPiAocmVzcGVjdGl2ZWx5
-KSBhIHJ1bm5pbmcgZ3Vlc3QuDQo+ID4NCj4gPiBUaGlzIGhhcyBiZWVuIHRlc3RlZCBieSBydW5u
-aW5nOg0KPiA+DQo+ID4gd2hpbGUgdHJ1ZTsgZG8gZGQgaWY9L2Rldi91cmFuZG9tIG9mPXRlc3Qu
-aW1nIGJzPTFNIGNvdW50PTEwMjQ7IGRvbmUNCj4gPg0KPiA+IGluIGEgUFYgZ3Vlc3Qgd2hpbHN0
-IHJ1bm5pbmc6DQo+ID4NCj4gPiB3aGlsZSB0cnVlOw0KPiA+ICAgIGRvIGVjaG8gdmJkLSRET01J
-RC0kVkJEID51bmJpbmQ7DQo+ID4gICAgZWNobyB1bmJvdW5kOw0KPiA+ICAgIHNsZWVwIDU7DQo+
-ID4gICAgZWNobyB2YmQtJERPTUlELSRWQkQgPmJpbmQ7DQo+ID4gICAgZWNobyBib3VuZDsNCj4g
-PiAgICBzbGVlcCAzOw0KPiA+ICAgIGRvbmUNCj4gPg0KPiA+IGluIGRvbTAgZnJvbSAvc3lzL2J1
-cy94ZW4tYmFja2VuZC9kcml2ZXJzL3ZiZCB0byBjb250aW51b3VzbHkgdW5iaW5kIGFuZA0KPiA+
-IHJlLWJpbmQgaXRzIHN5c3RlbSBkaXNrIGltYWdlLg0KPiANCj4gQ291bGQgeW91IGRvIHRoZSBz
-YW1lIHRlc3Qgd2l0aCBtaXhlZCByZWFkcy93cml0ZXMgYW5kIHZlcmlmaWNhdGlvbiBvZg0KPiB0
-aGUgcmVhZC93cml0dGVuIGRhdGEsIHBsZWFzZT8gQSB3cml0ZS1vbmx5IHRlc3QgaXMgbm90IF90
-aGF0Xw0KPiBjb252aW5jaW5nIHJlZ2FyZGluZyBjb3JyZWN0bmVzcy4gSXQgb25seSBwcm92ZXMg
-dGhlIGd1ZXN0IGlzIG5vdA0KPiBjcmFzaGluZy4NCg0KU3VyZS4gSSdsbCBmaW5kIHNvbWV0aGlu
-ZyB0aGF0IHdpbGwgdmVyaWZ5IGNvbnRlbnQuDQoNCj4gDQo+IEknbSBmaW5lIHdpdGggdGhlIGdl
-bmVyYWwgYXBwcm9hY2gsIHRob3VnaC4NCj4gDQoNCkNvb2wsIHRoYW5rcywNCg0KICBQYXVsDQoN
-Cj4gDQo+IEp1ZXJnZW4NCg==
+v4 -> v5:
+	Added Jacek Anaszewski's Acked-by tag on both patches.
+	Added Rob Herring's Reviewed-by tag on devicetree patch.
+	Lee Jones:
+	- tweaked commit message s/led/LED/
+	- use relative paths in Devicetree binding docs, line up ':'s
+
+v3 -> v4:
+	Removed tps6105 mfd patch - it was accepted (Mark Brown).
+	
+	Use the new LED registration API - suggested by Jacek Anaszewski.
+	
+	Updated led dt bindings to document function, color usage.
+
+v2 -> v3:
+	Removed tps6105x regulator patch - it was accepted (Mark Brown).
+	
+	Removed devicetree/platdata bindings for tps6105x led naming.
+	I can test only with a 4.19 vendor kernel, which does not have the
+	latest led naming infrastructure (function/color). Drop devicetree/
+	fwnode/pdata led naming in favour of hard-coding to "tps6105x::torch",
+	so the patch can be tested by me, yet remains acceptable to upstream.
+
+v1 -> v2:
+	Select chip operational mode by looking at subnode name, _not_ its
+	compatible property. Suggested by Mark Brown.
+
+I needed led operation for this mfd chip, so I added a very simple
+driver for this.
+
+My platform (arm imx6q) is devicetree-based, so I added optional
+devicetree support for this chip and its sub-drivers.
+
+Sven Van Asbroeck (2):
+  leds: tps6105x: add driver for mfd chip led mode
+  dt-bindings: mfd: update TI tps6105x chip bindings
+
+ .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++-
+ drivers/leds/Kconfig                          | 10 +++
+ drivers/leds/Makefile                         |  1 +
+ drivers/leds/leds-tps6105x.c                  | 83 +++++++++++++++++++
+ 4 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
+
+-- 
+2.17.1
+
