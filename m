@@ -2,85 +2,126 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1966AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F612071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IGqHHbWb"
+	by mail.kernel.org (Postfix) with ESMTP id EC8432071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfLIHhq (ORCPT
+        id S1727184AbfLIHkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:37:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42576 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfLIHhq (ORCPT
+        Mon, 9 Dec 2019 02:40:18 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39602 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfLIHkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:37:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RBzUEPx4oHsspEth4FQtF7CsBt3Lu0e/H3Pg/iH6hJA=; b=IGqHHbWb3mAXUulXMcdRbUS0Y
-        0zuhaNwPeJqLrq5SOvMTdIlQfa7tYyzBGq4p6i5bM6XJr7iZr5LeSq7ni2JP4fsnxQSSkMffIrmt2
-        hAJpORxNtU9o/oaAw6HBatFY/9NuoUUfDFS3WI2w5iu3hiFZNl95Nd9q6vFeHEpBoOm4ObPpPBWLd
-        3BCV52x8PtkjMoqdYJ+1kaXdtoJQtC1TIa197o7P1F7kEnMN0ePuZRBrGjBiUWZXQyanw3Zm9dgTT
-        P49cBbdz6rZWnUAUEukYcK73haKis+uFlqyYgmh061DaBwW0+1slKZiDdsDykO8BU4XRlsj383Gmm
-        kfwiajV9g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieDc0-0002fa-Rd; Mon, 09 Dec 2019 07:37:44 +0000
-Date:   Sun, 8 Dec 2019 23:37:44 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Coly Li <colyli@suse.de>
-Cc:     Liang Chen <liangchen.linux@gmail.com>, kent.overstreet@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org
-Subject: Re: [PATCH 2/2] [PATCH] bcache: __write_super to handle page sizes
- other than 4k
-Message-ID: <20191209073744.GB3852@infradead.org>
-References: <1575622543-22470-1-git-send-email-liangchen.linux@gmail.com>
- <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
- <e44b8bd9-470d-08af-be7f-a0808504772e@suse.de>
+        Mon, 9 Dec 2019 02:40:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so11368031oty.6;
+        Sun, 08 Dec 2019 23:40:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FPK1maUM55Gi6p6kYw8RySJ9yGFpidLuP0EhKQwUZt0=;
+        b=J88Wsea6C+k3NFQo5u00pV0uy5W9NhKezfpc3NsPLQUM61WGjHo8QhbT9n/CnSxp/B
+         0Mwd+6HFLfN55xRHIQUPa0H0nX1bWyWalY4AicHuYCip339jYB7pNiysMEjV7ZYhsDw7
+         8PZKGzzO0xAMFAJS0xqeITWT/Rg9CVuPmfD7rVTUtUfx68eKYunXLCq6TNFiaeKoSRWi
+         0xRBY6fpHgZP7ZZmEDPvR0AF4GlBsO/tMuDBfqQEeIgFrPLeUUxmoZhsBHwxRrtgpBVj
+         e72LREqdK8Ir0jRiW3WKznZdX6IrWAlr2P6A/Gyd0sD1P3iF5NXqvJpPv/4uxtlIAoNd
+         IqwA==
+X-Gm-Message-State: APjAAAX9TH34d5gxmqiio9qLZheqe413WXil1Az9fA0hGaOjP4pvbSjh
+        0fNCIiYSGoAS1VDYquWN4fDaj7LkhcF6c31WoH351CDH
+X-Google-Smtp-Source: APXvYqxnnTSYYLFHYr/PZKJtreFRDO2OI11O4NLAJMeK4zbXArJ/fD3O2OflqrT+cACovE3JpEFWmclImrX5h6naz84=
+X-Received: by 2002:a05:6830:91:: with SMTP id a17mr19172583oto.107.1575877217104;
+ Sun, 08 Dec 2019 23:40:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e44b8bd9-470d-08af-be7f-a0808504772e@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20191203201804.662066-1-mst@redhat.com> <20191203201804.662066-2-mst@redhat.com>
+In-Reply-To: <20191203201804.662066-2-mst@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Dec 2019 08:40:06 +0100
+Message-ID: <CAMuHMdXDm0NiCk1pD_-wS9c-ErmRKkrqnPc_pGKzG=QB35mj9A@mail.gmail.com>
+Subject: Re: [PATCH RFC net-next v8 1/3] netdev: pass the stuck queue to the
+ timeout handler
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julio Faracco <jcfaracco@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 05:44:38PM +0800, Coly Li wrote:
-> >  {
-> > -	struct cache_sb *out = page_address(bio_first_page_all(bio));
-> > +	struct cache_sb *out;
-> >  	unsigned int i;
-> > +	struct buffer_head *bh;
-> > +
-> > +	/*
-> > +	 * The page is held since read_super, this __bread * should not
-> > +	 * cause an extra io read.
-> > +	 */
-> > +	bh = __bread(bdev, 1, SB_SIZE);
-> > +	if (!bh)
-> > +		goto out_bh;
-> > +
-> > +	out = (struct cache_sb *) bh->b_data;
-> 
-> This is quite tricky here. Could you please to move this code piece into
-> an inline function and add code comments to explain why a read is
-> necessary for a write.
+Hi Michael,
 
-A read is not nessecary.  He only added it because he was too fearful
-of calculating the data offset directly.  But calculating it directly
-is almost trivial and should just be done here.  Alternatively if that
-is still to hard just keep a pointer to the cache_sb around, which is
-how most file systems do it.
+On Tue, Dec 3, 2019 at 9:21 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> This allows incrementing the correct timeout statistic without any mess.
+> Down the road, devices can learn to reset just the specific queue.
+>
+> The patch was generated with the following script:
+
+[...]
+
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+> --- a/drivers/net/ethernet/8390/8390p.c
+> +++ b/drivers/net/ethernet/8390/8390p.c
+> @@ -41,9 +41,9 @@ void eip_set_multicast_list(struct net_device *dev)
+>  }
+>  EXPORT_SYMBOL(eip_set_multicast_list);
+>
+> -void eip_tx_timeout(struct net_device *dev)
+> +void eip_tx_timeout(struct net_device *dev, unsigned int txqueue)
+>  {
+> -       __ei_tx_timeout(dev);
+> +       __ei_tx_timeout(dev, txqueue);
+>  }
+>  EXPORT_SYMBOL(eip_tx_timeout);
+
+On Mon, Dec 9, 2019 at 6:37 AM <noreply@ellerman.id.au> wrote:
+> FAILED linux-next/m68k-defconfig/m68k Mon Dec 09, 16:34
+>
+> http://kisskb.ellerman.id.au/kisskb/buildresult/14060060/
+>
+> Commit:   Add linux-next specific files for 20191209
+>           6cf8298daad041cd15dc514d8a4f93ca3636c84e
+> Compiler: m68k-linux-gcc (GCC) 4.6.3 / GNU ld (GNU Binutils) 2.22
+>
+> Possible errors
+> ---------------
+>
+> drivers/net/ethernet/8390/8390p.c:44:6: error: conflicting types for 'eip_tx_timeout'
+> drivers/net/ethernet/8390/8390p.c:48:1: error: conflicting types for 'eip_tx_timeout'
+> make[5]: *** [scripts/Makefile.build:266: drivers/net/ethernet/8390/8390p.o] Error 1
+> make[4]: *** [scripts/Makefile.build:503: drivers/net/ethernet/8390] Error 2
+> make[3]: *** [scripts/Makefile.build:503: drivers/net/ethernet] Error 2
+> make[2]: *** [scripts/Makefile.build:503: drivers/net] Error 2
+> make[1]: *** [Makefile:1693: drivers] Error 2
+> make: *** [Makefile:179: sub-make] Error 2
+
+Looks like you forgot to update the forward declaration in
+drivers/net/ethernet/8390/8390.h
+
+There may be others...
+http://kisskb.ellerman.id.au/kisskb/head/6cf8298daad041cd15dc514d8a4f93ca3636c84e/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
