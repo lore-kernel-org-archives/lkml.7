@@ -2,78 +2,80 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08410C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE6DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6F820692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D697420709
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 02:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575860083;
+	bh=IiKeChNrtz/p4Aq7d3yVyybl+heL9RFk0ZAzNPQG1Gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aeRnJZPtxNwFHtLM8B2+xvkAM/EJqNnM35B7nSgtLLJzyELewgLZN2PxH1ijjGzkb
+	 0tpxtIQDzEv3Pda9dbJ5gJXM7jiK/vgDVI0PUO1i/HLB13HO0xQwdh31v42ekhKwnU
+	 cJkoGHYM4Xi9EMe4NSbZyWG2vl2PVgha6bn2dyAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLICwN (ORCPT
+        id S1726953AbfLICym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 21:52:13 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43428 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfLICwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 21:52:12 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ie99d-0001ex-3y; Mon, 09 Dec 2019 02:52:09 +0000
-Date:   Mon, 9 Dec 2019 02:52:09 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arthur Marsh <arthur.marsh@internode.on.net>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: refcount_t: underflow; use-after-free with CIFS umount after
- scsi-misc commit ef2cc88e2a205b8a11a19e78db63a70d3728cdf5
-Message-ID: <20191209025209.GA4203@ZenIV.linux.org.uk>
-References: <30808b0b-367a-266a-7ef4-de69c08e1319@internode.on.net>
- <09396dca-3643-9a4b-070a-e7db2a07235e@internode.on.net>
- <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
+        Sun, 8 Dec 2019 21:54:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726748AbfLICym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Dec 2019 21:54:42 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD05E20692;
+        Mon,  9 Dec 2019 02:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575860081;
+        bh=IiKeChNrtz/p4Aq7d3yVyybl+heL9RFk0ZAzNPQG1Gw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JaetPVHtG558XXBCJass8k6qiJ2BAGyXNmZtm1j9zhSpZ590C4I6hV2eqsEbd7gqQ
+         Cu2pdg2Ryk5JWHQ2HaKYGZPyDOoSwwmWPBQebOho2kHB9eTRiblJuxWxc5om6CVOq2
+         EVMDdWutnd6DYlz4q0vXjHTQvKb/tgOy9G7/zJ1Y=
+Date:   Mon, 9 Dec 2019 10:54:26 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: Re: [PATCH] clk: imx: clk-imx7ulp: Add missing sentinel of
+ ulp_div_table
+Message-ID: <20191209025425.GW3365@dragon>
+References: <1574402986-11117-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjj8SQx4YzS8yw7ZJJKiVLBY0g=d8rCSyPCM=8Pzmz+Zg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1574402986-11117-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 06:23:02PM -0800, Linus Torvalds wrote:
-> On Sun, Dec 8, 2019 at 5:49 PM Arthur Marsh
-> <arthur.marsh@internode.on.net> wrote:
-> >
-> > This still happens with 5.5.0-rc1:
+On Fri, Nov 22, 2019 at 06:11:42AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Does it happen 100% of the time?
+> There should be a sentinel of ulp_div_table, otherwise _get_table_div
+> may access data out of the array.
 > 
-> Your bisection result looks pretty nonsensical - not that it's
-> impossible (anything is possible), but it really doesn't look very
-> likely. Which makes me think maybe it's slightly timing-sensitive or
-> something?
-> 
-> Would you mind trying to re-do the bisection, and for each kernel try
-> the mount thing at least a few times before you decide a kernel is
-> good?
-> 
-> Bisection is very powerful, but if _any_ of the kernels you marked
-> good weren't really good (they just happened to not trigger the
-> problem), bisection ends up giving completely the wrong answer. And
-> with that bisection commit, there's not even a hint of what could have
-> gone wrong.
+> Fixes: b1260067ac3d ("clk: imx: add imx7ulp clk driver")
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-FWIW, the thing that is IME absolutely incompatible with bisection
-is CONFIG_GCC_PLUGIN_RANDSTRUCT.  It can affect frequencies badly
-enough, even in the cases when the bug isn't directly dependent
-upon that thing.
-
-I suspect that nonsense bisects spewed by CI bots lately (bisect on
-x86 oops ending up at commit limited to arch/parisc, etc.) are at
-least partially due to that kind of garbage...
+Applied, thanks.
