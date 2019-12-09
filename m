@@ -7,134 +7,125 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8567DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCA8C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593BC20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC7D20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HyTEMvde"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vcegoY05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfLIJhH (ORCPT
+        id S1727568AbfLIJi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:37:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58910 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727160AbfLIJhG (ORCPT
+        Mon, 9 Dec 2019 04:38:57 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52302 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727388AbfLIJi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:37:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575884226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yz/Z2Uyi82Tsm+Aa8fxJXMQfCMt+llfBcTS4k9m0UwA=;
-        b=HyTEMvdeuKwOWQVIG56vr0Kq+46Acdl+8fC5yE3b0Z3nYuZH1pab5Io+bre1TAl6Bg71fo
-        3AfGc7pTeFXr3SYWDg2D/rptnpEalqeYEG+raXgn+voMX/dOBnjKYVj0e2hyjnqT88TVez
-        FLHxn7ZfC/tgTTiHl3FJtCC36DgD/1c=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-t_M8r7xpMP6lDhRa-Mn_sA-1; Mon, 09 Dec 2019 04:37:03 -0500
-Received: by mail-wr1-f72.google.com with SMTP id u18so7228795wrn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:37:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Yz/Z2Uyi82Tsm+Aa8fxJXMQfCMt+llfBcTS4k9m0UwA=;
-        b=AfG2A8RadLRfl7xIV1/F81HwGlVJPcOBK4IhrA+liRwxwc5qzGfPo+h24xxosdc6mP
-         QVDdwUxb8e/ABuQoB1j9g0o03AfCdEPbLw0qPmUOrXauicLs6OE6V9vNbzIdPLir0Lbb
-         KIaT/LKPKfobym4Ijs8ouHVtcqe7vd79YNkx5wYsjYi0/wwzfP4ckH3QV24m/J5/9gLy
-         Ux+eeO9nEsmvJGxNiUnvNpD3MrzdYc5hDB/mCwz/1g1JBxbcYohZYDpKFDSXmXkeiEoK
-         AKMVKuvnIGp6watp4/idJAWE0zUbM/oAE7t1Fyk/hJr4IL65BNPzFg6gWvhXEWqO/Rbz
-         AKqw==
-X-Gm-Message-State: APjAAAUF8t5c8YmAnFnhodevbSfGRm9pFpV3NzsqrlFO9YIVPZ6hq2Fx
-        77EG85ETy7MPu1vnLIl4UJmSRHo7YudY6x3I3yK51bYSSvFE87WgxXjDEXvo51EGfNQXWm9jwRn
-        OXN423zzNL5GPATG+/Gbr4b8e
-X-Received: by 2002:a1c:e909:: with SMTP id q9mr24499556wmc.30.1575884221780;
-        Mon, 09 Dec 2019 01:37:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzAW5LiyEF46zD4Bc+SWJqctxeL2ft11pv6kleMPxWl5MUVH4VkiuoT9F9bBt7G0hp8RX36XA==
-X-Received: by 2002:a1c:e909:: with SMTP id q9mr24499533wmc.30.1575884221452;
-        Mon, 09 Dec 2019 01:37:01 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id n30sm12564626wmd.3.2019.12.09.01.37.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 01:37:00 -0800 (PST)
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <20191202201036.GJ4063@linux.intel.com> <20191202211640.GF31681@xz-x1>
- <20191202215049.GB8120@linux.intel.com>
- <fd882b9f-e510-ff0d-db43-eced75427fc6@redhat.com>
- <20191203184600.GB19877@linux.intel.com>
- <374f18f1-0592-9b70-adbb-0a72cc77d426@redhat.com>
- <20191207002904.GA29396@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <224ef677-4f25-fb61-2450-b95816333876@redhat.com>
-Date:   Mon, 9 Dec 2019 10:37:06 +0100
+        Mon, 9 Dec 2019 04:38:56 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99cgDA086815;
+        Mon, 9 Dec 2019 03:38:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575884322;
+        bh=oqaWO0NPBKmyeLqC24LmgGny4o2Jfye2gEw2ZGBx4rY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vcegoY05FwzGDm0/docJe+rjQ+79dAnO/Upmj5EQ1TdOxaRl8mehfJMVRNOzzchL5
+         gDZrYMU5422klUz478q/ze5VQkkETK5J630Q22kNEUkvMv3DkB5kk6OgA0+BvohinY
+         V8EnMlbUQKsWPVI9XM1s0ZvfPkwRPbQy1yAxWnjk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99cg0F034198
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 03:38:42 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 03:38:42 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 03:38:42 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99cdB3083025;
+        Mon, 9 Dec 2019 03:38:40 -0600
+Subject: Re: [PATCH v3 2/2] drm/bridge: tc358767: Expose test mode
+ functionality via debugfs
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>
+References: <20191209050857.31624-1-andrew.smirnov@gmail.com>
+ <20191209050857.31624-3-andrew.smirnov@gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <45afdff8-4f91-f5be-a299-d0c7fed71ea7@ti.com>
+Date:   Mon, 9 Dec 2019 11:38:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191207002904.GA29396@linux.intel.com>
+In-Reply-To: <20191209050857.31624-3-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-MC-Unique: t_M8r7xpMP6lDhRa-Mn_sA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/12/19 01:29, Sean Christopherson wrote:
-> On Wed, Dec 04, 2019 at 11:05:47AM +0100, Paolo Bonzini wrote:
->> On 03/12/19 19:46, Sean Christopherson wrote:
->>> Rather than reserve entries, what if vCPUs reserved an entire ring?  Create
->>> a pool of N=nr_vcpus rings that are shared by all vCPUs.  To mark pages
->>> dirty, a vCPU claims a ring, pushes the pages into the ring, and then
->>> returns the ring to the pool.  If pushing pages hits the soft limit, a
->>> request is made to drain the ring and the ring is not returned to the pool
->>> until it is drained.
->>>
->>> Except for acquiring a ring, which likely can be heavily optimized, that'd
->>> allow parallel processing (#1), and would provide a facsimile of #2 as
->>> pushing more pages onto a ring would naturally increase the likelihood of
->>> triggering a drain.  And it might be interesting to see the effect of using
->>> different methods of ring selection, e.g. pure round robin, LRU, last used
->>> on the current vCPU, etc...
->>
->> If you are creating nr_vcpus rings, and draining is done on the vCPU
->> thread that has filled the ring, why not create nr_vcpus+1?  The current
->> code then is exactly the same as pre-claiming a ring per vCPU and never
->> releasing it, and using a spinlock to claim the per-VM ring.
+(Cc'ing Daniel for the last paragraph)
+
+On 09/12/2019 07:08, Andrey Smirnov wrote:
+> Presently, the driver code artificially limits test pattern mode to a
+> single pattern with fixed color selection. It being a kernel module
+> parameter makes switching "test pattern" <-> "proper output" modes
+> on-the-fly clunky and outright impossible if the driver is built into
+> the kernel.
+
+That's not correct, /sys/module/tc358767/parameters/test is there even if the driver is built-in.
+
+I think the bigger problems are that there's just one value, even if there are multiple devices, and 
+that with kernel parameter the driver can't act on it dynamically (afaik).
+
+> To improve the situation a bit, convert current test pattern code to
+> use debugfs instead by exposing "TestCtl" register. This way old
+> "tc_test_pattern=1" functionality can be emulated via:
 > 
-> Because I really don't like kvm_get_running_vcpu() :-)
-
-I also don't like it particularly, but I think it's okay to wrap it into
-a nicer API.
-
-> Binding the rings to vCPUs also makes for an inflexible API, e.g. the
-> amount of memory required for the rings scales linearly with the number of
-> vCPUs, or maybe there's a use case for having M:N vCPUs:rings.
-
-If we can get rid of the dirty bitmap, the amount of memory is probably
-going to be smaller anyway.  For example at 64k per ring, 256 rings
-occupy 16 MiB of memory, and that is the cost of dirty bitmaps for 512
-GiB of guest memory, and that's probably what you can expect for the
-memory of a 256-vCPU guest (at least roughly: if the memory is 128 GiB,
-the extra 12 MiB for dirty page rings don't really matter).
-
-Paolo
-
-> That being said, I'm pretty clueless when it comes to implementing and
-> tuning the userspace side of this type of stuff, so feel free to ignore my
-> thoughts on the API.
+>      echo -n 0x78146302 > tstctl
 > 
+> and switch back to regular mode can be done with:
+> 
+>      echo -n 0x78146300 > tstctl
 
+In the comment in the code you have 0 as return-to-regular-mode.
+
+With my setup, enabling test mode seems to work, but when I return to regular mode, the first echo 
+results in black display, but echoing 0 a second time will restore the display.
+
+Hmm, actually, just echoing 0 to tstctl multiple times, it makes the screen go black and then 
+restores it with every other echo.
+
+> +	debugfs = debugfs_create_dir(dev_name(dev), NULL);
+> +	if (!IS_ERR(debugfs)) {
+> +		debugfs_create_file_unsafe("tstctl", 0200, debugfs, tc,
+> +					   &tc_tstctl_fops);
+> +		devm_add_action_or_reset(dev, tc_remove_debugfs, debugfs);
+> +	}
+> +
+
+For me this creates debugfs/3-000f/tstctl. I don't think that's a clear or usable path, and could 
+even cause a name conflict in the worst case.
+
+Not sure what's a good solution here, but only two semi-good ones come to mind: have it in sysfs 
+under the device's dir, or debugfs/dri/something. The latter probably needs some thought and common 
+agreement on how to handle bridge and panel debugfs files. But that would be a good thing to have, 
+as I'm sure there are other similar cases (at least I have a few).
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
