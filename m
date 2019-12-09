@@ -2,152 +2,109 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABD9C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36509C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684392077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D2720828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kDyiSAth"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nth41AYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLIQ0V (ORCPT
+        id S1726826AbfLIQ01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:26:21 -0500
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:52250 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfLIQ0V (ORCPT
+        Mon, 9 Dec 2019 11:26:27 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51532 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQ01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:26:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575908780; x=1607444780;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=FACCC9TphTRL0+cXsVrKulsVHqGEFX7ZWN1UiNvGdJ4=;
-  b=kDyiSAth4ADec8XczuxKpXKMb6Pscj3U/EjgXlX2RtKo9nop6FxEbVTl
-   F+3lXa30JEo4JjfGvorCIpE5rJDdRAAqF+T/3u83DN7IfnIE38uLaBF2d
-   TZGvhjMIACttvaFWcQbZAjcyiflyewfDLc4FezmqiflcU/J/262qVCxEf
-   Q=;
-IronPort-SDR: yzqPwSyPBH0xLx/HAs8JGd+ttMLiiLLtO6zf8BPU2Mtjhu8V9WEV+W54648FzQtaeVusjRInio
- y40n5xzP9pZA==
-X-IronPort-AV: E=Sophos;i="5.69,296,1571702400"; 
-   d="scan'208";a="7764489"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Dec 2019 16:26:18 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 3C99CA20E8;
-        Mon,  9 Dec 2019 16:26:17 +0000 (UTC)
-Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 16:26:16 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 16:26:16 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Mon, 9 Dec 2019 16:26:15 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     =?iso-8859-1?Q?Roger_Pau_Monn=E9?= <roger.pau@citrix.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Juergen Gross" <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Subject: RE: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
- closed
-Thread-Topic: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
- closed
-Thread-Index: AQHVq3SCoU35oX1INEGjFwMD1PQM5aexs7UAgAAEsBCAAAg3gIAAAevggAAghQCAAAFgMIAACyOAgAAHopA=
-Date:   Mon, 9 Dec 2019 16:26:15 +0000
-Message-ID: <b9271df6222a4fba86ec54c81b09eace@EX13D32EUC003.ant.amazon.com>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-3-pdurrant@amazon.com>
- <20191209113926.GS980@Air-de-Roger>
- <19b5c2fa36b842e58bbdddd602c4e672@EX13D32EUC003.ant.amazon.com>
- <20191209122537.GV980@Air-de-Roger>
- <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
- <20191209142852.GW980@Air-de-Roger>
- <e026926b9aea4ffe868d41828c1f4721@EX13D32EUC003.ant.amazon.com>
- <20191209151339.GZ980@Air-de-Roger>
-In-Reply-To: <20191209151339.GZ980@Air-de-Roger>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.211]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Dec 2019 11:26:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tgG420DZ2cwuUBenbzd7C2H66aW1h6tEZ2bZ6ltYU8Y=; b=Nth41AYDV8uI93T6PJ0xDT7rw
+        M2OyFPd0KW4kuSuE1MzA8ToD2raOoxAZszRy0HIciY6DVsILRd1EbZ2PV1E7WRWAlu4+iKuk0WV31
+        LKaiuhstmqiOa53KHurQfU2A9fMiudm98akyTW152AZzBGbEbgqNE4Guxq6I9dZ6/NSe1eaGOhHB6
+        u1JEGS0cW9H/nTjO8MesRTg5vcrM/XXYLDOrTPx2sc59+VEBM14Lro2qmjmu0Xy0sqNPV204EtHqK
+        88uGOTq9OwYXOLLsUiCzZdftRMhl+OqBsVCsi+4jenfdnd9q/Ab/d+maIM3wBkPlIYAk3eTOs8nIf
+        bsYmafbTA==;
+Received: from [2601:1c0:6280:3f0::3deb]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ieLrX-0004oN-0l; Mon, 09 Dec 2019 16:26:19 +0000
+Subject: Re: [PATCH] Documentation: x86: fix boot.rst warning and format
+To:     Daniel Kiper <daniel.kiper@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <c6fbf592-0aca-69d9-e903-e869221a041a@infradead.org>
+ <20191209161340.kdsikc2hvbhmpi6k@tomti.i.net-space.pl>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a934c91b-0c9f-59d4-ee44-bcd7e9b20334@infradead.org>
+Date:   Mon, 9 Dec 2019 08:26:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191209161340.kdsikc2hvbhmpi6k@tomti.i.net-space.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-[snip]
-> >
-> > Well unbind is pretty useless now IMO since bind doesn't work, and a
-> transition straight to closed is just plain wrong anyway.
->=20
-> Why do you claim that a straight transition into the closed state is
-> wrong?
+On 12/9/19 8:13 AM, Daniel Kiper wrote:
+> On Sun, Dec 08, 2019 at 08:25:10PM -0800, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix a Sphinx documentation format warning by breaking a long line
+>> into 2 lines.
+>>
+>> Also drop the ':' usage after the Protocol version numbers since
+>> other Protocol versions don't use colons.
+>>
+>> Documentation/x86/boot.rst:72: WARNING: Malformed table.
+>> Text in column margin in table line 57.
+>>
+>> Fixes: 2c33c27fd603 ("x86/boot: Introduce kernel_info")
+>> Fixes: 00cd1c154d56 ("x86/boot: Introduce kernel_info.setup_type_max")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: x86@kernel.org
+>> Cc: Daniel Kiper <daniel.kiper@oracle.com>
+> 
+> Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+> 
+> What can I do next time to avoid mistakes like that? I suppose that
+> I can run something to get this warning but I do not know what exactly
+> it should be.
 
-It's badly documented, I agree, but have a look at https://git.kernel.org/p=
-ub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/xen-netback/xen=
-bus.c#n480. Connected -> Closed is not a valid transition, and I don't thin=
-k it was ever intended to be.
+I just do:
+$ mkdir DOC1
+$ make O=DOC1 htmldocs &>doc1.out
 
->=20
-> I don't see any such mention in blkif.h, which also doesn't contain
-> any guidelines regarding closing state transitions, so unless
-> otherwise stated somewhere else transitions into closed can happen
-> from any state IMO.
->=20
+doc1.out will contain the build log for the documentation.
+It will be large.  :(
+Just grep (or use editor search) for the file(s) that you are
+interested in.
 
-They can, but it is even more poorly documented what should be done in this=
- case.
 
-> > But, we could have a flag that the backend driver sets to say that it
-> supports transparent re-bind that gates this code. Would that make you
-> feel more comfortable?
->=20
-> Having an option to leave state untouched when unbinding would be fine
-> for me, otherwise state should be set to closed when unbinding. I
-> don't think there's anything else that needs to be done in this
-> regard, the cleanup should be exactly the same the only difference
-> being the setting of all the active backends to closed state.
->=20
-
-Ok, I'll add such a flag and define it for blkback only, in patch #4 i.e. w=
-hen it actually gains the ability to rebind.
-
-> > If you want unbind to actually do a proper unplug then that's extra wor=
-k
-> and not really something I want to tackle (and re-bind would still need t=
-o
-> be toolstack initiated as something would have to re-create the xenstore
-> area).
->=20
-> Why do you say the xenstore area would need to be recreated?
->=20
-> Setting state to closed shouldn't cause any cleanup of the xenstore
-> area, as that should already happen for example when using pvgrub
-> since in that case grub itself disconnects and already causes a
-> transition to closed and a re-attachment afterwards by the guest
-> kernel.
->=20
-
-For some reason, when I originally tested, the xenstore area disappeared. I=
- checked again and it did not this time. I just ended up with a frontend st=
-uck in state 5 (because it is the system disk and won't go offline) trying =
-to talk to a non-existent backend. Upon re-bind the backend goes into state=
- 5 (because it sees the 5 in the frontend) and leaves the guest wedged.
-
-  Paul
+thanks.
+-- 
+~Randy
 
