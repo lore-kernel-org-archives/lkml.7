@@ -2,109 +2,112 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB53C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAD5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401402080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Sz+/fCjq"
+	by mail.kernel.org (Postfix) with ESMTP id 7A904207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575914614;
+	bh=Ho6NIaCNXfbkLEOMsuOLOK6gq9sAAuapYyd79Asasxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uyt3NSX9arzs+5cm1kq7hW6J1cwheL1MP2eryf52WX37ZcOJIUOIIRPtt31bNZdad
+	 2cjVV+IPOODvfj++w59Hg14R8JnV6Aq5EjAwEDpcGp3nVAbx8Jvv10V0HR/DWaufJF
+	 GvzLe8Fvczs7MsV/0rSQwltf+VocobC+JfMPpfok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfLISC7 (ORCPT
+        id S1726874AbfLISDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:02:59 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37135 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLISC6 (ORCPT
+        Mon, 9 Dec 2019 13:03:33 -0500
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:36911 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfLISDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:02:58 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so828487plz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:02:58 -0800 (PST)
+        Mon, 9 Dec 2019 13:03:33 -0500
+Received: by mail-lf1-f53.google.com with SMTP id b15so11447717lfc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:03:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0YsPAtOD2B97kYz+aPx1oxns46408201TPj5O/tIazQ=;
-        b=Sz+/fCjqYOiJDd/7AcP5OSR6UajygLGcCbKT5Stg6Oz8XAY2WmjrCBd/m1SYfnEEnQ
-         Luf4Qn4e2hwf+WkdL15QyOYY1iVTaWzz1KevnrW4qtzYHKf6a4LyKSwXUu4niXhRVQmh
-         sjoLhkzMwb2ozNPJAIJsygJ6dLZ8T+Peg0Xb0=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PpeayAw5RjosR9XsravUrBYg0E2pZAf0Pj7kxkBeMwQ=;
+        b=LUAUPaeNDU6XQY5PvOsRTTNlTiJvWnF1rDQwxJZEDyC2iEwn8AaHrWqBf/A9/cXCba
+         +4+rN3MzgxVmbvRFRnNdliSz/J/bsVEJ12fRPqK3GbO24nDJT5GLlRmFTEFrhhXpWvh4
+         mWoerzE83OXDTE0wQspdalsWrEsrvNRBkYfbs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0YsPAtOD2B97kYz+aPx1oxns46408201TPj5O/tIazQ=;
-        b=GZyMevfNw0cm87D+B3yRsdDs9Gm63cbc60ORxw/aBKJAz77Iq5szVHFtUB2UZ1F7Vk
-         447BqqwDtdHUKkl9BiOQpLRcJWO+fWJEk7kgQsvdQN+U9df+7RxC46kipMNDqY5zvBR5
-         AqioeAiYAyNBKuD6WflHVL9rtzSwie2OUMeChy1TDEspoHezCguk25iRlcpV7/v6my5K
-         dGznuXmRI/hGyrnJQo6CyNnXZv4OREjIdyfX4l2Mg75/cqLH39joR6wFQl1dslvj6Fla
-         +Xa1Y0fBA52YPfnXWSrdSKpMQtjQ73ly0i/n1bP2IgU58weg32SKNVP4xnN6zDD7yYji
-         n7tg==
-X-Gm-Message-State: APjAAAUvbVmhYSBUUcBvMON6v5uC/Cdkx7vG1ozodiR2pXFK7nmpVN5K
-        PGyaP9chl1thzz8yNQM4wFaIIQ==
-X-Google-Smtp-Source: APXvYqxsvzB6CFv06nZv5X+fP4cX+FzYXhiKJAS60N31poBuk0qfyxhmyAij3weEl98sWCL57RWQFg==
-X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr31305945plq.325.1575914577974;
-        Mon, 09 Dec 2019 10:02:57 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h128sm114062pfe.172.2019.12.09.10.02.54
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PpeayAw5RjosR9XsravUrBYg0E2pZAf0Pj7kxkBeMwQ=;
+        b=rt/4kzddH7cIGpiGN/SMNDA5eBhXkGFT+IBva8egy2say/+HLAZR9OjxdazBknDnd4
+         GshEF5MA5065NKj4xwPft8s4WpNkavAZjmORO5INQU2AJx4kw4RpP5Ur59gMAVOFvmi4
+         oYpGhj5CbJSTaXtSX3Yfi+gkr3myrNaqc2Qdxk9KjkDWQOj83Wl0v9Kmmcd1fUEvW5c9
+         ohFwHUnllqYRtUGL1z9ly9jd1A9SvxCgZMdp19isxkmaZTOivgoHVDcOmRqyA4m9qmHT
+         EZQip8YXtMnlt739dpangcIKCxPETrc07MY897IOFILktephkA/SozO74i6osugDXdqh
+         ymwg==
+X-Gm-Message-State: APjAAAWkTBPuN2K8EhvJTguxOzJMkuRhz92BDA2m4SkieCTaKtxKw0bt
+        t5MSPkmrTrkAluVIw34tWXnEEt//JOI=
+X-Google-Smtp-Source: APXvYqxVylMz11aR/tS23/e/Aui83Lr6hzEBl0nClHPBdCFQJwi8QiuFuDznckAMs2Xf5RV9u1rrJA==
+X-Received: by 2002:ac2:5a09:: with SMTP id q9mr6700194lfn.71.1575914608921;
+        Mon, 09 Dec 2019 10:03:28 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id e8sm359696ljb.45.2019.12.09.10.03.27
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 10:02:56 -0800 (PST)
-Subject: Re: [PATCH 0/2] Add iProc IDM device support
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191202233127.31160-1-ray.jui@broadcom.com>
- <20191207173914.353f768d@why>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
-Date:   Mon, 9 Dec 2019 10:02:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 09 Dec 2019 10:03:27 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id m30so11431866lfp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:03:27 -0800 (PST)
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr15967030lfk.52.1575914607385;
+ Mon, 09 Dec 2019 10:03:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191207173914.353f768d@why>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
+ <20191209173820.GA11415@redhat.com>
+In-Reply-To: <20191209173820.GA11415@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 9 Dec 2019 10:03:11 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wik2dEemT+aG+Nmv7_kan7Cwz+vobL_=QtGWxPkV3yq7A@mail.gmail.com>
+Message-ID: <CAHk-=wik2dEemT+aG+Nmv7_kan7Cwz+vobL_=QtGWxPkV3yq7A@mail.gmail.com>
+Subject: Re: Fundamental race condition in wait_event_interruptible_exclusive()
+ ?
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 9, 2019 at 9:38 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> > because we've added ourselves as an exclusive writer to the
+> > queue. So it _says_ it was interrupted, not woken up, and the wait got
+> > cancelled, but because we were an exclusive waiter, we might be the
+> > _only_ thing that got woken up,
+>
+> And that is why ___wait_event() always checks the condition after
+> prepare_to_wait_event(), whatever it returns.
 
+Ack. I misread the code, and you're right - if we've been woken up,
+the condition is supposed to be true, and we never actually return
+-ERESTARTSYS.
 
-On 12/7/19 9:39 AM, Marc Zyngier wrote:
-> On Mon,  2 Dec 2019 15:31:25 -0800
-> Ray Jui <ray.jui@broadcom.com> wrote:
-> 
->> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
->> bus transactions. Most importantly, it can be configured to detect bus
->> transaction timeout. In such case, critical information such as transaction
->> address that caused the error, bus master ID of the transaction that caused
->> the error, and etc., are made available from the IDM device.
-> 
-> This seems to have many of the features of an EDAC device reporting
-> uncorrectable errors.
-> 
-> Is there any reason why it is not implemented as such?
-> 
-> Thanks,
-> 
-> 	M.
-> 
+So the situation of "got woken but returned error, and lost wakeup"
+won't actually ever happen.
 
-I thought EDAC errors (in fact, in our case, that's fatal rather than 
-uncorrectable) are mostly for DDR. Is my understanding incorrect?
+Good.
 
-Thanks,
+So yeah, I can do what I wanted to do, and it should all work.
 
-Ray
+I never even tested it, because I was getting fairly anal about
+possible races in the pipe code by then.
+
+               Linus
