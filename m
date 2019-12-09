@@ -2,214 +2,118 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F277C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E36C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C07E20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G89bKlHT"
+	by mail.kernel.org (Postfix) with ESMTP id 7408124653
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLIRJF (ORCPT
+        id S1726874AbfLIRJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:09:05 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51046 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLIRJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:09:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so108674wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:09:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ea4/PrZomre2i6zXGutNZcRSd2/RfVCGFIF5aKKigpg=;
-        b=G89bKlHTuIczjERUM7QoxO9gQNhhCJDzRyB73CspgjnYN17lwJLCyIpIsTJ+6oCYCh
-         kMWAkZtHWnoro7FaJEYnANtUpg61L+NyU1lcpEpjb56VzXYNOSvcx5/i4eBYSwMrprGC
-         YEEWuCa19HV6p8zlpHXB6pkendQRqg1IM9Pxamz1mVs6esNBVyDM+CPBVXR8g/vVHcGM
-         OkRN+RffI5J7kn0Cn40HcOGbVtb9YUR3hU4Hjf+2kZZ/DXTCKHLOudrTXVhShPC26g60
-         ZJdnFc3xDF0g2xUs7ZuUdMgHK3TEn14Fybrrd9EFF54cUi2itgoNyB5BJQD9vOvUnp/T
-         J1bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ea4/PrZomre2i6zXGutNZcRSd2/RfVCGFIF5aKKigpg=;
-        b=HJxBSS4Cc16UFmVGewHFW3f/TJMeJBjLxWYsUXSBhXA2dTQcwWQ/p0jomXM7ecGgBo
-         66jnGp+YGTq/37XyONa7aB8cTo20NfMeTu1KkjtSHJsiScImiNb42D5sL7DqWKfaeioA
-         I9g4G6TtG1/Th7eoz+PlOnKhQX7xbptIbo0RuhUC2n4fLN9mSZSfUPLloWGlYGd076jE
-         QZtuPTw7mPVz5wttA9f73qr5NTQJHvBCGEhGsPKiUuLSJ19Fn4jXHDOrelDLYz+dIvcX
-         Az2bHvz3Pjxhx3bj8vhwNN4iv3K0pqNff1qAlDlHaboLxRQ8PAQXZVbvtE07AuOXQo9V
-         QE3g==
-X-Gm-Message-State: APjAAAX7KwqIB3XMYm3oy4uLloErTGbU1pNTYdt//AGc6zUEotBMTVMu
-        bHwNr1t8XBvfqQaQORzg2Fsym+GY8zg=
-X-Google-Smtp-Source: APXvYqweu5sJJ/Vw8xl26KkVBRmHTsmcoLCvukjF1nH+mx7H5AW5d0klOdHvbnPnd8IRnvy/l2vH0g==
-X-Received: by 2002:a7b:ce19:: with SMTP id m25mr94947wmc.6.1575911341704;
-        Mon, 09 Dec 2019 09:09:01 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe? ([2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe])
-        by smtp.googlemail.com with ESMTPSA id x6sm468505wmi.44.2019.12.09.09.09.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 09:09:01 -0800 (PST)
-Subject: Re: [PATCH] thermal: rockchip: enable hwmon
-To:     schaecsn@gmx.net, rui.zhang@intel.com, edubezval@gmail.com,
-        amit.kucheria@verdurent.com, heiko@sntech.de,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191118052413.D729B6E85603@corona.crabdance.com>
- <20191202145256.78AA06E85603@corona.crabdance.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e3b6e675-14de-d020-48f4-a8ed877646ab@linaro.org>
-Date:   Mon, 9 Dec 2019 18:08:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 12:09:30 -0500
+Received: from mga07.intel.com ([134.134.136.100]:3279 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfLIRJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 12:09:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 09:09:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="362990817"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga004.jf.intel.com with ESMTP; 09 Dec 2019 09:09:29 -0800
+Date:   Mon, 9 Dec 2019 09:14:15 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, "Yi Liu" <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Joe Perches <joe@perches.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v5 0/8] VT-d Native Shared virtual memory cleanup and
+ fixes
+Message-ID: <20191209091415.0a733af6@jacob-builder>
+In-Reply-To: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191202145256.78AA06E85603@corona.crabdance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joerg and Baolu,
 
-Hi Stefan,
+Any more comments on this series? I rebased it on v5.5-rc1 without
+changes.
 
 
-On 02/12/2019 15:52, Stefan Schaeckeler wrote:
-> Hello linux power management mailing list and others,
+Thanks,
+
+Jacob
+
+On Mon,  2 Dec 2019 11:58:21 -0800
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> Mostly extracted from nested SVA/SVM series based on review comments
+> of v7. https://lkml.org/lkml/2019/10/24/852
 > 
-> New month, new try. Could someone review this patch, please. I would reall=
-> y
-> like to see the Rockchip RK3399 temperature sensors hooked up to the hwmon=
->  API.
+> This series also adds a few important fixes for native use of SVA.
+> Nested SVA new code will be submitted separately as a smaller set.
+> Based on the core branch of IOMMU tree staged for v5.5, where common
+> APIs for vSVA were applied.
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git core
+> 
+> Changelog:
+> v5	- Regrouped patch 6 and 8, added comments suggested by Joe
+> Perches v4	- Commit message fix
+> 
+> V3
+> 	- Squashed 1/10 & 2/10
+> 	- Deleted "8/10 Fix PASID cache flush" from this series
+> 	- Addressed reviews from Eric Auger and Baolu
+> V2
+> 	- Coding style fixes based on Baolu's input, no functional
+> change
+> 	- Added Acked-by tags.
+> 
+> Thanks,
+> 
+> Jacob
+> 
+> 
+> *** BLURB HERE ***
+> 
+> Jacob Pan (8):
+>   iommu/vt-d: Fix CPU and IOMMU SVM feature matching checks
+>   iommu/vt-d: Match CPU and IOMMU paging mode
+>   iommu/vt-d: Reject SVM bind for failed capability check
+>   iommu/vt-d: Avoid duplicated code for PASID setup
+>   iommu/vt-d: Fix off-by-one in PASID allocation
+>   iommu/vt-d: Replace Intel specific PASID allocator with IOASID
+>   iommu/vt-d: Avoid sending invalid page response
+>   iommu/vt-d: Misc macro clean up for SVM
+> 
+>  drivers/iommu/Kconfig       |   1 +
+>  drivers/iommu/intel-iommu.c |  23 +++----
+>  drivers/iommu/intel-pasid.c |  96 ++++++++------------------
+>  drivers/iommu/intel-svm.c   | 163
+> +++++++++++++++++++++++++-------------------
+> include/linux/intel-iommu.h |   5 +- 5 files changed, 135
+> insertions(+), 153 deletions(-)
+> 
 
-I don't know what is happening but there are some spurious '3D'
-characters. Please fix it, elaborate a bit the changelog and resend.
-I'll review it.
-
-Thanks
-
-
->> Enable hwmon for the soc and gpu temperature sensors.
->>
->> Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
->>
->> ---
->>  drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
->>  1 file changed, 11 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockch=
-> ip_thermal.c
->> index 343c2f5c5a25..e47c60010259 100644
->> --- a/drivers/thermal/rockchip_thermal.c
->> +++ b/drivers/thermal/rockchip_thermal.c
->> @@ -19,6 +19,8 @@
->>  #include <linux/mfd/syscon.h>
->>  #include <linux/pinctrl/consumer.h>
->>
->> +#include "thermal_hwmon.h"
->> +
->>  /**
->>   * If the temperature over a period of time High,
->>   * the resulting TSHUT gave CRU module,let it reset the entire chip,
->> @@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform=
-> _device *pdev)
->>
->>  	thermal->chip->control(thermal->regs, true);
->>
->> -	for (i =3D 0; i < thermal->chip->chn_num; i++)
->> +	for (i =3D 0; i < thermal->chip->chn_num; i++) {
->>  		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
->> +		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
->> +		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
->> +		if (error)
->> +			dev_warn(&pdev->dev,
->> +				 "failed to register sensor %d with hwmon: %d\n",
->> +				 i, error);
->> +	}
->>
->>  	platform_set_drvdata(pdev, thermal);
->>
->> @@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform=
-> _device *pdev)
->>  	for (i =3D 0; i < thermal->chip->chn_num; i++) {
->>  		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
->>
->> +		thermal_remove_hwmon_sysfs(sensor->tzd);
->>  		rockchip_thermal_toggle_sensor(sensor, false);
->>  	}
->>
->> --
->> 2.24.0
->>
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+[Jacob Pan]
