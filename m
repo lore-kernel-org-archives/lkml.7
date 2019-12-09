@@ -2,129 +2,105 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9621EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833D6C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714B52068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3F620726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 23:09:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ix9Owl8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfLIXIs (ORCPT
+        id S1727202AbfLIXJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 18:08:48 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:51516 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfLIXIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 18:08:48 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ieS8r-0003WX-Uy; Tue, 10 Dec 2019 00:08:37 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Soeren Moch <smoch@web.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-Date:   Tue, 10 Dec 2019 00:08:37 +0100
-Message-ID: <2668270.pdtvSLGib8@diego>
-In-Reply-To: <20191209223822.27236-8-smoch@web.de>
-References: <20191209223822.27236-1-smoch@web.de> <20191209223822.27236-8-smoch@web.de>
+        Mon, 9 Dec 2019 18:09:45 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:57608 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfLIXJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 18:09:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9N9IsW005786;
+        Mon, 9 Dec 2019 23:09:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=8tjmVSeobmMgjonTroVTxesPehyw5ZOz2eTvOwDYaIQ=;
+ b=ix9Owl8+yPjzAGYtgiSvAz7bur2EksS6KCkJK+yiT7g30omzAp4kJB9zYMiNgCGBol3F
+ RpK4m1aTD2Bomv5Gsf6DAIyDn3wXF4WGMMqHo8/BGtELAs9k6I1guYykAyRrkb9IBbkQ
+ JyX0EG99XuKVAVpIX2BwX2h4CjIJJ0+lRw/HabBZ0r4e7bqshoT/Zq/1o+nrwUqnJGi+
+ v9gdWc/IIPBGUAXC6txEisif3dvvTS2PoeddspJ2sfFVO7DYyh7V9Rezep0DgrVUIUw1
+ 6EEFlplXPfTUVbL2qOgHJfxzsYrh3tzEHx15eKLpd+xc68CqMEhmilmDNrPC9Nlu6JDf 0A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2wrw4myj5m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 23:09:33 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9N9NP7149624;
+        Mon, 9 Dec 2019 23:09:32 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2wsru81vt3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Dec 2019 23:09:30 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xB9N9AaX015611;
+        Mon, 9 Dec 2019 23:09:11 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Dec 2019 15:09:10 -0800
+To:     "wubo \(T\)" <wubo40@huawei.com>
+Cc:     "james.smart\@broadcom.com" <james.smart@broadcom.com>,
+        "dick.kennedy\@broadcom.com" <dick.kennedy@broadcom.com>,
+        "jejb\@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "martin.petersen\@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "liuzhiqiang \(I\)" <liuzhiqiang26@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH] scsi:lpfc:Fix memory leak on lpfc_bsg_write_ebuf_set func
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com>
+Date:   Mon, 09 Dec 2019 18:09:08 -0500
+In-Reply-To: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E7A966@DGGEML525-MBS.china.huawei.com>
+        (wubo's message of "Sat, 7 Dec 2019 03:22:46 +0000")
+Message-ID: <yq1sgltqep7.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912090182
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912090182
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Soeren,
 
-Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
-> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
-> The BCM4359/9 wifi controller in this module is connected to sdio0,
-> enable this interface.
-> 
-> Signed-off-by: Soeren Moch <smoch@web.de>
-> ---
-> Not sure where to place exactly the sdio0 node in the dts because
-> existing sd nodes are not sorted alphabetically.
-> 
-> This last patch in this brcmfmac patch series probably should be picked
-> up by Heiko independently of the rest of this series. It was sent together
-> to show how this brcmfmac extension for 4359-sdio support with RSDB is
-> used and tested.
+wubo,
 
-node placement looks good so I can apply it, just a general questions
-I only got patch 8/8 are patches 1-7 relevant for this one and what are they?
+> When phba->mbox_ext_buf_ctx.seqNum != phba->mbox_ext_buf_ctx.numBuf,
+> dd_data should be freed before return SLI_CONFIG_HANDLED.
+>
+> When lpfc_sli_issue_mbox func return fails, pmboxq should be also
+> freed in job_error tag.
 
-Thanks
-Heiko
+Applied to 5.5/scsi-fixes.
 
+Please make sure your Author: string matches your Signed-off-by:. Also,
+please use checkpatch!
 
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Cc: brcm80211-dev-list@cypress.com
-> Cc: netdev@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../boot/dts/rockchip/rk3399-rockpro64.dts    | 21 ++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> index 7f4b2eba31d4..9fa92790d6e0 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> @@ -71,13 +71,6 @@
->  		clock-names = "ext_clock";
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&wifi_enable_h>;
-> -
-> -		/*
-> -		 * On the module itself this is one of these (depending
-> -		 * on the actual card populated):
-> -		 * - SDIO_RESET_L_WL_REG_ON
-> -		 * - PDN (power down when low)
-> -		 */
->  		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
->  	};
-> 
-> @@ -650,6 +643,20 @@
->  	status = "okay";
->  };
-> 
-> +&sdio0 {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	disable-wp;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-> +	sd-uhs-sdr104;
-> +	status = "okay";
-> +};
-> +
->  &sdmmc {
->  	bus-width = <4>;
->  	cap-sd-highspeed;
-> --
-> 2.17.1
-> 
-
-
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
