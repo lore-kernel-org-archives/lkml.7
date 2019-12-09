@@ -2,145 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E4DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C625FC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C78206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A066A206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLITth convert rfc822-to-8bit (ORCPT
+        id S1726823AbfLITuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:49:37 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51884 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLITth (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:49:37 -0500
-Received: by mail-wm1-f65.google.com with SMTP id g206so645659wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:49:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=FetqLdZTgqYVH7ikYZFDoVL0KC42SrD46xkQJuqyRM0=;
-        b=NaSc5kZ1R/4efC67d19MWDwT+WF2CVLQayBwOBjY8hChMSPtFyGUUWB6PwnfqM1+eJ
-         +a0/G3ihEpl4SVwGthQWrupqD1292ud4dd5ZSaAwj2S8YCFeb8GUQ8vq2wDYY3OhiHTI
-         Zt1oX82Jnh4FBNrawcPgvPLVpNujwm6YYEH0uOPzooEBXN1MF70HFm/Bu+adrOur7+q+
-         5wgMMFDa9+TAld09a+c4OgwuDiDpUkFGqR2AeEfK0DGfPRMT1pCZ3JVNLmYAcc6ftvBd
-         dM4kDC/kbvTy3hYk/yn5EFqoWRsM42JnwAzjMsDe9w8UrGWB8eDkOD9U/knT0WanYVBd
-         ASlQ==
-X-Gm-Message-State: APjAAAWjVfHnnCji2hF8FFQGdqknrwbJxGoaegi5QNVetW6uZcRMZHsc
-        8zi/6pG9Hcu+Gmhrsai7d+3Pxw==
-X-Google-Smtp-Source: APXvYqzwdtZwcs4aWr/n3Y0vKZr/hBTDd8QXrLwOo8iigFvCVNTzOKX0Gg9TpN8KcfynfzDWIDYi9w==
-X-Received: by 2002:a1c:41c4:: with SMTP id o187mr819910wma.24.1575920974952;
-        Mon, 09 Dec 2019 11:49:34 -0800 (PST)
-Received: from [10.152.225.171] ([185.81.138.20])
-        by smtp.gmail.com with ESMTPSA id y6sm590029wrl.17.2019.12.09.11.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 11:49:34 -0800 (PST)
-Date:   Mon, 09 Dec 2019 20:49:30 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191209192959.GB10721@redhat.com>
-References: <20191209070646.GA32477@ircssh-2.c.rugged-nimbus-611.internal> <20191209192959.GB10721@redhat.com>
+        Mon, 9 Dec 2019 14:50:14 -0500
+Received: from mga12.intel.com ([192.55.52.136]:18590 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbfLITuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:50:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 11:38:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="244573678"
+Received: from nshalmon-mobl.ger.corp.intel.com (HELO localhost) ([10.252.8.146])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 11:38:24 -0800
+Date:   Mon, 9 Dec 2019 21:38:22 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Haitao Huang <haitao.huang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v24 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191209193822.GB19243@linux.intel.com>
+References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
+ <20191129231326.18076-13-jarkko.sakkinen@linux.intel.com>
+ <op.0b6gvhtiwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <20191202182102.GF4063@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v2 4/4] samples: Add example of using PTRACE_GETFD in conjunction with user trap
-To:     Oleg Nesterov <oleg@redhat.com>, Sargun Dhillon <sargun@sargun.me>
-CC:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        cyphar@cyphar.com, luto@amacapital.net, viro@zeniv.linux.org.uk
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-Message-ID: <BE3E056F-0147-4A00-8FF7-6CC9DE02A30C@ubuntu.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191202182102.GF4063@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On December 9, 2019 8:30:00 PM GMT+01:00, Oleg Nesterov <oleg@redhat.com> wrote:
->On 12/09, Sargun Dhillon wrote:
->>
->> +#define CHILD_PORT_TRY_BIND	80
->> +#define CHILD_PORT_ACTUAL_BIND	4998
->
->...
->
->> +static int handle_req(int listener)
->> +{
->> +	struct sockaddr_in addr = {
->> +		.sin_family	= AF_INET,
->> +		.sin_port	= htons(4998),
->
->then I think
->		.sin_port = htons(CHILD_PORT_ACTUAL_BIND);
->
->would be more clear...
->
->> +		.sin_addr	= {
->> +			.s_addr	= htonl(INADDR_LOOPBACK)
->> +		}
->> +	};
->> +	struct ptrace_getfd_args getfd_args = {
->> +		.options = PTRACE_GETFD_O_CLOEXEC
->> +	};
->> +	struct seccomp_notif_sizes sizes;
->> +	struct seccomp_notif_resp *resp;
->> +	struct seccomp_notif *req;
->> +	int fd, ret = 1;
->> +
->> +	if (seccomp(SECCOMP_GET_NOTIF_SIZES, 0, &sizes) < 0) {
->> +		perror("seccomp(GET_NOTIF_SIZES)");
->> +		goto out;
->> +	}
->> +	req = malloc(sizes.seccomp_notif);
->> +	if (!req)
->> +		goto out;
->> +	memset(req, 0, sizeof(*req));
->> +
->> +	resp = malloc(sizes.seccomp_notif_resp);
->> +	if (!resp)
->> +		goto out_free_req;
->> +	memset(resp, 0, sizeof(*resp));
->> +
->> +	if (ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, req)) {
->> +		perror("ioctl recv");
->> +		goto out;
->> +	}
->> +	printf("Child tried to call bind with fd: %lld\n",
->req->data.args[0]);
->> +	getfd_args.fd = req->data.args[0];
->> +	fd = ptrace_getfd(req->pid, &getfd_args);
->
->and iiuc otherwise you do not need to ptrace the child. So you could
->remove
->ptrace(PTRACE_SEIZE) in main() and just do
->
->	ptrace(PTRACE_SEIZE, req->pid);
->	fd = ptrace_getfd(req->pid, &getfd_args);
->	ptrace(PTRACE_DETACH, req->pid);
->
->here. However, PTRACE_DETACH won't work, it needs the stopped tracee.
->We can
->add PTRACE_DETACH_ASYNC, but this makes me think that PTRACE_GETFD has
->nothing
->to do with ptrace.
->
->May be a new syscall which does ptrace_may_access() + get_task_file()
->will make
->more sense?
->
->Oleg.
+On Mon, Dec 02, 2019 at 10:21:03AM -0800, Sean Christopherson wrote:
+> On Mon, Dec 02, 2019 at 09:48:43AM -0600, Haitao Huang wrote:
+> > On Fri, 29 Nov 2019 17:13:14 -0600, Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > 
+> > 
+> > >+
+> > >+	for (c = 0 ; c < addp.length; c += PAGE_SIZE) {
+> > >+		if (signal_pending(current)) {
+> > >+			ret = -ERESTARTSYS;
+> > >+			break;
+> > >+		}
+> > 
+> > This IOC is not idempotent as pages EADDed at this point can not be
+> > re-EADDed again. So we can't return ERESTARTSYS
+> 
+> Ah, and now I remember why I opted for modifying the parameters directly
+> instead of including a "number processed" field.  Andy pointed out the
+> ERESTARTSYS thing in the original multi-page add RFC[*], so presumably
+> updating the params and returning ERESTARTSYS is legal/acceptable.
+> 
+> [*] https://lkml.kernel.org/r/CALCETrUb4X9_L9RXKhmyNpfSCsbNodP=BfbfO8Fz_efq24jp8w@mail.gmail.com
 
-Once more since this annoying app uses html by default...
+There are exactly two primary options to pick from given the
+non-idempotent nature:
 
-But we can already do this right now and this is just an improvement.
-That's a bit rich for a new syscall imho...
+A. Return zero (since we support partial operation with the changes I
+   did in v24).
+B. Return -EINTR.
 
-Christian
+If we wanted to follow common syscall semantics in IO operations, then
+the semantics would be a mix of these:
+
+1. Return -EINTR if signals are pending before any pages got added.
+2. Return 0 if at least one page got added.
+
+This is how write() works for example according to the documentation
+[1]. As far as the user code goes [2] I think for that it is best
+idea to rely on semantics that developers are used to instead of
+being clever here.
+
+[1] http://man7.org/linux/man-pages/man2/write.2.html
+[2] https://lkml.kernel.org/r/CALCETrUb4X9_L9RXKhmyNpfSCsbNodP=BfbfO8Fz_efq24jp8w@mail.gmail.com
+
+/Jarkko
