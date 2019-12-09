@@ -2,429 +2,174 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3E1C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E239C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A744520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575873855;
-	bh=satcp7pvBEkmw0YjKfECaSFQJOr6tyXzvyx3YGw6ZHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=atQLAovpjE3PaEO87GO691Xof4E82WxYSFweq9GyaxTxjoWnn9TZofnCEm88oBrpQ
-	 iJYbH/8LZ9Y0JFSPydZ4rmxtAQrma5F03v5rQixmaYGjkUZBcmPSkZXNpiNQjuWRgI
-	 KmbGLDjUQQp/epNlOV3PK4vPCl2pU2MCipBgt+Xo=
+	by mail.kernel.org (Postfix) with ESMTP id 5D71720721
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:51:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RWETZMUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfLIGoO (ORCPT
+        id S1727110AbfLIGvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:44:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfLIGoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 01:44:14 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B136C206E0;
-        Mon,  9 Dec 2019 06:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575873853;
-        bh=satcp7pvBEkmw0YjKfECaSFQJOr6tyXzvyx3YGw6ZHk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DmNA/+/H631bjUIVQXGdULprDWxbrnAXnICRc5ZyYbq9W1cKvGzdbnY0XHmvHLZeJ
-         UX2HeP56Vz3bcchoj3GyJaoyLG0Wy7neBtnFHkBukXMqA6MskNEevrBkx2woEKu1Su
-         qCVkFVPhz2FMiafNBnuWo7fziZ0TsHn8KhCrznFw=
-Date:   Mon, 9 Dec 2019 14:43:58 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/4] arm64: dts: freescale: add Kontron sl28 support
-Message-ID: <20191209064356.GD3365@dragon>
-References: <20191123201317.25861-1-michael@walle.cc>
- <20191123201317.25861-5-michael@walle.cc>
+        Mon, 9 Dec 2019 01:51:18 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:33747 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfLIGvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 01:51:18 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191209065115epoutp039032ae6517f6368d5de254e114187bfc~eoU3SBzyy1887218872epoutp03m
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Dec 2019 06:51:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191209065115epoutp039032ae6517f6368d5de254e114187bfc~eoU3SBzyy1887218872epoutp03m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575874275;
+        bh=LsaN0pPFmyhAyZW+6JHxwgUFxLvFkNwwC3oQiQya+AE=;
+        h=To:Cc:From:Subject:Date:References:From;
+        b=RWETZMUDOXnScr9c1n5z09DcsdOekebdfCFuYhAi1ukX2p8OjwaAOF7somIejOakM
+         HdGoDc7oktTc4LexREx7IqzAGD0JJDetMPXDY+mn/VpeQnuz8HI/xfH8wsQ1JSJgJ4
+         8Q9D0us9H3Z3drjuW8JcAnKl3vxLFA0Tqf2x7tyI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191209065114epcas1p4324743c64ba1e4c979646c6ba9ab40af~eoU2c0Xlj1318713187epcas1p40;
+        Mon,  9 Dec 2019 06:51:14 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47WYkR1s4FzMqYm4; Mon,  9 Dec
+        2019 06:51:11 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        01.D6.51241.CDEEDED5; Mon,  9 Dec 2019 15:51:08 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191209065107epcas1p4eaa96dffa943add96359b15cbd4d3b62~eoUwaGp2O1318713187epcas1p4T;
+        Mon,  9 Dec 2019 06:51:07 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191209065107epsmtrp106228911c264ff9a3bd0728c5655ebf7~eoUwZXu7G2247022470epsmtrp1S;
+        Mon,  9 Dec 2019 06:51:07 +0000 (GMT)
+X-AuditID: b6c32a39-14bff7000001c829-ed-5dedeedc7476
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        26.08.10238.BDEEDED5; Mon,  9 Dec 2019 15:51:07 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191209065107epsmtip24612d5091e2456a0b4f131ca352b9d5e~eoUwN54da0746207462epsmtip28;
+        Mon,  9 Dec 2019 06:51:07 +0000 (GMT)
+To:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>
+Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
+        "Chanwoo Choi (samsung.com)" <cw00.choi@samsung.com>,
+        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [GIT PULL] devfreq fixes for v5.5-rc2
+Organization: Samsung Electronics
+Message-ID: <f2f33725-5a73-0553-ef8a-52b192b80cfb@samsung.com>
+Date:   Mon, 9 Dec 2019 15:57:34 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191123201317.25861-5-michael@walle.cc>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SW0gUYRTH+XZmx9Hc+lq7nIxynYrS0nbStVG0EiUWMjHKHqpFBx102Ss7
+        q3R5yKK8kaZGSdtFo8Kyh2BbTIXYsLKWbprdKEtLw5TsfjEya8cx8u13zvkfzvl/36EJ9Ukq
+        lDZanYLDypsZKohsuhYRFdX9ftigLfEt46qfPiS5J18HlNzdve8CuK7W4xT3peI64p7vOUdx
+        d24/UK4J0Lsbyyi951EJqa/0NCL9F/f8DHKLKTFf4HMFh0aw5thyjda8JGbdxqyULF2clo1i
+        47mVjMbKW4QkJjUtI2qt0ezfgNEU8uYCfyqDF0Vm+apEh63AKWjybaIziRHsuWZ7vD1a5C1i
+        gTUvOsdmSWC12hU6vzDblN/jbkf2N3j7qb4xsggNqspRIA04FnofFynLURCtxs0IRjvGCDn4
+        jODd3k8KOfiOoGHfJfSvxVd+n5BYja8guPMjRBZ9QHDDe8xfoOkZeDWUfjRKeQJ3KMDr6QmQ
+        GigcCd63TymJQ3A0fN9foZR4Gg6HRyN94wNUeBV0j1aOa0i8EHrrT5ASz8Sbwde0b0IzHXxH
+        +8fzBJ4Nz/rrFDKHweXh44S8aBcFLZ8YmVPhZ3UFJXMIDN30BMgcCoMHiyd4F5z3XaekpQGX
+        IvB4O5RyIQa8Zw8pJGMEjoCLrcvldDi0/DqB5LlT4f23A0pJAlgFpcVqWbIAunpfKGSeA6dL
+        yihZooe6srAqFO6aZMY1yYxrkhnX/7n1iGxEswS7aMkTRNaum/zXbjR+m5Hxzaj9XlobwjRi
+        glWahGGDWskXijssbQhogpmhOlM9ZFCrcvkdOwWHLctRYBbENqTzv3U1ETozx+a/dKszi9Wt
+        iImJ4WLZOB3LMrNV9EinQY3zeKdgEgS74PjXp6ADQ4vQ9lNpPpNJt2hJfWPxPEPD7iO+qrVz
+        iwZ9nt+Zhy9c3PC66XRXUOWrAcpY13Ky5/BARXBz+s3+6drM2MIxsu9JZ2b3rZrsB1sfJ4bU
+        lp5JOLK0sxPPiv+4qGpj/dzB5MKv6UHJHxQvsznurLM2cPEBbkprynlz3zbd0FX3vZqrfzat
+        f8mQYj7PRhIOkf8Le/I3P7EDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSvO7td29jDfYu17OYeOMKi8X1L89Z
+        Lc42vWG3uLxrDpvF594jjBa3G1ewWZw5fYnVgd1j06pONo8tV9tZPPq2rGL0+LxJLoAlissm
+        JTUnsyy1SN8ugSvj/qZjjAVPBSoWPv7H0sD4kreLkZNDQsBE4mTXeWYQW0hgN6PEvu/8EHFJ
+        iWkXjwLFOYBsYYnDh4u7GLmASt4ySry/f4EJJC4iYC/R8SETJM4scIlJYtavTywgvWwCWhL7
+        X9xgA7GFBfQkvrX2soLY/AKKEld/PGYEsXkF7CTu/OkDq2ERUJF4sGAuWK+oQJjEziWPmSBq
+        BCVOznwCFmcWUJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGAVnIWmZhaRlFpKWWUhaFjCyrGKU
+        TC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI4ILc0djJeXxB9iFOBgVOLhrbB5GyvEmlhW
+        XJl7iFGCg1lJhHfJxFexQrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgt
+        gskycXBKNTDyPlv81M1Vo/LHfqFcY9GLpxkaP80+bN8YMtlnaoLnF8nPpz3lLReavn6p+/V1
+        XmF8153nSxLTReUVv8yU/WNzle+MT4TmxllFm7VX8gh5sWlVvLvuFqGv80gwWWleoVDmn69T
+        tYXF7+b8cn1pa5Ajp9zUssm0p7yrwOb7Vp9T2e++GKS02yixFGckGmoxFxUnAgAAW9AghAIA
+        AA==
+X-CMS-MailID: 20191209065107epcas1p4eaa96dffa943add96359b15cbd4d3b62
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209065107epcas1p4eaa96dffa943add96359b15cbd4d3b62
+References: <CGME20191209065107epcas1p4eaa96dffa943add96359b15cbd4d3b62@epcas1p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 23, 2019 at 09:13:17PM +0100, Michael Walle wrote:
-> Add device tree files for the Kontron SMARC-sAL28 board and its
-> carriers.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   4 +
->  .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  27 +++
->  .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |  73 ++++++++
->  .../fsl-ls1028a-kontron-sl28-var4.dts         |  34 ++++
->  .../freescale/fsl-ls1028a-kontron-sl28.dts    | 158 ++++++++++++++++++
->  5 files changed, 296 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 93fce8f0c66d..080c5a59d6bd 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -4,6 +4,10 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-oxalis.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-kbox-a-230-ls.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var3-ads2.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-kontron-sl28-var4.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> new file mode 100644
-> index 000000000000..97e72c94b7fc
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-kbox-a-230-ls.dts
-> @@ -0,0 +1,27 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Device Tree File for the Kontron KBox A-230-LS.
-> + *
-> + * This consists of a Kontron SMARC-sAL28 (Dual PHY) and a special
-> + * carrier (s1914).
-> + *
-> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "fsl-ls1028a-kontron-sl28-var4.dts"
-> +
-> +/ {
-> +	model = "Kontron KBox A-230-LS";
-> +	compatible = "kontron,kbox-a-230-ls", "kontron,sl28-var3",
-> +		     "kontron,sl28", "fsl,ls1028a";
+Dear Rafael,
 
-Any new compatible needs to be documented.
+This is devfreq-fixes pull request for v5.5-rc2. I add detailed description of
+this pull request on the following tag. Please pull devfreq with following updates.
+- tag name : devfreq-fixes-for-5.5-rc2
 
-> +};
-> +
-> +&i2c4 {
-> +	eeprom@50 {
-> +		compatible = "atmel,24c32";
-> +		reg = <0x50>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-> new file mode 100644
-> index 000000000000..a4640e6b3928
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-> @@ -0,0 +1,73 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Device Tree file for the Kontron SMARC-sAL28 board on a SMARC Eval 2.0
-> + * carrier (ADS2).
-> + *
-> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "fsl-ls1028a-kontron-sl28.dts"
-> +
-> +/ {
-> +	model = "Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier";
-> +	compatible = "kontron,sl28-var3-ads2", "kontron,sl28", "fsl,ls1028a";
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,widgets =
-> +			"Headphone", "Headphone Jack",
-> +			"Line", "Line Out Jack";
-> +		simple-audio-card,routing =
-> +			"Line Out Jack", "LINEOUTR",
-> +			"Line Out Jack", "LINEOUTL",
-> +			"Headphone Jack", "HPOUTR",
-> +			"Headphone Jack", "HPOUTL";
-> +		simple-audio-card,mclk-fs = <256>;
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&sai6>;
-> +		};
-> +
-> +		simple-audio-card,codec {
-> +			sound-dai = <&wm8904>;
-> +			frame-master;
-> +			bitclock-master;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +
-> +	wm8904: wm8904@1a {
+Regards,
+Chanwoo Choi
 
-audio-codec for node name.
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-> +		#sound-dai-cells = <0>;
-> +		compatible = "wlf,wm8904";
-> +		reg = <0x1a>;
-> +		clocks = <&wm8904_mclk>;
-> +		clock-names = "mclk";
-> +		assigned-clocks = <&wm8904_mclk>;
-> +		assigned-clock-rates = <1250000>;
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "atmel,24c32";
-> +		reg = <0x50>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&sai6 {
-> +	status = "okay";
-> +};
-> +
-> +&soc {
-> +	wm8904_mclk: wm8904-mclk@f130080 {
-> +		compatible = "fsl,vf610-sai-clock";
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-Unsupported/undocumented binding?
+are available in the Git repository at:
 
-> +		reg = <0x0 0xf130080 0x0 0x80>;
-> +		clocks = <&clockgen 4 1>;
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
-> new file mode 100644
-> index 000000000000..5c8b13108e4d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var4.dts
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Device Tree file for the Kontron SMARC-sAL28 board.
-> + *
-> + * This is for the network variant 4 which has two ethernet ports. It
-> + * extends the base and provides one more port connected via RGMII.
-> + *
-> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "fsl-ls1028a-kontron-sl28.dts"
-> +
-> +/ {
-> +	model = "Kontron SMARC-sAL28 (Dual PHY)";
-> +	compatible = "kontron,sl28-var4", "kontron,sl28", "fsl,ls1028a";
-> +};
-> +
-> +&enetc_port1 {
-> +	phy-handle = <&phy1>;
-> +	phy-connection-type = "rgmii-id";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		phy1: ethernet-phy@4 {
-> +			reg = <0x4>;
-> +			eee-broken-1000t;
-> +			eee-broken-100tx;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-> new file mode 100644
-> index 000000000000..a18cb4395ad0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-> @@ -0,0 +1,158 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Device Tree file for the Kontron SMARC-sAL28 board.
-> + *
-> + * Copyright (C) 2019 Michael Walle <michael@walle.cc>
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +#include "fsl-ls1028a.dtsi"
-> +
-> +/ {
-> +	model = "Kontron SMARC-sAL28";
-> +	compatible = "kontron,sl28", "fsl,ls1028a";
-> +
-> +	aliases {
-> +		crypto = &crypto;
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&enetc_port0 {
-> +	phy-handle = <&phy0>;
-> +	phy-connection-type = "sgmii";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		phy0: ethernet-phy@5 {
-> +			reg = <0x5>;
-> +			eee-broken-1000t;
-> +			eee-broken-100tx;
-> +		};
-> +	};
-> +};
-> +
-> +&esdhc {
-> +	sd-uhs-sdr104;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr12;
-> +	status = "okay";
-> +};
-> +
-> +&esdhc1 {
-> +	mmc-hs200-1_8v;
-> +	mmc-hs400-1_8v;
-> +	bus-width = <8>;
-> +	status = "okay";
-> +};
-> +
-> +&fspi {
-> +	status = "okay";
-> +
-> +	w25q32jw@0 {
+  git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-fixes-for-5.5-rc2
 
-Use a generic node name.
+for you to fetch changes up to 27dbc542f651ed09de910f274b32634904103774:
 
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "w25q32jw", "jedec,spi-nor";
+  PM / devfreq: Use PM QoS for sysfs min/max_freq (2019-12-09 12:19:16 +0900)
 
-Is "w25q32jw" documented somewhere?
+----------------------------------------------------------------
 
-Shawn
+Update devfreq for 5.5-rc2
 
-> +		m25p,fast-read;
-> +		spi-max-frequency = <133000000>;
-> +		reg = <0>;
-> +		/* The following setting enables 1-1-2 (CMD-ADDR-DATA) mode */
-> +		spi-rx-bus-width = <2>; /* 2 SPI Rx lines */
-> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-> +
-> +		partition@0 {
-> +			reg = <0x000000 0x010000>;
-> +			label = "rcw";
-> +			read-only;
-> +		};
-> +
-> +		partition@10000 {
-> +			reg = <0x010000 0x0f0000>;
-> +			label = "failsafe bootloader";
-> +			read-only;
-> +		};
-> +
-> +		partition@100000 {
-> +			reg = <0x100000 0x040000>;
-> +			label = "failsafe DP firmware";
-> +			read-only;
-> +		};
-> +
-> +		partition@140000 {
-> +			reg = <0x140000 0x0a0000>;
-> +			label = "failsafe trusted firmware";
-> +			read-only;
-> +		};
-> +
-> +		partition@1e0000 {
-> +			reg = <0x1e0000 0x020000>;
-> +			label = "reserved";
-> +			read-only;
-> +		};
-> +
-> +		partition@200000 {
-> +			reg = <0x200000 0x010000>;
-> +			label = "configuration store";
-> +		};
-> +
-> +		partition@210000 {
-> +			reg = <0x210000 0x0f0000>;
-> +			label = "bootloader";
-> +		};
-> +
-> +		partition@300000 {
-> +			reg = <0x300000 0x040000>;
-> +			label = "DP firmware";
-> +		};
-> +
-> +		partition@340000 {
-> +			reg = <0x340000 0x0a0000>;
-> +			label = "trusted firmware";
-> +		};
-> +
-> +		partition@3e0000 {
-> +			reg = <0x3e0000 0x020000>;
-> +			label = "bootloader environment";
-> +		};
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	rtc@32 {
-> +		compatible = "microcrystal,rv8803";
-> +		reg = <0x32>;
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "atmel,24c32";
-> +		reg = <0x50>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.20.1
-> 
+Detailed description for this pull request:
+1. Update devfreq core
+- Add PM QoS support for devfreq device with following QoS type. External user
+of devfreq device can request the minimum and maximum frequency according to
+their multiple requirements.
+: DEV_PM_QOS_MIN_FREQUENCY is used for requesting the minimum device frequency.
+: DEV_PM_QOS_MAX_FREQUENCY is used for requesting the maximum device frequency.
+
+- Use PM QoS interface when entering the min/max_freq via sysfs interface.
+
+- Add get_freq_range() helper function in order to get the final min/max
+frequency among the multiple requirements of min/max frequency.
+
+- Fix the issue such as fixing the return value and modify code
+for more correct exception handling if error happen.
+
+----------------------------------------------------------------
+
+Leonard Crestez (6):
+      PM / devfreq: Fix devfreq_notifier_call returning errno
+      PM / devfreq: Set scaling_max_freq to max on OPP notifier error
+      PM / devfreq: Introduce get_freq_range helper
+      PM / devfreq: Don't fail devfreq_dev_release if not in list
+      PM / devfreq: Add PM QoS support
+      PM / devfreq: Use PM QoS for sysfs min/max_freq
+
+ drivers/devfreq/devfreq.c | 273 ++++++++++++++++++++++++++++++++++------------
+ include/linux/devfreq.h   |  14 ++-
+ 2 files changed, 212 insertions(+), 75 deletions(-)
