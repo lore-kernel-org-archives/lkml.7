@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5E5C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C847C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D72206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 04:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h+gg/oFP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mqwyNEVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfLIEeY (ORCPT
+        id S1727047AbfLIEhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Dec 2019 23:34:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44024 "EHLO
+        Sun, 8 Dec 2019 23:37:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44208 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfLIEeY (ORCPT
+        with ESMTP id S1726916AbfLIEhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Dec 2019 23:34:24 -0500
+        Sun, 8 Dec 2019 23:37:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z5wCHvvj5BNKu+yVA6hp40fY47Gzb5cUvJVOrEDs5h4=; b=h+gg/oFPuDo4nLPNHlEfYqskL
-        xlVlEghkQJ8iyy0nIRrQTRdb+IOl1s8uALy6r4Hk2x54F2b2T6y8ZU4K8ZDgcD8bGSZY+9xaZJ/WR
-        V4svJppP5kx/5uhXORWh0lJZh2Gt71zBpea2qO4Brb9pqp/HTpjXgUxhIp01ucfGKznKmx/ZKhCqE
-        h+mx10xbBJ99ZWOhxuolD8+RYzFXIRLjil9Y2+ZkGD72LFhY4yX0G/2y5JPjgMDDfcEzo3Dxe8OPg
-        xCwTiKZUo93Cw8wZkBo/lST+OKnqGHHn1hRUT9Z88g12E4XkgsJaNhZrnMOqukmVJgoYnIJOcEOJF
-        t1AU374aw==;
+         bh=MZaXJJ+0Us/9ZJLhvcDNPUmeTEawsBgwErdJM5IFJdQ=; b=mqwyNEVDcfc/b5Eu5EbdvPmT1
+        jaHjUVrqF2WMzTKglBkL3wjXjZwmvuXqmzGEWzEbm6Tg/IT3suAMSuqFrrRRrbZ++0j/oae6QDGC4
+        nNm423bVlGvnXMIOODXFY5q+FgT4Vn1xnX+vN53r63p0tf5phN8gzn+0Pp4DdBYtCq3Fd7BBznDx8
+        4akKnXjqeg6se08sC8UjjaVmVoQuP0ZN++AVT+1/7qKfIKUaWVddsz8rbkbvdgNf3mZ2GKVBJlEKD
+        1c/isI0zqomUQigh6Fyds/F8okQNwdcNt+8sIXpHNlrVu0qXFFoZdnMl8/dDpyAXixGUDQZd10ENM
+        2nbkC6uTw==;
 Received: from [2601:1c0:6280:3f0::3deb]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieAkZ-0002WU-NC; Mon, 09 Dec 2019 04:34:23 +0000
-To:     Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
+        id 1ieAnA-0003up-KT; Mon, 09 Dec 2019 04:37:04 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] devfreq: fix multiple kernel-doc warnings
-Message-ID: <50975461-6dab-8f89-e802-b34ca06008f5@infradead.org>
-Date:   Sun, 8 Dec 2019 20:34:23 -0800
+Subject: [PATCH] ASoC: fix soc-core.c kernel-doc warning
+Message-ID: <2215ee04-e870-5eea-a00c-9a5caf06faae@infradead.org>
+Date:   Sun, 8 Dec 2019 20:37:04 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
@@ -60,78 +58,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix kernel-doc warnings in devfreq files.
-Also fix a typo.
+Fix a kernel-doc warning in soc-core.c by adding notation for
+@legacy_dai_naming.
 
-../include/linux/devfreq.h:181: warning: Function parameter or member 'last_status' not described in 'devfreq'
-
-../drivers/devfreq/devfreq.c:1687: warning: bad line:         - Resource-managed devfreq_register_notifier()
-../drivers/devfreq/devfreq.c:1723: warning: bad line:         - Resource-managed devfreq_unregister_notifier()
-../drivers/devfreq/devfreq-event.c:355: warning: Function parameter or member 'edev' not described in 'devfreq_event_remove_edev'
-../drivers/devfreq/devfreq-event.c:355: warning: Excess function parameter 'dev' description in 'devfreq_event_remove_edev'
+../sound/soc/soc-core.c:2509: warning: Function parameter or member 'legacy_dai_naming' not described in 'snd_soc_register_dai'
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-pm@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
 ---
- drivers/devfreq/devfreq-event.c |    4 ++--
- drivers/devfreq/devfreq.c       |    4 ++--
- include/linux/devfreq.h         |    3 ++-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ sound/soc/soc-core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- linux-next-20191209.orig/drivers/devfreq/devfreq.c
-+++ linux-next-20191209/drivers/devfreq/devfreq.c
-@@ -1733,7 +1733,7 @@ static void devm_devfreq_notifier_releas
- 
- /**
-  * devm_devfreq_register_notifier()
--	- Resource-managed devfreq_register_notifier()
-+ *	- Resource-managed devfreq_register_notifier()
-  * @dev:	The devfreq user device. (parent of devfreq)
-  * @devfreq:	The devfreq object.
-  * @nb:		The notifier block to be unregistered.
-@@ -1769,7 +1769,7 @@ EXPORT_SYMBOL(devm_devfreq_register_noti
- 
- /**
-  * devm_devfreq_unregister_notifier()
--	- Resource-managed devfreq_unregister_notifier()
-+ *	- Resource-managed devfreq_unregister_notifier()
-  * @dev:	The devfreq user device. (parent of devfreq)
-  * @devfreq:	The devfreq object.
-  * @nb:		The notifier block to be unregistered.
---- linux-next-20191209.orig/drivers/devfreq/devfreq-event.c
-+++ linux-next-20191209/drivers/devfreq/devfreq-event.c
-@@ -346,9 +346,9 @@ EXPORT_SYMBOL_GPL(devfreq_event_add_edev
- 
- /**
-  * devfreq_event_remove_edev() - Remove the devfreq-event device registered.
-- * @dev		: the devfreq-event device
-+ * @edev	: the devfreq-event device
+--- linux-next-20191209.orig/sound/soc/soc-core.c
++++ linux-next-20191209/sound/soc/soc-core.c
+@@ -2508,6 +2508,8 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_dai
   *
-- * Note that this function remove the registered devfreq-event device.
-+ * Note that this function removes the registered devfreq-event device.
-  */
- int devfreq_event_remove_edev(struct devfreq_event_dev *edev)
- {
---- linux-next-20191209.orig/include/linux/devfreq.h
-+++ linux-next-20191209/include/linux/devfreq.h
-@@ -135,6 +135,7 @@ struct devfreq_stats {
-  *		devfreq.nb to the corresponding register notifier call chain.
-  * @work:	delayed work for load monitoring.
-  * @previous_freq:	previously configured frequency value.
-+ * @last_status:	devfreq user device info, performance statistics
-  * @data:	Private data of the governor. The devfreq framework does not
-  *		touch this.
-  * @min_freq:	Limit minimum frequency requested by user (0: none)
-@@ -148,7 +149,7 @@ struct devfreq_stats {
-  * @stats:	Statistics of devfreq device behavior
-  * @transition_notifier_list: list head of DEVFREQ_TRANSITION_NOTIFIER notifier
+  * @component: The component the DAIs are registered for
+  * @dai_drv: DAI driver to use for the DAI
++ * @legacy_dai_naming: if %true, use legacy single-name format;
++ * 	if %false, use multiple-name format;
   *
-- * This structure stores the devfreq information for a give device.
-+ * This structure stores the devfreq information for a given device.
-  *
-  * Note that when a governor accesses entries in struct devfreq in its
-  * functions except for the context of callbacks defined in struct
+  * Topology can use this API to register DAIs when probing a component.
+  * These DAIs's widgets will be freed in the card cleanup and the DAIs
 
