@@ -2,135 +2,180 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A224C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B6EC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5465D2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35024207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gGCrjof4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfLILIN (ORCPT
+        id S1727617AbfLILIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:08:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45292 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726377AbfLILIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:08:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 07F04AE4D;
-        Mon,  9 Dec 2019 11:08:11 +0000 (UTC)
-Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
- pressure
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <20191209105218.23583-1-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <17131297-6d09-7302-d632-246f62487652@suse.com>
-Date:   Mon, 9 Dec 2019 12:08:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 06:08:39 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48203 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727599AbfLILIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:08:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47WgRQ3lb0z9sPc;
+        Mon,  9 Dec 2019 22:08:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575889716;
+        bh=rYe8qrzC5Yad6k0eMTD1iKIi3I9u3ShpcDApHGCih3Q=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=gGCrjof44OinljG4Usq9loRpcZytu5Q1MmX9DfuOjt5J0oZKbDHKViLkY1olhW6TL
+         pn3HGcv7TtoOBTs89AAkcK3LZjCcC3pXDiGZYqa3idH9EFVf0ZMTzTbQy2ifdjUnXs
+         WWvGJ0hDpCBUzNv0pFFMRi6eJNsdTc4VS8zXAeqBueA217DSpk+dnzLbU3IurJsDim
+         NmWi5VTrIrL4NS5d96cHb6EX8oD4F2+FEVHCHxaM4N6GC2ZDLMm5fPTxG5YYbCsM4W
+         l+4EgpGiwjPYyVN9avCdVDu8fRbCUD5NAiTisSShqziayscWKNDKBtEW1ypOAZP5x8
+         1kdoBUkZl7b3w==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang\, Kan" <kan.liang@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH v16 06/25] powerpc: mm: Add p?d_leaf() definitions
+In-Reply-To: <20191206135316.47703-7-steven.price@arm.com>
+References: <20191206135316.47703-1-steven.price@arm.com> <20191206135316.47703-7-steven.price@arm.com>
+Date:   Mon, 09 Dec 2019 22:08:32 +1100
+Message-ID: <875ziprc27.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191209105218.23583-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 11:52, SeongJae Park wrote:
-> On Mon, 9 Dec 2019 11:15:22 +0100 "Jürgen Groß" <jgross@suse.com> wrote:
-> 
->> On 09.12.19 10:46, Durrant, Paul wrote:
->>>> -----Original Message-----
->>>> From: Jürgen Groß <jgross@suse.com>
->>>> Sent: 09 December 2019 09:39
->>>> To: Park, Seongjae <sjpark@amazon.com>; axboe@kernel.dk;
->>>> konrad.wilk@oracle.com; roger.pau@citrix.com
->>>> Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; Durrant,
->>>> Paul <pdurrant@amazon.com>; sj38.park@gmail.com; xen-
->>>> devel@lists.xenproject.org
->>>> Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
->>>> pressure
->>>>
->>>> On 09.12.19 09:58, SeongJae Park wrote:
->>>>> Each `blkif` has a free pages pool for the grant mapping.  The size of
->>>>> the pool starts from zero and be increased on demand while processing
->>>>> the I/O requests.  If current I/O requests handling is finished or 100
->>>>> milliseconds has passed since last I/O requests handling, it checks and
->>>>> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>>>>
->>>>> Therefore, `blkfront` running guests can cause a memory pressure in the
->>>>> `blkback` running guest by attaching a large number of block devices and
->>>>> inducing I/O.
->>>>
->>>> I'm having problems to understand how a guest can attach a large number
->>>> of block devices without those having been configured by the host admin
->>>> before.
->>>>
->>>> If those devices have been configured, dom0 should be ready for that
->>>> number of devices, e.g. by having enough spare memory area for ballooned
->>>> pages.
->>>>
->>>> So either I'm missing something here or your reasoning for the need of
->>>> the patch is wrong.
->>>>
->>>
->>> I think the underlying issue is that persistent grant support is hogging memory in the backends, thereby compromising scalability. IIUC this patch is essentially a band-aid to get back to the scalability that was possible before persistent grant support was added. Ultimately the right answer should be to get rid of persistent grants support and use grant copy, but such a change is clearly more invasive and would need far more testing.
->>
->> Persistent grants are hogging ballooned pages, which is equivalent to
->> memory only in case of the backend's domain memory being equal or
->> rather near to its max memory size.
->>
->> So configuring the backend domain with enough spare area for ballooned
->> pages should make this problem much less serious.
->>
->> Another problem in this area is the amount of maptrack frames configured
->> for a driver domain, which will limit the number of concurrent foreign
->> mappings of that domain.
-> 
-> Right, similar problems from other backends are possible.
-> 
->>
->> So instead of having a blkback specific solution I'd rather have a
->> common callback for backends to release foreign mappings in order to
->> enable a global resource management.
-> 
-> This patch is also based on a common callback, namely the shrinker callback
-> system.  As the shrinker callback is designed for the general memory pressure
-> handling, I thought this is a right one to use.  Other backends having similar
-> problems can use this in their way.
+Steven Price <steven.price@arm.com> writes:
+> walk_page_range() is going to be allowed to walk page tables other than
+> those of user space. For this it needs to know when it has reached a
+> 'leaf' entry in the page tables. This information is provided by the
+> p?d_leaf() functions/macros.
+>
+> For powerpc pmd_large() already exists and does what we want, so hoist
+> it out of the CONFIG_TRANSPARENT_HUGEPAGE condition and implement the
+> other levels. Macros are used to provide the generic p?d_leaf() names.
+>
+> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> CC: Paul Mackerras <paulus@samba.org>
+> CC: Michael Ellerman <mpe@ellerman.id.au>
+> CC: linuxppc-dev@lists.ozlabs.org
+> CC: kvm-ppc@vger.kernel.org
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  arch/powerpc/include/asm/book3s/64/pgtable.h | 30 ++++++++++++++------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> index b01624e5c467..3dd7b6f5edd0 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -923,6 +923,12 @@ static inline int pud_present(pud_t pud)
+>  	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PRESENT));
+>  }
+>  
+> +#define pud_leaf	pud_large
+> +static inline int pud_large(pud_t pud)
+> +{
+> +	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
+> +}
 
-But this is addressing memory shortage only and it is acting globally.
+We already have:
 
-What I'd like to have in some (maybe distant) future is a way to control
-resource usage per guest. Why would you want to throttle performance of
-all guests instead of only the one causing the pain by hogging lots of
-resources?
+#define pud_is_leaf pud_is_leaf
+static inline bool pud_is_leaf(pud_t pud)
+{
+	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
+}
 
-The new backend callback should (IMO) have a domid as parameter for
-specifying which guest should be taken away resources (including the
-possibility to select "any domain").
+And so on.
 
-It might be reasonable to have your shrinker hook in e.g. xenbus for
-calling the backend callbacks. And you could have another agent in the
-grant driver reacting on shortage of possible grant mappings.
+These went in relatively recently in:
 
-I don't expect you to implement all of that at once, but I think having
-that idea in mind when addressing current issues would be nice. So as a
-starting point you could move the shrinker hook to xenbus, add the
-generic callback to struct xenbus_driver, populate that callback in
-blkback and call it in the shrinker hook with "any domain". This would
-enable a future extension to other backends and a dynamic resource
-management in a natural way.
+  d6eacedd1f0e ("powerpc/book3s: Use config independent helpers for page table walk")
 
 
-Juergen
+Assuming those all work for you, maybe your patch in this series should
+just do:
+
+#define pud_leaf pud_is_leaf
+
+And so on. And then we can do a patch later to change the arch/powerpc
+code to use pud_leaf() etc. directly and drop the "is" versions.
+
+cheers
+
+
+> @@ -966,6 +972,12 @@ static inline int pgd_present(pgd_t pgd)
+>  	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PRESENT));
+>  }
+>  
+> +#define pgd_leaf	pgd_large
+> +static inline int pgd_large(pgd_t pgd)
+> +{
+> +	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
+> +}
+> +
+>  static inline pte_t pgd_pte(pgd_t pgd)
+>  {
+>  	return __pte_raw(pgd_raw(pgd));
+> @@ -1133,6 +1145,15 @@ static inline bool pmd_access_permitted(pmd_t pmd, bool write)
+>  	return pte_access_permitted(pmd_pte(pmd), write);
+>  }
+>  
+> +#define pmd_leaf	pmd_large
+> +/*
+> + * returns true for pmd migration entries, THP, devmap, hugetlb
+> + */
+> +static inline int pmd_large(pmd_t pmd)
+> +{
+> +	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+> +}
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  extern pmd_t pfn_pmd(unsigned long pfn, pgprot_t pgprot);
+>  extern pmd_t mk_pmd(struct page *page, pgprot_t pgprot);
+> @@ -1159,15 +1180,6 @@ pmd_hugepage_update(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp,
+>  	return hash__pmd_hugepage_update(mm, addr, pmdp, clr, set);
+>  }
+>  
+> -/*
+> - * returns true for pmd migration entries, THP, devmap, hugetlb
+> - * But compile time dependent on THP config
+> - */
+> -static inline int pmd_large(pmd_t pmd)
+> -{
+> -	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+> -}
+> -
+>  static inline pmd_t pmd_mknotpresent(pmd_t pmd)
+>  {
+>  	return __pmd(pmd_val(pmd) & ~_PAGE_PRESENT);
+> -- 
+> 2.20.1
