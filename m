@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2496C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05243C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DAA208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA8A2080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql1idqnF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uV5pv0K9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLIT6s (ORCPT
+        id S1727282AbfLIT7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:58:48 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37426 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfLIT61 (ORCPT
+        Mon, 9 Dec 2019 14:59:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45156 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfLIT6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:58:27 -0500
-Received: by mail-pj1-f68.google.com with SMTP id ep17so6336806pjb.4;
-        Mon, 09 Dec 2019 11:58:26 -0800 (PST)
+        Mon, 9 Dec 2019 14:58:12 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w7so6224308plz.12;
+        Mon, 09 Dec 2019 11:58:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Rh0bnLPUtx+tPcJ7oCSjUFbyV7d1BipJo6LPETVaXJc=;
-        b=Ql1idqnFkeOA1b2ibaJk1lP2UsH/b2TD0BILC3fV3jIWbO6hOXSrjUaYvsFKb84JtS
-         s6YZZ4GWy0d+u0x82WVYr3eyDLh2FJTWL5ABfs+z4V0q8cwbuATv9EHOY2Poa6e0YqRk
-         7uNOluhmhtg4XC1xGIyRPFwvn1VP64F56d4gZzQ+08CJKJ4bR8ZoPrnMEcLpi3NdhqlW
-         3Rk0Cp24NqoNVHhL27o1FoM87UpuMvKiEAgj3ME1e/Uiu602SGAV7YWjBsmARtVOjgZ3
-         WcYhoM0cIeckI9/dvRc8hmoc84F1JMCdxHEUQTZhA1eZqcAywBsuDW39KOXb1iDtuqtI
-         lq/w==
+        bh=qpHD+BzRmCza+J8cARPun5felyrs+dQCyBCt49mQSmg=;
+        b=uV5pv0K9ZJ71Pl8qC7WYaq6P9NAskW0V0XiAkeLFSyizhvo/+ytjTGIPfksDrUOIFH
+         Js0M/AxShyNuEgwRGXYUxmSZ9hS6mIf6M6xroyN+ABr52UgxQDr8i0IRUHbeNitNuT1U
+         PyUwlJnQD23uobSXoQoShIOi+Kx7wfE/5XbsRDZ587jUIWCSXsQUy11Zts/sTvp2lFbH
+         5TgIDQ+C35M4wzudq3ZZddIUCRLtt/+hDyJ6KSWhPBgoXvqB8KNkjACrIFSo5b2nMNRp
+         LHW08kv8joPWFKL9aOkDknxugehsWCZaRmGHlhK3NQtdzsZtB0+K+c6WRLw/WT63Dj6Q
+         tQKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Rh0bnLPUtx+tPcJ7oCSjUFbyV7d1BipJo6LPETVaXJc=;
-        b=Cd+KNrfRyXB2Jlvsec0Z9WrQ38fx7/JDrPZhcTOEHVFsySg3vTHEspKdqOoRPqB279
-         DPEgng0It+GJg4IeBuXVBGOVHp5iCxtutHNUbUtLKcbogyfpEZ2AECQvVCW+a9MdVuHJ
-         qFyn+KJjDvaV6fYcdp+ZQwBPJX8s+f9tsU+pdeWNhYCnLmfae5F+t4jPwGNKY+EZ2k3A
-         ZvTkWu8PpZ5h1abEf55PDy3GEoqMMxGcGaS58aWSzyqiuSBmBKH4wezAQICD/rhVDdKX
-         uJ6HUVWXkWTBEAqZpL5P+BI94N09AlRfUbIUltFdGnpdAvnncMCgicna6lHSYHpZxEgz
-         g1wA==
-X-Gm-Message-State: APjAAAVMLWBkO6+uOm59SNg8BUJBeYLI4Yl1DD8GJU25SvJ4gfFv54fw
-        9585xxKcNrzxaONYbKURkV4=
-X-Google-Smtp-Source: APXvYqw0rvrrMAD8BKloCopu8xC3C8Rdw1NB+NEIqLAqNAoIW5lOeisBjjvEUWp1r84TMZN7X6Ltgw==
-X-Received: by 2002:a17:902:b701:: with SMTP id d1mr3560003pls.144.1575921506316;
-        Mon, 09 Dec 2019 11:58:26 -0800 (PST)
+        bh=qpHD+BzRmCza+J8cARPun5felyrs+dQCyBCt49mQSmg=;
+        b=g+RsXsRaXbeTwZG8PwzQJV5zN235IDFyrMQ9zDuiwZgrUgMWc8upl8d1U55IrxlvF8
+         PvlwDTZ+NVmxwIS28U2G3RyxiqcmdKiDkJU01q2p0M7RvvboJEa/GZCr0w/JbXUsmwL/
+         ZnazoGlBjZ89VM4jpiy2f7X9DPwkLj/Q6HYozmme1LxwYKpe8sC4oZgS/ZTw3URx5Yoz
+         wrbcKaZik6jUe8GBvpCx92eTxcpNgIreKqvRmV3socTaNVcOH5sb2kYth6Rs87Rm6q8d
+         F95dTFxN9by62ZtFO+iGC+0JRZ3P3Edod7GDX/f0HjkPf569WEQ8p0iJav5T9bDC3nHC
+         0ufw==
+X-Gm-Message-State: APjAAAUlru/DPXANyqE5kjstc+Myp0aQMjeVFHv1cwPYCzGB4BV1U3ES
+        fPT+eui7yaQg7yeIg6dWXzk=
+X-Google-Smtp-Source: APXvYqygbR8Mv8+x1FDwcshTXI8hOICMR3PVfkwhuHwXw/fxZ9bDbGQIRtAbeAH/HT1r6178kXxFQw==
+X-Received: by 2002:a17:902:567:: with SMTP id 94mr30967241plf.174.1575921491679;
+        Mon, 09 Dec 2019 11:58:11 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id m34sm378688pgb.26.2019.12.09.11.58.25
+        by smtp.gmail.com with ESMTPSA id c19sm293007pfc.144.2019.12.09.11.58.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 11:58:25 -0800 (PST)
+        Mon, 09 Dec 2019 11:58:11 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org,
@@ -81,9 +81,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 15/17] clk: bm1880: convert to devm_platform_ioremap_resource
-Date:   Mon,  9 Dec 2019 19:57:47 +0000
-Message-Id: <20191209195749.868-15-tiny.windzz@gmail.com>
+Subject: [PATCH 07/17] clk: mvebu: convert to devm_platform_ioremap_resource
+Date:   Mon,  9 Dec 2019 19:57:39 +0000
+Message-Id: <20191209195749.868-7-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209195749.868-1-tiny.windzz@gmail.com>
 References: <20191209195749.868-1-tiny.windzz@gmail.com>
@@ -96,31 +96,53 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/clk/clk-bm1880.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/clk/mvebu/armada-37xx-periph.c | 4 +---
+ drivers/clk/mvebu/armada-37xx-tbg.c    | 4 +---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
-index 4cd175afce9b..9fa0ca1fe833 100644
---- a/drivers/clk/clk-bm1880.c
-+++ b/drivers/clk/clk-bm1880.c
-@@ -893,16 +893,13 @@ static int bm1880_clk_probe(struct platform_device *pdev)
- 	struct bm1880_clock_data *clk_data;
- 	void __iomem *pll_base, *sys_base;
+diff --git a/drivers/clk/mvebu/armada-37xx-periph.c b/drivers/clk/mvebu/armada-37xx-periph.c
+index f5746f9ea929..0d03878920ac 100644
+--- a/drivers/clk/mvebu/armada-37xx-periph.c
++++ b/drivers/clk/mvebu/armada-37xx-periph.c
+@@ -725,7 +725,6 @@ static int armada_3700_periph_clock_probe(struct platform_device *pdev)
+ 	const struct clk_periph_data *data;
  	struct device *dev = &pdev->dev;
+ 	int num_periph = 0, i, ret;
 -	struct resource *res;
- 	int num_clks, i;
+ 
+ 	data = of_device_get_match_data(dev);
+ 	if (!data)
+@@ -746,8 +745,7 @@ static int armada_3700_periph_clock_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	driver_data->hw_data->num = num_periph;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pll_base = devm_ioremap_resource(&pdev->dev, res);
-+	pll_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pll_base))
- 		return PTR_ERR(pll_base);
+-	driver_data->reg = devm_ioremap_resource(dev, res);
++	driver_data->reg = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(driver_data->reg))
+ 		return PTR_ERR(driver_data->reg);
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	sys_base = devm_ioremap_resource(&pdev->dev, res);
-+	sys_base = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(sys_base))
- 		return PTR_ERR(sys_base);
+diff --git a/drivers/clk/mvebu/armada-37xx-tbg.c b/drivers/clk/mvebu/armada-37xx-tbg.c
+index 585a02e0b330..5d86912fbb6e 100644
+--- a/drivers/clk/mvebu/armada-37xx-tbg.c
++++ b/drivers/clk/mvebu/armada-37xx-tbg.c
+@@ -84,7 +84,6 @@ static int armada_3700_tbg_clock_probe(struct platform_device *pdev)
+ 	struct clk_hw_onecell_data *hw_tbg_data;
+ 	struct device *dev = &pdev->dev;
+ 	const char *parent_name;
+-	struct resource *res;
+ 	struct clk *parent;
+ 	void __iomem *reg;
+ 	int i, ret;
+@@ -105,8 +104,7 @@ static int armada_3700_tbg_clock_probe(struct platform_device *pdev)
+ 	parent_name = __clk_get_name(parent);
+ 	clk_put(parent);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	reg = devm_ioremap_resource(dev, res);
++	reg = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(reg))
+ 		return PTR_ERR(reg);
  
 -- 
 2.17.1
