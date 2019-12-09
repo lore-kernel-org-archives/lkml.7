@@ -2,186 +2,159 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646C3C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26DDC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333242071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D049206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLIVbM convert rfc822-to-8bit (ORCPT
+        id S1726665AbfLIVea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:31:12 -0500
-Received: from mail-oln040092253011.outbound.protection.outlook.com ([40.92.253.11]:56128
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726354AbfLIVbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:31:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KOyVdon4aUv9NUlvuCFxwDvDh6mIj+d/gcSEQjz5FTqeDQL1rJNb+tP/GHRRQQYR70eCYohrOe3TOAWYIjlqBEzHoXWQwFqlHCTDiVJUvgThWy6qynaipYnVNusHvUHp5+GwCZreDdS21J+QkED9dTvKWv5m6V+fiKC1rSEYHMUHO9MrL/0Ivnud8iSa/Vd5syv83fUzw/DzPLUTcK3wopGKeQzbV1OG1NauVKl9yWUcSM8FB/rMWdtwzkBpKXpq52+7LaOaZZDxA9i+Iys2v6aLmaYIfy84zzov47VUrzksGHgzrnWy2pOsXI05F0LOJHGMpclsKfMji3PBBim1wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/wz9S715yrIld5P7lNH/d4XADhNT+0JWIAPuHfp87Do=;
- b=WuELJopshfKOH6b56rYU5Hp02wUvSHWB76nk6tubf/JyxxHBbbHtvValbMUk7XK6ZsMmzi90PgcJ6o6GgTzPH9UcEF91rxnwH3r5dCLucPaQWeHjNwHopASRW7Nwf+Mt8bo0hmuM31fVXtYxetFKuWwI3FffOYuV+hUGinE9xDvnPNDZeUk9vEqc1m7dz3F9zw81T99bph0kisiIYV+tD0zQq7kpA4iy2AEkpF6pVJUjX5jgH5RBdwV8J063cSilhUFfSIkhr2lbHxyMDqsBt2dLCt2lmBHe7TrswVFK3zObSq5keFnQqItMg7+/E0RbE8aalJyfZQgwvGh0ik+xRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT017.eop-APC01.prod.protection.outlook.com
- (10.152.250.56) by SG2APC01HT117.eop-APC01.prod.protection.outlook.com
- (10.152.251.51) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Mon, 9 Dec
- 2019 21:30:23 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.59) by
- SG2APC01FT017.mail.protection.outlook.com (10.152.250.203) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.25 via Frontend Transport; Mon, 9 Dec 2019 21:30:23 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 21:30:23 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [[RFC PATCH v1] 1/1] PCI: Add pci=nobbn to ignore ACPI _BBN method to
- override host bridge bus window
-Thread-Topic: [[RFC PATCH v1] 1/1] PCI: Add pci=nobbn to ignore ACPI _BBN
- method to override host bridge bus window
-Thread-Index: AQHVrtfd0zl4YBZzg0+ke2KUWaAOxg==
-Date:   Mon, 9 Dec 2019 21:30:23 +0000
-Message-ID: <PSXP216MB0438F3D8C09957C6A45BC43D80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY3PR01CA0140.ausprd01.prod.outlook.com
- (2603:10c6:0:1b::25) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:B2C5CC0693B0A5CE4C6178505B5B4D098C564580279750B2335B3B0463C9C78F;UpperCasedChecksum:2A66B1F23B2FCD0B687D7940BF7C9D76DEF75222677E24E27204AEA9EC91AC6B;SizeAsReceived:7529;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [vozPjDOkg8PuoF67WWaFysIZ93inMQwH6ZgYjwT5ZeWrF3VwZMp9qerYn3+9zpMo]
-x-microsoft-original-message-id: <20191209213008.GA15361@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: d131290a-3715-4fa8-9b4a-08d77ceeffce
-x-ms-exchange-slblob-mailprops: zswcL9HXbeWFySZoc/1CdWpwdPrvG2Yo5WgwNUjBSC3T7fpjPwUKNLjf8JIjkrndDHd8EGf4n43avf7Ru08fmrL7rZ++soK8W+mLOHbQGTDXt/WquzShJqoItFutbRnEujb9OL4k5amGoLzHrt4yqx99rjwyo1qie5nftB+aW5cGDcbgrd+UrMXEihyWRBdW41VWSvMxSM/2wKeLCuEQleRFyNxyPI+bPfbWqhg1KYKNqAcyGxACGbp3H5drsMh1h+IJihjZ6Kj/rGs155Mby7ThRL4nmU7iR5JHz3nUNxDnrLeeKfJS0eyOZpuA/804X4me/DYs3Kx19NWMs/Ir/7rsHMjuIAT/LVF55ZS4RCqZzuPCiUojy+JEBe+JX297RKCJF0Q3sDB6Xun4uYNEIFIqRqSCqMGE/tIt2cLCXPOI24Z62hFfHJPJvBYjcAWlGEbZ6WRJygJPk1TNlE56G4cRg5tx5TWlsFk6aIqBN2GQ+iXfbjxXX1AOHEKv5W6+szPHNTWEG7Gexoegcr8NKJn4w2Gdo07AlYdGcAUUBIqZDwinhvFmB9k2DWj4Kig12MGaOSEI9YoKIU0mDCV6/Nayv5ZWDh3Sth+0dwSWL9/iRKynnUtvgcAmQE2IDBqONIRC1huMVHHHg3gRdbXPZqmV1no20hySsLzjb8Wlib9RqJrqmMuvPobK6gf4OH2fee1Jj5UnuKVGw5k8INZdZByutyIfA4XLgvF9IEiJ+0scgcf3x5Q7Y6IFd8L8OgTf
-x-ms-traffictypediagnostic: SG2APC01HT117:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /GsmMdOAOIkj/rbV9nICqhzm7gYpSWGoj+SOn7k+NBp3KQQuH2QN+64WI0xj3LL4ClfrMhewNd8MDbIOpEjlvSO01PbcjwqTeNdHdETkUY+VsObz7+0JcvlNaKjLGXQIZPpSIL2p/TWPwfqG8fWb8lQ7XUIpWZu7XstBRMbTGhxvZd9t3rCaDTqgFTfR14/S
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2B1E51E8909E684EAE869BAD97B743C5@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Dec 2019 16:34:30 -0500
+Received: from mga01.intel.com ([192.55.52.88]:18340 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbfLIVea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:34:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 13:34:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="224929832"
+Received: from tstruk-mobl1.jf.intel.com (HELO [10.7.196.67]) ([10.7.196.67])
+  by orsmga002.jf.intel.com with ESMTP; 09 Dec 2019 13:34:29 -0800
+Subject: Re: [PROBLEM]: WARNING: lock held when returning to user space!
+ (5.4.1 #16 Tainted: G )
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Jeffrin Jose <jeffrin@rajagiritech.edu.in>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca
+References: <20191207173420.GA5280@debian>
+ <20191209103432.GC3306@willie-the-truck>
+ <20191209202552.GK19243@linux.intel.com>
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+Autocrypt: addr=tadeusz.struk@intel.com; keydata=
+ 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
+Message-ID: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
+Date:   Mon, 9 Dec 2019 13:34:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: d131290a-3715-4fa8-9b4a-08d77ceeffce
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 21:30:23.6313
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT117
+In-Reply-To: <20191209202552.GK19243@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pci=nobbn kernel parameter.
+On 12/9/19 12:25 PM, Jarkko Sakkinen wrote:
+> On Mon, Dec 09, 2019 at 10:34:32AM +0000, Will Deacon wrote:
+>> Hi,
+>>
+>> [expanding cc list]
+>>
+>> On Sat, Dec 07, 2019 at 11:04:20PM +0530, Jeffrin Jose wrote:
+>>> i got the following  output related from typical dmesg output from 5.4.1 kernel
+>>
+>> Was this during boot or during some other operation?
+>>
+>>> ================================================
+>>> WARNING: lock held when returning to user space!
+>>> 5.4.1 #16 Tainted: G            E    
+>>> ------------------------------------------------
+>>> tpm2-abrmd/691 is leaving the kernel with locks still held!
+>>> 2 locks held by tpm2-abrmd/691:
+>>>  #0: ffff8881ee784ba8 (&chip->ops_sem){.+.+}, at: tpm_try_get_ops+0x2b/0xc0 [tpm]
+>>>  #1: ffff8881ee784d88 (&chip->tpm_mutex){+.+.}, at: tpm_try_get_ops+0x57/0xc0 [tpm]
+>>
+>> Can you reproduce this failure on v5.5-rc1?
+> 
+> Does this appear after variable amount of time or detemitically always
+> at certain point of time (e.g. when the daemon starts or perhaps always
+> when doing a certain operations with TSS)?
+> 
+> Do we have possibility to get the user code path that gets executed when
+> this happens?
 
-Override the host bridge bus resource to [bus 00-ff] when specified.
+I think that's expected for a non-blocking operation.
+To get rid of the warning it should be changed to something like this:
 
-Update documentation to reflect the above.
+diff --git a/drivers/char/tpm/tpm-dev-common.c
+b/drivers/char/tpm/tpm-dev-common.c
+index 2ec47a69a2a6..47f1c0c5c8de 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -61,6 +61,12 @@ static void tpm_dev_async_work(struct work_struct *work)
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- Documentation/admin-guide/kernel-parameters.txt |  2 ++
- arch/x86/include/asm/pci_x86.h                  |  1 +
- arch/x86/pci/acpi.c                             | 11 +++++++++++
- arch/x86/pci/common.c                           |  3 +++
- 4 files changed, 17 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index cfe8c2b67..0333d9d63 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3432,6 +3432,8 @@
- 				please report a bug.
- 		nocrs		[X86] Ignore PCI host bridge windows from ACPI.
- 				If you need to use this, please report a bug.
-+		nobbn		[X86] Ignore PCI BIOS Bus Number from ACPI.
-+				If you need to use this, please report a bug.
- 		routeirq	Do IRQ routing for all PCI devices.
- 				This is normally done in pci_enable_device(),
- 				so this option is a temporary workaround
-diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-index 73bb404f4..179cdd5d1 100644
---- a/arch/x86/include/asm/pci_x86.h
-+++ b/arch/x86/include/asm/pci_x86.h
-@@ -39,6 +39,7 @@ do {						\
- #define PCI_ROOT_NO_CRS		0x100000
- #define PCI_NOASSIGN_BARS	0x200000
- #define PCI_BIG_ROOT_WINDOW	0x400000
-+#define PCI_ROOT_NO_BBN		0x800000
- 
- extern unsigned int pci_probe;
- extern unsigned long pirq_table_addr;
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 948656069..fc54a1f3c 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -20,6 +20,7 @@ struct pci_root_info {
- };
- 
- static bool pci_use_crs = true;
-+static bool pci_use_bbn = true;
- static bool pci_ignore_seg = false;
- 
- static int __init set_use_crs(const struct dmi_system_id *id)
-@@ -156,6 +157,8 @@ void __init pci_acpi_crs_quirks(void)
- 	else if (pci_probe & PCI_USE__CRS)
- 		pci_use_crs = true;
- 
-+	pci_use_bbn = !(pci_probe & PCI_ROOT_NO_BBN);
-+
- 	printk(KERN_INFO "PCI: %s host bridge windows from ACPI; "
- 	       "if necessary, use \"pci=%s\" and report a bug\n",
- 	       pci_use_crs ? "Using" : "Ignoring",
-@@ -298,6 +301,14 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
- 	struct resource_entry *entry, *tmp;
- 	int status;
- 
-+	if (!pci_use_bbn){
-+		dev_printk(KERN_DEBUG, &device->dev,
-+			   "host bridge window %pR (ignored)\n",
-+			   &ci->root->secondary);
-+		ci->root->secondary.start = 0x00;
-+		ci->root->secondary.end = 0xff;
+ 	mutex_lock(&priv->buffer_mutex);
+ 	priv->command_enqueued = false;
++	ret = tpm_try_get_ops(priv->chip);
++	if (ret) {
++		priv->response_length = ret;
++		goto out;
 +	}
 +
- 	status = acpi_pci_probe_root_resources(ci);
- 	if (pci_use_crs) {
- 		resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 9acab6ac2..9183a999f 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -594,6 +594,9 @@ char *__init pcibios_setup(char *str)
- 	} else if (!strcmp(str, "nocrs")) {
- 		pci_probe |= PCI_ROOT_NO_CRS;
- 		return NULL;
-+	} else if (!strcmp(str, "nobbn")) {
-+		pci_probe |= PCI_ROOT_NO_BBN;
-+		return NULL;
- #ifdef CONFIG_PHYS_ADDR_T_64BIT
- 	} else if (!strcmp(str, "big_root_window")) {
- 		pci_probe |= PCI_BIG_ROOT_WINDOW;
--- 
-2.24.0
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
+@@ -68,6 +74,7 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 		priv->response_length = ret;
+ 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
+ 	}
++out:
+ 	mutex_unlock(&priv->buffer_mutex);
+ 	wake_up_interruptible(&priv->async_wait);
+ }
+@@ -205,6 +212,7 @@ ssize_t tpm_common_write(struct file *file, const
+char __user *buf,
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
+ 		mutex_unlock(&priv->buffer_mutex);
++		tpm_put_ops(priv->chip);
+ 		return size;
+ 	}
 
+
+
+-- 
+Tadeusz
