@@ -2,180 +2,144 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B6EC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC87C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35024207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gGCrjof4"
+	by mail.kernel.org (Postfix) with ESMTP id 18611207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfLILIj (ORCPT
+        id S1727642AbfLILIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:08:39 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48203 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727599AbfLILIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:08:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47WgRQ3lb0z9sPc;
-        Mon,  9 Dec 2019 22:08:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1575889716;
-        bh=rYe8qrzC5Yad6k0eMTD1iKIi3I9u3ShpcDApHGCih3Q=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=gGCrjof44OinljG4Usq9loRpcZytu5Q1MmX9DfuOjt5J0oZKbDHKViLkY1olhW6TL
-         pn3HGcv7TtoOBTs89AAkcK3LZjCcC3pXDiGZYqa3idH9EFVf0ZMTzTbQy2ifdjUnXs
-         WWvGJ0hDpCBUzNv0pFFMRi6eJNsdTc4VS8zXAeqBueA217DSpk+dnzLbU3IurJsDim
-         NmWi5VTrIrL4NS5d96cHb6EX8oD4F2+FEVHCHxaM4N6GC2ZDLMm5fPTxG5YYbCsM4W
-         l+4EgpGiwjPYyVN9avCdVDu8fRbCUD5NAiTisSShqziayscWKNDKBtEW1ypOAZP5x8
-         1kdoBUkZl7b3w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Steven Price <steven.price@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang\, Kan" <kan.liang@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, kvm-ppc@vger.kernel.org
-Subject: Re: [PATCH v16 06/25] powerpc: mm: Add p?d_leaf() definitions
-In-Reply-To: <20191206135316.47703-7-steven.price@arm.com>
-References: <20191206135316.47703-1-steven.price@arm.com> <20191206135316.47703-7-steven.price@arm.com>
-Date:   Mon, 09 Dec 2019 22:08:32 +1100
-Message-ID: <875ziprc27.fsf@mpe.ellerman.id.au>
+        Mon, 9 Dec 2019 06:08:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45622 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727599AbfLILIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:08:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F531AEEC;
+        Mon,  9 Dec 2019 11:08:50 +0000 (UTC)
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>, Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <7fc610be-df56-c5ae-33fb-53b471aa76d1@suse.com>
+ <94aead35-1541-6c1a-d172-70dc613410c2@redhat.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <1089517e-4454-be5e-1320-7f246c4efefe@suse.com>
+Date:   Mon, 9 Dec 2019 12:08:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <94aead35-1541-6c1a-d172-70dc613410c2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Price <steven.price@arm.com> writes:
-> walk_page_range() is going to be allowed to walk page tables other than
-> those of user space. For this it needs to know when it has reached a
-> 'leaf' entry in the page tables. This information is provided by the
-> p?d_leaf() functions/macros.
->
-> For powerpc pmd_large() already exists and does what we want, so hoist
-> it out of the CONFIG_TRANSPARENT_HUGEPAGE condition and implement the
-> other levels. Macros are used to provide the generic p?d_leaf() names.
->
-> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> CC: Paul Mackerras <paulus@samba.org>
-> CC: Michael Ellerman <mpe@ellerman.id.au>
-> CC: linuxppc-dev@lists.ozlabs.org
-> CC: kvm-ppc@vger.kernel.org
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 30 ++++++++++++++------
->  1 file changed, 21 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index b01624e5c467..3dd7b6f5edd0 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -923,6 +923,12 @@ static inline int pud_present(pud_t pud)
->  	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PRESENT));
->  }
->  
-> +#define pud_leaf	pud_large
-> +static inline int pud_large(pud_t pud)
-> +{
-> +	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-> +}
+On 09.12.19 12:01, David Hildenbrand wrote:
+> On 09.12.19 11:24, Jürgen Groß wrote:
+>> On 09.12.19 11:07, Michal Hocko wrote:
+>>> On Fri 06-12-19 23:05:24, Baoquan He wrote:
+>>>> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+>>>> parameter") a global varialbe global max_mem_size is added to store
+>>>> the value which is parsed from 'mem= '. This truly stops those
+>>>> DIMM from being added into system memory during boot.
+>>>>
+>>>> However, it also limits the later memory hotplug functionality. Any
+>>>> memory board can't be hot added any more if its region is beyond the
+>>>> max_mem_size. System will print error like below:
+>>>>
+>>>> [  216.387164] acpi PNP0C80:02: add_memory failed
+>>>> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+>>>> [  216.392187] acpi PNP0C80:02: Enumeration failure
+>>>>
+>>>> >From document of 'mem =' parameter, it should be a restriction during
+>>>> boot, but not impact the system memory adding/removing after booting.
+>>>>
+>>>>     mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
+>>>>
+>>>> So fix it by also checking if it's during SYSTEM_BOOTING stage when
+>>>> restrict memory adding. Otherwise, skip the restriction.
+>>>
+>>> Could you be more specific about why the boot vs. later hotplug makes
+>>> any difference? The documentation is explicit about the boot time but
+>>> considering this seems to be like that since ever I strongly suspect
+>>> that this is just an omission.
+>>>
+>>> Btw. how have you tested the situation fixed by 357b4da50a62?
+>>
+>> I guess he hasn't.
+>>
+>> The backtrace of the problem at that time was:
+>>
+>> [ 8321.876844]  [<ffffffff81019ab9>] dump_trace+0x59/0x340
+>> [ 8321.882683]  [<ffffffff81019e8a>] show_stack_log_lvl+0xea/0x170
+>> [ 8321.889298]  [<ffffffff8101ac31>] show_stack+0x21/0x40
+>> [ 8321.895043]  [<ffffffff81319530>] dump_stack+0x5c/0x7c
+>> [ 8321.900779]  [<ffffffff8107fbf1>] warn_slowpath_common+0x81/0xb0
+>> [ 8321.907482]  [<ffffffff81009f54>] xen_alloc_pte+0x1d4/0x390
+>> [ 8321.913718]  [<ffffffff81064950>]
+>> pmd_populate_kernel.constprop.6+0x40/0x80
+>> [ 8321.921498]  [<ffffffff815ef0a8>] phys_pmd_init+0x210/0x255
+>> [ 8321.927724]  [<ffffffff815ef2c7>] phys_pud_init+0x1da/0x247
+>> [ 8321.933951]  [<ffffffff815efb81>] kernel_physical_mapping_init+0xf5/0x1d4
+>> [ 8321.941533]  [<ffffffff815ebc7d>] init_memory_mapping+0x18d/0x380
+>> [ 8321.948341]  [<ffffffff810647f9>] arch_add_memory+0x59/0xf0
+>> [ 8321.954570]  [<ffffffff815eceed>] add_memory_resource+0x8d/0x160
+>> [ 8321.961283]  [<ffffffff815ecff2>] add_memory+0x32/0xf0
+>> [ 8321.967025]  [<ffffffff813e1c91>] acpi_memory_device_add+0x131/0x2e0
+>> [ 8321.974128]  [<ffffffff8139f752>] acpi_bus_attach+0xe2/0x190
+>> [ 8321.980453]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+>> [ 8321.986778]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+>> [ 8321.993103]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
+>> [ 8321.999428]  [<ffffffff813a1157>] acpi_bus_scan+0x37/0x70
+>> [ 8322.005461]  [<ffffffff81fba955>] acpi_scan_init+0x77/0x1b4
+>> [ 8322.011690]  [<ffffffff81fba70c>] acpi_init+0x297/0x2b3
+>> [ 8322.017530]  [<ffffffff8100213a>] do_one_initcall+0xca/0x1f0
+>> [ 8322.023855]  [<ffffffff81f74266>] kernel_init_freeable+0x194/0x226
+>> [ 8322.030760]  [<ffffffff815eb1ba>] kernel_init+0xa/0xe0
+>> [ 8322.036503]  [<ffffffff815f7bc5>] ret_from_fork+0x55/0x80
+>>
+>> So this patch would break it again.
+>>
+>> I'd recommend ...
+>>
+>>>
+>>>> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem= parameter")
+>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+>>>> ---
+>>>>    mm/memory_hotplug.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>>>> index 55ac23ef11c1..5466a0a00901 100644
+>>>> --- a/mm/memory_hotplug.c
+>>>> +++ b/mm/memory_hotplug.c
+>>>> @@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
+>>>>    	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>>>>    	char *resource_name = "System RAM";
+>>>>    
+>>>> -	if (start + size > max_mem_size)
+>>>> +	if (start + size > max_mem_size && system_state == SYSTEM_BOOTING)
+>>
+>> ... changing this to: ... && system_state != SYSTEM_RUNNING
+> 
+> I think we usually use system_state < SYSTEM_RUNNING
+> 
 
-We already have:
-
-#define pud_is_leaf pud_is_leaf
-static inline bool pud_is_leaf(pud_t pud)
-{
-	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-}
-
-And so on.
-
-These went in relatively recently in:
-
-  d6eacedd1f0e ("powerpc/book3s: Use config independent helpers for page table walk")
+Works for me as well. :-)
 
 
-Assuming those all work for you, maybe your patch in this series should
-just do:
-
-#define pud_leaf pud_is_leaf
-
-And so on. And then we can do a patch later to change the arch/powerpc
-code to use pud_leaf() etc. directly and drop the "is" versions.
-
-cheers
-
-
-> @@ -966,6 +972,12 @@ static inline int pgd_present(pgd_t pgd)
->  	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PRESENT));
->  }
->  
-> +#define pgd_leaf	pgd_large
-> +static inline int pgd_large(pgd_t pgd)
-> +{
-> +	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
-> +}
-> +
->  static inline pte_t pgd_pte(pgd_t pgd)
->  {
->  	return __pte_raw(pgd_raw(pgd));
-> @@ -1133,6 +1145,15 @@ static inline bool pmd_access_permitted(pmd_t pmd, bool write)
->  	return pte_access_permitted(pmd_pte(pmd), write);
->  }
->  
-> +#define pmd_leaf	pmd_large
-> +/*
-> + * returns true for pmd migration entries, THP, devmap, hugetlb
-> + */
-> +static inline int pmd_large(pmd_t pmd)
-> +{
-> +	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> +}
-> +
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  extern pmd_t pfn_pmd(unsigned long pfn, pgprot_t pgprot);
->  extern pmd_t mk_pmd(struct page *page, pgprot_t pgprot);
-> @@ -1159,15 +1180,6 @@ pmd_hugepage_update(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp,
->  	return hash__pmd_hugepage_update(mm, addr, pmdp, clr, set);
->  }
->  
-> -/*
-> - * returns true for pmd migration entries, THP, devmap, hugetlb
-> - * But compile time dependent on THP config
-> - */
-> -static inline int pmd_large(pmd_t pmd)
-> -{
-> -	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> -}
-> -
->  static inline pmd_t pmd_mknotpresent(pmd_t pmd)
->  {
->  	return __pmd(pmd_val(pmd) & ~_PAGE_PRESENT);
-> -- 
-> 2.20.1
+Juergen
