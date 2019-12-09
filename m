@@ -2,53 +2,52 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FDAC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F59C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B212077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82492077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfLIPaA (ORCPT
+        id S1726335AbfLIPaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:30:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16926 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726491AbfLIP37 (ORCPT
+        Mon, 9 Dec 2019 10:30:04 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31850 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726665AbfLIPaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:29:59 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9FSHjn110206
+        Mon, 9 Dec 2019 10:30:00 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9FSJa6085474
         for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 10:29:58 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsnfdjv8y-1
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsm2cwj6f-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:29:57 -0500
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:29:56 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <zaslonko@linux.ibm.com>;
-        Mon, 9 Dec 2019 15:29:55 -0000
+        Mon, 9 Dec 2019 15:29:54 -0000
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Dec 2019 15:29:52 -0000
+        Mon, 9 Dec 2019 15:29:51 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9FToXJ44761296
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9FTo2x61472948
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 9 Dec 2019 15:29:50 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3F56A4057;
-        Mon,  9 Dec 2019 15:29:50 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EE5F7A4040;
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67AD7A404D;
-        Mon,  9 Dec 2019 15:29:50 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 88C11A404D;
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Dec 2019 15:29:50 +0000 (GMT)
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
 From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
@@ -60,465 +59,1104 @@ Cc:     Richard Purdie <rpurdie@rpsys.net>,
         Eduard Shishkin <edward6@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         zaslonko@linux.ibm.com
-Subject: [PATCH v2 3/6] lib/zlib: Add s390 hardware support for kernel zlib_inflate
-Date:   Mon,  9 Dec 2019 16:29:45 +0100
+Subject: [PATCH v2 1/6] lib/zlib: Add s390 hardware support for kernel zlib_deflate
+Date:   Mon,  9 Dec 2019 16:29:43 +0100
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209152948.37080-1-zaslonko@linux.ibm.com>
 References: <20191209152948.37080-1-zaslonko@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19120915-0012-0000-0000-000003732FFB
+x-cbid: 19120915-0020-0000-0000-00000395E617
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120915-0013-0000-0000-000021AEFF22
-Message-Id: <20191209152948.37080-4-zaslonko@linux.ibm.com>
+x-cbparentid: 19120915-0021-0000-0000-000021ED225C
+Message-Id: <20191209152948.37080-2-zaslonko@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
- phishscore=0 malwarescore=0 impostorscore=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ clxscore=1015 bulkscore=0 mlxscore=0 impostorscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1912090135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add decompression functions to zlib_dfltcc library.
-Update zlib_inflate functions with the hooks for s390 hardware support
+Create zlib_dfltcc library with the s390 DEFLATE CONVERSION CALL
+implementation and related compression functions.
+Update zlib_deflate functions with the hooks for s390 hardware support
 and adjust workspace structures with extra parameter lists required
-for hardware inflate decompression.
+for hardware deflate.
 
 Co-developed-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 ---
- lib/Kconfig                      |   8 ++
- lib/decompress_inflate.c         |  13 +++
- lib/zlib_dfltcc/Makefile         |   2 +-
- lib/zlib_dfltcc/dfltcc.h         |  28 ++++++
- lib/zlib_dfltcc/dfltcc_inflate.c | 143 +++++++++++++++++++++++++++++++
- lib/zlib_inflate/inflate.c       |  32 +++++--
- lib/zlib_inflate/inflate.h       |   8 ++
- lib/zlib_inflate/infutil.h       |  18 +++-
- 8 files changed, 241 insertions(+), 11 deletions(-)
- create mode 100644 lib/zlib_dfltcc/dfltcc_inflate.c
+ lib/Kconfig                      |  14 ++
+ lib/Makefile                     |   1 +
+ lib/zlib_deflate/deflate.c       |  79 ++++-----
+ lib/zlib_deflate/deftree.c       |  54 ------
+ lib/zlib_deflate/defutil.h       | 134 +++++++++++++--
+ lib/zlib_dfltcc/Makefile         |  11 ++
+ lib/zlib_dfltcc/dfltcc.c         |  52 ++++++
+ lib/zlib_dfltcc/dfltcc.h         | 115 +++++++++++++
+ lib/zlib_dfltcc/dfltcc_deflate.c | 274 +++++++++++++++++++++++++++++++
+ lib/zlib_dfltcc/dfltcc_syms.c    |  17 ++
+ lib/zlib_dfltcc/dfltcc_util.h    | 119 ++++++++++++++
+ 11 files changed, 768 insertions(+), 102 deletions(-)
+ create mode 100644 lib/zlib_dfltcc/Makefile
+ create mode 100644 lib/zlib_dfltcc/dfltcc.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc.h
+ create mode 100644 lib/zlib_dfltcc/dfltcc_deflate.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc_syms.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc_util.h
 
 diff --git a/lib/Kconfig b/lib/Kconfig
-index 7ccaa54006c3..a29264d6e98d 100644
+index 3321d04dfa5a..7ccaa54006c3 100644
 --- a/lib/Kconfig
 +++ b/lib/Kconfig
-@@ -292,6 +292,14 @@ config ZLIB_DFLTCC_DEFLATE
- 	help
- 	 Enable s390x hardware support for zlib deflate in the kernel.
+@@ -278,6 +278,20 @@ config ZLIB_DEFLATE
+ 	tristate
+ 	select BITREVERSE
  
-+config ZLIB_DFLTCC_INFLATE
++config ZLIB_DFLTCC
 +	def_bool y
-+	depends on ZLIB_DFLTCC && ZLIB_INFLATE
-+	prompt "Enable s390x hardware support for zlib inflate functions"
++	depends on S390
++	prompt "Enable s390x DEFLATE CONVERSION CALL support for zlib"
 +	help
-+	 Enable s390x hardware support for zlib inflate in the kernel.
++	 Enable s390x hardware support for zlib in the kernel.
 +
++config ZLIB_DFLTCC_DEFLATE
++	def_bool y
++	depends on ZLIB_DFLTCC && ZLIB_DEFLATE
++	prompt "Enable s390x hardware support for zlib deflate functions"
++	help
++	 Enable s390x hardware support for zlib deflate in the kernel.
 +
  config LZO_COMPRESS
  	tristate
  
-diff --git a/lib/decompress_inflate.c b/lib/decompress_inflate.c
-index 63b4b7eee138..523651e23c06 100644
---- a/lib/decompress_inflate.c
-+++ b/lib/decompress_inflate.c
-@@ -10,6 +10,10 @@
- #include "zlib_inflate/inftrees.c"
- #include "zlib_inflate/inffast.c"
- #include "zlib_inflate/inflate.c"
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+#include "zlib_dfltcc/dfltcc.c"
-+#include "zlib_dfltcc/dfltcc_inflate.c"
-+#endif
+diff --git a/lib/Makefile b/lib/Makefile
+index c5892807e06f..97aba321bb36 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -139,6 +139,7 @@ obj-$(CONFIG_842_COMPRESS) += 842/
+ obj-$(CONFIG_842_DECOMPRESS) += 842/
+ obj-$(CONFIG_ZLIB_INFLATE) += zlib_inflate/
+ obj-$(CONFIG_ZLIB_DEFLATE) += zlib_deflate/
++obj-$(CONFIG_ZLIB_DFLTCC) += zlib_dfltcc/
+ obj-$(CONFIG_REED_SOLOMON) += reed_solomon/
+ obj-$(CONFIG_BCH) += bch.o
+ obj-$(CONFIG_LZO_COMPRESS) += lzo/
+diff --git a/lib/zlib_deflate/deflate.c b/lib/zlib_deflate/deflate.c
+index d20ef458f137..9595b32b944a 100644
+--- a/lib/zlib_deflate/deflate.c
++++ b/lib/zlib_deflate/deflate.c
+@@ -52,16 +52,18 @@
+ #include <linux/zutil.h>
+ #include "defutil.h"
  
- #else /* STATIC */
- /* initramfs et al: linked */
-@@ -76,7 +80,12 @@ STATIC int INIT __gunzip(unsigned char *buf, long len,
- 	}
- 
- 	strm->workspace = malloc(flush ? zlib_inflate_workspacesize() :
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+	/* Always allocate the full workspace for DFLTCC */
-+				 zlib_inflate_workspacesize());
++/* architecture-specific bits */
++#ifdef CONFIG_ZLIB_DFLTCC_DEFLATE
++#  include "../zlib_dfltcc/dfltcc.h"
 +#else
- 				 sizeof(struct inflate_state));
++#define DEFLATE_RESET_HOOK(strm) do {} while (0)
++#define DEFLATE_HOOK(strm, flush, bstate) 0
++#define DEFLATE_NEED_CHECKSUM(strm) 1
 +#endif
- 	if (strm->workspace == NULL) {
- 		error("Out of memory while allocating workspace");
- 		goto gunzip_nomem4;
-@@ -123,10 +132,14 @@ STATIC int INIT __gunzip(unsigned char *buf, long len,
  
- 	rc = zlib_inflateInit2(strm, -MAX_WBITS);
+ /* ===========================================================================
+  *  Function prototypes.
+  */
+-typedef enum {
+-    need_more,      /* block not completed, need more input or more output */
+-    block_done,     /* block flush performed */
+-    finish_started, /* finish started, need only more output at next deflate */
+-    finish_done     /* finish done, accept no more input or output */
+-} block_state;
  
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+	/* Always keep the window for DFLTCC */
+ typedef block_state (*compress_func) (deflate_state *s, int flush);
+ /* Compression function. Returns the block state after the call. */
+@@ -72,7 +74,6 @@ static block_state deflate_fast   (deflate_state *s, int flush);
+ static block_state deflate_slow   (deflate_state *s, int flush);
+ static void lm_init        (deflate_state *s);
+ static void putShortMSB    (deflate_state *s, uInt b);
+-static void flush_pending  (z_streamp strm);
+ static int read_buf        (z_streamp strm, Byte *buf, unsigned size);
+ static uInt longest_match  (deflate_state *s, IPos cur_match);
+ 
+@@ -98,6 +99,25 @@ static  void check_match (deflate_state *s, IPos start, IPos match,
+  * See deflate.c for comments about the MIN_MATCH+1.
+  */
+ 
++/* Workspace to be allocated for deflate processing */
++typedef struct deflate_workspace {
++    /* State memory for the deflator */
++    deflate_state deflate_memory;
++#ifdef CONFIG_ZLIB_DFLTCC_DEFLATE
++    /* State memory for s390 hardware deflate */
++    struct dfltcc_state dfltcc_memory;
++#endif
++    Byte *window_memory;
++    Pos *prev_memory;
++    Pos *head_memory;
++    char *overlay_memory;
++} deflate_workspace;
++
++#ifdef CONFIG_ZLIB_DFLTCC_DEFLATE
++/* dfltcc_state must be doubleword aligned for DFLTCC call */
++static_assert(offsetof(struct deflate_workspace, dfltcc_memory) % 8 == 0);
++#endif
++
+ /* Values for max_lazy_match, good_match and max_chain_length, depending on
+  * the desired pack level (0..9). The values given below have been tuned to
+  * exclude worst case performance for pathological files. Better values may be
+@@ -207,7 +227,15 @@ int zlib_deflateInit2(
+      */
+     next = (char *) mem;
+     next += sizeof(*mem);
++#ifdef CONFIG_ZLIB_DFLTCC_DEFLATE
++    /*
++     *  DFLTCC requires the window to be page aligned.
++     *  Thus, we overallocate and take the aligned portion of the buffer.
++     */
++    mem->window_memory = (Byte *) PTR_ALIGN(next, PAGE_SIZE);
 +#else
- 	if (!flush) {
- 		WS(strm)->inflate_state.wsize = 0;
- 		WS(strm)->inflate_state.window = NULL;
- 	}
+     mem->window_memory = (Byte *) next;
 +#endif
+     next += zlib_deflate_window_memsize(windowBits);
+     mem->prev_memory = (Pos *) next;
+     next += zlib_deflate_prev_memsize(windowBits);
+@@ -277,6 +305,8 @@ int zlib_deflateReset(
+     zlib_tr_init(s);
+     lm_init(s);
  
- 	while (rc == Z_OK) {
- 		if (strm->avail_in == 0) {
-diff --git a/lib/zlib_dfltcc/Makefile b/lib/zlib_dfltcc/Makefile
-index 863d3b37e09d..8e4d5afbbb10 100644
---- a/lib/zlib_dfltcc/Makefile
-+++ b/lib/zlib_dfltcc/Makefile
-@@ -8,4 +8,4 @@
++    DEFLATE_RESET_HOOK(strm);
++
+     return Z_OK;
+ }
  
- obj-$(CONFIG_ZLIB_DFLTCC) += zlib_dfltcc.o
+@@ -294,35 +324,6 @@ static void putShortMSB(
+     put_byte(s, (Byte)(b & 0xff));
+ }   
  
--zlib_dfltcc-objs := dfltcc.o dfltcc_deflate.o dfltcc_syms.o
-+zlib_dfltcc-objs := dfltcc.o dfltcc_deflate.o dfltcc_inflate.o dfltcc_syms.o
-diff --git a/lib/zlib_dfltcc/dfltcc.h b/lib/zlib_dfltcc/dfltcc.h
-index 18fed7a444bc..4782c92bb2ff 100644
---- a/lib/zlib_dfltcc/dfltcc.h
-+++ b/lib/zlib_dfltcc/dfltcc.h
-@@ -104,6 +104,14 @@ int dfltcc_deflate(z_streamp strm,
-                    int flush,
-                    block_state *result);
- void dfltcc_reset(z_streamp strm, uInt size);
-+int dfltcc_can_inflate(z_streamp strm);
+-/* =========================================================================
+- * Flush as much pending output as possible. All deflate() output goes
+- * through this function so some applications may wish to modify it
+- * to avoid allocating a large strm->next_out buffer and copying into it.
+- * (See also read_buf()).
+- */
+-static void flush_pending(
+-	z_streamp strm
+-)
+-{
+-    deflate_state *s = (deflate_state *) strm->state;
+-    unsigned len = s->pending;
+-
+-    if (len > strm->avail_out) len = strm->avail_out;
+-    if (len == 0) return;
+-
+-    if (strm->next_out != NULL) {
+-	memcpy(strm->next_out, s->pending_out, len);
+-	strm->next_out += len;
+-    }
+-    s->pending_out += len;
+-    strm->total_out += len;
+-    strm->avail_out  -= len;
+-    s->pending -= len;
+-    if (s->pending == 0) {
+-        s->pending_out = s->pending_buf;
+-    }
+-}
+-
+ /* ========================================================================= */
+ int zlib_deflate(
+ 	z_streamp strm,
+@@ -404,7 +405,8 @@ int zlib_deflate(
+         (flush != Z_NO_FLUSH && s->status != FINISH_STATE)) {
+         block_state bstate;
+ 
+-	bstate = (*(configuration_table[s->level].func))(s, flush);
++	bstate = DEFLATE_HOOK(strm, flush, &bstate) ? bstate :
++		 (*(configuration_table[s->level].func))(s, flush);
+ 
+         if (bstate == finish_started || bstate == finish_done) {
+             s->status = FINISH_STATE;
+@@ -503,7 +505,8 @@ static int read_buf(
+ 
+     strm->avail_in  -= len;
+ 
+-    if (!((deflate_state *)(strm->state))->noheader) {
++    if (!DEFLATE_NEED_CHECKSUM(strm)) {}
++    else if (!((deflate_state *)(strm->state))->noheader) {
+         strm->adler = zlib_adler32(strm->adler, strm->next_in, len);
+     }
+     memcpy(buf, strm->next_in, len);
+diff --git a/lib/zlib_deflate/deftree.c b/lib/zlib_deflate/deftree.c
+index 9b1756b12743..a4a34da512fe 100644
+--- a/lib/zlib_deflate/deftree.c
++++ b/lib/zlib_deflate/deftree.c
+@@ -76,11 +76,6 @@ static const uch bl_order[BL_CODES]
+  * probability, to avoid transmitting the lengths for unused bit length codes.
+  */
+ 
+-#define Buf_size (8 * 2*sizeof(char))
+-/* Number of bits used within bi_buf. (bi_buf might be implemented on
+- * more than 16 bits on some systems.)
+- */
+-
+ /* ===========================================================================
+  * Local data. These are initialized only once.
+  */
+@@ -147,7 +142,6 @@ static void send_all_trees (deflate_state *s, int lcodes, int dcodes,
+ static void compress_block (deflate_state *s, ct_data *ltree,
+                            ct_data *dtree);
+ static void set_data_type  (deflate_state *s);
+-static void bi_windup      (deflate_state *s);
+ static void bi_flush       (deflate_state *s);
+ static void copy_block     (deflate_state *s, char *buf, unsigned len,
+                            int header);
+@@ -169,54 +163,6 @@ static void copy_block     (deflate_state *s, char *buf, unsigned len,
+  * used.
+  */
+ 
+-/* ===========================================================================
+- * Send a value on a given number of bits.
+- * IN assertion: length <= 16 and value fits in length bits.
+- */
+-#ifdef DEBUG_ZLIB
+-static void send_bits      (deflate_state *s, int value, int length);
+-
+-static void send_bits(
+-	deflate_state *s,
+-	int value,  /* value to send */
+-	int length  /* number of bits */
+-)
+-{
+-    Tracevv((stderr," l %2d v %4x ", length, value));
+-    Assert(length > 0 && length <= 15, "invalid length");
+-    s->bits_sent += (ulg)length;
+-
+-    /* If not enough room in bi_buf, use (valid) bits from bi_buf and
+-     * (16 - bi_valid) bits from value, leaving (width - (16-bi_valid))
+-     * unused bits in value.
+-     */
+-    if (s->bi_valid > (int)Buf_size - length) {
+-        s->bi_buf |= (value << s->bi_valid);
+-        put_short(s, s->bi_buf);
+-        s->bi_buf = (ush)value >> (Buf_size - s->bi_valid);
+-        s->bi_valid += length - Buf_size;
+-    } else {
+-        s->bi_buf |= value << s->bi_valid;
+-        s->bi_valid += length;
+-    }
+-}
+-#else /* !DEBUG_ZLIB */
+-
+-#define send_bits(s, value, length) \
+-{ int len = length;\
+-  if (s->bi_valid > (int)Buf_size - len) {\
+-    int val = value;\
+-    s->bi_buf |= (val << s->bi_valid);\
+-    put_short(s, s->bi_buf);\
+-    s->bi_buf = (ush)val >> (Buf_size - s->bi_valid);\
+-    s->bi_valid += len - Buf_size;\
+-  } else {\
+-    s->bi_buf |= (value) << s->bi_valid;\
+-    s->bi_valid += len;\
+-  }\
+-}
+-#endif /* DEBUG_ZLIB */
+-
+ /* ===========================================================================
+  * Initialize the various 'constant' tables. In a multi-threaded environment,
+  * this function may be called by two threads concurrently, but this is
+diff --git a/lib/zlib_deflate/defutil.h b/lib/zlib_deflate/defutil.h
+index a8c370897c9f..abf50099dfb0 100644
+--- a/lib/zlib_deflate/defutil.h
++++ b/lib/zlib_deflate/defutil.h
+@@ -1,5 +1,7 @@
++#ifndef DEFUTIL_H
++#define DEFUTIL_H
+ 
+-
++#include <linux/zutil.h>
+ 
+ #define Assert(err, str) 
+ #define Trace(dummy) 
+@@ -238,17 +240,13 @@ typedef struct deflate_state {
+ 
+ } deflate_state;
+ 
+-typedef struct deflate_workspace {
+-    /* State memory for the deflator */
+-    deflate_state deflate_memory;
+-    Byte *window_memory;
+-    Pos *prev_memory;
+-    Pos *head_memory;
+-    char *overlay_memory;
+-} deflate_workspace;
+-
++#ifdef CONFIG_ZLIB_DFLTCC_DEFLATE
++#define zlib_deflate_window_memsize(windowBits) \
++	(2 * (1 << (windowBits)) * sizeof(Byte) + PAGE_SIZE)
++#else
+ #define zlib_deflate_window_memsize(windowBits) \
+ 	(2 * (1 << (windowBits)) * sizeof(Byte))
++#endif
+ #define zlib_deflate_prev_memsize(windowBits) \
+ 	((1 << (windowBits)) * sizeof(Pos))
+ #define zlib_deflate_head_memsize(memLevel) \
+@@ -292,6 +290,24 @@ void zlib_tr_stored_type_only (deflate_state *);
+     put_byte(s, (uch)((ush)(w) >> 8)); \
+ }
+ 
++/* ===========================================================================
++ * Reverse the first len bits of a code, using straightforward code (a faster
++ * method would use a table)
++ * IN assertion: 1 <= len <= 15
++ */
++static inline unsigned  bi_reverse(
++    unsigned code, /* the value to invert */
++    int len        /* its bit length */
++)
++{
++    register unsigned res = 0;
++    do {
++        res |= code & 1;
++        code >>= 1, res <<= 1;
++    } while (--len > 0);
++    return res >> 1;
++}
++
+ /* ===========================================================================
+  * Flush the bit buffer, keeping at most 7 bits in it.
+  */
+@@ -325,3 +341,101 @@ static inline void bi_windup(deflate_state *s)
+ #endif
+ }
+ 
 +typedef enum {
-+    DFLTCC_INFLATE_CONTINUE,
-+    DFLTCC_INFLATE_BREAK,
-+    DFLTCC_INFLATE_SOFTWARE,
-+} dfltcc_inflate_action;
-+dfltcc_inflate_action dfltcc_inflate(z_streamp strm,
-+                                     int flush, int *ret);
- 
- #define DEFLATE_RESET_HOOK(strm) \
-     dfltcc_reset((strm), sizeof(deflate_state))
-@@ -112,4 +120,24 @@ void dfltcc_reset(z_streamp strm, uInt size);
- 
- #define DEFLATE_NEED_CHECKSUM(strm) (!dfltcc_can_deflate((strm)))
- 
-+#define INFLATE_RESET_HOOK(strm) \
-+    dfltcc_reset((strm), sizeof(struct inflate_state))
++    need_more,      /* block not completed, need more input or more output */
++    block_done,     /* block flush performed */
++    finish_started, /* finish started, need only more output at next deflate */
++    finish_done     /* finish done, accept no more input or output */
++} block_state;
 +
-+#define INFLATE_TYPEDO_HOOK(strm, flush) \
-+    if (dfltcc_can_inflate((strm))) { \
-+        dfltcc_inflate_action action; \
-+\
-+        RESTORE(); \
-+        action = dfltcc_inflate((strm), (flush), &ret); \
-+        LOAD(); \
-+        if (action == DFLTCC_INFLATE_CONTINUE) \
-+            break; \
-+        else if (action == DFLTCC_INFLATE_BREAK) \
-+            goto inf_leave; \
++#define Buf_size (8 * 2*sizeof(char))
++/* Number of bits used within bi_buf. (bi_buf might be implemented on
++ * more than 16 bits on some systems.)
++ */
++
++/* ===========================================================================
++ * Send a value on a given number of bits.
++ * IN assertion: length <= 16 and value fits in length bits.
++ */
++#ifdef DEBUG_ZLIB
++static void send_bits      (deflate_state *s, int value, int length);
++
++static void send_bits(
++    deflate_state *s,
++    int value,  /* value to send */
++    int length  /* number of bits */
++)
++{
++    Tracevv((stderr," l %2d v %4x ", length, value));
++    Assert(length > 0 && length <= 15, "invalid length");
++    s->bits_sent += (ulg)length;
++
++    /* If not enough room in bi_buf, use (valid) bits from bi_buf and
++     * (16 - bi_valid) bits from value, leaving (width - (16-bi_valid))
++     * unused bits in value.
++     */
++    if (s->bi_valid > (int)Buf_size - length) {
++        s->bi_buf |= (value << s->bi_valid);
++        put_short(s, s->bi_buf);
++        s->bi_buf = (ush)value >> (Buf_size - s->bi_valid);
++        s->bi_valid += length - Buf_size;
++    } else {
++        s->bi_buf |= value << s->bi_valid;
++        s->bi_valid += length;
 +    }
++}
++#else /* !DEBUG_ZLIB */
 +
-+#define INFLATE_NEED_CHECKSUM(strm) (!dfltcc_can_inflate((strm)))
++#define send_bits(s, value, length) \
++{ int len = length;\
++  if (s->bi_valid > (int)Buf_size - len) {\
++    int val = value;\
++    s->bi_buf |= (val << s->bi_valid);\
++    put_short(s, s->bi_buf);\
++    s->bi_buf = (ush)val >> (Buf_size - s->bi_valid);\
++    s->bi_valid += len - Buf_size;\
++  } else {\
++    s->bi_buf |= (value) << s->bi_valid;\
++    s->bi_valid += len;\
++  }\
++}
++#endif /* DEBUG_ZLIB */
 +
-+#define INFLATE_NEED_UPDATEWINDOW(strm) (!dfltcc_can_inflate((strm)))
++static inline void zlib_tr_send_bits(
++    deflate_state *s,
++    int value,
++    int length
++)
++{
++    send_bits(s, value, length);
++}
 +
- #endif /* DFLTCC_H */
-diff --git a/lib/zlib_dfltcc/dfltcc_inflate.c b/lib/zlib_dfltcc/dfltcc_inflate.c
++/* =========================================================================
++ * Flush as much pending output as possible. All deflate() output goes
++ * through this function so some applications may wish to modify it
++ * to avoid allocating a large strm->next_out buffer and copying into it.
++ * (See also read_buf()).
++ */
++static inline void flush_pending(
++	z_streamp strm
++)
++{
++    deflate_state *s = (deflate_state *) strm->state;
++    unsigned len = s->pending;
++
++    if (len > strm->avail_out) len = strm->avail_out;
++    if (len == 0) return;
++
++    if (strm->next_out != NULL) {
++	memcpy(strm->next_out, s->pending_out, len);
++	strm->next_out += len;
++    }
++    s->pending_out += len;
++    strm->total_out += len;
++    strm->avail_out  -= len;
++    s->pending -= len;
++    if (s->pending == 0) {
++        s->pending_out = s->pending_buf;
++    }
++}
++#endif /* DEFUTIL_H */
+diff --git a/lib/zlib_dfltcc/Makefile b/lib/zlib_dfltcc/Makefile
 new file mode 100644
-index 000000000000..12a93a06bd61
+index 000000000000..863d3b37e09d
 --- /dev/null
-+++ b/lib/zlib_dfltcc/dfltcc_inflate.c
-@@ -0,0 +1,143 @@
++++ b/lib/zlib_dfltcc/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# This is a modified version of zlib, which does all memory
++# allocation ahead of time.
++#
++# This is the code for s390 zlib hardware support.
++#
++
++obj-$(CONFIG_ZLIB_DFLTCC) += zlib_dfltcc.o
++
++zlib_dfltcc-objs := dfltcc.o dfltcc_deflate.o dfltcc_syms.o
+diff --git a/lib/zlib_dfltcc/dfltcc.c b/lib/zlib_dfltcc/dfltcc.c
+new file mode 100644
+index 000000000000..7f77e5bb01c6
+--- /dev/null
++++ b/lib/zlib_dfltcc/dfltcc.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: Zlib
++/* dfltcc.c - SystemZ DEFLATE CONVERSION CALL support. */
++
++#include <linux/zutil.h>
++#include "dfltcc_util.h"
++#include "dfltcc.h"
++
++char *oesc_msg(
++    char *buf,
++    int oesc
++)
++{
++    if (oesc == 0x00)
++        return NULL; /* Successful completion */
++    else {
++#ifdef STATIC
++        return NULL; /* Ignore for pre-boot decompressor */
++#else
++        sprintf(buf, "Operation-Ending-Supplemental Code is 0x%.2X", oesc);
++        return buf;
++#endif
++    }
++}
++
++void dfltcc_reset(
++    z_streamp strm,
++    uInt size
++)
++{
++    struct dfltcc_state *dfltcc_state =
++        (struct dfltcc_state *)((char *)strm->state + size);
++    struct dfltcc_qaf_param *param =
++        (struct dfltcc_qaf_param *)&dfltcc_state->param;
++
++    /* Initialize available functions */
++    if (is_dfltcc_enabled()) {
++        dfltcc(DFLTCC_QAF, param, NULL, NULL, NULL, NULL, NULL);
++        memmove(&dfltcc_state->af, param, sizeof(dfltcc_state->af));
++    } else
++        memset(&dfltcc_state->af, 0, sizeof(dfltcc_state->af));
++
++    /* Initialize parameter block */
++    memset(&dfltcc_state->param, 0, sizeof(dfltcc_state->param));
++    dfltcc_state->param.nt = 1;
++
++    /* Initialize tuning parameters */
++    dfltcc_state->level_mask = DFLTCC_LEVEL_MASK;
++    dfltcc_state->block_size = DFLTCC_BLOCK_SIZE;
++    dfltcc_state->block_threshold = DFLTCC_FIRST_FHT_BLOCK_SIZE;
++    dfltcc_state->dht_threshold = DFLTCC_DHT_MIN_SAMPLE_SIZE;
++    dfltcc_state->param.ribm = DFLTCC_RIBM;
++}
+diff --git a/lib/zlib_dfltcc/dfltcc.h b/lib/zlib_dfltcc/dfltcc.h
+new file mode 100644
+index 000000000000..18fed7a444bc
+--- /dev/null
++++ b/lib/zlib_dfltcc/dfltcc.h
+@@ -0,0 +1,115 @@
++// SPDX-License-Identifier: Zlib
++#ifndef DFLTCC_H
++#define DFLTCC_H
++
++#include "../zlib_deflate/defutil.h"
++
++/*
++ * Tuning parameters.
++ */
++#define DFLTCC_LEVEL_MASK 0x2 /* DFLTCC compression for level 1 only */
++#define DFLTCC_BLOCK_SIZE 1048576
++#define DFLTCC_FIRST_FHT_BLOCK_SIZE 4096
++#define DFLTCC_DHT_MIN_SAMPLE_SIZE 4096
++#define DFLTCC_RIBM 0
++
++/*
++ * Parameter Block for Query Available Functions.
++ */
++struct dfltcc_qaf_param {
++    char fns[16];
++    char reserved1[8];
++    char fmts[2];
++    char reserved2[6];
++};
++
++static_assert(sizeof(struct dfltcc_qaf_param) == 32);
++
++#define DFLTCC_FMT0 0
++
++/*
++ * Parameter Block for Generate Dynamic-Huffman Table, Compress and Expand.
++ */
++struct dfltcc_param_v0 {
++    uint16_t pbvn;                     /* Parameter-Block-Version Number */
++    uint8_t mvn;                       /* Model-Version Number */
++    uint8_t ribm;                      /* Reserved for IBM use */
++    unsigned reserved32 : 31;
++    unsigned cf : 1;                   /* Continuation Flag */
++    uint8_t reserved64[8];
++    unsigned nt : 1;                   /* New Task */
++    unsigned reserved129 : 1;
++    unsigned cvt : 1;                  /* Check Value Type */
++    unsigned reserved131 : 1;
++    unsigned htt : 1;                  /* Huffman-Table Type */
++    unsigned bcf : 1;                  /* Block-Continuation Flag */
++    unsigned bcc : 1;                  /* Block Closing Control */
++    unsigned bhf : 1;                  /* Block Header Final */
++    unsigned reserved136 : 1;
++    unsigned reserved137 : 1;
++    unsigned dhtgc : 1;                /* DHT Generation Control */
++    unsigned reserved139 : 5;
++    unsigned reserved144 : 5;
++    unsigned sbb : 3;                  /* Sub-Byte Boundary */
++    uint8_t oesc;                      /* Operation-Ending-Supplemental Code */
++    unsigned reserved160 : 12;
++    unsigned ifs : 4;                  /* Incomplete-Function Status */
++    uint16_t ifl;                      /* Incomplete-Function Length */
++    uint8_t reserved192[8];
++    uint8_t reserved256[8];
++    uint8_t reserved320[4];
++    uint16_t hl;                       /* History Length */
++    unsigned reserved368 : 1;
++    uint16_t ho : 15;                  /* History Offset */
++    uint32_t cv;                       /* Check Value */
++    unsigned eobs : 15;                /* End-of-block Symbol */
++    unsigned reserved431: 1;
++    uint8_t eobl : 4;                  /* End-of-block Length */
++    unsigned reserved436 : 12;
++    unsigned reserved448 : 4;
++    uint16_t cdhtl : 12;               /* Compressed-Dynamic-Huffman Table
++                                          Length */
++    uint8_t reserved464[6];
++    uint8_t cdht[288];
++    uint8_t reserved[32];
++    uint8_t csb[1152];
++};
++
++static_assert(sizeof(struct dfltcc_param_v0) == 1536);
++
++#define CVT_CRC32 0
++#define CVT_ADLER32 1
++#define HTT_FIXED 0
++#define HTT_DYNAMIC 1
++
++/*
++ *  Extension of inflate_state and deflate_state for DFLTCC.
++ */
++struct dfltcc_state {
++    struct dfltcc_param_v0 param;      /* Parameter block */
++    struct dfltcc_qaf_param af;        /* Available functions */
++    uLong level_mask;                  /* Levels on which to use DFLTCC */
++    uLong block_size;                  /* New block each X bytes */
++    uLong block_threshold;             /* New block after total_in > X */
++    uLong dht_threshold;               /* New block only if avail_in >= X */
++    char msg[64];                      /* Buffer for strm->msg */
++};
++
++/* Resides right after inflate_state or deflate_state */
++#define GET_DFLTCC_STATE(state) ((struct dfltcc_state *)((state) + 1))
++
++/* External functions */
++int dfltcc_can_deflate(z_streamp strm);
++int dfltcc_deflate(z_streamp strm,
++                   int flush,
++                   block_state *result);
++void dfltcc_reset(z_streamp strm, uInt size);
++
++#define DEFLATE_RESET_HOOK(strm) \
++    dfltcc_reset((strm), sizeof(deflate_state))
++
++#define DEFLATE_HOOK dfltcc_deflate
++
++#define DEFLATE_NEED_CHECKSUM(strm) (!dfltcc_can_deflate((strm)))
++
++#endif /* DFLTCC_H */
+diff --git a/lib/zlib_dfltcc/dfltcc_deflate.c b/lib/zlib_dfltcc/dfltcc_deflate.c
+new file mode 100644
+index 000000000000..b9d16917c30a
+--- /dev/null
++++ b/lib/zlib_dfltcc/dfltcc_deflate.c
+@@ -0,0 +1,274 @@
 +// SPDX-License-Identifier: Zlib
 +
-+#include "../zlib_inflate/inflate.h"
++#include "../zlib_deflate/defutil.h"
 +#include "dfltcc_util.h"
 +#include "dfltcc.h"
 +#include <linux/zutil.h>
 +
 +/*
-+ * Expand.
++ * Compress.
 + */
-+int dfltcc_can_inflate(
++int dfltcc_can_deflate(
 +    z_streamp strm
 +)
 +{
-+    struct inflate_state *state = (struct inflate_state *)strm->state;
++    deflate_state *state = (deflate_state *)strm->state;
 +    struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
 +
 +    /* Unsupported compression settings */
-+    if (state->wbits != HB_BITS)
++    if (!dfltcc_are_params_ok(state->level, state->w_bits, state->strategy,
++                              dfltcc_state->level_mask))
 +        return 0;
 +
 +    /* Unsupported hardware */
-+    return is_bit_set(dfltcc_state->af.fns, DFLTCC_XPND) &&
-+               is_bit_set(dfltcc_state->af.fmts, DFLTCC_FMT0);
-+}
-+
-+static int dfltcc_was_inflate_used(
-+    z_streamp strm
-+)
-+{
-+    struct inflate_state *state = (struct inflate_state *)strm->state;
-+    struct dfltcc_param_v0 *param = &GET_DFLTCC_STATE(state)->param;
-+
-+    return !param->nt;
-+}
-+
-+static int dfltcc_inflate_disable(
-+    z_streamp strm
-+)
-+{
-+    struct inflate_state *state = (struct inflate_state *)strm->state;
-+    struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
-+
-+    if (!dfltcc_can_inflate(strm))
++    if (!is_bit_set(dfltcc_state->af.fns, DFLTCC_GDHT) ||
++            !is_bit_set(dfltcc_state->af.fns, DFLTCC_CMPR) ||
++            !is_bit_set(dfltcc_state->af.fmts, DFLTCC_FMT0))
 +        return 0;
-+    if (dfltcc_was_inflate_used(strm))
-+        /* DFLTCC has already decompressed some data. Since there is not
-+         * enough information to resume decompression in software, the call
-+         * must fail.
-+         */
-+        return 1;
-+    /* DFLTCC was not used yet - decompress in software */
-+    memset(&dfltcc_state->af, 0, sizeof(dfltcc_state->af));
-+    return 0;
++
++    return 1;
 +}
 +
-+static dfltcc_cc dfltcc_xpnd(
++static void dfltcc_gdht(
 +    z_streamp strm
 +)
 +{
-+    struct inflate_state *state = (struct inflate_state *)strm->state;
++    deflate_state *state = (deflate_state *)strm->state;
++    struct dfltcc_param_v0 *param = &GET_DFLTCC_STATE(state)->param;
++    size_t avail_in = avail_in = strm->avail_in;
++
++    dfltcc(DFLTCC_GDHT,
++           param, NULL, NULL,
++           &strm->next_in, &avail_in, NULL);
++}
++
++static dfltcc_cc dfltcc_cmpr(
++    z_streamp strm
++)
++{
++    deflate_state *state = (deflate_state *)strm->state;
 +    struct dfltcc_param_v0 *param = &GET_DFLTCC_STATE(state)->param;
 +    size_t avail_in = strm->avail_in;
 +    size_t avail_out = strm->avail_out;
 +    dfltcc_cc cc;
 +
-+    cc = dfltcc(DFLTCC_XPND | HBT_CIRCULAR,
++    cc = dfltcc(DFLTCC_CMPR | HBT_CIRCULAR,
 +                param, &strm->next_out, &avail_out,
 +                &strm->next_in, &avail_in, state->window);
++    strm->total_in += (strm->avail_in - avail_in);
++    strm->total_out += (strm->avail_out - avail_out);
 +    strm->avail_in = avail_in;
 +    strm->avail_out = avail_out;
 +    return cc;
 +}
 +
-+dfltcc_inflate_action dfltcc_inflate(
++static void send_eobs(
 +    z_streamp strm,
-+    int flush,
-+    int *ret
++    const struct dfltcc_param_v0 *param
 +)
 +{
-+    struct inflate_state *state = (struct inflate_state *)strm->state;
++    deflate_state *state = (deflate_state *)strm->state;
++
++    zlib_tr_send_bits(
++          state,
++          bi_reverse(param->eobs >> (15 - param->eobl), param->eobl),
++          param->eobl);
++    flush_pending(strm);
++    if (state->pending != 0) {
++        /* The remaining data is located in pending_out[0:pending]. If someone
++         * calls put_byte() - this might happen in deflate() - the byte will be
++         * placed into pending_buf[pending], which is incorrect. Move the
++         * remaining data to the beginning of pending_buf so that put_byte() is
++         * usable again.
++         */
++        memmove(state->pending_buf, state->pending_out, state->pending);
++        state->pending_out = state->pending_buf;
++    }
++#ifdef ZLIB_DEBUG
++    state->compressed_len += param->eobl;
++#endif
++}
++
++int dfltcc_deflate(
++    z_streamp strm,
++    int flush,
++    block_state *result
++)
++{
++    deflate_state *state = (deflate_state *)strm->state;
 +    struct dfltcc_state *dfltcc_state = GET_DFLTCC_STATE(state);
 +    struct dfltcc_param_v0 *param = &dfltcc_state->param;
++    uInt masked_avail_in;
 +    dfltcc_cc cc;
++    int need_empty_block;
++    int soft_bcc;
++    int no_flush;
 +
-+    if (flush == Z_BLOCK) {
-+        /* DFLTCC does not support stopping on block boundaries */
-+        if (dfltcc_inflate_disable(strm)) {
-+            *ret = Z_STREAM_ERROR;
-+            return DFLTCC_INFLATE_BREAK;
-+        } else
-+            return DFLTCC_INFLATE_SOFTWARE;
-+    }
++    if (!dfltcc_can_deflate(strm))
++        return 0;
 +
-+    if (state->last) {
-+        if (state->bits != 0) {
-+            strm->next_in++;
-+            strm->avail_in--;
-+            state->bits = 0;
++again:
++    masked_avail_in = 0;
++    soft_bcc = 0;
++    no_flush = flush == Z_NO_FLUSH;
++
++    /* Trailing empty block. Switch to software, except when Continuation Flag
++     * is set, which means that DFLTCC has buffered some output in the
++     * parameter block and needs to be called again in order to flush it.
++     */
++    if (flush == Z_FINISH && strm->avail_in == 0 && !param->cf) {
++        if (param->bcf) {
++            /* A block is still open, and the hardware does not support closing
++             * blocks without adding data. Thus, close it manually.
++             */
++            send_eobs(strm, param);
++            param->bcf = 0;
 +        }
-+        state->mode = CHECK;
-+        return DFLTCC_INFLATE_CONTINUE;
++        return 0;
 +    }
 +
-+    if (strm->avail_in == 0 && !param->cf)
-+        return DFLTCC_INFLATE_BREAK;
-+
-+    if (!state->window || state->wsize == 0) {
-+        state->mode = MEM;
-+        return DFLTCC_INFLATE_CONTINUE;
++    if (strm->avail_in == 0 && !param->cf) {
++        *result = need_more;
++        return 1;
 +    }
++
++    /* There is an open non-BFINAL block, we are not going to close it just
++     * yet, we have compressed more than DFLTCC_BLOCK_SIZE bytes and we see
++     * more than DFLTCC_DHT_MIN_SAMPLE_SIZE bytes. Open a new block with a new
++     * DHT in order to adapt to a possibly changed input data distribution.
++     */
++    if (param->bcf && no_flush &&
++            strm->total_in > dfltcc_state->block_threshold &&
++            strm->avail_in >= dfltcc_state->dht_threshold) {
++        if (param->cf) {
++            /* We need to flush the DFLTCC buffer before writing the
++             * End-of-block Symbol. Mask the input data and proceed as usual.
++             */
++            masked_avail_in += strm->avail_in;
++            strm->avail_in = 0;
++            no_flush = 0;
++        } else {
++            /* DFLTCC buffer is empty, so we can manually write the
++             * End-of-block Symbol right away.
++             */
++            send_eobs(strm, param);
++            param->bcf = 0;
++            dfltcc_state->block_threshold =
++                strm->total_in + dfltcc_state->block_size;
++            if (strm->avail_out == 0) {
++                *result = need_more;
++                return 1;
++            }
++        }
++    }
++
++    /* The caller gave us too much data. Pass only one block worth of
++     * uncompressed data to DFLTCC and mask the rest, so that on the next
++     * iteration we start a new block.
++     */
++    if (no_flush && strm->avail_in > dfltcc_state->block_size) {
++        masked_avail_in += (strm->avail_in - dfltcc_state->block_size);
++        strm->avail_in = dfltcc_state->block_size;
++    }
++
++    /* When we have an open non-BFINAL deflate block and caller indicates that
++     * the stream is ending, we need to close an open deflate block and open a
++     * BFINAL one.
++     */
++    need_empty_block = flush == Z_FINISH && param->bcf && !param->bhf;
 +
 +    /* Translate stream to parameter block */
 +    param->cvt = CVT_ADLER32;
-+    param->sbb = state->bits;
-+    param->hl = state->whave; /* Software and hardware history formats match */
-+    param->ho = (state->write - state->whave) & ((1 << HB_BITS) - 1);
++    if (!no_flush)
++        /* We need to close a block. Always do this in software - when there is
++         * no input data, the hardware will not nohor BCC. */
++        soft_bcc = 1;
++    if (flush == Z_FINISH && !param->bcf)
++        /* We are about to open a BFINAL block, set Block Header Final bit
++         * until the stream ends.
++         */
++        param->bhf = 1;
++    /* DFLTCC-CMPR will write to next_out, so make sure that buffers with
++     * higher precedence are empty.
++     */
++    Assert(state->pending == 0, "There must be no pending bytes");
++    Assert(state->bi_valid < 8, "There must be less than 8 pending bits");
++    param->sbb = (unsigned int)state->bi_valid;
++    if (param->sbb > 0)
++        *strm->next_out = (Byte)state->bi_buf;
 +    if (param->hl)
-+        param->nt = 0; /* Honor history for the first block */
-+    param->cv = state->flags ? REVERSE(state->check) : state->check;
++        param->nt = 0; /* Honor history */
++    param->cv = strm->adler;
 +
-+    /* Inflate */
++    /* When opening a block, choose a Huffman-Table Type */
++    if (!param->bcf) {
++        if (strm->total_in == 0 && dfltcc_state->block_threshold > 0) {
++            param->htt = HTT_FIXED;
++        }
++        else {
++            param->htt = HTT_DYNAMIC;
++            dfltcc_gdht(strm);
++        }
++    }
++
++    /* Deflate */
 +    do {
-+        cc = dfltcc_xpnd(strm);
++        cc = dfltcc_cmpr(strm);
++        if (strm->avail_in < 4096 && masked_avail_in > 0)
++            /* We are about to call DFLTCC with a small input buffer, which is
++             * inefficient. Since there is masked data, there will be at least
++             * one more DFLTCC call, so skip the current one and make the next
++             * one handle more data.
++             */
++            break;
 +    } while (cc == DFLTCC_CC_AGAIN);
 +
 +    /* Translate parameter block to stream */
 +    strm->msg = oesc_msg(dfltcc_state->msg, param->oesc);
-+    state->last = cc == DFLTCC_CC_OK;
-+    state->bits = param->sbb;
-+    state->whave = param->hl;
-+    state->write = (param->ho + param->hl) & ((1 << HB_BITS) - 1);
-+    state->check = state->flags ? REVERSE(param->cv) : param->cv;
-+    if (cc == DFLTCC_CC_OP2_CORRUPT && param->oesc != 0) {
-+        /* Report an error if stream is corrupted */
-+        state->mode = BAD;
-+        return DFLTCC_INFLATE_CONTINUE;
-+    }
-+    state->mode = TYPEDO;
-+    /* Break if operands are exhausted, otherwise continue looping */
-+    return (cc == DFLTCC_CC_OP1_TOO_SHORT || cc == DFLTCC_CC_OP2_TOO_SHORT) ?
-+        DFLTCC_INFLATE_BREAK : DFLTCC_INFLATE_CONTINUE;
-+}
-diff --git a/lib/zlib_inflate/inflate.c b/lib/zlib_inflate/inflate.c
-index 48f14cd58c77..59de6c18f2fc 100644
---- a/lib/zlib_inflate/inflate.c
-+++ b/lib/zlib_inflate/inflate.c
-@@ -15,6 +15,16 @@
- #include "inffast.h"
- #include "infutil.h"
- 
-+/* architecture-specific bits */
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+#  include "../zlib_dfltcc/dfltcc.h"
-+#else
-+#define INFLATE_RESET_HOOK(strm) do {} while (0)
-+#define INFLATE_TYPEDO_HOOK(strm, flush) do {} while (0)
-+#define INFLATE_NEED_UPDATEWINDOW(strm) 1
-+#define INFLATE_NEED_CHECKSUM(strm) 1
-+#endif
++    state->bi_valid = param->sbb;
++    if (state->bi_valid == 0)
++        state->bi_buf = 0; /* Avoid accessing next_out */
++    else
++        state->bi_buf = *strm->next_out & ((1 << state->bi_valid) - 1);
++    strm->adler = param->cv;
 +
- int zlib_inflate_workspacesize(void)
- {
-     return sizeof(struct inflate_workspace);
-@@ -42,6 +52,7 @@ int zlib_inflateReset(z_streamp strm)
-     state->write = 0;
-     state->whave = 0;
- 
-+    INFLATE_RESET_HOOK(strm);
-     return Z_OK;
- }
- 
-@@ -66,7 +77,15 @@ int zlib_inflateInit2(z_streamp strm, int windowBits)
-         return Z_STREAM_ERROR;
-     }
-     state->wbits = (unsigned)windowBits;
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+    /*
-+     * DFLTCC requires the window to be page aligned.
-+     * Thus, we overallocate and take the aligned portion of the buffer.
++    /* Unmask the input data */
++    strm->avail_in += masked_avail_in;
++    masked_avail_in = 0;
++
++    /* If we encounter an error, it means there is a bug in DFLTCC call */
++    Assert(cc != DFLTCC_CC_OP2_CORRUPT || param->oesc == 0, "BUG");
++
++    /* Update Block-Continuation Flag. It will be used to check whether to call
++     * GDHT the next time.
 +     */
-+    state->window = PTR_ALIGN(&WS(strm)->working_window[0], PAGE_SIZE);
-+#else
-     state->window = &WS(strm)->working_window[0];
-+#endif
- 
-     return zlib_inflateReset(strm);
- }
-@@ -227,11 +246,6 @@ static int zlib_inflateSyncPacket(z_streamp strm)
-         bits -= bits & 7; \
-     } while (0)
- 
--/* Reverse the bytes in a 32-bit value */
--#define REVERSE(q) \
--    ((((q) >> 24) & 0xff) + (((q) >> 8) & 0xff00) + \
--     (((q) & 0xff00) << 8) + (((q) & 0xff) << 24))
--
- /*
-    inflate() uses a state machine to process as much input data and generate as
-    much output data as possible before returning.  The state machine is
-@@ -395,6 +409,7 @@ int zlib_inflate(z_streamp strm, int flush)
-             if (flush == Z_BLOCK) goto inf_leave;
- 	    /* fall through */
-         case TYPEDO:
-+            INFLATE_TYPEDO_HOOK(strm, flush);
-             if (state->last) {
-                 BYTEBITS();
-                 state->mode = CHECK;
-@@ -692,7 +707,7 @@ int zlib_inflate(z_streamp strm, int flush)
-                 out -= left;
-                 strm->total_out += out;
-                 state->total += out;
--                if (out)
-+                if (INFLATE_NEED_CHECKSUM(strm) && out)
-                     strm->adler = state->check =
-                         UPDATE(state->check, put - out, out);
-                 out = left;
-@@ -726,7 +741,8 @@ int zlib_inflate(z_streamp strm, int flush)
-      */
-   inf_leave:
-     RESTORE();
--    if (state->wsize || (state->mode < CHECK && out != strm->avail_out))
-+    if (INFLATE_NEED_UPDATEWINDOW(strm) &&
-+            (state->wsize || (state->mode < CHECK && out != strm->avail_out)))
-         zlib_updatewindow(strm, out);
- 
-     in -= strm->avail_in;
-@@ -734,7 +750,7 @@ int zlib_inflate(z_streamp strm, int flush)
-     strm->total_in += in;
-     strm->total_out += out;
-     state->total += out;
--    if (state->wrap && out)
-+    if (INFLATE_NEED_CHECKSUM(strm) && state->wrap && out)
-         strm->adler = state->check =
-             UPDATE(state->check, strm->next_out - out, out);
- 
-diff --git a/lib/zlib_inflate/inflate.h b/lib/zlib_inflate/inflate.h
-index 3d17b3d1b21f..f79337ddf98c 100644
---- a/lib/zlib_inflate/inflate.h
-+++ b/lib/zlib_inflate/inflate.h
-@@ -11,6 +11,8 @@
-    subject to change. Applications should only use zlib.h.
-  */
- 
-+#include "inftrees.h"
++    if (cc == DFLTCC_CC_OK) {
++        if (soft_bcc) {
++            send_eobs(strm, param);
++            param->bcf = 0;
++            dfltcc_state->block_threshold =
++                strm->total_in + dfltcc_state->block_size;
++        } else
++            param->bcf = 1;
++        if (flush == Z_FINISH) {
++            if (need_empty_block)
++                /* Make the current deflate() call also close the stream */
++                return 0;
++            else {
++                bi_windup(state);
++                *result = finish_done;
++            }
++        } else {
++            if (flush == Z_FULL_FLUSH)
++                param->hl = 0; /* Clear history */
++            *result = flush == Z_NO_FLUSH ? need_more : block_done;
++        }
++    } else {
++        param->bcf = 1;
++        *result = need_more;
++    }
++    if (strm->avail_in != 0 && strm->avail_out != 0)
++        goto again; /* deflate() must use all input or all output */
++    return 1;
++}
 +
- /* Possible inflate modes between inflate() calls */
- typedef enum {
-     HEAD,       /* i: waiting for magic header */
-@@ -108,4 +110,10 @@ struct inflate_state {
-     unsigned short work[288];   /* work area for code table building */
-     code codes[ENOUGH];         /* space for code tables */
- };
+diff --git a/lib/zlib_dfltcc/dfltcc_syms.c b/lib/zlib_dfltcc/dfltcc_syms.c
+new file mode 100644
+index 000000000000..6f23481804c1
+--- /dev/null
++++ b/lib/zlib_dfltcc/dfltcc_syms.c
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * linux/lib/zlib_dfltcc/dfltcc_syms.c
++ *
++ * Exported symbols for the s390 zlib dfltcc support.
++ *
++ */
 +
-+/* Reverse the bytes in a 32-bit value */
-+#define REVERSE(q) \
-+    ((((q) >> 24) & 0xff) + (((q) >> 8) & 0xff00) + \
-+     (((q) & 0xff00) << 8) + (((q) & 0xff) << 24))
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/zlib.h>
++#include "dfltcc.h"
 +
- #endif
-diff --git a/lib/zlib_inflate/infutil.h b/lib/zlib_inflate/infutil.h
-index eb1a9007bd86..0264b15c9192 100644
---- a/lib/zlib_inflate/infutil.h
-+++ b/lib/zlib_inflate/infutil.h
-@@ -12,14 +12,28 @@
- #define _INFUTIL_H
- 
- #include <linux/zlib.h>
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+#include "../zlib_dfltcc/dfltcc.h"
-+#include <asm/page.h>
-+#endif
- 
- /* memory allocation for inflation */
- 
- struct inflate_workspace {
- 	struct inflate_state inflate_state;
--	unsigned char working_window[1 << MAX_WBITS];
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+	struct dfltcc_state dfltcc_state;
-+	unsigned char working_window[(1 << MAX_WBITS) + PAGE_SIZE];
-+#else
-+	unsigned char working_window[(1 << MAX_WBITS)];
-+#endif
- };
- 
--#define WS(z) ((struct inflate_workspace *)(z->workspace))
-+#ifdef CONFIG_ZLIB_DFLTCC_INFLATE
-+/* dfltcc_state must be doubleword aligned for DFLTCC call */
-+static_assert(offsetof(struct inflate_workspace, dfltcc_state) % 8 == 0);
-+#endif
++EXPORT_SYMBOL(dfltcc_can_deflate);
++EXPORT_SYMBOL(dfltcc_deflate);
++EXPORT_SYMBOL(dfltcc_reset);
++MODULE_LICENSE("GPL");
+diff --git a/lib/zlib_dfltcc/dfltcc_util.h b/lib/zlib_dfltcc/dfltcc_util.h
+new file mode 100644
+index 000000000000..1930b43c1915
+--- /dev/null
++++ b/lib/zlib_dfltcc/dfltcc_util.h
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: Zlib
++#ifndef DFLTCC_UTIL_H
++#define DFLTCC_UTIL_H
 +
-+#define WS(strm) ((struct inflate_workspace *)(strm->workspace))
- 
- #endif
++#include <linux/zutil.h>
++
++/*
++ * C wrapper for the DEFLATE CONVERSION CALL instruction.
++ */
++typedef enum {
++    DFLTCC_CC_OK = 0,
++    DFLTCC_CC_OP1_TOO_SHORT = 1,
++    DFLTCC_CC_OP2_TOO_SHORT = 2,
++    DFLTCC_CC_OP2_CORRUPT = 2,
++    DFLTCC_CC_AGAIN = 3,
++} dfltcc_cc;
++
++#define DFLTCC_QAF 0
++#define DFLTCC_GDHT 1
++#define DFLTCC_CMPR 2
++#define DFLTCC_XPND 4
++#define HBT_CIRCULAR (1 << 7)
++#define HB_BITS 15
++#define HB_SIZE (1 << HB_BITS)
++#define DFLTCC_FACILITY 151
++
++static inline dfltcc_cc dfltcc(
++    int fn,
++    void *param,
++    Byte **op1,
++    size_t *len1,
++    const Byte **op2,
++    size_t *len2,
++    void *hist
++)
++{
++    Byte *t2 = op1 ? *op1 : NULL;
++    size_t t3 = len1 ? *len1 : 0;
++    const Byte *t4 = op2 ? *op2 : NULL;
++    size_t t5 = len2 ? *len2 : 0;
++    register int r0 __asm__("r0") = fn;
++    register void *r1 __asm__("r1") = param;
++    register Byte *r2 __asm__("r2") = t2;
++    register size_t r3 __asm__("r3") = t3;
++    register const Byte *r4 __asm__("r4") = t4;
++    register size_t r5 __asm__("r5") = t5;
++    int cc;
++
++    __asm__ volatile(
++                     ".insn rrf,0xb9390000,%[r2],%[r4],%[hist],0\n"
++                     "ipm %[cc]\n"
++                     : [r2] "+r" (r2)
++                     , [r3] "+r" (r3)
++                     , [r4] "+r" (r4)
++                     , [r5] "+r" (r5)
++                     , [cc] "=r" (cc)
++                     : [r0] "r" (r0)
++                     , [r1] "r" (r1)
++                     , [hist] "r" (hist)
++                     : "cc", "memory");
++    t2 = r2; t3 = r3; t4 = r4; t5 = r5;
++
++    if (op1)
++        *op1 = t2;
++    if (len1)
++        *len1 = t3;
++    if (op2)
++        *op2 = t4;
++    if (len2)
++        *len2 = t5;
++    return (cc >> 28) & 3;
++}
++
++static inline int is_bit_set(
++    const char *bits,
++    int n
++)
++{
++    return bits[n / 8] & (1 << (7 - (n % 8)));
++}
++
++static inline void turn_bit_off(
++    char *bits,
++    int n
++)
++{
++    bits[n / 8] &= ~(1 << (7 - (n % 8)));
++}
++
++static inline int dfltcc_are_params_ok(
++    int level,
++    uInt window_bits,
++    int strategy,
++    uLong level_mask
++)
++{
++    return (level_mask & (1 << level)) != 0 &&
++        (window_bits == HB_BITS) &&
++        (strategy == Z_DEFAULT_STRATEGY);
++}
++
++static inline int is_dfltcc_enabled(void)
++{
++    uint64_t facilities[(DFLTCC_FACILITY / 64) + 1];
++    register char r0 __asm__("r0");
++
++    memset(facilities, 0, sizeof(facilities));
++    r0 = sizeof(facilities) / sizeof(facilities[0]) - 1;
++    __asm__ volatile("stfle %[facilities]\n"
++                     : [facilities] "=Q" (facilities)
++                     , [r0] "+r" (r0)
++                     :
++                     : "cc");
++    return is_bit_set((const char *)facilities, DFLTCC_FACILITY);
++}
++
++char *oesc_msg(char *buf, int oesc);
++
++#endif /* DFLTCC_UTIL_H */
 -- 
 2.17.1
 
