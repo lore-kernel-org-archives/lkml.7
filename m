@@ -2,454 +2,267 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F21C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD2C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A918D20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 06:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44D72071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:00:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jegs/pLd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="p5cHXdoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfLIGzx (ORCPT
+        id S1727084AbfLIHAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 01:55:53 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:36470 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfLIGzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 01:55:06 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191209065503epoutp01883e66562c01f374b527b97cd8eaa8ec~eoYMCX5bT2979729797epoutp01V
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Dec 2019 06:55:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191209065503epoutp01883e66562c01f374b527b97cd8eaa8ec~eoYMCX5bT2979729797epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575874503;
-        bh=KfGbXTFk2S+92ux8sJu+T23qMAykMWjoPWvAZ6jNIy8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jegs/pLdSiJzwa48EQZI9wFxSofRvJhPpnDc54gUZ69RYI4bwuOCDUp2tzpxtOQSN
-         353GI+TV5SVoH96IVzJtllGwLTRmbrh9Q86n+6CdHCDdRcbRy3TDq2DfEvfOu153es
-         wTmG+XRk5pf4wbac3IaY2SFN+lqlY1q8c/a7zW44=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191209065503epcas1p4b5dcb907aa3eb8ae88fe0ff96013f744~eoYLxCWBy1134311343epcas1p4j;
-        Mon,  9 Dec 2019 06:55:03 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47WYpt1z0szMqYkk; Mon,  9 Dec
-        2019 06:55:02 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E2.CA.52419.6CFEDED5; Mon,  9 Dec 2019 15:55:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191209065501epcas1p44767c16feecd953fd5def1aaecb09313~eoYKZJomk0851508515epcas1p4E;
-        Mon,  9 Dec 2019 06:55:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191209065501epsmtrp2c031feff2044b2fea0136f17042bdb44~eoYKT75ai2760127601epsmtrp2j;
-        Mon,  9 Dec 2019 06:55:01 +0000 (GMT)
-X-AuditID: b6c32a37-59fff7000001ccc3-ef-5dedefc69a8d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        07.48.10238.5CFEDED5; Mon,  9 Dec 2019 15:55:01 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191209065501epsmtip133ba56ba592e695c7b87ceff3a3fda4b~eoYKHlVxZ1943819438epsmtip1d;
-        Mon,  9 Dec 2019 06:55:01 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v6 08/13] exfat: add exfat cache
-Date:   Mon,  9 Dec 2019 01:51:43 -0500
-Message-Id: <20191209065149.2230-9-namjae.jeon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191209065149.2230-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOKsWRmVeSWpSXmKPExsWy7bCmnu6x929jDbZe57doXryezWLl6qNM
-        Fnv2nmSxuLxrDpvFj+n1Flv+HWG1uPT+A4sDu8f+uWvYPXbfbGDz6NuyitHj8yY5j0Pb37AF
-        sEbl2GSkJqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYAXaGk
-        UJaYUwoUCkgsLlbSt7Mpyi8tSVXIyC8usVVKLUjJKTA0KNArTswtLs1L10vOz7UyNDAwMgWq
-        TMjJWLEuuaDHraLp2yymBsaNFl2MnBwSAiYSb25cZ+ti5OIQEtjBKNFxaAIzhPOJUeJS1xsW
-        COcbo8T5GXNZYFqu3X7NBJHYyygx+c5qFriWpWs/AA3j4GAT0Jb4s0UUpEFEwF5i8+wDYDXM
-        Ai2MEgtO/2AGqREWMJA4v1sPpIZFQFVib/9LdhCbV8Ba4ty6g2wQy+QlVm84wAxicwrYSLzp
-        OQi2WEJgDpvE498ToYpcJI42bYKyhSVeHd/CDmFLSXx+txfsHgmBaomP+5khwh2MEi++20LY
-        xhI3129gBSlhFtCUWL9LHyKsKLHz91xGEJtZgE/i3dceVogpvBIdbUIQJaoSfZcOM0HY0hJd
-        7R+glnpI7Pndzg4JkX5GiTX/LzNPYJSbhbBhASPjKkax1ILi3PTUYsMCY+T42sQITmRa5jsY
-        N5zzOcQowMGoxMOrYPU2Vog1say4MvcQowQHs5II75KJr2KFeFMSK6tSi/Lji0pzUosPMZoC
-        A3Iis5Rocj4wyeaVxBuaGhkbG1uYmJmbmRorifNy/LgYKySQnliSmp2aWpBaBNPHxMEp1cBY
-        PLNbNrvNfvm3pgaBr+sbxa5H8i4rcCz6eadnxoU75zcZhTCv2+xwKX7J7IcpqvoLijxKw3Yw
-        VniUeLCsaW361tD24rGrSNKaldvO+k0teu2S4LRJXYOv2rsxpXpr971Fa5ndBG8dmLX8UJMN
-        n+rfez1eem88k19+zPIsm8/2v0nFV+fPg+1KLMUZiYZazEXFiQAxTR7NegMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPLMWRmVeSWpSXmKPExsWy7bCSnO7R929jDZZN1LFoXryezWLl6qNM
-        Fnv2nmSxuLxrDpvFj+n1Flv+HWG1uPT+A4sDu8f+uWvYPXbfbGDz6NuyitHj8yY5j0Pb37AF
-        sEZx2aSk5mSWpRbp2yVwZaxYl1zQ41bR9G0WUwPjRosuRk4OCQETiWu3XzN1MXJxCAnsZpRY
-        1LCWGSIhLXHsxBkgmwPIFpY4fLgYJCwk8IFR4uXnbJAwm4C2xJ8toiBhEQFHid5dh1lAxjAL
-        dDFKPGr6BtYqLGAgcX63HkgNi4CqxN7+l+wgNq+AtcS5dQfZIDbJS6zecABsK6eAjcSbnoNM
-        EKusJa6+XMo4gZFvASPDKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0veT83E2M4GDT0tzBeHlJ
-        /CFGAQ5GJR7eCpu3sUKsiWXFlbmHGCU4mJVEeJdMfBUrxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-        nPdp3rFIIYH0xJLU7NTUgtQimCwTB6dUA2Oni9w+H/5P1laxLwLifSvvvBc/XJupvadIydZ1
-        uuFju7XNro+fKXx7uai4uJZP7OvnZ99TbzkdE6yf+r/NdsKD+j+8JqI56/0jd1eq+CkYhpfG
-        8/LaLX0kGBla3tRwWdNNc2f/s+Bi3e19r+8Kr/y8O3P3i0CFZo76f1NfPOhaPL856vvtR0os
-        xRmJhlrMRcWJAKm30rMyAgAA
-X-CMS-MailID: 20191209065501epcas1p44767c16feecd953fd5def1aaecb09313
-X-Msg-Generator: CA
+        Mon, 9 Dec 2019 02:00:07 -0500
+Received: from mail-eopbgr80078.outbound.protection.outlook.com ([40.107.8.78]:62117
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfLIHAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 02:00:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IrfbRPMWgzJG/GCh5CuJnRzHs0TQFMM2BabWQGql8YVbUblI2UEf1vlg60I0D/hDJCh3EsvpbCvJmSABUO6ng9UXB/06HdWGW6Oe4rLXEa2cRXSjnD0TOC1Dc5Y2scBEfVBpH36p2beR4yzd7FjLvmQh0vJx8yPfpxt8s10Goa/mNfzQV8udEx0Jr4EjDdWXENBWzFCirxpCkjS/c43wCfMaYUzmJggeXpE13C/fopAZcfugxgv+IwMt17d9pwY2+0XxVcYhEs9YsPRmJ/u1Ik6DqQFCyaHzr1Y2R28+Jk3iD+48G8CBqN7OGVZij/Q4Wzv4d01YoiFRpEOxWTqe7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qV/2KOUuY+2V+N2SuyLsUBBl1GAOoGYbkn2wyFpN1q4=;
+ b=Y2TpXMaz2ncTU/FEtZndFyCO8HbpYnFyIGKs/1ZGYqYaEEjZj2ubACf5JQX1+cyyKWkofYUmNHldksmrxH7haprqyrzzuH4osAV/PtkTuf5BBGGYNORsvnM20J2wtffpv29ngv2ibfffRUioX28Tn4MT5oVyTmCmAJqUfoMDDTJxRvnd6C+ChPsgi9iwz/BcSvERpbwcM1EavzjR8qpE+v9Twuh4UqL0gKcV4qiVk2P7jf96aNxLqZDjK75zKKVNSJnj8bkAZlXw29U0DodpR1uzZeTzZ2dx3wSS/j50zYkCjqWlAzrduRfwglaAit3p9CsXS9bFK9lo6P4Uygawzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qV/2KOUuY+2V+N2SuyLsUBBl1GAOoGYbkn2wyFpN1q4=;
+ b=p5cHXdoXV3evuuJwcszCBiLLHDBwHW1xOn32x5RdfsBywqXJm+Htr06jlJiaO9vd5fIj4MQgogeqHppXkfPUnV9wVotOeZvQfh/3Dn9mqsGu3UCaSHeR4vLLNfJW5F9InVZLQkEM8XIH/AX8tMDTrSeHyQ5VOTg+qio8JHwQMLY=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3026.eurprd04.prod.outlook.com (10.175.231.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Mon, 9 Dec 2019 07:00:01 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::a8a6:8d0d:aca4:7bf1%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 07:00:01 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+CC:     Roy Zang <roy.zang@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "frowand.list@gmail.com" <frowand.list@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>
+Subject: RE: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Topic: [PATCH] PCI: layerscape: Add the SRIOV support in host side
+Thread-Index: AQHVqP2nw3AoM5GAtUqPe+h1Ib8VVaemy2EAgADUbVCAAK4bgIAAOn2AgADDy0CAAhs3gIAGAcrw
+Date:   Mon, 9 Dec 2019 07:00:01 +0000
+Message-ID: <AM5PR04MB3299ACDE6BA3AFBFBFFF7D3AF5580@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20191202104506.27916-1-xiaowei.bao@nxp.com>
+ <606a00a2edcf077aa868319e0daa4dbc@www.loen.fr>
+ <AM5PR04MB3299A5A504DEFEF3E137A27CF5420@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <3dcdf44eb76390730658e3f4d932620c@www.loen.fr>
+ <8f56c2d9-ab01-a91e-902f-a61def0e8ce8@arm.com>
+ <AM5PR04MB3299BFC34A4666B7A9C12B13F55D0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <VI1PR04MB5134A689AEA8C49BFC7F8356EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB5134A689AEA8C49BFC7F8356EC5C0@VI1PR04MB5134.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 88c13b91-b95e-4496-26ef-08d77c756935
+x-ms-traffictypediagnostic: AM5PR04MB3026:|AM5PR04MB3026:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3026EB1F254D04735BAA6B66F5580@AM5PR04MB3026.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(366004)(346002)(13464003)(189003)(199004)(74316002)(316002)(52536014)(2906002)(7416002)(55016002)(44832011)(8936002)(9686003)(305945005)(33656002)(99286004)(4326008)(81166006)(81156014)(6506007)(8676002)(76116006)(186003)(53546011)(66446008)(64756008)(66556008)(66946007)(66476007)(102836004)(966005)(478600001)(54906003)(229853002)(110136005)(26005)(86362001)(76176011)(7696005)(71200400001)(71190400001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3026;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iYLJyZc+kjbSzyfWzeGD28J6UbXYCLpRMiax1GfOIbLqLdxp1RDPaWiOon/zLstxamfxvP02nqM9QnzxvCma3updsra8d+SwHcGxSZRx2bMyeGLB3vmiz/LUaz/jS4Gtgv0JliB0Ls63y9h772qR72nvC53s2M/rvp2MPAcux0HwQYJCH1EZ5zbXjs8O3qvWTaVfxibgIqLPjc0baWtfIptmPel0jr1jItegwegktmxuPgDRn8q7bm1BV4AMPHs1WDSuFqhSmLPTjbTR14L7pfXcKXe0cKlONbgrXSWCQEfMCc0q+UEpob9KxGVwHw90lRM1LrX72B9c4a+/wiMLUDttO3PjsoGRGxWrq+Le7NN3bCOPBjDxhqXAwug1QOx+tlyi9dQhW1qBTquaQaszIQFmXum1YP0ZKW2WUbbQGo78nxoo8mLPfBVbW/bGdFFlENN4YR3MTSh0E/f/gA+yN8Jby+K7fKmAIZaLU5DvbyhL009KAADvH/409VhSpQjF7L0qEJk058YHGt4BhxgcamO2tNGp4pgb5OILVfukft4=
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191209065501epcas1p44767c16feecd953fd5def1aaecb09313
-References: <20191209065149.2230-1-namjae.jeon@samsung.com>
-        <CGME20191209065501epcas1p44767c16feecd953fd5def1aaecb09313@epcas1p4.samsung.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88c13b91-b95e-4496-26ef-08d77c756935
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 07:00:01.3393
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A8JXwVSBD1zo740+KFu5J0X6BQX0AupZcNuv5R14OaUpkR1oLP7e703nz/uF127FpoJeDluDJwi/8/OGbu2PTw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the implementation of exfat cache.
-
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
----
- fs/exfat/cache.c | 325 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 325 insertions(+)
- create mode 100644 fs/exfat/cache.c
-
-diff --git a/fs/exfat/cache.c b/fs/exfat/cache.c
-new file mode 100644
-index 000000000000..74f9a44471d5
---- /dev/null
-+++ b/fs/exfat/cache.c
-@@ -0,0 +1,325 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  linux/fs/fat/cache.c
-+ *
-+ *  Written 1992,1993 by Werner Almesberger
-+ *
-+ *  Mar 1999. AV. Changed cache, so that it uses the starting cluster instead
-+ *	of inode number.
-+ *  May 1999. AV. Fixed the bogosity with FAT32 (read "FAT28"). Fscking lusers.
-+ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-+ */
-+
-+#include <linux/slab.h>
-+#include <asm/unaligned.h>
-+#include <linux/buffer_head.h>
-+
-+#include "exfat_raw.h"
-+#include "exfat_fs.h"
-+
-+#define EXFAT_CACHE_VALID	0
-+#define EXFAT_MAX_CACHE		16
-+
-+struct exfat_cache {
-+	struct list_head cache_list;
-+	unsigned int nr_contig;	/* number of contiguous clusters */
-+	unsigned int fcluster;	/* cluster number in the file. */
-+	unsigned int dcluster;	/* cluster number on disk. */
-+};
-+
-+struct exfat_cache_id {
-+	unsigned int id;
-+	unsigned int nr_contig;
-+	unsigned int fcluster;
-+	unsigned int dcluster;
-+};
-+
-+static struct kmem_cache *exfat_cachep;
-+
-+static void exfat_cache_init_once(void *c)
-+{
-+	struct exfat_cache *cache = (struct exfat_cache *)c;
-+
-+	INIT_LIST_HEAD(&cache->cache_list);
-+}
-+
-+int exfat_cache_init(void)
-+{
-+	exfat_cachep = kmem_cache_create("exfat_cache",
-+				sizeof(struct exfat_cache),
-+				0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD,
-+				exfat_cache_init_once);
-+	if (!exfat_cachep)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+void exfat_cache_shutdown(void)
-+{
-+	if (!exfat_cachep)
-+		return;
-+	kmem_cache_destroy(exfat_cachep);
-+}
-+
-+void exfat_cache_init_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	spin_lock_init(&ei->cache_lru_lock);
-+	ei->nr_caches = 0;
-+	ei->cache_valid_id = EXFAT_CACHE_VALID + 1;
-+	INIT_LIST_HEAD(&ei->cache_lru);
-+}
-+
-+static inline struct exfat_cache *exfat_cache_alloc(void)
-+{
-+	return kmem_cache_alloc(exfat_cachep, GFP_NOFS);
-+}
-+
-+static inline void exfat_cache_free(struct exfat_cache *cache)
-+{
-+	WARN_ON(!list_empty(&cache->cache_list));
-+	kmem_cache_free(exfat_cachep, cache);
-+}
-+
-+static inline void exfat_cache_update_lru(struct inode *inode,
-+		struct exfat_cache *cache)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	if (ei->cache_lru.next != &cache->cache_list)
-+		list_move(&cache->cache_list, &ei->cache_lru);
-+}
-+
-+static unsigned int exfat_cache_lookup(struct inode *inode,
-+		unsigned int fclus, struct exfat_cache_id *cid,
-+		unsigned int *cached_fclus, unsigned int *cached_dclus)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	static struct exfat_cache nohit = { .fcluster = 0, };
-+	struct exfat_cache *hit = &nohit, *p;
-+	unsigned int offset = EOF_CLUSTER;
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-+		/* Find the cache of "fclus" or nearest cache. */
-+		if (p->fcluster <= fclus && hit->fcluster < p->fcluster) {
-+			hit = p;
-+			if (hit->fcluster + hit->nr_contig < fclus) {
-+				offset = hit->nr_contig;
-+			} else {
-+				offset = fclus - hit->fcluster;
-+				break;
-+			}
-+		}
-+	}
-+	if (hit != &nohit) {
-+		exfat_cache_update_lru(inode, hit);
-+
-+		cid->id = ei->cache_valid_id;
-+		cid->nr_contig = hit->nr_contig;
-+		cid->fcluster = hit->fcluster;
-+		cid->dcluster = hit->dcluster;
-+		*cached_fclus = cid->fcluster + offset;
-+		*cached_dclus = cid->dcluster + offset;
-+	}
-+	spin_unlock(&ei->cache_lru_lock);
-+
-+	return offset;
-+}
-+
-+static struct exfat_cache *exfat_cache_merge(struct inode *inode,
-+		struct exfat_cache_id *new)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *p;
-+
-+	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-+		/* Find the same part as "new" in cluster-chain. */
-+		if (p->fcluster == new->fcluster) {
-+			if (new->nr_contig > p->nr_contig)
-+				p->nr_contig = new->nr_contig;
-+			return p;
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static void exfat_cache_add(struct inode *inode,
-+		struct exfat_cache_id *new)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *cache, *tmp;
-+
-+	if (new->fcluster == EOF_CLUSTER) /* dummy cache */
-+		return;
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	if (new->id != EXFAT_CACHE_VALID &&
-+	    new->id != ei->cache_valid_id)
-+		goto unlock;	/* this cache was invalidated */
-+
-+	cache = exfat_cache_merge(inode, new);
-+	if (cache == NULL) {
-+		if (ei->nr_caches < EXFAT_MAX_CACHE) {
-+			ei->nr_caches++;
-+			spin_unlock(&ei->cache_lru_lock);
-+
-+			tmp = exfat_cache_alloc();
-+			if (!tmp) {
-+				spin_lock(&ei->cache_lru_lock);
-+				ei->nr_caches--;
-+				spin_unlock(&ei->cache_lru_lock);
-+				return;
-+			}
-+
-+			spin_lock(&ei->cache_lru_lock);
-+			cache = exfat_cache_merge(inode, new);
-+			if (cache != NULL) {
-+				ei->nr_caches--;
-+				exfat_cache_free(tmp);
-+				goto out_update_lru;
-+			}
-+			cache = tmp;
-+		} else {
-+			struct list_head *p = ei->cache_lru.prev;
-+
-+			cache = list_entry(p,
-+					struct exfat_cache, cache_list);
-+		}
-+		cache->fcluster = new->fcluster;
-+		cache->dcluster = new->dcluster;
-+		cache->nr_contig = new->nr_contig;
-+	}
-+out_update_lru:
-+	exfat_cache_update_lru(inode, cache);
-+unlock:
-+	spin_unlock(&ei->cache_lru_lock);
-+}
-+
-+/*
-+ * Cache invalidation occurs rarely, thus the LRU chain is not updated. It
-+ * fixes itself after a while.
-+ */
-+static void __exfat_cache_inval_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *cache;
-+
-+	while (!list_empty(&ei->cache_lru)) {
-+		cache = list_entry(ei->cache_lru.next,
-+				   struct exfat_cache, cache_list);
-+		list_del_init(&cache->cache_list);
-+		ei->nr_caches--;
-+		exfat_cache_free(cache);
-+	}
-+	/* Update. The copy of caches before this id is discarded. */
-+	ei->cache_valid_id++;
-+	if (ei->cache_valid_id == EXFAT_CACHE_VALID)
-+		ei->cache_valid_id++;
-+}
-+
-+void exfat_cache_inval_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	__exfat_cache_inval_inode(inode);
-+	spin_unlock(&ei->cache_lru_lock);
-+}
-+
-+static inline int cache_contiguous(struct exfat_cache_id *cid,
-+		unsigned int dclus)
-+{
-+	cid->nr_contig++;
-+	return cid->dcluster + cid->nr_contig == dclus;
-+}
-+
-+static inline void cache_init(struct exfat_cache_id *cid,
-+		unsigned int fclus, unsigned int dclus)
-+{
-+	cid->id = EXFAT_CACHE_VALID;
-+	cid->fcluster = fclus;
-+	cid->dcluster = dclus;
-+	cid->nr_contig = 0;
-+}
-+
-+int exfat_get_cluster(struct inode *inode, unsigned int cluster,
-+		unsigned int *fclus, unsigned int *dclus,
-+		unsigned int *last_dclus, int allow_eof)
-+{
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	unsigned int limit = sbi->num_clusters;
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache_id cid;
-+	unsigned int content;
-+
-+	if (ei->start_clu == FREE_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to exfat cache (entry 0x%08x)",
-+			ei->start_clu);
-+		return -EIO;
-+	}
-+
-+	*fclus = 0;
-+	*dclus = ei->start_clu;
-+	*last_dclus = *dclus;
-+
-+	/*
-+	 * Don`t use exfat_cache if zero offset or non-cluster allocation
-+	 */
-+	if (cluster == 0 || *dclus == EOF_CLUSTER)
-+		return 0;
-+
-+	cache_init(&cid, EOF_CLUSTER, EOF_CLUSTER);
-+
-+	if (exfat_cache_lookup(inode, cluster, &cid, fclus, dclus) ==
-+			EOF_CLUSTER) {
-+		/*
-+		 * dummy, always not contiguous
-+		 * This is reinitialized by cache_init(), later.
-+		 */
-+		WARN_ON(cid.id != EXFAT_CACHE_VALID ||
-+			cid.fcluster != EOF_CLUSTER ||
-+			cid.dcluster != EOF_CLUSTER ||
-+			cid.nr_contig != 0);
-+	}
-+
-+	if (*fclus == cluster)
-+		return 0;
-+
-+	while (*fclus < cluster) {
-+		/* prevent the infinite loop of cluster chain */
-+		if (*fclus > limit) {
-+			exfat_fs_error(sb,
-+				"detected the cluster chain loop (i_pos %u)",
-+				(*fclus));
-+			return -EIO;
-+		}
-+
-+		if (exfat_ent_get(sb, *dclus, &content))
-+			return -EIO;
-+
-+		*last_dclus = *dclus;
-+		*dclus = content;
-+		(*fclus)++;
-+
-+		if (content == EOF_CLUSTER) {
-+			if (!allow_eof) {
-+				exfat_fs_error(sb,
-+				       "invalid cluster chain (i_pos %u, last_clus 0x%08x is EOF)",
-+				       *fclus, (*last_dclus));
-+				return -EIO;
-+			}
-+
-+			break;
-+		}
-+
-+		if (!cache_contiguous(&cid, *dclus))
-+			cache_init(&cid, *fclus, *dclus);
-+	}
-+
-+	exfat_cache_add(inode, &cid);
-+	return 0;
-+}
--- 
-2.17.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGF1cmVudGl1IFR1ZG9y
+IDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4gU2VudDogMjAxOeW5tDEy5pyINeaXpSAxOTox
+MQ0KPiBUbzogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+OyBSb2JpbiBNdXJwaHkN
+Cj4gPHJvYmluLm11cnBoeUBhcm0uY29tPjsgTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4N
+Cj4gQ2M6IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJt
+LmNvbTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IE0uaC4gTGlhbg0KPiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgcm9i
+aCtkdEBrZXJuZWwub3JnOyBNaW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54cC5jb20+OyBiaGVs
+Z2Fhc0Bnb29nbGUuY29tOyBhbmRyZXcubXVycmF5QGFybS5jb207DQo+IGZyb3dhbmQubGlzdEBn
+bWFpbC5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgRGlhbmENCj4g
+TWFkYWxpbmEgQ3JhY2l1biA8ZGlhbmEuY3JhY2l1bkBueHAuY29tPg0KPiBTdWJqZWN0OiBSRTog
+W1BBVENIXSBQQ0k6IGxheWVyc2NhcGU6IEFkZCB0aGUgU1JJT1Ygc3VwcG9ydCBpbiBob3N0IHNp
+ZGUNCj4gDQo+IEhpIFhpYW93ZWksDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4gRnJvbTogbGludXgtYXJtLWtlcm5lbCA8bGludXgtYXJtLWtlcm5lbC1ib3VuY2VzQGxp
+c3RzLmluZnJhZGVhZC5vcmc+DQo+ID4gT24gQmVoYWxmIE9mIFhpYW93ZWkgQmFvDQo+ID4NCj4g
+PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBSb2JpbiBNdXJwaHkg
+PHJvYmluLm11cnBoeUBhcm0uY29tPg0KPiA+ID4gU2VudDogMjAxOeW5tDEy5pyIM+aXpSAyMzoy
+MA0KPiA+ID4gVG86IE1hcmMgWnluZ2llciA8bWF6QGtlcm5lbC5vcmc+OyBYaWFvd2VpIEJhbw0K
+PiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiA+IENjOiBSb3kgWmFuZyA8cm95LnphbmdAbnhw
+LmNvbT47IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgWi5xLiBIb3UNCj4gPiA+IDx6
+aGlxaWFuZy5ob3VAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IE0uaC4g
+TGlhbg0KPiA+ID4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsN
+Cj4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgYmhlbGdhYXNAZ29v
+Z2xlLmNvbTsNCj4gPiA+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgZnJvd2FuZC5saXN0QGdtYWls
+LmNvbTsgTWluZ2thaSBIdQ0KPiA+ID4gPG1pbmdrYWkuaHVAbnhwLmNvbT4NCj4gPiA+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0hdIFBDSTogbGF5ZXJzY2FwZTogQWRkIHRoZSBTUklPViBzdXBwb3J0IGlu
+IGhvc3QNCj4gPiA+IHNpZGUNCj4gPiA+DQo+ID4gPiBPbiAwMy8xMi8yMDE5IDExOjUxIGFtLCBN
+YXJjIFp5bmdpZXIgd3JvdGU6DQo+ID4gPiA+IE9uIDIwMTktMTItMDMgMDE6NDIsIFhpYW93ZWkg
+QmFvIHdyb3RlOg0KPiA+ID4gPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+
+Pj4gRnJvbTogTWFyYyBaeW5naWVyIDxtYXpAbWlzdGVyam9uZXMub3JnPg0KPiA+ID4gPj4+IFNl
+bnQ6IDIwMTnlubQxMuaciDLml6UgMjA6NDgNCj4gPiA+ID4+PiBUbzogWGlhb3dlaSBCYW8gPHhp
+YW93ZWkuYmFvQG54cC5jb20+DQo+ID4gPiA+Pj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgZnJv
+d2FuZC5saXN0QGdtYWlsLmNvbTsgTS5oLiBMaWFuDQo+ID4gPiA+Pj4gPG1pbmdodWFuLmxpYW5A
+bnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiA+ID4gWmFu
+Zw0KPiA+ID4gPj4+IDxyb3kuemFuZ0BueHAuY29tPjsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNv
+bTsNCj4gPiA+ID4+PiBhbmRyZXcubXVycmF5QGFybS5jb207IGJoZWxnYWFzQGdvb2dsZS5jb207
+DQo+ID4gPiA+Pj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7DQo+ID4gPiA+Pj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gPj4+IFoucS4gSG91IDx6aGlx
+aWFuZy5ob3VAbnhwLmNvbT4NCj4gPiA+ID4+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBQQ0k6IGxh
+eWVyc2NhcGU6IEFkZCB0aGUgU1JJT1Ygc3VwcG9ydCBpbg0KPiA+ID4gPj4+IGhvc3Qgc2lkZQ0K
+PiA+ID4gPj4+DQo+ID4gPiA+Pj4gT24gMjAxOS0xMi0wMiAxMDo0NSwgWGlhb3dlaSBCYW8gd3Jv
+dGU6DQo+ID4gPiA+Pj4gPiBHSUMgZ2V0IHRoZSBtYXAgcmVsYXRpb25zIG9mIGRldmlkIGFuZCBz
+dHJlYW0gaWQgZnJvbSB0aGUNCj4gPiA+ID4+PiA+IG1zaS1tYXAgcHJvcGVydHkgb2YgRFRTLCBv
+dXIgcGxhdGZvcm0gYWRkIHRoaXMgcHJvcGVydHkgaW4NCj4gPiA+ID4+PiA+IHUtYm9vdCBiYXNl
+IG9uIHRoZSBQQ0llIGRldmljZSBpbiB0aGUgYnVzLCBidXQgaWYgZW5hYmxlIHRoZQ0KPiA+ID4g
+Pj4+ID4gdmYgZGV2aWNlIGluIGtlcm5lbCwgdGhlIHZmIGRldmljZSBtc2ktbWFwIHdpbGwgbm90
+IHNldCwgc28NCj4gPiA+ID4+PiA+IHRoZSB2ZiBkZXZpY2UgY2FuJ3Qgd29yaywgdGhpcyBwYXRj
+aCBwdXJwb3NlIGlzIHRoYXQgbWFuYWdlDQo+ID4gPiA+Pj4gPiB0aGUgc3RyZWFtIGlkIGFuZCBk
+ZXZpY2UgaWQgbWFwIHJlbGF0aW9ucyBkeW5hbWljYWxseSBpbg0KPiA+ID4gPj4+ID4ga2VybmVs
+LCBhbmQgbWFrZSB0aGUgbmV3IFBDSWUgZGV2aWNlIHdvcmsNCj4gPiBpbg0KPiA+ID4ga2VybmVs
+Lg0KPiA+ID4gPj4+ID4NCj4gPiA+ID4+PiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4
+aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+ID4gPj4+ID4gLS0tDQo+ID4gPiA+Pj4gPsKgIGRyaXZl
+cnMvb2YvaXJxLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgIDkNCj4gKysrDQo+ID4gPiA+Pj4gPsKgIGRyaXZlcnMvcGNpL2NvbnRyb2xs
+ZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMgfCA5NA0KPiA+ID4gPj4+ID4gKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCj4gPiA+ID4+PiA+wqAgZHJpdmVycy9wY2kvcHJvYmUuY8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNiArKw0KPiA+ID4g
+Pj4+ID7CoCBkcml2ZXJzL3BjaS9yZW1vdmUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgIDYgKysNCj4gPiA+ID4+PiA+wqAgNCBmaWxlcyBjaGFuZ2Vk
+LCAxMTUgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPj4+ID4NCj4gPiA+ID4+PiA+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL29mL2lycS5jIGIvZHJpdmVycy9vZi9pcnEuYyBpbmRleA0KPiA+ID4gPj4+ID4g
+YTI5NmVhZi4uNzkxZTYwOSAxMDA2NDQNCj4gPiA+ID4+PiA+IC0tLSBhL2RyaXZlcnMvb2YvaXJx
+LmMNCj4gPiA+ID4+PiA+ICsrKyBiL2RyaXZlcnMvb2YvaXJxLmMNCj4gPiA+ID4+PiA+IEBAIC01
+NzYsNiArNTc2LDExIEBAIHZvaWQgX19pbml0IG9mX2lycV9pbml0KGNvbnN0IHN0cnVjdA0KPiA+
+ID4gPj4+ID5vZl9kZXZpY2VfaWQNCj4gPiA+ID4+PiA+ICptYXRjaGVzKQ0KPiA+ID4gPj4+ID7C
+oMKgwqDCoMKgIH0NCj4gPiA+ID4+PiA+wqAgfQ0KPiA+ID4gPj4+ID4NCj4gPiA+ID4+PiA+ICt1
+MzIgX193ZWFrIGxzX3BjaWVfc3RyZWFtaWRfZml4KHN0cnVjdCBkZXZpY2UgKmRldiwgdTMyIHJp
+ZCkNCj4gPiA+ID4+PiA+ICt7DQo+ID4gPiA+Pj4gPiArwqDCoMKgIHJldHVybiByaWQ7DQo+ID4g
+PiA+Pj4gPiArfQ0KPiA+ID4gPj4+ID4gKw0KPiA+ID4gPj4+ID7CoCBzdGF0aWMgdTMyIF9fb2Zf
+bXNpX21hcF9yaWQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gPiA+ID4+PiA+ZGV2aWNl
+X25vZGUgICoqbnAsDQo+ID4gPiA+Pj4gPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgdTMyIHJpZF9pbikNCj4gPiA+ID4+PiA+wqAgew0KPiA+ID4gPj4+ID4gQEAgLTU5MCw2ICs1
+OTUsMTAgQEAgc3RhdGljIHUzMiBfX29mX21zaV9tYXBfcmlkKHN0cnVjdCBkZXZpY2UNCj4gPiA+
+ID4+PiA+KmRldiwgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqKm5wLA0KPiA+ID4gPj4+ID7CoMKgwqDC
+oMKgwqDCoMKgwqAgaWYgKCFvZl9tYXBfcmlkKHBhcmVudF9kZXYtPm9mX25vZGUsIHJpZF9pbiwN
+Cj4gPiA+ID4+PiA+Im1zaS1tYXAiLA0KPiA+ID4gPj4+ID7CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgICJtc2ktbWFwLW1hc2siLCBucCwgJnJpZF9vdXQpKQ0KPiA+ID4gPj4+ID7C
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhazsNCj4gPiA+ID4+PiA+ICsNCj4gPiA+ID4+
+PiA+ICvCoMKgwqAgaWYgKHJpZF9vdXQgPT0gcmlkX2luKQ0KPiA+ID4gPj4+ID4gK8KgwqDCoMKg
+wqDCoMKgIHJpZF9vdXQgPSBsc19wY2llX3N0cmVhbWlkX2ZpeChwYXJlbnRfZGV2LCByaWRfaW4p
+Ow0KPiA+ID4gPj4+DQo+ID4gPiA+Pj4gT3ZlciBteSBkZWFkIGJvZHkuIEdldCB5b3VyIGZpcm13
+YXJlIHRvIHByb3Blcmx5IHByb2dyYW0gdGhlIExVVA0KPiA+ID4gPj4+IHNvIHRoYXQgaXQgcHJl
+c2VudHMgdGhlIElUUyB3aXRoIGEgcmVhc29uYWJsZSB0b3BvbG9neS4gVGhlcmUgaXMNCj4gPiA+
+ID4+PiBhYnNvbHV0ZWx5IG5vIHdheSB0aGlzIGtpbmQgb2YgY2hhbmdlIG1ha2VzIGl0IGludG8g
+dGhlIGtlcm5lbC4NCj4gPiA+ID4+DQo+ID4gPiA+PiBTb3JyeSBmb3IgdGhpcywgSSBrbm93IGl0
+IGlzIG5vdCByZWFzb25hYmxlLCBidXQgSSBoYXZlIG5vIG90aGVyDQo+ID4gPiA+PiB3YXksIGFz
+IEkga25vdywgQVJNIGdldCB0aGUgbWFwcGluZyBvZiBzdHJlYW0gSUQgdG8gcmVxdWVzdCBJRA0K
+PiA+ID4gPj4gZnJvbSB0aGUgbXNpLW1hcCBwcm9wZXJ0eSBvZiBEVFMsIGlmIGFkZCBhIG5ldyBk
+ZXZpY2Ugd2hpY2ggbmVlZA0KPiA+ID4gPj4gdGhlIHN0cmVhbSBJRCBhbmQgdHJ5IHRvIGdldCBp
+dCBmcm9tIHRoZSBtc2ktbWFwIG9mIERUUywgaXQgd2lsbA0KPiA+ID4gPj4gZmFpbGVkIGFuZCBu
+b3Qgd29yaywgeWVzPyBTbyBjb3VsZCB5b3UgZ2l2ZSBtZSBhIGJldHRlciBhZHZpY2UgdG8NCj4g
+PiA+ID4+IGZpeCB0aGlzIGlzc3VlLCBJIHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGFueSBjb21t
+ZW50cyBvciBzdWdnZXN0aW9ucywNCj4gdGhhbmtzIGEgbG90Lg0KPiA+ID4gPg0KPiA+ID4gPiBX
+aHkgY2FuJ3QgZmlybXdhcmUgZXhwb3NlIGFuIG1zaS1tYXAvbXNpLW1hcC1tYXNrIHRoYXQgaGFz
+IGEgbGFyZ2UNCj4gPiA+ID4gZW5vdWdoIHJhbmdlIHRvIGVuc3VyZSBtYXBwaW5nIG9mIFZGcz8g
+V2hhdCBhcmUgdGhlIGxpbWl0YXRpb25zIG9mDQo+ID4gPiA+IHRoZSBMVVQgdGhhdCB3b3VsZCBw
+cmV2ZW50IHRoaXMgZnJvbSBiZWluZyBjb25maWd1cmVkIGJlZm9yZSB0aGUNCj4gPiA+ID4ga2Vy
+bmVsIGJvb3RzPw0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLCB5ZXMsIHRoaXMg
+aXMgdGhlIHJvb3QgY2F1c2UsIHdlIG9ubHkgaGF2ZSAxNg0KPiA+IHN0cmVhbSBJRHMgZm9yIFBD
+SWUgZG9tYWluLCB0aGlzIGlzIHRoZSBoYXJkd2FyZSBsaW1pdGF0aW9uLCBpZiB0aGVyZQ0KPiA+
+IGhhdmUgZW5vdWdoIHN0cmVhbSBJRHMsIHdlIGNhbiBleHBvc2UgYW4gbXNpLW1hcC9tc2ktbWFw
+LW1hc2sgZm9yIGFsbA0KPiA+IFBDSWUgZGV2aWNlcyBpbiBzeXN0ZW0sIHVuZm9ydHVuYXRlbHks
+IHRoZSBzdHJlYW0gSURzIGlzIG5vdCBlbm91Z2gsIEkNCj4gPiB0aGluayBvdGhlciBBUk0gdmVu
+ZG9yIGhhdmUgc2FtZSBpc3N1ZSB0aGF0IHRoZXkgZG9uJ3QgaGF2ZSBlbm91Z2gNCj4gPiBzdHJl
+YW0gSURzLg0KPiA+DQo+ID4gVGhhbmtzDQo+ID4gWGlhb3dlaQ0KPiA+DQo+ID4gPg0KPiA+ID4g
+RnVydGhlcm1vcmUsIG5vdGUgdGhhdCB0aGlzIGF0dGVtcHQgaXNuJ3QgZG9pbmcgYW55dGhpbmcg
+Zm9yIHRoZQ0KPiA+ID4gU01NVSBTdHJlYW0gSURzLCBzbyB0aGUgbW9tZW50IGFueW9uZSB0cmll
+cyB0byBhc3NpZ24gdGhvc2UgVkZzDQo+ID4gPiB0aGV5J3JlIHN0aWxsDQo+ID4gZ29pbmcNCj4g
+PiA+IHRvIGdvIGJhbmcgYW55d2F5LiBBbnkgZmlybXdhcmUtYmFzZWQgZml4dXAgZm9yIElEIG1h
+cHBpbmdzLCBjb25maWcNCj4gPiBzcGFjZQ0KPiA+ID4gYWRkcmVzc2VzLCBldGMuIG5lZWRzIHRv
+IGJlIFNSLUlPVi1hd2FyZSBhbmQgYWNjb3VudCBmb3IgYWxsDQo+ID4gPiAqcG9zc2libGUqIEJE
+RnMuDQo+ID4gPg0KPiA+ID4gT24gTFMyMDg1IGF0IGxlYXN0LCBJSVJDIHlvdSBjYW4gY29uZmln
+dXJlIGEgc2luZ2xlIExVVCBlbnRyeSB0bw0KPiA+ID4ganVzdA0KPiA+IHRyYW5zbGF0ZQ0KPiA+
+ID4gdGhlIEJ1czpEZXZpY2UgaWRlbnRpZmllciBhbmQgcGFzcyBzb21lIG9yIGFsbCBvZiB0aGUg
+RnVuY3Rpb24gYml0cw0KPiA+IHN0cmFpZ2h0DQo+ID4gPiB0aHJvdWdoIGFzIHRoZSBMU0JzIG9m
+IHRoZSBTdHJlYW0gSUQsIHNvIEkgZG9uJ3QgYmVsaWV2ZSB0aGUNCj4gPiA+IHJlbGF0aXZlbHkN
+Cj4gPiBsaW1pdGVkDQo+ID4gPiBudW1iZXIgb2YgTFVUIHJlZ2lzdGVycyBzaG91bGQgYmUgdG9v
+IG11Y2ggb2YgYW4gaXNzdWUuIEZvciBleGFtcGxlLA0KPiA+IGxhc3QNCj4gPiA+IHRpbWUgSSBo
+YWNrZWQgb24gdGhhdCBJIGFwcGFyZW50bHkgaGFkIGl0IHNldCB1cCBzdGF0aWNhbGx5IGxpa2Ug
+dGhpczoNCj4gPiA+DQo+ID4gPiAmcGNpZTMgew0KPiA+ID4gCS8qIFNxdWFzaCA4OjU6MyBCREYg
+ZG93biB0byAyOjI6MyAqLw0KPiA+ID4gCW1zaS1tYXAtbWFzayA9IDwweDAzMWY+Ow0KPiA+ID4g
+CW1zaS1tYXAgPSA8MHgwMDAgJml0cyAweDAwIDB4MjA+LA0KPiA+ID4gCQkgIDwweDEwMCAmaXRz
+IDB4MjAgMHgyMD4sDQo+ID4gPiAJCSAgPDB4MjAwICZpdHMgMHg0MCAweDIwPiwNCj4gPiA+IAkJ
+ICA8MHgzMDAgJml0cyAweDYwIDB4MjA+Ow0KPiA+ID4gfTsNCj4gPg0KPiA+IFRoYW5rcyBSb2Jp
+biwgdGhpcyBpcyBhIGVmZmVjdGl2ZSB3YXksIGJ1dCB3ZSBvbmx5IGhhdmUgdG90YWwgMTYNCj4g
+PiBzdHJlYW0gSURzIGZvciBQQ0llIGRvbWFpbiwgYW5kIG9ubHkgYXNzaWduIDQgc3RyZWFtIElE
+cyBmb3IgZWFjaCBQQ0llDQo+ID4gY29udHJvbGxlciBpZiB0aGUgYm9hcmQgaGF2ZSA0IFBDSWUg
+Y29udHJvbGxlcnMsIHRoaXMgaXMgdGhlIHJvb3QNCj4gPiBjYXVzZSwgSSBzdWJtaXR0ZWQgdGhp
+cyBwYXRjaCB0byBkeW5hbWljYWxseSBtYW5hZ2UgdGhlc2Ugc3RyZWFtIElEcywNCj4gPiBzbyB0
+aGF0IGl0IGxvb2tzIGxpa2UgZWFjaCBQQ0llIGNvbnRyb2xsZXIgaGFzIDE2IHN0cmVhbSBJRHMu
+IEkgY2FuDQo+ID4gZHluYW1pY2FsbHkgYWxsb2NhdGUgYW5kIHJlbGVhc2UgdGhlc2Ugc3RyZWFt
+IElEcyBiYXNlZCBvbiB0aGUgUENJZQ0KPiA+IGRldmljZXMgaW4gdGhlIGN1cnJlbnQgc3lzdGVt
+Lg0KPiA+IElmIHVzZSB5b3VyIG1ldGhvZCwNCj4gPiB3ZSBzdXBwb3J0IHVwIHRvIDQgUENJZSBk
+ZXZpY2VzKDIgUEZzIGFuZCAyIFZGcyksIGl0IHdpbGwgbm90IGFjaGlldmUNCj4gPiBvdXIgcHVy
+cG9zZS4NCj4gPg0KPiANCj4gV2UgYWxsb2NhdGUgdGhlIFN0cmVhbV9JRHMgaW4gYSBzdGF0aWMg
+ZmFzaGlvbiBpbiB1LWJvb3QsIHNlZSBbMV0sIHNvIGlmIGEgdXNlcg0KPiB3b3VsZCBuZWVkIGEg
+bGFyZ2VyIHJhbmdlIGZvciBQQ0kge3N9aGUgY291bGQgYWRqdXN0IHRoYXQgaW4gdGhlcmUuIE9u
+IG1vc3Qgb2YNCj4gb3VyIExheWVyc2NhcGUgY2hpcHMgdGhlIFNNTVUgaXMgY29uZmlndXJlZCB0
+byA1IGJpdHMgZm9yIFRCVV9JRCBwbHVzIDEwIGJpdHMNCj4gZm9yIFN0cmVhbUlELiBPdXQgb2Yg
+dGhlc2UgMTAgY29udHJvbGxhYmxlIGJpdHMgd2UgY2FuIGVmZmVjdGl2ZWx5IHVzZSA3IGJpdHMN
+Cj4gZ2l2aW5nIHVzIGEgbWF4IHJhbmdlIG9mIDEyNyBTdHJlYW1fSURzLg0KPiANCj4gWzFdDQo+
+IGh0dHBzOi8vZ2l0bGFiLmRlbnguZGUvdS1ib290L3UtYm9vdC9ibG9iL21hc3Rlci9hcmNoL2Fy
+bS9pbmNsdWRlL2FzbS9hcg0KPiBjaC1mc2wtbGF5ZXJzY2FwZS9zdHJlYW1faWRfbHNjaDMuaA0K
+DQpUaGFua3MgZm9yIHlvdXIgaW5mb3JtYXRpb24sIGl0IGlzIG5vdCBlbm91Z2ggZXZlbiB0aGVy
+ZSBhcmUgMTI3IFN0cmVhbV9JRHMsIGlmIGENClBDSWUgZGV2aWNlIHdoaWNoIHN1cHBvcnQgU1JJ
+T1YsIGJ1dCB0aGUgVkZzIG9mZnNldCBpcyAxMjgsIHRoZSBWRnMgd2lsbCBub3Qgd29yay4NCg0K
+VGhhbmtzIA0KWGlhb3dlaSANCg0KPiANCj4gLS0tDQo+IEJlc3QgUmVnYXJkcywgTGF1cmVudGl1
+DQo=
