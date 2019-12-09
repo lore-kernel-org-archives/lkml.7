@@ -2,172 +2,102 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE165C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D7AC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691422073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:15:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xCVk3hwr"
+	by mail.kernel.org (Postfix) with ESMTP id 71F3A2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfLIUPZ (ORCPT
+        id S1726689AbfLIURN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:15:25 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:43196 "EHLO vps0.lunn.ch"
+        Mon, 9 Dec 2019 15:17:13 -0500
+Received: from mga05.intel.com ([192.55.52.43]:33839 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbfLIUPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:15:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=T5Yi+OIGx+pBIZwjkRO4oHqWr7IP5W/5NxupEGz/i88=; b=xCVk3hwrbtcEnyJTg9bOSB0nCf
-        4GwmAlsCChLcd/z5Mt/hyrYYgkzMAgMZA3nG6ZP2rDF+DJEfKbTNt0RqPVZepesUfkABNzv/XNOGk
-        mMfP4o7ovmEhoOMSGiqiY0el6h3nXz21GZjN4X2jwzmBIjVAavS8lXUTXG/acUwrXiGE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iePR1-0007ni-IQ; Mon, 09 Dec 2019 21:15:11 +0100
-Date:   Mon, 9 Dec 2019 21:15:11 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 5/5] ethtool: provide link mode names as a
- string set
-Message-ID: <20191209201511.GL9099@lunn.ch>
-References: <cover.1575920565.git.mkubecek@suse.cz>
- <0c239334df943c3f5f4ca74a2509754e08eda9e3.1575920565.git.mkubecek@suse.cz>
+        id S1726598AbfLIURN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:17:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 12:17:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
+   d="scan'208";a="244585491"
+Received: from nshalmon-mobl.ger.corp.intel.com (HELO localhost) ([10.252.8.146])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 12:17:09 -0800
+Date:   Mon, 9 Dec 2019 22:17:07 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [GIT PULL] tpmdd updates for Linux v5.4
+Message-ID: <20191209201707.GI19243@linux.intel.com>
+References: <20190902143121.pjnykevzlajlcrh6@linux.intel.com>
+ <CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com>
+ <20191127205800.GA14290@linux.intel.com>
+ <20191127205912.GB14290@linux.intel.com>
+ <20191128012055.f3a6gq7bjpvuierx@cantor>
+ <20191129235322.GB21546@linux.intel.com>
+ <20191130001253.rtovohtfbg25uifm@cantor>
+ <20191206211834.GD9971@linux.intel.com>
+ <20191206230255.mhinntfevp6vdlkj@cantor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c239334df943c3f5f4ca74a2509754e08eda9e3.1575920565.git.mkubecek@suse.cz>
+In-Reply-To: <20191206230255.mhinntfevp6vdlkj@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 08:55:45PM +0100, Michal Kubecek wrote:
-> Unlike e.g. netdev features, the ethtool ioctl interface requires link mode
-> table to be in sync between kernel and userspace for userspace to be able
-> to display and set all link modes supported by kernel. The way arbitrary
-> length bitsets are implemented in netlink interface, this will be no longer
-> needed.
+On Fri, Dec 06, 2019 at 04:02:55PM -0700, Jerry Snitselaar wrote:
+> On Fri Dec 06 19, Jarkko Sakkinen wrote:
+> > On Fri, Nov 29, 2019 at 05:12:53PM -0700, Jerry Snitselaar wrote:
+> > > On Sat Nov 30 19, Jarkko Sakkinen wrote:
+> > > > On Wed, Nov 27, 2019 at 06:20:55PM -0700, Jerry Snitselaar wrote:
+> > > > > There also was that other issue reported on the list about
+> > > > > tpm_tis_core_init failing when calling tpm_get_timeouts due to the
+> > > > > power gating changes.
+> > > >
+> > > > Please add a (lore.ko) link for reference to this thread.
+> > > >
+> > > > /Jarkko
+> > > >
+> > > 
+> > > https://lore.kernel.org/linux-integrity/a60dadce-3650-44ce-8785-2f737ab9b993@www.fastmail.com/
+> > 
+> > tpm_chip_stop() probably causes the issue. That is why tpm2_probe()
+> > works and failure happens after that.
+> > 
+> > tpm_chip_stop() should be called once at the end of the function.
+> > 
 > 
-> To allow userspace to access all link modes running kernel supports, add
-> table of ethernet link mode names and make it available as a string set to
-> userspace GET_STRSET requests. Add build time check to make sure names
-> are defined for all modes declared in enum ethtool_link_mode_bit_indices.
+> The patch I posted that fixed the issue for him moved the
+> tpm_chip_start() from the irq probing section right below there to
+> before the tpm_get_timeouts call, but your idea is better.
 
-Hi Michal
+Yes, the chip can be reserved for the whole course of the function
+because it is single user at that point.
 
-Having a build time check is a good idea. However, i don't see it in
-the code. Please could you point it out.
-> 
-> Once the string set is available, make it also accessible via ioctl.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> ---
->  include/linux/ethtool.h      |  4 ++
->  include/uapi/linux/ethtool.h |  2 +
->  net/ethtool/common.c         | 86 ++++++++++++++++++++++++++++++++++++
->  net/ethtool/common.h         |  2 +
->  net/ethtool/ioctl.c          |  5 +++
->  5 files changed, 99 insertions(+)
-> 
-> diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-> index 95991e4300bf..5caef65d93d6 100644
-> --- a/include/linux/ethtool.h
-> +++ b/include/linux/ethtool.h
-> @@ -102,6 +102,10 @@ static inline u32 ethtool_rxfh_indir_default(u32 index, u32 n_rx_rings)
->  #define __ETHTOOL_DECLARE_LINK_MODE_MASK(name)		\
->  	DECLARE_BITMAP(name, __ETHTOOL_LINK_MODE_MASK_NBITS)
->  
-> +/* compose link mode index from speed, type and duplex */
-> +#define ETHTOOL_LINK_MODE(speed, type, duplex) \
-> +	ETHTOOL_LINK_MODE_ ## speed ## base ## type ## _ ## duplex ## _BIT
-> +
->  /* drivers must ignore base.cmd and base.link_mode_masks_nwords
->   * fields, but they are allowed to overwrite them (will be ignored).
->   */
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index d4591792f0b4..f44155840b07 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -593,6 +593,7 @@ struct ethtool_pauseparam {
->   * @ETH_SS_RSS_HASH_FUNCS: RSS hush function names
->   * @ETH_SS_PHY_STATS: Statistic names, for use with %ETHTOOL_GPHYSTATS
->   * @ETH_SS_PHY_TUNABLES: PHY tunable names
-> + * @ETH_SS_LINK_MODES: link mode names
->   */
->  enum ethtool_stringset {
->  	ETH_SS_TEST		= 0,
-> @@ -604,6 +605,7 @@ enum ethtool_stringset {
->  	ETH_SS_TUNABLES,
->  	ETH_SS_PHY_STATS,
->  	ETH_SS_PHY_TUNABLES,
-> +	ETH_SS_LINK_MODES,
->  };
->  
->  /**
-> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> index 220d6b539180..be1b26970eb1 100644
-> --- a/net/ethtool/common.c
-> +++ b/net/ethtool/common.c
-> @@ -83,3 +83,89 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
->  	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
->  	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
->  };
-> +
-> +#define __LINK_MODE_NAME(speed, type, duplex) \
-> +	#speed "base" #type "/" #duplex
-> +#define __DEFINE_LINK_MODE_NAME(speed, type, duplex) \
-> +	[ETHTOOL_LINK_MODE(speed, type, duplex)] = \
-> +	__LINK_MODE_NAME(speed, type, duplex)
-> +#define __DEFINE_SPECIAL_MODE_NAME(_mode, _name) \
-> +	[ETHTOOL_LINK_MODE_ ## _mode ## _BIT] = _name
-> +
-> +const char
-> +link_mode_names[__ETHTOOL_LINK_MODE_MASK_NBITS][ETH_GSTRING_LEN] = {
-> +	__DEFINE_LINK_MODE_NAME(10, T, Half),
-> +	__DEFINE_LINK_MODE_NAME(10, T, Full),
-> +	__DEFINE_LINK_MODE_NAME(100, T, Half),
-> +	__DEFINE_LINK_MODE_NAME(100, T, Full),
-> +	__DEFINE_LINK_MODE_NAME(1000, T, Half),
-> +	__DEFINE_LINK_MODE_NAME(1000, T, Full),
-> +	__DEFINE_SPECIAL_MODE_NAME(Autoneg, "Autoneg"),
-> +	__DEFINE_SPECIAL_MODE_NAME(TP, "TP"),
-> +	__DEFINE_SPECIAL_MODE_NAME(AUI, "AUI"),
-> +	__DEFINE_SPECIAL_MODE_NAME(MII, "MII"),
-> +	__DEFINE_SPECIAL_MODE_NAME(FIBRE, "FIBRE"),
-> +	__DEFINE_SPECIAL_MODE_NAME(BNC, "BNC"),
-> +	__DEFINE_LINK_MODE_NAME(10000, T, Full),
-> +	__DEFINE_SPECIAL_MODE_NAME(Pause, "Pause"),
-> +	__DEFINE_SPECIAL_MODE_NAME(Asym_Pause, "Asym_Pause"),
-> +	__DEFINE_LINK_MODE_NAME(2500, X, Full),
-> +	__DEFINE_SPECIAL_MODE_NAME(Backplane, "Backplane"),
-> +	__DEFINE_LINK_MODE_NAME(1000, KX, Full),
-> +	__DEFINE_LINK_MODE_NAME(10000, KX4, Full),
-> +	__DEFINE_LINK_MODE_NAME(10000, KR, Full),
-> +	[ETHTOOL_LINK_MODE_10000baseR_FEC_BIT] = "10000baseR_FEC",
+> Any thoughts on the irq issue? I need to go back and look at the older
+> commits again, but before Stefan's patch enabling the irq flag I'm not
+> sure the last time that testing code section in tpm_tis_send was
+> actually used. I think prior to that it always just went straight to
+> tpm_tis_send_main.
 
-Would
+I'd prefer to look it up with the fix for start/stop because it is
+a regression on its own and mixed effect is not great way to analyze
+anything.
 
-__DEFINE_SPECIAL_MODE_NAME(10000baseR_FEC, 10000baseR_FEC),
+So what we need is a T490S owner to provide klog with the fix applied.
 
-work here?
-
-     Andrew
+/Jarkko
