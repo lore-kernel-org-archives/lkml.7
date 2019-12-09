@@ -2,181 +2,123 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FEBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F20C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA27D2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1nLB4pL"
+	by mail.kernel.org (Postfix) with ESMTP id BBE582073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575881059;
+	bh=SBF6mOewuExxQmKx1erkCQfkC5yZuexlFnok3AqVd7o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t6V4kwshmGpR/WtEJiYaZWrJzAeXfY625nASO3xFtKjN25DzvCYGSv48HHsvR5dsW
+	 1ZPSgYpxuUYke+BDha1XkbW+wZd2NwVC/vaFWKWTF7NW/JlEdHqFDZcmqhQaSZAFD/
+	 buMK1AhrxItfQQJbB87DJGXlxyaO3AKcGp+kPPY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfLIInE (ORCPT
+        id S1727322AbfLIIoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:43:04 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35457 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfLIInD (ORCPT
+        Mon, 9 Dec 2019 03:44:18 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35179 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727160AbfLIIoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:43:03 -0500
-Received: by mail-pj1-f66.google.com with SMTP id w23so5578107pjd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 00:43:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zYU0p49jaQaWhoON0mWxdDgAlDp+Z2USeQN6YJkq0LU=;
-        b=f1nLB4pLihTj7QqOBhMeGoTXcSLn9LcpjRNX2SWnNb75lhCLZ2Z4xleFtyDtWBhC9C
-         g95kB+/UOZB9KrpPnTxQF5XttcnBmlkoTVEkUHhH6TwQc0FP3/VmDbZPfU2ZFKul2NSy
-         cW2ZAuB2+ipUqx61EFTiK46qUp2xhHvYXrGjtTgmuXluaS+16VZxNFbhF3h3Q3I5FqiC
-         Wu8eTfMs1nquL0RXIYyHaXYTPSRFBYHqpIsoehnmuFrSaQonxBy6kAC8Wqhad/t3vahI
-         ULyKn6Bcu9cEq9SGnAjVNzRhkXieXIKZuSN5dCJLtPcqBuw2GFlis1dTi18ITvDM9v1B
-         FJmQ==
+        Mon, 9 Dec 2019 03:44:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id o9so11506977ote.2;
+        Mon, 09 Dec 2019 00:44:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zYU0p49jaQaWhoON0mWxdDgAlDp+Z2USeQN6YJkq0LU=;
-        b=ITqkvUoVGtEbomKjs9XqcXj9au+vqegWrM3bWOiQXfk/88l4+QFCPCzOWQODtiBLZj
-         mUEkUYyqcQ+Pt6Pj8A84ngC/LUB5XTFxeBH0Rq1aCGJGjc4hulPktbtfVmLlxd+XleCZ
-         sB37RaBrDE2nCxfdI0HTAVGRqliGsqUnFVouPipAVwnAn0zhfnsNEb97miangY67A4aX
-         5dFXtJJ7xhg1w5x5dIK0eKiKdwfQvqzhQKGKLBD+DH3078nMOuSEi6qNO1C9aUcsoTwj
-         DUEW+QT2xAUJOwT9Qnjk0UsBbQ2DAaotfo4HOOk+Hf/Pu4FMJHI9R+sFbFZ9Wz+p7EFY
-         /SCQ==
-X-Gm-Message-State: APjAAAUpnVh6vq3Yv94y7anW6xY+ecma6sj0ZjLhxF1LOu3soMrEUGQn
-        QGwpsPH7L8viEvg98koEHKg=
-X-Google-Smtp-Source: APXvYqx+eMXHnMMqNF1EO8VX5HOBZ84BJhclLpKNqp3e8sDPXnKAb4vxozfV7CYe/qrlvdnxy07yrQ==
-X-Received: by 2002:a17:90a:ca12:: with SMTP id x18mr30682084pjt.66.1575880983333;
-        Mon, 09 Dec 2019 00:43:03 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id x12sm25332109pfm.130.2019.12.09.00.43.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:43:02 -0800 (PST)
-Date:   Mon, 9 Dec 2019 17:43:00 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 2/3] printk-rb: new printk ringbuffer
- implementation (reader)
-Message-ID: <20191209084300.GD88619@google.com>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-3-john.ogness@linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M0jcGNVDZdjVOcFf7U5lfAmPR1zFVD6MTPuQZE2xEcE=;
+        b=HNJ3D8YuQVuEIxDq9xeijwPiOCcO7/8CPkNxp6FmP1p04bVURJPkkk7es+SyHCmB7G
+         aP25r3rA1LILbDATT4vnKQ/RodfZS6Z0IKI9lZlJUC7o9x0m+3JuYJ97o96kIwdWABmk
+         n0uV9vVnsaucYDxCyb1xdLzbBWNZIteDu9ZsHPmhbvAuiziS1ndPsI+RoAzsZPPHQyNZ
+         UB4jCno60tO7mZvOMY9nrhyOSH5tfiVcshIldX5PvM7XVIAf22lEaVBAVGBHnXdaVOUc
+         j4vqg51j77LFetGcAxGV6/sLMVDMLNpQGg2+XKE1eSv7ACAYl5hQcsZ/DJcn7UO4cTDE
+         e9qw==
+X-Gm-Message-State: APjAAAWwk1KsVzp+7Ur+EL0ne5F//da7n40ygzW8cXe9amAq6kSiSuIj
+        5wF3j25fapem0uEQWhxPNkaBOcrF01gunyzkoZY=
+X-Google-Smtp-Source: APXvYqw3e7bqrtKZjCExTB/wvF/XmbS6xv1meaecTz1g79OjC4gLerzStkCD7JZ0/DUNY5Qbd/Fpc76z7jw/D/argko=
+X-Received: by 2002:a05:6830:18cd:: with SMTP id v13mr19601980ote.118.1575881057288;
+ Mon, 09 Dec 2019 00:44:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128015235.12940-3-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20191209065107epcas1p4eaa96dffa943add96359b15cbd4d3b62@epcas1p4.samsung.com>
+ <f2f33725-5a73-0553-ef8a-52b192b80cfb@samsung.com>
+In-Reply-To: <f2f33725-5a73-0553-ef8a-52b192b80cfb@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 9 Dec 2019 09:44:02 +0100
+Message-ID: <CAJZ5v0i0HJp-P+q-fMPsFdxTrc=Qo8Ckp16_8S=QHw2_=0+MYg@mail.gmail.com>
+Subject: Re: [GIT PULL] devfreq fixes for v5.5-rc2
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
+        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/11/28 02:58), John Ogness wrote:
-> +/* Given @blk_lpos, copy an expected @len of data into the provided buffer. */
-> +static bool copy_data(struct prb_data_ring *data_ring,
-> +		      struct prb_data_blk_lpos *blk_lpos, u16 len, char *buf,
-> +		      unsigned int buf_size)
-> +{
-> +	unsigned long data_size;
-> +	char *data;
-> +
-> +	/* Caller might not want the data. */
-> +	if (!buf || !buf_size)
-> +		return true;
-> +
-> +	data = get_data(data_ring, blk_lpos, &data_size);
-> +	if (!data)
-> +		return false;
-> +
-> +	/* Actual cannot be less than expected. */
-> +	if (WARN_ON_ONCE(data_size < len))
-> +		return false;
-> +
-> +	data_size = min_t(u16, buf_size, len);
-> +
-> +	if (!WARN_ON_ONCE(!data_size))
-> +		memcpy(&buf[0], data, data_size);
-> +	return true;
-> +}
-> +
-> +/*
-> + * Read the record @id and verify that it is committed and has the sequence
-> + * number @seq.
-> + *
-> + * Error return values:
-> + * -EINVAL: The record @seq does not exist.
-> + * -ENOENT: The record @seq exists, but its data is not available. This is a
-> + *          valid record, so readers should continue with the next seq.
-> + */
-> +static int desc_read_committed(struct prb_desc_ring *desc_ring, u32 id,
-> +			       u64 seq, struct prb_desc *desc)
-> +{
-> +	enum desc_state d_state;
-> +
-> +	d_state = desc_read(desc_ring, id, desc);
-> +	if (desc->info.seq != seq)
-> +		return -EINVAL;
-> +	else if (d_state == desc_reusable)
-> +		return -ENOENT;
-> +	else if (d_state != desc_committed)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Copy the ringbuffer data from the record with @seq to the provided
-> + * @r buffer. On success, 0 is returned.
-> + *
-> + * See desc_read_committed() for error return values.
-> + */
-> +static int prb_read(struct printk_ringbuffer *rb, u64 seq,
-> +		    struct printk_record *r)
-> +{
-> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> +	struct prb_desc *rdesc = to_desc(desc_ring, seq);
-> +	atomic_t *state_var = &rdesc->state_var;
-> +	struct prb_desc desc;
-> +	int err;
-> +	u32 id;
-> +
-> +	/* Get a reliable local copy of the descriptor and check validity. */
-> +	id = DESC_ID(atomic_read(state_var));
-> +	err = desc_read_committed(desc_ring, id, seq, &desc);
-> +	if (err)
-> +		return err;
-> +
-> +	/* If requested, copy meta data. */
-> +	if (r->info)
-> +		memcpy(r->info, &desc.info, sizeof(*(r->info)));
+On Mon, Dec 9, 2019 at 7:51 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>
+> Dear Rafael,
+>
+> This is devfreq-fixes pull request for v5.5-rc2. I add detailed description of
+> this pull request on the following tag. Please pull devfreq with following updates.
+> - tag name : devfreq-fixes-for-5.5-rc2
 
-I wonder if those WARN_ON-s will trigger false positive sometimes.
+Pulled and pushed out (as 5.5 candidate material), thank you!
 
-A theoretical case.
-
-What if reader gets preempted/interrupted in the middle of
-desc_read_committed()->desc_read()->memcpy(). The context which interrupts
-the reader recycles the descriptor and pushes new data. Suppose that
-reader was interrupted right after it copied ->info.seq and ->info.text_len.
-So the first desc_read_committed() will pass - we have matching ->seq
-and committed state. copy_data(), however, most likely, will generate
-WARNs. The final desc_read_committed() will notice that local copy
-of desc was in non-consistent state and everything is fine, but we have
-WARNs in the log buffer now.
-
-	-ss
+> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+>
+>   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-fixes-for-5.5-rc2
+>
+> for you to fetch changes up to 27dbc542f651ed09de910f274b32634904103774:
+>
+>   PM / devfreq: Use PM QoS for sysfs min/max_freq (2019-12-09 12:19:16 +0900)
+>
+> ----------------------------------------------------------------
+>
+> Update devfreq for 5.5-rc2
+>
+> Detailed description for this pull request:
+> 1. Update devfreq core
+> - Add PM QoS support for devfreq device with following QoS type. External user
+> of devfreq device can request the minimum and maximum frequency according to
+> their multiple requirements.
+> : DEV_PM_QOS_MIN_FREQUENCY is used for requesting the minimum device frequency.
+> : DEV_PM_QOS_MAX_FREQUENCY is used for requesting the maximum device frequency.
+>
+> - Use PM QoS interface when entering the min/max_freq via sysfs interface.
+>
+> - Add get_freq_range() helper function in order to get the final min/max
+> frequency among the multiple requirements of min/max frequency.
+>
+> - Fix the issue such as fixing the return value and modify code
+> for more correct exception handling if error happen.
+>
+> ----------------------------------------------------------------
+>
+> Leonard Crestez (6):
+>       PM / devfreq: Fix devfreq_notifier_call returning errno
+>       PM / devfreq: Set scaling_max_freq to max on OPP notifier error
+>       PM / devfreq: Introduce get_freq_range helper
+>       PM / devfreq: Don't fail devfreq_dev_release if not in list
+>       PM / devfreq: Add PM QoS support
+>       PM / devfreq: Use PM QoS for sysfs min/max_freq
+>
+>  drivers/devfreq/devfreq.c | 273 ++++++++++++++++++++++++++++++++++------------
+>  include/linux/devfreq.h   |  14 ++-
+>  2 files changed, 212 insertions(+), 75 deletions(-)
