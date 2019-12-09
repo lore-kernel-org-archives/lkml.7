@@ -2,449 +2,209 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3C0C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9245C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC482080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2832073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b7R1BqFE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0eO0j9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfLIMVH (ORCPT
+        id S1727541AbfLIMYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:21:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44546 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727482AbfLIMUf (ORCPT
+        Mon, 9 Dec 2019 07:24:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726687AbfLIMYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 07:20:35 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so15944838wrm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kLt6v09o9+N7Opy9fv70edG/QOJu7awJCO0s53Xmu2w=;
-        b=b7R1BqFE9R6nqueVtj9JIKkPVD6RqtGR2s/H6KxVAY4JmsIkOO229kjOrLBbSQRGdp
-         ODY9NX6RmpMrUjjw+85yraT9mT29FdPl8l9gGYRaDpVXujEqeleaqXSAGr3PJo5zfCt3
-         I9qyxg8qYYj0oJsCWIVlXOygofUh8EHdp7kSQOfcOF4l01+gjNeJUqeWhc4sigkR/KHv
-         IMiVPSvfGMXmYM4jztkUG7pJu36Mm4vvkO/BZX7JjmWdobT6NJMx7AKW0R39K2pKV18c
-         TZgN85GcAKJSqNH+FHE8531gMPq+vyT/pDKVqOtIkSGnC4O/yN/vxIcaYbIlwhOErevh
-         cILw==
+        Mon, 9 Dec 2019 07:24:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575894258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Om3e8U2zV0QaZB81qgLCidrh7Jm1jTyKjoRsq4wAO1A=;
+        b=Q0eO0j9trDdYlBH+N5djComR9zXXOFh5QzSEOidW3mWMGsFqvyHvR/VFaQIrd99vtAo2R5
+        TXLwr6sUcb+TStMwukCbjecer8KPk26JkdlDQ6T17UkdyDt7tdWN78iNZt1k/VNWR6ZqYk
+        M1OLEo8R/d1a42BLKm/i+T5Iv49XXH0=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-BAM8xrFbPMW4qMDZ__CMSw-1; Mon, 09 Dec 2019 07:24:17 -0500
+Received: by mail-qk1-f199.google.com with SMTP id b9so9832562qkl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:24:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kLt6v09o9+N7Opy9fv70edG/QOJu7awJCO0s53Xmu2w=;
-        b=l2/03w2O99Wupd6xhecpjkxqCi4Ogz5hR+dReUKp/JzkyxYzBoJD2RrX0Fax+472xl
-         uOL6FJ5VHP/YbEeVdyARaV1YXWn+1H3D8G4QUcIPy4Ytii0rY2tWnBJe3zDmuQSUggyI
-         lCT4OtuzovCx2VruQkDByds/EnbUmtmeYgHdMCrpcOhUOpugCNpEVChjrZTZdMwb2WFK
-         7sIW9XtuV49DHd3hgdcbVDv0k2n+mjZOfr7hPtOeaeB16WtdU//EB9RgUKZ+2zoOTcLB
-         BrtQ653Br0mUQXn25uhtCUIGwDg8qk1kGjlPAlNMBk7mUtEAkFMCdJoXH1RuxXzYf7rE
-         ZMOA==
-X-Gm-Message-State: APjAAAUPMFOSvxwKDMFogPXGDmOROAprIceuEOFmfGDWD6QxHQgld3vs
-        Na83gPA2nmDdION4fb0VXWqBsA==
-X-Google-Smtp-Source: APXvYqyRdtebnTl9EdRTAaKWWBAtWrys1UiyGUUvTshf4HSSRNK5mYBeoldPxIayS8KX6J4fGRRQog==
-X-Received: by 2002:adf:ca07:: with SMTP id o7mr1888982wrh.49.1575894032038;
-        Mon, 09 Dec 2019 04:20:32 -0800 (PST)
-Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id u18sm27066949wrt.26.2019.12.09.04.20.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 04:20:31 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] media: v4l2-mem2mem: handle draining, stopped and next-buf-is-last states
-Date:   Mon,  9 Dec 2019 13:20:25 +0100
-Message-Id: <20191209122028.13714-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191209122028.13714-1-narmstrong@baylibre.com>
-References: <20191209122028.13714-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R2wkCojmmyM/eMvArR6da0gzEriG+0Vl5wpoIupE6a0=;
+        b=IwiZRCP72uA7VdVP/W2aZE+b/0IhuCrfAn7hgXK3jWWsKXsjTQKvyblbg4OfoDZuuz
+         0sny4E+9fB7kK+3k+6i2NojpKgyJA0uYOfYNhFcDYeCX1pE6Td63K58egIwLuKPbaPO6
+         RFFnMn4ulMLGIimPA9ldZI4DDNaRLoVn31QLkNJfFfo81I8LyF8bY6WogKJXrPtoMbZC
+         85AgW+zTVZU3sKjhsVWvISALnGthZrcO1Bi4PbVD+Ln4OZFwVZ30u/oJNCGLaWjARst0
+         Sbzy+cSgApIg4fg72SF35L1DmCuiWOxViQ+2e2SAwVguR5UNjHT0RIg2CwIoDhp38HpJ
+         ZsPg==
+X-Gm-Message-State: APjAAAVP/VU8qaArOkoBpJz01OKyC3z3sBGcgU3720PbqSCnGhf2iEKh
+        ZSzC6rhZrf2Ie1r+M3zYijIjhqNgstf86SsGgVq/GjC3M+D3xWyWBhIXvGqvJWC3lQzCOJCOQvl
+        F77yg8CagZDF1NHglQuq+L9/Ku1rKBHDv5TMDXZY9
+X-Received: by 2002:a37:c57:: with SMTP id 84mr6830057qkm.157.1575894256892;
+        Mon, 09 Dec 2019 04:24:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzuZX+dUghHi7wPyOkamBRcZ36z3Od2tRPaKnHnAmGQD/DMSGgIgQOLFSwroihlGD9ll8sjWxVfTu+lqQTAIVU=
+X-Received: by 2002:a37:c57:: with SMTP id 84mr6830033qkm.157.1575894256520;
+ Mon, 09 Dec 2019 04:24:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+ <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+ <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+ <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
+ <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
+ <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com>
+ <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com> <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 9 Dec 2019 13:24:04 +0100
+Message-ID: <CACO55tu19-14nVnnCpWz3r3nf15j6tGWzHNBRmbbs2R6O4gMCA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: BAM8xrFbPMW4qMDZ__CMSw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the draining and stop phase of the HW decoder mem2mem bahaviour is
-now clearly defined, we can move handling of the following states to the
-common v4l2-mem2mem core code:
-- draining
-- stopped
-- next-buf-is-last
+On Mon, Dec 9, 2019 at 12:39 PM Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+>
+> On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > anybody any other ideas?
+>
+> Not yet, but I'm trying to collect some more information.
+>
+> > It seems that both patches don't really fix
+> > the issue and I have no idea left on my side to try out. The only
+> > thing left I could do to further investigate would be to reverse
+> > engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
+> > but I've heard users having similar issues to the one Lyude told us
+> > about... and I couldn't verify that the patches help there either in a
+> > reliable way.
+>
+> It looks like the newer (8+) versions of Windows expect the GPU driver
+> to prepare the GPU for power removal in some specific way and the
+> latter fails if the GPU has not been prepared as expected.
+>
+> Because testing indicates that the Windows 7 path in the platform
+> firmware works, it may be worth trying to do what it does to the PCIe
+> link before invoking the _OFF method for the power resource
+> controlling the GPU power.
+>
 
-By introducing the following v4l2-mem2mem APIS:
-- v4l2_m2m_encoder_cmd/v4l2_m2m_ioctl_encoder_cmd to handle start/stop command
-- v4l2_m2m_decoder_cmd/v4l2_m2m_ioctl_decoder_cmd to handle start/stop command
-- v4l2_m2m_start_streaming to handle start of streaming of the de/encoder queue
-- v4l2_m2m_stop_streaming to handle stop of streaming of the de/encoder queue
-- v4l2_m2m_last_buffer_done to maek the current dest buffer as the last one
+ohh, that actually makes sense. Didn't think of that yet.
 
-And inline helpers:
-- v4l2_m2m_mark_stopped to mark the de/encoding process as stopped
-- v4l2_m2m_dst_buf_is_last to detect the current dequeud dst_buf is the last
-- v4l2_m2m_has_stopped to detect the de/encoding stopped state
-- v4l2_m2m_is_last_draining_src_buf to detect the currect source buffer should
- be the last processing before stopping the de/encoding process
+> If the Mika's theory that the Win7 path simply turns the PCIe link off
+> is correct, then whatever the _OFF method tries to do to the link
+> after that should not matter.
+>
 
-The special next-buf-is-last when min_buffers != 1 case is also handled
-in v4l2_m2m_qbuf() by reusing the other introduced APIs.
+By the way, and I was only thinking about it after sending my last
+email out, do you think we should fail the runtime resume path if the
+device gets stuck in a power state?
 
-This state management has been stolen from the vicodec implementation,
-and is no-op for drivers not calling the v4l2_m2m_encoder_cmd or
-v4l2_m2m_decoder_cmd and v4l2_m2m_start_streaming/v4l2_m2m_stop_streaming.
+Currently pci core always calls into the driver regardless, but maybe
+for D3cold it really makes sense to just bail and refuse to resume? I
+think I tried that as an early "fix" and might even have a patch
+around. This should at least prevent crashes inside drivers trying to
+access invalid memory or getting stuck in loops.
 
-The vicodec will be the first one to be converted as an example.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/media/v4l2-core/v4l2-mem2mem.c | 174 ++++++++++++++++++++++++-
- include/media/v4l2-mem2mem.h           |  87 +++++++++++++
- 2 files changed, 259 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index 1afd9c6ad908..08aec4cc41dc 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -340,6 +340,11 @@ static void __v4l2_m2m_try_queue(struct v4l2_m2m_dev *m2m_dev,
- 		m2m_ctx->new_frame = !dst->vb2_buf.copied_timestamp ||
- 			dst->vb2_buf.timestamp != src->vb2_buf.timestamp;
- 
-+	if (m2m_ctx->has_stopped) {
-+		dprintk("Device has stopped\n");
-+		goto job_unlock;
-+	}
-+
- 	if (m2m_dev->m2m_ops->job_ready
- 		&& (!m2m_dev->m2m_ops->job_ready(m2m_ctx->priv))) {
- 		dprintk("Driver not ready\n");
-@@ -556,6 +561,101 @@ int v4l2_m2m_querybuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_querybuf);
- 
-+void v4l2_m2m_last_buffer_done(struct v4l2_m2m_ctx *m2m_ctx,
-+			       struct vb2_v4l2_buffer *vbuf)
-+{
-+	vbuf->flags |= V4L2_BUF_FLAG_LAST;
-+	vb2_buffer_done(&vbuf->vb2_buf, VB2_BUF_STATE_DONE);
-+
-+	v4l2_m2m_mark_stopped(m2m_ctx);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_last_buffer_done);
-+
-+static int v4l2_mark_last_buf(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	struct vb2_v4l2_buffer *next_dst_buf;
-+
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
-+
-+	if (m2m_ctx->has_stopped)
-+		return 0;
-+
-+	m2m_ctx->last_src_buf = v4l2_m2m_last_src_buf(m2m_ctx);
-+	m2m_ctx->is_draining = true;
-+
-+	if (m2m_ctx->last_src_buf)
-+		return 0;
-+
-+	next_dst_buf = v4l2_m2m_dst_buf_remove(m2m_ctx);
-+	if (!next_dst_buf) {
-+		m2m_ctx->next_buf_last = true;
-+		return 0;
-+	}
-+
-+	v4l2_m2m_last_buffer_done(m2m_ctx, next_dst_buf);
-+
-+	return 0;
-+}
-+
-+void v4l2_m2m_start_streaming(struct v4l2_m2m_ctx *m2m_ctx, struct vb2_queue *q)
-+{
-+	if (V4L2_TYPE_IS_OUTPUT(q->type))
-+		m2m_ctx->last_src_buf = NULL;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_start_streaming);
-+
-+void v4l2_m2m_stop_streaming(struct v4l2_m2m_ctx *m2m_ctx, struct vb2_queue *q)
-+{
-+	if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-+		if (m2m_ctx->is_draining) {
-+			struct vb2_v4l2_buffer *next_dst_buf;
-+
-+			m2m_ctx->last_src_buf = NULL;
-+			next_dst_buf = v4l2_m2m_dst_buf_remove(m2m_ctx);
-+			if (!next_dst_buf)
-+				m2m_ctx->next_buf_last = true;
-+			else
-+				v4l2_m2m_last_buffer_done(m2m_ctx,
-+							  next_dst_buf);
-+		}
-+	} else {
-+		m2m_ctx->is_draining = false;
-+		m2m_ctx->has_stopped = false;
-+		m2m_ctx->next_buf_last = false;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_stop_streaming);
-+
-+static void v4l2_m2m_force_last_buf_done(struct v4l2_m2m_ctx *m2m_ctx,
-+					 struct vb2_queue *q)
-+{
-+	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vbuf;
-+	unsigned int i;
-+
-+	if (WARN_ON(q->is_output))
-+		return;
-+	if (list_empty(&q->queued_list))
-+		return;
-+
-+	vb = list_first_entry(&q->queued_list, struct vb2_buffer, queued_entry);
-+	for (i = 0; i < vb->num_planes; i++)
-+		vb2_set_plane_payload(vb, i, 0);
-+
-+	/*
-+	 * Since the buffer hasn't been queued to the ready queue,
-+	 * mark is active and owned before marking it LAST and DONE
-+	 */
-+	vb->state = VB2_BUF_STATE_ACTIVE;
-+	atomic_inc(&q->owned_by_drv_count);
-+
-+	vbuf = to_vb2_v4l2_buffer(vb);
-+	vbuf->field = V4L2_FIELD_NONE;
-+
-+	v4l2_m2m_last_buffer_done(m2m_ctx, vbuf);
-+}
-+
- int v4l2_m2m_qbuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 		  struct v4l2_buffer *buf)
- {
-@@ -570,11 +670,25 @@ int v4l2_m2m_qbuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 			__func__);
- 		return -EPERM;
- 	}
-+
- 	ret = vb2_qbuf(vq, vdev->v4l2_dev->mdev, buf);
--	if (!ret && !(buf->flags & V4L2_BUF_FLAG_IN_REQUEST))
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If the capture queue is streaming, but streaming hasn't started
-+	 * on the device, but was asked to stop, mark the previously queued
-+	 * buffer as DONE with LAST flag since it won't be queued on the
-+	 * device.
-+	 */
-+	if (!V4L2_TYPE_IS_OUTPUT(vq->type) &&
-+	    vb2_is_streaming(vq) && !vb2_start_streaming_called(vq) &&
-+	    v4l2_m2m_dst_buf_is_last(m2m_ctx))
-+		v4l2_m2m_force_last_buf_done(m2m_ctx, vq);
-+	else if ((buf->flags & V4L2_BUF_FLAG_IN_REQUEST))
- 		v4l2_m2m_try_schedule(m2m_ctx);
- 
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_qbuf);
- 
-@@ -1225,6 +1339,62 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
- 
-+int v4l2_m2m_encoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_encoder_cmd *ec)
-+{
-+	if (ec->cmd != V4L2_ENC_CMD_STOP && ec->cmd != V4L2_ENC_CMD_START)
-+		return -EINVAL;
-+
-+	if (ec->cmd == V4L2_ENC_CMD_STOP)
-+		return v4l2_mark_last_buf(m2m_ctx);
-+
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
-+
-+	if (m2m_ctx->has_stopped)
-+		m2m_ctx->has_stopped = false;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_encoder_cmd);
-+
-+int v4l2_m2m_decoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_decoder_cmd *dc)
-+{
-+	if (dc->cmd != V4L2_DEC_CMD_STOP && dc->cmd != V4L2_DEC_CMD_START)
-+		return -EINVAL;
-+
-+	if (dc->cmd == V4L2_DEC_CMD_STOP)
-+		return v4l2_mark_last_buf(m2m_ctx);
-+
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
-+
-+	if (m2m_ctx->has_stopped)
-+		m2m_ctx->has_stopped = false;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_decoder_cmd);
-+
-+int v4l2_m2m_ioctl_encoder_cmd(struct file *file, void *priv,
-+			       struct v4l2_encoder_cmd *ec)
-+{
-+	struct v4l2_fh *fh = file->private_data;
-+
-+	return v4l2_m2m_encoder_cmd(file, fh->m2m_ctx, ec);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_encoder_cmd);
-+
-+int v4l2_m2m_ioctl_decoder_cmd(struct file *file, void *priv,
-+			       struct v4l2_decoder_cmd *dc)
-+{
-+	struct v4l2_fh *fh = file->private_data;
-+
-+	return v4l2_m2m_decoder_cmd(file, fh->m2m_ctx, dc);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_decoder_cmd);
-+
- int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
- 					     struct v4l2_decoder_cmd *dc)
- {
-diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
-index 1d85e24791e4..1eb988cfd0b1 100644
---- a/include/media/v4l2-mem2mem.h
-+++ b/include/media/v4l2-mem2mem.h
-@@ -80,6 +80,10 @@ struct v4l2_m2m_queue_ctx {
-  *		for an existing frame. This is always true unless
-  *		V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF is set, which
-  *		indicates slicing support.
-+ * @is_draining: indicates device is in draining phase
-+ * @last_src_buf: indicate the last source buffer for draining
-+ * @next_buf_last: next capture queud buffer will be tagged as last
-+ * @has_stopped: indicate the device has been stopped
-  * @m2m_dev: opaque pointer to the internal data to handle M2M context
-  * @cap_q_ctx: Capture (output to memory) queue context
-  * @out_q_ctx: Output (input from memory) queue context
-@@ -98,6 +102,11 @@ struct v4l2_m2m_ctx {
- 
- 	bool				new_frame;
- 
-+	bool				is_draining;
-+	struct vb2_v4l2_buffer		*last_src_buf;
-+	bool				next_buf_last;
-+	bool				has_stopped;
-+
- 	/* internal use only */
- 	struct v4l2_m2m_dev		*m2m_dev;
- 
-@@ -215,6 +224,42 @@ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
- 	vb2_buffer_done(&buf->vb2_buf, state);
- }
- 
-+static inline void
-+v4l2_m2m_mark_stopped(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	m2m_ctx->next_buf_last = false;
-+	m2m_ctx->is_draining = false;
-+	m2m_ctx->has_stopped = true;
-+}
-+
-+static inline bool
-+v4l2_m2m_dst_buf_is_last(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	return m2m_ctx->is_draining && m2m_ctx->next_buf_last;
-+}
-+
-+static inline bool
-+v4l2_m2m_has_stopped(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	return m2m_ctx->has_stopped;
-+}
-+
-+static inline bool
-+v4l2_m2m_is_last_draining_src_buf(struct v4l2_m2m_ctx *m2m_ctx,
-+				       struct vb2_v4l2_buffer *buf)
-+{
-+	return m2m_ctx->is_draining && buf == m2m_ctx->last_src_buf;
-+}
-+
-+/**
-+ * v4l2_m2m_last_buffer_done() - marks the buffer with LAST flag and DONE
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @buf: pointer to struct &v4l2_buffer
-+ */
-+void v4l2_m2m_last_buffer_done(struct v4l2_m2m_ctx *m2m_ctx,
-+			       struct vb2_v4l2_buffer *vbuf);
-+
- /**
-  * v4l2_m2m_reqbufs() - multi-queue-aware REQBUFS multiplexer
-  *
-@@ -312,6 +357,44 @@ int v4l2_m2m_streamon(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- int v4l2_m2m_streamoff(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 		       enum v4l2_buf_type type);
- 
-+/**
-+ * v4l2_m2m_start_streaming() - handle start of streaming of a video queue
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @q: queue
-+ */
-+void v4l2_m2m_start_streaming(struct v4l2_m2m_ctx *m2m_ctx,
-+			      struct vb2_queue *q);
-+
-+/**
-+ * v4l2_m2m_stop_streaming() - handle stop of streaming of a video queue
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @q: queue
-+ */
-+void v4l2_m2m_stop_streaming(struct v4l2_m2m_ctx *m2m_ctx,
-+			     struct vb2_queue *q);
-+
-+/**
-+ * v4l2_m2m_encoder_cmd() - execute an encoder command
-+ *
-+ * @file: pointer to struct &file
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @dc: pointer to the encoder command
-+ */
-+int v4l2_m2m_encoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_encoder_cmd *ec);
-+
-+/**
-+ * v4l2_m2m_decoder_cmd() - execute a decoder command
-+ *
-+ * @file: pointer to struct &file
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @dc: pointer to the decoder command
-+ */
-+int v4l2_m2m_decoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_decoder_cmd *dc);
-+
- /**
-  * v4l2_m2m_poll() - poll replacement, for destination buffers only
-  *
-@@ -704,6 +787,10 @@ int v4l2_m2m_ioctl_streamon(struct file *file, void *fh,
- 				enum v4l2_buf_type type);
- int v4l2_m2m_ioctl_streamoff(struct file *file, void *fh,
- 				enum v4l2_buf_type type);
-+int v4l2_m2m_ioctl_encoder_cmd(struct file *file, void *fh,
-+			       struct v4l2_encoder_cmd *ec);
-+int v4l2_m2m_ioctl_decoder_cmd(struct file *file, void *fh,
-+			       struct v4l2_decoder_cmd *dc);
- int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file, void *fh,
- 				   struct v4l2_encoder_cmd *ec);
- int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
--- 
-2.22.0
+> > On Wed, Nov 27, 2019 at 8:55 PM Lyude Paul <lyude@redhat.com> wrote:
+> > >
+> > > On Wed, 2019-11-27 at 12:51 +0100, Karol Herbst wrote:
+> > > > On Wed, Nov 27, 2019 at 12:49 PM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > > On Tue, Nov 26, 2019 at 06:10:36PM -0500, Lyude Paul wrote:
+> > > > > > Hey-this is almost certainly not the right place in this thread=
+ to
+> > > > > > respond,
+> > > > > > but this thread has gotten so deep evolution can't push the sub=
+ject
+> > > > > > further to
+> > > > > > the right, heh. So I'll just respond here.
+> > > > >
+> > > > > :)
+> > > > >
+> > > > > > I've been following this and helping out Karol with testing her=
+e and
+> > > > > > there.
+> > > > > > They had me test Bjorn's PCI branch on the X1 Extreme 2nd gener=
+ation,
+> > > > > > which
+> > > > > > has a turing GPU and 8086:1901 PCI bridge.
+> > > > > >
+> > > > > > I was about to say "the patch fixed things, hooray!" but it see=
+ms that
+> > > > > > after
+> > > > > > trying runtime suspend/resume a couple times things fall apart =
+again:
+> > > > >
+> > > > > You mean $subject patch, no?
+> > > > >
+> > > >
+> > > > no, I told Lyude to test the pci/pm branch as the runpm errors we s=
+aw
+> > > > on that machine looked different. Some BAR error the GPU reported
+> > > > after it got resumed, so I was wondering if the delays were helping
+> > > > with that. But after some cycles it still caused the same issue, th=
+at
+> > > > the GPU disappeared. Later testing also showed that my patch also
+> > > > didn't seem to help with this error sadly :/
+> > > >
+> > > > > > [  686.883247] nouveau 0000:01:00.0: DRM: suspending object tre=
+e...
+> > > > > > [  752.866484] ACPI Error: Aborting method \_SB.PCI0.PEG0.PEGP.=
+NVPO due
+> > > > > > to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+> > > > > > [  752.866508] ACPI Error: Aborting method \_SB.PCI0.PGON due t=
+o
+> > > > > > previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+> > > > > > [  752.866521] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00.=
+_ON due
+> > > > > > to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
+> > > > >
+> > > > > This is probably the culprit. The same AML code fails to properly=
+ turn
+> > > > > on the device.
+> > > > >
+> > > > > Is acpidump from this system available somewhere?
+> > >
+> > > Attached it to this email
+> > >
+> > > > >
+> > > --
+> > > Cheers,
+> > >         Lyude Paul
+> >
+>
 
