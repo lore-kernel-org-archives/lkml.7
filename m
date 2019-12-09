@@ -2,86 +2,120 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B14C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3C9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640D720692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575881763;
-	bh=lyCPhG+AcwqTTAuM0gsQ0MpixFG7NFJVOaTvOq94Vnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JUMbISS3oehHbsLmo1paLcPHs2LxjmIi/80lqj22f/QFwyrkms3KsUpdhzRhvciy1
-	 reaZ5lIxX0BgoNoLqOD9XUxFp7hh/gTIMA5yxLHj7MezdFpUA/nJij7+bPKKgmrpFN
-	 pWJ9hXRnBACEJ0SaVjWsE2vaSfVCZhyZPQrtW1TU=
+	by mail.kernel.org (Postfix) with ESMTP id D759A20692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:57:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p77BOAzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLII4C (ORCPT
+        id S1727260AbfLII51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:56:02 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40569 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLII4C (ORCPT
+        Mon, 9 Dec 2019 03:57:27 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38263 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLII51 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:56:02 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so13941709wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 00:56:01 -0800 (PST)
+        Mon, 9 Dec 2019 03:57:27 -0500
+Received: by mail-pl1-f194.google.com with SMTP id o8so5518533pls.5;
+        Mon, 09 Dec 2019 00:57:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Rd94SkExxWILtJkUpqFvUuCN5ndixKS4EI5Ogpk9Yg=;
+        b=p77BOAzq5Iit9ISix0BGN4EVWb0tlTSTswlSK87610dz0mxFxOFxaYQSeSdaCuLX1+
+         VNaDd8onkZYsjTRyeSww8VGyi71LzBgUAKRqYnbDqBcEzlHeh+DOgy3j9oZsIyVqlJX7
+         fcPUnpfOLzOYDEAmbdu2iMloIECzLWS9Pex4nCTM9QGAoBOWeKIPlpvRvMnsaSE1uWKV
+         G7WUI1hhxgJEFY3xHg8NRS+p71JhPzEGNAIAHSUKAET1TJpxjyn45mB4c8H1p+aC+pwM
+         3gcGujU3kWOY5E8tHY89oBrTujPklCegcjmoHz1YCZrJ0LDz8nvzWNYjUQ6LSUKR3T5D
+         77/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+jNs0/gfWc0O18Xh8VftNsf/QHjT78loeH1CleZ5apQ=;
-        b=pRkgVlld4RpsLZhMXn+Stf+sKQddTBZbNnDPk62zOvKGmPwUrmusOxoAp0us7YJXou
-         ys+A3qkN3UOG8+Vkg+5gvBRWfVjmA0LdGAiAiLD9h2Us1HXp0wmOeHGKMtUp/uloYTAg
-         j7ai0IF/7T5g84Pi+9rhE1kdqG/7aQyUnJaTyLhMz9eONuFxjUd017zn1qamKDrSDJOB
-         3osWQXmE3lo71ozoxwMEGxc2Pdlb2MiZD3fEtuQqSmztQV1SAR1nvJZKE0uriUGv6clK
-         2fb8o9mC/gedn8Wqc2qlFOpm+Rit19CnDE2ijWhZXtzma0OA9baDv2/SkTLIjQGDIUv7
-         StGg==
-X-Gm-Message-State: APjAAAU+7pJR4yiHaGFwZzuVq8Q/GDDxnfKTvpA+Phadu+Ig2N3VeCMK
-        YMOVLbF7cJWNbstsXdeaeVs=
-X-Google-Smtp-Source: APXvYqxo+DeuQmn77r793oTfIMPyj1gOkRciRJ2kiEAoJSe20gejEmrTaA5i0JLrOD95ryH6oX0EnQ==
-X-Received: by 2002:a1c:67c3:: with SMTP id b186mr15043958wmc.36.1575881760547;
-        Mon, 09 Dec 2019 00:56:00 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a184sm13283420wmf.29.2019.12.09.00.55.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Rd94SkExxWILtJkUpqFvUuCN5ndixKS4EI5Ogpk9Yg=;
+        b=TcPDWUr4f086jk2zaZDErHMzVpRb7HC4qIAXz+6poA62GnvtyvYN9TkiUUVuT2E3HV
+         a+pOx314s2QDw5W+6ri/gnuSk4e/lyyKbQ70RP1q4nlwE9oL4RVk3Rrk3HwT1B6LUGy1
+         z7JPAFuxEgkhJRoil4pqJdqGJC0bGP81gkYksiIkru2wY7GELOEl8XOzbTNtY5ArGuw8
+         xGAyjajFJ7GxiYB8ewJ/ldOqUyut5ZiZ0LXD9m2TQCLFv8y/wnbG09+4RNitJdIn0VgH
+         JihTPnQ4RmVHhYPGKIOIYcqYDjzhvV1hy0utQzyK1c/aY4i+uEm7Ot7kfgxDSSsY0rHL
+         izlw==
+X-Gm-Message-State: APjAAAVsV4668EUF3jZfqaFp9sNhKus/U/g7e+U6J87C1HcwhOvW5wrG
+        c+bj19tYgCb6JYh76IP1vY5+nPqy
+X-Google-Smtp-Source: APXvYqw6IqyvWGIcjS1oug7cS9BjUh2segQpwi1o/FAEO7jrgL7mxGnzV7TTZuv66b+jGsMzek56MQ==
+X-Received: by 2002:a17:902:9302:: with SMTP id bc2mr28656852plb.148.1575881846841;
+        Mon, 09 Dec 2019 00:57:26 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id u26sm25078305pfn.46.2019.12.09.00.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:55:59 -0800 (PST)
-Date:   Mon, 9 Dec 2019 09:55:59 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Subject: Re: [pipe] 3c0edea9b2:  lmbench3.PIPE.bandwidth.MB/sec -17.0%
- regression
-Message-ID: <20191209085559.GA5868@dhcp22.suse.cz>
-References: <20191208153949.GJ32275@shao2-debian>
+        Mon, 09 Dec 2019 00:57:26 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] dmaengine: axi-dmac: add a check for devm_regmap_init_mmio
+Date:   Mon,  9 Dec 2019 16:57:11 +0800
+Message-Id: <20191209085711.16001-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191208153949.GJ32275@shao2-debian>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 08-12-19 23:39:49, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed a -17.0% regression of lmbench3.PIPE.bandwidth.MB/sec due to commit:
-> 
-> 
-> commit: 3c0edea9b29f9be6c093f236f762202b30ac9431 ("pipe: Remove sync on wake_ups")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+The driver misses checking the result of devm_regmap_init_mmio().
+Add a check to fix it.
 
-Huh. How can something like that can even can get merged? No changelog,
-no s-o-b?
+Fixes: fc15be39a827 ("dmaengine: axi-dmac: add regmap support")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/dma/dma-axi-dmac.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index a0ee404b736e..cf4f892562cc 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -830,6 +830,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	struct dma_device *dma_dev;
+ 	struct axi_dmac *dmac;
+ 	struct resource *res;
++	struct regmap *regmap;
+ 	int ret;
+ 
+ 	dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
+@@ -921,10 +922,17 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, dmac);
+ 
+-	devm_regmap_init_mmio(&pdev->dev, dmac->base, &axi_dmac_regmap_config);
++	regmap = devm_regmap_init_mmio(&pdev->dev, dmac->base,
++		 &axi_dmac_regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		goto err_free_irq;
++	}
+ 
+ 	return 0;
+ 
++err_free_irq:
++	free_irq(dmac->irq, dmac);
+ err_unregister_of:
+ 	of_dma_controller_free(pdev->dev.of_node);
+ err_unregister_device:
 -- 
-Michal Hocko
-SUSE Labs
+2.24.0
+
