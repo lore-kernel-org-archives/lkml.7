@@ -2,621 +2,160 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D75C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2383C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5637A206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB8E206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDcLVbJ8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8sqjaam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLISUq (ORCPT
+        id S1726379AbfLISUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:20:46 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35204 "EHLO
+        Mon, 9 Dec 2019 13:20:51 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33547 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLISUl (ORCPT
+        with ESMTP id S1726771AbfLISUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:20:41 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c20so349767wmb.0;
-        Mon, 09 Dec 2019 10:20:38 -0800 (PST)
+        Mon, 9 Dec 2019 13:20:45 -0500
+Received: by mail-wm1-f65.google.com with SMTP id y23so494784wma.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:20:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Wpg4ypWzi7biO5WyjpAtCQhzPwFyoNkxfYfAncftY+s=;
-        b=GDcLVbJ8dLyl3XoK5SpC5yM1Mbwzg4xiRW1Hjed25hangncOEnPR3sfP8+uK9ZsZQI
-         guib6yZZO7zlGe9DPV3qZzqKmALfcZSdupr7wQWmIKdU88g0K3xLNfpmjUOANNahwn1b
-         lPhYO3QBWtZWR6qptTyG8dC+9U3kba7/Exe9n2qHmiFCL3TeGyJR6IzzLtIGIRbY1ur1
-         0ZYAuiEoW5f6kxeDKkJw/giQnwMNeSY+WjWDpn6qz5Is7qbQyvoqerbM2Jf1zHwO9xvj
-         vdENZ3lIfzpOi86UAzgXcJQTLQXo0VMT3vJOvy+hfK9UD+C3mYLDKTmqGwIPMs62wRym
-         w9Hw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6CxuywbnHE/AIuPDM3fOxaKKnVu1MG+sDjHowISxdA4=;
+        b=y8sqjaam9ujTWCV9clyjbbYe4PPU3nZza4OLwXVvI1zYC1ImTzHRe4mcRsr7E/hce3
+         GgSi30IzS9MdS5aJQcv2MJFqSxYTQ5oF7QOlLJFmzSalVrxNtUy1p4pJ9NbU4KlRYNg0
+         sO7Ra1CGJw+iUCGAI1EMpRiUrmlSRUchvvu+KfKRgfrDHJ1HzmMORm9xSaIWDTafW+uP
+         0b84/bxvwNCVy461zaahDanHsrvb85Fgl3/LD/8pQmhwCl4nZEaeQf0oc5/0h3ZBjpbo
+         fYkUazMVoIwemCYSFMTcT+fJ2n+hTMgxb3yaEue597n7VOCGikZDf6ilWttwzWLzQFV7
+         6VRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Wpg4ypWzi7biO5WyjpAtCQhzPwFyoNkxfYfAncftY+s=;
-        b=lrt9DGR5zoqCECfK01qPNWEQiE+QeFl2yXMBnG/lykQp8KxMmLYaxjUrbvJY4+QUZg
-         Rp+3mN/uOgTIC9PqssdmkkvQNedaUEO5ICA2ivpqihyIcDwYvt2IAizrCU2HVIhL5wIT
-         DUrKKdEys0daYoeVo2Hu8qwcCs8O1dr2mazK4xharCpu05VNjv0cCVWeektF4PXrwKkr
-         7SqcCbrZkf60dflh7iNhuen3wTD412MeWb3VJkQ5lWfTfO5X6syR1cG9cOFMn8iT++Hx
-         NvNNXkpUNbQZUGX99LKH9V3oU+0mlgSfkm9UUxE1aVuqW1aJDSqeG6ND9AW1kvq5AU+R
-         9FSQ==
-X-Gm-Message-State: APjAAAXTN1qq97bSL/3Ns8B6N4csPczcUe7Q1/8O6SfCmgh2JPj12CEG
-        fyQwbUAfBveI1FcdX8uDtTc=
-X-Google-Smtp-Source: APXvYqxeQCFTIPsop9FOVTIUHRVKwNl1vdDqSRTQPby0eSCBlnuvFqW5WZF98dG0S1S4IWWqVj1tRw==
-X-Received: by 2002:a1c:b406:: with SMTP id d6mr391154wmf.52.1575915637782;
-        Mon, 09 Dec 2019 10:20:37 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::42f0:c285])
-        by smtp.gmail.com with ESMTPSA id n14sm188261wmi.26.2019.12.09.10.20.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 10:20:37 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 3/3] arm64: dts: allwinner: unify header comment style
-Date:   Mon,  9 Dec 2019 19:20:24 +0100
-Message-Id: <20191209182024.20509-3-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191209182024.20509-1-peron.clem@gmail.com>
-References: <20191209182024.20509-1-peron.clem@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6CxuywbnHE/AIuPDM3fOxaKKnVu1MG+sDjHowISxdA4=;
+        b=KPKkgmpWGp9T5QqBsSj9B6wjiZRLB7m7rQqM1BQrdLLiGz/xBGgFmToNxVKPzyCral
+         X7V61v/w0dqrMfrSVqpdNMUhE03rYdGYEP73r6RIpHUbmqUfxlF7NvqpGvcM3IzPuMte
+         TA9qo5XOZHPXHqWyY2kDlqG3+mIm1NhqyVo1SoncOlygQSXA88yLn0f5C51FLEt2Cy1B
+         PBB7XGF6BreI4XpekCI3u8lo3csUmkUxqfovaGZuS6Y8xNyo7ta6dHXX9dvDCwLwtflc
+         7Y7NApm6axcld25cTxmnt7ZWHU2GLhV+p61uWTU1ijoPV/RmkCc27ac+tJT/ksSgtAH8
+         kaeA==
+X-Gm-Message-State: APjAAAU+MlBtQPFZBn4CezkpwPZvnZQwHA0jmG2PL468uhIuAneu9cMZ
+        hgIUIC0KG9CQWWn62xmWU4nMYETgorU=
+X-Google-Smtp-Source: APXvYqw1GGSKzbIwgUFKQbQ7BkEfH7OjSgAs3qu5pdQNRFpOMliGDUxW6GxzT9zAZFcQLWNvpMa7Tg==
+X-Received: by 2002:a05:600c:30a:: with SMTP id q10mr390247wmd.84.1575915642534;
+        Mon, 09 Dec 2019 10:20:42 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:683a:fee4:9950:e8ce? ([2a01:e34:ed2f:f020:683a:fee4:9950:e8ce])
+        by smtp.googlemail.com with ESMTPSA id f1sm200043wml.11.2019.12.09.10.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 10:20:41 -0800 (PST)
+Subject: Re: [PATCH v7 00/12] QorIQ TMU multi-sensor and HWMON support
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190912012920.29601-1-andrew.smirnov@gmail.com>
+ <27b7642917479f9c17af30054abe1a72d0b121f7.camel@pengutronix.de>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <94ec72a1-78a0-5a0e-ce52-ccc88e82e4d4@linaro.org>
+Date:   Mon, 9 Dec 2019 19:20:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <27b7642917479f9c17af30054abe1a72d0b121f7.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner device tree files used different comment style for
-copyright notice.
+Hi Lucas,
 
-Update this to keep a coherency.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/axp803.dtsi                | 4 +---
- .../boot/dts/allwinner/sun50i-a64-amarula-relic.dts      | 6 ++----
- .../arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts  | 4 +---
- .../dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts     | 8 +++-----
- .../boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts     | 6 ++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts   | 4 +---
- .../arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 6 ++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts  | 7 ++-----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts      | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts    | 7 ++-----
- .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts   | 9 +++------
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi     | 9 +++------
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts     | 9 +++------
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi            | 8 +++-----
- .../dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts | 4 ++--
- .../boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi    | 4 ++--
- .../boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts | 6 ++----
- .../boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts    | 6 ++----
- arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts  | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts | 4 +---
- .../boot/dts/allwinner/sun50i-h5-orangepi-prime.dts      | 9 +++------
- .../boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts  | 9 +++------
- .../boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi             | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts  | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts   | 4 +---
- .../boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts      | 4 +---
- .../boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts   | 6 ++----
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi    | 6 ++----
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts     | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts    | 4 +---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi             | 4 +---
- 34 files changed, 59 insertions(+), 130 deletions(-)
+On 06/12/2019 12:46, Lucas Stach wrote:
+> Hi all,
+> 
+> can this series be considered for mainline inclusion? It has been 
+> tested and works well in our i.MX8M kernel setup.
 
-diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-index 0e13e75132ac..5e5b8e65e02f 100644
---- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- */
-+// Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
- 
- /*
-  * AXP803 Integrated Power Management Chip
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 5634245d11db..ac979de19013 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 Amarula Solutions B.V.
-- * Author: Jagan Teki <jagan@amarulasolutions.com>
-- */
-+// Copyright (C) 2018 Amarula Solutions B.V.
-+// Author: Jagan Teki <jagan@amarulasolutions.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index ca733651cb83..6aa91e70cd0b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (c) 2016 ARM Ltd.
-- */
-+// Copyright (c) 2016 ARM Ltd.
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index f913b31b84c5..0bb30847f337 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-- */
-+// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index 787ebd805a3b..577f9e1d08a1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -1,9 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
-- * Copyright (C) 2019 Amarula Solutions B.V.
-- * Author: Jagan Teki <jagan@amarulasolutions.com>
-- */
-+// Copyright (C) 2019 Oceanic Systems (UK) Ltd.
-+// Copyright (C) 2019 Amarula Solutions B.V.
-+// Author: Jagan Teki <jagan@amarulasolutions.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-index 96ab0227e82d..9462c941cd21 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino-emmc.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 Martin Ayotte <martinayotte@gmail.com>
-- * Copyright (C) 2019 Sunil Mohan Adapa <sunil@medhas.org>
-- */
-+// Copyright (C) 2018 Martin Ayotte <martinayotte@gmail.com>
-+// Copyright (C) 2019 Sunil Mohan Adapa <sunil@medhas.org>
- 
- #include "sun50i-a64-olinuxino.dts"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index d630059fa61b..0c30b7c97806 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-- */
-+// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 492158ac3179..0c0bc73846f4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-- * Copyright (C) 2017-2018 Samuel Holland <samuel@sholland.org>
-- */
-+// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-+// Copyright (C) 2017-2018 Samuel Holland <samuel@sholland.org>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-index 72d6961dc312..302e24be0a31 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-lts.dts
-@@ -1,8 +1,5 @@
--/*
-- * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-- *
-- * Copyright (c) 2018 ARM Ltd.
-- */
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (c) 2018 ARM Ltd.
- 
- #include "sun50i-a64-sopine-baseboard.dts"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index 3c1ebf2f119b..32f4736d64bd 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (c) 2016 ARM Ltd.
-- */
-+// Copyright (c) 2016 ARM Ltd.
- 
- #include "sun50i-a64-pine64.dts"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 86223f65cdc3..54e7d524d38b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (c) 2016 ARM Ltd.
-- */
-+// Copyright (c) 2016 ARM Ltd.
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 78c82a665c84..2d0b3c6cc143 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -1,9 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- * Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
-- *
-- */
-+// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-+// Copyright (C) 2018 Vasily Khoruzhick <anarsoul@gmail.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 48ac9c726e91..49b1c3296213 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -1,10 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * Based on sun50i-a64-pine64.dts, which is:
-- *   Copyright (c) 2016 ARM Ltd.
-- */
-+// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-+// Based on sun50i-a64-pine64.dts, which is:
-+//   Copyright (c) 2016 ARM Ltd.
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 2291e7f9fe74..88b2b839aee8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -1,10 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * Based on sun50i-a64-pine64.dts, which is:
-- *   Copyright (c) 2016 ARM Ltd.
-- */
-+// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-+// Based on sun50i-a64-pine64.dts, which is:
-+//   Copyright (c) 2016 ARM Ltd.
- 
- #include "sun50i-a64.dtsi"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 970415106dcf..421454c8add7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -1,9 +1,6 @@
--/*
-- * Copyright (C) Harald Geyer <harald@ccbib.org>
-- * based on sun50i-a64-olinuxino.dts by Jagan Teki <jteki@openedev.com>
-- *
-- * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-- */
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+// Copyright (C) Harald Geyer <harald@ccbib.org>
-+// based on sun50i-a64-olinuxino.dts by Jagan Teki <jteki@openedev.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index eb388c096152..3360b1dd3133 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1,9 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2016 ARM Ltd.
-- * based on the Allwinner H3 dtsi:
-- *    Copyright (C) 2015 Jens Kuske <jenskuske@gmail.com>
-- */
-+// Copyright (C) 2016 ARM Ltd.
-+// based on the Allwinner H3 dtsi:
-+//    Copyright (C) 2015 Jens Kuske <jenskuske@gmail.com>
- 
- #include <dt-bindings/clock/sun50i-a64-ccu.h>
- #include <dt-bindings/clock/sun8i-de2.h>
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-index c924090331d0..3e0323fc592c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+// Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-+
- /*
-  * DTS for Emlid Neutis N5 Dev board.
-- *
-- * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
-index 5bec574fa108..6c5ae5d758b2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5.dtsi
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+// Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-+
- /*
-  * DTSI for Emlid Neutis N5 SoM.
-- *
-- * Copyright (C) 2018 Aleksandr Aleksandrov <aleksandr.aleksandrov@emlid.com>
-  */
- 
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
-index d68bdfea2271..64d35daf2023 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-libretech-all-h3-cc.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 BayLibre, SAS
-- * Author: Neil Armstrong <narmstrong@baylibre.com>
-- */
-+// Copyright (C) 2018 BayLibre, SAS
-+// Author: Neil Armstrong <narmstrong@baylibre.com>
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-index 3691c37630e7..b35fb6d38e48 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Antony Antony <antony@phenome.org>
-- * Copyright (C) 2016 ARM Ltd.
-- */
-+// Copyright (C) 2017 Antony Antony <antony@phenome.org>
-+// Copyright (C) 2016 ARM Ltd.
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-index e5c1e29306a8..6e666b02e16f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- */
-+// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index 8b40954f7308..6fb36ea20906 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2016 ARM Ltd.
-- */
-+// Copyright (C) 2016 ARM Ltd.
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-index 2b6bcebe25ee..da6f9601a780 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-@@ -1,10 +1,7 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-- *
-- * Based on sun50i-h5-orangepi-pc2.dts, which is:
-- *   Copyright (C) 2016 ARM Ltd.
-- */
-+// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.xyz>
-+// Based on sun50i-h5-orangepi-pc2.dts, which is:
-+//   Copyright (C) 2016 ARM Ltd.
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-index db6ea7b58999..28b15c9d59ba 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus.dts
-@@ -1,9 +1,6 @@
--/*
-- * Copyright (C) 2016 ARM Ltd.
-- * Copyright (C) 2018 Hauke Mehrtens <hauke@hauke-m.de>
-- *
-- * SPDX-License-Identifier: (GPL-2.0+ OR X11)
-- */
-+// SPDX-License-Identifier: (GPL-2.0+ OR X11)
-+// Copyright (C) 2016 ARM Ltd.
-+// Copyright (C) 2018 Hauke Mehrtens <hauke@hauke-m.de>
- 
- /dts-v1/;
- #include "sun50i-h5.dtsi"
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index a7ea6c2eeac1..7601c28a65d8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-- */
-+// Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 80e1371fbde8..f755a3a54b0c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR X11)
--/*
-- * Copyright (C) 2016 ARM Ltd.
-- */
-+// Copyright (C) 2016 ARM Ltd.
- 
- #include <arm/sunxi-h3-h5.dtsi>
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 84b7e9936300..e561b29c2be8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2019 Clément Péron <peron.clem@gmail.com>
-- */
-+// Copyright (C) 2019 Clément Péron <peron.clem@gmail.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 1c66304fc551..8a2d3849520a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
-- */
-+// Copyright (C) 2019 Ondřej Jirman <megous@megous.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-index 8844968f7227..e7ca75c0d0f7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 Jagan Teki <jagan@openedev.com>
-- */
-+// Copyright (C) 2018 Jagan Teki <jagan@openedev.com>
- 
- #include "sun50i-h6-orangepi.dtsi"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-index 2bd863561282..83aab7368889 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 Amarula Solutions
-- * Author: Jagan Teki <jagan@amarulasolutions.com>
-- */
-+// Copyright (C) 2018 Amarula Solutions
-+// Author: Jagan Teki <jagan@amarulasolutions.com>
- 
- #include "sun50i-h6-orangepi.dtsi"
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-index caccebe3389b..37f4c57597d4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-@@ -1,8 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2018 Amarula Solutions
-- * Author: Jagan Teki <jagan@amarulasolutions.com>
-- */
-+// Copyright (C) 2018 Amarula Solutions
-+// Author: Jagan Teki <jagan@amarulasolutions.com>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 3238323d5a71..acb3d7f5061c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.io>
-- */
-+// Copyright (c) 2017 Icenowy Zheng <icenowy@aosc.io>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-index 891ad616302c..f7b52c359037 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
-- */
-+// Copyright (c) 2019 Jernej Skrabec <jernej.skrabec@siol.net>
- 
- /dts-v1/;
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index b8f51d95ca8c..dd0dbbd39a36 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -1,7 +1,5 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
--/*
-- * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-- */
-+// Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/sun50i-h6-ccu.h>
+I'm fine with the changes but the series does not longer apply. I tried
+to solve the conflicts but got too many of them.
+
+Is it possible to respin the series?
+
+
+
+
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
