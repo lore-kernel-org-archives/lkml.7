@@ -2,129 +2,140 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8BBC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8B8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517192075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821082075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ly7daxZy"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="9GZZrx/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLIJ2A (ORCPT
+        id S1727350AbfLIJ24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:28:00 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37101 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfLIJ17 (ORCPT
+        Mon, 9 Dec 2019 04:28:56 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53910 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbfLIJ2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:27:59 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c23so266635plz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:27:59 -0800 (PST)
+        Mon, 9 Dec 2019 04:28:55 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99QZJ2016727;
+        Mon, 9 Dec 2019 04:28:40 -0500
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wraq3dq7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Dec 2019 04:28:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aK0PQSRfwc1+gBjhpVn5lxzIwz1ELTaWRv+InqNheEUesiEcNTP0+8C5Y8s3J7sxiBjkUVL2QLhJBdT3ZnblvUlKKWR580PxMclSnrHCC/0r0IoWJ7YtjBeQKGVy8NgCdznMb+xNvYMhnK8ZS2zkFakePyitBjjluph6SZcWujmrl+CXCkykvIHxZlQzUP5n/J8cjQ+b+DSE2cp5XmdU++spoaW24Us8oZZls5VuN6P+V8k1ePJEVfHR5UAaEOSEdFNTajTbKoA5qnRi4mdGQI9RDLSosb+Li2QguqZVS/APwfZtsymRnjuqeu0p3ZPz8DoeFtQ3lAFAd9szFV+TKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DPfe8uiSJkHB0cz3cnWoauntF7PbirniIBxeuaxGMtc=;
+ b=iYm3moC+KhNgx6naVYQyj4urrqKlV2UwJF0A2+/uuEV2Cn6pcUeBIPGeB/l0ovy6u0wXE6hpX6L1KZkeyqcFoFywblMRmoJ0kYDBSKHX4GeFU+dVNjNyrr2Gy3h3V3qQWwYoorghuXUTHw0yyC/8iP7y05GkZ11cNEbQjRgvkec3vL+eEWeCrYuC6K4Fckoqpnd8UXzu2IpQnwppRepAjNE7BQ1sBY0Zeelwl2weAfH2WNmBuuB+hUsChu2ivHyVp0QCFIIrKeaxgN6DJYep8Zx9LMNfNZr8IpXwQtZ0Ef9ByGerdLLBPHAYVJ2iv/lj7nGqyidB4uX9Sz6T1jA3JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rHHQKr0i75mqHj3OhmeZ0+BGxc8hlLVrwIhDe+URYcg=;
-        b=ly7daxZy/UDhQUWwKvd7jhbdYl8PZTrdBXVYPA/LGkBGar/kbEow0qUzkwwPARo4Gp
-         Pvi91wjoK/CMmeOmdX/bE3oY+FfjVhO9mIHP9k0jd2rXStODOBA3mq+t9xUl+YYlPx+v
-         amDe9j28QSKXWUnuP6wZscHm8qwLTAAt3NOSaCzEXgQJP1JTZpKMbFl7/ucc4Vlh+8tT
-         N9WIta0wOyWg42uMfurq7gTFg4JTqv5vaIZPlmWCLDK5lGtiYf7VxhCpg4Sebwu8VB/1
-         G3qasHMBSSDgwu0KiimykAl6YPD2OfOiyqzH3TT26Ji/wNnzGYPmDxZkIF77oo3N7xRG
-         sExQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rHHQKr0i75mqHj3OhmeZ0+BGxc8hlLVrwIhDe+URYcg=;
-        b=PKzoHafCxrkM3UUy1pyp2avJtdZ/9eBCqdiuE6NN/W0bbHqfgZhRNvpacbK32cwuo2
-         BEgrxU+dnS7jacJR3eWie0goHf1bBAEC/P4p8W60q0GJ63zGZO+klNyfKDrcdtGrqyel
-         T7DOsvZkqzHYeKO7Tek9tyJWt2eMjwEfpM0AkkmMieIqFWQUaECSoAkECPzMo0Toaloe
-         vUJHDnbu70Xhkd0LHNWI2Rx+G/yDfZi3P+FDkwBjck5j7D5qycaxwju7iL2B373DCyyl
-         0Za1GT8w45k+sTsbZSOa2MhuQzaSulukftjdkJ/OMY7yMKe7+Tb6VeJwcQsC9e+rVRwI
-         qZZQ==
-X-Gm-Message-State: APjAAAVQrzGGUGXe+XQlpqNIV9keygPCUcVNszvuheCslranoAcEH77G
-        v3Mbqfyt9lwkQxDj4WO3BZc=
-X-Google-Smtp-Source: APXvYqzCGd3qSvmAfe3R0sLqnFB2USWEhpUozXO8ZhIWbNaRxyD/nWRNvCzlw2bZp99pLhdszeysGQ==
-X-Received: by 2002:a17:90a:9f04:: with SMTP id n4mr31320455pjp.76.1575883679106;
-        Mon, 09 Dec 2019 01:27:59 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id k13sm16545287pfp.48.2019.12.09.01.27.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 01:27:58 -0800 (PST)
-Date:   Mon, 9 Dec 2019 18:27:56 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-Message-ID: <20191209092756.GH88619@google.com>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DPfe8uiSJkHB0cz3cnWoauntF7PbirniIBxeuaxGMtc=;
+ b=9GZZrx/v9XzJeMnaK+EBu6CcuYIH5pH0+Ttw+JKQa+MzqgsgMWhVYgYoCcGkqhuCYRFQlDOgqusL+p1jhGD/q+2/cBgnWz4qUPedUrRIsowPNpxVa2v2y5TsEb6icLP5BL3FEbzfWnHQd7nil3Sta3pj5Lyi+z0P8cPtkJYtpdQ=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5174.namprd03.prod.outlook.com (20.180.4.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Mon, 9 Dec 2019 09:28:37 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c%5]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 09:28:37 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "hslester96@gmail.com" <hslester96@gmail.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: axi-dmac: add a check for
+ devm_regmap_init_mmio
+Thread-Topic: [PATCH] dmaengine: axi-dmac: add a check for
+ devm_regmap_init_mmio
+Thread-Index: AQHVrm6zhfB4YXZwDU+2mjrHrKjDGKexiZaA
+Date:   Mon, 9 Dec 2019 09:28:37 +0000
+Message-ID: <232e1bafc05611355fdd26e2ffa16d0050ad37fc.camel@analog.com>
+References: <20191209085711.16001-1-hslester96@gmail.com>
+In-Reply-To: <20191209085711.16001-1-hslester96@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d0ae8cc0-01c2-4f7b-f76e-08d77c8a2b75
+x-ms-traffictypediagnostic: CH2PR03MB5174:
+x-microsoft-antispam-prvs: <CH2PR03MB5174AEA2D43BF58B8EBD00FAF9580@CH2PR03MB5174.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(39860400002)(136003)(376002)(199004)(189003)(478600001)(186003)(2906002)(4326008)(86362001)(66946007)(316002)(76176011)(99286004)(2616005)(229853002)(26005)(54906003)(8936002)(305945005)(6916009)(6512007)(102836004)(6486002)(5660300002)(118296001)(81156014)(71200400001)(71190400001)(5640700003)(6506007)(81166006)(8676002)(66446008)(66476007)(66556008)(64756008)(76116006)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5174;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 79jiqzfQxxLhN8KVQzuQcWUsBsWo/O60NN7BWf7hCiJTAeILIW9FrMBm7zj86nwH8nUD3rqiyIRgcA0DYreDVFbR1P9v71lDpseE5OIBD+rjhntsJq8PwkU+7YIp3mwgWPsiwUv0b60xRKjlYfTyIitzMpXE5bAvGW4OdbjdbewIVa8FaYOOTssvzROYEj4G7BT6Ibxg6DVT3rqNzVhlxJKIHU0S/cm4KS2XOVAOBD+bwlySjjUrXUOYdd2rBMT06ImKQjhA1sjx6/8RM3gjWzvVGgkfISFFDmP2PNBKAdhF7DD04ChWNhWKTue43xcPEfs1nDfUhHoN8isdBNG0wQQycGqOWl/x/s5RwWVK5uESHtfmITjrMlOefXiQfUY6PDj+2VYaigxvaPyOU9GESrxOjToQJKLoloDVFalsEx3NbL3L1AukaOOfa8bcN/ks
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B8155289B51E944EAC1D2C16AE73ED20@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128015235.12940-2-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0ae8cc0-01c2-4f7b-f76e-08d77c8a2b75
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 09:28:37.1432
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pmDRS4l6O/MzOzwAHdE3xLS7yumb1VC/Y3STBn7oCCw9GKRjPsTnNBwWNj+IjLbtNd5++hnDhtzOlqoH8iJ/qctFVfcuJrE9jz3yWHGigEI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5174
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxscore=0 clxscore=1011 mlxlogscore=999 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/11/28 02:58), John Ogness wrote:
-> + * Sample reader code::
-> + *
-> + *	struct printk_info info;
-> + *	char text_buf[32];
-> + *	char dict_buf[32];
-> + *	u64 next_seq = 0;
-> + *	struct printk_record r = {
-> + *		.info		= &info,
-> + *		.text_buf	= &text_buf[0],
-> + *		.dict_buf	= &dict_buf[0],
-> + *		.text_buf_size	= sizeof(text_buf),
-> + *		.dict_buf_size	= sizeof(dict_buf),
-> + *	};
-> + *
-> + *	while (prb_read_valid(&rb, next_seq, &r)) {
-> + *		if (info.seq != next_seq)
-> + *			pr_warn("lost %llu records\n", info.seq - next_seq);
-> + *
-> + *		if (info.text_len > r.text_buf_size) {
-> + *			pr_warn("record %llu text truncated\n", info.seq);
-> + *			text_buf[sizeof(text_buf) - 1] = 0;
-> + *		}
-> + *
-> + *		if (info.dict_len > r.dict_buf_size) {
-> + *			pr_warn("record %llu dict truncated\n", info.seq);
-> + *			dict_buf[sizeof(dict_buf) - 1] = 0;
-> + *		}
-> + *
-> + *		pr_info("%llu: %llu: %s;%s\n", info.seq, info.ts_nsec,
-> + *			&text_buf[0], info.dict_len ? &dict_buf[0] : "");
-> + *
-> + *		next_seq = info.seq + 1;
-> + *	}
-> + */
-
-Will this loop ever end? :)
-
-pr_info() adds data to ringbuffer, which prb_read_valid() reads, so pr_info()
-can add more data, which prb_read_valid() will read, so pr_info()...
-
-	-ss
+T24gTW9uLCAyMDE5LTEyLTA5IGF0IDE2OjU3ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
+IFtFeHRlcm5hbF0NCj4gDQo+IFRoZSBkcml2ZXIgbWlzc2VzIGNoZWNraW5nIHRoZSByZXN1bHQg
+b2YgZGV2bV9yZWdtYXBfaW5pdF9tbWlvKCkuDQo+IEFkZCBhIGNoZWNrIHRvIGZpeCBpdC4NCg0K
+VGhhbmtzIDopDQoNClJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5h
+cmRlbGVhbkBhbmFsb2cuY29tPg0KDQo+IA0KPiBGaXhlczogZmMxNWJlMzlhODI3ICgiZG1hZW5n
+aW5lOiBheGktZG1hYzogYWRkIHJlZ21hcCBzdXBwb3J0IikNCj4gU2lnbmVkLW9mZi1ieTogQ2h1
+aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2RtYS9k
+bWEtYXhpLWRtYWMuYyB8IDEwICsrKysrKysrKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9k
+bWEtYXhpLWRtYWMuYyBiL2RyaXZlcnMvZG1hL2RtYS1heGktZG1hYy5jDQo+IGluZGV4IGEwZWU0
+MDRiNzM2ZS4uY2Y0Zjg5MjU2MmNjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RtYS9kbWEtYXhp
+LWRtYWMuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9kbWEtYXhpLWRtYWMuYw0KPiBAQCAtODMwLDYg
+KzgzMCw3IEBAIHN0YXRpYyBpbnQgYXhpX2RtYWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZQ0KPiAqcGRldikNCj4gIAlzdHJ1Y3QgZG1hX2RldmljZSAqZG1hX2RldjsNCj4gIAlzdHJ1Y3Qg
+YXhpX2RtYWMgKmRtYWM7DQo+ICAJc3RydWN0IHJlc291cmNlICpyZXM7DQo+ICsJc3RydWN0IHJl
+Z21hcCAqcmVnbWFwOw0KPiAgCWludCByZXQ7DQo+ICANCj4gIAlkbWFjID0gZGV2bV9remFsbG9j
+KCZwZGV2LT5kZXYsIHNpemVvZigqZG1hYyksIEdGUF9LRVJORUwpOw0KPiBAQCAtOTIxLDEwICs5
+MjIsMTcgQEAgc3RhdGljIGludCBheGlfZG1hY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+DQo+ICpwZGV2KQ0KPiAgDQo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZG1hYyk7DQo+
+ICANCj4gLQlkZXZtX3JlZ21hcF9pbml0X21taW8oJnBkZXYtPmRldiwgZG1hYy0+YmFzZSwNCj4g
+JmF4aV9kbWFjX3JlZ21hcF9jb25maWcpOw0KPiArCXJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRf
+bW1pbygmcGRldi0+ZGV2LCBkbWFjLT5iYXNlLA0KPiArCQkgJmF4aV9kbWFjX3JlZ21hcF9jb25m
+aWcpOw0KPiArCWlmIChJU19FUlIocmVnbWFwKSkgew0KPiArCQlyZXQgPSBQVFJfRVJSKHJlZ21h
+cCk7DQo+ICsJCWdvdG8gZXJyX2ZyZWVfaXJxOw0KPiArCX0NCj4gIA0KPiAgCXJldHVybiAwOw0K
+PiAgDQo+ICtlcnJfZnJlZV9pcnE6DQo+ICsJZnJlZV9pcnEoZG1hYy0+aXJxLCBkbWFjKTsNCj4g
+IGVycl91bnJlZ2lzdGVyX29mOg0KPiAgCW9mX2RtYV9jb250cm9sbGVyX2ZyZWUocGRldi0+ZGV2
+Lm9mX25vZGUpOw0KPiAgZXJyX3VucmVnaXN0ZXJfZGV2aWNlOg0K
