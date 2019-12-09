@@ -2,100 +2,121 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F3DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEEFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A792068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:44:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SmOgiwnK"
+	by mail.kernel.org (Postfix) with ESMTP id 46A5820637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfLIUon (ORCPT
+        id S1726785AbfLIUpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:44:43 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45806 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLIUon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:44:43 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so7289618pgk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 12:44:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P6A5+rZhTptmYi/XXvTMUxMhuaBe3WlijHoR7rvgnBA=;
-        b=SmOgiwnKT67WrEjvZqB4vlKa7V/9WaeW85L24/yIVj4xe1O7wvkpkyTkoOf6uBavQJ
-         WCxT1w3DL1XCYg9IRrIq2KzQgsrbFVl9ep8dYKN3cH8RNRxXjODwv2Ahw6CMYmN5ioaV
-         8Wqc0VxAfQZtb8wDHlAkCBQO+yDjV5qoOnpMxzi9I+Ir6YnaC+i/lXbENNh3OXM54w2f
-         C39VFqSVak0aN0fLmi0jNzkagWndrb/Ns4mYEuzIu8jvhaYytZOUYKTeaJXejjtgD4gE
-         JvdS82p+CPVCnOGIjxXgbNAdNQHmjUuQ6G6V80UopznS75aermlda9QLXeA6OfYiympq
-         ic/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P6A5+rZhTptmYi/XXvTMUxMhuaBe3WlijHoR7rvgnBA=;
-        b=HdBhku2uMUSRNPTEtthB+c42lPBlJIj8oadtsHpCN5gSe/NkpuDVJafxLxodAsVDZW
-         8jlKqNn3U7mXKtHkADVXz9TXfwFNukl7Ps3MCfXTm+9QU4WPm1SKMGUsgkuo5oROs+Rs
-         DoC3iR56qpMpkfPPNMmRyTxbDDpCLC8LeWTVd9m+YJZGnMBT6vH9im2Z55BtihIWbFUc
-         ZNFprq8BYrKdkwWQ21eQP1PTSvuf1sp1K8/3nsF40NeBR/KsVe2mD0OFpWBmecuVKJJ5
-         i2bfxs76bqVKy6Hng1kGYY8/rdNgn9mSdTm8f3GfSkA+7thbdHPieg/NSbbfEBSazr03
-         +3kQ==
-X-Gm-Message-State: APjAAAVgZlXWAYRBVhdtAGIuccd3L8SiimLtA6Q/vrDAlhUmMgf7adol
-        EyxIkWZj8HCbrNOOmoS/o5k=
-X-Google-Smtp-Source: APXvYqx5zuFSs70Zm4tuzPqhBiILuMoQQ4hLWqqX7caxL1/j2f7pAa0eTIUH3bFhuunzByguYf//cQ==
-X-Received: by 2002:a63:6787:: with SMTP id b129mr20703137pgc.103.1575924282880;
-        Mon, 09 Dec 2019 12:44:42 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x4sm361891pfx.68.2019.12.09.12.44.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 12:44:41 -0800 (PST)
-Date:   Mon, 9 Dec 2019 12:44:40 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mon, 9 Dec 2019 15:45:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35098 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726509AbfLIUpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:45:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 118DCAC45;
+        Mon,  9 Dec 2019 20:45:47 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 449CEE0321; Mon,  9 Dec 2019 21:45:46 +0100 (CET)
+Date:   Mon, 9 Dec 2019 21:45:46 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver core: Fix test_async_driver_probe if NUMA is
- disabled
-Message-ID: <20191209204440.GA1584@roeck-us.net>
-References: <20191127202453.28087-1-linux@roeck-us.net>
- <4a2aa8554933c2d004761d5f3e8132018be5ea27.camel@linux.intel.com>
- <377feb00-9288-e03c-b8a7-26ba87e24927@roeck-us.net>
- <b5826338cd4479b724835ea5469c5a8318e88e2c.camel@linux.intel.com>
- <dfc50096-d95f-8e57-4ba2-3fc122626af8@roeck-us.net>
- <f82041432512481569071a83e727cfb9f128126d.camel@linux.intel.com>
+Subject: Re: [PATCH net-next 5/5] ethtool: provide link mode names as a
+ string set
+Message-ID: <20191209204546.GB31047@unicorn.suse.cz>
+References: <cover.1575920565.git.mkubecek@suse.cz>
+ <0c239334df943c3f5f4ca74a2509754e08eda9e3.1575920565.git.mkubecek@suse.cz>
+ <20191209201511.GL9099@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f82041432512481569071a83e727cfb9f128126d.camel@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191209201511.GL9099@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:18:28AM -0800, Alexander Duyck wrote:
+On Mon, Dec 09, 2019 at 09:15:11PM +0100, Andrew Lunn wrote:
+> On Mon, Dec 09, 2019 at 08:55:45PM +0100, Michal Kubecek wrote:
+> > Unlike e.g. netdev features, the ethtool ioctl interface requires link mode
+> > table to be in sync between kernel and userspace for userspace to be able
+> > to display and set all link modes supported by kernel. The way arbitrary
+> > length bitsets are implemented in netlink interface, this will be no longer
+> > needed.
 > > 
-> > I thought the code is specifically checking devices which it previously
-> > created, which are well defined and understood test devices. After all,
-> > the check is in the test driver's probe function. Guess I really don't
-> > understand the code. Please take my patch as bug report, and submit
-> > whatever fix you think is correct.
+> > To allow userspace to access all link modes running kernel supports, add
+> > table of ethernet link mode names and make it available as a string set to
+> > userspace GET_STRSET requests. Add build time check to make sure names
+> > are defined for all modes declared in enum ethtool_link_mode_bit_indices.
 > 
-> Sorry I had overlooked that this is the test code.
+> Hi Michal
 > 
-> I suppose it should be fine since we specify the node ID for all instances
-> where we register an asychronous test device.
-> 
+> Having a build time check is a good idea. However, i don't see it in
+> the code. Please could you point it out.
 
-That isn't exacly an endorsement. Would you mind submitting a patch
-that is acceptable for you ? I'll be more than happy to test it.
+Thanks for noticing. The BUILD_BUG_ON() check got lost when I moved the
+patch to an earlier place and changed the declaration to fixed size
+array like other name tables have. But you are right, losing the check
+would be too high price for the uniformity.
 
-Thanks,
-Guenter
+> > +#define __LINK_MODE_NAME(speed, type, duplex) \
+> > +	#speed "base" #type "/" #duplex
+> > +#define __DEFINE_LINK_MODE_NAME(speed, type, duplex) \
+> > +	[ETHTOOL_LINK_MODE(speed, type, duplex)] = \
+> > +	__LINK_MODE_NAME(speed, type, duplex)
+> > +#define __DEFINE_SPECIAL_MODE_NAME(_mode, _name) \
+> > +	[ETHTOOL_LINK_MODE_ ## _mode ## _BIT] = _name
+> > +
+> > +const char
+> > +link_mode_names[__ETHTOOL_LINK_MODE_MASK_NBITS][ETH_GSTRING_LEN] = {
+> > +	__DEFINE_LINK_MODE_NAME(10, T, Half),
+> > +	__DEFINE_LINK_MODE_NAME(10, T, Full),
+> > +	__DEFINE_LINK_MODE_NAME(100, T, Half),
+> > +	__DEFINE_LINK_MODE_NAME(100, T, Full),
+> > +	__DEFINE_LINK_MODE_NAME(1000, T, Half),
+> > +	__DEFINE_LINK_MODE_NAME(1000, T, Full),
+> > +	__DEFINE_SPECIAL_MODE_NAME(Autoneg, "Autoneg"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(TP, "TP"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(AUI, "AUI"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(MII, "MII"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(FIBRE, "FIBRE"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(BNC, "BNC"),
+> > +	__DEFINE_LINK_MODE_NAME(10000, T, Full),
+> > +	__DEFINE_SPECIAL_MODE_NAME(Pause, "Pause"),
+> > +	__DEFINE_SPECIAL_MODE_NAME(Asym_Pause, "Asym_Pause"),
+> > +	__DEFINE_LINK_MODE_NAME(2500, X, Full),
+> > +	__DEFINE_SPECIAL_MODE_NAME(Backplane, "Backplane"),
+> > +	__DEFINE_LINK_MODE_NAME(1000, KX, Full),
+> > +	__DEFINE_LINK_MODE_NAME(10000, KX4, Full),
+> > +	__DEFINE_LINK_MODE_NAME(10000, KR, Full),
+> > +	[ETHTOOL_LINK_MODE_10000baseR_FEC_BIT] = "10000baseR_FEC",
+> 
+> Would
+> 
+> __DEFINE_SPECIAL_MODE_NAME(10000baseR_FEC, 10000baseR_FEC),
+> 
+> work here?
+
+Right, it would (with double quotes for second argument). As I wrote the
+macro for bits which don't represent actual link modes, it never occured
+to me that it can be also used for this special case.
+
+I'll wait until tomorrow to see if there are more comments and send v2.
+
+Michal
