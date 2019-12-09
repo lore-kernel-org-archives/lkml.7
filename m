@@ -2,94 +2,108 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D2BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F2FC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FA8208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD562077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:26:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dym3GMJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLISZ4 (ORCPT
+        id S1726898AbfLIS0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:25:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36084 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726642AbfLISZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:25:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5212CAD2D;
-        Mon,  9 Dec 2019 18:25:51 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id EA416DA82A; Mon,  9 Dec 2019 19:25:43 +0100 (CET)
-Date:   Mon, 9 Dec 2019 19:25:43 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: add missing check after link_free_space
-Message-ID: <20191209182543.GQ2734@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        kjlu@umn.edu, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191209034114.16212-1-dinghao.liu@zju.edu.cn>
+        Mon, 9 Dec 2019 13:26:01 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46356 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfLIS0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:26:00 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9IPtM9095286;
+        Mon, 9 Dec 2019 12:25:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575915955;
+        bh=wHjPXA26kNlnCk1JrNudGWLJavjZeOcEMg0UiUtbdZ8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dym3GMJQR0LJ3UuJ6i408gxdRMDtMZD5zTxWSbnrjkuG+QTkTXZLvYVt8b9H/xoOL
+         ItOs1wwi2IciH1iaNPXfrfWcXDMjfl+67I6wfTwAWLyDL2cplKYfWwFxiPQxZZy1Dq
+         JBj1faQQC+Iv4gMz5gD4BnoQ1pCwkZDtKfcKngqs=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9IPsIO055343
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 12:25:55 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 12:25:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 12:25:54 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9IPsad010705;
+        Mon, 9 Dec 2019 12:25:54 -0600
+Subject: Re: [PATCH net-next v2 0/2] Rebase of patches
+To:     David Miller <davem@davemloft.net>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>
+References: <20191209175943.23110-1-dmurphy@ti.com>
+ <20191209.101005.1980841296607612612.davem@davemloft.net>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <898c9346-311e-4c93-9f83-afe255b54243@ti.com>
+Date:   Mon, 9 Dec 2019 12:23:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209034114.16212-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20191209.101005.1980841296607612612.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 11:41:14AM +0800, Dinghao Liu wrote:
-> The return value of link_free_space is checked out-sync.
-> One branch of an if statement uses an extra check after
-> WARN_ON() but its peer branch does not. WARN_ON() does
-> not change the control flow, thus only using this check
-> might be insufficient.
-> 
-> Fix this by simply adding a check on ret.
-> 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> --
-> Changes in v2:
->   - Add memory free for free space entry.
-> ---
->  fs/btrfs/free-space-cache.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-> index 3283da419200..ba2e6cea5233 100644
-> --- a/fs/btrfs/free-space-cache.c
-> +++ b/fs/btrfs/free-space-cache.c
-> @@ -2437,6 +2437,10 @@ int btrfs_remove_free_space(struct btrfs_block_group *block_group,
->  			if (info->bytes) {
->  				ret = link_free_space(ctl, info);
->  				WARN_ON(ret);
-> +				if (ret) {
-> +					kmem_cache_free(btrfs_free_space_cachep, info);
-> +					goto out_lock;
-> +				}
->  			} else {
->  				kmem_cache_free(btrfs_free_space_cachep, info);
+David
 
-There are two link_free_space followed by WARN_ON instances in the
-function, please remove both.
+On 12/9/19 12:10 PM, David Miller wrote:
+> From: Dan Murphy <dmurphy@ti.com>
+> Date: Mon, 9 Dec 2019 11:59:41 -0600
+>
+>> This is a rebase of the dp83867 patches on top of the net-next tree
+> That's not what this patch series does.
+>
+> The introductory posting is where you describe, at a high level, what the
+> whole patch series is doing as a unit, how it is doing it, and why it is
+> doing it that way.
+>
+> It also serves as the single email I can respond to when I want to let you
+> know that I've applied the patch series.
+>
+> Please read the documentation under Documentation/ if you still are unsure
+> what this introductory posting is all about and how you should compose one.
+>
+> Thank you.
 
-In the above case, the branches can be merged together so there's not
-repeated kmem_cache_free, like
+I understand what a cover letter is.
 
-	if (info->bytes)
-		ret = link_free_space(...);
-	kmem_cache_free(btrfs_free_space_cachep, info);
-	if (ret)
-		goto out_unlock;
+I don't normally see cover letters required for small patchsets like 
+this in other trees.  The commit messages should explain in detail what 
+is being changed as the cover letters are not committed to the kernel.  
+I only add cover letters when the patchsets are significant, per the 
+Documentation/ you eluded to.
+
+But if you require this for the linux net tree then I can add them as I 
+move forward it is not a problem either way.
+
+Dan
+
+
