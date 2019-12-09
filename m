@@ -2,189 +2,130 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BCFC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C225BC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7AA205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DEE205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOc/pTpI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G38QlEon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfLIUxC (ORCPT
+        id S1726678AbfLIUzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:53:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47090 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726408AbfLIUxB (ORCPT
+        Mon, 9 Dec 2019 15:55:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41704 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfLIUzo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:53:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575924780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LJBASH3qoTGdWSdB+LrXLR7p2EO5j8Zhq+6mo6vrhH0=;
-        b=YOc/pTpISDyGxrj+xe2wlK9aQ4q2aKjtT5OSkNHKYQpVataqJ5Nwg4B8O7oJ7pe06kunRi
-        w6+uU+YWfjwFCwsomygSPvGJzCAz8lMwkSqbhEOaGYoMxEGqNGMvfdzm3/7hDvrsa41Z8/
-        ZqdXfBBDPo7ARaAjIo6ScBhzjyH17pk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319--6ZnxKI4M3mmFNravhecog-1; Mon, 09 Dec 2019 15:52:58 -0500
-Received: by mail-wr1-f69.google.com with SMTP id u12so8015679wrt.15
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 12:52:58 -0800 (PST)
+        Mon, 9 Dec 2019 15:55:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x8so7708176pgk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 12:55:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cADxJVnUoV3/CYs6mlZcytBGrKUT6v8F+9De0N+ZbQ4=;
+        b=G38QlEonTCbZ77UkBJ4yf5cvaMTZNNiAf9wfBifsurQ7ULbIYVa9Mq9MLXvlHQCTjt
+         BL+cmITXf1bOz4unMnV/Pa9KxWEWfWbBPN6tlFbv5cZK6+xqAozesljsgEcqSJrJZwmr
+         hDJFlRNmLFy8GxdagXVj5drkP9CnfaBgtPmgJ8s/fhBY+H3+TF5WfqbxYi88f+Gf1bUs
+         8QYkCKfQJ+Nr61fu98LKA5r/KuS5ztGbWNXBHlD6LTsJGg8Stftkd3CTMlGjkJ4pnFkv
+         NpUbLBJBgwfgvZJIBTmhwiG3ar1IZyAP6CeqRdxcwYksisyMyDaziMAc0f+ESm7btsTk
+         VA0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=NGEL1NSYmJ/OoSlxzf6M70RXjEhwqgGKnWSMvOS+jtM=;
-        b=oJKMxMsr22wQzdOq29EFmOJRt00h/E55qxkY/YndQxyBmBpev7nEQplXjNFkFihZ27
-         ZvVJGRLdzXbiEPjOJJd9F3+AGMZJgMzL0aSD9JZjlAGloHaoDVl4TmjBC3fAqcUsqYor
-         /iBzWT6jw/LTKgYGn67ulYxmxx+JZghzLcUHLliGORnLXGIJlAImA0t7Aeql4raFGtjk
-         eiJ/p2Ul2SbOpdf9cgjtlOaLyUb0m3u+B32gquGAFnmgPWw5ZP5iX7P2ciBvyzkZTYHC
-         cJ5Tekwp2yBK3f2ifKhCbhLrJC5nweilgedSpZ2XXtwZXg5sgayLgeRCqyIBRF71GIfh
-         gGDA==
-X-Gm-Message-State: APjAAAWLhZyvBq1Zr6u/0PE1Co/cPxT3GygAlp1FdTxxVOMLdkaZr0IF
-        q/Tuqxt3agREhm0in3DUl3G+NM81/SdV5iIK/++FuYcIfYrILFK+F318sy79wAUZ3A9C9Da97Kv
-        op8OMhDkpScsQbaWqxgtMQk08
-X-Received: by 2002:a1c:4c10:: with SMTP id z16mr1076740wmf.136.1575924775716;
-        Mon, 09 Dec 2019 12:52:55 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzZrY86SAs9HX0pRhK9obPbaChosiTAnQWyc7+/5zfbpOwHVpMjKo7v99fnszsIjFo82bF44w==
-X-Received: by 2002:a1c:4c10:: with SMTP id z16mr1076719wmf.136.1575924775493;
-        Mon, 09 Dec 2019 12:52:55 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C63FA.dip0.t-ipconnect.de. [91.12.99.250])
-        by smtp.gmail.com with ESMTPSA id d8sm726691wre.13.2019.12.09.12.52.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 12:52:54 -0800 (PST)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t in arch_add_memory()
-Date:   Mon, 9 Dec 2019 21:52:53 +0100
-Message-Id: <F98E5D42-BD24-4A01-95EF-44329DDF8190@redhat.com>
-References: <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@suse.com>
-In-Reply-To: <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: -6ZnxKI4M3mmFNravhecog-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cADxJVnUoV3/CYs6mlZcytBGrKUT6v8F+9De0N+ZbQ4=;
+        b=VRQDacxyWaQoNgXCJMjmJcXV0wbQnFxJ26wT9xq2ZH4WMQnUW0qG7Z/eYkGn/mA2mv
+         HSBZ1j54LT2KDMFAUs6k8ID+kCT1IsodKWiAYtMdpWFD5NslrGI7rX6fcn8+c4xbj6pY
+         XGweSMSIz5XFi1B5gBUNTxcrB5oKhkJvLrxl1Lt/w5mTW5EYH4+2UMpV3t/EF17qdBeF
+         7Z+nhNTbPB4FRx7tEEUynt24uoiWmDJl89AbLHcWuq4vURHFPuYeZSTlQrBx5NPo+o1V
+         zrgmLQTtxJVFyFWVe3LZWb5v+w3ncL+p2zDGZRx6O89t/AzRXzvI+aWHtpPiiUwWAIU7
+         Aa4g==
+X-Gm-Message-State: APjAAAXrYGiSzo3NW/8dHJh5z8nun1sY/GNMSDiQwYgyGY7ZJaeAAgR6
+        bR37mpdHmC5XAl2+LHmnT5S1fsOnS/wY7hL/6r9reA==
+X-Google-Smtp-Source: APXvYqxhfCWhW/ylSziU+SAhjFBcrT9hZoKpHuKfFf9c+r14vZOL+ZmvdX3AR6YV9ukFakL3EJ76WXHGRuIa2uEbOi4=
+X-Received: by 2002:a63:590e:: with SMTP id n14mr11564655pgb.10.1575924942967;
+ Mon, 09 Dec 2019 12:55:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191209203855.25500-1-natechancellor@gmail.com>
+In-Reply-To: <20191209203855.25500-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Dec 2019 12:55:32 -0800
+Message-ID: <CAKwvOdkYrXehgFPFPeOLy5KKsS96d59DHE6JH+aEn57-avVA3Q@mail.gmail.com>
+Subject: Re: [PATCH] HID: core: Adjust indentation in hid_add_device
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Jiri Kosina <jkosina@suse.cz>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 9, 2019 at 12:39 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/hid/hid-core.c:2378:3: warning: misleading indentation;
+> statement is not part of the previous 'if' [-Wmisleading-indentation]
+>          if (!hdev->ll_driver->raw_request) {
+>          ^
+> ../drivers/hid/hid-core.c:2372:2: note: previous statement is here
+>         if (hid_ignore(hdev))
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space after the tab on this line.
+> Remove it so that the indentation is consistent with the Linux kernel
+> coding style and clang no longer warns.
+>
+> Fixes: 3c86726cfe38 ("HID: make .raw_request mandatory")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/793
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Thanks for taking the time to track down proper fixes tags.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+> ---
+>  drivers/hid/hid-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index e0b241bd3070..9c7f03f23eca 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -2375,10 +2375,10 @@ int hid_add_device(struct hid_device *hdev)
+>         /*
+>          * Check for the mandatory transport channel.
+>          */
+> -        if (!hdev->ll_driver->raw_request) {
+> +       if (!hdev->ll_driver->raw_request) {
+>                 hid_err(hdev, "transport driver missing .raw_request()\n");
+>                 return -EINVAL;
+> -        }
+> +       }
+>
+>         /*
+>          * Read the device report descriptor once and use as template
+> --
+> 2.24.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191209203855.25500-1-natechancellor%40gmail.com.
 
 
-> Am 09.12.2019 um 21:43 schrieb Dan Williams <dan.j.williams@intel.com>:
->=20
-> =EF=BB=BFOn Mon, Dec 9, 2019 at 12:24 PM Logan Gunthorpe <logang@deltatee=
-.com> wrote:
->>=20
->>=20
->>=20
->>> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
->>> On 09.12.19 20:13, Logan Gunthorpe wrote:
->>>> devm_memremap_pages() is currently used by the PCI P2PDMA code to crea=
-te
->>>> struct page mappings for IO memory. At present, these mappings are cre=
-ated
->>>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However,=
- on
->>>> x86, an mtrr register will typically override this and force the cache
->>>> type to be UC-. In the case firmware doesn't set this register it is
->>>> effectively WB and will typically result in a machine check exception
->>>> when it's accessed.
->>>>=20
->>>> Other arches are not currently likely to function correctly seeing the=
-y
->>>> don't have any MTRR registers to fall back on.
->>>>=20
->>>> To solve this, add an argument to arch_add_memory() to explicitly
->>>> set the pgprot value to a specific value.
->>>>=20
->>>> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
->>>> simple change to pass the pgprot_t down to their respective functions
->>>> which set up the page tables. For x86_32, set the page tables explicit=
-ly
->>>> using _set_memory_prot() (seeing they are already mapped). For sh, rej=
-ect
->>>> anything but PAGE_KERNEL settings -- this should be fine, for now, see=
-ing
->>>> sh doesn't support ZONE_DEVICE anyway.
->>>>=20
->>>> Cc: Dan Williams <dan.j.williams@intel.com>
->>>> Cc: David Hildenbrand <david@redhat.com>
->>>> Cc: Michal Hocko <mhocko@suse.com>
->>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>>> ---
->>>> arch/arm64/mm/mmu.c            | 4 ++--
->>>> arch/ia64/mm/init.c            | 5 ++++-
->>>> arch/powerpc/mm/mem.c          | 4 ++--
->>>> arch/s390/mm/init.c            | 4 ++--
->>>> arch/sh/mm/init.c              | 5 ++++-
->>>> arch/x86/mm/init_32.c          | 7 ++++++-
->>>> arch/x86/mm/init_64.c          | 4 ++--
->>>> include/linux/memory_hotplug.h | 2 +-
->>>> mm/memory_hotplug.c            | 2 +-
->>>> mm/memremap.c                  | 2 +-
->>>> 10 files changed, 25 insertions(+), 14 deletions(-)
->>>>=20
->>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>>> index 60c929f3683b..48b65272df15 100644
->>>> --- a/arch/arm64/mm/mmu.c
->>>> +++ b/arch/arm64/mm/mmu.c
->>>> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long =
-addr)
->>>> }
->>>>=20
->>>> #ifdef CONFIG_MEMORY_HOTPLUG
->>>> -int arch_add_memory(int nid, u64 start, u64 size,
->>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
->>>>                     struct mhp_restrictions *restrictions)
->>>=20
->>> Can we fiddle that into "struct mhp_restrictions" instead?
->>=20
->> Yes, if that's what people want, it's pretty trivial to do. I chose not
->> to do it that way because it doesn't get passed down to add_pages() and
->> it's not really a "restriction". If I don't hear any objections, I will
->> do that for v2.
->=20
-> +1 to storing this information alongside the altmap in that structure.
-> However, I agree struct mhp_restrictions, with the MHP_MEMBLOCK_API
-> flag now gone, has lost all of its "restrictions". How about dropping
-> the 'flags' property and renaming the struct to 'struct
-> mhp_modifiers'?
->=20
 
-I=E2=80=98d prefer that over an arch_add_memory_protected() as suggested by=
- Michal. But if we can change it after adding the memory (as also suggested=
- by Michal), that would also be nice.
-
-Cheers!
-
+-- 
+Thanks,
+~Nick Desaulniers
