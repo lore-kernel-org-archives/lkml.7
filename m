@@ -2,105 +2,88 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD643C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C62C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A47206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10DC206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575919656;
+	bh=bzcNyjdSa+ztOIW0Oxj5CIgYIGKH0CN4fPLCygHsqNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KePAlxZTihtNjfGnWN0u8NDRynhCQ79Y3nFg8dGSjVNcDpLULIcmxeFFWmvmvYDFJ
+	 GPMXKvm56xwqlzK/jyge5SWXLD41aTKNOohmk1yczKshx2E9TOWQhF4w+mC3s9xVfY
+	 ute07wZx5LINzNpf5HJ0GEbYqLYu+pYuOuHe7yN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfLIT1T (ORCPT
+        id S1727170AbfLIT1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:27:19 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:39839 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfLIT1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:27:16 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N3KgE-1he9Qm1eLq-010Mtl; Mon, 09 Dec 2019 20:27:14 +0100
-Received: by mail-qt1-f181.google.com with SMTP id k11so281078qtm.3;
-        Mon, 09 Dec 2019 11:27:14 -0800 (PST)
-X-Gm-Message-State: APjAAAW6N3ovd1Gl9x31r4xo1fK3rBiK1mOsrdM4eze4YKLfeSJOUkNN
-        vdirtl2LcElnD45sXuPmkW+Vtal+oOm02/RmOBw=
-X-Google-Smtp-Source: APXvYqw8S7eatu+K64zQ4xgIER2Piv2OR5qIkc9fHY9hfY2/sTUPAuTv7mjAtXGPnDIgDvdsQGZVrBJHzRcDC9wlEio=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr26650326qtr.7.1575919633087;
- Mon, 09 Dec 2019 11:27:13 -0800 (PST)
+        Mon, 9 Dec 2019 14:27:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbfLIT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:27:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1911B205ED;
+        Mon,  9 Dec 2019 19:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575919653;
+        bh=bzcNyjdSa+ztOIW0Oxj5CIgYIGKH0CN4fPLCygHsqNM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HKU1PVYVil4JQoKV10k3yQs0bBRNzeGyu1QwXWueJeK8H/YRJgG3B+AWAZmdJZIz0
+         1ZIQ8lTY0CVEyBJxejWba5JnO6ooo7XfgkHAJapfqkiUWLnRR/OotfsemDcB7CkKYh
+         EhXpqerBQVAHk269bNP1y7LMF7SjsVscCLf7/Yl0=
+Date:   Mon, 9 Dec 2019 20:27:30 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        kernel test robot <lkp@intel.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] of/platform: Unconditionally pause/resume sync state
+ during kernel init
+Message-ID: <20191209192730.GA1693284@kroah.com>
+References: <20191209192221.143379-1-saravanak@google.com>
 MIME-Version: 1.0
-References: <20191209151256.2497534-1-arnd@arndb.de> <20191209151256.2497534-4-arnd@arndb.de>
- <20191209.102950.2248756181772063368.davem@davemloft.net>
-In-Reply-To: <20191209.102950.2248756181772063368.davem@davemloft.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 9 Dec 2019 20:26:56 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a25UGV1KS1ufZsyQJk1+9Rp9is0x6eOU7pr5Xf6Z3N2gA@mail.gmail.com>
-Message-ID: <CAK8P3a25UGV1KS1ufZsyQJk1+9Rp9is0x6eOU7pr5Xf6Z3N2gA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
-To:     David Miller <davem@davemloft.net>
-Cc:     khc@pm.waw.pl, gregkh <gregkh@linuxfoundation.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
-        "R.J.Dunlop" <bob.dunlop@farsite.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Martin Schiller <ms@dev.tdt.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:7qnWVUiaxASlMAvTvom/HXL4dbDqoezMjO1lHSGf+4G5u8IuV2X
- pFkXOOQ/6ddk5gl1KfsyK1tj/zLQMt8ArSlH39A7HyP6wxDTF0cOhETKpiuQHJHB6A0f+lu
- jlyai+ijhU2h0kK20dKH1ldsTdDl553/s3lgGvcGb7MuJt1hR6VtrAfGGGDhKw0wB5ySh2D
- mU2pqXR+LbKHHtRE39Qzg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8/+aPbNBCc8=:M7jNY8qixxukakRKEYGtPE
- mWWAZexkE7gKrw1xC0tEtvMj9sq0ybgDz/Bj2ZrxG9ehieGK97AA4czcQK7SCSlAXvUNrNCoS
- kFqWzMcpIfEO1IeuxunVDjvAZWi4gRAVhX2UjLxM/0XeulbWrB9RilRFfKzs3OMXwkDFI2nCN
- vRxHdHroITgI18PRjlNJTMXaS+fpmamcRrxuQ5yZ/ohJuaUrPaV3u5LM0rMqG0Dy2rgAGXVJt
- YQU8sMjCDoeLCNQzQxqQ+e6tXdERGJlknq0H6SkjDQntCyvutRu7DeKTINhYNAfWAhHqYFAsG
- h8BJAajR4cpJjA+/KO8KBD9IEuqRB8wRKZH3LHV+E2KkYrBiNCQ8Pt594FtEop834fSogodMm
- /RpxyEdrCyEMtcpv08lPG7Y7X9uZTmgSoSGFlmaOL421w4Wwi995w6/sqcIIrqL6Y8E6HSzbe
- 6BKHG74vwEmgsfKkFlXtJO75KHWHz3qSDGuzlTNi9g58ZBVAzSQ8IJdF4FdW1NPZv0lr4ZaZr
- eH0kjvU71Cl+77MDwA04KGyJ3IseTKAf4GH5bR4jUZBj8maKuRhsn/kOn+YeIV8SF7sLjm2Pl
- w3GbioHLJSrPPncZt/ZzSXKr+9bty9aWX9ZuWcGMO4Wr+Xp5lNvd8FdFw7WRCZUW4Gd6jI5rW
- KycTTOpbbGv4gSPz/fcz41tmACZ1q0+Fqr/37ZMVA57jeAMqk/7MsV053FglBdSezaXhxP6OI
- RTA+7L1Ir5QNFoEayEQNUp9/hILIXmlWqvcaqKuHDgKWPMPhXe5V5xpCKuK06o7BJjXZlPCpA
- ZcbHu2KNWFmzBbu3nnhF7ED39pj07otjbXcg5I/xduZBCqocx9kJ+tcqahtE95aScInaOpRgp
- CR9UkKMcz95rvjy/FBPQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209192221.143379-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 7:29 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Mon,  9 Dec 2019 16:12:56 +0100
->
-> > syzbot keeps finding issues in the X.25 implementation that nobody is
-> > interested in fixing.  Given that all the x25 patches of the past years
-> > that are not global cleanups tend to fix user-triggered oopses, is it
-> > time to just retire the subsystem?
->
-> I have a bug fix that I'm currently applying to 'net' right now actually:
->
->         https://patchwork.ozlabs.org/patch/1205973/
->
-> So your proposal might be a bit premature.
+On Mon, Dec 09, 2019 at 11:22:21AM -0800, Saravana Kannan wrote:
+> Commit 5e6669387e22 ("of/platform: Pause/resume sync state during init
+> and of_platform_populate()") paused/resumed sync state during init only
+> if Linux had parsed and populated a devicetree.
+> 
+> However, the check for that (of_have_populated_dt()) can change after
+> of_platform_default_populate_init() executes.  One example of this is
+> when devicetree unittests are enabled.  This causes an unmatched
+> pause/resume of sync state. To avoid this, just unconditionally
+> pause/resume sync state during init.
+> 
+> Fixes: 5e6669387e22 ("of/platform: Pause/resume sync state during init and of_platform_populate()")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+> ---
+>  drivers/of/platform.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Ok, makes sense. Looking back in the history, I also see other bugfixes
-from the same author.
 
-Adding Martin Schiller to Cc: for a few questions:
+What changed from v1?
 
-- What hardware are you using for X.25?
-- Would you be available to be listed in the MAINTAINERS file
-  as a contact for net/x25?
-- Does your bug fix address the latest issue found by syzbot[1],
-  or do you have an idea to fix it if not?
+Always put that below the --- line.
 
-        Arnd
+v3 please?
 
-[1] https://lore.kernel.org/netdev/CAK8P3a0LdF+aQ1hnZrVKkNBQaum0WqW1jyR7_Eb+JRiwyHWr6Q@mail.gmail.com/
+thanks,
+
+greg k-h
