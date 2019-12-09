@@ -2,83 +2,118 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC7FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F856C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F31C2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D723207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfLIQ4a (ORCPT
+        id S1726607AbfLIQ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:56:30 -0500
-Received: from mga02.intel.com ([134.134.136.20]:47310 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfLIQ4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:56:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 08:56:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="387294529"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2019 08:56:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7788C141; Mon,  9 Dec 2019 18:56:25 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] io-mapping: Use PHYS_PFN() macro in io_mapping_map_atomic_wc()
-Date:   Mon,  9 Dec 2019 18:56:24 +0200
-Message-Id: <20191209165624.56351-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 11:58:16 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726477AbfLIQ6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:58:15 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9GlS4I127248
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 11:58:14 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtfqhfca-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:58:13 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Mon, 9 Dec 2019 16:58:10 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 16:58:04 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9Gw3NS44696048
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 16:58:04 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D612411C050;
+        Mon,  9 Dec 2019 16:58:03 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01B8111C04A;
+        Mon,  9 Dec 2019 16:58:01 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon,  9 Dec 2019 16:58:00 +0000 (GMT)
+Date:   Mon, 9 Dec 2019 22:28:00 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Boaz Harrosh <boaz@plexistor.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121041218.GK24548@ming.t460p>
+ <20191121141207.GA18443@pauld.bos.csb>
+ <93de0f75-3664-c71e-9947-5b37ae935ddc@plexistor.com>
+ <8c02ab43-3880-68db-f293-9958510fb29e@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <8c02ab43-3880-68db-f293-9958510fb29e@kernel.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19120916-0012-0000-0000-000003733800
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120916-0013-0000-0000-000021AF077F
+Message-Id: <20191209165800.GB27229@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 mlxlogscore=953 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 phishscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PHYS_PFN() macro in io_mapping_map_atomic_wc() instead of
-open coded variant.
+* Jens Axboe <axboe@kernel.dk> [2019-11-21 09:19:29]:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/io-mapping.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > I wish there was a flag to wake_up() or to the event object that says
+> > to relinquish the remaning of the time-slice to the waiter on same
+> > CPU, since I will be soon sleeping.
+> 
+> Isn't that basically what wake_up_sync() is?
+> 
 
-diff --git a/include/linux/io-mapping.h b/include/linux/io-mapping.h
-index 6e125e9b4187..837058bc1c9f 100644
---- a/include/linux/io-mapping.h
-+++ b/include/linux/io-mapping.h
-@@ -28,6 +28,7 @@ struct io_mapping {
- 
- #ifdef CONFIG_HAVE_ATOMIC_IOMAP
- 
-+#include <linux/pfn.h>
- #include <asm/iomap.h>
- /*
-  * For small address space machines, mapping large objects
-@@ -64,12 +65,10 @@ io_mapping_map_atomic_wc(struct io_mapping *mapping,
- 			 unsigned long offset)
- {
- 	resource_size_t phys_addr;
--	unsigned long pfn;
- 
- 	BUG_ON(offset >= mapping->size);
- 	phys_addr = mapping->base + offset;
--	pfn = (unsigned long) (phys_addr >> PAGE_SHIFT);
--	return iomap_atomic_prot_pfn(pfn, mapping->prot);
-+	return iomap_atomic_prot_pfn(PHYS_PFN(phys_addr), mapping->prot);
- }
- 
- static inline void
+Workqueue don't seem to be using wait_queue_head which is needed when using
+wake_up_sync and its related APIs.  Also wake_up_sync would work when the
+waking task seems to hand off the CPU and goes to sleep/block. However here,
+i.e in fsperf case atleast, the waking thread continues to run after it has
+woken the per cpu workqueue.
+
 -- 
-2.24.0
+Thanks and Regards
+Srikar Dronamraju
 
