@@ -2,26 +2,26 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B74C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B971C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E561321556
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF0A24653
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfLISnT (ORCPT
+        id S1727061AbfLISnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:43:19 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:34260 "EHLO mail.bugwerft.de"
+        Mon, 9 Dec 2019 13:43:18 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:34254 "EHLO mail.bugwerft.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfLISm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726675AbfLISm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 13:42:59 -0500
 Received: from zenbar.fritz.box (pD95EF75D.dip0.t-ipconnect.de [217.94.247.93])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id A76232E5CDE;
-        Mon,  9 Dec 2019 18:29:06 +0000 (UTC)
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 3EC8A2E5CCC;
+        Mon,  9 Dec 2019 18:29:03 +0000 (UTC)
 From:   Daniel Mack <daniel@zonque.org>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
@@ -29,12 +29,10 @@ To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
         pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 03/10] dt-bindings: gpio: Add documentation for ad242x GPIO controllers
-Date:   Mon,  9 Dec 2019 19:35:03 +0100
-Message-Id: <20191209183511.3576038-4-daniel@zonque.org>
+Subject: [PATCH 00/10] mfd: Add support for Analog Devices A2B transceiver
+Date:   Mon,  9 Dec 2019 19:35:00 +0100
+Message-Id: <20191209183511.3576038-1-daniel@zonque.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191209183511.3576038-1-daniel@zonque.org>
-References: <20191209183511.3576038-1-daniel@zonque.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,85 +40,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device must be place as a sub-device of an AD242x MFD node.
+This patch series adds support for Analog Device's AD242x A2B
+transceivers.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- .../bindings/gpio/adi,ad242x-gpio.yaml        | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
+  https://www.analog.com/media/en/technical-documentation/user-guides/AD242x_TRM_Rev1.1.pdf
+
+These transceivers are used to form an audio network by connecting the
+parts in a daisy-chain. On top of audio, the devices expose some other
+functions such as GPIO, programmable clock outputs and remote-side I2C
+bus master. The first node in the chain is called the master node, and
+all other devices are called slave nodes. Up to 15 such devices can be
+connected this way.
+
+The master device responds on two addresses on the I2C bus. The primary
+one is used to access all registers in the master node itself, the
+secondary is for accessing remote nodes after prior setup through the
+master node. In the driver stack, these details are hidden behind
+specific regmap configs.
+
+The driver stack is implemented as MFD core and companion drivers that
+can be registered as sub-devices in DT. Drivers for these sub-devices
+can be used for both master and slave nodes, as they just interface
+with the node's regmap.
+
+The master node is responsible for discovering all the slave nodes at
+probe time, and it needs to take the used audio and routing modes in
+each of the slave devices into account in order to pre-calculate the
+bus-timings correctly. Hence, this bus is not hot-pluggable.
+
+Transceivers can both receive and provide audio, and streams can be
+routed from one node to any other, including many others. The tricky
+bit is how to expose the audio routing in DT in a sane way.
+The way it is implemented here, the slave nodes specify the number of
+slots they each consume and generate, and which thereof they forward
+from one side to the other. This mimics the internal register
+structure and should allow for even exotic setups.
+
+Please let me know what you think and what could be improved.
+
+
+Thanks,
+Daniel
+
+
+Daniel Mack (10):
+  dt-bindings: mfd: Add documentation for ad242x
+  dt-bindings: i2c: Add documentation for ad242x i2c controllers
+  dt-bindings: gpio: Add documentation for AD242x GPIO controllers
+  dt-bindings: clock: Add documentation for AD242x clock providers
+  dt-bindings: sound: Add documentation for AD242x codecs
+  mfd: Add core driver for AD242x A2B transceivers
+  i2c: Add driver for AD242x bus controller
+  gpio: Add driver for AD242x GPIO controllers
+  clk: Add support for AD242x clock output providers
+  ASoC: Add codec component for AD242x nodes
+
+ .../bindings/clock/adi,ad242x-clk.yaml        |  32 +
+ .../bindings/gpio/adi,ad242x-gpio.yaml        |  65 ++
+ .../bindings/i2c/adi,ad242x-i2c.yaml          |  31 +
+ .../bindings/mfd/adi,ad242x-bus.yaml          |  29 +
+ .../bindings/mfd/adi,ad242x-master.yaml       | 235 +++++++
+ .../bindings/mfd/adi,ad242x-slave.yaml        | 108 ++++
+ .../bindings/sound/adi,ad242x-codec.yaml      |  31 +
+ drivers/clk/Kconfig                           |   6 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-ad242x.c                      | 231 +++++++
+ drivers/gpio/Kconfig                          |   6 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-ad242x.c                    | 229 +++++++
+ drivers/i2c/busses/Kconfig                    |  10 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-ad242x.c               | 178 +++++
+ drivers/mfd/Kconfig                           |  11 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/ad242x-bus.c                      |  42 ++
+ drivers/mfd/ad242x-master.c                   | 611 ++++++++++++++++++
+ drivers/mfd/ad242x-node.c                     | 262 ++++++++
+ drivers/mfd/ad242x-slave.c                    | 234 +++++++
+ include/dt-bindings/clock/adi,ad242x.h        |   9 +
+ include/linux/mfd/ad242x.h                    | 400 ++++++++++++
+ sound/soc/codecs/Kconfig                      |   5 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/ad242x.c                     | 338 ++++++++++
+ 27 files changed, 3109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/adi,ad242x-clk.yaml
  create mode 100644 Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-master.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-slave.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,ad242x-codec.yaml
+ create mode 100644 drivers/clk/clk-ad242x.c
+ create mode 100644 drivers/gpio/gpio-ad242x.c
+ create mode 100644 drivers/i2c/busses/i2c-ad242x.c
+ create mode 100644 drivers/mfd/ad242x-bus.c
+ create mode 100644 drivers/mfd/ad242x-master.c
+ create mode 100644 drivers/mfd/ad242x-node.c
+ create mode 100644 drivers/mfd/ad242x-slave.c
+ create mode 100644 include/dt-bindings/clock/adi,ad242x.h
+ create mode 100644 include/linux/mfd/ad242x.h
+ create mode 100644 sound/soc/codecs/ad242x.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml b/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
-new file mode 100644
-index 000000000000..0a5a339fc84e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/adi,ad242x-gpio.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/gpio/adi,ad242x-gpio.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Analog Devices AD242x GPIO controller
-+
-+maintainers:
-+  - Daniel Mack <daniel@zonque.org>
-+
-+description: |
-+  This module is part of the AD242x MFD device. For more details and an example
-+  refer to Documentation/devicetree/bindings/mfd/ad242x.yaml.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad2428w-gpio
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-over-distance:
-+    type: object
-+    description: |
-+      Sub-node to configure pins as 'GPIO over distance'.
-+      Pins in this mode are not accessible as regular GPIOs; instead, their
-+      state is transparantly mirrored between one or multiple nodes.
-+
-+      Each child node of the 'gpio-over-distance' node describes one pin
-+      that is to be configured in 'over distance' mode
-+
-+    properties:
-+      pin:
-+        type: object
-+        properties:
-+          reg:
-+            maxItems: 1
-+
-+          adi,virtual-port-mask:
-+            $ref: '/schemas/types.yaml#/definitions/uint32'
-+            description: |
-+              The virtual port mask to assign this GPIO to.
-+              Multiple GPIOs can use the same virtual port to link them
-+              together. Refer to the datasheet for the details.
-+
-+          adi,gpio-output:
-+            type: boolean
-+            description: Configures this GPIO as output. Defaults to input mode.
-+
-+          adi,gpio-inverted:
-+            type: boolean
-+            description: Inverts the GPIO value
-+
-+        required:
-+          - reg
-+          - adi,virtual-port-mask
-+
-+required:
-+  - compatible
-+  - '#gpio-cells'
-+  - gpio-controller
 -- 
 2.23.0
 
