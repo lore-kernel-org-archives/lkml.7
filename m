@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB3C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDFBC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB38B205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F067A205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575922827;
-	bh=R+HJtlDi28oVqztaFS/7tgnt/ODcDIx25ZAkKNGiTJM=;
+	s=default; t=1575922832;
+	bh=XB+N3nb/WUZ9uLXxdwbQjIQ9OZ0/S9O6TVQIH5ySn1A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=PX/W6a0676eaKjb8ujIUtKEbQBE+TDzErvXiei28jLKuhUMrGhWcy59vwP9COJlcM
-	 T5+ZS1ufT40Ihji2SPSklaIFyK7HM7IYhFXM0aTHxFR5DHIw1hjbElyxBXWPB4w6nn
-	 YmpfJrIngrc0ot3rMJ6BV60h4j7EiBB+6X4+1RAs=
+	b=MaalSrjc1UAGOtrm0u6x3mYSj/q+WqAmzPNCHBeGCaErC1dZeFBVUr8IsX8/W0CMC
+	 1derrRuRGFeqhBv51PFsZ7xv/HO9oSdlVnJ5pg8Gc0DLJsKK2oWxQfG2YnIpdoIuJO
+	 WWDutLKg6G8qwITBdQKz6G8DbjMWHC5o3RNe7kmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfLIUU0 (ORCPT
+        id S1726971AbfLIUUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:20:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 15:20:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbfLIUU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:20:26 -0500
-Subject: Re: [GIT PULL] Thermal management updates for v5.5-rc2
+        id S1726502AbfLIUU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:20:27 -0500
+Subject: Re: [GIT PULL] Btrfs kconfig update for 5.5-rc2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575922825;
-        bh=R+HJtlDi28oVqztaFS/7tgnt/ODcDIx25ZAkKNGiTJM=;
+        s=default; t=1575922826;
+        bh=XB+N3nb/WUZ9uLXxdwbQjIQ9OZ0/S9O6TVQIH5ySn1A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ApBd5r2k40UczLle4G9MGxiT+lCgrY2Z2+2KpmlHlReUDaY/nH24cmwWWI4/9zM9w
-         AyUKqiteJN8JDTKAOh3yNO5MxMQIMWj91NKVrirQ5aLQw44szD8sL0hBmq3D7BH235
-         EztQ9YoolJxjDAUF/5PqQ2V00jATphLmcMhtfHjI=
+        b=UpjWPJlr7kwJfVE5TWyMGABjkn05jsdveaSlXtu8M6lfW1kA3U4ryj6MzePrN5zde
+         HNBwOsYRBk8ZswvqEkghogQp0WW691e9glETMwdT7yLbtXZhqKhJ9t3eUonZD5ig+j
+         BsI185ajfcrjdVJzH0ja84jGgnlO2oqS9J2eWUks=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
-References: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
+In-Reply-To: <cover.1575911345.git.dsterba@suse.com>
+References: <cover.1575911345.git.dsterba@suse.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <38cbdb4739a56d25f13ef5afa7c6686d2baf74c4.camel@intel.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
- tags/thermal-5.5-rc2
-X-PR-Tracked-Commit-Id: 6e456dca47c5e3b8d8c6bbc4edd1377985d793b5
+X-PR-Tracked-Message-Id: <cover.1575911345.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git
+ for-5.5-rc1-kconfig
+X-PR-Tracked-Commit-Id: 78f926f72e43e4b974f69688593a9b682089e82a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 316eaf170252f3b50e0d7d5d17ac1f0ee8ae70ef
-Message-Id: <157592282581.794.1452620589164632828.pr-tracker-bot@kernel.org>
-Date:   Mon, 09 Dec 2019 20:20:25 +0000
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
+X-PR-Merge-Commit-Id: 6794862a16ef41f753abd75c03a152836e4c8028
+Message-Id: <157592282661.794.2839761668961385321.pr-tracker-bot@kernel.org>
+Date:   Mon, 09 Dec 2019 20:20:26 +0000
+To:     David Sterba <dsterba@suse.com>
+Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 09 Dec 2019 14:18:21 +0800:
+The pull request you sent on Mon,  9 Dec 2019 18:31:12 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-5.5-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.5-rc1-kconfig
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/316eaf170252f3b50e0d7d5d17ac1f0ee8ae70ef
+https://git.kernel.org/torvalds/c/6794862a16ef41f753abd75c03a152836e4c8028
 
 Thank you!
 
