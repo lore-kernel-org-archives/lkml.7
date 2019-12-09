@@ -2,80 +2,80 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2096C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D46C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5D022077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8EC207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 12:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575896000;
+	bh=U4O5S5rduTkoz2GV1+PR+HzHG8x2XgOHHdNguUE9hoE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SDyWo08cUxTBCnJV+vPc4C6OHnifcAu4PMBgPWxXlnUT89RXhEmEXE59Ut2HfyPXY
+	 3oTgOJh9O0O0MdJnRCrgnISYvygtlfWKfOwHxWtfMVougzEU213HK2/pIxxGqcdDDe
+	 5hoAbEcIOlNw5IwVUwYVR6TxfjNTyzqCS8Zxh474=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfLIMw7 (ORCPT
+        id S1727645AbfLIMxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 07:52:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:59466 "EHLO foss.arm.com"
+        Mon, 9 Dec 2019 07:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfLIMw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 07:52:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F4081328;
-        Mon,  9 Dec 2019 04:52:58 -0800 (PST)
-Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A46B3F718;
-        Mon,  9 Dec 2019 04:52:58 -0800 (PST)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     broonie@kernel.org, lgirdwood@gmail.com
-Subject: [PATCH] regulator: core: avoid unneeded .list_voltage calls
-Date:   Mon,  9 Dec 2019 12:52:39 +0000
-Message-Id: <20191209125239.46054-1-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726687AbfLIMxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 07:53:19 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C01192077B;
+        Mon,  9 Dec 2019 12:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575895998;
+        bh=U4O5S5rduTkoz2GV1+PR+HzHG8x2XgOHHdNguUE9hoE=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=PuGahGg+Kxhi1BtiiL+cBFKGmrXbgDJx3hB3Idx5s1FkWMN3O147lxKPBnRf97WvQ
+         pcMVDohclVKLlvNb8bzLWaOAXVARR5aXaA4w9tkYL1Q8kjjtLIHPEKaXhnHSxRHW3E
+         lBSdMSXQPHDL/D72y1e6CwltG3ds8XMxk33M0j04=
+Date:   Mon, 9 Dec 2019 13:53:15 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Fabian Henneke <fabian.henneke@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hidraw: Fix returning EPOLLOUT from hidraw_poll
+In-Reply-To: <20191204023713.3983-1-marcel@holtmann.org>
+Message-ID: <nycvar.YFH.7.76.1912091353020.4603@cbobk.fhfr.pm>
+References: <20191204023713.3983-1-marcel@holtmann.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inside machine_constraints_voltage() a loop is in charge of verifying that
-each of the defined voltages are within the configured constraints and
-that those constraints are in fact compatible with the available voltages'
-list.
+On Wed, 4 Dec 2019, Marcel Holtmann wrote:
 
-When the registered regulator happens to be defined with a wide range of
-possible voltages the above O(n) loop can be costly.
-Moreover since this behaviour is triggered during the registration process,
-it means also that it can be easily triggered at probe time, slowing down
-considerably some module loading.
+> When polling a connected /dev/hidrawX device, it is useful to get the
+> EPOLLOUT when writing is possible. Since writing is possible as soon as
+> the device is connected, always return it.
+> 
+> Right now EPOLLOUT is only returned when there are also input reports
+> are available. This works if devices start sending reports when
+> connected, but some HID devices might need an output report first before
+> sending any input reports. This change will allow using EPOLLOUT here as
+> well.
+> 
+> Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> Cc: stable@vger.kernel.org
 
-On the other side if such wide range of voltage values happens to be also
-continuous and without discontinuity of any kind, the above potentially
-cumbersome operation is also useless.
+Applied, thanks Marcel.
 
-For these reasons, avoid such .list_voltage poll loop when regulator is
-described as 'continuous_voltage_range' as is, indeed, similarly already
-done inside regulator_is_supported_voltage().
-
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- drivers/regulator/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 679ad3d2ed23..580fbdd3c97e 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1198,6 +1198,10 @@ static int machine_constraints_voltage(struct regulator_dev *rdev,
- 			return -EINVAL;
- 		}
- 
-+		/* no need to loop voltages if range is continuous */
-+		if (rdev->desc->continuous_voltage_range)
-+			return 0;
-+
- 		/* initial: [cmin..cmax] valid, [min_uV..max_uV] not */
- 		for (i = 0; i < count; i++) {
- 			int	value;
 -- 
-2.17.1
+Jiri Kosina
+SUSE Labs
 
