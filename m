@@ -2,116 +2,99 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA75C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D2AC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB293206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pqr97GYV"
+	by mail.kernel.org (Postfix) with ESMTP id B7F91206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 05:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575868585;
+	bh=2HUa/vY3ulKUf2lVowtjfAKpUaXpkNrfavp20mOhY/c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xq5QAJDBa/t6UuvhjKedabK1RMOgpWuIwumBUpNEW0WaKWq+UUsrx10LDZmQ3itSb
+	 pA6dNq6ClAYx71JyQxcVrl9OLn4QSp3CbgCY/T0QwAW3bbMXYH/1NVDardlwqfKmfG
+	 CxA9tPyR5kTpUB92J70/BDwoMQJKc09hF1Vk9FGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbfLIFPL (ORCPT
+        id S1726351AbfLIFQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 00:15:11 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54846 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfLIFPK (ORCPT
+        Mon, 9 Dec 2019 00:16:24 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:19005 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfLIFQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 00:15:10 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB95F8ZF091561;
-        Sun, 8 Dec 2019 23:15:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575868508;
-        bh=EyuMnGkYXKYwJOyPgwsdnQQYvmnlhhBxVc+f7mSxO8o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pqr97GYV4K4YVUQauehsTM9ehjKtQFJKvnuazq68cPmczENxNAXVVWBjoCVBmsm8X
-         f4o6t9H54dYufP2ak+pjf+p/kz+yklwR6wlOJFNHpurjvHj9uoFPPmDkEX0OYRpiL0
-         1vlnVl6gpsGFqk5XMOs1viJkYJiPG806Hs86E+Vg=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB95F877085804
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 8 Dec 2019 23:15:08 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 8 Dec
- 2019 23:15:06 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Sun, 8 Dec 2019 23:15:06 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB95F4Pm003003;
-        Sun, 8 Dec 2019 23:15:05 -0600
-Subject: Re: [PATCH] gpio: pca953x: Read irq trigger type from DT
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191205144508.31339-1-vigneshr@ti.com>
- <5837a37d-479d-5c33-45b5-c1b32b0cdc52@ti.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <bfaa7ed4-6acf-3941-0de6-f139eed7cf99@ti.com>
-Date:   Mon, 9 Dec 2019 10:45:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <5837a37d-479d-5c33-45b5-c1b32b0cdc52@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 9 Dec 2019 00:16:24 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id xB95FR53012005;
+        Mon, 9 Dec 2019 14:15:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com xB95FR53012005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575868528;
+        bh=YUKwrQ0HNTM5/RA0jtvxUxrn3eWB5Xxa4b2uKY9dbao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gDedeshFSu7VE1TZH3L6Mc/zJwLLcWAC4nUfyH1+SRaTCFwOF0rphr6qHaZ5sDWsR
+         6dteJukWCZYitIcH0RdDfWGC2gZVwxvjHvOg4sp8ME+yOqCaZXlTd0ANc3jQGMO0sM
+         vS8mTs3PrFoK4cIFEhJ1rS3Hma9dcU1d94K1JWq//ZWx1AWXtsuyZBYHRzbS8Iay48
+         kyTukskR/KlrkNZ5XZQN6KDYORqTHmLQ+XuAtZeMzQoauDswMur+PJ+fLx4NEPk/w2
+         7iQ5yCP2kKWDYufFSTKqPDKfbiUynmB5yXb6DRge1r3evPDQsYbm6CVYOcMNf5XFO/
+         Ho7W0mcaoXibw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-mtd@lists.infradead.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: denali: error out if platform has no associated data
+Date:   Mon,  9 Dec 2019 14:15:23 +0900
+Message-Id: <20191209051523.21772-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Grygorii,
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On 05/12/19 8:31 pm, Grygorii Strashko wrote:
-> 
-> 
-> On 05/12/2019 16:45, Vignesh Raghavendra wrote:
-[...]
+denali->ecc_caps is a mandatory parameter. If it were left unset,
+nand_ecc_choose_conf() would end up with NULL pointer access.
 
->> @@ -768,10 +769,14 @@ static int pca953x_irq_setup(struct pca953x_chip
->> *chip, int irq_base)
->>       bitmap_and(chip->irq_stat, irq_stat, reg_direction,
->> chip->gpio_chip.ngpio);
->>       mutex_init(&chip->irq_lock);
->>   +    irqflags = irq_get_trigger_type(client->irq);
->> +    if (irqflags == IRQF_TRIGGER_NONE)
->> +        irqflags = IRQF_TRIGGER_LOW;
-> 
-> I think you can just drop IRQF_TRIGGER_LOW:
-> - for paltform code it will be set from resources in
-> platform_get_irq_optional()
-> - for DT code it will be set in __setup_irq()
-> 
+So, every compatible must be associated with proper denali_dt_data.
+If of_device_get_match_data() returns NULL, let it fail immediately.
 
-Ok, will drop setting IRQF_TRIGGER_LOW in v2.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks for the review!
+ drivers/mtd/nand/raw/denali_dt.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
->> +    irqflags |= IRQF_ONESHOT | IRQF_SHARED;
->> +
->>       ret = devm_request_threaded_irq(&client->dev, client->irq,
->>                       NULL, pca953x_irq_handler,
->> -                    IRQF_TRIGGER_LOW | IRQF_ONESHOT |
->> -                    IRQF_SHARED,
->> +                    irqflags,
->>                       dev_name(&client->dev), chip);
->>       if (ret) {
->>           dev_err(&client->dev, "failed to request irq %d\n",
->>
-> 
-
+diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
+index 8b779a899dcf..276187939689 100644
+--- a/drivers/mtd/nand/raw/denali_dt.c
++++ b/drivers/mtd/nand/raw/denali_dt.c
+@@ -118,11 +118,12 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 	denali = &dt->controller;
+ 
+ 	data = of_device_get_match_data(dev);
+-	if (data) {
+-		denali->revision = data->revision;
+-		denali->caps = data->caps;
+-		denali->ecc_caps = data->ecc_caps;
+-	}
++	if (WARN_ON(!data))
++		return -EINVAL;
++
++	denali->revision = data->revision;
++	denali->caps = data->caps;
++	denali->ecc_caps = data->ecc_caps;
+ 
+ 	denali->dev = dev;
+ 	denali->irq = platform_get_irq(pdev, 0);
 -- 
-Regards
-Vignesh
+2.17.1
+
