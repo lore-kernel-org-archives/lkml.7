@@ -2,452 +2,128 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75553C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0511AC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7E120836
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79F72080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575917160;
+	bh=kVdBHEamyw0TEJvlj71qFPFlWDoUAQmHHW0My2GO6BY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cZL5iinpVWlDtAN/lkGEmWqxgctdHAO//duZg/RjgWh7PWQUbW6M4YDXbonIEF70r
+	 ekrjA/2hjBTHNdlkP4DV4BOxgpD4PhMd39enIGGcom6MjVRvK0KrEHaLJ2KAsHbdAr
+	 49jXk+hR5riic5o7Tg+/mxxDYDXZNiHBzpyY2K2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfLISnt (ORCPT
+        id S1726677AbfLISp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:43:49 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:34234 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbfLISmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:42:53 -0500
-Received: from zenbar.fritz.box (pD95EF75D.dip0.t-ipconnect.de [217.94.247.93])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 0E0D92E5CF1;
-        Mon,  9 Dec 2019 18:29:16 +0000 (UTC)
-From:   Daniel Mack <daniel@zonque.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
-        pascal.huerst@gmail.com, Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 10/10] ASoC: Add codec component for AD242x nodes
-Date:   Mon,  9 Dec 2019 19:35:11 +0100
-Message-Id: <20191209183511.3576038-12-daniel@zonque.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191209183511.3576038-1-daniel@zonque.org>
-References: <20191209183511.3576038-1-daniel@zonque.org>
+        Mon, 9 Dec 2019 13:45:59 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46627 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfLISp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:45:59 -0500
+Received: by mail-pl1-f195.google.com with SMTP id k20so6144226pll.13;
+        Mon, 09 Dec 2019 10:45:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1gFoYCa7AlAmnk1s1t8ozpJosgfJNX2bcZlbOW2olns=;
+        b=B7GHAHceaIHu0mkV4fG2IOZLANfvqJeH++PRmyZuN9BF0BdGyY9fbzP8CAf19RphpA
+         enTEVOtfxGKGaJ+W5mBSmeo1OQ2WpXi3pqPIgVHeC/qvyn1pkfVL48bClnDcwwtoZblD
+         Qo+NyY+yDxqU5gMYrqOW/9krYswZBD1hviP5lTbjj/ZBsDNxcPzI4VW7TI78m1aWtbKS
+         jyswImA3q4CJ5aOdxvx/5TJJawZH2JPwjLHhmwF7rCAGzms5aYQeFhyWdXJHjRIBxrDQ
+         gv22Dpyx1JploOH/iFy2Zhd/hCgqKw8cuS4odsuNvbZKbdyUdM/0WR+UMi6NxdOzBJo7
+         km+Q==
+X-Gm-Message-State: APjAAAXyLaTUqnjOVm7uW1uh/PQeOlivLx65RC7SvKryOqRLFAIM+0hE
+        rmcM3SMQw98iGOfyxU1ZzJoYwpyRLIAYFw==
+X-Google-Smtp-Source: APXvYqyl5p3COqmJGCQ+A4j4ybM0jJFj2GPBs8ZwFrQSwoz6aE/5l4nbS9i0rrQm6wjycJ92+k3zpw==
+X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr31870248plr.16.1575917158044;
+        Mon, 09 Dec 2019 10:45:58 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id t63sm200318pfb.70.2019.12.09.10.45.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 10:45:57 -0800 (PST)
+Date:   Mon, 9 Dec 2019 10:46:54 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-mips@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] MIPS: define ioremap_nocache to ioremap
+Message-ID: <20191209184654.w2d7mguzfc5cyage@lantea.localdomain>
+References: <20191209135823.28465-1-hch@lst.de>
+ <20191209135823.28465-2-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191209135823.28465-2-hch@lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver makes AD242x nodes available as DAIs in ASoC topologies.
+Hi Christoph,
 
-The hardware allows multiple TDM channel modes and bitdepths, but
-as these modes have influence in the timing calculations at discovery
-time, the mode in that the will be used in needs to be configured
-statically in the devicetree.
+On Mon, Dec 09, 2019 at 02:58:21PM +0100, Christoph Hellwig wrote:
+> They are both defined the same way, but this makes it easier to validate
+> the scripted ioremap_nocache removal following soon.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-The configuration applied at runtime through hwparams() is then
-required to match the pre-configured settings.
+Acked-by: Paul Burton <paulburton@kernel.org>
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
----
- sound/soc/codecs/Kconfig  |   5 +
- sound/soc/codecs/Makefile |   2 +
- sound/soc/codecs/ad242x.c | 338 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 345 insertions(+)
- create mode 100644 sound/soc/codecs/ad242x.c
+Thanks,
+    Paul
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 4abf37b5083f..75365abc277f 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -22,6 +22,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_AD193X_SPI if SPI_MASTER
- 	select SND_SOC_AD193X_I2C if I2C
- 	select SND_SOC_AD1980 if SND_SOC_AC97_BUS
-+	select SND_SOC_AD242X if MFD_AD242X
- 	select SND_SOC_AD73311
- 	select SND_SOC_ADAU1373 if I2C
- 	select SND_SOC_ADAU1761_I2C if I2C
-@@ -333,6 +334,10 @@ config SND_SOC_AD1980
- 	select REGMAP_AC97
- 	tristate
- 
-+config SND_SOC_AD242X
-+	tristate "Analog Devices AD242x CODEC"
-+	depends on MFD_AD242X
-+
- config SND_SOC_AD73311
- 	tristate
- 
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index ddfd07071925..ec76448fc1da 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -7,6 +7,7 @@ snd-soc-ad193x-objs := ad193x.o
- snd-soc-ad193x-spi-objs := ad193x-spi.o
- snd-soc-ad193x-i2c-objs := ad193x-i2c.o
- snd-soc-ad1980-objs := ad1980.o
-+snd-soc-ad242x-objs := ad242x.o
- snd-soc-ad73311-objs := ad73311.o
- snd-soc-adau-utils-objs := adau-utils.o
- snd-soc-adau1373-objs := adau1373.o
-@@ -294,6 +295,7 @@ obj-$(CONFIG_SND_SOC_AD193X)	+= snd-soc-ad193x.o
- obj-$(CONFIG_SND_SOC_AD193X_SPI)	+= snd-soc-ad193x-spi.o
- obj-$(CONFIG_SND_SOC_AD193X_I2C)	+= snd-soc-ad193x-i2c.o
- obj-$(CONFIG_SND_SOC_AD1980)	+= snd-soc-ad1980.o
-+obj-$(CONFIG_SND_SOC_AD242X)	+= snd-soc-ad242x.o
- obj-$(CONFIG_SND_SOC_AD73311) += snd-soc-ad73311.o
- obj-$(CONFIG_SND_SOC_ADAU_UTILS)	+= snd-soc-adau-utils.o
- obj-$(CONFIG_SND_SOC_ADAU1373)	+= snd-soc-adau1373.o
-diff --git a/sound/soc/codecs/ad242x.c b/sound/soc/codecs/ad242x.c
-new file mode 100644
-index 000000000000..76189a7c3c92
---- /dev/null
-+++ b/sound/soc/codecs/ad242x.c
-@@ -0,0 +1,338 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/mfd/ad242x.h>
-+#include <linux/of_device.h>
-+#include <linux/slab.h>
-+#include <sound/asoundef.h>
-+#include <sound/core.h>
-+#include <sound/initval.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+
-+struct ad242x_private {
-+	struct ad242x_node	*node;
-+	bool			pdm[2];
-+	bool			pdm_highpass;
-+};
-+
-+static const struct snd_soc_dapm_widget ad242x_dapm_widgets[] = {
-+	SND_SOC_DAPM_AIF_IN("RX0",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("RX1",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("TX0", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("TX1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+};
-+
-+static const struct snd_soc_dapm_route ad242x_dapm_routes[] = {
-+	{ "DAI0 Playback", NULL, "RX0" },
-+	{ "TX0", NULL, "DAI0 Capture"  },
-+	{ "DAI1 Playback", NULL, "RX1" },
-+	{ "TX1", NULL, "DAI1 Capture"  },
-+};
-+
-+static int ad242x_set_dai_fmt(struct snd_soc_dai *codec_dai,
-+			      unsigned int format,
-+			      unsigned int index)
-+{
-+	struct snd_soc_component *component = codec_dai->component;
-+	struct ad242x_private *priv = snd_soc_component_get_drvdata(component);
-+	int ret, val = 0;
-+
-+	/* set DAI format */
-+	switch (format & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		priv->pdm[index] = false;
-+		break;
-+	case SND_SOC_DAIFMT_PDM:
-+		priv->pdm[index] = true;
-+		break;
-+	default:
-+		dev_err(component->dev, "unsupported dai format\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Setting clock inversion is only supported globally for both DAIs,
-+	 * so we ignore the settings made for DAI1 here.
-+	 */
-+	if (index == 0) {
-+		switch (format & SND_SOC_DAIFMT_INV_MASK) {
-+		case SND_SOC_DAIFMT_NB_NF:
-+			val = 0;
-+			break;
-+		case SND_SOC_DAIFMT_IB_NF:
-+			val = AD242X_I2SCTL_RXBCLKINV;
-+			break;
-+		case SND_SOC_DAIFMT_NB_IF:
-+		case SND_SOC_DAIFMT_IB_IF:
-+			dev_err(component->dev, "unsupported inversion mask\n");
-+			return -EINVAL;
-+		}
-+
-+		ret = regmap_update_bits(priv->node->regmap, AD242X_I2SCTL,
-+					AD242X_I2SCTL_RXBCLKINV, val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (ad242x_node_is_master(priv->node) &&
-+	   ((format & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBS_CFS)) {
-+		dev_err(component->dev, "master node must be clock slave\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!ad242x_node_is_master(priv->node) &&
-+	   ((format & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)) {
-+		dev_err(component->dev, "slave node must be clock master\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad242x_set_dai_fmt_dai0(struct snd_soc_dai *codec_dai,
-+				   unsigned int format)
-+{
-+	return ad242x_set_dai_fmt(codec_dai, format, 0);
-+}
-+
-+static int ad242x_set_dai_fmt_dai1(struct snd_soc_dai *codec_dai,
-+				   unsigned int format)
-+{
-+	return ad242x_set_dai_fmt(codec_dai, format, 1);
-+}
-+
-+static int ad242x_hw_params(struct snd_pcm_substream *substream,
-+			    struct snd_pcm_hw_params *params,
-+			    struct snd_soc_dai *dai,
-+			    int index)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct ad242x_private *priv = snd_soc_component_get_drvdata(component);
-+	unsigned int sff_rate = ad242x_master_get_clk_rate(priv->node->master);
-+	unsigned int rate = params_rate(params);
-+	unsigned int val, mask;
-+	int ret;
-+
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+		if (priv->node->tdm_slot_size != 16)
-+			return -EINVAL;
-+		break;
-+	case SNDRV_PCM_FORMAT_S32_LE:
-+		if (priv->node->tdm_slot_size != 32)
-+			return -EINVAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (priv->pdm[index]) {
-+		if (substream->stream != SNDRV_PCM_STREAM_PLAYBACK)
-+			return -EINVAL;
-+
-+		if (index == 0) {
-+			val = AD242X_PDMCTL_PDM0EN;
-+			mask = AD242X_PDMCTL_PDM0EN | AD242X_PDMCTL_PDM0SLOTS;
-+		} else {
-+			val = AD242X_PDMCTL_PDM1EN;
-+			mask = AD242X_PDMCTL_PDM1EN | AD242X_PDMCTL_PDM1SLOTS;
-+		}
-+
-+		switch (params_channels(params)) {
-+		case 1:
-+			break;
-+		case 2:
-+			val = mask;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		mask |= AD242X_PDMCTL_HPFEN;
-+		if (priv->pdm_highpass)
-+			val |= AD242X_PDMCTL_HPFEN;
-+
-+		ret = regmap_update_bits(priv->node->regmap, AD242X_PDMCTL,
-+					 mask, val);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		if (params_channels(params) != priv->node->tdm_mode)
-+			return -EINVAL;
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			if (index == 0)
-+				mask = AD242X_I2SCTL_RX0EN;
-+			else
-+				mask = AD242X_I2SCTL_RX1EN;
-+		} else {
-+			if (index == 0)
-+				mask = AD242X_I2SCTL_TX0EN;
-+			else
-+				mask = AD242X_I2SCTL_TX1EN;
-+		}
-+
-+		ret = regmap_update_bits(priv->node->regmap, AD242X_I2SCTL,
-+					 mask, mask);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (!ad242x_node_is_master(priv->node)) {
-+		val = 0;
-+
-+		if (rate == sff_rate / 2)
-+			val = AD242X_I2SRATE_I2SRATE(1);
-+		else if (rate == sff_rate / 4)
-+			val = AD242X_I2SRATE_I2SRATE(2);
-+		else if (rate == sff_rate * 2)
-+			val = AD242X_I2SRATE_I2SRATE(5);
-+		else if (rate == sff_rate * 4)
-+			val = AD242X_I2SRATE_I2SRATE(6);
-+		else if (rate != sff_rate)
-+			return -EINVAL;
-+
-+		ret = regmap_write(priv->node->regmap, AD242X_I2SRATE, val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad242x_hw_params_dai0(struct snd_pcm_substream *substream,
-+				 struct snd_pcm_hw_params *params,
-+				 struct snd_soc_dai *dai)
-+{
-+	return ad242x_hw_params(substream, params, dai, 0);
-+}
-+
-+static int ad242x_hw_params_dai1(struct snd_pcm_substream *substream,
-+				 struct snd_pcm_hw_params *params,
-+				 struct snd_soc_dai *dai)
-+{
-+	return ad242x_hw_params(substream, params, dai, 1);
-+}
-+
-+static const struct snd_soc_dai_ops ad242x_dai0_ops = {
-+	.hw_params	= ad242x_hw_params_dai0,
-+	.set_fmt	= ad242x_set_dai_fmt_dai0,
-+};
-+
-+static const struct snd_soc_dai_ops ad242x_dai1_ops = {
-+	.hw_params	= ad242x_hw_params_dai1,
-+	.set_fmt	= ad242x_set_dai_fmt_dai1,
-+};
-+
-+#define AD242X_RATES (					\
-+	SNDRV_PCM_RATE_22050  | SNDRV_PCM_RATE_32000  |	\
-+	SNDRV_PCM_RATE_44100  | SNDRV_PCM_RATE_48000  |	\
-+	SNDRV_PCM_RATE_88200  | SNDRV_PCM_RATE_96000  |	\
-+	SNDRV_PCM_RATE_176400 | SNDRV_PCM_RATE_192000)
-+#define AD242X_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE)
-+
-+static struct snd_soc_dai_driver ad242x_dai[] = {
-+	{
-+		.name = "ad242x-dai0",
-+		.playback = {
-+			.stream_name	= "DAI0 Playback",
-+			.channels_min	= 1,
-+			.channels_max	= 32,
-+			.rates		= AD242X_RATES,
-+			.formats	= AD242X_FORMATS,
-+		},
-+		.capture = {
-+			.stream_name	= "DAI0 Capture",
-+			.channels_min	= 1,
-+			.channels_max	= 32,
-+			.rates		= AD242X_RATES,
-+			.formats	= AD242X_FORMATS,
-+		},
-+		.ops = &ad242x_dai0_ops,
-+	},
-+	{
-+		.name = "ad242x-dai1",
-+		.playback = {
-+			.stream_name	= "DAI1 Playback",
-+			.channels_min	= 1,
-+			.channels_max	= 32,
-+			.rates		= AD242X_RATES,
-+			.formats	= AD242X_FORMATS,
-+		},
-+		.capture = {
-+			.stream_name	= "DAI1 Capture",
-+			.channels_min	= 1,
-+			.channels_max	= 32,
-+			.rates		= AD242X_RATES,
-+			.formats	= AD242X_FORMATS,
-+		},
-+		.ops = &ad242x_dai1_ops,
-+	},
-+};
-+
-+static int ad242x_soc_probe(struct snd_soc_component *component)
-+{
-+	struct ad242x_private *priv = snd_soc_component_get_drvdata(component);
-+
-+	component->regmap = priv->node->regmap;
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_component_driver soc_component_device_ad242x = {
-+	.probe			= ad242x_soc_probe,
-+	.dapm_widgets		= ad242x_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(ad242x_dapm_widgets),
-+	.dapm_routes		= ad242x_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(ad242x_dapm_routes),
-+	.idle_bias_on		= 1,
-+	.use_pmdown_time	= 1,
-+	.endianness		= 1,
-+	.non_legacy_dai_naming	= 1,
-+};
-+
-+static int ad242x_codec_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ad242x_private *priv;
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->node = dev_get_drvdata(dev->parent);
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->pdm_highpass = of_property_read_bool(dev->of_node,
-+						   "adi,pdm-highpass-filter");
-+
-+	return devm_snd_soc_register_component(dev,
-+					       &soc_component_device_ad242x,
-+					       ad242x_dai,
-+					       ARRAY_SIZE(ad242x_dai));
-+}
-+
-+static const struct of_device_id ad242x_of_match[] = {
-+	{ .compatible = "adi,ad2428w-codec", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad242x_of_match);
-+
-+static struct platform_driver ad242x_platform_driver = {
-+	.driver  = {
-+		.name   = "ad242x-codec",
-+		.of_match_table = ad242x_of_match,
-+	},
-+	.probe  = ad242x_codec_platform_probe,
-+};
-+
-+module_platform_driver(ad242x_platform_driver);
-+
-+MODULE_AUTHOR("Daniel Mack <daniel@zonque.org>");
-+MODULE_DESCRIPTION("AD242X ALSA SoC driver");
-+MODULE_LICENSE("GPL");
--- 
-2.23.0
-
+> ---
+>  arch/mips/include/asm/io.h | 25 ++-----------------------
+>  1 file changed, 2 insertions(+), 23 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+> index 3f6ce74335b4..d9caa811a2fa 100644
+> --- a/arch/mips/include/asm/io.h
+> +++ b/arch/mips/include/asm/io.h
+> @@ -227,29 +227,8 @@ static inline void __iomem *ioremap_prot(phys_addr_t offset,
+>   */
+>  #define ioremap(offset, size)						\
+>  	__ioremap_mode((offset), (size), _CACHE_UNCACHED)
+> -
+> -/*
+> - * ioremap_nocache     -   map bus memory into CPU space
+> - * @offset:    bus address of the memory
+> - * @size:      size of the resource to map
+> - *
+> - * ioremap_nocache performs a platform specific sequence of operations to
+> - * make bus memory CPU accessible via the readb/readw/readl/writeb/
+> - * writew/writel functions and the other mmio helpers. The returned
+> - * address is not guaranteed to be usable directly as a virtual
+> - * address.
+> - *
+> - * This version of ioremap ensures that the memory is marked uncachable
+> - * on the CPU as well as honouring existing caching rules from things like
+> - * the PCI bus. Note that there are other caches and buffers on many
+> - * busses. In particular driver authors should read up on PCI writes
+> - *
+> - * It's useful if some control registers are in such an area and
+> - * write combining or read caching is not desirable:
+> - */
+> -#define ioremap_nocache(offset, size)					\
+> -	__ioremap_mode((offset), (size), _CACHE_UNCACHED)
+> -#define ioremap_uc ioremap_nocache
+> +#define ioremap_nocache		ioremap
+> +#define ioremap_uc		ioremap
+>  
+>  /*
+>   * ioremap_cache -	map bus memory into CPU space
+> -- 
+> 2.20.1
+> 
