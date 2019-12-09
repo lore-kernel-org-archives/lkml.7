@@ -2,80 +2,77 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3318EC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1863C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F9B20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB107207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfLIOPT (ORCPT
+        id S1727866AbfLIOSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:15:19 -0500
-Received: from mga14.intel.com ([192.55.52.115]:19829 "EHLO mga14.intel.com"
+        Mon, 9 Dec 2019 09:18:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:33784 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfLIOPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:15:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 06:15:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="219988880"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Dec 2019 06:15:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 83D66141; Mon,  9 Dec 2019 16:15:07 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] mfd: intel-lpss: Add Intel Jasper Lake PCI IDs
-Date:   Mon,  9 Dec 2019 16:15:07 +0200
-Message-Id: <20191209141507.60298-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
+        id S1727268AbfLIOSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:18:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4701328;
+        Mon,  9 Dec 2019 06:18:06 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 404123F718;
+        Mon,  9 Dec 2019 06:18:05 -0800 (PST)
+Date:   Mon, 9 Dec 2019 14:17:59 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        andrew.murray@arm.com, robh@kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v11 0/3] PCI: Add Intel PCIe Driver and respective
+ dt-binding yaml file
+Message-ID: <20191209141759.GA3802@e121166-lin.cambridge.arm.com>
+References: <cover.1575860791.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1575860791.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Jasper Lake has the same LPSS than Intel Ice Lake.
-Add the new IDs to the list of supported devices.
+On Mon, Dec 09, 2019 at 11:20:03AM +0800, Dilip Kota wrote:
+> Intel PCIe is Synopsys based controller. Intel PCIe driver uses
+> DesignWare PCIe framework for host initialization and register
+> configurations.
+> 
+> Changes on v11:
+> 	Patches rebase on kernel v5.5-rc1
+> 
+> Dilip Kota (3):
+>   dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+>   PCI: dwc: intel: PCIe RC controller driver
+>   PCI: artpec6: Configure FTS with dwc helper function
+> 
+>  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 ++++++
+>  drivers/pci/controller/dwc/Kconfig                 |  11 +
+>  drivers/pci/controller/dwc/Makefile                |   1 +
+>  drivers/pci/controller/dwc/pcie-artpec6.c          |   8 +-
+>  drivers/pci/controller/dwc/pcie-designware.c       |  57 +++
+>  drivers/pci/controller/dwc/pcie-designware.h       |  12 +
+>  drivers/pci/controller/dwc/pcie-intel-gw.c         | 545 +++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h                      |   1 +
+>  8 files changed, 766 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Applied to pci/dwc, thanks.
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index b33030e3385c..c40a6c7d0cf8 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -240,6 +240,19 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x4b79), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x4b7a), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x4b7b), (kernel_ulong_t)&bxt_i2c_info },
-+	/* JSL */
-+	{ PCI_VDEVICE(INTEL, 0x4da8), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x4da9), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x4daa), (kernel_ulong_t)&spt_info },
-+	{ PCI_VDEVICE(INTEL, 0x4dab), (kernel_ulong_t)&spt_info },
-+	{ PCI_VDEVICE(INTEL, 0x4daf), (kernel_ulong_t)&spt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x4dc5), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4dc6), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4de8), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4de9), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4dea), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4deb), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x4dfb), (kernel_ulong_t)&spt_info },
- 	/* APL */
- 	{ PCI_VDEVICE(INTEL, 0x5aac), (kernel_ulong_t)&apl_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x5aae), (kernel_ulong_t)&apl_i2c_info },
--- 
-2.24.0
-
+Lorenzo
