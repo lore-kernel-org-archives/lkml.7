@@ -2,91 +2,109 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A0C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924CAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E756F207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A612077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Jhg/fh6t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oe+5C+o2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLIQVP (ORCPT
+        id S1726831AbfLIQVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:21:15 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43364 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIQVO (ORCPT
+        Mon, 9 Dec 2019 11:21:36 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37730 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfLIQVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:21:14 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9GLCa7083653;
-        Mon, 9 Dec 2019 10:21:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575908472;
-        bh=vxhkMBsN2pPnCv5+ROibr/eTdfzg7Vv+kXmb+sy+smY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Jhg/fh6tPZt5NHrdIWV3b4OzYQkx9+0SKW3RoR8zD73j1TTY0TkQ3e6NJMpV70bF5
-         ZBwj0jwy4X4Lpib+pwAoLsBrw2wAlbPs6xxZ6+r8Tc5JNQ22s62ZLztFD2N6vbSjyi
-         aD0wrPWWLzkVuWz6pvbLa3kjGEpmyZYwWFKNoFHo=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9GLC9B000606
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 10:21:12 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 10:21:12 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 10:21:12 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9GL9xX003945;
-        Mon, 9 Dec 2019 10:21:10 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
-        <sjakhade@cadence.com>, <rogerq@ti.com>, <jsarha@ti.com>
-Subject: [PATCH 1/3] dt-bindings: phy: Add PHY_TYPE_DP definition
-Date:   Mon, 9 Dec 2019 18:21:09 +0200
-Message-ID: <89dfcd484bad19cb954ee4f74305d1aa172ea292.1575906694.git.jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1575906694.git.jsarha@ti.com>
-References: <cover.1575906694.git.jsarha@ti.com>
+        Mon, 9 Dec 2019 11:21:36 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q127so7366308pga.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 08:21:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ivG1sogaJP93bTE4LGU6va4QS4V/Fw37s6F674FfD8=;
+        b=oe+5C+o2ssEPEJg4vajO8v3ZF+0bJ8RMzXHtUw8k/N5UcGUYTL3+mwi3NeOA7S6sip
+         Ml0YnEea19N3gxajFY+s144LflzHMoJkwtV8lXm6Qjj0FnWPfT/gcqygWfmWHs7KmQZX
+         o4i/lmpRRGgpvNO63t7uEgc8/855nkXQemUMvgDV99FI8K7oHpGAs7MfQavtzAxz8S78
+         Io7OWZa0+BCEv8Nozwwe1+G1qLQUE7nOtFKBnaCQhHlcFl/L/2o7ZQVuUbZiX30c0YO1
+         hCkWjnaGZ3NVTI3iCFWQH6d6Z8gGquqqFYKlvilIbgz0n6KS8YAFZEQNdY0t8/Kxz56b
+         G5FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ivG1sogaJP93bTE4LGU6va4QS4V/Fw37s6F674FfD8=;
+        b=XN7jHgUHp73y1x4ed6NW9RJW/aDLREMGedl2mbXfeZ2cWzYUewXeFuc8Zn0QnsWNxi
+         msQMsxBQoWFpCRphrTfkX4UgodRTgDY0dq+j0O/luD8ZOhxDZ4P3OG0pgHEyJlpTvhpN
+         pXZ/rBCgjVl1m42P1lZzZ0ioq0RqSdU34nr72wkvymYflKNudT15pBPYRnD0uqXuxZyz
+         WX+uNT3es9R41zUDCpkxn3V10BTdGdiWON2eWsx9B5hEGiUXzyGYr4z+Nzy/LD/246YR
+         7F2S37s7KR/rQwztNvyQ5tLwOjlELdU04z18cMucl/UfZz++IIA8hGerXOfa0LijfuaE
+         GJTg==
+X-Gm-Message-State: APjAAAX6ftcW0fEZ+i/x4sVTdGiuKZQcoUxIVX9mGXB3/flm5vmqfrGK
+        IgBprz9KqW/oAqwJ5NGw7kA=
+X-Google-Smtp-Source: APXvYqwtrxgz6QJcHHYTa6IyBm/KUca0VEZGe4yjjL2YzTMzsOiREc+CN40xHYRI/2lIoD/3oTFqdQ==
+X-Received: by 2002:a65:530d:: with SMTP id m13mr19576837pgq.351.1575908495552;
+        Mon, 09 Dec 2019 08:21:35 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id s2sm28695572pfb.109.2019.12.09.08.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 08:21:34 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ALSA: hda/ca0132 - add missed snd_hda_gen_parse_auto_config
+Date:   Tue, 10 Dec 2019 00:21:19 +0800
+Message-Id: <20191209162119.14820-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add definition for DisplayPort phy type.
+It is found that all usages of snd_hda_parse_pin_defcfg() are followed
+with snd_hda_gen_parse_auto_config() except here.
+This should be a miss and needs to add the missed call.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- include/dt-bindings/phy/phy.h | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_ca0132.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-index b6a1eaf1b339..1f3f866fae7b 100644
---- a/include/dt-bindings/phy/phy.h
-+++ b/include/dt-bindings/phy/phy.h
-@@ -16,5 +16,6 @@
- #define PHY_TYPE_USB2		3
- #define PHY_TYPE_USB3		4
- #define PHY_TYPE_UFS		5
-+#define PHY_TYPE_DP		6
+diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
+index b7a1abb3e231..ea1187a13241 100644
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -24,6 +24,7 @@
+ #include "hda_local.h"
+ #include "hda_auto_parser.h"
+ #include "hda_jack.h"
++#include "hda_generic.h"
  
- #endif /* _DT_BINDINGS_PHY */
+ #include "ca0132_regs.h"
+ 
+@@ -8844,6 +8845,10 @@ static int patch_ca0132(struct hda_codec *codec)
+ 	if (err < 0)
+ 		goto error;
+ 
++	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
++	if (err < 0)
++		goto error;
++
+ 	return 0;
+ 
+  error:
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.24.0
 
