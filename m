@@ -2,163 +2,108 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF15C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFB7C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39C02080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575891547;
-	bh=SVfy5JgsypTwmpiZU+DLENcZr2fgweQuNe+ZcwawK0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A0SQNXHPTo0QC6zIynKaxI/ipfC8/NoWBqe/RYF4xw9wYrxUF+UbwmUVvqVlupRP4
-	 UPZs2LiIzJUa7dSpSDP5NM92lmwv5pXrA0f31WAJVr683LZf3LdkV3byXncqECUMEu
-	 FU0uXQeB0J8w7S4qtz/zQGhTkbVgb4HEmHuSaLmc=
+	by mail.kernel.org (Postfix) with ESMTP id 9AA0F207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="eJNWy0Ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLILjG (ORCPT
+        id S1727534AbfLILje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:39:06 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42249 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfLILjG (ORCPT
+        Mon, 9 Dec 2019 06:39:34 -0500
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:55788 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfLILje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:39:06 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j22so5985784oij.9;
-        Mon, 09 Dec 2019 03:39:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mPM/hwSdd2dpR68KRDIRUCSfL+ZarPQKfGdIq8K3ckk=;
-        b=Y4eQkSZOSr43h0aL45DzLMphxNKlD0BI/If9WdLqXzn7K7BUcBBmdQWzg2OVXb4AIS
-         mcG+v3YF8MHn/CtlnPnh6i8gu7pWhSqNHchoBv9CEKFlM98Il5ciD86gFSuKGEGV4cCP
-         wcx+BgXMzuryB89HBwFi5TMa2rH81MdNnFEcw7Q/ojylaNIVC1rju+Gh3ZzhlvVJ0Ac4
-         D8DZCLeCps3Seh2zVQ1KcZ6Q6nV0v+OpPOetnwCpzNwkWdT3a6Bthk518s+WT+6ucx9W
-         PXhCbUcQJPDOtYYXdsjjtb7RCLRT8M8ZfC1IIbxJLgqoESCMqiV10DGT6/ZtVXmY504T
-         6glQ==
-X-Gm-Message-State: APjAAAV9rYFSjXtWoAJrRMPjyMBuYCZwwg9K0JT3mvDHdXvgP1eV2t/e
-        oNgLHHrmDria8Wd6GqVGVv81zn0bhsnhrNfZlLk=
-X-Google-Smtp-Source: APXvYqzG8vwOM20aU3KzuzbhZ5+B1Tkp8z1UETWtoGf+LzRaBUX4n5P3Sb4ZJ2d9h2hcY0SF6eTRe0bkPN0OirKV+LE=
-X-Received: by 2002:a05:6808:1c5:: with SMTP id x5mr17465882oic.57.1575891545016;
- Mon, 09 Dec 2019 03:39:05 -0800 (PST)
+        Mon, 9 Dec 2019 06:39:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1575891573;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=39CqSIEMZVfOawQ2ymQJQJHkso0RnGhhEsi61vao+jE=;
+  b=eJNWy0Arpp85BmQEBNkRUdlRTZLU5+B1Hita6WtJtgYH5y4etAEnW1qy
+   /6FG9EqtwjPf9ezrncoDS700FyslRVuMDcaBORgk7MA8pXvK4yscITlPx
+   ybvEFKM07CjXZthtK5VCco53h3TczbgqeAR0N2DGzARVWDGKVX+X+xYLx
+   Q=;
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: QOjjavhu2Xb8XBPsXZWMvhL5aoSyi6XLHS1Pqi7msf0HO36Hi78MF0A3Lo/07gHXRZrdZFJZuu
+ MK2J1WMOzg1z6ysUyG8Mc457o9N5/1uYaS6hGJvzzo6zc7uw3KZ22l3SI8rShKtI72dSwHXKeK
+ Wqj1EQiO7h9CC8mTUo7SgIQEWKkQaDxRa97qlR0ogD8ngfQ2ISZIqf1DvkVNye1gDF9YPbfAj6
+ JSexr7+ea3QfZ6XujNzi0AwHtAz3quhtWWfwmfGMRa9zXoh/c20GzhpoUs0YA1G+u10QZJKxsF
+ 0g8=
+X-SBRS: 2.7
+X-MesageID: 9741861
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,294,1571716800"; 
+   d="scan'208";a="9741861"
+Date:   Mon, 9 Dec 2019 12:39:26 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     Paul Durrant <pdurrant@amazon.com>
+CC:     <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+        "Juergen Gross" <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
+ closed
+Message-ID: <20191209113926.GS980@Air-de-Roger>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-3-pdurrant@amazon.com>
 MIME-Version: 1.0
-References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
- <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
- <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
- <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
- <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
- <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com> <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com>
-In-Reply-To: <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 9 Dec 2019 12:38:53 +0100
-Message-ID: <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Lyude Paul <lyude@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191205140123.3817-3-pdurrant@amazon.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> anybody any other ideas?
+On Thu, Dec 05, 2019 at 02:01:21PM +0000, Paul Durrant wrote:
+> Only force state to closed in the case when the toolstack may need to
+> clean up. This can be detected by checking whether the state in xenstore
+> has been set to closing prior to device removal.
 
-Not yet, but I'm trying to collect some more information.
+I'm not sure I see the point of this, I would expect that a failure to
+probe or the removal of the device would leave the xenbus state as
+closed, which is consistent with the actual driver state.
 
-> It seems that both patches don't really fix
-> the issue and I have no idea left on my side to try out. The only
-> thing left I could do to further investigate would be to reverse
-> engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
-> but I've heard users having similar issues to the one Lyude told us
-> about... and I couldn't verify that the patches help there either in a
-> reliable way.
+Can you explain what's the benefit of leaving a device without a
+driver in such unknown state?
 
-It looks like the newer (8+) versions of Windows expect the GPU driver
-to prepare the GPU for power removal in some specific way and the
-latter fails if the GPU has not been prepared as expected.
-
-Because testing indicates that the Windows 7 path in the platform
-firmware works, it may be worth trying to do what it does to the PCIe
-link before invoking the _OFF method for the power resource
-controlling the GPU power.
-
-If the Mika's theory that the Win7 path simply turns the PCIe link off
-is correct, then whatever the _OFF method tries to do to the link
-after that should not matter.
-
-> On Wed, Nov 27, 2019 at 8:55 PM Lyude Paul <lyude@redhat.com> wrote:
-> >
-> > On Wed, 2019-11-27 at 12:51 +0100, Karol Herbst wrote:
-> > > On Wed, Nov 27, 2019 at 12:49 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > > On Tue, Nov 26, 2019 at 06:10:36PM -0500, Lyude Paul wrote:
-> > > > > Hey-this is almost certainly not the right place in this thread to
-> > > > > respond,
-> > > > > but this thread has gotten so deep evolution can't push the subject
-> > > > > further to
-> > > > > the right, heh. So I'll just respond here.
-> > > >
-> > > > :)
-> > > >
-> > > > > I've been following this and helping out Karol with testing here and
-> > > > > there.
-> > > > > They had me test Bjorn's PCI branch on the X1 Extreme 2nd generation,
-> > > > > which
-> > > > > has a turing GPU and 8086:1901 PCI bridge.
-> > > > >
-> > > > > I was about to say "the patch fixed things, hooray!" but it seems that
-> > > > > after
-> > > > > trying runtime suspend/resume a couple times things fall apart again:
-> > > >
-> > > > You mean $subject patch, no?
-> > > >
-> > >
-> > > no, I told Lyude to test the pci/pm branch as the runpm errors we saw
-> > > on that machine looked different. Some BAR error the GPU reported
-> > > after it got resumed, so I was wondering if the delays were helping
-> > > with that. But after some cycles it still caused the same issue, that
-> > > the GPU disappeared. Later testing also showed that my patch also
-> > > didn't seem to help with this error sadly :/
-> > >
-> > > > > [  686.883247] nouveau 0000:01:00.0: DRM: suspending object tree...
-> > > > > [  752.866484] ACPI Error: Aborting method \_SB.PCI0.PEG0.PEGP.NVPO due
-> > > > > to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-> > > > > [  752.866508] ACPI Error: Aborting method \_SB.PCI0.PGON due to
-> > > > > previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-> > > > > [  752.866521] ACPI Error: Aborting method \_SB.PCI0.PEG0.PG00._ON due
-> > > > > to previous error (AE_AML_LOOP_TIMEOUT) (20190816/psparse-529)
-> > > >
-> > > > This is probably the culprit. The same AML code fails to properly turn
-> > > > on the device.
-> > > >
-> > > > Is acpidump from this system available somewhere?
-> >
-> > Attached it to this email
-> >
-> > > >
-> > --
-> > Cheers,
-> >         Lyude Paul
->
+Thanks, Roger.
