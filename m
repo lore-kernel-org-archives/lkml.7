@@ -2,139 +2,170 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D4C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D56C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71C92068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D34C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUTP4Id4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tIfUwUlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfLIVWY (ORCPT
+        id S1726816AbfLIVW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:22:24 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43509 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLIVWX (ORCPT
+        Mon, 9 Dec 2019 16:22:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:32795 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLIVW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:22:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so17341201ljm.10;
-        Mon, 09 Dec 2019 13:22:21 -0800 (PST)
+        Mon, 9 Dec 2019 16:22:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id r67so6433793pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:22:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hfN3ul6hjpl2dirTMlovPdIO/5/d4Exh0KyMwDDvy9s=;
-        b=aUTP4Id4O4xbxCmkQMemUqwf+A6XD+HWrtRRDtNvHeAqGPYt2T8zoBr8af50sSF/oh
-         xqCUEMME2zGnIDV506uYLvC+55NONJC2GZD3Y4rxe4Iz7tkTxtB2Za1zo36pWtR2UAEh
-         gjx4z0BLc3W/F7zrsdBmgpOORCvU/ByXEicuBJyz0by+jfoRFmEuI9CFvOZ0Kj50qJQY
-         jzcR+MEBiYLrFmGsfkRHKgFHtdCjdAuFy5AOMMmU6m4sd+r3xN+bJxRSQ5KIJHPkM4sg
-         Jmk3qM7H5wgXEyw2LPRE+jZVBCP7JeQ8boLIcTXKq72tMPsQEkRuS5pzsfl7ezpKiHn2
-         sD9w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZYKN4XMxSrLNdiW1K9zMIVb1AY7QEckrYyQGFO3gO7U=;
+        b=tIfUwUlu/aebwlAJY5I4wiUV+hL2zrAKrAhhFztgRjVtv2G7CznBy3/+nHdkAd9mFg
+         eUi6wvK36wARtJVvf95GdIo4aA7revKeWc0izcsqcLvXLgfJW+injVOYMpEEVQBnr1kr
+         Hq2nD5kyOsjq7ysmRBMqsg9lC5uPzecPpKZaV0IykkwR7l7ulnya8cXpm/niOgqUoNl9
+         9ZnW3wcUeRkuaL398+LUn72CTffQClXItu4v7VGcUKLAiNAr8KUWgn0TxA1PAQL9k/AI
+         JDzi6aMZwe5u/p+9jdrOj/2XWEMtv+xc4rYuovd51SEiB2zhTyY4QOIozi4MXy+t7t28
+         D+xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hfN3ul6hjpl2dirTMlovPdIO/5/d4Exh0KyMwDDvy9s=;
-        b=tVPAo+Zpo80nE29T3Y0EQnY1rc2uNgyxzOH2zqQPpStcA1dN7xD0k3GLWMpwpq/Ggq
-         j8Oqe0/hTNCGICwJ3+pYuV08Pj5cqofM+yVMknK+2BDzp11plZRa4409a+YHmx/BR/U+
-         2Gpd4Vj0pUd0ODG8chcx7JkCVKMEnexWRXBapo5/DumRaPIOR0Lgp3R69Upb/cdhGjHf
-         wuz4LPqabsmfF93bClID4Xfqlrk5zmxz2XyoL4qHqpfYj67XsFhvb5UB0LoAg7IHqR2Y
-         ajOqguVBaDdecWaYYuM/fQPAPOR2swZb/wYLaQxQ0v2mAsnaU4SFb1msRdMrecU5/h96
-         bA9Q==
-X-Gm-Message-State: APjAAAVm7bkayiwq6OgwQq7QjSEF5BPMhwzbofh3HPsp2Coedk11Vh9x
-        YSMC6UxJVtJZ93T5U0LEXw46gE3G
-X-Google-Smtp-Source: APXvYqzkedDuJ1mylj4K6QNH/bG8ZkXNM30pZ3tfzuwZ2lJA23WGf4luIwH5aJBrVQwHx+41Wuj0yg==
-X-Received: by 2002:a2e:7e07:: with SMTP id z7mr16979405ljc.165.1575926540462;
-        Mon, 09 Dec 2019 13:22:20 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id s16sm300639lfc.35.2019.12.09.13.22.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 13:22:19 -0800 (PST)
-Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191203004116.11771-1-digetx@gmail.com>
- <20191207215216.GA9561@qmqm.qmqm.pl>
- <0b3a861d-e5e8-ddca-ac60-0a3c61a9d9dc@gmail.com>
- <20191209160420.GA24097@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
-Date:   Tue, 10 Dec 2019 00:22:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZYKN4XMxSrLNdiW1K9zMIVb1AY7QEckrYyQGFO3gO7U=;
+        b=Kdk6DvP09/akS7Mmww98Tcc2XAnFxdCLdXcnFaLaaCHGX78EmNghqGyCNxpSDXwkA7
+         ONk2skEQZQGgexCzUjJAZgYzeVqgiAUTd1I1kNnpaLHnvDCUzxReMW5pWx16HzpvMzwv
+         LnqXxnLWmbM8V0Je67BkoHIA9+megHnAbRo6SReVOAaGAgCtF2elEEP8vbvS0i79f5O5
+         hIfdx7mVRZoItYF/agXVB8LlyEXj52diuWAzWr2h2PrmDt7TzuvVsoFVYpX+zIcAWffW
+         15MEzgXse0JT5xD/VimL64SpRd6GdmbwUKFe/BxTkxZG4F5VDJ6Qp9iqtqDJuBf0C4ie
+         SSbg==
+X-Gm-Message-State: APjAAAUWFJ4i80WDRjj8wQAaVDKU5zfAPAZB5/AYZpnTi60iOne9JjC4
+        gKmSHcMU6sBwUkaWpH+3oq0HaKTb8bNBpO0gxvr0RQ==
+X-Google-Smtp-Source: APXvYqxLyJ84N4sB7y2gm9HTU5F0NX0yt0sS6W9FapviadhzzQ2uydjnauwEeo2bWU2j0dESyGplK2ODB74G0M/HMSI=
+X-Received: by 2002:a17:902:8b86:: with SMTP id ay6mr18228675plb.223.1575926577921;
+ Mon, 09 Dec 2019 13:22:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191209160420.GA24097@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191209211623.44166-1-natechancellor@gmail.com>
+In-Reply-To: <20191209211623.44166-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Dec 2019 13:22:46 -0800
+Message-ID: <CAKwvOd=UgY8+w9MVjJa-xpZ-08K9zrn79226otp2=TOCFT6MnQ@mail.gmail.com>
+Subject: Re: [PATCH] net: tulip: Adjust indentation in {dmfe,uli526x}_init_module
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-parisc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.12.2019 19:04, Michał Mirosław пишет:
-> On Sun, Dec 08, 2019 at 01:56:14AM +0300, Dmitry Osipenko wrote:
->> 08.12.2019 00:52, Michał Mirosław пишет:
->>> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
->>>> Hello,
->>>>
->>>> This series does the following:
->>>>
->>>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->>>>      into common drivers/cpuidle/ directory.
->>>>
->>>>   2. Enables CPU cluster power-down idling state on Tegra30.
->>>>
->>>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
->>>> and of the Tegra's arch code in general. Please review, thanks!
->>>
->>> I did a quick smoke test for this series on top of Linus' master:
->>>  - rebuilding with the patches applied, CONFIG_ARM_TEGRA_CPUIDLE=n - works
->>>  - building with CONFIG_ARM_TEGRA_CPUIDLE=y - doesn't boot
->>>
->>> The hang is somewhere early in the boot process, before simplefb can
->>> take the console and show any logs. If I get BOOTFB to work again I might
->>> be able to get some more info.
->>
->> Thank you very much for trying these patches!
->>
->> Could you please try to make ARM_TEGRA_CPUIDLE "tristate" in the Kconfig
->> and compile it as a loadable module? That way you'll get framebuffer
->> shown before the hang happens.
->>
->> Does LP2 suspend/resume work for you? There should be
->> "nvidia,suspend-mode = <2>" in the PMC's node of device-tree.
-> 
-> Not at the moment. I also tried suspend-mode = <1> and <0>, but it
-> made no difference.
+On Mon, Dec 9, 2019 at 1:16 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+> indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         switch (mode) {
+>         ^
+> ../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
+> statement is here
+>         if (cr6set)
+>         ^
+> 1 warning generated.
+>
+> ../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
+> indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         switch(mode) {
+>         ^
+> ../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
+> statement is here
+>         if (cr6set)
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space before the tab on these
+> lines. Remove them so that the indentation is consistent with the Linux
+> kernel coding style and clang no longer warns.
+>
+> While we are here, adjust the default block in dmfe_init_module to have
+> a proper break between the label and assignment and add a space between
+> the switch and opening parentheses to avoid a checkpatch warning.
+>
+> Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/795
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-If LP2 doesn't work, then it explains why you're getting the hang.
+/^ \t
+in vim turns up a few more cases that I think should be fixed (in both files)
 
-Are you using TF300T for the testing? I'm recalling that LP2 worked for
-you sometime ago on TF300T, maybe some offending change was introduced
-since then. Could you please try to do the git bisection or at least
-find out what is the last good kernel version?
+> ---
+>  drivers/net/ethernet/dec/tulip/dmfe.c    | 7 ++++---
+>  drivers/net/ethernet/dec/tulip/uli526x.c | 4 ++--
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/dec/tulip/dmfe.c b/drivers/net/ethernet/dec/tulip/dmfe.c
+> index 0efdbd1a4a6f..32d470d4122a 100644
+> --- a/drivers/net/ethernet/dec/tulip/dmfe.c
+> +++ b/drivers/net/ethernet/dec/tulip/dmfe.c
+> @@ -2214,15 +2214,16 @@ static int __init dmfe_init_module(void)
+>         if (cr6set)
+>                 dmfe_cr6_user_set = cr6set;
+>
+> -       switch(mode) {
+> -       case DMFE_10MHF:
+> +       switch (mode) {
+> +       case DMFE_10MHF:
+>         case DMFE_100MHF:
+>         case DMFE_10MFD:
+>         case DMFE_100MFD:
+>         case DMFE_1M_HPNA:
+>                 dmfe_media_mode = mode;
+>                 break;
+> -       default:dmfe_media_mode = DMFE_AUTO;
+> +       default:
+> +               dmfe_media_mode = DMFE_AUTO;
+>                 break;
+>         }
+>
+> diff --git a/drivers/net/ethernet/dec/tulip/uli526x.c b/drivers/net/ethernet/dec/tulip/uli526x.c
+> index b1f30b194300..117ffe08800d 100644
+> --- a/drivers/net/ethernet/dec/tulip/uli526x.c
+> +++ b/drivers/net/ethernet/dec/tulip/uli526x.c
+> @@ -1809,8 +1809,8 @@ static int __init uli526x_init_module(void)
+>         if (cr6set)
+>                 uli526x_cr6_user_set = cr6set;
+>
+> -       switch (mode) {
+> -       case ULI526X_10MHF:
+> +       switch (mode) {
+> +       case ULI526X_10MHF:
+>         case ULI526X_100MHF:
+>         case ULI526X_10MFD:
+>         case ULI526X_100MFD:
+> --
+> 2.24.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191209211623.44166-1-natechancellor%40gmail.com.
 
-I rebased this series on a recent linux-next and you could find the
-rebased patches here [1].
 
-[1] https://github.com/grate-driver/linux/commits/master
 
-With [1] you should be able to remove "nvidia,suspend-mode" property
-from the device-tree to get cpuidle working with the disabled CC6 state
-(LP2). Could you please check that at least disabled CC6 works for you?
+-- 
+Thanks,
+~Nick Desaulniers
