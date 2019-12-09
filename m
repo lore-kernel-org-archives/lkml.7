@@ -2,128 +2,80 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C10C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13225C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CCE205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Lexmark.com header.i=@Lexmark.com header.b="csd9z9S5"
+	by mail.kernel.org (Postfix) with ESMTP id DE72F206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLISzz (ORCPT
+        id S1726785AbfLIS4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:55:55 -0500
-Received: from mail-dm6nam11on2139.outbound.protection.outlook.com ([40.107.223.139]:57152
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726354AbfLISzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:55:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jp0MXB7JcWiIdKuaBpA8uubD8AUciI7rOqHGXVtaLfYb5pl+OYPFKNir1PsUkrHL2GSlFA2O4CFzYsElareMJJSSnmbyGbEGbbEBI5vbfrfOiOfqj0rGeYct1lvUMIEP8Klov7Hqvv7aaVkMc6ETOLpsBxxU9tveAzAh3gh97dZMJuajDAuxIRebOBUg5YjnEI+OZCO3g9UElOwY6hMUwPliVsVmz0O0vNy5r3WFqIr1ReBSQ9UcXKcIbUBxMKxS1nXPCVJcsOp1Iyv/GvGE3efI/jZRcZPitgekHUcJPgnXJ4ZDonXU2IWrdSOt54eE9wd9ABy9NyDrMu+OMJih6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxDNNClZfQCL0R47wiZ/1Fv9Gg6U5Ak35uIKya487cM=;
- b=avh9Lma8b2N361nj8PF2RIvkEZ+jWNP/ScJ4/U1PfP+zOhwE4gW64hCRBySsedogYFAtUqcoXYsTD8c2OdBPclGPH1rBrB/WJRF8gnxJTLh3qShxb+Z3raYFs2H2N4bnPZ+7C+AFpHtw3DTYFmPCnQXUT3ZntD9WWGp2Q6U3eU5mKRZR0k5V6KIEoSw0suUNiUY4uJk6vzIY1Hfx5+D1kiNXthjbhtF2dS5bt9fmw97d8FUBRmeB3y/xknZLkgxaC9ZhrgyETwxWpdl9YOocvkZsx7pRe6h0h+e8SDXSkYLFzZVpaHpEPeSDUJMvQh8IufuR1y2etO1PtYYS4aSE7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=lexmark.com; dmarc=pass action=none header.from=lexmark.com;
- dkim=pass header.d=lexmark.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Lexmark.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BxDNNClZfQCL0R47wiZ/1Fv9Gg6U5Ak35uIKya487cM=;
- b=csd9z9S5eYeoJwS/pAjx6SlGahhGOWFffpxMvlJJQxarfSmU2qyKWX+SkHwA8WseRfAj4YPVft3V4XYoxmQNQO51HVlXXEIj75jz4CzoklwRmy3cznR/Dfxs/gH9wkLz4CmqpcNfm2bSWuyapdEcl/jTCzMJ2fyVsUw4ieIz7So=
-Received: from BN8PR10MB3379.namprd10.prod.outlook.com (20.179.140.29) by
- BN8PR10MB3603.namprd10.prod.outlook.com (20.179.96.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Mon, 9 Dec 2019 18:55:51 +0000
-Received: from BN8PR10MB3379.namprd10.prod.outlook.com
- ([fe80::9d23:4a97:d48a:7f84]) by BN8PR10MB3379.namprd10.prod.outlook.com
- ([fe80::9d23:4a97:d48a:7f84%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 18:55:51 +0000
-From:   Zak Hays <zak.hays@lexmark.com>
-CC:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/2] thermal: armada: fix register offsets for AXP
-Thread-Topic: [PATCH v3 1/2] thermal: armada: fix register offsets for AXP
-Thread-Index: AQHVrsGLD999I+sXU02u/nnKx+JFe6eyJbMn
-Date:   Mon, 9 Dec 2019 18:55:51 +0000
-Message-ID: <BN8PR10MB337990B7688320D736760BB68C580@BN8PR10MB3379.namprd10.prod.outlook.com>
-References: <1575917171-11085-1-git-send-email-zhays@lexmark.com>
-In-Reply-To: <1575917171-11085-1-git-send-email-zhays@lexmark.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zak.hays@lexmark.com; 
-x-originating-ip: [192.146.101.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c26f6332-5a16-45b1-8ac7-08d77cd9696f
-x-ms-traffictypediagnostic: BN8PR10MB3603:
-x-microsoft-antispam-prvs: <BN8PR10MB36031E66E21C0210EF6E1C858C580@BN8PR10MB3603.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:372;
-x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(7696005)(498600001)(54906003)(64756008)(66556008)(66476007)(9686003)(8676002)(2906002)(4326008)(33656002)(109986005)(44832011)(305945005)(81166006)(81156014)(71200400001)(71190400001)(55016002)(76116006)(86362001)(6506007)(52536014)(66946007)(5660300002)(26005)(4744005)(8936002)(66446008)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR10MB3603;H:BN8PR10MB3379.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: lexmark.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HxTtjJhEiV5il5nrE4yEKVKhwfe02le5OYoE7YMPw8LkQZkynORCaZjHeS/ljPz9HzQvSzy5WeJOlQGuVpxhXRtp14pvEVWiHiHJK4IyPi5XxdsNBLDQbm3EvcMxGV4Zbl4TUdkTZ9OOvZ0RZPqs2/DzsRo+Sk/Eh/3p/boQVCE+gIpZ+ZXJWlSg0XrbRcyIi8TGw8ggwvF9vDXLtE88q3rh0LOoU+LAd41wSjlmdcCvdRa4r6QYXVkxs5TDD/POmQpOI27FUhtXaRmVwcPudIi8eONruR9bysDFRhILrdeRwSl1OEAm8UYB+w1nFrP6cKgAlaTlwVeYAo20rD5x5DtGNswI4E6ZpPEo0rxLcqApdBpox4fm3ERGzVijQqjiW14eC/PP/+FlSpUClu9WosfZp2KAevYJ/NpXB5gVtM0OOK2ATRi5U8n/uLN/Uy8H
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Dec 2019 13:56:13 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:10589 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIS4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:56:13 -0500
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQr4OGUPX+1JiWAnI+L0="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.0.2 DYNA|AUTH)
+        with ESMTPSA id R01a59vB9IswbS2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 9 Dec 2019 19:54:58 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     =?UTF-8?q?Cl=C3=A9ment=20Perrochaud?= 
+        <clement.perrochaud@effinnov.com>,
+        Charles Gorand <charles.gorand@effinnov.com>,
+        linux-nfc@lists.01.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] NFC: nxp-nci: Fix probing without ACPI
+Date:   Mon,  9 Dec 2019 19:53:43 +0100
+Message-Id: <20191209185343.215893-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-OriginatorOrg: Lexmark.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c26f6332-5a16-45b1-8ac7-08d77cd9696f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 18:55:51.4149
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 12709065-6e6c-41c9-9e4d-fb0a436969ce
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 995rhOEEKowYK3vWjoaiDs4scSJfUGgOg3CBbFHVdX0FxovsgrsaIooq2YcImNeAinMVdGEpGg3xlD024+zE5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3603
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As shown in its device tree, Armada XP has the control1 register at=0A=
-0x184d0, not 0x182d0.=0A=
-=0A=
-Signed-off-by: Zachary Hays <zhays@lexmark.com>=0A=
----=0A=
-v2: update commit title and add "Signed-off-by"=0A=
-v3: resend for clarification=0A=
----=0A=
- drivers/thermal/armada_thermal.c | 2 +-=0A=
- 1 file changed, 1 insertion(+), 1 deletion(-)=0A=
-=0A=
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_ther=
-mal.c=0A=
-index 709a22f455e9..88363812033c 100644=0A=
---- a/drivers/thermal/armada_thermal.c=0A=
-+++ b/drivers/thermal/armada_thermal.c=0A=
-@@ -578,7 +578,7 @@ static const struct armada_thermal_data armadaxp_data =
-=3D {=0A=
-        .coef_m =3D 10000000ULL,=0A=
-        .coef_div =3D 13825,=0A=
-        .syscon_status_off =3D 0xb0,=0A=
--       .syscon_control1_off =3D 0xd0,=0A=
-+       .syscon_control1_off =3D 0x2d0,=0A=
- };=0A=
-=0A=
- static const struct armada_thermal_data armada370_data =3D {=0A=
---=0A=
-2.7.4=0A=
-=0A=
+devm_acpi_dev_add_driver_gpios() returns -ENXIO if CONFIG_ACPI
+is disabled (e.g. on device tree platforms).
+In this case, nxp-nci will silently fail to probe.
+
+The other NFC drivers only log a debug message if
+devm_acpi_dev_add_driver_gpios() fails.
+Do the same in nxp-nci to fix this problem.
+
+Fixes: ad0acfd69add ("NFC: nxp-nci: Get rid of code duplication in ->probe()")
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ drivers/nfc/nxp-nci/i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 4d1909aecd6c..9f60e4dc5a90 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -278,7 +278,7 @@ static int nxp_nci_i2c_probe(struct i2c_client *client,
+ 
+ 	r = devm_acpi_dev_add_driver_gpios(dev, acpi_nxp_nci_gpios);
+ 	if (r)
+-		return r;
++		dev_dbg(dev, "Unable to add GPIO mapping table\n");
+ 
+ 	phy->gpiod_en = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
+ 	if (IS_ERR(phy->gpiod_en)) {
+-- 
+2.24.0
+
