@@ -2,176 +2,127 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF81C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9764C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB88D21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F9324653
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyNHS4Vl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NxVpNJQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLIUMp (ORCPT
+        id S1726908AbfLIUMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:12:45 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42632 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfLIUMk (ORCPT
+        Mon, 9 Dec 2019 15:12:54 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58064 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIUMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:12:40 -0500
-Received: by mail-lj1-f196.google.com with SMTP id e28so17114331ljo.9;
-        Mon, 09 Dec 2019 12:12:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=toXARQVeazduKdMBcjZ4AH+zKbnIDWRz3fBlo89SsY8=;
-        b=oyNHS4VlNQIeO8uN4MTz5mnnSbKmtqbZwyZ5dC7UpkgqBEwuGlmOIN0+RPkkDpEMOa
-         vCZXz7sr6AVN0zyHTNBcclHbuWsYc+4eO5xAzAjB7nTQhnuaqs6H0E95/9FyprYS6Nxh
-         3OghsnDtsPF72u6J9DOE11wxG0welgCE3mwMUMQ92BAWyHTsOzblUWF+kON4av1oX12Q
-         hOMQyJbCrvt01M4XYMXodNBql795RbFgyYevszJWpwRaNVe4cqSgfpvlCPZUekti4onD
-         K/cYJA/cZnHYMIxm7WENW7bOSBDY956QC5jk6f0MHTqVhPl5cJAAmU+rKjlIUgVhgB76
-         HMSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=toXARQVeazduKdMBcjZ4AH+zKbnIDWRz3fBlo89SsY8=;
-        b=ZXu/BU3rQ3FnotN/tqn0Piz0ErURHYpckMbqYb0BF8rpyQ5PyPrJklmRdCKr0bJBXN
-         vJGZlruNCAuz+99Swv8Cv7HCKe+YDbAfa3OD7Awfosgf2ndxSPNRdapBWtH9CdwSwfoE
-         jH9fYH235lm0n1raQ57CHwSFhSaV9ic3i1DljsV7loW2Px1t730eNXw5U0SmbCS1c02Y
-         up05PH0xady7l77E2lOeqX5Z8EmukEuC99v88tPsHhioGNdTDqOsotNXzuxo4jqTgoQ6
-         1NaT0khAuNFXnvtadZWr2I7Yoxztm3qTh/WhwiSUVisoE9jvP4a37FN76OTJfFExj7dN
-         b6Gw==
-X-Gm-Message-State: APjAAAVeO0IL2zOLTfOg0BgMzQ0FpxJyDrJnJO9yzxpZcfoZS1pOqyAj
-        A8uEoLBiuCZysGSKgvCde/U=
-X-Google-Smtp-Source: APXvYqzFJzecx4/IUoPCD798bOm5o7OiSgWA4hOkXHCqKz5R/DTqwq7ycwmvKJ9TE7el6GO2a/JYvA==
-X-Received: by 2002:a2e:9741:: with SMTP id f1mr17084867ljj.123.1575922357865;
-        Mon, 09 Dec 2019 12:12:37 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id k25sm453452lji.42.2019.12.09.12.12.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 12:12:36 -0800 (PST)
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alexios.zavras@intel.com, alsa-devel@alsa-project.org
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
-Date:   Mon, 9 Dec 2019 23:12:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 15:12:39 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCYeD127572;
+        Mon, 9 Dec 2019 14:12:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575922354;
+        bh=6vGHJhYH4z/ijV+8X0E6eHdnbtT9ZGzqFX7An5fC93k=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=NxVpNJQP1YbKBroSf/JmiZql4K904CsBfjLy321EVRH/UZ+0M6Mab5sCzRbdW6INP
+         F9R7YhFMto7AmZWfn41Wn1EZVmAq+YBJz3Qeu7VzkSQMGot7gp/majOxNwRphVmEj8
+         ix5jAQWpHXt3o0EtRv7IRx9Uql1Uq7OzoTlgx3JU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9KCY8a036582
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 14:12:34 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 14:12:34 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 14:12:34 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9KCYHs066381;
+        Mon, 9 Dec 2019 14:12:34 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <bunk@kernel.org>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH net-next v3 1/2] dt-bindings: dp83867: Convert fifo-depth to common fifo-depth and make optional
+Date:   Mon, 9 Dec 2019 14:10:24 -0600
+Message-ID: <20191209201025.5757-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191209201025.5757-1-dmurphy@ti.com>
+References: <20191209201025.5757-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.12.2019 00:36, Sowjanya Komatineni пишет:
-> 
-> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
->>
->> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
->>> 07.12.2019 18:53, Dmitry Osipenko пишет:
->>>> 07.12.2019 18:47, Dmitry Osipenko пишет:
->>>>> 07.12.2019 17:28, Dmitry Osipenko пишет:
->>>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
->>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3
->>>>>>> with
->>>>>>> mux and gate for each of these clocks.
->>>>>>>
->>>>>>> Currently these PMC clocks are registered by Tegra clock driver
->>>>>>> using
->>>>>>> clk_register_mux and clk_register_gate by passing PMC base address
->>>>>>> and register offsets and PMC programming for these clocks happens
->>>>>>> through direct PMC access by the clock driver.
->>>>>>>
->>>>>>> With this, when PMC is in secure mode any direct PMC access from the
->>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>> functional.
->>>>>>>
->>>>>>> This patch adds these clocks registration with PMC as a clock
->>>>>>> provider
->>>>>>> for these clocks. clk_ops callback implementations for these clocks
->>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
->>>>>>> programming
->>>>>>> in secure mode and non-secure mode.
->>>>>>>
->>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>> ---
->>>>> [snip]
->>>>>
->>>>>>> +
->>>>>>> +static const struct clk_ops pmc_clk_gate_ops = {
->>>>>>> +    .is_enabled = pmc_clk_is_enabled,
->>>>>>> +    .enable = pmc_clk_enable,
->>>>>>> +    .disable = pmc_clk_disable,
->>>>>>> +};
->>>>>> What's the benefit of separating GATE from the MUX?
->>>>>>
->>>>>> I think it could be a single clock.
->>>>> According to TRM:
->>>>>
->>>>> 1. GATE and MUX are separate entities.
->>>>>
->>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in TRM).
->>>>>
->>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,
->>>>> correct?
-> 
-> Was following existing clk-tegra-pmc as I am not sure of reason for
-> having these clocks registered as separate mux and gate clocks.
-> 
-> Yes, PMC clocks can be registered as single clock and can use clk_ops
-> for set/get parent and enable/disable.
-> 
-> enable/disable of PMC clocks is for force-enable to force the clock to
-> run regardless of ACCEPT_REQ or INVERT_REQ.
-> 
->>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
->>>> should belong to PMC.
->>> Also, it should be "osc" and not "clk_m".
->>
->> I followed the same parents as it were in existing clk-tegra-pmc driver.
->>
->> Yeah they are wrong and they should be from osc and not clk_m.
->>
->> Will fix in next version.
->>
+Convert the ti,fifo-depth from a TI specific property to the common
+tx-fifo-depth property.  Also add support for the rx-fifo-depth.
 
-Could you please describe the full EXTPERIPH clock topology and how the
-pinmux configuration is related to it all?
+These are optional properties for this device and if these are not
+available then the fifo depths are set to device default values.
 
-What is internal to the Tegra chip and what are the external outputs?
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Reported-by: Adrian Bunk <bunk@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+---
 
-Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
+v3 - No changes
+v2 - Rebase on linux-net next as the patch would not apply
+
+ Documentation/devicetree/bindings/net/ti,dp83867.txt | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+index 388ff48f53ae..44e2a4fab29e 100644
+--- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
++++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
+@@ -8,8 +8,6 @@ Required properties:
+ 	- ti,tx-internal-delay - RGMII Transmit Clock Delay - see dt-bindings/net/ti-dp83867.h
+ 		for applicable values. Required only if interface type is
+ 		PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_TXID
+-	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
+-		for applicable values
+ 
+ Note: If the interface type is PHY_INTERFACE_MODE_RGMII the TX/RX clock delays
+       will be left at their default values, as set by the PHY's pin strapping.
+@@ -42,6 +40,14 @@ Optional property:
+ 				    Some MACs work with differential SGMII clock.
+ 				    See data manual for details.
+ 
++	- ti,fifo-depth - Transmitt FIFO depth- see dt-bindings/net/ti-dp83867.h
++		for applicable values (deprecated)
++
++	-tx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
++			 the depth can be found in dt-bindings/net/ti-dp83867.h
++	-rx-fifo-depth - As defined in the ethernet-controller.yaml.  Values for
++			 the depth can be found in dt-bindings/net/ti-dp83867.h
++
+ Note: ti,min-output-impedance and ti,max-output-impedance are mutually
+       exclusive. When both properties are present ti,max-output-impedance
+       takes precedence.
+@@ -55,7 +61,7 @@ Example:
+ 		reg = <0>;
+ 		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_25_NS>;
+ 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_75_NS>;
+-		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++		tx-fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+ 	};
+ 
+ Datasheet can be found:
+-- 
+2.23.0
+
