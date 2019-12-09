@@ -2,157 +2,244 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E61C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82174C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54059206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47506206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjS6ZYwg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uW7KM0kd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfLIVQb (ORCPT
+        id S1726783AbfLIVSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:16:31 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38202 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfLIVQb (ORCPT
+        Mon, 9 Dec 2019 16:18:42 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41822 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfLIVSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:16:31 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h20so13566359otn.5;
-        Mon, 09 Dec 2019 13:16:30 -0800 (PST)
+        Mon, 9 Dec 2019 16:18:41 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x8so7736896pgk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:18:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FPQYv1CbF5PEoyV5DeRvhLdH9ApHt5XdOf0DWTue2HU=;
-        b=QjS6ZYwgFxpo/3EKAkWOHJQjgc3+lg/XGoY+/I0Fb+FfiFr9BN3a7x+9JjDJAqlSGj
-         1AEfquUPPfsAvU2H6JH7duI5fFp/GMuv1aJZ4w+CcTVsypB8MAYJRHp5yx+FluqLWuec
-         iyloOOlIL5YfchuaJZ+LGklRyH+zn94xCCk0r9Np0shNXcHAAM2ZGR5sOIZz9Kem2OaZ
-         H7QTzOM5jIwjU2c6n0CdSHPx+FZn5nrjr8dVkUKksd+ZxgfbLR5NaLIzKFlg5pobnDGG
-         /FEinY/2W+/4wjxKj2d6PNz5/EosBGCaCcXTcy/P1TJTjejXocp/zBAKx88v1Jav47E+
-         Bq/A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8sHrzINyOkYNGQIQ9XXaLWKRmil7He9/vhOTZUxiLLw=;
+        b=uW7KM0kdul8udjx+VGXxVZkx3nIsZrbTLdHzXY6E6egwpRT1L3B8lKi8xx53yKTK5g
+         c+s2jBB0b1IEkjhSwxqkUsz+gLchSAkiJyaBJXocl29G5xa1l+cK59XREHl4pxIXP9ZH
+         PVF2TUcOJl0o4+42k4numsNxHmTiYIsoRguDOzbNI/yxZCQCC3qU2oDA3h2S1kjGoDNG
+         ymJFefPu0zTuNc7eSegY4sWWQAEPFtKJat+jilFe2eTBqPsD2uEN/qKFFIGqn1K6K9Mm
+         FuKgtcfk9+yFAzlJV+SguKDnWBov3wK1LWXoHGTbvNqyMCwKjMHMhuocdS+fCTBCi2AP
+         qlcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FPQYv1CbF5PEoyV5DeRvhLdH9ApHt5XdOf0DWTue2HU=;
-        b=UuN5h1g5/D29As4QOIeCXFKkEeqJH5x6PJJtZ1r1pd6igJudoGYPza3k+Bl93hV20W
-         p+6MreDcSdupnYnA6tTOEkODNBHSFejOYgg8zaZQDEDIK+4PvAksNiGoBTPMq0wM4jfo
-         IRS0YrNCz3Kj+bnxsg7cgp7wXKTLdq2V6O7bSPBKzt+vG2XdlC5gcxSDGLlOcZ3cT6Z6
-         3qvidBYG1JCaSGK3jpP1HYZqPwBg5Q0/Jfs0dEqR1RrAWvke1VkAC5CjJILFUcfcKBLT
-         7/FmBNv5LPDt5sVVBzsVzkoC76AlnaKEnUWUvf3qEMaQPQfb88ypUVLdAiQ3CmoxMKzC
-         NwJA==
-X-Gm-Message-State: APjAAAXcK0R1XoPhImJA5N8cpL6/oXOQQx4A+O5+lzeZUV8f1+zo7zEl
-        tL2KacQ4WSBaaAYA2PaBe7XpdguzL7A=
-X-Google-Smtp-Source: APXvYqy1MfB4bbMMrkLP5JgBCVwn6uHSi2l3IRpKKB9OtqFyxx7T73FbSy1fHrbn7gBsMT4+ZKAchw==
-X-Received: by 2002:a9d:74d8:: with SMTP id a24mr24272190otl.100.1575926190314;
-        Mon, 09 Dec 2019 13:16:30 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 11sm461647otz.3.2019.12.09.13.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 13:16:29 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] net: tulip: Adjust indentation in {dmfe,uli526x}_init_module
-Date:   Mon,  9 Dec 2019 14:16:23 -0700
-Message-Id: <20191209211623.44166-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8sHrzINyOkYNGQIQ9XXaLWKRmil7He9/vhOTZUxiLLw=;
+        b=GV4sJ9Kw9m832tYwwvcQV8ZRYF2PKmtDHzj9V4H4XWKjT9qE65q+JyB0gaAwDRupCS
+         hYOBs9BMobCLnbC0epQnPP7q4f8m9lYyzld1xeUHUwEagabNvjSashGSqmEp66XMC1UA
+         mhF+4mbaE4NDWfNoGTImSKiR85WqBXixvYHTXAHVePDip1WsDLy9tXMKvvugoMn3OBUr
+         6VOCS5olq6zbbN+zvHhDpc3r9ClvN6cwSRpU3zoH/SmEQbb+CFjq/jitY6JksCjNYrzP
+         or1haetqJzmRebT7HgBVL++wkYwfdGtg98f2GkcGe1905NuquE9gpkSSi7dsun7Qat/0
+         9Jeg==
+X-Gm-Message-State: APjAAAXMH54aTfJ5IiQ8K8/GpAVC5MmmVxfUXxN/UYjH3tdBojIbIZ3E
+        vdRKhOI4AolSEtR+eM1G89Q+e2MC823x+wg81giTjw==
+X-Google-Smtp-Source: APXvYqxsdIDMfz7N8k5QAyut9TYtchslk0l1X3EQIaFJPMPBYjWBQrkZ0ibJBDa/mh0YI1EgXFRT3s5C4jgAa2w+vuk=
+X-Received: by 2002:aa7:9151:: with SMTP id 17mr31823690pfi.3.1575926320653;
+ Mon, 09 Dec 2019 13:18:40 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20191209205010.4115-1-natechancellor@gmail.com> <20191209210328.18866-1-natechancellor@gmail.com>
+In-Reply-To: <20191209210328.18866-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Dec 2019 13:18:29 -0800
+Message-ID: <CAKwvOd=GYWaoxQg_xH-gOHfqKeTZ_qaw35ucjFxcjd69AK+pyw@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Mon, Dec 9, 2019 at 1:04 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
+> indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         while (!ret) {
+>         ^
+> ../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
+> statement is here
+>         if (column + thislen > writesize)
+>         ^
+> 1 warning generated.
+>
+> This warning occurs because there is a space before the tab of the while
+> loop. There are spaces at the beginning of a lot of the lines in this
+> block, remove them so that the indentation is consistent with the Linux
+> kernel coding style and clang no longer warns.
+>
+> Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/794
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> v1 -> v2:
+>
+> * Clean up the block before the one that warns, which was added as part
+>   of the fixes commit (Nick).
+>
+>  drivers/mtd/nand/onenand/onenand_base.c | 80 ++++++++++++-------------
+>  1 file changed, 40 insertions(+), 40 deletions(-)
+>
+> diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
+> index 77bd32a683e1..13c69eb021a6 100644
+> --- a/drivers/mtd/nand/onenand/onenand_base.c
+> +++ b/drivers/mtd/nand/onenand/onenand_base.c
+> @@ -1248,44 +1248,44 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
+>
+>         stats = mtd->ecc_stats;
+>
+> -       /* Read-while-load method */
+> +       /* Read-while-load method */
+>
+> -       /* Do first load to bufferRAM */
+> -       if (read < len) {
+> -               if (!onenand_check_bufferram(mtd, from)) {
+> +       /* Do first load to bufferRAM */
+> +       if (read < len) {
+> +               if (!onenand_check_bufferram(mtd, from)) {
+>                         this->command(mtd, ONENAND_CMD_READ, from, writesize);
+> -                       ret = this->wait(mtd, FL_READING);
+> -                       onenand_update_bufferram(mtd, from, !ret);
+> +                       ret = this->wait(mtd, FL_READING);
+> +                       onenand_update_bufferram(mtd, from, !ret);
+>                         if (mtd_is_eccerr(ret))
+>                                 ret = 0;
+> -               }
+> -       }
+> +               }
+> +       }
+>
+>         thislen = min_t(int, writesize, len - read);
+>         column = from & (writesize - 1);
+>         if (column + thislen > writesize)
+>                 thislen = writesize - column;
+>
+> -       while (!ret) {
+> -               /* If there is more to load then start next load */
+> -               from += thislen;
+> -               if (read + thislen < len) {
+> +       while (!ret) {
+> +               /* If there is more to load then start next load */
+> +               from += thislen;
+> +               if (read + thislen < len) {
+>                         this->command(mtd, ONENAND_CMD_READ, from, writesize);
+> -                       /*
+> -                        * Chip boundary handling in DDP
+> -                        * Now we issued chip 1 read and pointed chip 1
+> +                       /*
+> +                        * Chip boundary handling in DDP
+> +                        * Now we issued chip 1 read and pointed chip 1
+>                          * bufferram so we have to point chip 0 bufferram.
+> -                        */
+> -                       if (ONENAND_IS_DDP(this) &&
+> -                           unlikely(from == (this->chipsize >> 1))) {
+> -                               this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
+> -                               boundary = 1;
+> -                       } else
+> -                               boundary = 0;
+> -                       ONENAND_SET_PREV_BUFFERRAM(this);
+> -               }
+> -               /* While load is going, read from last bufferRAM */
+> -               this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+> +                        */
+> +                       if (ONENAND_IS_DDP(this) &&
+> +                           unlikely(from == (this->chipsize >> 1))) {
+> +                               this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
+> +                               boundary = 1;
+> +                       } else
+> +                               boundary = 0;
+> +                       ONENAND_SET_PREV_BUFFERRAM(this);
+> +               }
+> +               /* While load is going, read from last bufferRAM */
+> +               this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+>
+>                 /* Read oob area if needed */
+>                 if (oobbuf) {
+> @@ -1302,23 +1302,23 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
+>                 }
+>
+>                 /* See if we are done */
 
-../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        switch (mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
-statement is here
-        if (cr6set)
-        ^
-1 warning generated.
+With this applied, I see a missed instance right here ^ (L1304).
+In vim:
 
-../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        switch(mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
-statement is here
-        if (cr6set)
-        ^
-1 warning generated.
 
-This warning occurs because there is a space before the tab on these
-lines. Remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+^ \t
 
-While we are here, adjust the default block in dmfe_init_module to have
-a proper break between the label and assignment and add a space between
-the switch and opening parentheses to avoid a checkpatch warning.
+In my .vimrc, I set:
+https://github.com/nickdesaulniers/dotfiles/blob/37359525f5a403b4ed2d3f9d1bbbee2da8ec8115/.vimrc#L35-L41
+to make tabs glaringly visible.
 
-Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/795
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/net/ethernet/dec/tulip/dmfe.c    | 7 ++++---
- drivers/net/ethernet/dec/tulip/uli526x.c | 4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+> -               read += thislen;
+> -               if (read == len)
+> -                       break;
+> -               /* Set up for next read from bufferRAM */
+> -               if (unlikely(boundary))
+> -                       this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
+> -               ONENAND_SET_NEXT_BUFFERRAM(this);
+> -               buf += thislen;
+> +               read += thislen;
+> +               if (read == len)
+> +                       break;
+> +               /* Set up for next read from bufferRAM */
+> +               if (unlikely(boundary))
+> +                       this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
+> +               ONENAND_SET_NEXT_BUFFERRAM(this);
+> +               buf += thislen;
+>                 thislen = min_t(int, writesize, len - read);
+> -               column = 0;
+> -               cond_resched();
+> -               /* Now wait for load */
+> -               ret = this->wait(mtd, FL_READING);
+> -               onenand_update_bufferram(mtd, from, !ret);
+> +               column = 0;
+> +               cond_resched();
+> +               /* Now wait for load */
+> +               ret = this->wait(mtd, FL_READING);
+> +               onenand_update_bufferram(mtd, from, !ret);
+>                 if (mtd_is_eccerr(ret))
+>                         ret = 0;
+> -       }
+> +       }
+>
+>         /*
+>          * Return success, if no ECC failures, else -EBADMSG
+> --
+> 2.24.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191209210328.18866-1-natechancellor%40gmail.com.
 
-diff --git a/drivers/net/ethernet/dec/tulip/dmfe.c b/drivers/net/ethernet/dec/tulip/dmfe.c
-index 0efdbd1a4a6f..32d470d4122a 100644
---- a/drivers/net/ethernet/dec/tulip/dmfe.c
-+++ b/drivers/net/ethernet/dec/tulip/dmfe.c
-@@ -2214,15 +2214,16 @@ static int __init dmfe_init_module(void)
- 	if (cr6set)
- 		dmfe_cr6_user_set = cr6set;
- 
-- 	switch(mode) {
--   	case DMFE_10MHF:
-+	switch (mode) {
-+	case DMFE_10MHF:
- 	case DMFE_100MHF:
- 	case DMFE_10MFD:
- 	case DMFE_100MFD:
- 	case DMFE_1M_HPNA:
- 		dmfe_media_mode = mode;
- 		break;
--	default:dmfe_media_mode = DMFE_AUTO;
-+	default:
-+		dmfe_media_mode = DMFE_AUTO;
- 		break;
- 	}
- 
-diff --git a/drivers/net/ethernet/dec/tulip/uli526x.c b/drivers/net/ethernet/dec/tulip/uli526x.c
-index b1f30b194300..117ffe08800d 100644
---- a/drivers/net/ethernet/dec/tulip/uli526x.c
-+++ b/drivers/net/ethernet/dec/tulip/uli526x.c
-@@ -1809,8 +1809,8 @@ static int __init uli526x_init_module(void)
- 	if (cr6set)
- 		uli526x_cr6_user_set = cr6set;
- 
-- 	switch (mode) {
--   	case ULI526X_10MHF:
-+	switch (mode) {
-+	case ULI526X_10MHF:
- 	case ULI526X_100MHF:
- 	case ULI526X_10MFD:
- 	case ULI526X_100MFD:
+
+
 -- 
-2.24.0
-
+Thanks,
+~Nick Desaulniers
