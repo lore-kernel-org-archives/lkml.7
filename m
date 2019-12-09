@@ -2,53 +2,74 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E8C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C70BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA13E206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF152073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbfLIIgk (ORCPT
+        id S1727230AbfLIIin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:36:40 -0500
-Received: from verein.lst.de ([213.95.11.211]:41330 "EHLO verein.lst.de"
+        Mon, 9 Dec 2019 03:38:43 -0500
+Received: from mga09.intel.com ([134.134.136.24]:19761 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfLIIgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:36:40 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9500168BE1; Mon,  9 Dec 2019 09:36:37 +0100 (CET)
-Date:   Mon, 9 Dec 2019 09:36:37 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Javier =?iso-8859-1?Q?Gonz=E1lez?= <javier@javigon.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-Subject: Re: [block] f216fdd77b:
- BUG:kernel_reboot-without-warning_in_boot_stage
-Message-ID: <20191209083637.GA15038@lst.de>
-References: <20191208153922.GI32275@shao2-debian> <20191209073152.GA14094@lst.de> <a67a0920-472f-7f86-299a-097bc2986a1c@intel.com>
+        id S1727113AbfLIIin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 03:38:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 00:38:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
+   d="scan'208";a="237673418"
+Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.197.115]) ([10.239.197.115])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Dec 2019 00:38:39 -0800
+Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
+ Write Policy
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     rafael.j.wysocki@intel.com, lenb@kernel.org,
+        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191202070348.32148-1-tao3.xu@intel.com>
+ <5cb15538-7097-1aa1-00a1-ce21c086c13b@intel.com>
+ <20191209075517.GA691602@kroah.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <ba82f0ed-16a9-8058-bc2c-560209750f0c@intel.com>
+Date:   Mon, 9 Dec 2019 16:38:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a67a0920-472f-7f86-299a-097bc2986a1c@intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191209075517.GA691602@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 04:08:56PM +0800, Rong Chen wrote:
-> Hi Christoph,
->
-> Kernel boot failed in early stage with commit "f216fdd77b":
+On 12/9/2019 3:55 PM, Greg KH wrote:
+> On Mon, Dec 09, 2019 at 03:43:21PM +0800, Tao Xu wrote:
+>> Gentle ping :)
+>>
+>> On 12/2/2019 3:03 PM, Tao Xu wrote:
+>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
+>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
+>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
+>>> 2 is "Write Through" for Write Policy.
+>>>
+>>> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+>>> ---
+>>>    drivers/acpi/numa/hmat.c | 4 ++--
+>>>    include/linux/node.h     | 4 ++--
+>>>    2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> It was the middle of the merge window that just ended a few hours ago.
+> Please give maintainers a chance to catch up...
+> 
 
-Well, this config (plus enabling virtio for real) boots just fine for
-me.  There is nothing in your dmesgs, which makes me assume the boot
-stage means really early?  Nothing touched in this commit is involved
-in the very early boot path, though.
+I understand, thanks
