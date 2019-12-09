@@ -2,81 +2,107 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E183C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9BAC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D99220726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD1D206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfLIKNf (ORCPT
+        id S1727237AbfLIKP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:13:35 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:47908 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLIKNe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:13:34 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id bmDU2100k5USYZQ01mDU7x; Mon, 09 Dec 2019 11:13:32 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ieG2i-0003mS-Kz; Mon, 09 Dec 2019 11:13:28 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ieG2i-0006vI-J1; Mon, 09 Dec 2019 11:13:28 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: shmobile: defconfig: Restore debugfs support
-Date:   Mon,  9 Dec 2019 11:13:27 +0100
-Message-Id: <20191209101327.26571-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Dec 2019 05:15:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbfLIKP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 05:15:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 67BABB3E2;
+        Mon,  9 Dec 2019 10:15:24 +0000 (UTC)
+Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
+ pressure
+To:     "Durrant, Paul" <pdurrant@amazon.com>,
+        "Park, Seongjae" <sjpark@amazon.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sj38.park@gmail.com" <sj38.park@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <20191209085839.21215-1-sjpark@amazon.com>
+ <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
+ <026ba79524da43648371e5bca437a5e4@EX13D32EUC003.ant.amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <e913c44e-c898-9504-1e2a-927563563208@suse.com>
+Date:   Mon, 9 Dec 2019 11:15:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <026ba79524da43648371e5bca437a5e4@EX13D32EUC003.ant.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 0e4a459f56c32d3e ("tracing: Remove unnecessary DEBUG_FS
-dependency"), CONFIG_DEBUG_FS is no longer auto-enabled.  This breaks
-booting Debian 9, as systemd needs debugfs:
+On 09.12.19 10:46, Durrant, Paul wrote:
+>> -----Original Message-----
+>> From: Jürgen Groß <jgross@suse.com>
+>> Sent: 09 December 2019 09:39
+>> To: Park, Seongjae <sjpark@amazon.com>; axboe@kernel.dk;
+>> konrad.wilk@oracle.com; roger.pau@citrix.com
+>> Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; Durrant,
+>> Paul <pdurrant@amazon.com>; sj38.park@gmail.com; xen-
+>> devel@lists.xenproject.org
+>> Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
+>> pressure
+>>
+>> On 09.12.19 09:58, SeongJae Park wrote:
+>>> Each `blkif` has a free pages pool for the grant mapping.  The size of
+>>> the pool starts from zero and be increased on demand while processing
+>>> the I/O requests.  If current I/O requests handling is finished or 100
+>>> milliseconds has passed since last I/O requests handling, it checks and
+>>> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
+>>>
+>>> Therefore, `blkfront` running guests can cause a memory pressure in the
+>>> `blkback` running guest by attaching a large number of block devices and
+>>> inducing I/O.
+>>
+>> I'm having problems to understand how a guest can attach a large number
+>> of block devices without those having been configured by the host admin
+>> before.
+>>
+>> If those devices have been configured, dom0 should be ready for that
+>> number of devices, e.g. by having enough spare memory area for ballooned
+>> pages.
+>>
+>> So either I'm missing something here or your reasoning for the need of
+>> the patch is wrong.
+>>
+> 
+> I think the underlying issue is that persistent grant support is hogging memory in the backends, thereby compromising scalability. IIUC this patch is essentially a band-aid to get back to the scalability that was possible before persistent grant support was added. Ultimately the right answer should be to get rid of persistent grants support and use grant copy, but such a change is clearly more invasive and would need far more testing.
 
-    [FAILED] Failed to mount /sys/kernel/debug.
-    See 'systemctl status sys-kernel-debug.mount' for details.
-    [DEPEND] Dependency failed for Local File Systems.
-    ...
-    You are in emergGive root password for maintenance
-    (or press Control-D to continue):
+Persistent grants are hogging ballooned pages, which is equivalent to
+memory only in case of the backend's domain memory being equal or
+rather near to its max memory size.
 
-Fix this by enabling CONFIG_DEBUG_FS explicitly.
+So configuring the backend domain with enough spare area for ballooned
+pages should make this problem much less serious.
 
-See also commit 18977008f44c66bd ("ARM: multi_v7_defconfig: Restore
-debugfs support").
+Another problem in this area is the amount of maptrack frames configured
+for a driver domain, which will limit the number of concurrent foreign
+mappings of that domain.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued as a fix for v5.5.
----
- arch/arm/configs/shmobile_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+So instead of having a blkback specific solution I'd rather have a
+common callback for backends to release foreign mappings in order to
+enable a global resource management.
 
-diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-index 7f0985e023313b57..64fa849f8bbe0617 100644
---- a/arch/arm/configs/shmobile_defconfig
-+++ b/arch/arm/configs/shmobile_defconfig
-@@ -215,4 +215,5 @@ CONFIG_DMA_CMA=y
- CONFIG_CMA_SIZE_MBYTES=64
- CONFIG_PRINTK_TIME=y
- # CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_DEBUG_FS=y
- CONFIG_DEBUG_KERNEL=y
--- 
-2.17.1
 
+Juergen
