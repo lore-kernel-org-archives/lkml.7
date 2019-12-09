@@ -2,71 +2,75 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE3C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F180C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7536320726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143FD20726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:45:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6LUxwqG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yt6S7+mi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfLILpB (ORCPT
+        id S1727578AbfLILpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:45:01 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32972 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfLILpB (ORCPT
+        Mon, 9 Dec 2019 06:45:05 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37858 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfLILpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:45:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so7012843pgk.0;
-        Mon, 09 Dec 2019 03:45:00 -0800 (PST)
+        Mon, 9 Dec 2019 06:45:04 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ep17so5795846pjb.4;
+        Mon, 09 Dec 2019 03:45:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IPlVvddAVkBLckSB5xQwsO5FlMrHgcla5wmGZLf2wA0=;
-        b=O6LUxwqG2ZiFRETIdI+pR6KDi4khLs4++dVjnKtHH9f1Iz8ORTxeRv88a6K9grAx2d
-         ZL9S2dF5SHg03oZFGIgJ+ofhfjDsb6r3UgKMwgtKyfQ1FAiLBFchgbu3SO0DKEflPtCz
-         nZ0lpRPPLkTBiQVI4rb3sqvErbnzKL/jVTh40alilx2Z/6Fsqgy4x8mRL34Y42PneeyY
-         tRBhlB5gqPAzNK8E3dqvTXoeSn+KgV9eQ2b23l73fCWBfp7DuiXF+vAa+iSP7xQ8h7l3
-         qf7lhk97X2tC3Qmi2YNtAGCgj3Qw8eTkkZrrDOv50jhKDg27SHj6TDK98VkhVuW6jq/3
-         AsOA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y0PAkFn9zoMouugxeRSrbgzuXq1FaZx49kjzBfMutLw=;
+        b=Yt6S7+mimnrv0qpJwjBMxmMOWE49TxI1xq5JJlBSzMOglWUgg6h0cUnH6veuPsDzJx
+         XeOyCKBcj0ja8Viz8cRZb2bX2vGDrE68Ao1gX2OFRzjOiRGV5AC7JfIGkQis4d2MV3CI
+         8G+TMqjSkQYYl3uJTOXyHIimToBDLEwvUNXofpSOIknKmfUjw4LMXLXqZbk+95JNGK4b
+         V55Mkwikiy58NNSVkDtnf3aurksEg9U5T8kbFuY2gzNKHRJALMUebaDQnJHjNoeVb2PF
+         Q/RMVIjbT1kx7rXbLnuO/zPxge8aGeVRi8Vg5WVdGvxlQDmDMXLHBcSQiiW4xIDCAyI4
+         Gd0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IPlVvddAVkBLckSB5xQwsO5FlMrHgcla5wmGZLf2wA0=;
-        b=UDoRPx4LtR+YT3OqCb7p9c9QBQRvVbC5VpW0CFoytcHftQn+0nN1kfWpsaZCC0OxcM
-         LlkYBCDfnPF0s+zwB0v1v1BWyqRoKmJzaLQlGFHy/1jwL4LM03MeJkB8T2wgxvBXNlJK
-         o/p/bD4YyglQHFve4NnttQ72h+L81icjib98uEO0YoQphKgYKLLXSQ5QaUyBDWqk4OWe
-         OQJcq2dGNLqsRoO9SLVDw5zpzFReHXHv6lzqrF0GRhx+qGA51FRCbzfoE5W0W5OEsvez
-         i9oGIVi7FKKbvVyJzGFKdc5gzGJqTHoFoNhDRL7uUmj064LSAaJ06ga9tPLijzIePcfX
-         HTVg==
-X-Gm-Message-State: APjAAAVHQQJhuhFxzUsXSz9tH66am+N0Rt5vZFj77NbbCOB2EnRLmmlt
-        kQh8Br99xe6tD96zueMZgBEvdA7x
-X-Google-Smtp-Source: APXvYqyOvhZf0WvxvjusSfLsbdBKS5NIkM7Dlh2IsBYF7/Ve9lehAruLioZ4qFv7hQpDyW18O/ZdqA==
-X-Received: by 2002:aa7:9f94:: with SMTP id z20mr23171842pfr.111.1575891900131;
-        Mon, 09 Dec 2019 03:45:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y0PAkFn9zoMouugxeRSrbgzuXq1FaZx49kjzBfMutLw=;
+        b=VZSJ2iIutNOwiXZpgMtcc+QsDBbFSFSvCSPw/F9zLwvYSjoY12KgDJmUvUfVoVaKXQ
+         ogRhagqnDuPVqK49MJsftQ34hpKdBrmU0H4ub9GgIILb44yDgKE3E6kis7fwaxuO36fH
+         TjeQ1sW42DJtixK6UnjpSfK4KHuuNYGAz5rKGVVySOm29l683YUaFTl/Iani0w/DCwc3
+         nSSNbUkpyP+afVM4scnrk5CUByuUuu4RzBucbRwmiWDfBuYHRTbuK8pfMQo1Ky5D2FLz
+         7AjGj3KRCELgGSC+qzsKLBzTbQLnXEXi20bn1hiwGL4td3uyoK7kIC0UYcfyTJEHP4Vc
+         sU7A==
+X-Gm-Message-State: APjAAAVs7SnLfYtZO2JeOkwH6wfayxhqc+ffpvhN/5XpSOgUJZvbaAPg
+        oYc0LMt39nvzkvKvaWW7DFI=
+X-Google-Smtp-Source: APXvYqycQYwAYmqn/ClsH/V275ospaIry1KVDthbiCvKSCRo1bbCoVnhBDtZtnMM9evtC3TvnKs8mw==
+X-Received: by 2002:a17:90a:3243:: with SMTP id k61mr30237050pjb.55.1575891903761;
+        Mon, 09 Dec 2019 03:45:03 -0800 (PST)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id c8sm27805289pfj.106.2019.12.09.03.44.56
+        by smtp.gmail.com with ESMTPSA id c8sm27805289pfj.106.2019.12.09.03.45.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 03:44:59 -0800 (PST)
+        Mon, 09 Dec 2019 03:45:03 -0800 (PST)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Orson Zhai <orsonzhai@gmail.com>,
         Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH v4 0/3] Add Unisoc's SC9863A support
-Date:   Mon,  9 Dec 2019 19:44:01 +0800
-Message-Id: <20191209114404.22483-1-zhang.lyra@gmail.com>
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v4 1/3] dt-bindings: arm: sprd: add global registers bindings
+Date:   Mon,  9 Dec 2019 19:44:02 +0800
+Message-Id: <20191209114404.22483-2-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191209114404.22483-1-zhang.lyra@gmail.com>
+References: <20191209114404.22483-1-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,48 +78,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SC9863A has Octa-core ARM Cortex A55 application processor. Find more
-details about it on the website: http://www.unisoc.com/sc9863a
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Changes from v3:
-* Rebased on v5.5-rc1;
-* Fix the cpu-map to put all cpus into the single cluster;
-* Fixed a bindings error.
+The global registers would be used by different peripheral devices which
+we can see them as syscon clients which can use regmap interface that
+syscon driver provides.
 
-Changes from v2:
-* Discard some dt-bindings patches which have been applied by Rob Herring.
-* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
-* Moved sprd.yaml to the vendor directory.
-* Addressed comments from Rob:
-- fixed dtbs_check errors;
-- move gic under to the bus node;
-- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
-- added specific compatible string for syscon nodes;
-- cut down registers range of syscon nodes;
-- removed unnecessary property "sprd,sc-id";
-- added earlycon support in devicetree.
-
-Changes from v1: 
-- Convert DT bindings to json-schema.
-
-Chunyan Zhang (3):
-  dt-bindings: arm: sprd: add global registers bindings
-  dt-bindings: arm: move sprd board file to vendor directory
-  arm64: dts: Add Unisoc's SC9863A SoC support
-
- .../bindings/arm/sprd/global-regs.yaml        |  34 ++
- .../bindings/arm/{ => sprd}/sprd.yaml         |   2 +-
- arch/arm64/boot/dts/sprd/Makefile             |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 523 ++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi         | 148 +++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
- 6 files changed, 747 insertions(+), 2 deletions(-)
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ .../bindings/arm/sprd/global-regs.yaml        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
- rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (92%)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
 
+diff --git a/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml b/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+new file mode 100644
+index 000000000000..012207166116
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2019 Unisoc Inc.
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/sprd/global-regs.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Unisoc Global Registers
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - sprd,sc9860-glbregs
++              - sprd,sc9863a-glbregs
++          - const: syscon
++
++  reg:
++    maxItems: 1
++
++examples:
++  - |
++    apb_regs: syscon@402e0000 {
++      compatible = "sprd,sc9863a-glbregs", "syscon";
++      reg = <0x402e0000 0x4000>;
++    };
++
++...
 -- 
 2.20.1
 
