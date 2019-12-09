@@ -2,146 +2,167 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6EFC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A8C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC314207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ALzopFQL"
+	by mail.kernel.org (Postfix) with ESMTP id 4AEB62077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:03:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfLIRDo (ORCPT
+        id S1726879AbfLIRDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:03:44 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39802 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfLIRDo (ORCPT
+        Mon, 9 Dec 2019 12:03:55 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37883 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbfLIRDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:03:44 -0500
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8DB1911B7;
-        Mon,  9 Dec 2019 18:03:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575911021;
-        bh=mr+jK5r3XVWbTZg+DqoafdgX3g3Ns9IRa/wCOjA8Aw0=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ALzopFQLdE116q4/nfvql434YtDl70hiCzN7Ia2v8YuoBv8LCDCjszb/qsHFkoe6g
-         EnROZb0gxF8lSRLQkomQMjB6ZBIy3iS7/S26J0KRJPuBPse7+9prD3ZfhMeeZEvvf/
-         sPCZHNrFFGZKdDGUenulZK97IKPw/RJ9IF/P9X9Y=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: Regulator probe on demand (or circular dependencies)
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
- <20191209163755.GF5483@sirena.org.uk>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <d7003d64-e838-9dcb-8c61-d6567ff6eb69@ideasonboard.com>
-Date:   Mon, 9 Dec 2019 17:03:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Dec 2019 12:03:54 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so17117688wru.4;
+        Mon, 09 Dec 2019 09:03:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:reply-to:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7QOUlkYUUcL9RJraaiKsihHk7jZjKK6PuheJk93ZnR8=;
+        b=ctEOjv8hYW1/QL2SnxSD7+hHIKBNiMHTop+gaLx5eyNbx4ti9Pit40arXxbDgusB3P
+         dOiAu0L9eNgHBH1hqDsDpQyl0hd0gEk9b+0Xhssne9CheyfgmUWV+hlQunTxwGBOa+Qf
+         i9xRcfAhazyMkzeWzFLzhZ5uUrxe1Au/Fh5rpUsodcnupBInUb7/jewxaO4/KWHMXthu
+         M62Y7g0WhDyG6BHYAkygS6qTL5bLYc6x1doUXFX6Vw1IfZgtSEaBPNCvNdkOtvLa/wB5
+         yAi2W9yrrBImkKJk/9LQJcLQvK2/qh3n7V0lxWQkpZdhqbyIoym4AbiczPM7UdezZUqy
+         h6NQ==
+X-Gm-Message-State: APjAAAWSNAuIkdLCK0btiT1Au1PtgoNKvFnzbkegGlEHYQ3Qmaqw4ORw
+        BmLfca3QO4I4ZplhLcLwNbs=
+X-Google-Smtp-Source: APXvYqyXeQqJ7RT1D+Sl1ilUP24lFuVIODYGVL4QNseqeCGV72i6jF8Qc0eGYSNZhQo8KVsbqYHMSA==
+X-Received: by 2002:a5d:5308:: with SMTP id e8mr3274981wrv.77.1575911032440;
+        Mon, 09 Dec 2019 09:03:52 -0800 (PST)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id j12sm78312wrw.54.2019.12.09.09.03.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 09:03:51 -0800 (PST)
+Subject: Re: [PATCH v3] floppy: hide invalid floppy disk types
+To:     =?UTF-8?Q?Moritz_M=c3=bcller?= <moritzm.mueller@posteo.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de
+Cc:     "Philip K ." <philip@warpmail.net>
+References: <d3f0613c-6c3a-8efc-1c27-a6b75c34972f@gmail.com>
+ <20191209093258.14319-1-moritzm.mueller@posteo.de>
+Reply-To: efremov@linux.com
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <6e2c358c-6cfb-88cd-7bc8-3d4c87bb85be@linux.com>
+Date:   Mon, 9 Dec 2019 20:03:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191209163755.GF5483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
+In-Reply-To: <20191209093258.14319-1-moritzm.mueller@posteo.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Hi,
 
-Thanks for getting back to me,
-
-On 09/12/2019 16:37, Mark Brown wrote:
-> On Fri, Dec 06, 2019 at 04:38:04PM +0000, Kieran Bingham wrote:
+On 12/9/19 12:32 PM, Moritz Müller wrote:
+> In some cases floppy disks are being indexed, even though no actual
+> device exists. In our case this was caused by the CMOS-RAM having a few
+> peculiar bits. This caused a non-existent floppy disk of the type 13 (in
+> our case) to be registered as an possibly mountable device, even though
+> it could not be mounted by any user.
 > 
->> The MAX9286 also exposes 2 GPIO pins, as such I have configured the
->> MAX9286 driver [1] to expose a gpio-chip [2].
+> We believe this to be an instance of this bug:
 > 
-> So this seems like a MFD then?  The nice thing about using the MFD
-> subsystem is that it means that the drivers for the various subsystems
-> on the device can instantiate in any order and defer separately without
-> interfering with each other which seems like it's the issue here.
-
-Well that's part of the problem... the V4L2 async framework can not
-currently support the device performing a probe-defer at all, so it
-*will* fail later (and crash currently).
-
-I hope we can fix this sometime - but it's a recurring pain point it
-seems. Unless it's just our video-capture driver, I'll have to dig
-deeper here, and check with Niklas.
-
-
->>  - is there anything I can do here within regulator_dev_lookup() to
->>    attempt creating the regulator_dev 'on-demand' when
->>    of_find_regulator_by_node(node) returns empty? (or is that crazy, and
->>    just a rabbit-hole?)
+>  https://bugzilla.kernel.org/show_bug.cgi?id=13486
+>  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/384579
 > 
-> This seems like a terrible idea, you'll have a half baked regulator in
-> the system which will need special casing all over the place and
-> doubtless be an ongoing source of bugs.
+> This patch adds the option FLOPPY_ALLOW_UNKNOWN_TYPES to prevent the
+> additional check that fixed the issue on our reference system, and
+> increases the startup time of affected systems by over a minute.
+> 
+> Co-developed-by: Philip K. <philip@warpmail.net>
+> Signed-off-by: Philip K. <philip@warpmail.net>
+> Signed-off-by: Moritz Müller <moritzm.mueller@posteo.de>
 
-Thanks - that's essentially what I'm glad to hear /before/ going down
-some rabbit hole. I'll re-evaluate with the team, and see what the next
-best steps are.
+Thank you for the patch!
 
--- 
-Regards
---
-Kieran
+Have you tested your patch with FLOPPY_ALLOW_UNKNOWN_TYPES and without
+FLOPPY_ALLOW_UNKNOWN_TYPES?
+
+I will answer about motivation for this change in V2 branch of the patch.
+
+> ---
+>  drivers/block/Kconfig  | 10 ++++++++++
+>  drivers/block/floppy.c |  6 ++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+> index 1bb8ec575352..9e6b32c50b67 100644
+> --- a/drivers/block/Kconfig
+> +++ b/drivers/block/Kconfig
+> @@ -72,6 +72,16 @@ config AMIGA_Z2RAM
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called z2ram.
+>  
+> +config FLOPPY_ALLOW_UNKNOWN_TYPES
+> +	bool "Allow floppy disks of unknown type to be registered."
+> +	default n
+> +	help
+> +	  Select this option if you want the Kernel to register floppy
+> +	  disks of an unknown type.
+> +
+> +	  This should usually not be enabled, because of cases where the
+> +	  system falsely recognizes a non-existent floppy disk as mountable.
+> +
+>  config CDROM
+>  	tristate
+>  	select BLK_SCSI_REQUEST
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> index 485865fd0412..9439444d46d0 100644
+> --- a/drivers/block/floppy.c
+> +++ b/drivers/block/floppy.c
+> @@ -3949,7 +3949,11 @@ static void __init config_types(void)
+>  			} else
+>  				allowed_drive_mask &= ~(1 << drive);
+>  		} else {
+> +#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
+>  			params = &default_drive_params[0].params;
+> +#else
+> + 			params = UDP;
+> +#endif
+>  			snprintf(temparea, sizeof(temparea),
+>  				 "unknown type %d (usb?)", type);
+>  			name = temparea;
+
+Maybe just skip the else branch completely here? This will omit
+snprintf, following if (name) block and UDP update.
+
++#ifdef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
+                        params = &default_drive_params[0].params;
+                        snprintf(temparea, sizeof(temparea),
+                                 "unknown type %d (usb?)", type);
+                        name = temparea;
++#else
++                       continue;
++#endif
+
+
+> @@ -4518,7 +4520,10 @@ static bool floppy_available(int drive)
+>  		return false;
+>  	if (fdc_state[FDC(drive)].version == FDC_NONE)
+>  		return false;
+> +#ifndef CONFIG_FLOPPY_ALLOW_UNKNOWN_TYPES
+> +	if (UDP->cmos >= ARRAY_SIZE(default_drive_params))
+> +		return false;
+> +#endif
+>  	return true;
+>  }
+>  
+> 
+
+Thanks,
+Denis
