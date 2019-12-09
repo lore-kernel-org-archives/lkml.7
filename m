@@ -5,67 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7106FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5332C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DD720692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BA820692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBnrp6ld"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MugDM+mL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfLIQVz (ORCPT
+        id S1726823AbfLIQWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:21:55 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46061 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfLIQVz (ORCPT
+        Mon, 9 Dec 2019 11:22:20 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41232 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLIQWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:21:55 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so7464095pfg.12;
-        Mon, 09 Dec 2019 08:21:54 -0800 (PST)
+        Mon, 9 Dec 2019 11:22:20 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so7482356pfd.8;
+        Mon, 09 Dec 2019 08:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=70oqW20/DJHzjlf28vSOcRGe1yLG+Cg2RK6l9FagL/c=;
-        b=OBnrp6ldO9XdylaMgI5/cr9oWs8jDGq/zWcPAWIaikmOEPJNw2qdUzxC+/YcmlCw0V
-         Y7KjpfRCnIiqe4G9IETiAXRW4MdRb6JSDi2Y54sI7QlifOqE9qZMcdFJa5WvGx4BxAMl
-         9GHwbSrvo3NucwGJMFvAO6p1185lyaPrLhYyp4RTkczwBUxwiEsMtcPaqEthZcF8WJcY
-         5h2ymoCBeGF0lgkNF+t49yVm9wv85bei0UJcbmN0704g+/lar2QVoYbNoGWs5VrbIKRj
-         Vqvmx3WAqPB7xEdOQkDYggvY72KwgxBMFuMu68zFaDcz93Vi2h71iTgjGulOyAhXNg0Z
-         wbpw==
+        bh=1WchXByJdtEUq90E1n/vrDWDGRooLaARsJZ93BiIjh4=;
+        b=MugDM+mL+KSCPyqjfhhBXj9LjxiGzJb5I2Z3C8EHAV8QVerqqSPA9KemYncix6rnsd
+         OVjezkkRyH6ybNmQ8s3s4+rZT4hAU+zeGHjX809S7p0lJPY83r/W6b8U/C+OKP8nvNxC
+         43/MgzRWHTGr9zroE2VHUZmRYeshEBe6Ifl3KWYZANOuRoRqPs6NgfKA+3VDxC1eiaEA
+         a+QGVmPBbT/yNfzHL0RouwRtR9IpqrhA8ukMaVYzP7BidTxpY3u2dGrO0Ae2Hr5oaJC9
+         n1QKEhgPFoehNUqBrqUFn4jiHkhpN7F/CeeWTy8kAD6TT5h4r0SoSogNWDn3O0W+YUQe
+         FwRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=70oqW20/DJHzjlf28vSOcRGe1yLG+Cg2RK6l9FagL/c=;
-        b=rqG0VOnYpLIjDWJmCz1YynEnEK3vFHafAFUz+UdfGqU9BoVtbVNOIXA4chVCxNEjmA
-         ihsqHBJjcOsVrjadviwwXe3YtHS2CHr8/MofWNWRt+vc8j3ASZh0qwFs753qasNp9CjM
-         91Okt9OZWnqzgHhLOM8C3DuyuZqHWFdm7ft0QdQeOQMufjCChtNb2j5HiQkDjD4cIeCR
-         6GOEhEx4axPghrSK7KKiIhxomogZ1y0iGHwo85Pym5nFAiFnf+O+fTPilpD6aKEO3wBO
-         rdOR8NH/TAcLYWT+ac62klz1DpCMFBSR7DvhYX2XUBLTlRyYjuYRLp3uGTxcLGLi0NJw
-         VnJw==
-X-Gm-Message-State: APjAAAUtX+r2zC2MjYwxUTESwh4XdUbltZ6KFOjgE5rAGTP1nDSPX9++
-        xZJg/QnWtzzcvm4RGA+tQN8=
-X-Google-Smtp-Source: APXvYqwo9qI45m5jDokO8HihKyUyIE6CPbZT1X7EJ7Eh7j/3O3eilTlx22kkYK4520v5d9URHJbPxg==
-X-Received: by 2002:a62:ac15:: with SMTP id v21mr30819253pfe.48.1575908514461;
-        Mon, 09 Dec 2019 08:21:54 -0800 (PST)
+        bh=1WchXByJdtEUq90E1n/vrDWDGRooLaARsJZ93BiIjh4=;
+        b=c0VSm2vC8jjwAb+rbwhckBVWaQWHm9yKGRGn5v9Rfu89Ph+lSHRej7nBaGbmJ4dysv
+         E1ce91dYkVhcIafMRn+MvBN5xEuw0vMYpnty571Z9aXPVUvGEdfYtRgUOAN81tq6xdwd
+         Bmnfbr/gUc+tN9MQVhzQqT0i4877mEcMOLVaAyYxTGKsPwXLKSjTR89X5OpNzREqdRKE
+         q89rEY5Xk05Fl4YvXN0Nbz0WdX3OA1jNhHh0f9HGzzvUjeeNrDH07tcmQdS4VzC+vzOW
+         Q8TGOApO95GNBfF1K3gk7Jdrol4yFob56dKCYcpDIeMM4Ua3flul4aNdTbe85HJAuk/g
+         qAHw==
+X-Gm-Message-State: APjAAAVBG+4YChqHzRs22Z8BUd/yLbMlFBjmIhooN0P3ykajXJXmeF80
+        6MPTVLjXwOe/+ZFPK8/7WneCno5AGHU=
+X-Google-Smtp-Source: APXvYqwhWzAsuYvQLN0xKCm+fPbIVs0ilIo5yZp/kpbRUMNEqJ7Z5ywErb8fmqFQ1dQu+zf4drHaAw==
+X-Received: by 2002:a63:6d0e:: with SMTP id i14mr20013323pgc.12.1575908539486;
+        Mon, 09 Dec 2019 08:22:19 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o8sm202614pjo.7.2019.12.09.08.21.50
+        by smtp.gmail.com with ESMTPSA id u10sm46106pgg.41.2019.12.09.08.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 08:21:53 -0800 (PST)
+        Mon, 09 Dec 2019 08:22:18 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jamie Iles <jamie@jamieiles.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v4 resend] crypto: picoxcell: adjust the position of tasklet_init and fix missed tasklet_kill
-Date:   Tue, 10 Dec 2019 00:21:44 +0800
-Message-Id: <20191209162144.14877-1-hslester96@gmail.com>
+Subject: [PATCH] fjes: fix missed check in fjes_acpi_add
+Date:   Tue, 10 Dec 2019 00:22:07 +0800
+Message-Id: <20191209162207.14934-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,61 +73,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since tasklet is needed to be initialized before registering IRQ
-handler, adjust the position of tasklet_init to fix the wrong order.
+fjes_acpi_add() misses a check for platform_device_register_simple().
+Add a check to fix it.
 
-Besides, to fix the missed tasklet_kill, this patch adds a helper
-function and uses devm_add_action to kill the tasklet automatically.
-
-Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Fixes: 658d439b2292 ("fjes: Introduce FUJITSU Extended Socket Network Device driver")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-Changes in v4:
-  - Use devm_add_action instead of devm_add_action_or_reset.
+ drivers/net/fjes/fjes_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/crypto/picoxcell_crypto.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/crypto/picoxcell_crypto.c b/drivers/crypto/picoxcell_crypto.c
-index 29da449b3e9e..d187312b9864 100644
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -1595,6 +1595,11 @@ static const struct of_device_id spacc_of_id_table[] = {
- MODULE_DEVICE_TABLE(of, spacc_of_id_table);
- #endif /* CONFIG_OF */
- 
-+static void spacc_tasklet_kill(void *data)
-+{
-+	tasklet_kill(data);
-+}
+diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+index b517c1af9de0..91a1059517f5 100644
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -166,6 +166,9 @@ static int fjes_acpi_add(struct acpi_device *device)
+ 	/* create platform_device */
+ 	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+ 						   ARRAY_SIZE(fjes_resource));
++	if (IS_ERR(plat_dev))
++		return PTR_ERR(plat_dev);
 +
- static int spacc_probe(struct platform_device *pdev)
- {
- 	int i, err, ret;
-@@ -1637,6 +1642,14 @@ static int spacc_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
+ 	device->driver_data = plat_dev;
  
-+	tasklet_init(&engine->complete, spacc_spacc_complete,
-+		     (unsigned long)engine);
-+
-+	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
-+			      &engine->complete);
-+	if (ret)
-+		return ret;
-+
- 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
- 			     engine->name, engine)) {
- 		dev_err(engine->dev, "failed to request IRQ\n");
-@@ -1694,8 +1707,6 @@ static int spacc_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&engine->completed);
- 	INIT_LIST_HEAD(&engine->in_progress);
- 	engine->in_flight = 0;
--	tasklet_init(&engine->complete, spacc_spacc_complete,
--		     (unsigned long)engine);
- 
- 	platform_set_drvdata(pdev, engine);
- 
+ 	return 0;
 -- 
 2.24.0
 
