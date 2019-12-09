@@ -2,103 +2,131 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB6C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DF4C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A05206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOBkGJs+"
+	by mail.kernel.org (Postfix) with ESMTP id F2808206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLITMq (ORCPT
+        id S1726890AbfLITOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:12:46 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34291 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLITMq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:12:46 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d202so14129036qkb.1;
-        Mon, 09 Dec 2019 11:12:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q2n3Ep3oTE0Cvd+RIe5uHUhooskIBzQpsbGGxGO3Chk=;
-        b=mOBkGJs+38FH69k+F7+s119d8qSe86/v7VrixRpQhmiBBj7z/n2jAeIMjE0pnagRjY
-         6R9W1S5UYd7sagDHr9/SW2+SN+rNkp63Dg9qTPP0dAg3LNHbEYbUHgB7IQbjWYjXyIyn
-         Bi7zbwed108OaMBZ+QJRZJp9ialxwYt7gwbeV31gnABXV6FRu85ASppn0ecWefBt+cxg
-         WOQ5G30lzC1duAlaipqaecjxBgGl9ogRnHkdlCzoWANSJk0SIC1CcfVApvVWlb61fJBa
-         bcYQPp02ZTPo9skJMoxd3hDbLc6iCml/jMOeeegDk75vuaUX5qu0TMmIl+VpFzwdfW7B
-         2WKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q2n3Ep3oTE0Cvd+RIe5uHUhooskIBzQpsbGGxGO3Chk=;
-        b=dPoK+S0oRJhShRBsgDI4Ce+QiaRxmDz+klp+gbsaFo5kiJXNCNf1XF/Ukgc0FVMW6a
-         JCec29x752Qy40UGFyv7YxWWR5Ks7Ci3FcGq7+ChMoKUQc+YwzWuUXOOfMzRCypwfBwD
-         QYwBpOwwjQ/VWFkVkCgp76iEJFURFnDwV73tIpLeCOAfqyoNKjchanC7xaytWMNg6eXO
-         I+I0N/lYqTiTVensZeL5mv+wq4rbajaOx/FQNa3+WZ+xfgGSBwFzPIQ2gSqjhdxvfXpY
-         uye55ZZX6sOjjqJfEdHLgx+Q8I93QfhyTh0mys7NxRygD3bOm9FVxw9JmPwIrdOYjdeH
-         qQnA==
-X-Gm-Message-State: APjAAAUTfiAZaUJasWtrwPYnaVH7Qgl/5V0ZhEIlseWcm7bN4s/z+J+G
-        0Sq3OJ7U4j2WavCxSxZxh/k=
-X-Google-Smtp-Source: APXvYqzieak4udGQsL5U1LHgU7o/hQRs0IaSDXl7JFWCmqe0v+TRHhSL6p4TUPtXh5v3iZSdTs/k2A==
-X-Received: by 2002:a37:5b41:: with SMTP id p62mr4897197qkb.442.1575918764987;
-        Mon, 09 Dec 2019 11:12:44 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id y26sm176564qtc.94.2019.12.09.11.12.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 11:12:44 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 9 Dec 2019 14:12:42 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Mon, 9 Dec 2019 14:14:04 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:56026 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLITOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:14:04 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ieOTk-00025k-Lg; Mon, 09 Dec 2019 12:13:57 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1ieOTd-0001Me-0k; Mon, 09 Dec 2019 12:13:49 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Subject: Re: [PATCH 6/6] efi/earlycon: Remap entire framebuffer after page
- initialization
-Message-ID: <20191209191242.GA3075464@rani.riverdale.lan>
-References: <20191206165542.31469-1-ardb@kernel.org>
- <20191206165542.31469-7-ardb@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Mon,  9 Dec 2019 12:13:40 -0700
+Message-Id: <20191209191346.5197-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191206165542.31469-7-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, akpm@linux-foundation.org, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, will@kernel.org, luto@kernel.org, peterz@infradead.org, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH 0/6] Allow setting caching mode in arch_add_memory() for P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 04:55:42PM +0000, Ard Biesheuvel wrote:
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> When commit 69c1f396f25b
-> 
->   "efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation"
-> 
-> moved the x86 specific EFI earlyprintk implementation to a shared location,
-> it also tweaked the behaviour. In particular, it dropped a trick with full
-> framebuffer remapping after page initialization, leading to two regressions:
-> 1) very slow scrolling after page initialization,
-> 2) kernel hang when the 'keep_bootcon' command line argument is passed.
-> 
-> Putting the tweak back fixes #2 and mitigates #1, i.e., it limits the slow
-> behavior to the early boot stages, presumably due to eliminating heavy
-> map()/unmap() operations per each pixel line on the screen.
-> 
+Hi,
 
-Could the efi earlycon have an interaction with PCI resource allocation,
-similar to what commit dcf8f5ce3165 ("drivers/fbdev/efifb: Allow BAR to
-be moved instead of claiming it") fixed for efifb?
+Currently, the page tables created using memremap_pages() are always
+created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
+is creating pages for PCI BAR memory which should never be accessed
+through the cache and instead use either WC or UC. This still works in
+most cases, on x86, because the MTRR registers typically override the
+caching settings in the page tables for all of the IO memory to be
+UC-. However, this tends not to work so well on other arches or
+some rare x86 machines that have firmware which does not setup the
+MTRR registers in this way.
+
+Instead of this, this series proposes a change to arch_add_memory()
+to take the pgprot required by the mapping which allows us to
+explicitly set pagetable entries for P2PDMA memory to WC.
+
+This changes is pretty routine for most of the arches: x86_64, s390, arm64
+and powerpc simply need to thread the pgprot through to where the page tables
+are setup. x86_32 unfortunately sets up the page tables at boot so
+must use _set_memory_prot() to change their caching mode. ia64 and sh
+don't appear to have an easy way to change the page tables so, for now
+at least, we just return -EINVAL on such mappings and thus they will
+not support P2PDMA memory until the work for this is done.
+
+Thanks,
+
+Logan
+
+--
+
+Logan Gunthorpe (6):
+  x86/mm: Thread pgprot_t through init_memory_mapping()
+  x86/mm: Introduce _set_memory_prot()
+  powerpc/mm: Thread pgprot_t through create_section_mapping()
+  s390/mm: Thread pgprot_t through vmem_add_mapping()
+  mm, memory_hotplug: Provide argument for the pgprot_t in
+    arch_add_memory()
+  mm/memremap: Set caching mode for PCI P2PDMA memory to WC
+
+ arch/arm64/mm/mmu.c                        |  4 +--
+ arch/ia64/mm/init.c                        |  5 +++-
+ arch/powerpc/include/asm/book3s/64/hash.h  |  3 +-
+ arch/powerpc/include/asm/book3s/64/radix.h |  3 +-
+ arch/powerpc/include/asm/sparsemem.h       |  3 +-
+ arch/powerpc/mm/book3s64/hash_utils.c      |  5 ++--
+ arch/powerpc/mm/book3s64/pgtable.c         |  7 +++--
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 +++++++-----
+ arch/powerpc/mm/mem.c                      |  7 +++--
+ arch/s390/include/asm/pgtable.h            |  3 +-
+ arch/s390/mm/extmem.c                      |  3 +-
+ arch/s390/mm/init.c                        |  4 +--
+ arch/s390/mm/vmem.c                        | 10 +++----
+ arch/sh/mm/init.c                          |  5 +++-
+ arch/x86/include/asm/page_types.h          |  3 --
+ arch/x86/include/asm/pgtable.h             |  3 ++
+ arch/x86/include/asm/set_memory.h          |  1 +
+ arch/x86/kernel/amd_gart_64.c              |  3 +-
+ arch/x86/mm/init.c                         |  9 +++---
+ arch/x86/mm/init_32.c                      | 10 +++++--
+ arch/x86/mm/init_64.c                      | 34 ++++++++++++----------
+ arch/x86/mm/mm_internal.h                  |  3 +-
+ arch/x86/mm/pageattr.c                     |  7 +++++
+ arch/x86/platform/efi/efi_64.c             |  3 +-
+ include/linux/memory_hotplug.h             |  2 +-
+ mm/memory_hotplug.c                        |  2 +-
+ mm/memremap.c                              |  5 +++-
+ 27 files changed, 104 insertions(+), 61 deletions(-)
+
+--
+2.20.1
