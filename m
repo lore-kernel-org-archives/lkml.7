@@ -2,177 +2,110 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ADCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63222C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D54C206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j6Tb2U+e"
+	by mail.kernel.org (Postfix) with ESMTP id 40FEA206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLIVSp (ORCPT
+        id S1726949AbfLIVTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:18:45 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:45544 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLIVSn (ORCPT
+        Mon, 9 Dec 2019 16:19:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726780AbfLIVTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:18:43 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9LEJTt099179;
-        Mon, 9 Dec 2019 21:18:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=DcHo2qcfzMbQlUOHHHSb+VlsPwDr5lda2gZcp52PhOE=;
- b=j6Tb2U+ealnyosc4c714KslmFt3jbEt3DAhcv9T//5gCV1QRXwhsJkLrUa1Anbc7I3uX
- cvHGFHPs1PCwHF/QVkOK+dj0n68DoD4JKjuqxigScmCdkdGmmKsj8cc613fEACR4q73E
- dTd6bFJBVgqYiO0a7kcIm3GnnMC2ouWCtP41GcBWF94n0IH8Gz06/U7k0A66PizPLmve
- tFNmgnd2Sla5GF+Xur5UZNw/cF+TuPz9wFYCm+jSnXfcVGIV5gcvIyoQlq4WibRiAZPL
- ugcYOjQHvZ250UTq2DnSdImkWT/+3DNpWNdvu6brKG4/u5Z0+C3H08fZKCCYYejMahNk pQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wr41q28yv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Dec 2019 21:18:34 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xB9LDike192068;
-        Mon, 9 Dec 2019 21:18:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2wsv8amj78-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Dec 2019 21:18:34 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xB9LHLtl022412;
-        Mon, 9 Dec 2019 21:17:21 GMT
-Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Dec 2019 13:17:21 -0800
-Subject: Re: [PATCH] xen/pciback: Prevent NULL pointer dereference in
- quirks_show
-To:     "Nuernberger, Stefan" <snu@amazon.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Seidel, Conny" <consei@amazon.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "ross.lagerwall@citrix.com" <ross.lagerwall@citrix.com>,
-        "Dannowski, Uwe" <uwed@amazon.de>
-References: <20191206134804.4537-1-snu@amazon.com>
- <9917a357-12f6-107f-e08d-33e464036317@oracle.com>
- <1575655787.7257.42.camel@amazon.de>
- <4bc83b82-427f-2215-3161-5776867675a1@oracle.com>
- <1575915416.21160.49.camel@amazon.de>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <7e20daf7-e351-205d-183d-5861e0839c66@oracle.com>
-Date:   Mon, 9 Dec 2019 16:21:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <1575915416.21160.49.camel@amazon.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 9 Dec 2019 16:19:04 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9LHQaB062868
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 16:19:03 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt9xctb6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:19:02 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 9 Dec 2019 21:19:01 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 21:18:57 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9LIFHH44957952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 21:18:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE22F11C04C;
+        Mon,  9 Dec 2019 21:18:56 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3AEC011C050;
+        Mon,  9 Dec 2019 21:18:55 +0000 (GMT)
+Received: from dhcp-9-31-102-17.watson.ibm.com (unknown [9.31.102.17])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Dec 2019 21:18:55 +0000 (GMT)
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>
+Cc:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Date:   Mon, 09 Dec 2019 16:18:54 -0500
+In-Reply-To: <20191209194715.GD19243@linux.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E49096521@shsmsx102.ccr.corp.intel.com>
+         <1575057916.6220.7.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909BA3B@shsmsx102.ccr.corp.intel.com>
+         <1575260220.4080.17.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+         <1575267453.4080.26.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+         <1575269075.4080.31.camel@linux.ibm.com>
+         <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+         <1575312932.24227.13.camel@linux.ibm.com>
+         <20191209194715.GD19243@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912090167
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912090167
+X-TM-AS-GCONF: 00
+x-cbid: 19120921-0020-0000-0000-00000395FAE1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120921-0021-0000-0000-000021ED3888
+Message-Id: <1575926334.4557.17.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ suspectscore=0 mlxscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ adultscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ mlxlogscore=879 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-12-09 at 21:47 +0200, Jarkko Sakkinen wrote:
+> On Mon, Dec 02, 2019 at 10:55:32AM -0800, James Bottomley wrote:
+> > blob but it looks like we need to fix the API.  I suppose the good news
+> > is given this failure that we have the opportunity to rewrite the API
+> > since no-one else can have used it for anything because of this.  The
+> 
+> I did successfully run this test when I wrote it 5 years ago:
+> 
+> https://github.com/jsakkine-intel/tpm2-scripts/blob/master/keyctl-smoke.sh
 
-On 12/9/19 1:16 PM, Nuernberger, Stefan wrote:
-> On Fri, 2019-12-06 at 15:15 -0500, Boris Ostrovsky wrote:
->> On 12/6/19 1:09 PM, Nuernberger, Stefan wrote:
->>> On Fri, 2019-12-06 at 10:11 -0500, Boris Ostrovsky wrote:
->>>> On 12/6/19 8:48 AM, Stefan Nuernberger wrote:
->>>>> From: Uwe Dannowski <uwed@amazon.de>
->>>>>   
->>>>>   		list_for_each_entry(cfg_entry, &dev_data-
->>>>>> config_fields, list) {
->>>> Couldn't you have the same race here?
->>> Not quite the same, but it might not be entirely safe yet. The
->>> 'quirks_show' takes the 'device_ids_lock' and races with unbind /
->>> 'pcistub_device_release' "which takes device_lock mutex". So this
->>> might
->>> now be a UAF read access instead of a NULL pointer dereference.
->> Yes, that's what I meant (although I don't see much difference in
->> this
->> context).
-> Well, the NULL ptr access causes an instant kernel panic whereas we
-> have not attributed crashes to the possible UAF read until now.
->
->>>   We have
->>> not observed adversarial effects in our testing (compared to the
->>> obvious issues with NULL pointer) but that's not a guarantee of
->>> course.
->>>
->>> So should quirks_show actually be protected by pcistub_devices_lock
->>> instead as are other functions that access dev_data? Does it need
->>> both
->>> locks in that case?
->> device_ids_lock protects device_ids list, which is not what you are
->> trying to access, so that doesn't look like right lock to hold. And
->> AFAICT pcistub_devices_lock is not held when device data is cleared
->> in
->> pcistub_device_release() (which I think is where we are racing).
-> Indeed. The xen_pcibk_quirks list does not have a separate lock to
-> protect it. It's either modified under 'pcistub_devices_lock', from
-> pcistub_remove(), or iterated over with the 'device_ids_lock' held in
-> quirks_show(). Also the quirks list is amended from
->    pcistub_init_device()
->      -> xen_pcibk_config_init_dev()
->        -> xen_pcibk_config_quirks_init()
-> without holding any lock at all. In fact the
-> pcistub_init_devices_late() and pcistub_seize() functions deliberately
-> release the pcistub_devices_lock before calling pcistub_init_device().
-> This looks broken.
+Thanks, Jarkko.  Is this test still working or is there a regression?
 
-
-Indeed.
-
-
->
-> The race is between
->    pcistub_remove()
->      -> pcistub_device_put()
->        -> pcistub_device_release()
-> on one side and the quirks_show() on the other side. The problematic
-> quirk is freed from the xen_pcibk_quirks list in pcistub_remove() early
-> on under pcistub_devices_lock before the associated dev_data is freed
-> eventually. So switching from device_ids_lock to pcistub_devices_lock
-> in quirks_show() could be sufficient to always have valid dev_data for
-> all quirks in the list.
-
-
-Yes, that should do it. (I missed xen_pcibk_config_quirk_release() call, 
-which is why I wasn't sure pcistub_devices_lock is held where necessary).
-
-
->
-> There is also pcistub_put_pci_dev() possibly in the race, called from
-> xen_pcibk_remove_device(), or xen_pcibk_xenbus_remove(), or
-> pcistub_remove(). The pcistub_remove() call site is safe when we switch
-> to pcistub_devices_lock (same reasoning as above). For the others I
-> currently do not see when the quirks are ever freed?
-
-
-I wonder whether we should call xen_pcibk_config_quirk_release() from 
-pcistub_device_release() under pcistub_devices_lock.
-
-
--boris
+Mimi
 
