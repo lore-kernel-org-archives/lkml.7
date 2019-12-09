@@ -2,42 +2,44 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1011C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22831C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897022068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F93222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfLINzX (ORCPT
+        id S1727495AbfLIN5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:55:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59704 "EHLO mx1.suse.de"
+        Mon, 9 Dec 2019 08:57:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60392 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727268AbfLINzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:55:23 -0500
+        id S1726687AbfLIN5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:57:51 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B3B57AC3F;
-        Mon,  9 Dec 2019 13:55:20 +0000 (UTC)
-Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
- FRONT/BACK_RING_ATTACH
+        by mx1.suse.de (Postfix) with ESMTP id DC6FAAC3C;
+        Mon,  9 Dec 2019 13:57:49 +0000 (UTC)
+Subject: Re: [PATCH 4/4] xen-blkback: support dynamic unbind/bind
 To:     Paul Durrant <pdurrant@amazon.com>, linux-kernel@vger.kernel.org,
         xen-devel@lists.xenproject.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>
 References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-4-pdurrant@amazon.com>
+ <20191205140123.3817-5-pdurrant@amazon.com>
 From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
-Date:   Mon, 9 Dec 2019 14:55:19 +0100
+Message-ID: <bbf958af-d435-3a56-1e91-e068125a9ce7@suse.com>
+Date:   Mon, 9 Dec 2019 14:57:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191205140123.3817-4-pdurrant@amazon.com>
+In-Reply-To: <20191205140123.3817-5-pdurrant@amazon.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -47,83 +49,35 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 05.12.19 15:01, Paul Durrant wrote:
-> Currently these macros will skip over any requests/responses that are
-> added to the shared ring whilst it is detached. This, in general, is not
-> a desirable semantic since most frontend implementations will eventually
-> block waiting for a response which would either never appear or never be
-> processed.
+> By simply re-attaching to shared rings during connect_ring() rather than
+> assuming they are freshly allocated (i.e assuming the counters are zero)
+> it is possible for vbd instances to be unbound and re-bound from and to
+> (respectively) a running guest.
 > 
-> NOTE: These macros are currently unused. BACK_RING_ATTACH(), however, will
->        be used in a subsequent patch.
+> This has been tested by running:
 > 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> ---
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> ---
->   include/xen/interface/io/ring.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> while true; do dd if=/dev/urandom of=test.img bs=1M count=1024; done
 > 
-> diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
-> index 3f40501fc60b..405adfed87e6 100644
-> --- a/include/xen/interface/io/ring.h
-> +++ b/include/xen/interface/io/ring.h
-> @@ -143,14 +143,14 @@ struct __name##_back_ring {						\
->   #define FRONT_RING_ATTACH(_r, _s, __size) do {				\
->       (_r)->sring = (_s);							\
->       (_r)->req_prod_pvt = (_s)->req_prod;				\
-> -    (_r)->rsp_cons = (_s)->rsp_prod;					\
-> +    (_r)->rsp_cons = (_s)->req_prod;					\
->       (_r)->nr_ents = __RING_SIZE(_s, __size);				\
->   } while (0)
->   
->   #define BACK_RING_ATTACH(_r, _s, __size) do {				\
->       (_r)->sring = (_s);							\
->       (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
-> -    (_r)->req_cons = (_s)->req_prod;					\
-> +    (_r)->req_cons = (_s)->rsp_prod;					\
->       (_r)->nr_ents = __RING_SIZE(_s, __size);				\
->   } while (0)
+> in a PV guest whilst running:
+> 
+> while true;
+>    do echo vbd-$DOMID-$VBD >unbind;
+>    echo unbound;
+>    sleep 5;
+>    echo vbd-$DOMID-$VBD >bind;
+>    echo bound;
+>    sleep 3;
+>    done
+> 
+> in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
+> re-bind its system disk image.
 
-Lets look at all possible scenarios where BACK_RING_ATTACH()
-might happen:
+Could you do the same test with mixed reads/writes and verification of
+the read/written data, please? A write-only test is not _that_
+convincing regarding correctness. It only proves the guest is not
+crashing.
 
-Initially (after [FRONT|BACK]_RING_INIT(), leaving _pvt away):
-req_prod=0, rsp_cons=0, rsp_prod=0, req_cons=0
-Using BACK_RING_ATTACH() is fine (no change)
-
-Request queued:
-req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=0
-Using BACK_RING_ATTACH() is fine (no change)
-
-and taken by backend:
-req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=1
-Using BACK_RING_ATTACH() is resetting req_cons to 0, will result
-in redoing request (for blk this is fine, other devices like SCSI
-tapes will have issues with that). One possible solution would be
-to ensure all taken requests are either stopped or the response
-is queued already.
-
-Response queued:
-req_prod=1, rsp_cons=0, rsp_prod=1, req_cons=1
-Using BACK_RING_ATTACH() is fine (no change)
-
-Response taken:
-req_prod=1, rsp_cons=1, rsp_prod=1, req_cons=1
-Using BACK_RING_ATTACH() is fine (no change)
-
-In general I believe the [FRONT|BACK]_RING_ATTACH() macros are not
-fine to be used in the current state, as the *_pvt fields normally not
-accessible by the other end are initialized using the (possibly
-untrusted) values from the shared ring. There needs at least to be a
-test for the values to be sane, and your change should not result in the
-same value to be read twice, as it could have changed in between.
-
-As this is an error which can happen in other OS's, too, I'd recommend
-to add the adapted macros (plus a comment regarding the possible
-problem noted above for special devices like tapes) to the Xen variant
-of ring.h.
+I'm fine with the general approach, though.
 
 
 Juergen
