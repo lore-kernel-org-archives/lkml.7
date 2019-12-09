@@ -2,103 +2,136 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F03C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C53C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B81DD2071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N79GCO9l"
+	by mail.kernel.org (Postfix) with ESMTP id 4197D20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575878065;
+	bh=l5RNIqY71fgRQ4gflWGJ6VKGFQXsfgVwTeBzBRWCnmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xfFRGVbV7LnSxMOQvutJGHBah5sWpCkiFtDi4T0K3N4besSV36zbFJocSnvTF9EBi
+	 lQ5xkdCzmL8YWVoKVbmg6NaDuXeioPmXxKj3CYEWQrokwrsk7yL40HJ8tZWSj5saO0
+	 hhNIeJPai9uU+oN5GauGA8uGdUdNSfVKj7W9gDns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfLIHvE (ORCPT
+        id S1727145AbfLIHyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:51:04 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33113 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbfLIHvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:51:04 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y206so6793944pfb.0;
-        Sun, 08 Dec 2019 23:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=T93KpotdGkFqtc77qF2EAzOUEnvgTHpxwI5GuqbP7b4=;
-        b=N79GCO9lrJQ9kFidXylgJv1/NvbaQAqEtR6ip+va41MyO8Wgd+bFaBgZEiMHDCDrVq
-         /O7SGbGzDccjAXV+VBWPQxIv1atxpYo3eQLR5auqJD4thxtmZvN+aL3Yytab6RYvg9lv
-         1V6p6yZ/oPNWMWtS6hQQjdoTItOaYTHN1hiV3bLulK+0xwjDK2U+yp9wJ+nWKG2Wq07f
-         G6LBjWE+zT+vPRZPAfr68TWQb/hn3uJUYymefKC/jQt7eKAhNf0qBtURZgB1PtIS0Q5e
-         DDE9Li0cONlHxzXeylpBE04Z2FrtzF8auwGonb4CCCVaDr2H5kpXJEVBustMlQqKcSlt
-         s5pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T93KpotdGkFqtc77qF2EAzOUEnvgTHpxwI5GuqbP7b4=;
-        b=uI2hccKbWAcBaDU8OfRrNHGv9NjBAWrRVvmowIg0aX3WK6069zraJYMQPuTpsxKUnb
-         67/zyk/rNnBYSkSJYJceYmFnjxUmEGe8FfOBkJkawHLMgj6DkkjxGt3GuZy5LM14dT7F
-         4rh+mJ1N6Ky45XI+jKzApPoeDttpl5UXLJpB95WpCpmavVcdTJ4oiy15GkeRftm7FDmm
-         ichtWK822XftG2Putu1ZEXxf/ozr4q21UkhinxDVa1vaSm+7UxT257dAxqP4r05s8ria
-         WE3qB1VceWLSW1eaV1Tum7zpWSBgtpyI8aWupk1Cx3eMt1rLwqFJzkGr4KZhmu4F9uDQ
-         3VpA==
-X-Gm-Message-State: APjAAAXIz+uFDgyuUeYCkIZmAFTEkbiHs2QowUox13TOslQcKrTdR00m
-        6WMXzH82V0Iut0+ktoGQx6WJuV1DAyQ=
-X-Google-Smtp-Source: APXvYqwNTJADqjLqVulG110m73ntGwb1QV+9AeWkSqjiWMdSBPgBwYxtAeEGWPWOQtdlvx/w1QW8SQ==
-X-Received: by 2002:aa7:8096:: with SMTP id v22mr976843pff.240.1575877863074;
-        Sun, 08 Dec 2019 23:51:03 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:13bf:5229:e955:851e:da75:6e07])
-        by smtp.gmail.com with ESMTPSA id z10sm2881079pfa.184.2019.12.08.23.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Dec 2019 23:51:02 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     paulmck@kernel.org, joel@joelfernandes.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] rculist.h: Add list_tail_rcu()
-Date:   Mon,  9 Dec 2019 13:20:43 +0530
-Message-Id: <20191209075043.17947-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Dec 2019 02:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbfLIHyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 02:54:23 -0500
+Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EAA2206D3;
+        Mon,  9 Dec 2019 07:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575878063;
+        bh=l5RNIqY71fgRQ4gflWGJ6VKGFQXsfgVwTeBzBRWCnmA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cdeQwFjYFMVzFUr+WBxPM2UoXcUM34dHDHDlXse6W6pGhUNw4fXvyRJZsZxwoSt7e
+         /90E+MSe4ehpwRUS2sdbf77ubqB8d1DrkO2CSKEuGO9YsT9AvJPnhG7JbgbZEksY6H
+         qnqAaymyoD4xlJ8PxUL70giW5qfYCn6C8GYHBKGs=
+Date:   Mon, 9 Dec 2019 09:54:15 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Darren Stevens <darren@stevens-zone.net>,
+        mad skateman <madskateman@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] powerpc: ensure that swiotlb buffer is allocated from
+ low memory
+Message-ID: <20191209075413.GA4137@rapoport-lnx>
+References: <20191204123524.22919-1-rppt@kernel.org>
+ <87h82aqcju.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h82aqcju.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Mon, Dec 09, 2019 at 04:43:17PM +1100, Michael Ellerman wrote:
+> Mike Rapoport <rppt@kernel.org> writes:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G. If a
+> > system has more physical memory than this limit, the swiotlb buffer is not
+> > addressable because it is allocated from memblock using top-down mode.
+> >
+> > Force memblock to bottom-up mode before calling swiotlb_init() to ensure
+> > that the swiotlb buffer is DMA-able.
+> >
+> > Link: https://lkml.kernel.org/r/F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de
+> 
+> This wasn't bisected, but I thought it was a regression. Do we know what
+> commit caused it?
+> 
+> Was it 25078dc1f74b ("powerpc: use mm zones more sensibly") ?
 
-This patch adds the macro list_tail_rcu() and document it.
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- include/linux/rculist.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 4b7ae1bf50b3..9f21efa525ab 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -40,6 +40,16 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
-  */
- #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
+swiotlb buffer is initialized before zones are actually used, so probably
+not :)
  
-+/**
-+ * list_tail_rcu - returns the prev pointer of the head of the list
-+ * @head: the head of the list
-+ *
-+ * Note: This should only be used with the list header,
-+ * but only if list_del() and similar primitives are not
-+ * also used on the list header.
-+ */
-+#define list_tail_rcu(head)	(*((struct list_head __rcu **)(&(head)->prev)))
-+
- /*
-  * Check during list traversal that we are within an RCU reader
-  */
--- 
-2.17.1
+> Or was that a red herring?
+> 
+> cheers
+> 
+> > Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Darren Stevens <darren@stevens-zone.net>
+> > Cc: mad skateman <madskateman@gmail.com>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Robin Murphy <robin.murphy@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > ---
+> >  arch/powerpc/mm/mem.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> > index be941d382c8d..14c2c53e3f9e 100644
+> > --- a/arch/powerpc/mm/mem.c
+> > +++ b/arch/powerpc/mm/mem.c
+> > @@ -260,6 +260,14 @@ void __init mem_init(void)
+> >  	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+> >  
+> >  #ifdef CONFIG_SWIOTLB
+> > +	/*
+> > +	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
+> > +	 * 4G. We force memblock to bottom-up mode to ensure that the
+> > +	 * memory allocated in swiotlb_init() is DMA-able.
+> > +	 * As it's the last memblock allocation, no need to reset it
+> > +	 * back to to-down.
+> > +	 */
+> > +	memblock_set_bottom_up(true);
+> >  	swiotlb_init(0);
+> >  #endif
+> >  
+> > -- 
+> > 2.24.0
 
+-- 
+Sincerely yours,
+Mike.
