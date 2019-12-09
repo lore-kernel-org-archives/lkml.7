@@ -2,119 +2,163 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B33C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F25C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D3520692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22E820692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtgdPaUX"
+	dkim=pass (1024-bit key) header.d=Lexmark.com header.i=@Lexmark.com header.b="B/VCf/Oc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLIQ3f (ORCPT
+        id S1726522AbfLIQbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:29:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21392 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726408AbfLIQ3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:29:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575908973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NNvyL4Y9eRzqtb2H2E84LxRf2YADQJydGhMMLpn/rvY=;
-        b=CtgdPaUXHLr7wOYSR51eTk3XjiAgFnLa4/BHk6Uy7LJiRBJrDGTHpgwpwT8WAYWOeXZTMQ
-        Z+DlxrfqC9i+CPyWbIxq29xfAjOYS+IZwSAX8j0SLiMm82HGqcFudxJx6YZMjLUsWytbeg
-        DnKWY3vd9yN4H/t+Xyu+lw8P94vAA7U=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-81-kC_5v7YMNQCgVDUGvrysxg-1; Mon, 09 Dec 2019 11:29:31 -0500
-Received: by mail-qv1-f72.google.com with SMTP id g15so4909307qvq.20
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 08:29:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wQxMVxgAtK5y0CyKs1BCEj6d5vwE3qN67Xvd5FZmfgk=;
-        b=V18p9fxar1LM0QJHY4BU3GNkwxo8Jewya11oBpgt/lwy2Zqp65lmWzEO1W1zrwwkFn
-         L4tWV0aY4flQ4vECxM8iQUs3Jq7faTVnr0rguYiLNrDIKLEBadW92PvIrs+CrGT4rUri
-         QCAVTqcUvi9JlabnFLRXoLb0IQFtB6rVQSf9CkfnhG0JvH3yQ2REVg8DL0MkXy3qM/+J
-         SPuEH7bLY0wxNyy6nO07bCqzGgw0AVi6stHtsZd96M308ZGIyCEv0Sf07ZZq3utx1JTs
-         ZBTxO0RLYz22r4Ksb+Jw2ZI7aVAHReKqAuyZxvZS3zjhi8zBVzoQo2V/eF3kDH5Kd6/t
-         juYA==
-X-Gm-Message-State: APjAAAU/K77ZDwfs3i67tjb8qjxUqdwyj/Y/YuKxs4z4lO8cgBg7nnuM
-        TDwSzYiSJV11D+1m3aKgZEkWpQFfQfYapr2vpgj3Jm6Ad76rJTIT20BlaVK0u/J/WxB9HY5cIjN
-        ldnpEyHJK6Inb5Q+ZFgKjoOrp
-X-Received: by 2002:a05:620a:899:: with SMTP id b25mr6205351qka.197.1575908971023;
-        Mon, 09 Dec 2019 08:29:31 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwFUcc6D6y2hR3oAFJBLyCpXqAb6UQCleKthwatt7HxCSSIjpA7ZaRTzyQmAILOaUj4yhzSHQ==
-X-Received: by 2002:a05:620a:899:: with SMTP id b25mr6205322qka.197.1575908970851;
-        Mon, 09 Dec 2019 08:29:30 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id f19sm420087qkk.69.2019.12.09.08.29.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 08:29:30 -0800 (PST)
-Date:   Mon, 9 Dec 2019 11:29:25 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org, Julio Faracco <jcfaracco@gmail.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, mst@redhat.com,
-        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        dnmendes76@gmail.com, Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH net-next v9 3/3] netronome: use the new txqueue timeout
- argument
-Message-ID: <20191209162727.10113-4-mst@redhat.com>
-References: <20191209162727.10113-1-mst@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20191209162727.10113-1-mst@redhat.com>
-X-Mailer: git-send-email 2.22.0.678.g13338e74b8
-X-Mutt-Fcc: =sent
-X-MC-Unique: kC_5v7YMNQCgVDUGvrysxg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
+        Mon, 9 Dec 2019 11:31:32 -0500
+Received: from mail-mw2nam10on2130.outbound.protection.outlook.com ([40.107.94.130]:17473
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbfLIQbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:31:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W4taHhlA9cP1sQvtzE7McAliosSbKtYY/HntLNKJdnosbWSRzY2d3TisUU8yN1gMxWyJ8822xcGIXam5brji03g28h9V9EZpMIcX+ZUq43Phopt6tV3N8thWNPc3uD2nR0+/HDaLeghWxNohsd+u2lZ/+VhWao/hinFWQXu/W/795FrrhXTBEH5rtbnuvlfojG8tkzatlHu/8yovGCEW8mZLbXttFHl7BxAjOjO6FeNnbup064ubl7vId/1PZLEPxn4Md2b/VmbwKUIgfNxbi25SSAtC1/zwL8lDPAFYU5ZN81dUYj3M3Lc1sVneTY0Oa97TVGbabx7qUeIfbeUy5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwpsAQnULDJ8pcN+aHMeeinTzKknxNWBs4HSVe9zAwQ=;
+ b=krrXzfjaDrQoDQKwduSX4bE+SvGcsxG0ZxLwR45yCNZs6f1edLb1bjY9WOLrx6tGlCgLJdEkp5Q9YDN06OJY4TEp0ijBvIQMtkR8NYsBD+QSzSZuaRiq0UVmqQ3UVzoDqDpICFUthL+mEdjPqlYFudYsJ4AWplauCc1mb3VNWivptrMxGe5p5Gqngk9hr71hFFBNrERCM9EDsuHqX3EWfBC+iN+KRc7grSLoFy4c/hif6pcUE5XfDxxC0PvnRk3e4KF4oMU/ZVehFeSLym4vMHz8stte7I+HdReoBcHNU8aUwyn66Nt3uTEQFPmqAwsmITmkxRaMA40zz35TssnAtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lexmark.com; dmarc=pass action=none header.from=lexmark.com;
+ dkim=pass header.d=lexmark.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Lexmark.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwpsAQnULDJ8pcN+aHMeeinTzKknxNWBs4HSVe9zAwQ=;
+ b=B/VCf/OcYveceHVsT4DbWQlkU+D61sNv5SgXx4+t2NaGnIj0p5AUXP8APacOrsxF4R0pYjJgswLzmE1Ev/hQfn8KpQ3eKcSzmW/YuwlurgShUZIOEvrwhBymJX2fL9ygWi1I6x6BHyfUWYlBSlXljZxMjl2UV51gEbzJ/BEzFKI=
+Received: from BN8PR10MB3379.namprd10.prod.outlook.com (20.179.140.29) by
+ BN8PR10MB3169.namprd10.prod.outlook.com (20.179.138.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Mon, 9 Dec 2019 16:31:27 +0000
+Received: from BN8PR10MB3379.namprd10.prod.outlook.com
+ ([fe80::9d23:4a97:d48a:7f84]) by BN8PR10MB3379.namprd10.prod.outlook.com
+ ([fe80::9d23:4a97:d48a:7f84%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 16:31:27 +0000
+From:   Zak Hays <zak.hays@lexmark.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] thermal: armada: fix register offsets for AXP
+Thread-Topic: [PATCH v2 1/2] thermal: armada: fix register offsets for AXP
+Thread-Index: AQHVqtv7mxwVHsmesUi/W4BU64aP7qeqa2w8gAeNUACAAABEaQ==
+Date:   Mon, 9 Dec 2019 16:31:26 +0000
+Message-ID: <BN8PR10MB33792C7BA3B1D002AEDD25E08C580@BN8PR10MB3379.namprd10.prod.outlook.com>
+References: <1575485367-18262-1-git-send-email-zhays@lexmark.com>
+ <BN8PR10MB3379A954079A4ECF574E80DE8C5D0@BN8PR10MB3379.namprd10.prod.outlook.com>,<e2ed2a04-83c0-b346-4de0-0f92d6dd7fbf@linaro.org>
+In-Reply-To: <e2ed2a04-83c0-b346-4de0-0f92d6dd7fbf@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zak.hays@lexmark.com; 
+x-originating-ip: [192.146.101.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6700e64d-8e0c-4d80-1fa5-08d77cc53d04
+x-ms-traffictypediagnostic: BN8PR10MB3169:
+x-microsoft-antispam-prvs: <BN8PR10MB316996FB383345045D68BF368C580@BN8PR10MB3169.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(189003)(199004)(305945005)(55016002)(81166006)(5660300002)(81156014)(71190400001)(66446008)(8936002)(186003)(71200400001)(66556008)(76116006)(6506007)(6916009)(26005)(86362001)(52536014)(64756008)(478600001)(66946007)(9686003)(54906003)(316002)(66574012)(7696005)(66476007)(4326008)(44832011)(8676002)(33656002)(229853002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR10MB3169;H:BN8PR10MB3379.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: lexmark.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KoaQU9hOCt6/KCvhwzgAz9q7Ih/xV2rp31wbm0x5eQ8M0EiLdh/XpTPvncYg5vzFkWjVygoF9LMtW0/PRvA7BFSe/xyjqhudcXt5JGnl35S7UtuXZh4arvkv9ORv6+pR489VarHCRUVC4bvfeOCMqRLtzV+Uiu5ogLN8zsbouIXUvEFqGCPK6Ol9iSMnQoeLj5SbNE4c3i01f+Xj/JZndmDv2XUna1wSiluITfa39fvAvSYGLy7/9hoZHUerEvYv9otw6UCzx4ncHKKJUy0ZEIv0DX9ISw4yGDBfgyoMwpHIAgpBNKV7jHelSEVpZ7pJ4J84WU5gq3MPndMPRPtgvsEJcaGDswMKw4HY5vz7+IiaE3effI+P1ZKQ9eC7C6iPqhiJfEQJilHlCHvPCG7OTuAnJtbIv8PuvmVBcSfk9VDf0dJhaxYnNoXM0ia4I+kJ
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+MIME-Version: 1.0
+X-OriginatorOrg: Lexmark.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6700e64d-8e0c-4d80-1fa5-08d77cc53d04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 16:31:26.9157
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 12709065-6e6c-41c9-9e4d-fb0a436969ce
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Btbwpjv2AxinfwA6Qp5MvX+UAEKvldXvrSeYrybttt7xwHNc7QN3qkd3Q+bMY1Qspn39tnjjunETFU3coz5NuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20191209162925.am-9jZmMn6_dEvS0ibjs0MahRRprQuhWap0AQARiylc@z>
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
----
- drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/=
-net/ethernet/netronome/nfp/nfp_net_common.c
-index bd305fc6ed5a..d4eeb3b3cf35 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-@@ -1324,14 +1324,8 @@ nfp_net_tx_ring_reset(struct nfp_net_dp *dp, struct =
-nfp_net_tx_ring *tx_ring)
- static void nfp_net_tx_timeout(struct net_device *netdev, unsigned int txq=
-ueue)
- {
- =09struct nfp_net *nn =3D netdev_priv(netdev);
--=09int i;
-=20
--=09for (i =3D 0; i < nn->dp.netdev->real_num_tx_queues; i++) {
--=09=09if (!netif_tx_queue_stopped(netdev_get_tx_queue(netdev, i)))
--=09=09=09continue;
--=09=09nn_warn(nn, "TX timeout on ring: %d\n", i);
--=09}
--=09nn_warn(nn, "TX watchdog timeout\n");
-+=09nn_warn(nn, "TX watchdog timeout on ring: %u\n", txqueue);
- }
-=20
- /* Receive processing
---=20
-MST
-
+Hi Daniel,=0A=
+=0A=
+>Hi Zak,=0A=
+>=0A=
+>what patch to pick up? V2 or V2?=0A=
+I'm not sure I entirely understand your question. There are two patches:=0A=
+=0A=
+Zachary Hays  thermal: armada: fix register offsets for AXP=0A=
+Zachary Hays  thermal: armada: clear reset in armadaxp_init=0A=
+=0A=
+Version 2 of each patch updates the commit message to add a "Signed-off-by"=
+=0A=
+and cleans up the commit message per Miqu=E8l's earlier comments. Otherwise=
+ the=0A=
+patches are the same as they were in version 1. The patch below is version =
+2 of that first patch.=0A=
+=0A=
+Does that answer your question?=0A=
+>=0A=
+>What email is the correct one?=0A=
+>=0A=
+>        Zachary Hays <zhays@lexmark.com>=0A=
+>or=0A=
+>        Zak Hays <zak.hays@lexmark.com>=0A=
+>=0A=
+Both addresses route to the same place but "Zachary Hays <zhays@lexmark.com=
+>" is preferable. Sorry for the confusion.=0A=
+=0A=
+>Also waiting for Miquel to ack the patch.=0A=
+>=0A=
+>Thanks=0A=
+>=0A=
+> -- Daniel=0A=
+>=0A=
+>=0A=
+>On 05/12/2019 15:19, Zak Hays wrote:=0A=
+>> As shown in its device tree, Armada XP has the control1 register at=0A=
+>> 0x184d0, not 0x182d0.=0A=
+>>=0A=
+>> Signed-off-by: Zachary Hays <zhays@lexmark.com>=0A=
+>> ---=0A=
+>> v2: update commit title and add "Signed-off-by"=0A=
+>> ---=0A=
+>>  drivers/thermal/armada_thermal.c | 2 +-=0A=
+>>  1 file changed, 1 insertion(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_t=
+hermal.c=0A=
+>> index 709a22f455e9..88363812033c 100644=0A=
+>> --- a/drivers/thermal/armada_thermal.c=0A=
+>> +++ b/drivers/thermal/armada_thermal.c=0A=
+>> @@ -578,7 +578,7 @@ static const struct armada_thermal_data armadaxp_dat=
+a =3D {=0A=
+>>         .coef_m =3D 10000000ULL,=0A=
+>>         .coef_div =3D 13825,=0A=
+>>         .syscon_status_off =3D 0xb0,=0A=
+>> -       .syscon_control1_off =3D 0xd0,=0A=
+>> +       .syscon_control1_off =3D 0x2d0,=0A=
+>>  };=0A=
+>>=0A=
+>>  static const struct armada_thermal_data armada370_data =3D {=0A=
+>> --=0A=
+>> 2.7.4=0A=
+>>=
