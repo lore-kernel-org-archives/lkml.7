@@ -2,96 +2,148 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FB1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D24CC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45947206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=iluvatar.ai header.i=@iluvatar.ai header.b="F3HhOdnr"
+	by mail.kernel.org (Postfix) with ESMTP id 7805E206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfLIKAG (ORCPT
+        id S1727200AbfLIKBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:00:06 -0500
-Received: from owa.iluvatar.ai ([103.91.158.24]:16133 "EHLO smg.iluvatar.ai"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727200AbfLIKAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:00:06 -0500
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 05:00:04 EST
-X-AuditID: 0a650161-78bff700000078a3-9f-5dee2de096fb
-Received: from owa.iluvatar.ai (s-10-101-1-102.iluvatar.local [10.101.1.102])
-        by smg.iluvatar.ai (Symantec Messaging Gateway) with SMTP id 7B.F0.30883.0ED2EED5; Mon,  9 Dec 2019 19:20:00 +0800 (HKT)
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; d=iluvatar.ai; s=key_2018;
-        c=relaxed/relaxed; t=1575884707; h=from:subject:to:date:message-id;
-        bh=4XY6KZy5NFgqtGCerKi26yFsh/3MiJ6OzvRR3Z9dvrw=;
-        b=F3HhOdnrOFHJ8EUYcI6dCcUMs7jE6v9RPJHfkluSmPDlJdvhE52A0KDst39yd9GhXefhAyENZtK
-        Kwg5vNp32vDRDm+xPvY3oUS+BLPha5JVUM8oF6fUGQZS3L+eZP6HgfkkkNUJjxpKJEuHZec8Axclt
-        yLUCLplrfBkOxIQoQco=
-Received: from hsj-Precision-5520.iluvatar.local (10.101.199.253) by
- S-10-101-1-102.iluvatar.local (10.101.1.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1415.2; Mon, 9 Dec 2019 17:45:07 +0800
-From:   Huang Shijie <sjhuang@iluvatar.ai>
-To:     <jbaron@akamai.com>
-CC:     <linux-kernel@vger.kernel.org>, <1537577747@qq.com>,
-        Huang Shijie <sjhuang@iluvatar.ai>
-Subject: [PATCH] lib/dynamic_debug: make better dynamic log output
-Date:   Mon, 9 Dec 2019 17:44:37 +0800
-Message-ID: <20191209094437.14866-1-sjhuang@iluvatar.ai>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Dec 2019 05:01:34 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40746 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfLIKBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 05:01:34 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A9E2C28BA5C
+Subject: Re: [resend PATCH v6 08/12] clk: mediatek: mt6779: switch mmsys to
+ platform device probing
+To:     matthias.bgg@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com
+Cc:     sean.wang@mediatek.com, sean.wang@kernel.org,
+        rdunlap@infradead.org, wens@csie.org, hsinyi@chromium.org,
+        frank-w@public-files.de, drinkcat@chromium.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, mbrugger@suse.com
+References: <20191207224740.24536-1-matthias.bgg@kernel.org>
+ <20191207224740.24536-9-matthias.bgg@kernel.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <ef75d3d2-7a2d-5b68-ad0a-ffdf1da4bab9@collabora.com>
+Date:   Mon, 9 Dec 2019 11:01:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Originating-IP: [10.101.199.253]
-X-ClientProxiedBy: S-10-101-1-102.iluvatar.local (10.101.1.102) To
- S-10-101-1-102.iluvatar.local (10.101.1.102)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJLMWRmVeSWpSXmKPExsXClcqYpvtA912sQXeHscXkqwfYLGYsPs5q
-        cXnXHDYHZo/JRxYwe9x6tpbV4/MmuQDmKC6blNSczLLUIn27BK6M9ubcghdsFat67jA2MJ5m
-        7WLk4JAQMJFo+lzQxcjFISRwglHi2NtHbF2MnBzMAhISB1+8YAZJsAi8ZZLYeXQ3K0RVK5PE
-        xBU3mECq2AQ0JOaeuMsMMklEQFzi/XxXiOZYibld+8DCwgJOEnv3RoCEWQRUJBb+OcgCYvMK
-        WEgs37CAGcSWEJCXWL3hADNEXFDi5MwnLCCtQgIKEi9WakGUKEks2TuLCcIulPj+8i7LBEaB
-        WUgunYWkewEj0ypG/uLcdL3MnNKyxJLEIr3EzE2MkPBL3MF4o/Ol3iFGAQ5GJR7eCYFvY4VY
-        E8uKK3MPMUpwMCuJ8C6Z+CpWiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/Qv6cxQgLpiSWp2amp
-        BalFMFkmDk6pBqapbo3Vs7r8Ofw6Yp6GGUrN+rDkptTd5c6bL6Uf5Jy+a/2+VWJTsk1WPUu/
-        xdCy1u1bE5NyetHs+IvcvdOUfmfmX6z6v3Yv0+/arODc3fzR/ruzandZ2IUaHGQsEUlyDDz7
-        MZqF9elplUvs86M+ZXKzvDArDG9d8PdTTabuvg+BO+Nbo52SF69fenzKBZtI8XsbXJR7r+lX
-        GOjM+SzL5rPk0qq9VitsHWb/ttC1K1PMtgoyU7I9FvRbIvTz1euncpuXvdS8Hphyeu6eM9Ui
-        DApJ3o+Llhls7V0RO11qnt+M5PVT1J3EDE6fFuK6ca5e6NfkXCbBKe92aR1YNlvPJKnH48k5
-        cZZz1aam33cnRyixFGckGmoxFxUnAgB4aCFhvAIAAA==
+In-Reply-To: <20191207224740.24536-9-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver strings and device name is not changed for the driver's dynamic
-log output. But the dynamic_emit_prefix() which contains the function names
-may changed when the function names are changed.
+Hi Matthias,
 
-So the patch makes the better dynamic log output.
+On 7/12/19 23:47, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> Switch probing for the MMSYS to support invocation to a
+> plain paltform device. The driver will be probed by the DRM subsystem.
+> 
+> Singed-off-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  drivers/clk/mediatek/clk-mt6779-mm.c | 41 +++++++++++++++++++---------
 
-Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
----
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And the same comment from previous patch. The comment applies to patches until 11.
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c60409138e13..8cfcdd5bd1ff 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -590,8 +590,8 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
- 		char buf[PREFIX_SIZE];
- 
- 		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
--				dynamic_emit_prefix(descriptor, buf),
- 				dev_driver_string(dev), dev_name(dev),
-+				dynamic_emit_prefix(descriptor, buf),
- 				&vaf);
- 	}
- 
--- 
-2.17.1
-
+>  1 file changed, 28 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/clk/mediatek/clk-mt6779-mm.c b/drivers/clk/mediatek/clk-mt6779-mm.c
+> index fb5fbb8e3e41..439ec460c166 100644
+> --- a/drivers/clk/mediatek/clk-mt6779-mm.c
+> +++ b/drivers/clk/mediatek/clk-mt6779-mm.c
+> @@ -4,13 +4,19 @@
+>   * Author: Wendell Lin <wendell.lin@mediatek.com>
+>   */
+>  
+> +#include <linux/module.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/platform_device.h>
+>  #include <dt-bindings/clock/mt6779-clk.h>
+> +#include <linux/slab.h>
+>  
+>  #include "clk-mtk.h"
+>  #include "clk-gate.h"
+>  
+> +struct clk_mt6779_mm_priv {
+> +	struct clk_onecell_data *clk_data;
+> +};
+> +
+>  static const struct mtk_gate_regs mm0_cg_regs = {
+>  	.set_ofs = 0x0104,
+>  	.clr_ofs = 0x0108,
+> @@ -84,30 +90,39 @@ static const struct mtk_gate mm_clks[] = {
+>  	GATE_MM1(CLK_MM_DISP_OVL_FBDC, "mm_disp_ovl_fbdc", "mm_sel", 16),
+>  };
+>  
+> -static const struct of_device_id of_match_clk_mt6779_mm[] = {
+> -	{ .compatible = "mediatek,mt6779-mmsys", },
+> -	{}
+> -};
+> -
+>  static int clk_mt6779_mm_probe(struct platform_device *pdev)
+>  {
+> -	struct clk_onecell_data *clk_data;
+> -	struct device_node *node = pdev->dev.of_node;
+> +	struct clk_mt6779_mm_priv *private;
+> +	struct device_node *node = pdev->dev.parent->of_node;
+> +
+> +	private = devm_kzalloc(&pdev->dev, sizeof(*private), GFP_KERNEL);
+> +	if (!private)
+> +		return -ENOMEM;
+>  
+> -	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+> +	private->clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
+> +	platform_set_drvdata(pdev, private);
+>  
+>  	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
+> -			       clk_data);
+> +			       private->clk_data);
+>  
+> -	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +	return of_clk_add_provider(node, of_clk_src_onecell_get,
+> +						private->clk_data);
+> +}
+> +
+> +static int clk_mt6779_mm_remove(struct platform_device *pdev)
+> +{
+> +	struct clk_mt6779_mm_priv *private = platform_get_drvdata(pdev);
+> +
+> +	kfree(private->clk_data);
+> +
+> +	return 0;
+>  }
+>  
+>  static struct platform_driver clk_mt6779_mm_drv = {
+>  	.probe = clk_mt6779_mm_probe,
+> +	.remove = clk_mt6779_mm_remove,
+>  	.driver = {
+>  		.name = "clk-mt6779-mm",
+> -		.of_match_table = of_match_clk_mt6779_mm,
+>  	},
+>  };
+> -
+> -builtin_platform_driver(clk_mt6779_mm_drv);
+> +module_platform_driver(clk_mt6779_mm_drv);
+> 
