@@ -2,510 +2,185 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4335BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07872C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3456207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B9C2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EH2gqenm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfLIOZL (ORCPT
+        id S1727598AbfLIO27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:25:11 -0500
-Received: from mail-co1nam11on2056.outbound.protection.outlook.com ([40.107.220.56]:15948
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726687AbfLIOZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:25:07 -0500
-Received: from CH2PR02CA0011.namprd02.prod.outlook.com (2603:10b6:610:4e::21)
- by SN6PR02MB5069.namprd02.prod.outlook.com (2603:10b6:805:67::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Mon, 9 Dec
- 2019 14:25:04 +0000
-Received: from SN1NAM02FT033.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by CH2PR02CA0011.outlook.office365.com
- (2603:10b6:610:4e::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
- Transport; Mon, 9 Dec 2019 14:25:04 +0000
-Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
- smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- gmail.com discourages use of 149.199.60.83 as permitted sender)
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT033.mail.protection.outlook.com (10.152.72.133) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
- via Frontend Transport; Mon, 9 Dec 2019 14:25:03 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1ieJwl-0007qI-Ex; Mon, 09 Dec 2019 06:23:35 -0800
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1ieJwg-0006oJ-8J; Mon, 09 Dec 2019 06:23:30 -0800
-Received: from xsj-pvapsmtp01 (xsj-pvapsmtp01.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB9ENTt0022367;
-        Mon, 9 Dec 2019 06:23:29 -0800
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@gmail.com>)
-        id 1ieJwf-0006nz-0I; Mon, 09 Dec 2019 06:23:29 -0800
-From:   shubhrajyoti.datta@gmail.com
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     michal.simek@xilinx.com, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
-Subject: [PATCH v2 1/2] uio: uio_xilinx_apm: Add Xilinx AXI performance monitor driver
-Date:   Mon,  9 Dec 2019 19:53:24 +0530
-Message-Id: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
-X-Mailer: git-send-email 2.1.1
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--11.547-7.0-31-1
-X-imss-scan-details: No--11.547-7.0-31-1;No--11.547-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-Matching-Connectors: 132203751041825349;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(39860400002)(136003)(346002)(199004)(189003)(426003)(76482006)(336012)(2616005)(6666004)(30864003)(73392003)(36756003)(450100002)(54906003)(316002)(82202003)(4326008)(9686003)(107886003)(498600001)(305945005)(8936002)(86362001)(81156014)(70586007)(70206006)(5660300002)(2906002)(26005)(356004)(55446002)(9786002)(8676002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5069;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Mon, 9 Dec 2019 09:28:59 -0500
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:55955 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfLIO27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:28:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1575901739;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=X1P5ZS66O+SyV3Z0pG3ySBc5zDyuUajrOIBHrzr8Pms=;
+  b=EH2gqenm9Iv6+PdaymFKCdHBdr1KRQJR+nXxnqIcKj1IYX3mM6G4Oa0t
+   xgtALdDRhsCihQOgIfncGZJbNgprWRQ22QcEZAjNQ6EZrZ/+HdTvR9lwM
+   lfTsGh5Zh/MpvoocaoJr1BcePvnig8xmgsnlmUmlnt5DoA2Dc+FblYeFG
+   w=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: a1ru/4XWSvrJrh5euaNnkOw8Vn3o3G46oijEi/FPyzJJ5TLvObjfsKXIaMgNz5CM0IqGTp3qc5
+ NKJSNxeQQkbuDEB0EqCCu+3gryAHE1mLeXG3H7Dmucqllf79phmdJt0RvpKjbrz1TcKdPaV+Qa
+ a/DvXG50rPXGHbnFS0pDCNSVnVX/hoAYQmmbAvyKX9TVwCttsWCQlnqmmrnFPoBKrSC0nQ50zH
+ 2CANj0bjodv3B6IMfPEnJIN8sKz9KkOB1CxplML9TB/kUiwIowKQRH/nwzVmjkWuM+spastILk
+ S4g=
+X-SBRS: 2.7
+X-MesageID: 9395324
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,296,1571716800"; 
+   d="scan'208";a="9395324"
+Date:   Mon, 9 Dec 2019 15:28:52 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     "Durrant, Paul" <pdurrant@amazon.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "Juergen Gross" <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
+ closed
+Message-ID: <20191209142852.GW980@Air-de-Roger>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-3-pdurrant@amazon.com>
+ <20191209113926.GS980@Air-de-Roger>
+ <19b5c2fa36b842e58bbdddd602c4e672@EX13D32EUC003.ant.amazon.com>
+ <20191209122537.GV980@Air-de-Roger>
+ <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 56c37127-e8d8-47ee-b091-08d77cb39541
-X-MS-TrafficTypeDiagnostic: SN6PR02MB5069:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB50692689E980274116E5F91F87580@SN6PR02MB5069.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 02462830BE
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n+uceQu76uKvEDyqEdDRBNUL6RqsQBALtu6d88CGu7uvVDHHXdN1K1ykocJBOyY7dAOnH9+H/PYbYLxKkCgcHGFDxCy4FLgqd7x3PtTbL+W2AkLfC1AYuF21vZBUNJ84ovr9S07FH3HMgaiYRevJXiX/ee2zLPyZYAWtWNjPyBF2p0AENKjkRPFUxoIy9iXkmiqtE2sT0iiesoNEoSW9tHZZM+3N+vBnIgJInd33o+mhGqolME1yvswEgBWgn5+uuvjLAVxl7Qg5NDksAyYpq+05oNvEmYDe3fyVfST/fk4TF2Yut7jwtV2WHruzNcd904ae5WKR0P5OB10vg5VZkE7wq70tfCdMov7oLvW9PePxrf1q6FRvdYjSNfeislvajGwKbQrA0Rz30U9c7BALgcPcaJt+GTIlpiSt+glUUCB73/PMZcuRx+4QiJ0EjPZj
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 14:25:03.7962
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c37127-e8d8-47ee-b091-08d77cb39541
-X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5069
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Mon, Dec 09, 2019 at 12:40:47PM +0000, Durrant, Paul wrote:
+> > -----Original Message-----
+> > From: Roger Pau Monné <roger.pau@citrix.com>
+> > Sent: 09 December 2019 12:26
+> > To: Durrant, Paul <pdurrant@amazon.com>
+> > Cc: linux-kernel@vger.kernel.org; xen-devel@lists.xenproject.org; Juergen
+> > Gross <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>;
+> > Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
+> > closed
+> > 
+> > On Mon, Dec 09, 2019 at 12:01:38PM +0000, Durrant, Paul wrote:
+> > > > -----Original Message-----
+> > > > From: Roger Pau Monné <roger.pau@citrix.com>
+> > > > Sent: 09 December 2019 11:39
+> > > > To: Durrant, Paul <pdurrant@amazon.com>
+> > > > Cc: linux-kernel@vger.kernel.org; xen-devel@lists.xenproject.org;
+> > Juergen
+> > > > Gross <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>;
+> > > > Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > > > Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is
+> > forced to
+> > > > closed
+> > > >
+> > > > On Thu, Dec 05, 2019 at 02:01:21PM +0000, Paul Durrant wrote:
+> > > > > Only force state to closed in the case when the toolstack may need
+> > to
+> > > > > clean up. This can be detected by checking whether the state in
+> > xenstore
+> > > > > has been set to closing prior to device removal.
+> > > >
+> > > > I'm not sure I see the point of this, I would expect that a failure to
+> > > > probe or the removal of the device would leave the xenbus state as
+> > > > closed, which is consistent with the actual driver state.
+> > > >
+> > > > Can you explain what's the benefit of leaving a device without a
+> > > > driver in such unknown state?
+> > > >
+> > >
+> > > If probe fails then I think it should leave the state alone. If the
+> > > state is moved to closed then basically you just killed that
+> > > connection to the guest (as the frontend will normally close down
+> > > when it sees this change) so, if the probe failure was due to a bug
+> > > in blkback or, e.g., a transient resource issue then it's game over
+> > > as far as that guest goes.
+> > 
+> > But the connection can be restarted by switching the backend to the
+> > init state again.
+> 
+> Too late. The frontend saw closed and you already lost.
+> 
+> > 
+> > > The ultimate goal here is PV backend re-load that is completely
+> > transparent to the guest. Modifying anything in xenstore compromises that
+> > so we need to be careful.
+> > 
+> > That's a fine goal, but not switching to closed state in
+> > xenbus_dev_remove seems wrong, as you have actually left the frontend
+> > without a matching backend and with the state not set to closed.
+> > 
+> 
+> Why is this a problem? With this series fully applied a (block) backend can come and go without needing to change the state. Relying on guests to DTRT is not a sustainable option for a cloud deployment.
+> 
+> > Ie: that would be fine if you explicitly state this is some kind of
+> > internal blkback reload, but not for the general case where blkback
+> > has been unbound. I think we need someway to difference a blkback
+> > reload vs a unbound.
+> > 
+> 
+> Why do we need that though? Why is it advantageous for a backend to go to closed. No PV backends cope with an unbind as-is, and a toolstack initiated unplug will always set state to 5 anyway. So TBH any state transition done directly in the xenbus code looks wrong to me anyway (but appears to be a necessary evil to keep the toolstack working in the event it spawns a backend where there is actually to driver present, or it doesn't come online).
 
-Added driver for Xilinx AXI performance monitor IP.
+IMO the normal flow for unbind would be to attempt to close open
+connections and then remove the driver: leaving frontends connected
+without any attached backends is not correct, and will just block the
+guest frontend until requests start timing out.
 
-Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v2:
-Updated the header
+I can see the reasoning for doing that for the purpose of updating a
+blkback module without guests noticing, but I would prefer that
+leaving connections open was an option that could be given when
+unbinding (or maybe a driver option in sysfs?), so that the default
+behaviour would be to try to close everything when unbinding if
+possible.
 
- drivers/uio/Kconfig          |  12 ++
- drivers/uio/Makefile         |   1 +
- drivers/uio/uio_xilinx_apm.c | 358 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 371 insertions(+)
- create mode 100644 drivers/uio/uio_xilinx_apm.c
-
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 202ee81..de30312 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -165,4 +165,16 @@ config UIO_HV_GENERIC
- 	  to network and storage devices from userspace.
- 
- 	  If you compile this as a module, it will be called uio_hv_generic.
-+
-+config UIO_XILINX_APM
-+	tristate "Xilinx AXI Performance Monitor driver"
-+	depends on MICROBLAZE || ARCH_ZYNQ || ARCH_ZYNQMP
-+	help
-+	  This driver is developed for AXI Performance Monitor IP, designed to
-+	  monitor AXI4 traffic for performance analysis of AXI bus in the
-+	  system. Driver maps HW registers and parameters to userspace.
-+
-+	  To compile this driver as a module, choose M here; the module
-+	  will be called uio_xilinx_apm.
-+
- endif
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index c285dd2..b3464d8 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
- obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
- obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
- obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
-+obj-$(CONFIG_UIO_XILINX_APM)	+= uio_xilinx_apm.o
-diff --git a/drivers/uio/uio_xilinx_apm.c b/drivers/uio/uio_xilinx_apm.c
-new file mode 100644
-index 0000000..3f69922
---- /dev/null
-+++ b/drivers/uio/uio_xilinx_apm.c
-@@ -0,0 +1,358 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx AXI Performance Monitor
-+ *
-+ * Description:
-+ * This driver is developed for AXI Performance Monitor IP,
-+ * designed to monitor AXI4 traffic for performance analysis
-+ * of AXI bus in the system. Driver maps HW registers and parameters
-+ * to userspace. Userspace need not clear the interrupt of IP since
-+ * driver clears the interrupt.
-+ *
-+ * Copyright (c) 2019 Xilinx Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/uio_driver.h>
-+
-+#define XAPM_IS_OFFSET		0x0038  /* Interrupt Status Register */
-+#define DRV_NAME		"xilinxapm_uio"
-+#define DRV_VERSION		"1.0"
-+#define UIO_DUMMY_MEMSIZE	4096
-+#define XAPM_MODE_ADVANCED	1
-+#define XAPM_MODE_PROFILE	2
-+#define XAPM_MODE_TRACE		3
-+
-+/**
-+ * struct xapm_param - HW parameters structure
-+ * @mode: Mode in which APM is working
-+ * @maxslots: Maximum number of Slots in APM
-+ * @eventcnt: Event counting enabled in APM
-+ * @eventlog: Event logging enabled in APM
-+ * @sampledcnt: Sampled metric counters enabled in APM
-+ * @numcounters: Number of counters in APM
-+ * @metricwidth: Metric Counter width (32/64)
-+ * @sampledwidth: Sampled metric counter width
-+ * @globalcntwidth: Global Clock counter width
-+ * @scalefactor: Scaling factor
-+ * @isr: Interrupts info shared to userspace
-+ * @is_32bit_filter: Flags for 32bit filter
-+ * @clk: Clock handle
-+ */
-+struct xapm_param {
-+	u32 mode;
-+	u32 maxslots;
-+	u32 eventcnt;
-+	u32 eventlog;
-+	u32 sampledcnt;
-+	u32 numcounters;
-+	u32 metricwidth;
-+	u32 sampledwidth;
-+	u32 globalcntwidth;
-+	u32 scalefactor;
-+	u32 isr;
-+	bool is_32bit_filter;
-+	struct clk *clk;
-+};
-+
-+/**
-+ * struct xapm_dev - Global driver structure
-+ * @info: uio_info structure
-+ * @param: xapm_param structure
-+ * @regs: IOmapped base address
-+ */
-+struct xapm_dev {
-+	struct uio_info info;
-+	struct xapm_param param;
-+	void __iomem *regs;
-+};
-+
-+/**
-+ * xapm_handler - Interrupt handler for APM
-+ * @irq: IRQ number
-+ * @info: Pointer to uio_info structure
-+ *
-+ * Return: Always returns IRQ_HANDLED
-+ */
-+static irqreturn_t xapm_handler(int irq, struct uio_info *info)
-+{
-+	struct xapm_dev *xapm = (struct xapm_dev *)info->priv;
-+	void *ptr;
-+
-+	ptr = (unsigned long *)xapm->info.mem[1].addr;
-+	/* Clear the interrupt and copy the ISR value to userspace */
-+	xapm->param.isr = readl(xapm->regs + XAPM_IS_OFFSET);
-+	writel(xapm->param.isr, xapm->regs + XAPM_IS_OFFSET);
-+	memcpy(ptr, &xapm->param, sizeof(struct xapm_param));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * xapm_getprop - Retrieves dts properties to param structure
-+ * @pdev: Pointer to platform device
-+ * @param: Pointer to param structure
-+ *
-+ * Returns: '0' on success and failure value on error
-+ */
-+static int xapm_getprop(struct platform_device *pdev, struct xapm_param *param)
-+{
-+	u32 mode = 0;
-+	int ret;
-+	struct device_node *node;
-+
-+	node = pdev->dev.of_node;
-+
-+	/* Retrieve required dts properties and fill param structure */
-+	ret = of_property_read_u32(node, "xlnx,enable-profile", &mode);
-+	if (ret < 0)
-+		dev_info(&pdev->dev, "no property xlnx,enable-profile\n");
-+	else if (mode)
-+		param->mode = XAPM_MODE_PROFILE;
-+
-+	ret = of_property_read_u32(node, "xlnx,enable-trace", &mode);
-+	if (ret < 0)
-+		dev_info(&pdev->dev, "no property xlnx,enable-trace\n");
-+	else if (mode)
-+		param->mode = XAPM_MODE_TRACE;
-+
-+	ret = of_property_read_u32(node, "xlnx,num-monitor-slots",
-+				   &param->maxslots);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,num-monitor-slots");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,enable-event-count",
-+				   &param->eventcnt);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,enable-event-count");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,enable-event-log",
-+				   &param->eventlog);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,enable-event-log");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,have-sampled-metric-cnt",
-+				   &param->sampledcnt);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,have-sampled-metric-cnt");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,num-of-counters",
-+				   &param->numcounters);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,num-of-counters");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,metric-count-width",
-+				   &param->metricwidth);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,metric-count-width");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,metrics-sample-count-width",
-+				   &param->sampledwidth);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property metrics-sample-count-width");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,global-count-width",
-+				   &param->globalcntwidth);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,global-count-width");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(node, "xlnx,metric-count-scale",
-+				   &param->scalefactor);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no property xlnx,metric-count-scale");
-+		return ret;
-+	}
-+
-+	param->is_32bit_filter = of_property_read_bool(node,
-+						"xlnx,id-filter-32bit");
-+
-+	return 0;
-+}
-+
-+/**
-+ * xapm_probe - Driver probe function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * Returns: '0' on success and failure value on error
-+ */
-+
-+static int xapm_probe(struct platform_device *pdev)
-+{
-+	struct xapm_dev *xapm;
-+	struct resource *res;
-+	int irq;
-+	int ret;
-+	void *ptr;
-+
-+	xapm = devm_kzalloc(&pdev->dev, (sizeof(struct xapm_dev)), GFP_KERNEL);
-+	if (!xapm)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	xapm->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(xapm->regs)) {
-+		dev_err(&pdev->dev, "unable to iomap registers\n");
-+		return PTR_ERR(xapm->regs);
-+	}
-+
-+	xapm->param.clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(xapm->param.clk)) {
-+		if (PTR_ERR(xapm->param.clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "axi clock error\n");
-+		return PTR_ERR(xapm->param.clk);
-+	}
-+
-+	ret = clk_prepare_enable(xapm->param.clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable clock.\n");
-+		return ret;
-+	}
-+	pm_runtime_get_noresume(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	/* Initialize mode as Advanced so that if no mode in dts, default
-+	 * is Advanced
-+	 */
-+	xapm->param.mode = XAPM_MODE_ADVANCED;
-+	ret = xapm_getprop(pdev, &xapm->param);
-+	if (ret < 0)
-+		goto err_clk_dis;
-+
-+	xapm->info.mem[0].name = "xilinx_apm";
-+	xapm->info.mem[0].addr = res->start;
-+	xapm->info.mem[0].size = resource_size(res);
-+	xapm->info.mem[0].memtype = UIO_MEM_PHYS;
-+
-+	xapm->info.mem[1].addr = (unsigned long)kzalloc(UIO_DUMMY_MEMSIZE,
-+							GFP_KERNEL);
-+	ptr = (unsigned long *)xapm->info.mem[1].addr;
-+	xapm->info.mem[1].size = UIO_DUMMY_MEMSIZE;
-+	xapm->info.mem[1].memtype = UIO_MEM_LOGICAL;
-+
-+	xapm->info.name = "axi-pmon";
-+	xapm->info.version = DRV_VERSION;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "unable to get irq\n");
-+		ret = irq;
-+		goto err_clk_dis;
-+	}
-+
-+	xapm->info.irq = irq;
-+	xapm->info.handler = xapm_handler;
-+	xapm->info.priv = xapm;
-+	xapm->info.irq_flags = IRQF_SHARED;
-+
-+	memcpy(ptr, &xapm->param, sizeof(struct xapm_param));
-+
-+	ret = uio_register_device(&pdev->dev, &xapm->info);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "unable to register to UIO\n");
-+		goto err_clk_dis;
-+	}
-+
-+	platform_set_drvdata(pdev, xapm);
-+
-+	dev_info(&pdev->dev, "Probed Xilinx APM\n");
-+
-+	return 0;
-+
-+err_clk_dis:
-+	clk_disable_unprepare(xapm->param.clk);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+	return ret;
-+}
-+
-+/**
-+ * xapm_remove - Driver remove function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * Return: Always returns '0'
-+ */
-+static int xapm_remove(struct platform_device *pdev)
-+{
-+	struct xapm_dev *xapm = platform_get_drvdata(pdev);
-+
-+	uio_unregister_device(&xapm->info);
-+	clk_disable_unprepare(xapm->param.clk);
-+	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_set_suspended(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused xapm_runtime_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct xapm_dev *xapm = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(xapm->param.clk);
-+	return 0;
-+};
-+
-+static int __maybe_unused xapm_runtime_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct xapm_dev *xapm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(xapm->param.clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable clock.\n");
-+		return ret;
-+	}
-+	return 0;
-+};
-+
-+static const struct dev_pm_ops xapm_dev_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(xapm_runtime_suspend, xapm_runtime_resume)
-+	SET_RUNTIME_PM_OPS(xapm_runtime_suspend,
-+			   xapm_runtime_resume, NULL)
-+};
-+
-+static const struct of_device_id xapm_of_match[] = {
-+	{ .compatible = "xlnx,axi-perf-monitor", },
-+	{ /* end of table*/ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, xapm_of_match);
-+
-+static struct platform_driver xapm_driver = {
-+	.driver = {
-+		.name = "xilinx-axipmon",
-+		.of_match_table = xapm_of_match,
-+		.pm = &xapm_dev_pm_ops,
-+	},
-+	.probe = xapm_probe,
-+	.remove = xapm_remove,
-+};
-+
-+module_platform_driver(xapm_driver);
-+
-+MODULE_AUTHOR("Xilinx Inc.");
-+MODULE_DESCRIPTION("Xilinx AXI Performance Monitor driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.1
-
+Thanks, Roger.
