@@ -2,129 +2,81 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48780C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25108C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2130B2068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E966F2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:27:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AQ5uuAD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfLIUYy (ORCPT
+        id S1726646AbfLIU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:24:54 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:58624 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfLIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:24:53 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iePa0-0003kM-0J; Mon, 09 Dec 2019 13:24:29 -0700
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Mon, 9 Dec 2019 15:27:00 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:57152 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLIU07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:26:59 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A5797205D07B;
+        Mon,  9 Dec 2019 12:26:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5797205D07B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1575923218;
+        bh=kAPFAoYHjtm9AzjW0GrD+w2DDaOvexFJS3Kgd3gHBDc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AQ5uuAD8hU2knYQC4wx13g05p4OJw0EHmqdDQBc6zcen/V0HeLrkanZAx5IqIfhpQ
+         0RijU2xmHfT9178jTBC8bI6uiCY4SynSPahDfBsqrEQDStuYh9OGcQOr/oa34/Ym1g
+         poP8Gb4vq9AKhOt/zP1eDpBOyIrElfMQP702yn7c=
+Subject: Re: [PATCH v10 0/9] powerpc: Enabling IMA arch specific secure boot
+ policies
+To:     Mimi Zohar <zohar@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
-Date:   Mon, 9 Dec 2019 13:24:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <5254346f-4ba7-c820-e127-d46b84f2e6e6@linux.microsoft.com>
+Date:   Mon, 9 Dec 2019 12:27:24 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-CA
+In-Reply-To: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: mhocko@suse.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, akpm@linux-foundation.org, dan.j.williams@intel.com, hch@lst.de, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t
- in arch_add_memory()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mimi,
 
+On 10/30/2019 8:31 PM, Mimi Zohar wrote:
 
-On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
-> On 09.12.19 20:13, Logan Gunthorpe wrote:
->> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
->> struct page mappings for IO memory. At present, these mappings are created
->> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
->> x86, an mtrr register will typically override this and force the cache
->> type to be UC-. In the case firmware doesn't set this register it is
->> effectively WB and will typically result in a machine check exception
->> when it's accessed.
->>
->> Other arches are not currently likely to function correctly seeing they
->> don't have any MTRR registers to fall back on.
->>
->> To solve this, add an argument to arch_add_memory() to explicitly
->> set the pgprot value to a specific value.
->>
->> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
->> simple change to pass the pgprot_t down to their respective functions
->> which set up the page tables. For x86_32, set the page tables explicitly
->> using _set_memory_prot() (seeing they are already mapped). For sh, reject
->> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
->> sh doesn't support ZONE_DEVICE anyway.
->>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>  arch/arm64/mm/mmu.c            | 4 ++--
->>  arch/ia64/mm/init.c            | 5 ++++-
->>  arch/powerpc/mm/mem.c          | 4 ++--
->>  arch/s390/mm/init.c            | 4 ++--
->>  arch/sh/mm/init.c              | 5 ++++-
->>  arch/x86/mm/init_32.c          | 7 ++++++-
->>  arch/x86/mm/init_64.c          | 4 ++--
->>  include/linux/memory_hotplug.h | 2 +-
->>  mm/memory_hotplug.c            | 2 +-
->>  mm/memremap.c                  | 2 +-
->>  10 files changed, 25 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 60c929f3683b..48b65272df15 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
->>  }
->>  
->>  #ifdef CONFIG_MEMORY_HOTPLUG
->> -int arch_add_memory(int nid, u64 start, u64 size,
->> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
->>  			struct mhp_restrictions *restrictions)
+> This patchset extends the previous version[1] by adding support for
+> checking against a blacklist of binary hashes.
 > 
-> Can we fiddle that into "struct mhp_restrictions" instead?
+> The IMA subsystem supports custom, built-in, arch-specific policies to
+> define the files to be measured and appraised. These policies are honored
+> based on priority, where arch-specific policy is the highest and custom
+> is the lowest.
 
-Yes, if that's what people want, it's pretty trivial to do. I chose not
-to do it that way because it doesn't get passed down to add_pages() and
-it's not really a "restriction". If I don't hear any objections, I will
-do that for v2.
+Has this change been signed off and merged for the next update of the 
+kernel (v5.5)?
 
-Thanks,
-
-Logan
+thanks,
+  -lakshmi
