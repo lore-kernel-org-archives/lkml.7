@@ -2,108 +2,117 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D23C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE88C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0565D20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CBF2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZaX0ioq"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bq9Malpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfLII6p (ORCPT
+        id S1727388AbfLII7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:58:45 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35062 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLII6o (ORCPT
+        Mon, 9 Dec 2019 03:59:17 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:16802 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLII7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:58:44 -0500
-Received: by mail-pf1-f194.google.com with SMTP id b19so6881883pfo.2;
-        Mon, 09 Dec 2019 00:58:44 -0800 (PST)
+        Mon, 9 Dec 2019 03:59:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J5879LZ/Pi63QwYbKH9FG7q4Bl0Ds4fjn/Pvg7Od1Ec=;
-        b=RZaX0ioqUEqw0QfmHP6faFSw/t94WFmFghK9AEN6Yv+N/+UKM772AHLpfMdRLslZCz
-         A1LJv9UNjP5cXmhnRr/SWM/veawKnW1O+iElSUa5ANIA9akzRPw9A9t+sr4xuTp1CnLW
-         2QueHSGHz/xh0Mpg5C31KZN2D/Uyu1LKQGTzO5S1a+AUG1Ky+qPl3uhZrOB1i+QBEEfV
-         hSI2mvJvTb1hQga8wCfn6zUhQpldlomq2PprONFxrzqDnyb58T+3YlJ0Rk+HInqAqvor
-         QkjLVHbIAEPN5qD75BlwVNmISorFFWMfXJvZfx0Tm0GEN5OmLmpcdGrqnt/LAq1VDAqb
-         isTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J5879LZ/Pi63QwYbKH9FG7q4Bl0Ds4fjn/Pvg7Od1Ec=;
-        b=hp/sW0T0wG9qNqBAjZrNghNzf3d9IMbrJxvXtPRMXs3t4y6Ylj9KPxM1GnUKTiE9sG
-         KcCpKwjLKaF/I35+KgGiCg6VLNlN3Lhqd0Icub5MvpKhKb8gQXor5va7QTkBmsoDkXB/
-         hT4T8bUXMa8SsqaWHgghRRmj/6/9h84WRrZ4boy02hie9W/9UnjmxGcAFiQfvBLGBt2z
-         WzIiv0/PN4ntEtGX90xnllBe1PH7xd8LwfBo9lba8GjDrpe1L03J9x3qHPwY7ungd1yA
-         a56o7HzoTSdLAF0i9tWp8RjH6qBD7gsPB9kuPiszrW/aodPwNNIWJMeCXxp6KZ7PUxfw
-         PSGg==
-X-Gm-Message-State: APjAAAU27iI95TRG7F5i130hJF9e2tj3rftJDamzSLGN5OWAlaO0lqZI
-        TrYAs+eUv6Qk3zdRxrrXGIE=
-X-Google-Smtp-Source: APXvYqyOgxCtG+slALBSZvCRJBZ2STsFf/PiiOls9fa04H+mWGLjYNLpGc90OOQE5vNvxiYdGKoleQ==
-X-Received: by 2002:a63:cc02:: with SMTP id x2mr17928600pgf.114.1575881923958;
-        Mon, 09 Dec 2019 00:58:43 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id f24sm11681569pjp.12.2019.12.09.00.58.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:58:43 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Rui Miguel Silva <rmfrfs@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: imx7-mipi-csis: Add the missed v4l2_async_notifier_cleanup in remove
-Date:   Mon,  9 Dec 2019 16:58:28 +0800
-Message-Id: <20191209085828.16183-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575881957; x=1607417957;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=LGTA5TBkns2swo7rzErYEaOZnrGxFvudwmigEUBWSbw=;
+  b=bq9MalpgtYVPszaKwKWPam2iaN4VtgL2S/AJaNjpRMmgUj6el5XF0dba
+   th9oPnA4PyRyeljinM8C3EpJl1RMw8xCTvzvhbmcGpKh9cw473UNKbf1t
+   s023OJ5WC5kwzp43bQdSboQooCnQUTIo7Dbi6FGZGp9lDslJv5TItIrGf
+   g=;
+IronPort-SDR: dJUnx6CEDqktFiRuiiivz/Sg1VkDOSdNj1YmovhDEEj21n8RIw7fJ4f1q0sB0LgpCJeF+6bCPY
+ PixdBF2EnBzw==
+X-IronPort-AV: E=Sophos;i="5.69,294,1571702400"; 
+   d="scan'208";a="7696916"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 09 Dec 2019 08:59:16 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id E2691A1E75;
+        Mon,  9 Dec 2019 08:59:13 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 08:59:12 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.249) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 9 Dec 2019 08:59:08 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <axboe@kernel.dk>, <konrad.wilk@oracle.com>, <roger.pau@citrix.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pdurrant@amazon.com>, <sj38.park@gmail.com>,
+        <xen-devel@lists.xenproject.org>, SeongJae Park <sjpark@amazon.com>
+Subject: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory pressure
+Date:   Mon, 9 Dec 2019 09:58:38 +0100
+Message-ID: <20191209085839.21215-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.249]
+X-ClientProxiedBy: EX13D29UWA001.ant.amazon.com (10.43.160.187) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All drivers in imx call v4l2_async_notifier_cleanup() after unregistering
-the notifier except this driver.
-This should be a miss and we need to add the call to fix it.
+Each `blkif` has a free pages pool for the grant mapping.  The size of
+the pool starts from zero and be increased on demand while processing
+the I/O requests.  If current I/O requests handling is finished or 100
+milliseconds has passed since last I/O requests handling, it checks and
+shrinks the pool to not exceed the size limit, `max_buffer_pages`.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
- 1 file changed, 1 insertion(+)
+Therefore, `blkfront` running guests can cause a memory pressure in the
+`blkback` running guest by attaching a large number of block devices and
+inducing I/O.  System administrators can avoid such problematic
+situations by limiting the maximum number of devices each guest can
+attach.  However, finding the optimal limit is not so easy.  Improper
+set of the limit can results in the memory pressure or a resource
+underutilization.  This commit avoids such problematic situations by
+squeezing the pools (returns every free page in the pool to the system)
+for a while (users can set this duration via a module parameter) if a
+memory pressure is detected.
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 99166afca071..2bfa85bb84e7 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -1105,6 +1105,7 @@ static int mipi_csis_remove(struct platform_device *pdev)
- 	mipi_csis_debugfs_exit(state);
- 	v4l2_async_unregister_subdev(&state->mipi_sd);
- 	v4l2_async_notifier_unregister(&state->subdev_notifier);
-+	v4l2_async_notifier_cleanup(&state->subdev_notifier);
- 
- 	pm_runtime_disable(&pdev->dev);
- 	mipi_csis_pm_suspend(&pdev->dev, true);
+
+Base Version
+------------
+
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/blkback_aggressive_shrinking_v3
+
+
+Patch History
+-------------
+
+Changes from v2 (https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity (aggressive
+   shrinking -> squeezing)
+
+Changes from v1 (https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily` (suggested
+   by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+SeongJae Park (1):
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+
+ drivers/block/xen-blkback/blkback.c | 35 +++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
+
 -- 
-2.24.0
+2.17.1
 
