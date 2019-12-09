@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29969C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA7BC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06262080D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF42F2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575920015;
-	bh=lPGB69Ul9Z+to5pHDNq2b5gcrgJvKozGNnmvEu3SFDM=;
+	s=default; t=1575920018;
+	bh=BToz5JHrjUWsUPJ/3ovCQ8vpI4jT63sQyRRUO6Nlgok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7FRBxawc1d0KvEV30xzlQCVrUlKTUrTWg6yeRRwZGja4zKHaR9GQW4zYj0A0RCRQ
-	 o5qAZC2Wh7ewamz7tCLYM4rkgBtqbbueXGJ5O8dDEDzvxNH0zdGGS6qqrv4Ka4tk5n
-	 NiZTAk8HjpVXODEaB9PyHCCPofDiY30N0xqXZzPk=
+	b=k05qti4k2EAmXJr4QLRnJuIvETEOdRIy4SGY4m/PlZv/mwvbydI3wipXtxE2UV1Kq
+	 YbKZmI0XZHsJaBeL8VxGu/+SvIqUc3aDYXQI1DzXQgleyQIfn3+YK5P3lRE10oFrPl
+	 op3t2cR3ftA2sWiBpZ25+Mxs7DhMRG6W2qYMcxJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfLITdd (ORCPT
+        id S1727045AbfLITdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:33:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfLITdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 14:33:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726987AbfLITd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:33:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B4E22080D;
-        Mon,  9 Dec 2019 19:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8539206E0;
+        Mon,  9 Dec 2019 19:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575920010;
-        bh=lPGB69Ul9Z+to5pHDNq2b5gcrgJvKozGNnmvEu3SFDM=;
+        s=default; t=1575920008;
+        bh=BToz5JHrjUWsUPJ/3ovCQ8vpI4jT63sQyRRUO6Nlgok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkqmy0lQnrOGWCEgn031HajNumfeaO0dcOMO5YDG4w+xuBHivXEX8VB6oxS9ap5My
-         5+eY2h8Kx416w0GJ45TJE32rid5KRtU/IcYCQ5vd16ulwvfmAZow7cYtmI1/OnXpIN
-         yPxZ6B5wF95dRub3mRyWxwPwSGGHVN5NGWAoIy7o=
+        b=A0kjUcB75uFR4u4UJ/HW0FLnhGRvnXIAJ0OXOrIJ0IJ65qXXL0lA4gg2owDg3yS5Z
+         wazrAUGXyOp8fk+RWn20jINIctqJjTApf/J3Xm8/0LrrDyjSqiYMY/RopgapV6lpxD
+         laUS4/7cTOmyHO7iCAHhqG0impqviNTmVG7Wh84Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Saravana Kannan <saravanak@google.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 6/6] device.h: move 'struct driver' stuff out to device/driver.h
-Date:   Mon,  9 Dec 2019 20:33:03 +0100
-Message-Id: <20191209193303.1694546-7-gregkh@linuxfoundation.org>
+Subject: [PATCH 5/6] device.h: move 'struct class' stuff out to device/class.h
+Date:   Mon,  9 Dec 2019 20:33:02 +0100
+Message-Id: <20191209193303.1694546-6-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
 References: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
@@ -60,8 +60,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 device.h has everything and the kitchen sink when it comes to struct
-device things, so split out the struct driver things things to a
-separate .h file to make things easier to maintain and manage over time.
+device things, so split out the struct class things things to a separate
+.h file to make things easier to maintain and manage over time.
 
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
@@ -69,336 +69,292 @@ Cc: Saravana Kannan <saravanak@google.com>
 Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/driver.c         |   1 +
- include/linux/device.h        | 272 +------------------------------
- include/linux/device/driver.h | 292 ++++++++++++++++++++++++++++++++++
- init/main.c                   |   2 +-
- 4 files changed, 295 insertions(+), 272 deletions(-)
- create mode 100644 include/linux/device/driver.h
+ drivers/base/class.c         |   1 +
+ include/linux/device.h       | 241 +------------------------------
+ include/linux/device/class.h | 266 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 268 insertions(+), 240 deletions(-)
+ create mode 100644 include/linux/device/class.h
 
-diff --git a/drivers/base/driver.c b/drivers/base/driver.c
-index 4e5ca632f35e..57c68769e157 100644
---- a/drivers/base/driver.c
-+++ b/drivers/base/driver.c
+diff --git a/drivers/base/class.c b/drivers/base/class.c
+index d8a6a5864c2e..bcd410e6d70a 100644
+--- a/drivers/base/class.c
++++ b/drivers/base/class.c
 @@ -8,6 +8,7 @@
-  * Copyright (c) 2007 Novell Inc.
+  * Copyright (c) 2003-2004 IBM Corp.
   */
  
-+#include <linux/device/driver.h>
++#include <linux/device/class.h>
  #include <linux/device.h>
  #include <linux/module.h>
- #include <linux/errno.h>
+ #include <linux/init.h>
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 2d697159bfbc..5cb4ff1d7601 100644
+index cb0ea7e66d53..2d697159bfbc 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -28,6 +28,7 @@
+@@ -27,6 +27,7 @@
+ #include <linux/gfp.h>
  #include <linux/overflow.h>
  #include <linux/device/bus.h>
- #include <linux/device/class.h>
-+#include <linux/device/driver.h>
++#include <linux/device/class.h>
  #include <asm/device.h>
  
  struct device;
-@@ -45,227 +46,6 @@ struct iommu_fwspec;
- struct dev_pin_info;
- struct iommu_param;
+@@ -294,246 +295,6 @@ int subsys_system_register(struct bus_type *subsys,
+ int subsys_virtual_register(struct bus_type *subsys,
+ 			    const struct attribute_group **groups);
  
 -/**
-- * enum probe_type - device driver probe type to try
-- *	Device drivers may opt in for special handling of their
-- *	respective probe routines. This tells the core what to
-- *	expect and prefer.
-- *
-- * @PROBE_DEFAULT_STRATEGY: Used by drivers that work equally well
-- *	whether probed synchronously or asynchronously.
-- * @PROBE_PREFER_ASYNCHRONOUS: Drivers for "slow" devices which
-- *	probing order is not essential for booting the system may
-- *	opt into executing their probes asynchronously.
-- * @PROBE_FORCE_SYNCHRONOUS: Use this to annotate drivers that need
-- *	their probe routines to run synchronously with driver and
-- *	device registration (with the exception of -EPROBE_DEFER
-- *	handling - re-probing always ends up being done asynchronously).
-- *
-- * Note that the end goal is to switch the kernel to use asynchronous
-- * probing by default, so annotating drivers with
-- * %PROBE_PREFER_ASYNCHRONOUS is a temporary measure that allows us
-- * to speed up boot process while we are validating the rest of the
-- * drivers.
-- */
--enum probe_type {
--	PROBE_DEFAULT_STRATEGY,
--	PROBE_PREFER_ASYNCHRONOUS,
--	PROBE_FORCE_SYNCHRONOUS,
--};
--
--/**
-- * struct device_driver - The basic device driver structure
-- * @name:	Name of the device driver.
-- * @bus:	The bus which the device of this driver belongs to.
+- * struct class - device classes
+- * @name:	Name of the class.
 - * @owner:	The module owner.
-- * @mod_name:	Used for built-in modules.
-- * @suppress_bind_attrs: Disables bind/unbind via sysfs.
-- * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
-- * @of_match_table: The open firmware table.
-- * @acpi_match_table: The ACPI match table.
-- * @probe:	Called to query the existence of a specific device,
-- *		whether this driver can work with it, and bind the driver
-- *		to a specific device.
-- * @sync_state:	Called to sync device state to software state after all the
-- *		state tracking consumers linked to this device (present at
-- *		the time of late_initcall) have successfully bound to a
-- *		driver. If the device has no consumers, this function will
-- *		be called at late_initcall_sync level. If the device has
-- *		consumers that are never bound to a driver, this function
-- *		will never get called until they do.
-- * @remove:	Called when the device is removed from the system to
-- *		unbind a device from this driver.
-- * @shutdown:	Called at shut-down time to quiesce the device.
-- * @suspend:	Called to put the device to sleep mode. Usually to a
-- *		low power state.
-- * @resume:	Called to bring a device from sleep mode.
-- * @groups:	Default attributes that get created by the driver core
-- *		automatically.
-- * @dev_groups:	Additional attributes attached to device instance once the
-- *		it is bound to the driver.
-- * @pm:		Power management operations of the device which matched
-- *		this driver.
-- * @coredump:	Called when sysfs entry is written to. The device driver
-- *		is expected to call the dev_coredump API resulting in a
-- *		uevent.
-- * @p:		Driver core's private data, no one other than the driver
-- *		core can touch this.
+- * @class_groups: Default attributes of this class.
+- * @dev_groups:	Default attributes of the devices that belong to the class.
+- * @dev_kobj:	The kobject that represents this class and links it into the hierarchy.
+- * @dev_uevent:	Called when a device is added, removed from this class, or a
+- *		few other things that generate uevents to add the environment
+- *		variables.
+- * @devnode:	Callback to provide the devtmpfs.
+- * @class_release: Called to release this class.
+- * @dev_release: Called to release the device.
+- * @shutdown_pre: Called at shut-down time before driver shutdown.
+- * @ns_type:	Callbacks so sysfs can detemine namespaces.
+- * @namespace:	Namespace of the device belongs to this class.
+- * @get_ownership: Allows class to specify uid/gid of the sysfs directories
+- *		for the devices belonging to the class. Usually tied to
+- *		device's namespace.
+- * @pm:		The default device power management operations of this class.
+- * @p:		The private data of the driver core, no one other than the
+- *		driver core can touch this.
 - *
-- * The device driver-model tracks all of the drivers known to the system.
-- * The main reason for this tracking is to enable the driver core to match
-- * up drivers with new devices. Once drivers are known objects within the
-- * system, however, a number of other things become possible. Device drivers
-- * can export information and configuration variables that are independent
-- * of any specific device.
+- * A class is a higher-level view of a device that abstracts out low-level
+- * implementation details. Drivers may see a SCSI disk or an ATA disk, but,
+- * at the class level, they are all simply disks. Classes allow user space
+- * to work with devices based on what they do, rather than how they are
+- * connected or how they work.
 - */
--struct device_driver {
+-struct class {
 -	const char		*name;
--	struct bus_type		*bus;
--
 -	struct module		*owner;
--	const char		*mod_name;	/* used for built-in modules */
 -
--	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
--	enum probe_type probe_type;
+-	const struct attribute_group	**class_groups;
+-	const struct attribute_group	**dev_groups;
+-	struct kobject			*dev_kobj;
 -
--	const struct of_device_id	*of_match_table;
--	const struct acpi_device_id	*acpi_match_table;
+-	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
+-	char *(*devnode)(struct device *dev, umode_t *mode);
 -
--	int (*probe) (struct device *dev);
--	void (*sync_state)(struct device *dev);
--	int (*remove) (struct device *dev);
--	void (*shutdown) (struct device *dev);
--	int (*suspend) (struct device *dev, pm_message_t state);
--	int (*resume) (struct device *dev);
--	const struct attribute_group **groups;
--	const struct attribute_group **dev_groups;
+-	void (*class_release)(struct class *class);
+-	void (*dev_release)(struct device *dev);
+-
+-	int (*shutdown_pre)(struct device *dev);
+-
+-	const struct kobj_ns_type_operations *ns_type;
+-	const void *(*namespace)(struct device *dev);
+-
+-	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
 -
 -	const struct dev_pm_ops *pm;
--	void (*coredump) (struct device *dev);
 -
--	struct driver_private *p;
+-	struct subsys_private *p;
 -};
 -
--
--extern int __must_check driver_register(struct device_driver *drv);
--extern void driver_unregister(struct device_driver *drv);
--
--extern struct device_driver *driver_find(const char *name,
--					 struct bus_type *bus);
--extern int driver_probe_done(void);
--extern void wait_for_device_probe(void);
--
--/* sysfs interface for exporting driver attributes */
--
--struct driver_attribute {
--	struct attribute attr;
--	ssize_t (*show)(struct device_driver *driver, char *buf);
--	ssize_t (*store)(struct device_driver *driver, const char *buf,
--			 size_t count);
+-struct class_dev_iter {
+-	struct klist_iter		ki;
+-	const struct device_type	*type;
 -};
 -
--#define DRIVER_ATTR_RW(_name) \
--	struct driver_attribute driver_attr_##_name = __ATTR_RW(_name)
--#define DRIVER_ATTR_RO(_name) \
--	struct driver_attribute driver_attr_##_name = __ATTR_RO(_name)
--#define DRIVER_ATTR_WO(_name) \
--	struct driver_attribute driver_attr_##_name = __ATTR_WO(_name)
+-extern struct kobject *sysfs_dev_block_kobj;
+-extern struct kobject *sysfs_dev_char_kobj;
+-extern int __must_check __class_register(struct class *class,
+-					 struct lock_class_key *key);
+-extern void class_unregister(struct class *class);
 -
--extern int __must_check driver_create_file(struct device_driver *driver,
--					const struct driver_attribute *attr);
--extern void driver_remove_file(struct device_driver *driver,
--			       const struct driver_attribute *attr);
+-/* This is a #define to keep the compiler from merging different
+- * instances of the __key variable */
+-#define class_register(class)			\
+-({						\
+-	static struct lock_class_key __key;	\
+-	__class_register(class, &__key);	\
+-})
 -
--extern int __must_check driver_for_each_device(struct device_driver *drv,
--					       struct device *start,
--					       void *data,
--					       int (*fn)(struct device *dev,
--							 void *));
--struct device *driver_find_device(struct device_driver *drv,
--				  struct device *start, const void *data,
--				  int (*match)(struct device *dev, const void *data));
+-struct class_compat;
+-struct class_compat *class_compat_register(const char *name);
+-void class_compat_unregister(struct class_compat *cls);
+-int class_compat_create_link(struct class_compat *cls, struct device *dev,
+-			     struct device *device_link);
+-void class_compat_remove_link(struct class_compat *cls, struct device *dev,
+-			      struct device *device_link);
+-
+-extern void class_dev_iter_init(struct class_dev_iter *iter,
+-				struct class *class,
+-				struct device *start,
+-				const struct device_type *type);
+-extern struct device *class_dev_iter_next(struct class_dev_iter *iter);
+-extern void class_dev_iter_exit(struct class_dev_iter *iter);
+-
+-extern int class_for_each_device(struct class *class, struct device *start,
+-				 void *data,
+-				 int (*fn)(struct device *dev, void *data));
+-extern struct device *class_find_device(struct class *class,
+-					struct device *start, const void *data,
+-					int (*match)(struct device *, const void *));
 -
 -/**
-- * driver_find_device_by_name - device iterator for locating a particular device
+- * class_find_device_by_name - device iterator for locating a particular device
 - * of a specific name.
-- * @drv: the driver we're iterating
+- * @class: class type
 - * @name: name of the device to match
 - */
--static inline struct device *driver_find_device_by_name(struct device_driver *drv,
--							const char *name)
+-static inline struct device *class_find_device_by_name(struct class *class,
+-						       const char *name)
 -{
--	return driver_find_device(drv, NULL, name, device_match_name);
+-	return class_find_device(class, NULL, name, device_match_name);
 -}
 -
 -/**
-- * driver_find_device_by_of_node- device iterator for locating a particular device
-- * by of_node pointer.
-- * @drv: the driver we're iterating
-- * @np: of_node pointer to match.
+- * class_find_device_by_of_node : device iterator for locating a particular device
+- * matching the of_node.
+- * @class: class type
+- * @np: of_node of the device to match.
 - */
 -static inline struct device *
--driver_find_device_by_of_node(struct device_driver *drv,
--			      const struct device_node *np)
+-class_find_device_by_of_node(struct class *class, const struct device_node *np)
 -{
--	return driver_find_device(drv, NULL, np, device_match_of_node);
+-	return class_find_device(class, NULL, np, device_match_of_node);
 -}
 -
 -/**
-- * driver_find_device_by_fwnode- device iterator for locating a particular device
-- * by fwnode pointer.
-- * @drv: the driver we're iterating
-- * @fwnode: fwnode pointer to match.
+- * class_find_device_by_fwnode : device iterator for locating a particular device
+- * matching the fwnode.
+- * @class: class type
+- * @fwnode: fwnode of the device to match.
 - */
 -static inline struct device *
--driver_find_device_by_fwnode(struct device_driver *drv,
--			     const struct fwnode_handle *fwnode)
+-class_find_device_by_fwnode(struct class *class,
+-			    const struct fwnode_handle *fwnode)
 -{
--	return driver_find_device(drv, NULL, fwnode, device_match_fwnode);
+-	return class_find_device(class, NULL, fwnode, device_match_fwnode);
 -}
 -
 -/**
-- * driver_find_device_by_devt- device iterator for locating a particular device
-- * by devt.
-- * @drv: the driver we're iterating
-- * @devt: devt pointer to match.
+- * class_find_device_by_devt : device iterator for locating a particular device
+- * matching the device type.
+- * @class: class type
+- * @devt: device type of the device to match.
 - */
--static inline struct device *driver_find_device_by_devt(struct device_driver *drv,
--							dev_t devt)
+-static inline struct device *class_find_device_by_devt(struct class *class,
+-						       dev_t devt)
 -{
--	return driver_find_device(drv, NULL, &devt, device_match_devt);
--}
--
--static inline struct device *driver_find_next_device(struct device_driver *drv,
--						     struct device *start)
--{
--	return driver_find_device(drv, start, NULL, device_match_any);
+-	return class_find_device(class, NULL, &devt, device_match_devt);
 -}
 -
 -#ifdef CONFIG_ACPI
+-struct acpi_device;
 -/**
-- * driver_find_device_by_acpi_dev : device iterator for locating a particular
+- * class_find_device_by_acpi_dev : device iterator for locating a particular
 - * device matching the ACPI_COMPANION device.
-- * @drv: the driver we're iterating
+- * @class: class type
 - * @adev: ACPI_COMPANION device to match.
 - */
 -static inline struct device *
--driver_find_device_by_acpi_dev(struct device_driver *drv,
--			       const struct acpi_device *adev)
+-class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
 -{
--	return driver_find_device(drv, NULL, adev, device_match_acpi_dev);
+-	return class_find_device(class, NULL, adev, device_match_acpi_dev);
 -}
 -#else
 -static inline struct device *
--driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+-class_find_device_by_acpi_dev(struct class *class, const void *adev)
 -{
 -	return NULL;
 -}
 -#endif
 -
--void driver_deferred_probe_add(struct device *dev);
--int driver_deferred_probe_check_state(struct device *dev);
--int driver_deferred_probe_check_state_continue(struct device *dev);
+-struct class_attribute {
+-	struct attribute attr;
+-	ssize_t (*show)(struct class *class, struct class_attribute *attr,
+-			char *buf);
+-	ssize_t (*store)(struct class *class, struct class_attribute *attr,
+-			const char *buf, size_t count);
+-};
 -
- /**
-  * struct subsys_interface - interfaces to device functions
-  * @name:       name of the device function
-@@ -1018,8 +798,6 @@ static inline struct device_node *dev_of_node(struct device *dev)
- 	return dev->of_node;
- }
- 
--void driver_init(void);
+-#define CLASS_ATTR_RW(_name) \
+-	struct class_attribute class_attr_##_name = __ATTR_RW(_name)
+-#define CLASS_ATTR_RO(_name) \
+-	struct class_attribute class_attr_##_name = __ATTR_RO(_name)
+-#define CLASS_ATTR_WO(_name) \
+-	struct class_attribute class_attr_##_name = __ATTR_WO(_name)
+-
+-extern int __must_check class_create_file_ns(struct class *class,
+-					     const struct class_attribute *attr,
+-					     const void *ns);
+-extern void class_remove_file_ns(struct class *class,
+-				 const struct class_attribute *attr,
+-				 const void *ns);
+-
+-static inline int __must_check class_create_file(struct class *class,
+-					const struct class_attribute *attr)
+-{
+-	return class_create_file_ns(class, attr, NULL);
+-}
+-
+-static inline void class_remove_file(struct class *class,
+-				     const struct class_attribute *attr)
+-{
+-	return class_remove_file_ns(class, attr, NULL);
+-}
+-
+-/* Simple class attribute that is just a static string */
+-struct class_attribute_string {
+-	struct class_attribute attr;
+-	char *str;
+-};
+-
+-/* Currently read-only only */
+-#define _CLASS_ATTR_STRING(_name, _mode, _str) \
+-	{ __ATTR(_name, _mode, show_class_attr_string, NULL), _str }
+-#define CLASS_ATTR_STRING(_name, _mode, _str) \
+-	struct class_attribute_string class_attr_##_name = \
+-		_CLASS_ATTR_STRING(_name, _mode, _str)
+-
+-extern ssize_t show_class_attr_string(struct class *class, struct class_attribute *attr,
+-                        char *buf);
+-
+-struct class_interface {
+-	struct list_head	node;
+-	struct class		*class;
+-
+-	int (*add_dev)		(struct device *, struct class_interface *);
+-	void (*remove_dev)	(struct device *, struct class_interface *);
+-};
+-
+-extern int __must_check class_interface_register(struct class_interface *);
+-extern void class_interface_unregister(struct class_interface *);
+-
+-extern struct class * __must_check __class_create(struct module *owner,
+-						  const char *name,
+-						  struct lock_class_key *key);
+-extern void class_destroy(struct class *cls);
+-
+-/* This is a #define to keep the compiler from merging different
+- * instances of the __key variable */
+-#define class_create(owner, name)		\
+-({						\
+-	static struct lock_class_key __key;	\
+-	__class_create(owner, name, &__key);	\
+-})
 -
  /*
-  * High level routines for use by the bus drivers
-  */
-@@ -1193,52 +971,4 @@ extern long sysfs_deprecated;
- #define sysfs_deprecated 0
- #endif
- 
--/**
-- * module_driver() - Helper macro for drivers that don't do anything
-- * special in module init/exit. This eliminates a lot of boilerplate.
-- * Each module may only use this macro once, and calling it replaces
-- * module_init() and module_exit().
-- *
-- * @__driver: driver name
-- * @__register: register function for this driver type
-- * @__unregister: unregister function for this driver type
-- * @...: Additional arguments to be passed to __register and __unregister.
-- *
-- * Use this macro to construct bus specific macros for registering
-- * drivers, and do not use it on its own.
-- */
--#define module_driver(__driver, __register, __unregister, ...) \
--static int __init __driver##_init(void) \
--{ \
--	return __register(&(__driver) , ##__VA_ARGS__); \
--} \
--module_init(__driver##_init); \
--static void __exit __driver##_exit(void) \
--{ \
--	__unregister(&(__driver) , ##__VA_ARGS__); \
--} \
--module_exit(__driver##_exit);
--
--/**
-- * builtin_driver() - Helper macro for drivers that don't do anything
-- * special in init and have no exit. This eliminates some boilerplate.
-- * Each driver may only use this macro once, and calling it replaces
-- * device_initcall (or in some cases, the legacy __initcall).  This is
-- * meant to be a direct parallel of module_driver() above but without
-- * the __exit stuff that is not used for builtin cases.
-- *
-- * @__driver: driver name
-- * @__register: register function for this driver type
-- * @...: Additional arguments to be passed to __register
-- *
-- * Use this macro to construct bus specific macros for registering
-- * drivers, and do not use it on its own.
-- */
--#define builtin_driver(__driver, __register, ...) \
--static int __init __driver##_init(void) \
--{ \
--	return __register(&(__driver) , ##__VA_ARGS__); \
--} \
--device_initcall(__driver##_init);
--
- #endif /* _DEVICE_H_ */
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+  * The type of device, "struct device" is embedded in. A class
+  * or bus can contain devices of different types
+diff --git a/include/linux/device/class.h b/include/linux/device/class.h
 new file mode 100644
-index 000000000000..1188260f9a02
+index 000000000000..e8d470c457d1
 --- /dev/null
-+++ b/include/linux/device/driver.h
-@@ -0,0 +1,292 @@
++++ b/include/linux/device/class.h
+@@ -0,0 +1,266 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * The driver-specific portions of the driver model
++ * The class-specific portions of the driver model
 + *
 + * Copyright (c) 2001-2003 Patrick Mochel <mochel@osdl.org>
 + * Copyright (c) 2004-2009 Greg Kroah-Hartman <gregkh@suse.de>
@@ -409,298 +365,259 @@ index 000000000000..1188260f9a02
 + * See Documentation/driver-api/driver-model/ for more information.
 + */
 +
-+#ifndef _DEVICE_DRIVER_H_
-+#define _DEVICE_DRIVER_H_
++#ifndef _DEVICE_CLASS_H_
++#define _DEVICE_CLASS_H_
 +
 +#include <linux/kobject.h>
 +#include <linux/klist.h>
 +#include <linux/pm.h>
 +#include <linux/device/bus.h>
 +
-+/**
-+ * enum probe_type - device driver probe type to try
-+ *	Device drivers may opt in for special handling of their
-+ *	respective probe routines. This tells the core what to
-+ *	expect and prefer.
-+ *
-+ * @PROBE_DEFAULT_STRATEGY: Used by drivers that work equally well
-+ *	whether probed synchronously or asynchronously.
-+ * @PROBE_PREFER_ASYNCHRONOUS: Drivers for "slow" devices which
-+ *	probing order is not essential for booting the system may
-+ *	opt into executing their probes asynchronously.
-+ * @PROBE_FORCE_SYNCHRONOUS: Use this to annotate drivers that need
-+ *	their probe routines to run synchronously with driver and
-+ *	device registration (with the exception of -EPROBE_DEFER
-+ *	handling - re-probing always ends up being done asynchronously).
-+ *
-+ * Note that the end goal is to switch the kernel to use asynchronous
-+ * probing by default, so annotating drivers with
-+ * %PROBE_PREFER_ASYNCHRONOUS is a temporary measure that allows us
-+ * to speed up boot process while we are validating the rest of the
-+ * drivers.
-+ */
-+enum probe_type {
-+	PROBE_DEFAULT_STRATEGY,
-+	PROBE_PREFER_ASYNCHRONOUS,
-+	PROBE_FORCE_SYNCHRONOUS,
-+};
++struct device;
++struct fwnode_handle;
 +
 +/**
-+ * struct device_driver - The basic device driver structure
-+ * @name:	Name of the device driver.
-+ * @bus:	The bus which the device of this driver belongs to.
++ * struct class - device classes
++ * @name:	Name of the class.
 + * @owner:	The module owner.
-+ * @mod_name:	Used for built-in modules.
-+ * @suppress_bind_attrs: Disables bind/unbind via sysfs.
-+ * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
-+ * @of_match_table: The open firmware table.
-+ * @acpi_match_table: The ACPI match table.
-+ * @probe:	Called to query the existence of a specific device,
-+ *		whether this driver can work with it, and bind the driver
-+ *		to a specific device.
-+ * @sync_state:	Called to sync device state to software state after all the
-+ *		state tracking consumers linked to this device (present at
-+ *		the time of late_initcall) have successfully bound to a
-+ *		driver. If the device has no consumers, this function will
-+ *		be called at late_initcall_sync level. If the device has
-+ *		consumers that are never bound to a driver, this function
-+ *		will never get called until they do.
-+ * @remove:	Called when the device is removed from the system to
-+ *		unbind a device from this driver.
-+ * @shutdown:	Called at shut-down time to quiesce the device.
-+ * @suspend:	Called to put the device to sleep mode. Usually to a
-+ *		low power state.
-+ * @resume:	Called to bring a device from sleep mode.
-+ * @groups:	Default attributes that get created by the driver core
-+ *		automatically.
-+ * @dev_groups:	Additional attributes attached to device instance once the
-+ *		it is bound to the driver.
-+ * @pm:		Power management operations of the device which matched
-+ *		this driver.
-+ * @coredump:	Called when sysfs entry is written to. The device driver
-+ *		is expected to call the dev_coredump API resulting in a
-+ *		uevent.
-+ * @p:		Driver core's private data, no one other than the driver
-+ *		core can touch this.
++ * @class_groups: Default attributes of this class.
++ * @dev_groups:	Default attributes of the devices that belong to the class.
++ * @dev_kobj:	The kobject that represents this class and links it into the hierarchy.
++ * @dev_uevent:	Called when a device is added, removed from this class, or a
++ *		few other things that generate uevents to add the environment
++ *		variables.
++ * @devnode:	Callback to provide the devtmpfs.
++ * @class_release: Called to release this class.
++ * @dev_release: Called to release the device.
++ * @shutdown_pre: Called at shut-down time before driver shutdown.
++ * @ns_type:	Callbacks so sysfs can detemine namespaces.
++ * @namespace:	Namespace of the device belongs to this class.
++ * @get_ownership: Allows class to specify uid/gid of the sysfs directories
++ *		for the devices belonging to the class. Usually tied to
++ *		device's namespace.
++ * @pm:		The default device power management operations of this class.
++ * @p:		The private data of the driver core, no one other than the
++ *		driver core can touch this.
 + *
-+ * The device driver-model tracks all of the drivers known to the system.
-+ * The main reason for this tracking is to enable the driver core to match
-+ * up drivers with new devices. Once drivers are known objects within the
-+ * system, however, a number of other things become possible. Device drivers
-+ * can export information and configuration variables that are independent
-+ * of any specific device.
++ * A class is a higher-level view of a device that abstracts out low-level
++ * implementation details. Drivers may see a SCSI disk or an ATA disk, but,
++ * at the class level, they are all simply disks. Classes allow user space
++ * to work with devices based on what they do, rather than how they are
++ * connected or how they work.
 + */
-+struct device_driver {
++struct class {
 +	const char		*name;
-+	struct bus_type		*bus;
-+
 +	struct module		*owner;
-+	const char		*mod_name;	/* used for built-in modules */
 +
-+	bool suppress_bind_attrs;	/* disables bind/unbind via sysfs */
-+	enum probe_type probe_type;
++	const struct attribute_group	**class_groups;
++	const struct attribute_group	**dev_groups;
++	struct kobject			*dev_kobj;
 +
-+	const struct of_device_id	*of_match_table;
-+	const struct acpi_device_id	*acpi_match_table;
++	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
++	char *(*devnode)(struct device *dev, umode_t *mode);
 +
-+	int (*probe) (struct device *dev);
-+	void (*sync_state)(struct device *dev);
-+	int (*remove) (struct device *dev);
-+	void (*shutdown) (struct device *dev);
-+	int (*suspend) (struct device *dev, pm_message_t state);
-+	int (*resume) (struct device *dev);
-+	const struct attribute_group **groups;
-+	const struct attribute_group **dev_groups;
++	void (*class_release)(struct class *class);
++	void (*dev_release)(struct device *dev);
++
++	int (*shutdown_pre)(struct device *dev);
++
++	const struct kobj_ns_type_operations *ns_type;
++	const void *(*namespace)(struct device *dev);
++
++	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
 +
 +	const struct dev_pm_ops *pm;
-+	void (*coredump) (struct device *dev);
 +
-+	struct driver_private *p;
++	struct subsys_private *p;
 +};
 +
-+
-+extern int __must_check driver_register(struct device_driver *drv);
-+extern void driver_unregister(struct device_driver *drv);
-+
-+extern struct device_driver *driver_find(const char *name,
-+					 struct bus_type *bus);
-+extern int driver_probe_done(void);
-+extern void wait_for_device_probe(void);
-+
-+/* sysfs interface for exporting driver attributes */
-+
-+struct driver_attribute {
-+	struct attribute attr;
-+	ssize_t (*show)(struct device_driver *driver, char *buf);
-+	ssize_t (*store)(struct device_driver *driver, const char *buf,
-+			 size_t count);
++struct class_dev_iter {
++	struct klist_iter		ki;
++	const struct device_type	*type;
 +};
 +
-+#define DRIVER_ATTR_RW(_name) \
-+	struct driver_attribute driver_attr_##_name = __ATTR_RW(_name)
-+#define DRIVER_ATTR_RO(_name) \
-+	struct driver_attribute driver_attr_##_name = __ATTR_RO(_name)
-+#define DRIVER_ATTR_WO(_name) \
-+	struct driver_attribute driver_attr_##_name = __ATTR_WO(_name)
++extern struct kobject *sysfs_dev_block_kobj;
++extern struct kobject *sysfs_dev_char_kobj;
++extern int __must_check __class_register(struct class *class,
++					 struct lock_class_key *key);
++extern void class_unregister(struct class *class);
 +
-+extern int __must_check driver_create_file(struct device_driver *driver,
-+					const struct driver_attribute *attr);
-+extern void driver_remove_file(struct device_driver *driver,
-+			       const struct driver_attribute *attr);
++/* This is a #define to keep the compiler from merging different
++ * instances of the __key variable */
++#define class_register(class)			\
++({						\
++	static struct lock_class_key __key;	\
++	__class_register(class, &__key);	\
++})
 +
-+extern int __must_check driver_for_each_device(struct device_driver *drv,
-+					       struct device *start,
-+					       void *data,
-+					       int (*fn)(struct device *dev,
-+							 void *));
-+struct device *driver_find_device(struct device_driver *drv,
-+				  struct device *start, const void *data,
-+				  int (*match)(struct device *dev, const void *data));
++struct class_compat;
++struct class_compat *class_compat_register(const char *name);
++void class_compat_unregister(struct class_compat *cls);
++int class_compat_create_link(struct class_compat *cls, struct device *dev,
++			     struct device *device_link);
++void class_compat_remove_link(struct class_compat *cls, struct device *dev,
++			      struct device *device_link);
++
++extern void class_dev_iter_init(struct class_dev_iter *iter,
++				struct class *class,
++				struct device *start,
++				const struct device_type *type);
++extern struct device *class_dev_iter_next(struct class_dev_iter *iter);
++extern void class_dev_iter_exit(struct class_dev_iter *iter);
++
++extern int class_for_each_device(struct class *class, struct device *start,
++				 void *data,
++				 int (*fn)(struct device *dev, void *data));
++extern struct device *class_find_device(struct class *class,
++					struct device *start, const void *data,
++					int (*match)(struct device *, const void *));
 +
 +/**
-+ * driver_find_device_by_name - device iterator for locating a particular device
++ * class_find_device_by_name - device iterator for locating a particular device
 + * of a specific name.
-+ * @drv: the driver we're iterating
++ * @class: class type
 + * @name: name of the device to match
 + */
-+static inline struct device *driver_find_device_by_name(struct device_driver *drv,
-+							const char *name)
++static inline struct device *class_find_device_by_name(struct class *class,
++						       const char *name)
 +{
-+	return driver_find_device(drv, NULL, name, device_match_name);
++	return class_find_device(class, NULL, name, device_match_name);
 +}
 +
 +/**
-+ * driver_find_device_by_of_node- device iterator for locating a particular device
-+ * by of_node pointer.
-+ * @drv: the driver we're iterating
-+ * @np: of_node pointer to match.
++ * class_find_device_by_of_node : device iterator for locating a particular device
++ * matching the of_node.
++ * @class: class type
++ * @np: of_node of the device to match.
 + */
 +static inline struct device *
-+driver_find_device_by_of_node(struct device_driver *drv,
-+			      const struct device_node *np)
++class_find_device_by_of_node(struct class *class, const struct device_node *np)
 +{
-+	return driver_find_device(drv, NULL, np, device_match_of_node);
++	return class_find_device(class, NULL, np, device_match_of_node);
 +}
 +
 +/**
-+ * driver_find_device_by_fwnode- device iterator for locating a particular device
-+ * by fwnode pointer.
-+ * @drv: the driver we're iterating
-+ * @fwnode: fwnode pointer to match.
++ * class_find_device_by_fwnode : device iterator for locating a particular device
++ * matching the fwnode.
++ * @class: class type
++ * @fwnode: fwnode of the device to match.
 + */
 +static inline struct device *
-+driver_find_device_by_fwnode(struct device_driver *drv,
-+			     const struct fwnode_handle *fwnode)
++class_find_device_by_fwnode(struct class *class,
++			    const struct fwnode_handle *fwnode)
 +{
-+	return driver_find_device(drv, NULL, fwnode, device_match_fwnode);
++	return class_find_device(class, NULL, fwnode, device_match_fwnode);
 +}
 +
 +/**
-+ * driver_find_device_by_devt- device iterator for locating a particular device
-+ * by devt.
-+ * @drv: the driver we're iterating
-+ * @devt: devt pointer to match.
++ * class_find_device_by_devt : device iterator for locating a particular device
++ * matching the device type.
++ * @class: class type
++ * @devt: device type of the device to match.
 + */
-+static inline struct device *driver_find_device_by_devt(struct device_driver *drv,
-+							dev_t devt)
++static inline struct device *class_find_device_by_devt(struct class *class,
++						       dev_t devt)
 +{
-+	return driver_find_device(drv, NULL, &devt, device_match_devt);
-+}
-+
-+static inline struct device *driver_find_next_device(struct device_driver *drv,
-+						     struct device *start)
-+{
-+	return driver_find_device(drv, start, NULL, device_match_any);
++	return class_find_device(class, NULL, &devt, device_match_devt);
 +}
 +
 +#ifdef CONFIG_ACPI
++struct acpi_device;
 +/**
-+ * driver_find_device_by_acpi_dev : device iterator for locating a particular
++ * class_find_device_by_acpi_dev : device iterator for locating a particular
 + * device matching the ACPI_COMPANION device.
-+ * @drv: the driver we're iterating
++ * @class: class type
 + * @adev: ACPI_COMPANION device to match.
 + */
 +static inline struct device *
-+driver_find_device_by_acpi_dev(struct device_driver *drv,
-+			       const struct acpi_device *adev)
++class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
 +{
-+	return driver_find_device(drv, NULL, adev, device_match_acpi_dev);
++	return class_find_device(class, NULL, adev, device_match_acpi_dev);
 +}
 +#else
 +static inline struct device *
-+driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
++class_find_device_by_acpi_dev(struct class *class, const void *adev)
 +{
 +	return NULL;
 +}
 +#endif
 +
-+void driver_deferred_probe_add(struct device *dev);
-+int driver_deferred_probe_check_state(struct device *dev);
-+int driver_deferred_probe_check_state_continue(struct device *dev);
-+void driver_init(void);
++struct class_attribute {
++	struct attribute attr;
++	ssize_t (*show)(struct class *class, struct class_attribute *attr,
++			char *buf);
++	ssize_t (*store)(struct class *class, struct class_attribute *attr,
++			const char *buf, size_t count);
++};
 +
-+/**
-+ * module_driver() - Helper macro for drivers that don't do anything
-+ * special in module init/exit. This eliminates a lot of boilerplate.
-+ * Each module may only use this macro once, and calling it replaces
-+ * module_init() and module_exit().
-+ *
-+ * @__driver: driver name
-+ * @__register: register function for this driver type
-+ * @__unregister: unregister function for this driver type
-+ * @...: Additional arguments to be passed to __register and __unregister.
-+ *
-+ * Use this macro to construct bus specific macros for registering
-+ * drivers, and do not use it on its own.
-+ */
-+#define module_driver(__driver, __register, __unregister, ...) \
-+static int __init __driver##_init(void) \
-+{ \
-+	return __register(&(__driver) , ##__VA_ARGS__); \
-+} \
-+module_init(__driver##_init); \
-+static void __exit __driver##_exit(void) \
-+{ \
-+	__unregister(&(__driver) , ##__VA_ARGS__); \
-+} \
-+module_exit(__driver##_exit);
++#define CLASS_ATTR_RW(_name) \
++	struct class_attribute class_attr_##_name = __ATTR_RW(_name)
++#define CLASS_ATTR_RO(_name) \
++	struct class_attribute class_attr_##_name = __ATTR_RO(_name)
++#define CLASS_ATTR_WO(_name) \
++	struct class_attribute class_attr_##_name = __ATTR_WO(_name)
 +
-+/**
-+ * builtin_driver() - Helper macro for drivers that don't do anything
-+ * special in init and have no exit. This eliminates some boilerplate.
-+ * Each driver may only use this macro once, and calling it replaces
-+ * device_initcall (or in some cases, the legacy __initcall).  This is
-+ * meant to be a direct parallel of module_driver() above but without
-+ * the __exit stuff that is not used for builtin cases.
-+ *
-+ * @__driver: driver name
-+ * @__register: register function for this driver type
-+ * @...: Additional arguments to be passed to __register
-+ *
-+ * Use this macro to construct bus specific macros for registering
-+ * drivers, and do not use it on its own.
-+ */
-+#define builtin_driver(__driver, __register, ...) \
-+static int __init __driver##_init(void) \
-+{ \
-+	return __register(&(__driver) , ##__VA_ARGS__); \
-+} \
-+device_initcall(__driver##_init);
++extern int __must_check class_create_file_ns(struct class *class,
++					     const struct class_attribute *attr,
++					     const void *ns);
++extern void class_remove_file_ns(struct class *class,
++				 const struct class_attribute *attr,
++				 const void *ns);
 +
-+#endif	/* _DEVICE_DRIVER_H_ */
-diff --git a/init/main.c b/init/main.c
-index 91f6ebb30ef0..dc50a803ea8f 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -63,7 +63,7 @@
- #include <linux/lockdep.h>
- #include <linux/kmemleak.h>
- #include <linux/pid_namespace.h>
--#include <linux/device.h>
-+#include <linux/device/driver.h>
- #include <linux/kthread.h>
- #include <linux/sched.h>
- #include <linux/sched/init.h>
++static inline int __must_check class_create_file(struct class *class,
++					const struct class_attribute *attr)
++{
++	return class_create_file_ns(class, attr, NULL);
++}
++
++static inline void class_remove_file(struct class *class,
++				     const struct class_attribute *attr)
++{
++	return class_remove_file_ns(class, attr, NULL);
++}
++
++/* Simple class attribute that is just a static string */
++struct class_attribute_string {
++	struct class_attribute attr;
++	char *str;
++};
++
++/* Currently read-only only */
++#define _CLASS_ATTR_STRING(_name, _mode, _str) \
++	{ __ATTR(_name, _mode, show_class_attr_string, NULL), _str }
++#define CLASS_ATTR_STRING(_name, _mode, _str) \
++	struct class_attribute_string class_attr_##_name = \
++		_CLASS_ATTR_STRING(_name, _mode, _str)
++
++extern ssize_t show_class_attr_string(struct class *class, struct class_attribute *attr,
++                        char *buf);
++
++struct class_interface {
++	struct list_head	node;
++	struct class		*class;
++
++	int (*add_dev)		(struct device *, struct class_interface *);
++	void (*remove_dev)	(struct device *, struct class_interface *);
++};
++
++extern int __must_check class_interface_register(struct class_interface *);
++extern void class_interface_unregister(struct class_interface *);
++
++extern struct class * __must_check __class_create(struct module *owner,
++						  const char *name,
++						  struct lock_class_key *key);
++extern void class_destroy(struct class *cls);
++
++/* This is a #define to keep the compiler from merging different
++ * instances of the __key variable */
++#define class_create(owner, name)		\
++({						\
++	static struct lock_class_key __key;	\
++	__class_create(owner, name, &__key);	\
++})
++
++
++#endif	/* _DEVICE_CLASS_H_ */
 -- 
 2.24.0
 
