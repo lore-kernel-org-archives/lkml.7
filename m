@@ -2,185 +2,126 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07872C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173BDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B9C2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EH2gqenm"
+	by mail.kernel.org (Postfix) with ESMTP id DEEBD2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfLIO27 (ORCPT
+        id S1727566AbfLIObD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:28:59 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:55955 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfLIO27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:28:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575901739;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=X1P5ZS66O+SyV3Z0pG3ySBc5zDyuUajrOIBHrzr8Pms=;
-  b=EH2gqenm9Iv6+PdaymFKCdHBdr1KRQJR+nXxnqIcKj1IYX3mM6G4Oa0t
-   xgtALdDRhsCihQOgIfncGZJbNgprWRQ22QcEZAjNQ6EZrZ/+HdTvR9lwM
-   lfTsGh5Zh/MpvoocaoJr1BcePvnig8xmgsnlmUmlnt5DoA2Dc+FblYeFG
-   w=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: a1ru/4XWSvrJrh5euaNnkOw8Vn3o3G46oijEi/FPyzJJ5TLvObjfsKXIaMgNz5CM0IqGTp3qc5
- NKJSNxeQQkbuDEB0EqCCu+3gryAHE1mLeXG3H7Dmucqllf79phmdJt0RvpKjbrz1TcKdPaV+Qa
- a/DvXG50rPXGHbnFS0pDCNSVnVX/hoAYQmmbAvyKX9TVwCttsWCQlnqmmrnFPoBKrSC0nQ50zH
- 2CANj0bjodv3B6IMfPEnJIN8sKz9KkOB1CxplML9TB/kUiwIowKQRH/nwzVmjkWuM+spastILk
- S4g=
-X-SBRS: 2.7
-X-MesageID: 9395324
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,296,1571716800"; 
-   d="scan'208";a="9395324"
-Date:   Mon, 9 Dec 2019 15:28:52 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     "Durrant, Paul" <pdurrant@amazon.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Juergen Gross" <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
- closed
-Message-ID: <20191209142852.GW980@Air-de-Roger>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-3-pdurrant@amazon.com>
- <20191209113926.GS980@Air-de-Roger>
- <19b5c2fa36b842e58bbdddd602c4e672@EX13D32EUC003.ant.amazon.com>
- <20191209122537.GV980@Air-de-Roger>
- <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
+        Mon, 9 Dec 2019 09:31:03 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2167 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726687AbfLIObD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:31:03 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 181F11164564CBDC2020;
+        Mon,  9 Dec 2019 14:31:02 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 9 Dec 2019 14:31:01 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 9 Dec 2019
+ 14:31:01 +0000
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <tglx@linutronix.de>, <chenxiang66@hisilicon.com>,
+        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <maz@kernel.org>, <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
+        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+Message-ID: <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+Date:   Mon, 9 Dec 2019 14:30:59 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <54e3cd3a42d8418d9a36388315deab13@EX13D32EUC003.ant.amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+In-Reply-To: <20191207080335.GA6077@ming.t460p>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 12:40:47PM +0000, Durrant, Paul wrote:
-> > -----Original Message-----
-> > From: Roger Pau Monné <roger.pau@citrix.com>
-> > Sent: 09 December 2019 12:26
-> > To: Durrant, Paul <pdurrant@amazon.com>
-> > Cc: linux-kernel@vger.kernel.org; xen-devel@lists.xenproject.org; Juergen
-> > Gross <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>;
-> > Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
-> > closed
-> > 
-> > On Mon, Dec 09, 2019 at 12:01:38PM +0000, Durrant, Paul wrote:
-> > > > -----Original Message-----
-> > > > From: Roger Pau Monné <roger.pau@citrix.com>
-> > > > Sent: 09 December 2019 11:39
-> > > > To: Durrant, Paul <pdurrant@amazon.com>
-> > > > Cc: linux-kernel@vger.kernel.org; xen-devel@lists.xenproject.org;
-> > Juergen
-> > > > Gross <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>;
-> > > > Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> > > > Subject: Re: [Xen-devel] [PATCH 2/4] xenbus: limit when state is
-> > forced to
-> > > > closed
-> > > >
-> > > > On Thu, Dec 05, 2019 at 02:01:21PM +0000, Paul Durrant wrote:
-> > > > > Only force state to closed in the case when the toolstack may need
-> > to
-> > > > > clean up. This can be detected by checking whether the state in
-> > xenstore
-> > > > > has been set to closing prior to device removal.
-> > > >
-> > > > I'm not sure I see the point of this, I would expect that a failure to
-> > > > probe or the removal of the device would leave the xenbus state as
-> > > > closed, which is consistent with the actual driver state.
-> > > >
-> > > > Can you explain what's the benefit of leaving a device without a
-> > > > driver in such unknown state?
-> > > >
-> > >
-> > > If probe fails then I think it should leave the state alone. If the
-> > > state is moved to closed then basically you just killed that
-> > > connection to the guest (as the frontend will normally close down
-> > > when it sees this change) so, if the probe failure was due to a bug
-> > > in blkback or, e.g., a transient resource issue then it's game over
-> > > as far as that guest goes.
-> > 
-> > But the connection can be restarted by switching the backend to the
-> > init state again.
+On 07/12/2019 08:03, Ming Lei wrote:
+> On Fri, Dec 06, 2019 at 10:35:04PM +0800, John Garry wrote:
+>> Currently the cpu allowed mask for the threaded part of a threaded irq
+>> handler will be set to the effective affinity of the hard irq.
+>>
+>> Typically the effective affinity of the hard irq will be for a single cpu. As such,
+>> the threaded handler would always run on the same cpu as the hard irq.
+>>
+>> We have seen scenarios in high data-rate throughput testing that the cpu
+>> handling the interrupt can be totally saturated handling both the hard
+>> interrupt and threaded handler parts, limiting throughput.
 > 
-> Too late. The frontend saw closed and you already lost.
-> 
-> > 
-> > > The ultimate goal here is PV backend re-load that is completely
-> > transparent to the guest. Modifying anything in xenstore compromises that
-> > so we need to be careful.
-> > 
-> > That's a fine goal, but not switching to closed state in
-> > xenbus_dev_remove seems wrong, as you have actually left the frontend
-> > without a matching backend and with the state not set to closed.
-> > 
-> 
-> Why is this a problem? With this series fully applied a (block) backend can come and go without needing to change the state. Relying on guests to DTRT is not a sustainable option for a cloud deployment.
-> 
-> > Ie: that would be fine if you explicitly state this is some kind of
-> > internal blkback reload, but not for the general case where blkback
-> > has been unbound. I think we need someway to difference a blkback
-> > reload vs a unbound.
-> > 
-> 
-> Why do we need that though? Why is it advantageous for a backend to go to closed. No PV backends cope with an unbind as-is, and a toolstack initiated unplug will always set state to 5 anyway. So TBH any state transition done directly in the xenbus code looks wrong to me anyway (but appears to be a necessary evil to keep the toolstack working in the event it spawns a backend where there is actually to driver present, or it doesn't come online).
 
-IMO the normal flow for unbind would be to attempt to close open
-connections and then remove the driver: leaving frontends connected
-without any attached backends is not correct, and will just block the
-guest frontend until requests start timing out.
+Hi Ming,
 
-I can see the reasoning for doing that for the purpose of updating a
-blkback module without guests noticing, but I would prefer that
-leaving connections open was an option that could be given when
-unbinding (or maybe a driver option in sysfs?), so that the default
-behaviour would be to try to close everything when unbinding if
-possible.
+> Frankly speaking, I never observed that single CPU is saturated by one storage
+> completion queue's interrupt load. Because CPU is still much quicker than
+> current storage device.
+> 
+> If there are more drives, one CPU won't handle more than one queue(drive)'s
+> interrupt if (nr_drive * nr_hw_queues) < nr_cpu_cores.
 
-Thanks, Roger.
+Are things this simple? I mean, can you guarantee that fio processes are 
+evenly distributed as such?
+
+> 
+> So could you describe your case in a bit detail? Then we can confirm
+> if this change is really needed.
+
+The issue is that the CPU is saturated in servicing the hard and 
+threaded part of the interrupt together - here's the sort of thing which 
+we saw previously:
+Before:
+CPU	%usr	%sys	%irq	%soft	%idle
+all	2.9	13.1	1.2	4.6	78.2				
+0	0.0	29.3	10.1	58.6	2.0
+1	18.2	39.4	0.0	1.0	41.4
+2	0.0	2.0	0.0	0.0	98.0
+
+CPU0 has no effectively no idle.
+
+Then, by allowing the threaded part to roam:
+After:
+CPU	%usr	%sys	%irq	%soft	%idle
+all	3.5	18.4	2.7	6.8	68.6
+0	0.0	20.6	29.9	29.9	19.6
+1	0.0	39.8	0.0	50.0	10.2
+
+Note: I think that I may be able to reduce the irq hard part load in the 
+endpoint driver, but not that much such that we see still this issue.
+
+> 
+>>
+>> For when the interrupt is managed, allow the threaded part to run on all
+>> cpus in the irq affinity mask.
+> 
+> I remembered that performance drop is observed by this approach in some
+> test.
+
+ From checking the thread about the NVMe interrupt swamp, just switching 
+to threaded handler alone degrades performance. I didn't see any 
+specific results for this change from Long Li - 
+https://lkml.org/lkml/2019/8/21/128
+
+Thanks,
+John
+
