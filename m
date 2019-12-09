@@ -2,97 +2,134 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F29C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C314C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022AD2072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BD62072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irbGLck+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LDRSB5vT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfLIJT7 (ORCPT
+        id S1727545AbfLIJUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:19:59 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36330 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLIJT6 (ORCPT
+        Mon, 9 Dec 2019 04:20:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49442 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIJUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:19:58 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x184so5463588pfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:19:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rblqrVWgHOkLe8re4/2fq7AZG311veSlNYjEA4Bdios=;
-        b=irbGLck+knp1Ju7e9pP0NpD0AzNpAOlf8ABivW0Ml5lBNACQwxbCqw/lIuUQizc3ib
-         Q39CrDMnBtHy6nZ4ffYTzmFtVgCPgXeaxEwC7sOuahuvXz3logOsd1CHSEqCmTmjvFcm
-         HoMTL/HXPWOcQWNsKWs44ZibzyoQpOiPd6j6mYchuVyS1hEEt5Q0PyzsXr2IRXIB1MV6
-         8rCxtypGhoVBovjl7cZFdfLYsZg+zZa7RVIZmPXwgQ9j6yivgaIl+XEJyK1+vrsNtspY
-         gs7pgnuI6VDhcVzKE1fQ9mT9V0x/5Zja7pJG5ZZeRvBGAqroID0CX6KivVSqEkyHPJO6
-         HJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rblqrVWgHOkLe8re4/2fq7AZG311veSlNYjEA4Bdios=;
-        b=oveTnLp7iOpTu01YrvDveBJEllulH1M1lpN9Hm4pRCDbZsvGLpVabvTYm6T6ZwYLdk
-         /McuPyaE2e+Pdvb777uspwIYeiNTbRZDbf6hL/M2gteYiUmnun1GuLBnvFvh++pePCom
-         HOFfrUlyXAkCYipkehBIepGhOv6m/RuTFVnJw5FuhwnREejr7b86eq4OUrvD4v4FVRl0
-         hE6ngNO2ZfdhF+M2lYR8+b0a9pDs6fuFGQhc6oRMmi5b1jlDSUQtxt3n00ZDcWEySRcG
-         ZTgtY4seMA9whKvJlsyes9I/SWtv3ftxtmGN2AIXyUZkz2Q5y9/bZPOzwPOapQxRVbB9
-         jkMg==
-X-Gm-Message-State: APjAAAWd5S4wE/D0PGmyuws/J9oAYMXdqxQnuROYA5OxRwaL0gbXj/S0
-        K7T+RRwE5VOwLUlGDfpzNPE=
-X-Google-Smtp-Source: APXvYqw2ZlZOWUS2rME9afylFB5pXb3oqENJCiCE0CvOZ4S8LNdoJJ6zejKVkEIpVL2q9JwflgtFyw==
-X-Received: by 2002:a63:1447:: with SMTP id 7mr17603167pgu.22.1575883197881;
-        Mon, 09 Dec 2019 01:19:57 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id z64sm26719931pfz.23.2019.12.09.01.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 01:19:56 -0800 (PST)
-Date:   Mon, 9 Dec 2019 18:19:54 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-Message-ID: <20191209091954.GG88619@google.com>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
+        Mon, 9 Dec 2019 04:20:50 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kgt1025891;
+        Mon, 9 Dec 2019 03:20:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575883242;
+        bh=dmmRTLHcKKOhWpZ8gdUFaYUVoMPoJ3qut66Ws5fy6ZI=;
+        h=From:To:CC:Subject:Date;
+        b=LDRSB5vTC1A1kbf1luw+acC1iBRooExqA3ZIBN7nt/QZ7oK41NNG5FnCcGiareWWL
+         3ii3rtK1ZWbGFX/l23Jm9pTQu/RKEmeCLc8zd7frGE9fzoc74IAObIdTfRegAoc9MV
+         uR8BlKAVNvp385qooITx39/4dtOSAwhIeNiQjZfY=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99Kgkc004900
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 03:20:42 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 03:20:42 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 03:20:42 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99Kccw087697;
+        Mon, 9 Dec 2019 03:20:39 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 00/13] Add PCIe support to TI's J721E SoC
+Date:   Mon, 9 Dec 2019 14:51:34 +0530
+Message-ID: <20191209092147.22901-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/12/02 16:48), Petr Mladek wrote:
-> Hi,
-> 
-> I have seen few prelimitary versions before this public one.
-> I am either happy with it or blind to see new problems[*].
+TI's J721E SoC uses Cadence PCIe core to implement both RC mode
+and EP mode.
 
-I guess I'm happy with it.
+The high level features are:
+  *) Supports Legacy, MSI and MSI-X interrupt
+  *) Supports upto GEN4 speed mode
+  *) Supports SR-IOV
+  *) Supports multiple physical function
+  *) Ability to route all transactions via SMMU
 
-	-ss
+This patch series
+  *) Add support in Cadence PCIe core to be used for TI's J721E SoC
+  *) Add a driver for J721E PCIe wrapper
+
+This is a trimmed down series of the initial RFC series [1].
+
+Changes from RFC [1]:
+  *) Ability to route all transactions via SMMU is removed
+  *) SR-IOV support is removed
+  *) Miscellaneous improvement to endpoint core is removed
+
+All these will be sent as smaller series.
+
+I've also pushed the series along with device tree changes [2].
+
+[1] -> https://lkml.org/lkml/2019/6/4/619
+[2] -> https://github.com/kishon/linux-wip.git j7_pci_v1
+
+Kishon Vijay Abraham I (13):
+  PCI: cadence: Remove stray "pm_runtime_put_sync()" in error path
+  linux/kernel.h: Add PTR_ALIGN_DOWN macro
+  PCI: cadence: Add support to use custom read and write accessors
+  PCI: cadence: Add support to start link and verify link status
+  PCI: cadence: Add read and write accessors to perform only 32-bit
+    accesses
+  PCI: cadence: Allow pci_host_bridge to have custom pci_ops
+  PCI: cadence: Add new *ops* for CPU addr fixup
+  PCI: cadence: Use local management register to configure Vendor ID
+  dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC
+  dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC
+  PCI: j721e: Add TI J721E PCIe driver
+  misc: pci_endpoint_test: Add J721E in pci_device_id table
+  MAINTAINERS: Add Kishon Vijay Abraham I for TI J721E SoC PCIe
+
+ .../bindings/pci/ti,j721e-pci-ep.yaml         | 113 +++++
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 161 +++++++
+ MAINTAINERS                                   |   3 +-
+ drivers/misc/pci_endpoint_test.c              |   9 +
+ drivers/pci/controller/cadence/Kconfig        |  23 +
+ drivers/pci/controller/cadence/Makefile       |   1 +
+ drivers/pci/controller/cadence/pci-j721e.c    | 430 ++++++++++++++++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  10 +-
+ .../controller/cadence/pcie-cadence-host.c    |  55 ++-
+ drivers/pci/controller/cadence/pcie-cadence.c |  48 +-
+ drivers/pci/controller/cadence/pcie-cadence.h | 133 +++++-
+ include/linux/kernel.h                        |   1 +
+ 12 files changed, 958 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.c
+
+-- 
+2.17.1
+
