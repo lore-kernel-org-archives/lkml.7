@@ -2,85 +2,106 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85180C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E242C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1CE207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0161620866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575887479;
+	bh=gafekmb4KwDK0GFglr1pIqczrJdYTdFqnQ7Hxp+1pNk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WThcNaelTp0B0CAoXUdkPRRnkpeo7YtynmUcsDWDRbdDhtD8r5UNw0UCEQHnIbL6g
+	 8ejZe7YiiPUS8tYADSLaUecBCx7GDa2ptupSYmoZPO/faddwTZx11KPJYPNMf66xHF
+	 KRVCRB+H/UlmCnX1o1IefZy9kf6qYyk5Vj2V3eMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfLIK3X (ORCPT
+        id S1727463AbfLIKbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:29:23 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57010 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727196AbfLIK3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:29:23 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DCE12AD18;
-        Mon,  9 Dec 2019 10:29:20 +0000 (UTC)
-Subject: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
- pressure
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pdurrant@amazon.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org
-References: <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
- <20191209102347.17337-1-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <7a1dfa22-1108-602f-68ff-ed30a18c1d3d@suse.com>
-Date:   Mon, 9 Dec 2019 11:29:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 05:31:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727188AbfLIKbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 05:31:17 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB62207FD;
+        Mon,  9 Dec 2019 10:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575887476;
+        bh=gafekmb4KwDK0GFglr1pIqczrJdYTdFqnQ7Hxp+1pNk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y7CL2LY2P0Wt4SWbIonQ4EPnbdkoSkwr6PVzFh7izIJbM3ClApk9TBkeWb1EuINKC
+         XYINiL8nP5MJkyBbbtJIp3hfFwqLDd+ygIMRa1+j2IRSJ0X/sWm19KFUZMBRmZKnyT
+         B2MT2ZBN/nHWBQJqibdl+yX6hEB2qFeb9A+J7xnM=
+Date:   Mon, 9 Dec 2019 10:31:11 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
+        fschnitzlein@suse.de, Felix Schnizlein <fschnizlein@suse.com>
+Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
+Message-ID: <20191209103110.GB3306@willie-the-truck>
+References: <20191206162421.15050-1-trenn@suse.de>
+ <20191206162421.15050-4-trenn@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20191209102347.17337-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206162421.15050-4-trenn@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 11:23, SeongJae Park wrote:
-> On   Mon, 9 Dec 2019 10:39:02 +0100  Juergen <jgross@suse.com> wrote:
+On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
+> From: Felix Schnizlein <fschnizlein@suse.de>
 > 
->> On 09.12.19 09:58, SeongJae Park wrote:
->>> Each `blkif` has a free pages pool for the grant mapping.  The size of
->>> the pool starts from zero and be increased on demand while processing
->>> the I/O requests.  If current I/O requests handling is finished or 100
->>> milliseconds has passed since last I/O requests handling, it checks and
->>> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>>
->>> Therefore, `blkfront` running guests can cause a memory pressure in the
->>> `blkback` running guest by attaching a large number of block devices and
->>> inducing I/O.
->>
->> I'm having problems to understand how a guest can attach a large number
->> of block devices without those having been configured by the host admin
->> before.
->>
->> If those devices have been configured, dom0 should be ready for that
->> number of devices, e.g. by having enough spare memory area for ballooned
->> pages.
+> Export all information from /proc/cpuinfo to sysfs:
+> implementer, architecture, variant, part, revision,
+> bogomips and flags are exported.
 > 
-> As mentioned in the original message as below, administrators _can_ avoid this
-> problem, but finding the optimal configuration is hard, especially if the
-> number of the guests is large.
+> Example:
+> /sys/devices/system/cpu/cpu1/info/:[0]# head *
+> ==> architecture <==
+> 8
 > 
-> 	System administrators can avoid such problematic situations by limiting
-> 	the maximum number of devices each guest can attach.  However, finding
-> 	the optimal limit is not so easy.  Improper set of the limit can
-> 	results in the memory pressure or a resource underutilization.
+> ==> bogomips <==
+> 40.00
+> 
+> ==> flags <==
+> fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
+> 
+> ==> implementer <==
+> 0x51
+> 
+> ==> part <==
+> 0xc00
+> 
+> ==> revision <==
+> 1
+> 
+> ==> variant <==
+> 0x0
+> 
+> Signed-off-by: Thomas Renninger <trenn@suse.de>
+> Signed-off-by: Felix Schnizlein <fschnizlein@suse.com>
+> ---
+>  Documentation/ABI/testing/sysfs-devices-system-cpu | 22 +++++++++
+>  arch/arm64/Kconfig                                 |  1 +
+>  arch/arm64/kernel/cpuinfo.c                        | 55 ++++++++++++++++++++++
+>  3 files changed, 78 insertions(+)
 
-This sounds as if the admin would set a device limit. But it is the
-other way round: The admin needs to configure each possible device
-with all parameters (e.g. backing dom0 resource) for enabling the
-frontend to use it.
+I don't understand why we need this on arm64 and why it's an improvement
+over all the other schemes we already support for identifying CPU features.
 
+Given the pain we've endured over the years exposing this sort of stuff to
+userspace, I'm relucant to add more just for the fun of it.
 
-Juergen
+Will
