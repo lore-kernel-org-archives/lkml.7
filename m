@@ -2,137 +2,161 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB14EC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEABC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DBB206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25722206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hhCalqlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfLINqA (ORCPT
+        id S1727789AbfLINqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:46:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:52814 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfLINqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:46:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 05:45:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
-   d="scan'208";a="414073956"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.104])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Dec 2019 05:45:58 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     like.xu@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>, stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: Fix missing marker for snr_uncore_imc_freerunning_events
-Date:   Mon,  9 Dec 2019 05:42:33 -0800
-Message-Id: <1575898953-85496-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Dec 2019 08:46:42 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35266 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbfLINql (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:46:41 -0500
+Received: by mail-qt1-f193.google.com with SMTP id s8so15611117qte.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 05:46:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rKY8nQ/36ZYIRL43SesLbBNstgqfPCGGmMTonTZ2il8=;
+        b=hhCalqlm3yqxnVlbPMkN+bqjjPU1bLUwUu3cuuoLZLdYXudklunO0/Cy7XlY6y/hiO
+         x4IgOw3ukPGPAyzgTOcs+D4SDsU4GHbqhhhPNtM/mnp1IGFP9VncVld5dJRpCCuvKXEO
+         cCSQmfPxl0a6iker/1a+SnLv1Ke4zYEK4dOfZk0cPOldAgFySxnl62XwrgGhpo7d1DSI
+         jNzpeaL9Nf/LdrrfoDm1iM3jrZYyniYmCF+HfzAFDILzUtqo+HYu5O7O8l4V/9HtJKAA
+         65iHaf1v9+OA4h0TqaOwmx9K3TZdEN/riUkRfFD3fP0Q9CJnS0V4D40WXdHslPUASTU7
+         PlCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rKY8nQ/36ZYIRL43SesLbBNstgqfPCGGmMTonTZ2il8=;
+        b=PGcGpbZo1PVfkjvF9nnxCmgZ7B6s4IyKr3rvQmKnQ8WLCHpa1GziOdUB3fPyADN3/z
+         PTCOuqAyQ0TvZBLKZRc4AhQPL1r7atZ2JMo4TICsWYzqBUum04YOzDnFdc5JP0DRrs/z
+         A4YQ1NCdqf1i1+Sml3Lxh0LVeeZfK07IAcMgmirhK1R2yoC9oc04aL/N2zhgGEtLlFRQ
+         8dYjJ1cT7j2wKLporHGOKTEvPzTq6KPfLGGD2WTSY3JLF4T5ea3Qhpxs0mGgAiLYzMle
+         i1LLUm+jSWONQBJibbvIuFv0YTR+wkhbOTZnaLxUgyB5CfSN1PkBv71PaN7DqDhKlZOB
+         dPSA==
+X-Gm-Message-State: APjAAAWACCHbJ/FssVLv3u4oQXrLT7LPakeKZygdGp5gg+i2DYkBh2oh
+        AcW35XqhEVNmXFnJSuhSLFsjtLHiz/aVmGzoJ6aDjQ==
+X-Google-Smtp-Source: APXvYqwOoj3Iq7H9MPlRC6Alm7SDeJtbsGl5BNZVmlYeK7ddFNdnLC8TuI2UoS45aEwChxo5375NC80kUhkvzKtCHnw=
+X-Received: by 2002:ac8:2489:: with SMTP id s9mr25022912qts.257.1575899199309;
+ Mon, 09 Dec 2019 05:46:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20171219215906.GA12465@gmail.com> <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
+In-Reply-To: <20191209132914.907306-1-rafaeldtinoco@ubuntu.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 9 Dec 2019 14:46:27 +0100
+Message-ID: <CACT4Y+YtpOZ1c0QV4-q_b-CrGMGRALwoFTNPgxZuUC9S9J3gfA@mail.gmail.com>
+Subject: Re: ppc64el kernel access of bad area (ext4_htree_store_dirent->rb_insert_color)
+To:     Rafael David Tinoco <rafaeldtinoco@ubuntu.com>
+Cc:     Eric Biggers <ebiggers3@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        syzbot 
+        <bot+eb13811afcefe99cfe45081054e7883f569f949d@syzkaller.appspotmail.com>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Mon, Dec 9, 2019 at 2:29 PM Rafael David Tinoco
+<rafaeldtinoco@ubuntu.com> wrote:
+>
+> It looks like the same stacktrace that was reported in this thread. This =
+has
+> been reported to ppc64el AND we got a reproducer (ocfs2-tools autopkgtest=
+s).
+>
+> [ 85.605850] Faulting instruction address: 0xc000000000e81168
+> [ 85.605901] Oops: Kernel access of bad area, sig: 11 [#1]
+> [ 85.605970] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSerie=
+s
+> [ 85.606029] Modules linked in: ocfs2 quota_tree ocfs2_dlmfs ocfs2_stack_=
+o2cb ocfs2_dlm ocfs2_nodemanager ocfs2_stackglue iptable_mangle xt_TCPMSS x=
+t_tcpudp bpfilter dm_multipath scsi_dh_rdac scsi_dh_emc scsi_dh_alua vmx_cr=
+ypto crct10dif_vpmsum sch_fq_codel ip_tables x_tables autofs4 btrfs xor zst=
+d_compress raid6_pq libcrc32c crc32c_vpmsum virtio_net virtio_blk net_failo=
+ver failover
+> [ 85.606291] CPU: 0 PID: 1 Comm: systemd Not tainted 5.3.0-18-generic #19=
+-Ubuntu
+> [ 85.606350] NIP: c000000000e81168 LR: c00000000054f240 CTR: 000000000000=
+0000
+> [ 85.606410] REGS: c00000005a3e3700 TRAP: 0300 Not tainted (5.3.0-18-gene=
+ric)
+> [ 85.606469] MSR: 8000000000009033 <SF,EE,ME,IR,DR,RI,LE> CR: 28024448 XE=
+R: 00000000
+> [ 85.606531] CFAR: 0000701f9806f638 DAR: 0000000001744098 DSISR: 40000000=
+ IRQMASK: 0
+> [ 85.606531] GPR00: 0000000000007374 c00000005a3e3990 c0000000019c9100 c0=
+0000004fe462a8
+> [ 85.606531] GPR04: c00000005856d840 000000000000000e 0000000074656772 c0=
+0000004fe4a568
+> [ 85.606531] GPR08: 0000000000000000 c000000058568004 0000000001744090 00=
+00000000000000
+> [ 85.606531] GPR12: 00000000e8086002 c000000001d60000 00007fffddd522d0 00=
+00000000000000
+> [ 85.606531] GPR16: 0000000000000000 0000000000000000 0000000000000000 c0=
+0000000755e07c
+> [ 85.606531] GPR20: c0000000598caca8 c00000005a3e3a58 0000000000000000 c0=
+00000058292f00
+> [ 85.606531] GPR24: c000000000eea710 0000000000000000 c00000005856d840 c0=
+0000000755e074
+> [ 85.606531] GPR28: 000000006518907d c00000005a3e3a68 c00000004fe4b160 00=
+000000027c47b6
+> [ 85.607079] NIP [c000000000e81168] rb_insert_color+0x18/0x1c0
+> [ 85.607137] LR [c00000000054f240] ext4_htree_store_dirent+0x140/0x1c0
+> [ 85.607186] Call Trace:
+> [ 85.607208] [c00000005a3e3990] [c00000000054f158] ext4_htree_store_diren=
+t+0x58/0x1c0 (unreliable)
+> [ 85.607279] [c00000005a3e39e0] [c000000000594cd8] htree_dirblock_to_tree=
++0x1b8/0x380
+> [ 85.607340] [c00000005a3e3b00] [c0000000005962c0] ext4_htree_fill_tree+0=
+xc0/0x3f0
+> [ 85.607401] [c00000005a3e3c00] [c00000000054ebe4] ext4_readdir+0x814/0xc=
+e0
+> [ 85.607459] [c00000005a3e3d40] [c000000000472d6c] iterate_dir+0x1fc/0x28=
+0
+> [ 85.607511] [c00000005a3e3d90] [c0000000004746f0] ksys_getdents64+0xa0/0=
+x1f0
+> [ 85.607572] [c00000005a3e3e00] [c000000000474868] sys_getdents64+0x28/0x=
+130
+> [ 85.607622] [c00000005a3e3e20] [c00000000000b388] system_call+0x5c/0x70
+> [ 85.607672] Instruction dump:
+> [ 85.607703] 4082ffe8 4e800020 38600000 4e800020 60000000 60000000 e92300=
+00 2c290000
+> [ 85.607764] 4182018c e9490000 71480001 4c820020 <e90a0008> 7c284840 2fa8=
+0000 4182006c
+> [ 85.607827] ---[ end trace cfc53af0f8d62cef ]---
+> [ 85.610600]
+> [ 86.611522] BUG: Unable to handle kernel data access at 0xc000030058567e=
+ff
+> [ 86.611604] Faulting instruction address: 0xc000000000403aa8
+> [ 86.611656] Oops: Kernel access of bad area, sig: 11 [#2]
+> [ 86.611697] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUMA pSerie=
+s
+> [ 86.611748] Modules linked in: ocfs2 quota_tr
+>
+> Thread from beginning 2018, so I guess this issue is pretty intermittent =
+but
+> might exist, and, perhaps, its related to specific arches/machines ?
 
-An Oops during the boot is found on some SNR machines.
-
-[   15.795410] BUG: unable to handle page fault for address:
-00000000000022b0
-[   15.795412] #PF: supervisor read access in kernel mode
-[   15.795413] #PF: error_code(0x0000) - not-present page
-[   15.795414] PGD 0 P4D 0
-[   15.795418] Oops: 0000 [#1] SMP NOPTI
-[   15.795420] CPU: 6 PID: 941 Comm: systemd-udevd Not tainted
-5.3.0-snr-v5.3 #292
-[   15.795421] Hardware name: Intel Corporation JACOBSVILLE/JACOBSVILLE,
-BIOS JBVLCRB1.86B.0011.D44.1909191126 09/19/2019
-[   15.795428] RIP: 0010:strlen+0x0/0x20
-[   15.795431] Code: 48 89 f9 74 09 48 83 c1 01 80 39 00 75 f7 31 d2 44
-0f
-b6 04 16 44 88 04 11 48 83 c2 01 45 84 c0 75 ee c3 0f 1f 80 00 00 00 00
-<80> 3f 00 74 10 48 89 f8 48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
-[   15.855395] i801_smbus 0000:00:1f.4: SPD Write Disable is set
-[   15.858351] RSP: 0018:ffffaeb4812039c8 EFLAGS: 00010202
-[   15.858353] RAX: 0000000000000000 RBX: ffff9fec99c71300 RCX:
-0000000000008000
-[   15.858354] RDX: 00000000000022b0 RSI: 0000000000000cc0 RDI:
-00000000000022b0
-[   15.858355] RBP: 00000000000022b0 R08: 0000000000000000 R09:
-0000000000000000
-[   15.858356] R10: 0000000000000000 R11: 0000000000000000 R12:
-ffff9fec8583a800
-[   15.858357] R13: 0000000000000cc0 R14: ffff9fec94015648 R15:
-ffff9fec81f291a8
-[   15.858358] FS:  00007f89e7160940(0000) GS:ffff9fec9dc00000(0000)
-knlGS:0000000000000000
-[   15.858361] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   15.864343] i801_smbus 0000:00:1f.4: SMBus using polling
-[   15.869998] CR2: 00000000000022b0 CR3: 0000000842ca2000 CR4:
-0000000000340ee0
-[   15.870000] Call Trace:
-[   15.870006]  kstrdup+0x1a/0x60
-[   15.870012]  __kernfs_new_node+0x41/0x1f0
-[   15.870018]  ? __mutex_unlock_slowpath+0x4d/0x2a0
-[   15.895135] ioatdma 0000:00:01.3: enabling device (0004 -> 0006)
-[   15.899395]  kernfs_new_node+0x36/0x60
-[   15.899400]  __kernfs_create_file+0x2c/0xf3
-[   15.961374]  sysfs_add_file_mode_ns+0xa4/0x1a0
-[   15.961379]  internal_create_group+0x117/0x370
-[   15.972133]  ? sysfs_add_file_mode_ns+0xa4/0x1a0
-[   15.972138]  internal_create_groups.part.0+0x3d/0xa0
-[   15.982656]  device_add+0x625/0x690
-[   15.982662]  pmu_dev_alloc+0x93/0xf0
-[   15.982664]  perf_pmu_register+0x292/0x3e0
-[   15.982674]  uncore_pmu_register+0x76/0x120 [intel_uncore]
-[   15.982681]  intel_uncore_init+0x1fd/0xe2c [intel_uncore]
-[   15.982688]  ? uncore_types_init+0x1d4/0x1d4 [intel_uncore]
-[   16.013580]  do_one_initcall+0x5d/0x2e4
-[   16.013584]  ? do_init_module+0x23/0x230
-[   16.013586]  ? rcu_read_lock_sched_held+0x6b/0x80
-[   16.013589]  ? kmem_cache_alloc_trace+0x2c4/0x2f0
-[   16.013591]  ? do_init_module+0x23/0x230
-[   16.013594]  do_init_module+0x5c/0x230
-[   16.013597]  load_module+0x2779/0x2a90
-[   16.013605]  ? ima_post_read_file+0xfd/0x110
-[   16.026926] ioatdma 0000:00:01.4: enabling device (0004 -> 0006)
-[   16.028808]  ? __do_sys_finit_module+0xaa/0x110
-[   16.060527]  __do_sys_finit_module+0xaa/0x110
-[   16.060536]  do_syscall_64+0x5c/0xb0
-[   16.060540]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This snr_uncore_imc_freerunning_events array was missing an end-marker.
-
-Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
-Reported-by: Like Xu <like.xu@linux.intel.com>
-Tested-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/uncore_snbep.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10a5ec..0116448 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4536,6 +4536,7 @@ static struct uncore_event_desc snr_uncore_imc_freerunning_events[] = {
- 	INTEL_UNCORE_EVENT_DESC(write,		"event=0xff,umask=0x21"),
- 	INTEL_UNCORE_EVENT_DESC(write.scale,	"3.814697266e-6"),
- 	INTEL_UNCORE_EVENT_DESC(write.unit,	"MiB"),
-+	{ /* end: all zeroes */ },
- };
- 
- static struct intel_uncore_ops snr_uncore_imc_freerunning_ops = {
--- 
-2.7.4
-
+FTR, here is the original thread/bug (at least my email client did not
+thread them together):
+https://groups.google.com/g/syzkaller-bugs/c/YBhhSkrImIM/m/3HMv_dFUCwAJ
+https://syzkaller.appspot.com/bug?extid=3Deb13811afcefe99cfe45081054e7883f5=
+69f949d
