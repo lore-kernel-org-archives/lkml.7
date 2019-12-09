@@ -5,124 +5,150 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A40C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C035C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D390206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11C1206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wTf08lNe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W6mljHLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLIVMs (ORCPT
+        id S1726677AbfLIVNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:12:48 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36064 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLIVMr (ORCPT
+        Mon, 9 Dec 2019 16:13:47 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40991 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfLIVNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:12:47 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x184so6416917pfb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:12:47 -0800 (PST)
+        Mon, 9 Dec 2019 16:13:47 -0500
+Received: by mail-ed1-f66.google.com with SMTP id c26so13997314eds.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 13:13:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=reyZZJheLd9yHQxDntXi/qlyLtQlfdLU5vTmTSU2J4w=;
-        b=wTf08lNeP17+SN7FmdBXOMHbX47zfgrkLvREVS5gXOgqNTkW7U9Cch1XQfVdtEc2gg
-         aA15kTWlGED0Hum556nKwbzPSZ5EaE4X6MGEueaj7Fi6Qf2Kl1yQtEOaa7LRyKmcV8gs
-         BoFFOpT0JRzbBNq7FVQNPow/WgjFEiCVdYwIFQbWXYeI7iLuTtQs4HzlzkTrJ0fB26iv
-         HaCAtSASApe9u958UOkUL/qCoc9ebU/VQmMKcH+gECZA2newVCGxrAi5qjtPLCV8WyXX
-         blp+7DgHmrwGR2Oht2SHVZ8shW+/F7czJteB5NgIYPKJ+elPO390ybYmu8eTbz2MgtAs
-         jQfg==
+         :cc:content-transfer-encoding;
+        bh=3ZAoOzsHYMKfDXOLJj5uoHSZwKX72h4MMlTI4huTal4=;
+        b=W6mljHLuB1QKV1MV560FwGm++i7fBoubbLgbVEpONn17GrKMZOmybDH/7jlbsGVJmF
+         cp879E+659aMh57h7kPgtmnkyQuHcpDl3jf2dFvrI59xzf9qN0JyINOW+4off2ytUmFg
+         vipqu0vE85k6VRLmuHb4RTlzBSBdUQ2ntpX4eF+Pqe8HW4KFElTi6WOVh+TSxIcXViAF
+         781e16UvnUeECoulj5tle+AVoj03HcxVs6rhZvyUVfpxwoUH9gsz/mr+3zkYWdxOJRFi
+         xv+Ep8bNh1aExYX2uvXo2KKVy1Su7+kQuKRdehk6TUmce/uJ9HIieHpmIcyEE/j36a/H
+         jMlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=reyZZJheLd9yHQxDntXi/qlyLtQlfdLU5vTmTSU2J4w=;
-        b=ZpnGSP5+InxDGQHwbEXxfIsr2B7ecnzD9ZSRUGxzF1xisC7i/mJ6tgS0gVSbt490IT
-         6VXWJsWDHPcGThrgaXQCMUA7uGTCUCjKHxo9YAs8kP2SlrCxYJaQTQlwIS3NWrtLTZL6
-         vlTZW5rP18Kfc4PJWLdjzftk1f+zhogHgrL/+lMdbi8Z39mfW99HRB85OnURzReUrPHe
-         FfyRPucZ46jSDGsJ2D29a9Vc4ODJ7KzMROvxTLjScQZQ2tAOZHeAVj+3vuMhRIa1OB3n
-         aX+awE6NeGM4phoCypLHAk+VykWbmh858+zKEdkV1ggqqXf/yZEGnVrcqr6tx4Kob7ef
-         FOgw==
-X-Gm-Message-State: APjAAAXMPE4Iy0kUDBVg2PHBKyOpt7MrNUds4J6xaojj1SaR0tMCDL04
-        nIy2qJC15z/8j1u3B9baN+QUjVIWd727zs4ZhYvrcw==
-X-Google-Smtp-Source: APXvYqwLGMPwEIVk+sSMIlstyIzR4bv6rsf8nn9gwB56VsbsfzQTut0FeK9yEhGwUb5Py3QiR4RBRkiRmZBRsJWcnXg=
-X-Received: by 2002:a65:590f:: with SMTP id f15mr20500805pgu.381.1575925966701;
- Mon, 09 Dec 2019 13:12:46 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3ZAoOzsHYMKfDXOLJj5uoHSZwKX72h4MMlTI4huTal4=;
+        b=LKLvKQ3jhnXruAcA1R/H/cLjNL4Mn7ZoxKJJ9UADbXomGAJz64fx/SUNAsty2b9q/S
+         C+CpHI72j/IWAF48FjXpIPqfWV0ozEf2Q8hbfySH6PloJ2jix6+xpKWaKQytzrbOv1XZ
+         VN/PzH4k06m8vXE1XE9Ygr5m3ZT2Z9ZquW68HERTYqzwPMnnrH04TN4rPXpAjAa6Yoqw
+         A7f5cYPyVfg1E10reGlWLgB4i3msQEUHJnaJnLl9WkRbTEquiyhUt8Zt5xFeMNHuUC9f
+         SqJxqEjr8BDOSeMkQlwnMsRPxyREFQtGrl5iSXardhopoY1/uQ/KN25Sfw7roc01fQmA
+         y3pA==
+X-Gm-Message-State: APjAAAUwiSyHplR1jUFAY3ziU2aDMNslz2wwt1W+wKrUq4x0pQQq8arp
+        tGx/7D+wgix9jiFX6P//gJHriY0cI1Egp2dUjuOrxw==
+X-Google-Smtp-Source: APXvYqwOeAYRIGSS28MDvsTD1YE5oXpHxeuznU/vT5+R7gO5Mglz7Raj8PezQmQSqkVPvEy14AyTNHoSNOZgO1CmTK8=
+X-Received: by 2002:a50:fb08:: with SMTP id d8mr26688858edq.79.1575926025103;
+ Mon, 09 Dec 2019 13:13:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20191209200338.12546-1-natechancellor@gmail.com>
-In-Reply-To: <20191209200338.12546-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 9 Dec 2019 13:12:35 -0800
-Message-ID: <CAKwvOdkWYqYD-036putggpCyq44xuLVsN9krzC98pmHoKe_0uw@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/44x: Adjust indentation in ibm4xx_denali_fixup_memsize
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+References: <20191205071953.121511-1-wvw@google.com> <20191205071953.121511-2-wvw@google.com>
+ <92311e54-8ae8-d9a5-2597-f2b9b447cfb5@linaro.org>
+In-Reply-To: <92311e54-8ae8-d9a5-2597-f2b9b447cfb5@linaro.org>
+From:   Wei Wang <wvw@google.com>
+Date:   Mon, 9 Dec 2019 13:13:33 -0800
+Message-ID: <CAGXk5yrvfJW62NHRHRJ4KtQEp5qxfr1V=R37kHMnkV9xgbEU3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] thermal: prevent cooling device with no type to be registered
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 12:04 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Mon, Dec 9, 2019 at 11:36 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> Clang warns:
+> On 05/12/2019 08:19, Wei Wang wrote:
+> > commit 54fa38cc2eda ("thermal: core: prevent zones with no types to be
+> > registered") added logic to prevent thermal zone with empty type to be
+> > registered. Similarly, there are APIs that rely on cdev->type.
+> > This patch prevents cooling device without valid type to be registered.
+> >
+> > Signed-off-by: Wei Wang <wvw@google.com>
+> > ---
+> >  drivers/thermal/thermal_core.c | 16 +++++++++++++---
+> >  1 file changed, 13 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_c=
+ore.c
+> > index d4481cc8958f..974e2d91c30b 100644
+> > --- a/drivers/thermal/thermal_core.c
+> > +++ b/drivers/thermal/thermal_core.c
+> > @@ -954,12 +954,22 @@ __thermal_cooling_device_register(struct device_n=
+ode *np,
+> >       struct thermal_zone_device *pos =3D NULL;
+> >       int result;
+> >
+> > -     if (type && strlen(type) >=3D THERMAL_NAME_LENGTH)
+> > +     if (!type || !type[0]) {
 >
-> ../arch/powerpc/boot/4xx.c:231:3: warning: misleading indentation;
-> statement is not part of the previous 'else' [-Wmisleading-indentation]
->         val = SDRAM0_READ(DDR0_42);
->         ^
-> ../arch/powerpc/boot/4xx.c:227:2: note: previous statement is here
->         else
->         ^
->
-> This is because there is a space at the beginning of this line; remove
-> it so that the indentation is consistent according to the Linux kernel
-> coding style and clang no longer warns.
->
-> Fixes: d23f5099297c ("[POWERPC] 4xx: Adds decoding of 440SPE memory size to boot wrapper library")
+> Why not use strlen(type) =3D=3D 0 ?
 
-ah, can even see it in the diff. Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Checking empty is faster than getting length and this is already a
+pattern used in this file:
+https://github.com/torvalds/linux/blob/v5.4/drivers/thermal/thermal_core.c#=
+L63
 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/780
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  arch/powerpc/boot/4xx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
+
 >
-> diff --git a/arch/powerpc/boot/4xx.c b/arch/powerpc/boot/4xx.c
-> index 1699e9531552..00c4d843a023 100644
-> --- a/arch/powerpc/boot/4xx.c
-> +++ b/arch/powerpc/boot/4xx.c
-> @@ -228,7 +228,7 @@ void ibm4xx_denali_fixup_memsize(void)
->                 dpath = 8; /* 64 bits */
+> > +             pr_err("Error: No cooling device type defined\n");
+> >               return ERR_PTR(-EINVAL);
+> > +     }
+> > +
+> > +     if (strlen(type) >=3D THERMAL_NAME_LENGTH) {
+> > +             pr_err("Error: Cooling device name over %d chars: %s\n",
+> > +                     THERMAL_NAME_LENGTH, type);
+> > +             return ERR_PTR(-EINVAL);
+> > +     }
+> >
+> >       if (!ops || !ops->get_max_state || !ops->get_cur_state ||
+> > -         !ops->set_cur_state)
+> > +         !ops->set_cur_state) {
+> > +             pr_err("Error: Cooling device missing callbacks: %s\n", t=
+ype);
+> >               return ERR_PTR(-EINVAL);
+> > +     }
+> >
+> >       cdev =3D kzalloc(sizeof(*cdev), GFP_KERNEL);
+> >       if (!cdev)
+> > @@ -972,7 +982,7 @@ __thermal_cooling_device_register(struct device_nod=
+e *np,
+> >       }
+> >
+> >       cdev->id =3D result;
+> > -     strlcpy(cdev->type, type ? : "", sizeof(cdev->type));
+> > +     strlcpy(cdev->type, type, sizeof(cdev->type));
+> >       mutex_init(&cdev->lock);
+> >       INIT_LIST_HEAD(&cdev->thermal_instances);
+> >       cdev->np =3D np;
+> >
 >
->         /* get address pins (rows) */
-> -       val = SDRAM0_READ(DDR0_42);
-> +       val = SDRAM0_READ(DDR0_42);
 >
->         row = DDR_GET_VAL(val, DDR_APIN, DDR_APIN_SHIFT);
->         if (row > max_row)
 > --
-> 2.24.0
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
 >
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20191209200338.12546-1-natechancellor%40gmail.com.
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
