@@ -2,116 +2,137 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9E1C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D91C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319DA20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEzijxr3"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7AC207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfLIKVU (ORCPT
+        id S1727421AbfLIKWD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:21:20 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39052 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfLIKVU (ORCPT
+        Mon, 9 Dec 2019 05:22:03 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:58624 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726279AbfLIKWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:21:20 -0500
-Received: by mail-qk1-f194.google.com with SMTP id c16so4132805qko.6;
-        Mon, 09 Dec 2019 02:21:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5wpZqct9zId1JMwIvIkTx98tJap0IvMG3KRrK6bEBDM=;
-        b=IEzijxr3E1MusXczAG2YYKgDDebdtwecdNChK8m0OZEuPTczGvG/jF8TIAj6eRHJbn
-         zGKRwTp/VOf6TQ4y52WYJZaFpC2mXgQTNWw/cQEdlOdzNkkuG3OkrE/taG3vtua5mPQx
-         vzXPMmV9ks6Nu8rrxwjMFew9TrRekYdQyaS5uz9nvWnjyt0lNHOImUh5uWPYcCKqYr6O
-         Ftvijxlneg7V9vTHmu3cGwn5idi4FUap9nZnjbartbHGqUgkBWWCm5lfdPe5mBZSolt2
-         KYajD2UnoEgw+wCTLOUGik1/3aob3g4MwpOJIbC76wuF/ZlEKrd+bhwdWVoIucJu+RK3
-         M8bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5wpZqct9zId1JMwIvIkTx98tJap0IvMG3KRrK6bEBDM=;
-        b=VMyvf86C8yJG+xn7gWOOdzghPOXXf2mQK68UzoBFQFugfCHM7VVXVka1+3+gnhr4gN
-         LjBoNNVfO0VUPgBL4X2RA0q1kWCrJpxX8SOHVuQJEw+Rmt/MHtdhVhOlKz2qnfU6tGqh
-         XhdEyEEhMgCl7SRdjxfzLvTyR8BSNahiuluxZc/LLd2Bz3+bwcEMLo8ILaObiIrDWUrh
-         oXP3dppHw6kMcd4uSidZz9sMKnQMAVkLKvtzepxbv/R/WK1Y12YK7XSRE8VggLteblAT
-         pmxifBVhSzBBlAWHRNX1iT6wIkJ4fyXJnqulfvqKR0FQfIVbHJTbzkHSN46iS6PMF4zx
-         J8kw==
-X-Gm-Message-State: APjAAAWUDsh12UFZWCB8705dCu2h7f25tduqg6xyFWVvh1dZXq+0HsgM
-        HVWxj1rSm528lQ143QQtyxI4oVH0ubHXook9QWI=
-X-Google-Smtp-Source: APXvYqyiNlRqsKmdsEqcVQgML3WflGAH6cHuImDpuJGUsALxjPRXGR5VclsRP4zcDT20/Ag5ILjgKv74utoPsvlBGKg=
-X-Received: by 2002:ae9:e30e:: with SMTP id v14mr25857560qkf.344.1575886878939;
- Mon, 09 Dec 2019 02:21:18 -0800 (PST)
+        Mon, 9 Dec 2019 05:22:02 -0500
+X-IronPort-AV: E=Sophos;i="5.69,294,1571695200"; 
+   d="scan'208";a="419359771"
+X-MGA-submission: =?us-ascii?q?MDEy0mNecwNuL9Jk5yYbF2EQVnchtra1QLxSda?=
+ =?us-ascii?q?LVt2y4q13qmPpebNroNPIYago/EeZChF1k1i8WrzH2uQbUIlF5P+NBEb?=
+ =?us-ascii?q?zQ45Lx2dyOC7BDW8GJHNWgCr6Dib9AlaQwu2cPD16slJUMVl5OoQGXuy?=
+ =?us-ascii?q?KwBuaKZZ69PpoINS8s52KQlw=3D=3D?=
+Received: from zcs-store9.inria.fr ([128.93.142.36])
+  by mail2-relais-roc.national.inria.fr with ESMTP; 09 Dec 2019 11:21:57 +0100
+Date:   Mon, 9 Dec 2019 11:21:57 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sinclair Yeh <syeh@vmware.com>,
+        linux-graphics-maintainer@vmware.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1606305704.12702713.1575886917867.JavaMail.zimbra@inria.fr>
+In-Reply-To: <20191208105328.15335-1-lukas.bulwahn@gmail.com>
+References: <20191208105328.15335-1-lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] drm/vmwgfx: Replace deprecated PTR_RET
 MIME-Version: 1.0
-References: <1575622543-22470-1-git-send-email-liangchen.linux@gmail.com>
- <1575622543-22470-2-git-send-email-liangchen.linux@gmail.com>
- <e44b8bd9-470d-08af-be7f-a0808504772e@suse.de> <20191209073744.GB3852@infradead.org>
- <dc01bf2c-4457-9658-c0a3-cbd4b7eff82b@suse.de>
-In-Reply-To: <dc01bf2c-4457-9658-c0a3-cbd4b7eff82b@suse.de>
-From:   Liang C <liangchen.linux@gmail.com>
-Date:   Mon, 9 Dec 2019 18:21:07 +0800
-Message-ID: <CAKhg4tL+A0aPMFxQt43EvzW4vH1p4T8XGMH5eKuT5_-ZvK5H5A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] [PATCH] bcache: __write_super to handle page sizes
- other than 4k
-To:     Coly Li <colyli@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bcache@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [202.161.33.40]
+X-Mailer: Zimbra 8.7.11_GA_3800 (ZimbraWebClient - FF70 (Linux)/8.7.11_GA_3800)
+Thread-Topic: drm/vmwgfx: Replace deprecated PTR_RET
+Thread-Index: E97hwnQVmXIxUQ0U2XENNb5kIN+0Tw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No problem. I will change the patch to remove this extra read. Thanks.
+> De: "Lukas Bulwahn" <lukas.bulwahn@gmail.com>
+> À: "Thomas Hellstrom" <thellstrom@vmware.com>, dri-devel@lists.freedesktop.org
+> Cc: "David Airlie" <airlied@linux.ie>, "Daniel Vetter" <daniel@ffwll.ch>, "Sinclair Yeh" <syeh@vmware.com>,
+> linux-graphics-maintainer@vmware.com, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, "Lukas Bulwahn"
+> <lukas.bulwahn@gmail.com>
+> Envoyé: Dimanche 8 Décembre 2019 18:53:28
+> Objet: [PATCH] drm/vmwgfx: Replace deprecated PTR_RET
 
-On Mon, Dec 9, 2019 at 5:52 PM Coly Li <colyli@suse.de> wrote:
->
-> On 2019/12/9 3:37 =E4=B8=8B=E5=8D=88, Christoph Hellwig wrote:
-> > On Fri, Dec 06, 2019 at 05:44:38PM +0800, Coly Li wrote:
-> >>>  {
-> >>> -   struct cache_sb *out =3D page_address(bio_first_page_all(bio));
-> >>> +   struct cache_sb *out;
-> >>>     unsigned int i;
-> >>> +   struct buffer_head *bh;
-> >>> +
-> >>> +   /*
-> >>> +    * The page is held since read_super, this __bread * should not
-> >>> +    * cause an extra io read.
-> >>> +    */
-> >>> +   bh =3D __bread(bdev, 1, SB_SIZE);
-> >>> +   if (!bh)
-> >>> +           goto out_bh;
-> >>> +
-> >>> +   out =3D (struct cache_sb *) bh->b_data;
-> >>
-> >> This is quite tricky here. Could you please to move this code piece in=
-to
-> >> an inline function and add code comments to explain why a read is
-> >> necessary for a write.
-> >
-> > A read is not nessecary.  He only added it because he was too fearful
-> > of calculating the data offset directly.  But calculating it directly
-> > is almost trivial and should just be done here.  Alternatively if that
-> > is still to hard just keep a pointer to the cache_sb around, which is
-> > how most file systems do it.
-> >
-> Copied, if Liang does not have time to handle this as your suggestion, I
-> will handle it.
->
-> Thanks for the hint.
->
+> Commit 508108ea2747 ("drm/vmwgfx: Don't refcount command-buffer managed
+> resource lookups during command buffer validation") slips in use of
+> deprecated PTR_RET. Use PTR_ERR_OR_ZERO instead.
+> 
+> As the PTR_ERR_OR_ZERO is a bit longer than PTR_RET, we introduce
+> local variable ret for proper indentation and line-length limits.
+
+Is 0 actually possible?  I have the impression that it is not, but perhaps I missed something.
+
+julia
+
+
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> applies cleanly on current master (9455d25f4e3b) and next-20191207
+> compile-tested on x86_64_defconfig + DRM_VMWGFX=y
+> 
+> drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 21 +++++++++++++++------
+> 1 file changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> index 934ad7c0c342..73489a45decb 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+> @@ -2377,9 +2377,12 @@ static int vmw_cmd_dx_clear_rendertarget_view(struct
+> vmw_private *dev_priv,
+> {
+> 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXClearRenderTargetView) =
+> 		container_of(header, typeof(*cmd), header);
+> +	struct vmw_resource *ret;
+> 
+> -	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_rt,
+> -					   cmd->body.renderTargetViewId));
+> +	ret = vmw_view_id_val_add(sw_context, vmw_view_rt,
+> +				  cmd->body.renderTargetViewId);
+> +
+> +	return PTR_ERR_OR_ZERO(ret);
+> }
+> 
+> /**
+> @@ -2396,9 +2399,12 @@ static int vmw_cmd_dx_clear_depthstencil_view(struct
+> vmw_private *dev_priv,
+> {
+> 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXClearDepthStencilView) =
+> 		container_of(header, typeof(*cmd), header);
+> +	struct vmw_resource *ret;
+> +
+> +	ret = vmw_view_id_val_add(sw_context, vmw_view_ds,
+> +				  cmd->body.depthStencilViewId);
+> 
+> -	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_ds,
+> -					   cmd->body.depthStencilViewId));
+> +	return PTR_ERR_OR_ZERO(ret);
+> }
+> 
+> static int vmw_cmd_dx_view_define(struct vmw_private *dev_priv,
+> @@ -2741,9 +2747,12 @@ static int vmw_cmd_dx_genmips(struct vmw_private
+> *dev_priv,
+> {
+> 	VMW_DECLARE_CMD_VAR(*cmd, SVGA3dCmdDXGenMips) =
+> 		container_of(header, typeof(*cmd), header);
+> +	struct vmw_resource *ret;
+> +
+> +	ret = vmw_view_id_val_add(sw_context, vmw_view_sr,
+> +				  cmd->body.shaderResourceViewId);
+> 
+> -	return PTR_RET(vmw_view_id_val_add(sw_context, vmw_view_sr,
+> -					   cmd->body.shaderResourceViewId));
+> +	return PTR_ERR_OR_ZERO(ret);
+> }
+> 
+> /**
 > --
->
-> Coly Li
+> 2.17.1
