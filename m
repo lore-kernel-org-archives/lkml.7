@@ -2,151 +2,214 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1421FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F277C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E670E20692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C07E20692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G89bKlHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfLIRIU convert rfc822-to-8bit (ORCPT
+        id S1726771AbfLIRJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:08:20 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42250 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLIRIQ (ORCPT
+        Mon, 9 Dec 2019 12:09:05 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51046 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIRJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:08:16 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s64so709651pgb.9;
-        Mon, 09 Dec 2019 09:08:15 -0800 (PST)
+        Mon, 9 Dec 2019 12:09:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so108674wmg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:09:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ea4/PrZomre2i6zXGutNZcRSd2/RfVCGFIF5aKKigpg=;
+        b=G89bKlHTuIczjERUM7QoxO9gQNhhCJDzRyB73CspgjnYN17lwJLCyIpIsTJ+6oCYCh
+         kMWAkZtHWnoro7FaJEYnANtUpg61L+NyU1lcpEpjb56VzXYNOSvcx5/i4eBYSwMrprGC
+         YEEWuCa19HV6p8zlpHXB6pkendQRqg1IM9Pxamz1mVs6esNBVyDM+CPBVXR8g/vVHcGM
+         OkRN+RffI5J7kn0Cn40HcOGbVtb9YUR3hU4Hjf+2kZZ/DXTCKHLOudrTXVhShPC26g60
+         ZJdnFc3xDF0g2xUs7ZuUdMgHK3TEn14Fybrrd9EFF54cUi2itgoNyB5BJQD9vOvUnp/T
+         J1bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=pPjzbV+XoAtiNq1c5fnVV7Us4zipQoGWT7Qul1cJyng=;
-        b=ffaJjSqJSiRVtvv352eTQohYdXE+ft52Bfkez4Tjv8dNz5/VsuxocjJwBBZsMDnwp6
-         FffcmkHM4+TGDNtyE5MwkNi0KZ9Q5qeLhrAzbi4dKS0ZBUMrUQkJbANFoz++ikq7J18G
-         t69eSJsqtWvM9rtR/Auviw14ClMgUNgrdl3KQ5U3DAV5qgjnhFBZf2ZTKFk8im97Trj0
-         Szc3ztW4nxbzhXROF4ibtGSqUcjjlZoBIPEy29mfWBISUYlRa9XLFp+CevQua6xw4jvL
-         1N2b0BueTTVBpe82Yoms+UVtJCklOEsGdB+7Hn68AQLvId/iQzFwl2n75Kn4p+gTFbpk
-         0MAQ==
-X-Gm-Message-State: APjAAAXpZ8ENbsXXspHEb/tkWgVGjmotOD2GtvNPGaHYHUUZ+aYSKThK
-        EE07nzXskbWPyjRHmu7z5jQ=
-X-Google-Smtp-Source: APXvYqxLZEJRTdaKTvd+1D3aFVyOayeVhezMkQ+DuhC85xm2Fqahw6g5npYOtg5jcKeoWnsdtMVLpA==
-X-Received: by 2002:a65:6914:: with SMTP id s20mr19419027pgq.44.1575911295347;
-        Mon, 09 Dec 2019 09:08:15 -0800 (PST)
-Received: from [172.31.133.107] ([216.9.110.1])
-        by smtp.gmail.com with ESMTPSA id g191sm43969pfb.19.2019.12.09.09.08.13
+        bh=ea4/PrZomre2i6zXGutNZcRSd2/RfVCGFIF5aKKigpg=;
+        b=HJxBSS4Cc16UFmVGewHFW3f/TJMeJBjLxWYsUXSBhXA2dTQcwWQ/p0jomXM7ecGgBo
+         66jnGp+YGTq/37XyONa7aB8cTo20NfMeTu1KkjtSHJsiScImiNb42D5sL7DqWKfaeioA
+         I9g4G6TtG1/Th7eoz+PlOnKhQX7xbptIbo0RuhUC2n4fLN9mSZSfUPLloWGlYGd076jE
+         QZtuPTw7mPVz5wttA9f73qr5NTQJHvBCGEhGsPKiUuLSJ19Fn4jXHDOrelDLYz+dIvcX
+         Az2bHvz3Pjxhx3bj8vhwNN4iv3K0pqNff1qAlDlHaboLxRQ8PAQXZVbvtE07AuOXQo9V
+         QE3g==
+X-Gm-Message-State: APjAAAX7KwqIB3XMYm3oy4uLloErTGbU1pNTYdt//AGc6zUEotBMTVMu
+        bHwNr1t8XBvfqQaQORzg2Fsym+GY8zg=
+X-Google-Smtp-Source: APXvYqweu5sJJ/Vw8xl26KkVBRmHTsmcoLCvukjF1nH+mx7H5AW5d0klOdHvbnPnd8IRnvy/l2vH0g==
+X-Received: by 2002:a7b:ce19:: with SMTP id m25mr94947wmc.6.1575911341704;
+        Mon, 09 Dec 2019 09:09:01 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe? ([2a01:e34:ed2f:f020:3114:25b8:99b8:d7fe])
+        by smtp.googlemail.com with ESMTPSA id x6sm468505wmi.44.2019.12.09.09.09.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 09:08:14 -0800 (PST)
-Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
-To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-ide@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-References: <20191209052119.32072-1-linux@roeck-us.net>
- <20191209052119.32072-2-linux@roeck-us.net>
-From:   Bart Van Assche <bvanassche@acm.org>
-X-Pep-Version: 2.0
-Message-ID: <c87ca545-d8f1-bf1e-2474-b98a6eb60422@acm.org>
-Date:   Mon, 9 Dec 2019 09:08:13 -0800
+        Mon, 09 Dec 2019 09:09:01 -0800 (PST)
+Subject: Re: [PATCH] thermal: rockchip: enable hwmon
+To:     schaecsn@gmx.net, rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, heiko@sntech.de,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191118052413.D729B6E85603@corona.crabdance.com>
+ <20191202145256.78AA06E85603@corona.crabdance.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e3b6e675-14de-d020-48f4-a8ed877646ab@linaro.org>
+Date:   Mon, 9 Dec 2019 18:08:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191209052119.32072-2-linux@roeck-us.net>
+In-Reply-To: <20191202145256.78AA06E85603@corona.crabdance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/8/19 9:21 PM, Guenter Roeck wrote:
-> +static int satatemp_scsi_command(struct satatemp_data *st,
-> +				 u8 ata_command, u8 feature,
-> +				 u8 lba_low, u8 lba_mid, u8 lba_high)
-> +{
-> +	static u8 scsi_cmd[MAX_COMMAND_SIZE];
-> +	int data_dir;
 
-Declaring scsi_cmd[] static makes an otherwise thread-safe function
-thread-unsafe. Has it been considered to allocate scsi_cmd[] on the stack?
+Hi Stefan,
 
-> +	/*
-> +	 * Inquiry data sanity checks (per SAT-5):
-> +	 * - peripheral qualifier must be 0
-> +	 * - peripheral device type must be 0x0 (Direct access block device)
-> +	 * - SCSI Vendor ID is "ATA     "
-> +	 */
-> +	if (sdev->inquiry[0] ||
-> +	    strncmp(&sdev->inquiry[8], "ATA     ", 8))
-> +		return -ENODEV;
 
-It's possible that we will need a quirk mechanism to disable temperature
-monitoring for certain ATA devices. Has it been considered to make
-scsi_add_lun() set a flag that indicates whether or not temperatures
-should be monitored and to check that flag from inside this function?
-I'm asking this because an identical strncmp() check exists in
-scsi_add_lun().
+On 02/12/2019 15:52, Stefan Schaeckeler wrote:
+> Hello linux power management mailing list and others,
+> 
+> New month, new try. Could someone review this patch, please. I would reall=
+> y
+> like to see the Rockchip RK3399 temperature sensors hooked up to the hwmon=
+>  API.
 
-> +static int satatemp_read(struct device *dev, enum hwmon_sensor_types type,
-> +			 u32 attr, int channel, long *val)
-> +{
-> +	struct satatemp_data *st = dev_get_drvdata(dev);
+I don't know what is happening but there are some spurious '3D'
+characters. Please fix it, elaborate a bit the changelog and resend.
+I'll review it.
 
-Which device does 'dev' represent? What guarantees that the drvdata
-won't be used for another purpose, e.g. by the SCSI core?
+Thanks
 
-> +/*
-> + * The device argument points to sdev->sdev_dev. Its parent is
-> + * sdev->sdev_gendev, which we can use to get the scsi_device pointer.
-> + */
-> +static int satatemp_add(struct device *dev, struct class_interface *intf)
-> +{
-> +	struct scsi_device *sdev = to_scsi_device(dev->parent);
-> +	struct satatemp_data *st;
-> +	int err;
-> +
-> +	st = kzalloc(sizeof(*st), GFP_KERNEL);
-> +	if (!st)
-> +		return -ENOMEM;
-> +
-> +	st->sdev = sdev;
-> +	st->dev = dev;
-> +	mutex_init(&st->lock);
-> +
-> +	if (satatemp_identify(st)) {
-> +		err = -ENODEV;
-> +		goto abort;
-> +	}
-> +
-> +	st->hwdev = hwmon_device_register_with_info(dev->parent, "satatemp",
-> +						    st, &satatemp_chip_info,
-> +						    NULL);
-> +	if (IS_ERR(st->hwdev)) {
-> +		err = PTR_ERR(st->hwdev);
-> +		goto abort;
-> +	}
-> +
-> +	list_add(&st->list, &satatemp_devlist);
-> +	return 0;
-> +
-> +abort:
-> +	kfree(st);
-> +	return err;
-> +}
 
-How much does synchronously submitting SCSI commands from inside the
-device probing call back slow down SCSI device discovery? What is the
-impact of this code on systems with a large number of ATA devices?
+>> Enable hwmon for the soc and gpu temperature sensors.
+>>
+>> Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+>>
+>> ---
+>>  drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
+>>  1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockch=
+> ip_thermal.c
+>> index 343c2f5c5a25..e47c60010259 100644
+>> --- a/drivers/thermal/rockchip_thermal.c
+>> +++ b/drivers/thermal/rockchip_thermal.c
+>> @@ -19,6 +19,8 @@
+>>  #include <linux/mfd/syscon.h>
+>>  #include <linux/pinctrl/consumer.h>
+>>
+>> +#include "thermal_hwmon.h"
+>> +
+>>  /**
+>>   * If the temperature over a period of time High,
+>>   * the resulting TSHUT gave CRU module,let it reset the entire chip,
+>> @@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform=
+> _device *pdev)
+>>
+>>  	thermal->chip->control(thermal->regs, true);
+>>
+>> -	for (i =3D 0; i < thermal->chip->chn_num; i++)
+>> +	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+>>  		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+>> +		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
+>> +		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
+>> +		if (error)
+>> +			dev_warn(&pdev->dev,
+>> +				 "failed to register sensor %d with hwmon: %d\n",
+>> +				 i, error);
+>> +	}
+>>
+>>  	platform_set_drvdata(pdev, thermal);
+>>
+>> @@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform=
+> _device *pdev)
+>>  	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+>>  		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
+>>
+>> +		thermal_remove_hwmon_sysfs(sensor->tzd);
+>>  		rockchip_thermal_toggle_sensor(sensor, false);
+>>  	}
+>>
+>> --
+>> 2.24.0
+>>
 
-Thanks,
 
-Bart.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
