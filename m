@@ -2,111 +2,85 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC12C00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706BC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18E2207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B8F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LzYyV/QZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQTIghiX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfLIKYc (ORCPT
+        id S1727412AbfLIK1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:24:32 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:41315 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfLIKYc (ORCPT
+        Mon, 9 Dec 2019 05:27:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42009 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfLIK1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:24:32 -0500
+        Mon, 9 Dec 2019 05:27:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j22so5824231oij.9;
+        Mon, 09 Dec 2019 02:27:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575887072; x=1607423072;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:mime-version;
-  bh=TFhrQ8TsGCVpfe7qixLlviznfKMBnnGyy14ZJutL01Q=;
-  b=LzYyV/QZZc3sH1e7KGUGZXEsHI2keOD53LJXnCoKJSsJx8PT0TqLjlhs
-   pR6kNwefBMlDDX8PTNfa6Ssld8ZRnMY4xbwdZ7waq4sVOyUrwgThSvVHG
-   kI2X8R7dsUBCIyBCURi42nQt9ecL38zGlG7PzgtVYIn4jeN5lC7MBK6em
-   c=;
-IronPort-SDR: LhN+WuCUR0utaUbkSbqVuYjmhb2X6P9gEQoHKVbHuK6WeSYVaDGlSMQBcTUtdx6mHGX7twf2Sl
- tjgcW2EmOvsA==
-X-IronPort-AV: E=Sophos;i="5.69,294,1571702400"; 
-   d="scan'208";a="3990731"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 09 Dec 2019 10:24:21 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id B074CA0766;
-        Mon,  9 Dec 2019 10:24:20 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 10:24:20 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 10:24:16 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <jgross@suse.com>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pdurrant@amazon.com>, <sj38.park@gmail.com>,
-        <xen-devel@lists.xenproject.org>
-Subject: Re: Re: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory pressure
-Date:   Mon, 9 Dec 2019 11:23:47 +0100
-Message-ID: <20191209102347.17337-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-References: <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
-In-Reply-To: <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
+        b=rQTIghiXGjKRvew8550rzD8nED93vGsH14VPT8ZowwJxJypGj2JJCg4WG4ssPyBNCf
+         7AioaFOakr1OXnFH2APWquuBYj6k2M1STa28v+zYnYWoMRmGaP8zAMXT3SVf+AXcYIwr
+         BTwyBMl1tA7VkeJugpV5ONPFZFSIVCu6C4u0tknGcMz1MVNnD/d2IAtzw99l4dsLE/zG
+         yXt7bRCLP7uXqhS+t9gq7Li6CbWyKF96EI0DHohtIMqimRAeMcSTt+D/VNjHAod5KmQE
+         huGVspqbi2GnMm7xUjE/tUgYEDZ8FSBdfRwz8GBw0BWGLhMsBD6KMvk8QEig6bDvH3Sa
+         ilBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BOldAukWPGvCMXmrQf1gXfFA50h3n/TlEcM4kvZn67k=;
+        b=BpkT7ZTpw+sjJucDSipFBH22IJiUKkkl6+pHz9vJt+CuUAQejCnFIKVhKoakxxCdNP
+         mgMbYDMCFKei9qJ3Z1vIVWIi2djhM71mvj6WXQO1jGK6gQz4NGCUKrhjsJwQLCoWa+tB
+         BD/xml2cmpg8EFWiLYk7twHaxqvnxMGwj4a7JG82vyMf0Xj/BTJ7B75toQdfM7sPJRje
+         FaXMQXL3CEwhckozJ+ZxayvLmGAbYvxD6YclLWT2Y6O8eU/vYe8do9qHPDzwAkoDO7FP
+         8/7IuLPLN8LjJTNBkohfhdzjfIQZwjEJ8KVwttMGiRm1mtTC+gmrqTl5kEN4Xe4SkzIv
+         xPLA==
+X-Gm-Message-State: APjAAAUE3TtVARL2elxZ9fnYmA2U0ePpU2vQhC4CCClGkBLcpuB95K9k
+        qAsRiT9g13qOrbq9n+PFE39ErwCGuEbeLyNB+VA=
+X-Google-Smtp-Source: APXvYqzDel7dxaZdi9R+PP3cUE6cZO9V1PUkCfBzoSIrbf9sruiYhOkZPeAeUMFEIJQXv+PVS7LJNIyxKg/RZuXISF0=
+X-Received: by 2002:aca:f445:: with SMTP id s66mr22398129oih.95.1575887253334;
+ Mon, 09 Dec 2019 02:27:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D22UWC003.ant.amazon.com (10.43.162.250) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Mon, 9 Dec 2019 12:27:22 +0200
+Message-ID: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+Subject: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     hkallweit1@gmail.com, bhelgaas@google.com, marc.zyngier@arm.com,
+        tglx@linutronix.de, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On   Mon, 9 Dec 2019 10:39:02 +0100  Juergen <jgross@suse.com> wrote:
+Hi,
+While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
+that because of the line:
+    info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
+in pci_msi_create_irq_domain()
+The IRQF_ONESHOT is ignored, especially when requesting IRQ through
+pci_request_threaded_irq() where handler is NULL.
 
->On 09.12.19 09:58, SeongJae Park wrote:
->> Each `blkif` has a free pages pool for the grant mapping.  The size of
->> the pool starts from zero and be increased on demand while processing
->> the I/O requests.  If current I/O requests handling is finished or 100
->> milliseconds has passed since last I/O requests handling, it checks and
->> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
->>
->> Therefore, `blkfront` running guests can cause a memory pressure in the
->> `blkback` running guest by attaching a large number of block devices and
->> inducing I/O.
->
->I'm having problems to understand how a guest can attach a large number
->of block devices without those having been configured by the host admin
->before.
->
->If those devices have been configured, dom0 should be ready for that
->number of devices, e.g. by having enough spare memory area for ballooned
->pages.
+The problem is that the MSI masking now only surrounds the HW handler,
+and all additional MSI that occur before the threaded handler is
+complete are considered by the note_interrupt() as spurious.
 
-As mentioned in the original message as below, administrators _can_ avoid this
-problem, but finding the optimal configuration is hard, especially if the
-number of the guests is large.
+Besides the side effect of that, I don't really understand the logic
+of not masking the MSI until the threaded handler is complete,
+especially when there's no HW handler and only threaded handler.
 
-	System administrators can avoid such problematic situations by limiting
-	the maximum number of devices each guest can attach.  However, finding
-	the optimal limit is not so easy.  Improper set of the limit can
-	results in the memory pressure or a resource underutilization.
+Your thoughts?
 
-
-Thanks,
-SeongJae Park
-
->
->So either I'm missing something here or your reasoning for the need of
->the patch is wrong.
->
->
->Juergen
->
+Thank,
+Ramon.
