@@ -2,120 +2,141 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58398C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF501C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E18620726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B13D24680
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SLSmAy21"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SYYgamLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfLIJqd (ORCPT
+        id S1727323AbfLIJtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:46:33 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:53393 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfLIJqc (ORCPT
+        Mon, 9 Dec 2019 04:49:07 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52836 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfLIJtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:46:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575884791; x=1607420791;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4cIuMxtJH4KZz9+iT3cGj9msbb3a41ZVBSEqjbz+WdA=;
-  b=SLSmAy21f7mrEWjW9itUQV8+9DQ0hLws3fPikioviEZLyvl3edlFONHo
-   vTGW2nvmhYTYZrBbD9mDQA6/I2l19jIhUQQwV2PHp5Zl3zwE2F3p9vy1j
-   Y7wO7ZL1sHjA8ZYZtjEgvpI9r5om25ius/wJDG7D57OLMDwwGjoRVCRLd
-   8=;
-IronPort-SDR: arqHB+twrTT98tJnLn4AETwVom5+UNCEXWZoX+SoypLJ7tOeZxnXbkSGFvksFQPtNgtDUfSYSt
- G+F8qhe4JlUg==
-X-IronPort-AV: E=Sophos;i="5.69,294,1571702400"; 
-   d="scan'208";a="8224098"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 09 Dec 2019 09:46:30 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 963E2A22A5;
-        Mon,  9 Dec 2019 09:46:27 +0000 (UTC)
-Received: from EX13D31EUB001.ant.amazon.com (10.43.166.210) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 09:46:26 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 09:46:25 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Mon, 9 Dec 2019 09:46:25 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        "Park, Seongjae" <sjpark@amazon.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sj38.park@gmail.com" <sj38.park@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: RE: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
- pressure
-Thread-Topic: [PATCH v3 0/1] xen/blkback: Squeeze page pools if a memory
- pressure
-Thread-Index: AQHVrm7tNfXN4zMxAE2n5qoiVkODNaexjBwAgAABEcA=
-Date:   Mon, 9 Dec 2019 09:46:25 +0000
-Message-ID: <026ba79524da43648371e5bca437a5e4@EX13D32EUC003.ant.amazon.com>
-References: <20191209085839.21215-1-sjpark@amazon.com>
- <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
-In-Reply-To: <954f7beb-9d40-253e-260b-4750809bf808@suse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.211]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 9 Dec 2019 04:49:07 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB99n4q5034636;
+        Mon, 9 Dec 2019 03:49:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575884944;
+        bh=gXkmhjcxW2shpp8IuTFNOznIZj9QdXL4AF01PfYwrZs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SYYgamLftGLE21WsTvUWXHazxF6KK9Nl/WMmoZpwc+TEXlxwlCMZ+bb2l2wa4CnLr
+         eF3FFlHUZvop/NM3nb7zZ4lvUehYeS9T7PVAxndbLI+MjUeu0wuFwXF7f1LbRdXVpS
+         dk/g2SyoymsGKedhL1Xm1CF6KXICte7T/ebUoncU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB99n4na050489
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 03:49:04 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 03:49:04 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 03:49:04 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB99n28p009818;
+        Mon, 9 Dec 2019 03:49:02 -0600
+Subject: Re: [PATCH v4 0/3] phy: cadence: j721e-wiz: Add Type-C plug flip
+ support
+To:     <kishon@ti.com>
+CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
+        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20191028102153.24866-1-rogerq@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <d9f3af03-b9a6-d5b9-dce6-e573ceef7348@ti.com>
+Date:   Mon, 9 Dec 2019 11:49:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191028102153.24866-1-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKw7xyZ2VuIEdyb8OfIDxqZ3Jv
-c3NAc3VzZS5jb20+DQo+IFNlbnQ6IDA5IERlY2VtYmVyIDIwMTkgMDk6MzkNCj4gVG86IFBhcmss
-IFNlb25namFlIDxzanBhcmtAYW1hem9uLmNvbT47IGF4Ym9lQGtlcm5lbC5kazsNCj4ga29ucmFk
-LndpbGtAb3JhY2xlLmNvbTsgcm9nZXIucGF1QGNpdHJpeC5jb20NCj4gQ2M6IGxpbnV4LWJsb2Nr
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgRHVycmFudCwN
-Cj4gUGF1bCA8cGR1cnJhbnRAYW1hem9uLmNvbT47IHNqMzgucGFya0BnbWFpbC5jb207IHhlbi0N
-Cj4gZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAw
-LzFdIHhlbi9ibGtiYWNrOiBTcXVlZXplIHBhZ2UgcG9vbHMgaWYgYSBtZW1vcnkNCj4gcHJlc3N1
-cmUNCj4gDQo+IE9uIDA5LjEyLjE5IDA5OjU4LCBTZW9uZ0phZSBQYXJrIHdyb3RlOg0KPiA+IEVh
-Y2ggYGJsa2lmYCBoYXMgYSBmcmVlIHBhZ2VzIHBvb2wgZm9yIHRoZSBncmFudCBtYXBwaW5nLiAg
-VGhlIHNpemUgb2YNCj4gPiB0aGUgcG9vbCBzdGFydHMgZnJvbSB6ZXJvIGFuZCBiZSBpbmNyZWFz
-ZWQgb24gZGVtYW5kIHdoaWxlIHByb2Nlc3NpbmcNCj4gPiB0aGUgSS9PIHJlcXVlc3RzLiAgSWYg
-Y3VycmVudCBJL08gcmVxdWVzdHMgaGFuZGxpbmcgaXMgZmluaXNoZWQgb3IgMTAwDQo+ID4gbWls
-bGlzZWNvbmRzIGhhcyBwYXNzZWQgc2luY2UgbGFzdCBJL08gcmVxdWVzdHMgaGFuZGxpbmcsIGl0
-IGNoZWNrcyBhbmQNCj4gPiBzaHJpbmtzIHRoZSBwb29sIHRvIG5vdCBleGNlZWQgdGhlIHNpemUg
-bGltaXQsIGBtYXhfYnVmZmVyX3BhZ2VzYC4NCj4gPg0KPiA+IFRoZXJlZm9yZSwgYGJsa2Zyb250
-YCBydW5uaW5nIGd1ZXN0cyBjYW4gY2F1c2UgYSBtZW1vcnkgcHJlc3N1cmUgaW4gdGhlDQo+ID4g
-YGJsa2JhY2tgIHJ1bm5pbmcgZ3Vlc3QgYnkgYXR0YWNoaW5nIGEgbGFyZ2UgbnVtYmVyIG9mIGJs
-b2NrIGRldmljZXMgYW5kDQo+ID4gaW5kdWNpbmcgSS9PLg0KPiANCj4gSSdtIGhhdmluZyBwcm9i
-bGVtcyB0byB1bmRlcnN0YW5kIGhvdyBhIGd1ZXN0IGNhbiBhdHRhY2ggYSBsYXJnZSBudW1iZXIN
-Cj4gb2YgYmxvY2sgZGV2aWNlcyB3aXRob3V0IHRob3NlIGhhdmluZyBiZWVuIGNvbmZpZ3VyZWQg
-YnkgdGhlIGhvc3QgYWRtaW4NCj4gYmVmb3JlLg0KPiANCj4gSWYgdGhvc2UgZGV2aWNlcyBoYXZl
-IGJlZW4gY29uZmlndXJlZCwgZG9tMCBzaG91bGQgYmUgcmVhZHkgZm9yIHRoYXQNCj4gbnVtYmVy
-IG9mIGRldmljZXMsIGUuZy4gYnkgaGF2aW5nIGVub3VnaCBzcGFyZSBtZW1vcnkgYXJlYSBmb3Ig
-YmFsbG9vbmVkDQo+IHBhZ2VzLg0KPiANCj4gU28gZWl0aGVyIEknbSBtaXNzaW5nIHNvbWV0aGlu
-ZyBoZXJlIG9yIHlvdXIgcmVhc29uaW5nIGZvciB0aGUgbmVlZCBvZg0KPiB0aGUgcGF0Y2ggaXMg
-d3JvbmcuDQo+IA0KDQpJIHRoaW5rIHRoZSB1bmRlcmx5aW5nIGlzc3VlIGlzIHRoYXQgcGVyc2lz
-dGVudCBncmFudCBzdXBwb3J0IGlzIGhvZ2dpbmcgbWVtb3J5IGluIHRoZSBiYWNrZW5kcywgdGhl
-cmVieSBjb21wcm9taXNpbmcgc2NhbGFiaWxpdHkuIElJVUMgdGhpcyBwYXRjaCBpcyBlc3NlbnRp
-YWxseSBhIGJhbmQtYWlkIHRvIGdldCBiYWNrIHRvIHRoZSBzY2FsYWJpbGl0eSB0aGF0IHdhcyBw
-b3NzaWJsZSBiZWZvcmUgcGVyc2lzdGVudCBncmFudCBzdXBwb3J0IHdhcyBhZGRlZC4gVWx0aW1h
-dGVseSB0aGUgcmlnaHQgYW5zd2VyIHNob3VsZCBiZSB0byBnZXQgcmlkIG9mIHBlcnNpc3RlbnQg
-Z3JhbnRzIHN1cHBvcnQgYW5kIHVzZSBncmFudCBjb3B5LCBidXQgc3VjaCBhIGNoYW5nZSBpcyBj
-bGVhcmx5IG1vcmUgaW52YXNpdmUgYW5kIHdvdWxkIG5lZWQgZmFyIG1vcmUgdGVzdGluZy4NCg0K
-ICBQYXVsDQo=
+Hi Kishon,
+
+On 28/10/2019 12:21, Roger Quadros wrote:
+> Hi,
+> 
+> On J721e platform, the 2 lanes of SERDES PHY are used to achieve
+> USB Type-C plug flip support without any additional MUX component
+> by using a lane swap feature.
+> 
+> However, the driver needs to know the Type-C plug orientation before
+> it can decide whether to swap the lanes or not. This is achieved via a
+> GPIO named DIR.
+> 
+> Another constraint is that the lane swap must happen only when the PHY
+> is in inactive state. This is achieved by sampling the GPIO and
+> programming the lane swap before bringing the PHY out of reset.
+> 
+> This series adds support to read the GPIO and accordingly program
+> the Lane swap for Type-C plug flip support.
+> 
+> Series must be applied on top of
+> https://lkml.org/lkml/2019/10/23/589
+
+I just tested this on top of Sierra PHY patches v3
+https://lkml.org/lkml/2019/11/28/186
+on v5.5-rc1
+
+USB3 works fine on J7ES.
+
+Please queue this along with the Sierra PHY patches for -next. Thanks.
+
+cheers,
+-roger
+
+> 
+> cheers,
+> -roger
+> 
+> Changelog:
+> v4
+> - fixes in dt-binding document
+>    - fix typo
+>    - change to typec-dir-debounce-ms and add min/max/default values
+>    - drop reference to uint32 type
+> - fixes in driver
+>    - change to updated typec-dir-debounce-ms property
+>    - add limit checks and use default value if not specified
+> 
+> v3
+> - Rebase on v2 of PHY series and update DT binding to yaml
+> 
+> v2
+> - revise commit log of patch 1
+> - use regmap_field in patch 3
+> 
+> Roger Quadros (3):
+>    phy: cadence: Sierra: add phy_reset hook
+>    dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
+>    phy: ti: j721e-wiz: Manage typec-gpio-dir
+> 
+>   .../bindings/phy/ti,phy-j721e-wiz.yaml        | 17 ++++++
+>   drivers/phy/cadence/phy-cadence-sierra.c      | 10 +++
+>   drivers/phy/ti/phy-j721e-wiz.c                | 61 +++++++++++++++++++
+>   3 files changed, 88 insertions(+)
+> 
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
