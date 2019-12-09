@@ -2,149 +2,158 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BBDC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAA8C00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B6C20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l57bR7j5"
+	by mail.kernel.org (Postfix) with ESMTP id 6685C206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfLITeo (ORCPT
+        id S1727050AbfLITfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:34:44 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39024 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLITen (ORCPT
+        Mon, 9 Dec 2019 14:35:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56054 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfLITfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:34:43 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so13275655oty.6;
-        Mon, 09 Dec 2019 11:34:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PFE1nWxTiyfBRgn/J6q9Y8I6dNPJrpPO2zwkS+e8TbI=;
-        b=l57bR7j5YoTdsraECl+v5XCXZ2L9yCiOQaei6qnxTgzBKu6DHPdEP2L91+oIkroRMl
-         dBW16Yn7M2d5zqpGrKHHu9zqC1Iwdbrm/Bior7UUkbmS7Dzt7c2vA1rIVGXy7w1Xq7jI
-         7cTqZ73LSKdFPLYOPe9dsTyCkkvaHQTmaqpczWxscNNewc8+95w6VQ25TW+OJnEExH9R
-         TrA/R3/6pFOehNsWxcSaOGZ1Crp1aSlN3xuRW9HZitoMTe6QRU4p/4G7m3uVAmI3K8+1
-         St0Rh2zNQH94IiQoZhUthkIOMFEG13Y9CSu0Mg3X/4ibfQ9xRUJCsmdzpZFts0nuLUJE
-         Je0Q==
+        Mon, 9 Dec 2019 14:35:09 -0500
+Received: by mail-io1-f71.google.com with SMTP id z21so11423142iob.22
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:35:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PFE1nWxTiyfBRgn/J6q9Y8I6dNPJrpPO2zwkS+e8TbI=;
-        b=UdUmEu1Kl8uHkcS6c/u/GFnAv22Rs0oSfyd/St7MQsf3TR/FtHw+cU8S+dJKylpOEw
-         1R4cVWM4J5liRRJxTJMRgIX7YjLxqkisSOlQfShaP7teSwqiJEPIUHt/xrAH6GmRMz5B
-         NLm6igUGZwhxprsscCExYyTtp2M789I8BMZFBxtyBYxYIxkJD8gUngeLwr6nFP5v5TjN
-         PjwVQcFZV6NdMVoy/H9AVH+t+sdTkdttWg8OkLChRIK93u2q8G2XvH+rGSLvKgPivSrf
-         /U856LyWEm3ZCBuVja92gBXHu//yzsEjzYUQ82fCQ8Cm64POEatIJmR8Xlt5eDInoKI9
-         p6rg==
-X-Gm-Message-State: APjAAAU8R5vUAZonjbdqI4xS3OZUtWGch9rgqLsM+V/WmrDyK2+V0EPD
-        Tpd45f6jnu6S8Lt5RhknpP0=
-X-Google-Smtp-Source: APXvYqxSnopGKPKS40Fp2UWWVvhccgBBkC3FGIBGVtKql552IcLIhIyHMgbgNBjN89Vl/gf2tP5iZg==
-X-Received: by 2002:a9d:6a92:: with SMTP id l18mr23312145otq.37.1575920082851;
-        Mon, 09 Dec 2019 11:34:42 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id x16sm296462oto.41.2019.12.09.11.34.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 11:34:42 -0800 (PST)
-Date:   Mon, 9 Dec 2019 12:34:40 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Julio Faracco <jcfaracco@gmail.com>,
-        netdev@vger.kernel.org, davem@davemloft.net, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Martin Habets <mhabets@solarflare.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net-next v9 1/3] netdev: pass the stuck queue to the
- timeout handler
-Message-ID: <20191209193440.GA15189@ubuntu-m2-xlarge-x86>
-References: <20191209162727.10113-1-mst@redhat.com>
- <20191209162727.10113-2-mst@redhat.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=E10f5qzd5KyYdQlZXYbO1fJdYSUgZRfua7S1F+8CoFE=;
+        b=NSGjh5EzQymDJzniqqAyOhuLv0GCUusZVeGiUDPkyIhCCOepIByWrJFuLhDIEU+mFO
+         HavnN9pz1po1i98gysvyZ/qWS6VARxyInyF14M4AmwybiUYq/eE9pscLyHD4X6LHJg4S
+         nAPkeRq41MMJRBpXi4YKRpokcDjBwc8WL7Md3muJojWwWbNdk3zGXqeI9gQvawq6Y9jd
+         BZfvmYx1cWzUuaqgcLC+A18/maZeLPRvVKIMoRNgtDZ6IWh0fIq/iDHA+vZNbbMXyfzW
+         JudaK5caaHAX8mfU/fJ39GXMXtWrXPqiDDb9b9mwLqCXqvSjbHXespjkOdkKLxploLkJ
+         9Y1A==
+X-Gm-Message-State: APjAAAX724CcRLh5EUnCZBmgN9tIP93DKww6FVW6y7Rcj8AXC7UhIUB7
+        H1fpVTMtZFTP27dF6A74bdvQudyUYU2izuf/+WyAcUGssM9G
+X-Google-Smtp-Source: APXvYqxNYJHGiYdka47X23jHa0Gk72PNQafSYRuj7NfhwdlepjdJRWslX6GV+x7FFZQjeayn1HLNKsJLo7iKw55HwRyPngMqPbmr
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209162727.10113-2-mst@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6638:c9:: with SMTP id w9mr28058415jao.30.1575920108608;
+ Mon, 09 Dec 2019 11:35:08 -0800 (PST)
+Date:   Mon, 09 Dec 2019 11:35:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000044a65205994a7e13@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in mem16_serial_out
+From:   syzbot <syzbot+92f32d4e21fb246d31a2@syzkaller.appspotmail.com>
+To:     andriy.shevchenko@linux.intel.com, asierra@xes-inc.com,
+        ext-kimmo.rautkoski@vaisala.com, gregkh@linuxfoundation.org,
+        jslaby@suse.com, kai.heng.feng@canonical.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        mika.westerberg@linux.intel.com, paulburton@kernel.org, sr@denx.de,
+        syzkaller-bugs@googlegroups.com, yegorslists@googlemail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+Hello,
 
-On Mon, Dec 09, 2019 at 11:29:03AM -0500, Michael S. Tsirkin wrote:
-> This allows incrementing the correct timeout statistic without any mess.
-> Down the road, devices can learn to reset just the specific queue.
-> 
-> The patch was generated with the following script:
-> 
-<snip>
-> 
-> where the list of files and functions is simply from:
-> 
-> git grep ndo_tx_timeout, with manual addition of headers
-> in the rare cases where the function is from a header,
-> then manually changing the few places which actually
-> call ndo_tx_timeout.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> Acked-by: Heiner Kallweit <hkallweit1@gmail.com>
-> Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Acked-by: Shannon Nelson <snelson@pensando.io>
-> Reviewed-by: Martin Habets <mhabets@solarflare.com>
-> 
-> changes from v8:
-> 	fix up a missing direct call to timeout
-> 	rebased on net-next
-> changes from v7:
-> 	fixup leftovers from v3 change
-> changes from v6:
-> 	fix typo in rtl driver
-> changes from v5:
-> 	add missing files (allow any net device argument name)
-> changes from v4:
-> 	add a missing driver header
-> changes from v3:
->         change queue # to unsigned
-> Changes from v2:
->         added headers
-> Changes from v1:
->         Fix errors found by kbuild:
->         generalize the pattern a bit, to pick up
->         a couple of instances missed by the previous
->         version.
-> ---
-<snip>
-> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> index 6a9d12dad5d9..ad0ecebb1b34 100644
-> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-> @@ -288,7 +288,7 @@ static int dpaa_stop(struct net_device *net_dev)
->  	return err;
->  }
->  
-> -static void dpaa_tx_timeout(struct net_device *net_dev)
-> +static void dpaa_tx_timeout(struct net_device *net_dev, int txqueue)
+syzbot found the following crash on:
 
-This needs to be unsigned int, otherwise there is a build error:
+HEAD commit:    e42617b8 Linux 5.5-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1157cd41e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3754e2c78c1adb82
+dashboard link: https://syzkaller.appspot.com/bug?extid=92f32d4e21fb246d31a2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136f7e41e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112b7c82e00000
 
-../drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2622:20: error: incompatible pointer types initializing 'void (*)(struct net_device *, unsigned int)' with an expression of type 'void (struct net_device *, int)' [-Werror,-Wincompatible-pointer-types]
-        .ndo_tx_timeout = dpaa_tx_timeout,
-                          ^~~~~~~~~~~~~~~
-1 error generated.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+92f32d4e21fb246d31a2@syzkaller.appspotmail.com
 
-Cheers,
-Nathan
+BUG: kernel NULL pointer dereference, address: 0000000000000003
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD a9a61067 P4D a9a61067 PUD 8fa24067 PMD 0
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9054 Comm: syz-executor150 Not tainted 5.5.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:writew arch/x86/include/asm/io.h:66 [inline]
+RIP: 0010:mem16_serial_out+0x6c/0x90 drivers/tty/serial/8250/8250_port.c:414
+Code: b6 8d e9 00 00 00 49 8d 7d 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa  
+48 c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5d 40 <66> 44 89 23 5b  
+41 5c 41 5d 5d c3 e8 d4 44 cf fd eb c2 e8 2d 45 cf
+RSP: 0018:ffffc90001cf7908 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 1ffffffff182080e RSI: ffffffff83e38106 RDI: ffffffff8c104070
+RBP: ffffc90001cf7920 R08: ffff88808ffac040 R09: ffffed10431421c6
+R10: ffffed10431421c5 R11: ffff888218a10e2b R12: 00000000000000bf
+R13: ffffffff8c104030 R14: ffffc90001cf7a40 R15: ffffffff8c104188
+FS:  0000000000866880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000003 CR3: 00000000a64a2000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  serial_port_out include/linux/serial_core.h:265 [inline]
+  serial8250_do_startup+0x12b9/0x1cf0  
+drivers/tty/serial/8250/8250_port.c:2077
+  serial8250_startup+0x62/0x80 drivers/tty/serial/8250/8250_port.c:2329
+  uart_port_startup drivers/tty/serial/serial_core.c:219 [inline]
+  uart_startup drivers/tty/serial/serial_core.c:258 [inline]
+  uart_startup+0x452/0x980 drivers/tty/serial/serial_core.c:249
+  uart_set_info drivers/tty/serial/serial_core.c:998 [inline]
+  uart_set_info_user+0x13b4/0x1cf0 drivers/tty/serial/serial_core.c:1023
+  tty_tiocsserial drivers/tty/tty_io.c:2506 [inline]
+  tty_ioctl+0xf60/0x14f0 drivers/tty/tty_io.c:2648
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:545 [inline]
+  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
+  __do_sys_ioctl fs/ioctl.c:756 [inline]
+  __se_sys_ioctl fs/ioctl.c:754 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440219
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc99622388 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440219
+RDX: 0000000020000240 RSI: 000000000000541f RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000401b30 R11: 0000000000000246 R12: 0000000000401aa0
+R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+CR2: 0000000000000003
+---[ end trace 2e0575eb0019173e ]---
+RIP: 0010:writew arch/x86/include/asm/io.h:66 [inline]
+RIP: 0010:mem16_serial_out+0x6c/0x90 drivers/tty/serial/8250/8250_port.c:414
+Code: b6 8d e9 00 00 00 49 8d 7d 40 48 b8 00 00 00 00 00 fc ff df 48 89 fa  
+48 c1 ea 03 d3 e3 80 3c 02 00 75 19 48 63 db 49 03 5d 40 <66> 44 89 23 5b  
+41 5c 41 5d 5d c3 e8 d4 44 cf fd eb c2 e8 2d 45 cf
+RSP: 0018:ffffc90001cf7908 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 1ffffffff182080e RSI: ffffffff83e38106 RDI: ffffffff8c104070
+RBP: ffffc90001cf7920 R08: ffff88808ffac040 R09: ffffed10431421c6
+R10: ffffed10431421c5 R11: ffff888218a10e2b R12: 00000000000000bf
+R13: ffffffff8c104030 R14: ffffc90001cf7a40 R15: ffffffff8c104188
+FS:  0000000000866880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000003 CR3: 00000000a64a2000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
