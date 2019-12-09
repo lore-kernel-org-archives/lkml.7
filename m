@@ -2,162 +2,359 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B309C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046CFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8C42073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SMFHCFzk"
+	by mail.kernel.org (Postfix) with ESMTP id CEBF520692
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 16:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLIQFV (ORCPT
+        id S1726741AbfLIQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 11:05:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59628 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726230AbfLIQFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 11:05:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575907519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rdQu8xysEeA7Pkbx//hfR4CuVK1XlSe6Fl07ozhjFb0=;
-        b=SMFHCFzk97BdDHVdCPtPiSjytibkfNmm3YlWlA1IeUr7yaKAp1AAc1YDmzj3KfTh085V1E
-        BUsUK7MPdOzDhRRdsA4bueu5y9OUkV0dBuuOg40rgyPgeQZ5tzNIctgbtu8uHQSKzA1JKL
-        cqjRTGe7KvW/TnSu6s7DmMMgukYhShM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-Eh1-RqlkP_SSCGy-IdrtRA-1; Mon, 09 Dec 2019 11:05:18 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65425100F93F;
-        Mon,  9 Dec 2019 16:05:17 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D99A6194BB;
-        Mon,  9 Dec 2019 16:05:16 +0000 (UTC)
-Subject: Re: [PATCH] hugetlbfs: Disable IRQ when taking hugetlb_lock in
- set_max_huge_pages()
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20191209160150.18064-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <93f8fd73-eb5b-355d-eea9-d74911190296@redhat.com>
-Date:   Mon, 9 Dec 2019 11:05:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20191209160150.18064-1-longman@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: Eh1-RqlkP_SSCGy-IdrtRA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Mon, 9 Dec 2019 11:06:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:36922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfLIQGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:06:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 383451FB;
+        Mon,  9 Dec 2019 08:06:46 -0800 (PST)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BD9A3F718;
+        Mon,  9 Dec 2019 08:06:44 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Date:   Mon,  9 Dec 2019 16:06:38 +0000
+Message-Id: <20191209160638.141431-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/19 11:01 AM, Waiman Long wrote:
-> The following lockdep splat was observed in some test runs:
->
-> [  612.388273] ================================
-> [  612.411273] WARNING: inconsistent lock state
-> [  612.432273] 4.18.0-159.el8.x86_64+debug #1 Tainted: G        W --------- -  -
-> [  612.469273] --------------------------------
-> [  612.489273] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-> [  612.517273] swapper/30/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
-> [  612.541273] ffffffff9acdc038 (hugetlb_lock){+.?.}, at: free_huge_page+0x36f/0xaa0
-> [  612.576273] {SOFTIRQ-ON-W} state was registered at:
-> [  612.598273]   lock_acquire+0x14f/0x3b0
-> [  612.616273]   _raw_spin_lock+0x30/0x70
-> [  612.634273]   __nr_hugepages_store_common+0x11b/0xb30
-> [  612.657273]   hugetlb_sysctl_handler_common+0x209/0x2d0
-> [  612.681273]   proc_sys_call_handler+0x37f/0x450
-> [  612.703273]   vfs_write+0x157/0x460
-> [  612.719273]   ksys_write+0xb8/0x170
-> [  612.736273]   do_syscall_64+0xa5/0x4d0
-> [  612.753273]   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
-> [  612.777273] irq event stamp: 691296
-> [  612.794273] hardirqs last  enabled at (691296): [<ffffffff99bb034b>] _raw_spin_unlock_irqrestore+0x4b/0x60
-> [  612.839273] hardirqs last disabled at (691295): [<ffffffff99bb0ad2>] _raw_spin_lock_irqsave+0x22/0x81
-> [  612.882273] softirqs last  enabled at (691284): [<ffffffff97ff0c63>] irq_enter+0xc3/0xe0
-> [  612.922273] softirqs last disabled at (691285): [<ffffffff97ff0ebe>] irq_exit+0x23e/0x2b0
-> [  612.962273]
-> [  612.962273] other info that might help us debug this:
-> [  612.993273]  Possible unsafe locking scenario:
-> [  612.993273]
-> [  613.020273]        CPU0
-> [  613.031273]        ----
-> [  613.042273]   lock(hugetlb_lock);
-> [  613.057273]   <Interrupt>
-> [  613.069273]     lock(hugetlb_lock);
-> [  613.085273]
-> [  613.085273]  *** DEADLOCK ***
->       :
-> [  613.245273] Call Trace:
-> [  613.256273]  <IRQ>
-> [  613.265273]  dump_stack+0x9a/0xf0
-> [  613.281273]  mark_lock+0xd0c/0x12f0
-> [  613.297273]  ? print_shortest_lock_dependencies+0x80/0x80
-> [  613.322273]  ? sched_clock_cpu+0x18/0x1e0
-> [  613.341273]  __lock_acquire+0x146b/0x48c0
-> [  613.360273]  ? trace_hardirqs_on+0x10/0x10
-> [  613.379273]  ? trace_hardirqs_on_caller+0x27b/0x580
-> [  613.401273]  lock_acquire+0x14f/0x3b0
-> [  613.419273]  ? free_huge_page+0x36f/0xaa0
-> [  613.440273]  _raw_spin_lock+0x30/0x70
-> [  613.458273]  ? free_huge_page+0x36f/0xaa0
-> [  613.477273]  free_huge_page+0x36f/0xaa0
-> [  613.495273]  bio_check_pages_dirty+0x2fc/0x5c0
-> [  613.516273]  clone_endio+0x17f/0x670 [dm_mod]
-> [  613.536273]  ? disable_discard+0x90/0x90 [dm_mod]
-> [  613.558273]  ? bio_endio+0x4ba/0x930
-> [  613.575273]  ? blk_account_io_completion+0x400/0x530
-> [  613.598273]  blk_update_request+0x276/0xe50
-> [  613.617273]  scsi_end_request+0x7b/0x6a0
-> [  613.636273]  ? lock_downgrade+0x6f0/0x6f0
-> [  613.654273]  scsi_io_completion+0x1c6/0x1570
-> [  613.674273]  ? sd_completed_bytes+0x3a0/0x3a0 [sd_mod]
-> [  613.698273]  ? scsi_mq_requeue_cmd+0xc0/0xc0
-> [  613.718273]  blk_done_softirq+0x22e/0x350
-> [  613.737273]  ? blk_softirq_cpu_dead+0x230/0x230
-> [  613.758273]  __do_softirq+0x23d/0xad8
-> [  613.776273]  irq_exit+0x23e/0x2b0
-> [  613.792273]  do_IRQ+0x11a/0x200
-> [  613.806273]  common_interrupt+0xf/0xf
-> [  613.823273]  </IRQ>
->
-> Since hugetlb_lock can be taken from both process and IRQ contexts, we
-> need to protect the lock from nested locking by disabling IRQ before
-> taking it.  So for functions that are only called from the process
-> context, the spin_lock_irq()/spin_unlock_irq() pair is used. For
-> functions that may be called from both process and IRQ contexts, the
-> spin_lock_irqsave()/spin_unlock_irqrestore() pair is used.
->
-> For now, I am assuming that only free_huge_page() will be called from
-> IRQ context.
->
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  mm/hugetlb.c | 116 +++++++++++++++++++++++++++++++--------------------
->  1 file changed, 71 insertions(+), 45 deletions(-)
+From: Deepak Pandey <Deepak.Pandey@arm.com>
 
-Sorry, I forgot to update the patch title. IRQ is disabled in all the
-instances where it is acquired. So "in set_max_huge_pages()" should be
-removed from the title.
+The Arm N1SDP SoC suffers from some PCIe integration issues, most
+prominently config space accesses to not existing BDFs being answered
+with a bus abort, resulting in an SError.
+To mitigate this, the firmware scans the bus before boot (catching the
+SErrors) and creates a table with valid BDFs, which acts as a filter for
+Linux' config space accesses.
 
-Thanks,
-Longman
+Add code consulting the table as an ACPI PCIe quirk, also register the
+corresponding device tree based description of the host controller.
+Also fix the other two minor issues on the way, namely not being fully
+ECAM compliant and config space accesses being restricted to 32-bit
+accesses only.
+
+This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+and to access *any* devices (there are no platform devices except UART).
+
+Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
+[Sudipto: extend to cover the CCIX root port as well]
+Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
+[Andre: fix coding style issues, rewrite some parts, add DT support]
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ arch/arm64/configs/defconfig        |   1 +
+ drivers/acpi/pci_mcfg.c             |   7 +
+ drivers/pci/controller/Kconfig      |  11 ++
+ drivers/pci/controller/Makefile     |   1 +
+ drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
+ include/linux/pci-ecam.h            |   2 +
+ 6 files changed, 218 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-n1sdp.c
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6a83ba2aea3e..58124ef5070b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -177,6 +177,7 @@ CONFIG_NET_9P=y
+ CONFIG_NET_9P_VIRTIO=y
+ CONFIG_PCI=y
+ CONFIG_PCIEPORTBUS=y
++CONFIG_PCI_QUIRKS=y
+ CONFIG_PCI_IOV=y
+ CONFIG_HOTPLUG_PCI=y
+ CONFIG_HOTPLUG_PCI_ACPI=y
+diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+index 6b347d9920cc..7a2b41b9ab57 100644
+--- a/drivers/acpi/pci_mcfg.c
++++ b/drivers/acpi/pci_mcfg.c
+@@ -142,6 +142,13 @@ static struct mcfg_fixup mcfg_quirks[] = {
+ 	XGENE_V2_ECAM_MCFG(4, 0),
+ 	XGENE_V2_ECAM_MCFG(4, 1),
+ 	XGENE_V2_ECAM_MCFG(4, 2),
++
++#define N1SDP_ECAM_MCFG(rev, seg, ops) \
++	{"ARMLTD", "ARMN1SDP", rev, seg, MCFG_BUS_ANY, ops }
++
++	/* N1SDP SoC with v1 PCIe controller */
++	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
++	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
+ };
+ 
+ static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index c77069c8ee5d..45700d32f02e 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -37,6 +37,17 @@ config PCI_FTPCI100
+ 	depends on OF
+ 	default ARCH_GEMINI
+ 
++config PCIE_HOST_N1SDP_ECAM
++	bool "ARM N1SDP PCIe Controller"
++	depends on ARM64
++	depends on OF || (ACPI && PCI_QUIRKS)
++	select PCI_HOST_COMMON
++	default y if ARCH_VEXPRESS
++	help
++	  Say Y here if you want PCIe support for the Arm N1SDP platform.
++	  The controller is ECAM compliant, but needs a quirk to workaround
++	  an integration issue.
++
+ config PCI_TEGRA
+ 	bool "NVIDIA Tegra PCIe controller"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index 3d4f597f15ce..5f47fefbd67d 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+ obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+ obj-$(CONFIG_VMD) += vmd.o
++obj-$(CONFIG_PCIE_HOST_N1SDP_ECAM) += pcie-n1sdp.o
+ # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+ obj-y				+= dwc/
+ 
+diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
+new file mode 100644
+index 000000000000..620ab221466c
+--- /dev/null
++++ b/drivers/pci/controller/pcie-n1sdp.c
+@@ -0,0 +1,196 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2018/2019 ARM Ltd.
++ *
++ * This quirk is to mask the following issues:
++ * - PCIE SLVERR: config space accesses to invalid PCIe BDFs cause a bus
++ *		  error (signalled as an asynchronous SError)
++ * - MCFG BDF mapping: the root complex is mapped separately from the device
++ *		       config space
++ * - Non 32-bit accesses to config space are not supported.
++ *
++ * At boot time the SCP board firmware creates a discovery table with
++ * the root complex' base address and the valid BDF values, discovered while
++ * scanning the config space and catching the SErrors.
++ * Linux responds only to the EPs listed in this table, returning NULL
++ * for the rest.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/ioport.h>
++#include <linux/sizes.h>
++#include <linux/of_pci.h>
++#include <linux/of.h>
++#include <linux/pci-ecam.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++
++/* Platform specific values as hardcoded in the firmware. */
++#define AP_NS_SHARED_MEM_BASE	0x06000000
++#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
++#define BDF_TABLE_SIZE		SZ_16K
++
++/*
++ * Shared memory layout as written by the SCP upon boot time:
++ *  ----
++ *  Discover data header --> RC base address
++ *                       \-> BDF Count
++ *  Discover data        --> BDF 0...n
++ *  ----
++ */
++struct pcie_discovery_data {
++	u32 rc_base_addr;
++	u32 nr_bdfs;
++	u32 valid_bdfs[0];
++} *pcie_discovery_data[MAX_SEGMENTS];
++
++void __iomem *rc_remapped_addr[MAX_SEGMENTS];
++
++/*
++ * map_bus() is called before we do a config space access for a certain
++ * device. We use this to check whether this device is valid, avoiding
++ * config space accesses which would result in an SError otherwise.
++ */
++static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
++				       int where)
++{
++	struct pci_config_window *cfg = bus->sysdata;
++	unsigned int devfn_shift = cfg->ops->bus_shift - 8;
++	unsigned int busn = bus->number;
++	unsigned int segment = bus->domain_nr;
++	unsigned int bdf_addr;
++	unsigned int table_count, i;
++
++	if (segment >= MAX_SEGMENTS ||
++	    busn < cfg->busr.start || busn > cfg->busr.end)
++		return NULL;
++
++	/* The PCIe root complex has a separate config space mapping. */
++	if (busn == 0 && devfn == 0)
++		return rc_remapped_addr[segment] + where;
++
++	busn -= cfg->busr.start;
++	bdf_addr = (busn << cfg->ops->bus_shift) + (devfn << devfn_shift);
++	table_count = pcie_discovery_data[segment]->nr_bdfs;
++	for (i = 0; i < table_count; i++) {
++		if (bdf_addr == pcie_discovery_data[segment]->valid_bdfs[i])
++			return pci_ecam_map_bus(bus, devfn, where);
++	}
++
++	return NULL;
++}
++
++static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
++{
++	phys_addr_t table_base;
++	struct device *dev = cfg->parent;
++	struct pcie_discovery_data *shared_data;
++	size_t bdfs_size;
++
++	if (segment >= MAX_SEGMENTS)
++		return -ENODEV;
++
++	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
++
++	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
++				"PCIe valid BDFs")) {
++		dev_err(dev, "PCIe BDF shared region request failed\n");
++		return -ENOMEM;
++	}
++
++	shared_data = devm_ioremap(dev,
++				   table_base, BDF_TABLE_SIZE);
++	if (!shared_data)
++		return -ENOMEM;
++
++	/* Copy the valid BDFs structure to allocated normal memory. */
++	bdfs_size = sizeof(struct pcie_discovery_data) +
++		    sizeof(u32) * shared_data->nr_bdfs;
++	pcie_discovery_data[segment] = devm_kmalloc(dev, bdfs_size, GFP_KERNEL);
++	if (!pcie_discovery_data[segment])
++		return -ENOMEM;
++
++	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
++
++	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
++						shared_data->rc_base_addr,
++						PCI_CFG_SPACE_EXP_SIZE);
++	if (!rc_remapped_addr[segment]) {
++		dev_err(dev, "Cannot remap root port base\n");
++		return -ENOMEM;
++	}
++
++	devm_iounmap(dev, shared_data);
++
++	return 0;
++}
++
++static int pci_n1sdp_pcie_init(struct pci_config_window *cfg)
++{
++	return pci_n1sdp_init(cfg, 0);
++}
++
++static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
++{
++	return pci_n1sdp_init(cfg, 1);
++}
++
++struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
++	.bus_shift	= 20,
++	.init		= pci_n1sdp_pcie_init,
++	.pci_ops	= {
++		.map_bus        = pci_n1sdp_map_bus,
++		.read           = pci_generic_config_read32,
++		.write          = pci_generic_config_write32,
++	}
++};
++
++struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
++	.bus_shift	= 20,
++	.init		= pci_n1sdp_ccix_init,
++	.pci_ops	= {
++		.map_bus        = pci_n1sdp_map_bus,
++		.read           = pci_generic_config_read32,
++		.write          = pci_generic_config_write32,
++	}
++};
++
++static const struct of_device_id n1sdp_pcie_of_match[] = {
++	{ .compatible = "arm,n1sdp-pcie" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, n1sdp_pcie_of_match);
++
++static int n1sdp_pcie_probe(struct platform_device *pdev)
++{
++	const struct device_node *of_node = pdev->dev.of_node;
++	u32 segment;
++
++	if (of_property_read_u32(of_node, "linux,pci-domain", &segment)) {
++		dev_err(&pdev->dev, "N1SDP PCI controllers require linux,pci-domain property\n");
++		return -EINVAL;
++	}
++
++	switch (segment) {
++	case 0:
++		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
++	case 1:
++		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
++	}
++
++	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
++		MAX_SEGMENTS);
++
++	return -EINVAL;
++}
++
++static struct platform_driver n1sdp_pcie_driver = {
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.of_match_table = n1sdp_pcie_of_match,
++		.suppress_bind_attrs = true,
++	},
++	.probe = n1sdp_pcie_probe,
++};
++builtin_platform_driver(n1sdp_pcie_driver);
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index a73164c85e78..03cdea69f4e8 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -57,6 +57,8 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+ extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+ extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+ extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
++extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
++extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
+ #endif
+ 
+ #ifdef CONFIG_PCI_HOST_COMMON
+-- 
+2.17.1
 
