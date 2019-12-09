@@ -2,143 +2,119 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FCC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C157CC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6122077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E022077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 13:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eLEgXA5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfLINAR convert rfc822-to-8bit (ORCPT
+        id S1727683AbfLINAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 08:00:17 -0500
-Received: from mail-oln040092253049.outbound.protection.outlook.com ([40.92.253.49]:30694
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727268AbfLINAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:00:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Up+ht78xis5Co+579LnR55e+j3LvjM1bP1AkUK8hs+4ziUf0+raS/Cu1mAyBjPXxM8fHn50MOKTie8TvZ8347OrBXmeoBI8bE8cqzkKM4gx9bTN+UK7oV4ThbgYyBxZLDo9JEqg7Y8fyzlTHL/KwNs8VPngwveHFLi0uaM28iDzQg8xGmX6SslTDHC9zGWBoO7tu4zEKSVTTMLDY+WcLz4rRuMoMWfs9vyCLlDzXOuJK03kykK71uqe79Ha+ZXBMI3Ka/5VhL01vGT3cEyCzQFXmV0jlyiWRIINyR65Hhlp4m1+qMKphKcvAg3LpcP75BDBaFfPjssrXONEN+gtYSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D/OELDpQxPcZGJ+sYL7LWncgmwYxkHmP76LLvMuNy0E=;
- b=UoCQlt43hFrGavEjVO4ek35j+BLI2mo1iqmQM0dA4O3izfy/BjGnhriPm32ByXL8o5HH8v9TXB8jXrJMRTkUuqTpB5fuESh0d+EoLTjHvw9Mk2ggwQB8T24JV6goU7XjV2O8NEHnsi0GhzFG3aRIp/Y7rzp13SPMbYo419Fe47xgsFGdgmeRB1XRCkifYc2n+DKwSJxOIOtLnfZTAB7HKxbnW3xikDL1nXH4UjbD+MqwWFB2v2LY7EpGEFrEBmwZgETDIe2z75NFd4F+GbTBSVeTOvB592Ly9+NBDvn4vhuO7zODjlw/O603+MmHQIsTDUm6p6PpPOCr0SCm7401sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT003.eop-APC01.prod.protection.outlook.com
- (10.152.248.60) by HK2APC01HT090.eop-APC01.prod.protection.outlook.com
- (10.152.249.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Mon, 9 Dec
- 2019 13:00:11 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
- HK2APC01FT003.mail.protection.outlook.com (10.152.248.173) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.25 via Frontend Transport; Mon, 9 Dec 2019 13:00:11 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 13:00:10 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v12 2/4] PCI: In extend_bridge_window() change available to
- new_size
-Thread-Topic: [PATCH v12 2/4] PCI: In extend_bridge_window() change available
- to new_size
-Thread-Index: AQHVrpCWg3aFUt9ZDEGlAJkcxWcZHQ==
-Date:   Mon, 9 Dec 2019 13:00:10 +0000
-Message-ID: <PSXP216MB043896A9321EDC0EC5C6874F80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYCPR01CA0030.ausprd01.prod.outlook.com
- (2603:10c6:10:e::18) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:B8E8E4D305F5CA5F9FBFADDB8085BC9A52C3273AC35A60005421D1D3BF7F7E24;UpperCasedChecksum:63C8097933FAA77927E3901A5A37076C332924CB1592398B963EF552A1195128;SizeAsReceived:7614;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [85xwPnOG6tmid0HD9eiGeyjyPwoSAti/w1kfwH9WuYL0cE8u4qm2Pkwtw4f2VZcC6vgYUI6wuXo=]
-x-microsoft-original-message-id: <20191209130002.GA3011@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 387a718d-39bf-47df-2060-08d77ca7b940
-x-ms-exchange-slblob-mailprops: kw4jv30d2yRo2VVZljeoS8aHjULAHTRDe5X9jSqjsfHoA0Kj3RdYWEHFOtFIgunR3BPRk9g8fRZF/PjhFn9NY7ropYRD2qAWustIQffx1gvUVh97/PkCUFul/IW3LrJUXtewsw1treiG3E74kW7MdqeFMGuwDszC/HqeQ4hKe/MbTVtxZAvtPQ5qXgpmDPwZGdYELqqCN7t1i2wCQwWjAcbgG3gT3MoiEaOLRrBUNKudNC6qE2spi4+urOub5g5asVbnArmhO8x5YQljSX+gnokLbnEn+y/U2euO76kjqM8xXi7oSYnu+qTscTzNlFw1fCjeba90vAtmkhYKLv5r6KGCF5a/HsqzG2aLDIn/ui4vZoQbXtFmdXtyS2qp6HpCsY4smMQc8p1lNJN71vVlohfT2H/aUb0SFraIb7ZnIFVligKA7WIxwavKWT1D01fPumB6lFgNf8RKkO+Wmp07ZoaJFQFGrkn1ezRB41nFv8u+pznrdnle8wpgXVRNtyiHXGSKeRymRrW0/TjYaBIHWtceRZDlwafXPaHXi7+VJSoO/pHuknVZhGrcuurdfggfZCZ0KwYuGNUtwTTYzsBQ5WtldyrVhASgP56vNDfjXlAwAJTQeqSk6Vz5wrQs0TYnRscSYbqiYoTfrM3IrzmLizzIdXHsKY+94LSVvDw2AQ8=
-x-ms-traffictypediagnostic: HK2APC01HT090:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tn/XwKzuzr8/8OzC9Uvo1Na4KyStxY21itj7N9gLiJiEQuIDh7ruC9k9Yt3qTeQDlmyYHp12ITsHsiH9hYsjadEdYKKw/7IDBT07HfcCQPQZv0BuG4EQRdyhOSg2rTWYaj7ph8nJij+IY+a7NB7dgKnzysOOy+jVcZrywfzPAuJfnp/PkRJSWbX0Ijh+ChwE
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7063E438C3EC3340A0466CC948A02314@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Dec 2019 08:00:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33242 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727268AbfLINAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:00:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575896421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PToppvBGgoJ4HzIVSd6dCqQlJDe/OieeWuQiyuHp0M0=;
+        b=eLEgXA5AXnf7S16iG2LUvWBg1+ccGpNNFboSCevSBaqpM/Wg30ly3vC8MzY/RlfIQIyh+a
+        SfT8BFwKvfF5VsNMvg/duJXW4WA8JW2KVAzTO7djS476H08aNi3LzUbS3mPctDuSAlPGHH
+        O14c7QcV49Y1ertARQok4mmW9bjvEDA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-1En_jaMEOCKjZftqq0Zc6A-1; Mon, 09 Dec 2019 08:00:17 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B98C718A8C8A;
+        Mon,  9 Dec 2019 13:00:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (ovpn-204-235.brq.redhat.com [10.40.204.235])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0526B6E531;
+        Mon,  9 Dec 2019 13:00:07 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon,  9 Dec 2019 14:00:15 +0100 (CET)
+Date:   Mon, 9 Dec 2019 14:00:06 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
+ wakeups reliable
+Message-ID: <20191209130005.GB5388@redhat.com>
+References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
+ <20191209091813.GA41320@gmail.com>
+ <20191209102759.GA123769@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 387a718d-39bf-47df-2060-08d77ca7b940
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 13:00:10.8443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT090
+In-Reply-To: <20191209102759.GA123769@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 1En_jaMEOCKjZftqq0Zc6A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In extend_bridge_window() change "available" parameter name to new_size.
-This makes more sense as this parameter represents the new size for the
-window.
+On 12/09, Ingo Molnar wrote:
+>
+> Any consumed exclusive event is handled in finish_wait_exclusive() now:
+>
+> +               } else {
+> +                       /* We got removed from the waitqueue already, wak=
+e up the next exclusive waiter (if any): */
+> +                       if (interrupted && waitqueue_active(wq_head))
+> +                               __wake_up_locked_key(wq_head, TASK_NORMAL=
+, NULL);
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/setup-bus.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+See my previous email, I don't think we need this...
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 8c990f981..165a62a79 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1834,14 +1834,14 @@ void __init pci_assign_unassigned_resources(void)
- 
- static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
--				 resource_size_t available)
-+				 resource_size_t new_size)
- {
- 	struct pci_dev_resource *dev_res;
- 
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= available)
-+	if (resource_size(res) >= new_size)
- 		return;
- 
- 	dev_res = res_to_dev_res(add_list, res);
-@@ -1849,10 +1849,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
- 		return;
- 
- 	/* Is there room to extend the window? */
--	if (available - resource_size(res) <= dev_res->add_size)
-+	if (new_size - resource_size(res) <= dev_res->add_size)
- 		return;
- 
--	dev_res->add_size = available - resource_size(res);
-+	dev_res->add_size = new_size - resource_size(res);
- 	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
- 		&dev_res->add_size);
- }
--- 
-2.24.0
+But if we do this, then __wake_up_locked_key(key =3D> NULL) doesn't look ri=
+ght.
+It should use the same "key" which was passed to __wake_up(key) which remov=
+ed
+us from list.
+
+Currently this doesn't really matter, the only user of prepare_to_wait_even=
+t()
+which relies on the "keyed" wakeup is ___wait_var_event() and it doesn't ha=
+ve
+"exclusive" waiters, but still.
+
+Hmm. and it seems that init_wait_var_entry() is buggy? Again, currently thi=
+s
+doesn't matter, but don't we need the trivial fix below?
+
+Oleg.
+
+--- x/kernel/sched/wait_bit.c
++++ x/kernel/sched/wait_bit.c
+@@ -179,6 +179,7 @@ void init_wait_var_entry(struct wait_bit
+ =09=09=09.bit_nr =3D -1,
+ =09=09},
+ =09=09.wq_entry =3D {
++=09=09=09.flags=09 =3D flags,
+ =09=09=09.private =3D current,
+ =09=09=09.func=09 =3D var_wake_function,
+ =09=09=09.entry=09 =3D LIST_HEAD_INIT(wbq_entry->wq_entry.entry),
 
