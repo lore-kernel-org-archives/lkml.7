@@ -2,148 +2,157 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED05DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B294C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3F62072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="nIRaegXK";
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SuMFst1G"
+	by mail.kernel.org (Postfix) with ESMTP id D9B152072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfLIJQn (ORCPT
+        id S1727507AbfLIJR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:16:43 -0500
-Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:49732 "EHLO
-        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727496AbfLIJQm (ORCPT
+        Mon, 9 Dec 2019 04:17:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726377AbfLIJR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:16:42 -0500
-Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
-        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99FEFh021367
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 09:16:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
- cc : references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp;
- bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
- b=nIRaegXKspiKE88HxNH6WjH7FyQNO5dMclhW890Uu2Fdq29E7bj8StIEi3DIiLDpD5Tt
- woBdm74F/5iAx90vefct5/fTyXpfgeTkevSleiiFaEjhwa0ZYrm8fvdYIrsMzpUq+mH0
- ELbzSFy9yrBQ4PbhZpAMiUzVsUzH6WjYy1WTDwbMP8o144d1ZtWAxqy3Tk0VPIQlScaC
- AjhScw409wDtubAiG9otQOfwCsqUgFXY27h13RIYhHUErGtT+kJ2+5KD3r2I0IOe0kFd
- G/tEXbDtsONuRzRnOqZnfZ4Jzqxa4ezZmUsczCBH9Rd+D6pY2OuZQXztnpULZrn7JGlt Dg== 
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        by mx08-00252a01.pphosted.com with ESMTP id 2wr1er0vff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:16:39 +0000
-Received: by mail-wm1-f70.google.com with SMTP id y125so6862285wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:16:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
-        b=SuMFst1GNtlvgI4cGzuoakXgAu2yerkgS/GDEcxL7qi9KS61f4biV8Fp04WzdqOFvn
-         j1Gp7UyQPmGUKIx4MxpdKsGM24SzZGWzt/fIRXi8bPyMFBERrKD4MBhBhYMoo8ZXUIxP
-         P48gvIosiJqetY/6b62Qk027EewfB7LmrwKB2YskMOKcQEClBnyig6OPlKOUeXTP095S
-         EbgVNQobXZjDI8CK0EhfTfs03R7Fzsd0/Uh0xNVlFtrxShdzlqfsT/p7ZEA7VFEGhgFc
-         R+Iqq3a32SCC7tlondsDN8+BEzTPt30nffEsF+4JSL4340+SFl0EpRmqR4Zs17A5lGt7
-         aYsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
-        b=F1vYTkCU+svXygNYDbzt9DNHIbgnmaSsvS7d13dw1xsCbI2uWFVeHgJgXE5k6F7mri
-         bOpzjuA/b+IOefeHvOxck6BZctv5UKpDlEgBrbEe1Hu78Z3DMfOyL+DQNGImv2CGeH+r
-         2ivJlNWL6nG3oVm53b/E9JMan9qbfpMmlwAlPDfhjrVJoYoYbl48ZddldouXsYsStTYa
-         ANter6K9xNvYP1X79SxnRIeU3iMkqLRavo7/jlpOEOJUk9etDO8Z8m3KVDJPd1Za1AHl
-         EJc0TC6VMqQuLqG+MpqnyiQ/eRn77ce5KypXnorYoRSDNq5KL646m6hAG57c3wXHY9qw
-         d58g==
-X-Gm-Message-State: APjAAAXK+rMUPq6efVDSt9JTAq06REVB1LTM22eKH6xIA1pZ8idVUoeK
-        S1xiytT8g/94znFbUIhF6LZTdGqw+YgsJl4BbXBw++J5hidxfRbEJop/Q8OhiY87ToBaWPQfUhr
-        7IWF7f3GYFcClbYKgC9a272I+
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845429wrk.53.1575882998149;
-        Mon, 09 Dec 2019 01:16:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzT3Io5pOspq+kl6pPKQBqKVgBf9LVLOJQm7nVHNRzkVmlSJL3zQmrWoRTiXlnHeBQS8aQY4w==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845391wrk.53.1575882997834;
-        Mon, 09 Dec 2019 01:16:37 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:340b:2c9a:9ebb:aeea? ([2a00:1098:3142:14:340b:2c9a:9ebb:aeea])
-        by smtp.gmail.com with ESMTPSA id f1sm12909270wml.11.2019.12.09.01.16.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 01:16:36 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
-Cc:     mbrugger@suse.com, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
- <711470d3-e683-69d4-8f4e-791a76faab29@gmail.com>
- <e72de603-2ad9-5a3b-109e-8ee14bf3293c@raspberrypi.org>
- <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
-From:   Phil Elwell <phil@raspberrypi.org>
-Message-ID: <c085e99f-c1b3-1729-0170-fa17a1aea995@raspberrypi.org>
-Date:   Mon, 9 Dec 2019 09:16:35 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 04:17:59 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99HK9J126637
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 04:17:58 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtgyj225-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 04:17:58 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
+        Mon, 9 Dec 2019 09:17:56 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 09:17:53 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB99HqdJ50855956
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 09:17:52 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41CD042041;
+        Mon,  9 Dec 2019 09:17:52 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C41E14203F;
+        Mon,  9 Dec 2019 09:17:49 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.109.247.23])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  9 Dec 2019 09:17:49 +0000 (GMT)
+Date:   Mon, 9 Dec 2019 14:47:46 +0530
+From:   Bharata B Rao <bharata@linux.ibm.com>
+To:     guro@fb.com
+Cc:     mhocko@kernel.org, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        shakeelb@google.com, vdavydov.dev@gmail.com, longman@redhat.com
+Subject: Re: [PATCH 00/16] The new slab memory controller
+Reply-To: bharata@linux.ibm.com
 MIME-Version: 1.0
-In-Reply-To: <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19120909-0016-0000-0000-000002D30E58
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120909-0017-0000-0000-000033351ECC
+Message-Id: <20191209091746.GA16989@in.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ priorityscore=1501 lowpriorityscore=0 suspectscore=1 bulkscore=0
+ phishscore=0 impostorscore=0 adultscore=0 spamscore=0 mlxlogscore=746
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/2019 18:13, Florian Fainelli wrote:
-> On 12/6/19 2:16 AM, Phil Elwell wrote:
->> Hi Nicolas,
->>
->> On 06/12/2019 00:08, Florian Fainelli wrote:
->>> On 12/4/19 4:56 AM, Nicolas Saenz Julienne wrote:
->>>> Raspberry Pi's firmware has a feature to select how much memory to
->>>> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
->>>> to 944MB, with a default of 64MB. This memory resides in the topmost
->>>> part of the lower 1GB memory area and grows bigger expanding towards the
->>>> begging of memory.
->>>>
->>>> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
->>>> the memory available to the system in the lower 1GB area can outgrow the
->>>> interconnect's dma-range as its size was selected based on the maximum
->>>> system memory available given the default gpu_mem configuration. This
->>>> makes that memory slice unavailable for DMA. And may cause nasty kernel
->>>> warnings if CMA happens to include it.
->>>>
->>>> Change soc's dma-ranges to really reflect it's HW limitation, which is
->>>> being able to only DMA to the lower 1GB area.
->>>>
->>>> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
->>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>>> ---
->>>>
->>>> NOTE: I'd appreciate if someone from the RPi foundation commented on
->>>> this as it's something that I'll propose to be backported to their tree.
->>
->> The 0x3c000000 size was a mistake that arose from c0000000 + 3c000000 =
->> fc000000, but that is mixing apples and oranges (actually DMA addresses
->> and host physical addresses). Please correct it as you are proposing.
-> 
-> Do you want to add an Acked-by or Reviewed-by tag to make this statement
-> official?
+Hi,
 
-Here you go:
+I see the below crash during early boot when I try this patchset on
+PowerPC host. I am on new_slab.rfc.v5.3 branch.
 
-Reviewed-by: Phil Elwell <phil@raspberrypi.org>
+BUG: Unable to handle kernel data access at 0x81030236d1814578
+Faulting instruction address: 0xc0000000002cc314
+Oops: Kernel access of bad area, sig: 11 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA PowerNV
+Modules linked in: ip_tables x_tables autofs4 sr_mod cdrom usbhid bnx2x crct10dif_vpmsum crct10dif_common mdio libcrc32c crc32c_vpmsum
+CPU: 31 PID: 1752 Comm: keyboard-setup. Not tainted 5.3.0-g9bd85fd72a0c #155
+NIP:  c0000000002cc314 LR: c0000000002cc2e8 CTR: 0000000000000000
+REGS: c000001e40f378b0 TRAP: 0380   Not tainted  (5.3.0-g9bd85fd72a0c)
+MSR:  900000010280b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44022224  XER: 00000000
+CFAR: c0000000002c6ad4 IRQMASK: 1 
+GPR00: c0000000000b8a40 c000001e40f37b40 c000000000ed9600 0000000000000000 
+GPR04: 0000000000000023 0000000000000010 c000001e40f37b24 c000001e3cba3400 
+GPR08: 0000000000000020 81030218815f4578 0000001e50220000 0000000000000030 
+GPR12: 0000000000002200 c000001fff774d80 0000000000000000 00000001072600d8 
+GPR16: 0000000000000000 c0000000000bbaac 0000000000000000 0000000000000000 
+GPR20: c000001e40f37c48 0000000000000001 0000000000000000 c000001e3cba3400 
+GPR24: c000001e40f37dd8 0000000000000000 c000000000fa0d58 0000000000000000 
+GPR28: c000001e3a080080 c000001e32da0100 0000000000000118 0000000000000010 
+NIP [c0000000002cc314] __mod_memcg_state+0x58/0xd0
+LR [c0000000002cc2e8] __mod_memcg_state+0x2c/0xd0
+Call Trace:
+[c000001e40f37b90] [c0000000000b8a40] account_kernel_stack+0xa4/0xe4
+[c000001e40f37bd0] [c0000000000ba4a4] copy_process+0x2b4/0x16f0
+[c000001e40f37cf0] [c0000000000bbaac] _do_fork+0x9c/0x3e4
+[c000001e40f37db0] [c0000000000bc030] sys_clone+0x74/0xa8
+[c000001e40f37e20] [c00000000000bb34] ppc_clone+0x8/0xc
+Instruction dump:
+4bffa7e9 2fa30000 409e007c 395efffb 3d000020 2b8a0001 409d0008 39000020 
+e93d0718 e94d0028 7bde1f24 7d29f214 <7ca9502a> 7fff2a14 7fe9fe76 7d27fa78 
+
+Looks like page->mem_cgroup_vec is allocated but not yet initialized
+with memcg pointers when we try to access them.
+
+I did get past the crash by initializing the pointers like this
+in account_kernel_stack(), but I am pretty sure that this is not the
+place to do this:
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 541fd805fb88..be21419feae2 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -380,13 +380,26 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
+                 * All stack pages are in the same zone and belong to the
+                 * same memcg.
+                 */
+-               struct page *first_page = virt_to_page(stack);
++               struct page *first_page = virt_to_head_page((stack));
++               unsigned long off;
++               struct mem_cgroup_ptr *memcg_ptr;
++               struct mem_cgroup *memcg;
+ 
+                mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
+                                    THREAD_SIZE / 1024 * account);
+ 
+-               mod_memcg_page_state(first_page, MEMCG_KERNEL_STACK_KB,
++               if (!first_page->mem_cgroup_vec)
++                       return;
++               off = obj_to_index(task_struct_cachep, first_page, stack);
++               memcg_ptr = first_page->mem_cgroup_vec[off];
++               if (!memcg_ptr)
++                       return;
++               rcu_read_lock();
++               memcg = memcg_ptr->memcg;
++               if (memcg)
++                       __mod_memcg_state(memcg, MEMCG_KERNEL_STACK_KB,
+                                     account * (THREAD_SIZE / 1024));
++               rcu_read_unlock();
+        }
+ }
+
+Regards,
+Bharata.
+
