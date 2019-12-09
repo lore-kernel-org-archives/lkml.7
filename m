@@ -2,83 +2,92 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82AC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02985C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5103207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:37:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FDe0UB5c"
+	by mail.kernel.org (Postfix) with ESMTP id D4BA3205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLIShL (ORCPT
+        id S1726646AbfLISie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:37:11 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:45724 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfLIShL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:37:11 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47WsL41VqKzCS;
-        Mon,  9 Dec 2019 19:34:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575916476; bh=or7Oj6xnUL/WDCELdOhIBVwh1AdCpOT9i9SKDT6ot5Y=;
-        h=Date:From:Subject:To:Cc:From;
-        b=FDe0UB5ceT51Pl4PG1WYMSGUL+PxNPgip6WXgT9/QRzRRYsdvHXw4n5/BTpKF0t+N
-         Aux17mYjRjlxjEBkXKeFqp2gBGKu6u+CyDX+9bk+c3c/0mz57OsqRWuFn01lmbVHL1
-         IEyyJ1ZcWCluRdTjLJtuY5iGdAesv2o0AKGIsUNxfPlOEMxg5AsiLkSXBLDJaKQwRw
-         2We52qw2vr0UO+YQ27mp+ngA5CJj3pojIQgZaAWd3DrO2h4YJegAxJiY6ENZHrjpLJ
-         7t9SqeQCbnXauSoWSiV0OGrYa3jt1k6Q89EwEW+r2z4dUgZsp7UvpF/S4yTKIExqQg
-         oASz5B8UKIDrA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 09 Dec 2019 19:37:05 +0100
-Message-Id: <3f12c2deaae9e77a5e7ab8415db7751a27bc3b98.1575916477.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] mmc: sdhci-s3c: remove unused ext_cd_gpio field
+        Mon, 9 Dec 2019 13:38:34 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:37424 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726365AbfLISid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:38:33 -0500
+Received: (qmail 5435 invoked by uid 2102); 9 Dec 2019 13:38:32 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 9 Dec 2019 13:38:32 -0500
+Date:   Mon, 9 Dec 2019 13:38:32 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hid_field_extract
+In-Reply-To: <000000000000dd7e7e05990793c1@google.com>
+Message-ID: <Pine.LNX.4.44L0.1912091337050.1462-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     linux-mmc@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/mmc/host/sdhci-s3c.c | 2 --
- 1 file changed, 2 deletions(-)
+On Fri, 6 Dec 2019, syzbot wrote:
 
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index 51e096f27388..8b15945dd499 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -117,7 +117,6 @@ struct sdhci_s3c {
- 	struct s3c_sdhci_platdata *pdata;
- 	int			cur_clk;
- 	int			ext_cd_irq;
--	int			ext_cd_gpio;
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11d12861e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=09ef48aa58261464b621
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101a781ee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d71c2ae00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in __extract drivers/hid/hid-core.c:1345  
+> [inline]
+> BUG: KASAN: slab-out-of-bounds in hid_field_extract+0x150/0x170  
+> drivers/hid/hid-core.c:1365
+> Read of size 1 at addr ffff8881cf50f000 by task swapper/0/0
+
+Diagnostic patch.
+
+#syz test: https://github.com/google/kasan.git 1f22d15c
+
+Index: usb-devel/drivers/hid/hid-core.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hid-core.c
++++ usb-devel/drivers/hid/hid-core.c
+@@ -1488,6 +1488,7 @@ static void hid_input_field(struct hid_d
+ 	if (!value)
+ 		return;
  
- 	struct clk		*clk_io;
- 	struct clk		*clk_bus[MAX_BUS_CLK];
-@@ -512,7 +511,6 @@ static int sdhci_s3c_probe(struct platform_device *pdev)
- 			goto err_pdata_io_clk;
- 	} else {
- 		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
--		sc->ext_cd_gpio = -1; /* invalid gpio number */
++	hid_info(hid, "Field offset %u size %u count %u\n", offset, size, count);
+ 	for (n = 0; n < count; n++) {
+ 
+ 		value[n] = min < 0 ?
+@@ -1712,6 +1713,7 @@ int hid_report_raw_event(struct hid_devi
  	}
  
- 	drv_data = sdhci_s3c_get_driver_data(pdev);
--- 
-2.20.1
+ 	if (hid->claimed != HID_CLAIMED_HIDRAW && report->maxfield) {
++		hid_info(hid, "Report rsize %u csize %u\n", rsize, csize);
+ 		for (a = 0; a < report->maxfield; a++)
+ 			hid_input_field(hid, report->field[a], cdata, interrupt);
+ 		hdrv = hid->driver;
 
