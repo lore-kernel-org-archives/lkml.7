@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7071FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00125C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4926E20726
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2EF20726
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLITOW (ORCPT
+        id S1727101AbfLITO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:14:22 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:56068 "EHLO ale.deltatee.com"
+        Mon, 9 Dec 2019 14:14:29 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:56028 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbfLITOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:14:08 -0500
+        id S1726354AbfLITOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:14:04 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieOTm-00025o-2L; Mon, 09 Dec 2019 12:14:04 -0700
+        id 1ieOTk-00025m-RO; Mon, 09 Dec 2019 12:13:59 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieOTd-0001Mp-GC; Mon, 09 Dec 2019 12:13:49 -0700
+        id 1ieOTd-0001Mj-99; Mon, 09 Dec 2019 12:13:49 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -44,20 +44,18 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Date:   Mon,  9 Dec 2019 12:13:44 -0700
-Message-Id: <20191209191346.5197-5-logang@deltatee.com>
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Date:   Mon,  9 Dec 2019 12:13:42 -0700
+Message-Id: <20191209191346.5197-3-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191209191346.5197-1-logang@deltatee.com>
 References: <20191209191346.5197-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, akpm@linux-foundation.org, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, will@kernel.org, luto@kernel.org, peterz@infradead.org, logang@deltatee.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, borntraeger@de.ibm.com
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, dan.j.williams@intel.com, akpm@linux-foundation.org, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, peterz@infradead.org, logang@deltatee.com, hpa@zytor.com, will@kernel.org, luto@kernel.org, x86@kernel.org
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 4/6] s390/mm: Thread pgprot_t through vmem_add_mapping()
+Subject: [PATCH 2/6] x86/mm: Introduce _set_memory_prot()
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,109 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In prepartion to support a pgprot_t argument for arch_add_memory().
+For use in the 32bit arch_add_memory() to set the pgprot type of the
+memory to add.
 
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- arch/s390/include/asm/pgtable.h |  3 ++-
- arch/s390/mm/extmem.c           |  3 ++-
- arch/s390/mm/init.c             |  2 +-
- arch/s390/mm/vmem.c             | 10 +++++-----
- 4 files changed, 10 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/set_memory.h | 1 +
+ arch/x86/mm/pageattr.c            | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 5ff98d76a66c..e0d5ed38282b 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1673,7 +1673,8 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
- 
- #define kern_addr_valid(addr)   (1)
- 
--extern int vmem_add_mapping(unsigned long start, unsigned long size);
-+extern int vmem_add_mapping(unsigned long start, unsigned long size,
-+			    pgprot_t prot);
- extern int vmem_remove_mapping(unsigned long start, unsigned long size);
- extern int s390_enable_sie(void);
- extern int s390_enable_skey(void);
-diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
-index fd0dae9d10f4..6cf7029a7b35 100644
---- a/arch/s390/mm/extmem.c
-+++ b/arch/s390/mm/extmem.c
-@@ -313,7 +313,8 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
- 		goto out_free;
- 	}
- 
--	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-+	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1,
-+			      PAGE_KERNEL);
- 
- 	if (rc)
- 		goto out_free;
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index a124f19f7b3c..263ebb074cdd 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -276,7 +276,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	if (WARN_ON_ONCE(restrictions->altmap))
- 		return -EINVAL;
- 
--	rc = vmem_add_mapping(start, size);
-+	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
- 	if (rc)
- 		return rc;
- 
-diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-index b403fa14847d..8a5e95f184a2 100644
---- a/arch/s390/mm/vmem.c
-+++ b/arch/s390/mm/vmem.c
-@@ -66,7 +66,7 @@ pte_t __ref *vmem_pte_alloc(void)
- /*
-  * Add a physical memory range to the 1:1 mapping.
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index 2ee8e469dcf5..d728c2f3ad96 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -34,6 +34,7 @@
+  * The caller is required to take care of these.
   */
--static int vmem_add_mem(unsigned long start, unsigned long size)
-+static int vmem_add_mem(unsigned long start, unsigned long size, pgprot_t prot)
- {
- 	unsigned long pgt_prot, sgt_prot, r3_prot;
- 	unsigned long pages4k, pages1m, pages2g;
-@@ -79,7 +79,7 @@ static int vmem_add_mem(unsigned long start, unsigned long size)
- 	pte_t *pt_dir;
- 	int ret = -ENOMEM;
  
--	pgt_prot = pgprot_val(PAGE_KERNEL);
-+	pgt_prot = pgprot_val(prot);
- 	sgt_prot = pgprot_val(SEGMENT_KERNEL);
- 	r3_prot = pgprot_val(REGION3_KERNEL);
- 	if (!MACHINE_HAS_NX) {
-@@ -362,7 +362,7 @@ int vmem_remove_mapping(unsigned long start, unsigned long size)
- 	return ret;
++int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+ int _set_memory_uc(unsigned long addr, int numpages);
+ int _set_memory_wc(unsigned long addr, int numpages);
+ int _set_memory_wt(unsigned long addr, int numpages);
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 0d09cc5aad61..024e3ddf494d 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -1781,6 +1781,13 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
+ 		CPA_PAGES_ARRAY, pages);
  }
  
--int vmem_add_mapping(unsigned long start, unsigned long size)
-+int vmem_add_mapping(unsigned long start, unsigned long size, pgprot_t prot)
++int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
++{
++	return change_page_attr_set_clr(&addr, numpages, prot,
++					__pgprot(~pgprot_val(prot)), 0, 0,
++					NULL);
++}
++
+ int _set_memory_uc(unsigned long addr, int numpages)
  {
- 	struct memory_segment *seg;
- 	int ret;
-@@ -379,7 +379,7 @@ int vmem_add_mapping(unsigned long start, unsigned long size)
- 	if (ret)
- 		goto out_free;
- 
--	ret = vmem_add_mem(start, size);
-+	ret = vmem_add_mem(start, size, prot);
- 	if (ret)
- 		goto out_remove;
- 	goto out;
-@@ -403,7 +403,7 @@ void __init vmem_map_init(void)
- 	struct memblock_region *reg;
- 
- 	for_each_memblock(memory, reg)
--		vmem_add_mem(reg->base, reg->size);
-+		vmem_add_mem(reg->base, reg->size, PAGE_KERNEL);
- 	__set_memory((unsigned long)_stext,
- 		     (unsigned long)(_etext - _stext) >> PAGE_SHIFT,
- 		     SET_MEMORY_RO | SET_MEMORY_X);
+ 	/*
 -- 
 2.20.1
 
