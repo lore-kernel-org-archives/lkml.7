@@ -2,102 +2,92 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A09FC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA97C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03C0206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408CA206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 21:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jhUlUlPm"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="aFdT+b/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLIVJR (ORCPT
+        id S1726771AbfLIVJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 16:09:17 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52288 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfLIVJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:09:17 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB9L9ANx047646;
-        Mon, 9 Dec 2019 15:09:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575925750;
-        bh=Y4Fj9ku2JzET4DUtx5DnN34khAGg36Lhfe3pUDRQA3k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jhUlUlPm3bcdAoESnImEXH6bHp8xiIG2TuhcWJVNnL9mSheE0GPDNh2ROJ99vPgUI
-         7jzaVhlN/CYsq58+U95Ghk8lEYk6+8OPRuAhcBsVXtQHGebopRanadNndeJZ9xzlnh
-         vs00QY427Xwdi8vBy14bjL4Q9FedOC/qGE7HxQU0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB9L9AAF053616
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 15:09:10 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 15:09:10 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 15:09:10 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB9L9As7115332;
-        Mon, 9 Dec 2019 15:09:10 -0600
-Subject: Re: [PATCH 2/2] net: m_can: Make wake-up gpio an optional
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sean Nyekjaer <sean@geanix.com>
-CC:     <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20191204175112.7308-1-dmurphy@ti.com>
- <20191204175112.7308-2-dmurphy@ti.com>
- <b9eaa5c4-13bc-295f-dcbf-d2a846243682@geanix.com>
- <827b022e-9188-7bcf-25e3-3777df3b08a5@ti.com>
- <809b9ff1-88e3-4e46-33e0-856db37898b2@pengutronix.de>
- <dc24a8a3-d515-f84b-9f33-db92bd4a412a@ti.com>
- <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <cc310081-1855-958b-fbe4-529937ff941c@ti.com>
-Date:   Mon, 9 Dec 2019 15:07:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 16:09:38 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:20946 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfLIVJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:09:38 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Wwjy6cZpzCS;
+        Mon,  9 Dec 2019 22:07:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575925623; bh=Qc4cMiFfqRcpK1/wEakCiApC7wh9tCxkWxOw2MmHKU0=;
+        h=Date:From:Subject:To:Cc:From;
+        b=aFdT+b/auaLo+CrXXgBNInWjo2FntKJNOsY7H/vwhIqJiN5dtFsEjGUHWH5i092F2
+         o9XEt4YLMpJ5XgvJQQh3ZgoTJLbQ/uFNjdPm8H+YCtBGELbs4r89+N227sg11EAtPL
+         v5zeVpOlmV2MeY8niGFydO9uyUKoLZGA2O8ii+H+ylrgJbQET14gGxW+6BTiG3ahtV
+         IYPwNwPfkM6eZfim0g8tOCBRzT0OdvVVGrW1Cb1FPbDh68C6D/J9b2PFbQTxNp58NE
+         dglh3O6LPrfy+OwAWSvYcKhMMgeG0cIRg5E5eVefT2XNZD+NmIuu4P1AYQ2jpGWwNE
+         /SqHYEuIr9g9g==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 09 Dec 2019 22:09:35 +0100
+Message-Id: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 0/4] mmc: simplify WP/CD GPIO handling
 MIME-Version: 1.0
-In-Reply-To: <6ef8fe8a-acec-89c5-83d3-fd47cf1f40ab@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+This series removes convoluted handling of inverted CD and WP lines in
+SD/MMC host drivers when using GPIOs.
 
-On 12/9/19 3:06 PM, Marc Kleine-Budde wrote:
-> On 12/9/19 10:01 PM, Dan Murphy wrote:
->>>>> I would add tcan4x5x to the subject of this patch ->
->>>>> "net: m_can: tcan4x5x Make wake-up gpio an optional"
->>>>>
->>>> Do you want me to submit v2 with the $subject change?
->>>>
->>>> Or would you fix it up when committing it?
->>> I'll change the subject while applying.
->>>
->>> Dan, what about maintainerchip of the tcan4x5?
->> Do you know when you will be applying these?
-> The patch is already upstream. See linux-can/mater:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/log/
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can.git/commit/?id=2de497356955ce58cd066fb03d2da5235f3c7c23
+First patch, sent separately earlier, adds gpiod_toggle_active_low() to
+switch line inversion flag in the gpiod structure. Next two patches
+modify WP and CD initialization to apply all the inversions onto gpiod's
+active-low flag. Final patch removes now-unused argument from init functions.
 
-Ah I was looking here
+x86 allyesconfig build-tested.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git
+Michał Mirosław (4):
+  gpio: add gpiod_toggle_active_low()
+  mmc: rework wp-gpio handling
+  mmc: rework cd-gpio handling
+  mmc: remove mmc_gpiod_request_*(invert_gpio)
 
->
+ drivers/gpio/gpiolib-of.c          | 21 -------------------
+ drivers/gpio/gpiolib.c             | 11 ++++++++++
+ drivers/mmc/core/host.c            | 33 ++++++++----------------------
+ drivers/mmc/core/slot-gpio.c       | 30 ++++++++++-----------------
+ drivers/mmc/host/davinci_mmc.c     |  4 ++--
+ drivers/mmc/host/mmc_spi.c         |  4 ++--
+ drivers/mmc/host/mmci.c            |  4 ++--
+ drivers/mmc/host/pxamci.c          | 12 +++++------
+ drivers/mmc/host/s3cmci.c          |  4 ++--
+ drivers/mmc/host/sdhci-acpi.c      |  2 +-
+ drivers/mmc/host/sdhci-esdhc-imx.c | 15 +++++++-------
+ drivers/mmc/host/sdhci-pci-core.c  |  4 ++--
+ drivers/mmc/host/sdhci-sirf.c      |  2 +-
+ drivers/mmc/host/sdhci-spear.c     |  2 +-
+ drivers/mmc/host/tmio_mmc_core.c   |  2 +-
+ include/linux/gpio/consumer.h      |  7 +++++++
+ include/linux/mmc/slot-gpio.h      |  5 ++---
+ 17 files changed, 67 insertions(+), 95 deletions(-)
+
+-- 
+2.20.1
+
