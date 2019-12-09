@@ -2,622 +2,114 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA7BC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A48C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF42F2077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575920018;
-	bh=BToz5JHrjUWsUPJ/3ovCQ8vpI4jT63sQyRRUO6Nlgok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k05qti4k2EAmXJr4QLRnJuIvETEOdRIy4SGY4m/PlZv/mwvbydI3wipXtxE2UV1Kq
-	 YbKZmI0XZHsJaBeL8VxGu/+SvIqUc3aDYXQI1DzXQgleyQIfn3+YK5P3lRE10oFrPl
-	 op3t2cR3ftA2sWiBpZ25+Mxs7DhMRG6W2qYMcxJY=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF3D20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfLITdc (ORCPT
+        id S1727070AbfLITeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43240 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 14:34:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:43610 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfLITd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:33:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8539206E0;
-        Mon,  9 Dec 2019 19:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575920008;
-        bh=BToz5JHrjUWsUPJ/3ovCQ8vpI4jT63sQyRRUO6Nlgok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0kjUcB75uFR4u4UJ/HW0FLnhGRvnXIAJ0OXOrIJ0IJ65qXXL0lA4gg2owDg3yS5Z
-         wazrAUGXyOp8fk+RWn20jINIctqJjTApf/J3Xm8/0LrrDyjSqiYMY/RopgapV6lpxD
-         laUS4/7cTOmyHO7iCAHhqG0impqviNTmVG7Wh84Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 5/6] device.h: move 'struct class' stuff out to device/class.h
-Date:   Mon,  9 Dec 2019 20:33:02 +0100
-Message-Id: <20191209193303.1694546-6-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
-References: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
+        id S1726495AbfLITeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:34:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64E69328;
+        Mon,  9 Dec 2019 11:34:02 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF67D3F6CF;
+        Mon,  9 Dec 2019 11:34:01 -0800 (PST)
+Subject: Re: [PATCH V2] iommu/iova: Init the struct iova to fix the possible
+ memleak
+To:     Xiaotao Yin <xiaotao.yin@windriver.com>, joro@8bytes.org,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Kexin.Hao@windriver.com
+References: <20191209082404.40166-1-xiaotao.yin@windriver.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <977971ed-f77f-847a-89ab-0ddf45abf24d@arm.com>
+Date:   Mon, 9 Dec 2019 19:33:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209082404.40166-1-xiaotao.yin@windriver.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-device.h has everything and the kitchen sink when it comes to struct
-device things, so split out the struct class things things to a separate
-.h file to make things easier to maintain and manage over time.
+On 09/12/2019 8:24 am, Xiaotao Yin wrote:
+> During ethernet(Marvell octeontx2) set ring buffer test:
+> ethtool -G eth1 rx <rx ring size> tx <tx ring size>
+> following kmemleak will happen sometimes:
+> 
+> unreferenced object 0xffff000b85421340 (size 64):
+>    comm "ethtool", pid 867, jiffies 4295323539 (age 550.500s)
+>    hex dump (first 64 bytes):
+>      80 13 42 85 0b 00 ff ff ff ff ff ff ff ff ff ff  ..B.............
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>      ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>    backtrace:
+>      [<000000001b204ddf>] kmem_cache_alloc+0x1b0/0x350
+>      [<00000000d9ef2e50>] alloc_iova+0x3c/0x168
+>      [<00000000ea30f99d>] alloc_iova_fast+0x7c/0x2d8
+>      [<00000000b8bb2f1f>] iommu_dma_alloc_iova.isra.0+0x12c/0x138
+>      [<000000002f1a43b5>] __iommu_dma_map+0x8c/0xf8
+>      [<00000000ecde7899>] iommu_dma_map_page+0x98/0xf8
+>      [<0000000082004e59>] otx2_alloc_rbuf+0xf4/0x158
+>      [<000000002b107f6b>] otx2_rq_aura_pool_init+0x110/0x270
+>      [<00000000c3d563c7>] otx2_open+0x15c/0x734
+>      [<00000000a2f5f3a8>] otx2_dev_open+0x3c/0x68
+>      [<00000000456a98b5>] otx2_set_ringparam+0x1ac/0x1d4
+>      [<00000000f2fbb819>] dev_ethtool+0xb84/0x2028
+>      [<0000000069b67c5a>] dev_ioctl+0x248/0x3a0
+>      [<00000000af38663a>] sock_ioctl+0x280/0x638
+>      [<000000002582384c>] do_vfs_ioctl+0x8b0/0xa80
+>      [<000000004e1a2c02>] ksys_ioctl+0x84/0xb8
+> 
+> The reason:
+> When alloc_iova_mem() without initial with Zero, sometimes fpn_lo will equal to
+> IOVA_ANCHOR by chance, so when return from __alloc_and_insert_iova_range() with
+> -ENOMEM(iova32_full), the new_iova will not be freed in free_iova_mem().
 
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/base/class.c         |   1 +
- include/linux/device.h       | 241 +------------------------------
- include/linux/device/class.h | 266 +++++++++++++++++++++++++++++++++++
- 3 files changed, 268 insertions(+), 240 deletions(-)
- create mode 100644 include/linux/device/class.h
+Ooh, subtle... nice catch!
 
-diff --git a/drivers/base/class.c b/drivers/base/class.c
-index d8a6a5864c2e..bcd410e6d70a 100644
---- a/drivers/base/class.c
-+++ b/drivers/base/class.c
-@@ -8,6 +8,7 @@
-  * Copyright (c) 2003-2004 IBM Corp.
-  */
- 
-+#include <linux/device/class.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/init.h>
-diff --git a/include/linux/device.h b/include/linux/device.h
-index cb0ea7e66d53..2d697159bfbc 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -27,6 +27,7 @@
- #include <linux/gfp.h>
- #include <linux/overflow.h>
- #include <linux/device/bus.h>
-+#include <linux/device/class.h>
- #include <asm/device.h>
- 
- struct device;
-@@ -294,246 +295,6 @@ int subsys_system_register(struct bus_type *subsys,
- int subsys_virtual_register(struct bus_type *subsys,
- 			    const struct attribute_group **groups);
- 
--/**
-- * struct class - device classes
-- * @name:	Name of the class.
-- * @owner:	The module owner.
-- * @class_groups: Default attributes of this class.
-- * @dev_groups:	Default attributes of the devices that belong to the class.
-- * @dev_kobj:	The kobject that represents this class and links it into the hierarchy.
-- * @dev_uevent:	Called when a device is added, removed from this class, or a
-- *		few other things that generate uevents to add the environment
-- *		variables.
-- * @devnode:	Callback to provide the devtmpfs.
-- * @class_release: Called to release this class.
-- * @dev_release: Called to release the device.
-- * @shutdown_pre: Called at shut-down time before driver shutdown.
-- * @ns_type:	Callbacks so sysfs can detemine namespaces.
-- * @namespace:	Namespace of the device belongs to this class.
-- * @get_ownership: Allows class to specify uid/gid of the sysfs directories
-- *		for the devices belonging to the class. Usually tied to
-- *		device's namespace.
-- * @pm:		The default device power management operations of this class.
-- * @p:		The private data of the driver core, no one other than the
-- *		driver core can touch this.
-- *
-- * A class is a higher-level view of a device that abstracts out low-level
-- * implementation details. Drivers may see a SCSI disk or an ATA disk, but,
-- * at the class level, they are all simply disks. Classes allow user space
-- * to work with devices based on what they do, rather than how they are
-- * connected or how they work.
-- */
--struct class {
--	const char		*name;
--	struct module		*owner;
--
--	const struct attribute_group	**class_groups;
--	const struct attribute_group	**dev_groups;
--	struct kobject			*dev_kobj;
--
--	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
--	char *(*devnode)(struct device *dev, umode_t *mode);
--
--	void (*class_release)(struct class *class);
--	void (*dev_release)(struct device *dev);
--
--	int (*shutdown_pre)(struct device *dev);
--
--	const struct kobj_ns_type_operations *ns_type;
--	const void *(*namespace)(struct device *dev);
--
--	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
--
--	const struct dev_pm_ops *pm;
--
--	struct subsys_private *p;
--};
--
--struct class_dev_iter {
--	struct klist_iter		ki;
--	const struct device_type	*type;
--};
--
--extern struct kobject *sysfs_dev_block_kobj;
--extern struct kobject *sysfs_dev_char_kobj;
--extern int __must_check __class_register(struct class *class,
--					 struct lock_class_key *key);
--extern void class_unregister(struct class *class);
--
--/* This is a #define to keep the compiler from merging different
-- * instances of the __key variable */
--#define class_register(class)			\
--({						\
--	static struct lock_class_key __key;	\
--	__class_register(class, &__key);	\
--})
--
--struct class_compat;
--struct class_compat *class_compat_register(const char *name);
--void class_compat_unregister(struct class_compat *cls);
--int class_compat_create_link(struct class_compat *cls, struct device *dev,
--			     struct device *device_link);
--void class_compat_remove_link(struct class_compat *cls, struct device *dev,
--			      struct device *device_link);
--
--extern void class_dev_iter_init(struct class_dev_iter *iter,
--				struct class *class,
--				struct device *start,
--				const struct device_type *type);
--extern struct device *class_dev_iter_next(struct class_dev_iter *iter);
--extern void class_dev_iter_exit(struct class_dev_iter *iter);
--
--extern int class_for_each_device(struct class *class, struct device *start,
--				 void *data,
--				 int (*fn)(struct device *dev, void *data));
--extern struct device *class_find_device(struct class *class,
--					struct device *start, const void *data,
--					int (*match)(struct device *, const void *));
--
--/**
-- * class_find_device_by_name - device iterator for locating a particular device
-- * of a specific name.
-- * @class: class type
-- * @name: name of the device to match
-- */
--static inline struct device *class_find_device_by_name(struct class *class,
--						       const char *name)
--{
--	return class_find_device(class, NULL, name, device_match_name);
--}
--
--/**
-- * class_find_device_by_of_node : device iterator for locating a particular device
-- * matching the of_node.
-- * @class: class type
-- * @np: of_node of the device to match.
-- */
--static inline struct device *
--class_find_device_by_of_node(struct class *class, const struct device_node *np)
--{
--	return class_find_device(class, NULL, np, device_match_of_node);
--}
--
--/**
-- * class_find_device_by_fwnode : device iterator for locating a particular device
-- * matching the fwnode.
-- * @class: class type
-- * @fwnode: fwnode of the device to match.
-- */
--static inline struct device *
--class_find_device_by_fwnode(struct class *class,
--			    const struct fwnode_handle *fwnode)
--{
--	return class_find_device(class, NULL, fwnode, device_match_fwnode);
--}
--
--/**
-- * class_find_device_by_devt : device iterator for locating a particular device
-- * matching the device type.
-- * @class: class type
-- * @devt: device type of the device to match.
-- */
--static inline struct device *class_find_device_by_devt(struct class *class,
--						       dev_t devt)
--{
--	return class_find_device(class, NULL, &devt, device_match_devt);
--}
--
--#ifdef CONFIG_ACPI
--struct acpi_device;
--/**
-- * class_find_device_by_acpi_dev : device iterator for locating a particular
-- * device matching the ACPI_COMPANION device.
-- * @class: class type
-- * @adev: ACPI_COMPANION device to match.
-- */
--static inline struct device *
--class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
--{
--	return class_find_device(class, NULL, adev, device_match_acpi_dev);
--}
--#else
--static inline struct device *
--class_find_device_by_acpi_dev(struct class *class, const void *adev)
--{
--	return NULL;
--}
--#endif
--
--struct class_attribute {
--	struct attribute attr;
--	ssize_t (*show)(struct class *class, struct class_attribute *attr,
--			char *buf);
--	ssize_t (*store)(struct class *class, struct class_attribute *attr,
--			const char *buf, size_t count);
--};
--
--#define CLASS_ATTR_RW(_name) \
--	struct class_attribute class_attr_##_name = __ATTR_RW(_name)
--#define CLASS_ATTR_RO(_name) \
--	struct class_attribute class_attr_##_name = __ATTR_RO(_name)
--#define CLASS_ATTR_WO(_name) \
--	struct class_attribute class_attr_##_name = __ATTR_WO(_name)
--
--extern int __must_check class_create_file_ns(struct class *class,
--					     const struct class_attribute *attr,
--					     const void *ns);
--extern void class_remove_file_ns(struct class *class,
--				 const struct class_attribute *attr,
--				 const void *ns);
--
--static inline int __must_check class_create_file(struct class *class,
--					const struct class_attribute *attr)
--{
--	return class_create_file_ns(class, attr, NULL);
--}
--
--static inline void class_remove_file(struct class *class,
--				     const struct class_attribute *attr)
--{
--	return class_remove_file_ns(class, attr, NULL);
--}
--
--/* Simple class attribute that is just a static string */
--struct class_attribute_string {
--	struct class_attribute attr;
--	char *str;
--};
--
--/* Currently read-only only */
--#define _CLASS_ATTR_STRING(_name, _mode, _str) \
--	{ __ATTR(_name, _mode, show_class_attr_string, NULL), _str }
--#define CLASS_ATTR_STRING(_name, _mode, _str) \
--	struct class_attribute_string class_attr_##_name = \
--		_CLASS_ATTR_STRING(_name, _mode, _str)
--
--extern ssize_t show_class_attr_string(struct class *class, struct class_attribute *attr,
--                        char *buf);
--
--struct class_interface {
--	struct list_head	node;
--	struct class		*class;
--
--	int (*add_dev)		(struct device *, struct class_interface *);
--	void (*remove_dev)	(struct device *, struct class_interface *);
--};
--
--extern int __must_check class_interface_register(struct class_interface *);
--extern void class_interface_unregister(struct class_interface *);
--
--extern struct class * __must_check __class_create(struct module *owner,
--						  const char *name,
--						  struct lock_class_key *key);
--extern void class_destroy(struct class *cls);
--
--/* This is a #define to keep the compiler from merging different
-- * instances of the __key variable */
--#define class_create(owner, name)		\
--({						\
--	static struct lock_class_key __key;	\
--	__class_create(owner, name, &__key);	\
--})
--
- /*
-  * The type of device, "struct device" is embedded in. A class
-  * or bus can contain devices of different types
-diff --git a/include/linux/device/class.h b/include/linux/device/class.h
-new file mode 100644
-index 000000000000..e8d470c457d1
---- /dev/null
-+++ b/include/linux/device/class.h
-@@ -0,0 +1,266 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * The class-specific portions of the driver model
-+ *
-+ * Copyright (c) 2001-2003 Patrick Mochel <mochel@osdl.org>
-+ * Copyright (c) 2004-2009 Greg Kroah-Hartman <gregkh@suse.de>
-+ * Copyright (c) 2008-2009 Novell Inc.
-+ * Copyright (c) 2012-2019 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-+ * Copyright (c) 2012-2019 Linux Foundation
-+ *
-+ * See Documentation/driver-api/driver-model/ for more information.
-+ */
-+
-+#ifndef _DEVICE_CLASS_H_
-+#define _DEVICE_CLASS_H_
-+
-+#include <linux/kobject.h>
-+#include <linux/klist.h>
-+#include <linux/pm.h>
-+#include <linux/device/bus.h>
-+
-+struct device;
-+struct fwnode_handle;
-+
-+/**
-+ * struct class - device classes
-+ * @name:	Name of the class.
-+ * @owner:	The module owner.
-+ * @class_groups: Default attributes of this class.
-+ * @dev_groups:	Default attributes of the devices that belong to the class.
-+ * @dev_kobj:	The kobject that represents this class and links it into the hierarchy.
-+ * @dev_uevent:	Called when a device is added, removed from this class, or a
-+ *		few other things that generate uevents to add the environment
-+ *		variables.
-+ * @devnode:	Callback to provide the devtmpfs.
-+ * @class_release: Called to release this class.
-+ * @dev_release: Called to release the device.
-+ * @shutdown_pre: Called at shut-down time before driver shutdown.
-+ * @ns_type:	Callbacks so sysfs can detemine namespaces.
-+ * @namespace:	Namespace of the device belongs to this class.
-+ * @get_ownership: Allows class to specify uid/gid of the sysfs directories
-+ *		for the devices belonging to the class. Usually tied to
-+ *		device's namespace.
-+ * @pm:		The default device power management operations of this class.
-+ * @p:		The private data of the driver core, no one other than the
-+ *		driver core can touch this.
-+ *
-+ * A class is a higher-level view of a device that abstracts out low-level
-+ * implementation details. Drivers may see a SCSI disk or an ATA disk, but,
-+ * at the class level, they are all simply disks. Classes allow user space
-+ * to work with devices based on what they do, rather than how they are
-+ * connected or how they work.
-+ */
-+struct class {
-+	const char		*name;
-+	struct module		*owner;
-+
-+	const struct attribute_group	**class_groups;
-+	const struct attribute_group	**dev_groups;
-+	struct kobject			*dev_kobj;
-+
-+	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
-+	char *(*devnode)(struct device *dev, umode_t *mode);
-+
-+	void (*class_release)(struct class *class);
-+	void (*dev_release)(struct device *dev);
-+
-+	int (*shutdown_pre)(struct device *dev);
-+
-+	const struct kobj_ns_type_operations *ns_type;
-+	const void *(*namespace)(struct device *dev);
-+
-+	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
-+
-+	const struct dev_pm_ops *pm;
-+
-+	struct subsys_private *p;
-+};
-+
-+struct class_dev_iter {
-+	struct klist_iter		ki;
-+	const struct device_type	*type;
-+};
-+
-+extern struct kobject *sysfs_dev_block_kobj;
-+extern struct kobject *sysfs_dev_char_kobj;
-+extern int __must_check __class_register(struct class *class,
-+					 struct lock_class_key *key);
-+extern void class_unregister(struct class *class);
-+
-+/* This is a #define to keep the compiler from merging different
-+ * instances of the __key variable */
-+#define class_register(class)			\
-+({						\
-+	static struct lock_class_key __key;	\
-+	__class_register(class, &__key);	\
-+})
-+
-+struct class_compat;
-+struct class_compat *class_compat_register(const char *name);
-+void class_compat_unregister(struct class_compat *cls);
-+int class_compat_create_link(struct class_compat *cls, struct device *dev,
-+			     struct device *device_link);
-+void class_compat_remove_link(struct class_compat *cls, struct device *dev,
-+			      struct device *device_link);
-+
-+extern void class_dev_iter_init(struct class_dev_iter *iter,
-+				struct class *class,
-+				struct device *start,
-+				const struct device_type *type);
-+extern struct device *class_dev_iter_next(struct class_dev_iter *iter);
-+extern void class_dev_iter_exit(struct class_dev_iter *iter);
-+
-+extern int class_for_each_device(struct class *class, struct device *start,
-+				 void *data,
-+				 int (*fn)(struct device *dev, void *data));
-+extern struct device *class_find_device(struct class *class,
-+					struct device *start, const void *data,
-+					int (*match)(struct device *, const void *));
-+
-+/**
-+ * class_find_device_by_name - device iterator for locating a particular device
-+ * of a specific name.
-+ * @class: class type
-+ * @name: name of the device to match
-+ */
-+static inline struct device *class_find_device_by_name(struct class *class,
-+						       const char *name)
-+{
-+	return class_find_device(class, NULL, name, device_match_name);
-+}
-+
-+/**
-+ * class_find_device_by_of_node : device iterator for locating a particular device
-+ * matching the of_node.
-+ * @class: class type
-+ * @np: of_node of the device to match.
-+ */
-+static inline struct device *
-+class_find_device_by_of_node(struct class *class, const struct device_node *np)
-+{
-+	return class_find_device(class, NULL, np, device_match_of_node);
-+}
-+
-+/**
-+ * class_find_device_by_fwnode : device iterator for locating a particular device
-+ * matching the fwnode.
-+ * @class: class type
-+ * @fwnode: fwnode of the device to match.
-+ */
-+static inline struct device *
-+class_find_device_by_fwnode(struct class *class,
-+			    const struct fwnode_handle *fwnode)
-+{
-+	return class_find_device(class, NULL, fwnode, device_match_fwnode);
-+}
-+
-+/**
-+ * class_find_device_by_devt : device iterator for locating a particular device
-+ * matching the device type.
-+ * @class: class type
-+ * @devt: device type of the device to match.
-+ */
-+static inline struct device *class_find_device_by_devt(struct class *class,
-+						       dev_t devt)
-+{
-+	return class_find_device(class, NULL, &devt, device_match_devt);
-+}
-+
-+#ifdef CONFIG_ACPI
-+struct acpi_device;
-+/**
-+ * class_find_device_by_acpi_dev : device iterator for locating a particular
-+ * device matching the ACPI_COMPANION device.
-+ * @class: class type
-+ * @adev: ACPI_COMPANION device to match.
-+ */
-+static inline struct device *
-+class_find_device_by_acpi_dev(struct class *class, const struct acpi_device *adev)
-+{
-+	return class_find_device(class, NULL, adev, device_match_acpi_dev);
-+}
-+#else
-+static inline struct device *
-+class_find_device_by_acpi_dev(struct class *class, const void *adev)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+struct class_attribute {
-+	struct attribute attr;
-+	ssize_t (*show)(struct class *class, struct class_attribute *attr,
-+			char *buf);
-+	ssize_t (*store)(struct class *class, struct class_attribute *attr,
-+			const char *buf, size_t count);
-+};
-+
-+#define CLASS_ATTR_RW(_name) \
-+	struct class_attribute class_attr_##_name = __ATTR_RW(_name)
-+#define CLASS_ATTR_RO(_name) \
-+	struct class_attribute class_attr_##_name = __ATTR_RO(_name)
-+#define CLASS_ATTR_WO(_name) \
-+	struct class_attribute class_attr_##_name = __ATTR_WO(_name)
-+
-+extern int __must_check class_create_file_ns(struct class *class,
-+					     const struct class_attribute *attr,
-+					     const void *ns);
-+extern void class_remove_file_ns(struct class *class,
-+				 const struct class_attribute *attr,
-+				 const void *ns);
-+
-+static inline int __must_check class_create_file(struct class *class,
-+					const struct class_attribute *attr)
-+{
-+	return class_create_file_ns(class, attr, NULL);
-+}
-+
-+static inline void class_remove_file(struct class *class,
-+				     const struct class_attribute *attr)
-+{
-+	return class_remove_file_ns(class, attr, NULL);
-+}
-+
-+/* Simple class attribute that is just a static string */
-+struct class_attribute_string {
-+	struct class_attribute attr;
-+	char *str;
-+};
-+
-+/* Currently read-only only */
-+#define _CLASS_ATTR_STRING(_name, _mode, _str) \
-+	{ __ATTR(_name, _mode, show_class_attr_string, NULL), _str }
-+#define CLASS_ATTR_STRING(_name, _mode, _str) \
-+	struct class_attribute_string class_attr_##_name = \
-+		_CLASS_ATTR_STRING(_name, _mode, _str)
-+
-+extern ssize_t show_class_attr_string(struct class *class, struct class_attribute *attr,
-+                        char *buf);
-+
-+struct class_interface {
-+	struct list_head	node;
-+	struct class		*class;
-+
-+	int (*add_dev)		(struct device *, struct class_interface *);
-+	void (*remove_dev)	(struct device *, struct class_interface *);
-+};
-+
-+extern int __must_check class_interface_register(struct class_interface *);
-+extern void class_interface_unregister(struct class_interface *);
-+
-+extern struct class * __must_check __class_create(struct module *owner,
-+						  const char *name,
-+						  struct lock_class_key *key);
-+extern void class_destroy(struct class *cls);
-+
-+/* This is a #define to keep the compiler from merging different
-+ * instances of the __key variable */
-+#define class_create(owner, name)		\
-+({						\
-+	static struct lock_class_key __key;	\
-+	__class_create(owner, name, &__key);	\
-+})
-+
-+
-+#endif	/* _DEVICE_CLASS_H_ */
--- 
-2.24.0
+I suppose we could also open-code the kmem_cache_free() call in 
+alloc_iova() to bypass the check entirely because "we know what we're 
+doing", but only if the zeroing proves to have a measurable overhead.
 
+> Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
+> Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
+> ---
+>   drivers/iommu/iova.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index 41c605b0058f..2c27a661632c 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -233,7 +233,7 @@ static DEFINE_MUTEX(iova_cache_mutex);
+>   
+>   struct iova *alloc_iova_mem(void)
+>   {
+> -	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
+> +	return kmem_cache_alloc(iova_cache, GFP_ATOMIC | __GFP_ZERO);
+
+FWIW there is a kmem_cache_zalloc() helper, which seems fairly 
+well-established. Either way, though,
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+>   }
+>   EXPORT_SYMBOL(alloc_iova_mem);
+>   
+> 
