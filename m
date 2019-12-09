@@ -2,187 +2,164 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881BFC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B285C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0B7206E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:23:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UPwnWHPe"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1A0206E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfLIOXc (ORCPT
+        id S1727640AbfLIOZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:23:32 -0500
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:3738 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfLIOXc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:23:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575901409; x=1607437409;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yC7RtTqpzljL0plev7LbEwemCbQXzkF9oOp8/mzR6tQ=;
-  b=UPwnWHPe5RbJ5YZN+DdSsyms2bep7fDAJG1Y1iGh4iFOp95U5Us7KtFg
-   gjGZjbgCE4sLxYeFyGnl4K7qYoaVsKj5brir1gJglTfDKueGwDpPzqRRt
-   0ucOCxfcrX+IdOeE9KNMEdlSPz4HQ/QxnZ+apxIQt+F0VzBGvLuj+jBL/
-   U=;
-IronPort-SDR: TQefqo2jYvovd/dWUkJjd26RhHABL1VmNxac/kOkgjxr+Tne3MW+P9+m1lJls+opd9WKwWpvRn
- 4ux1lzpu3XNA==
-X-IronPort-AV: E=Sophos;i="5.69,294,1571702400"; 
-   d="scan'208";a="6817377"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 09 Dec 2019 14:23:27 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id 891D7A0519;
-        Mon,  9 Dec 2019 14:23:26 +0000 (UTC)
-Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 14:23:25 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 9 Dec 2019 14:23:25 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Mon, 9 Dec 2019 14:23:24 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: RE: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
- closed
-Thread-Topic: [Xen-devel] [PATCH 2/4] xenbus: limit when state is forced to
- closed
-Thread-Index: AQHVq3SCoU35oX1INEGjFwMD1PQM5aexs7UAgAAEWoCAAAHxUIAAAeGAgAAAtoCAABhzAIAABs0QgAAB3ACAAAKyUA==
-Date:   Mon, 9 Dec 2019 14:23:24 +0000
-Message-ID: <380d160eb06c45e5962fe85aedd79ed5@EX13D32EUC003.ant.amazon.com>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-3-pdurrant@amazon.com>
- <20191209113926.GS980@Air-de-Roger>
- <b8a138ad-5770-65fa-f368-f7b4063702fa@suse.com>
- <3412e42d13224b6786613e58dc189ebf@EX13D32EUC003.ant.amazon.com>
- <8d66e520-3009-cde1-e24c-26d7476e5873@suse.com>
- <63d653a04207451e9041c89acd04f2a2@EX13D32EUC003.ant.amazon.com>
- <2cd2a27e-2bb8-bd9d-45d8-1710038fb97a@suse.com>
- <c86eadaf008f48aeb4bb7140a80b69e6@EX13D32EUC003.ant.amazon.com>
- <1c4c9b3e-31a5-d8b3-01de-3ad84db6390a@suse.com>
-In-Reply-To: <1c4c9b3e-31a5-d8b3-01de-3ad84db6390a@suse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.211]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 9 Dec 2019 09:25:07 -0500
+Received: from mail-eopbgr770077.outbound.protection.outlook.com ([40.107.77.77]:49230
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727359AbfLIOZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:25:07 -0500
+Received: from SN4PR0201CA0020.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::30) by BN6PR02MB2482.namprd02.prod.outlook.com
+ (2603:10b6:404:55::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Mon, 9 Dec
+ 2019 14:25:05 +0000
+Received: from SN1NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by SN4PR0201CA0020.outlook.office365.com
+ (2603:10b6:803:2b::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12 via Frontend
+ Transport; Mon, 9 Dec 2019 14:25:05 +0000
+Authentication-Results: spf=softfail (sender IP is 149.199.60.83)
+ smtp.mailfrom=gmail.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 149.199.60.83 as permitted sender)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT063.mail.protection.outlook.com (10.152.72.213) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Mon, 9 Dec 2019 14:25:05 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieJwo-0007qK-FV; Mon, 09 Dec 2019 06:23:38 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieJwj-0006oW-B1; Mon, 09 Dec 2019 06:23:33 -0800
+Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB9ENWdJ017866;
+        Mon, 9 Dec 2019 06:23:32 -0800
+Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <shubhrajyoti.datta@gmail.com>)
+        id 1ieJwi-0006nz-2F; Mon, 09 Dec 2019 06:23:32 -0800
+From:   shubhrajyoti.datta@gmail.com
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     michal.simek@xilinx.com, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH v2 2/2] devicetree: bindings: Add the binding doc for xilinx APM
+Date:   Mon,  9 Dec 2019 19:53:25 +0530
+Message-Id: <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
+X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--6.273-7.0-31-1
+X-imss-scan-details: No--6.273-7.0-31-1;No--6.273-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-Matching-Connectors: 132203751052549827;(f9e945fa-a09a-4caa-7158-08d2eb1d8c44);()
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(189003)(199004)(9686003)(107886003)(81156014)(82202003)(4326008)(8936002)(86362001)(81166006)(70586007)(70206006)(8676002)(450100002)(316002)(2906002)(55446002)(36756003)(6666004)(356004)(498600001)(26005)(305945005)(9786002)(76482006)(2616005)(73392003)(336012)(5660300002)(426003)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2482;H:xsj-pvapsmtpgw01;FPR:;SPF:SoftFail;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7f39353d-0110-4d57-7c11-08d77cb395e5
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2482:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB248243FD0D3BFD1E278061CC87580@BN6PR02MB2482.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-Forefront-PRVS: 02462830BE
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7ko+LpF7lVln+qf+9OCdrEQb8bT729BaPUuevIqd2Q6P7Y//d5dAXKO1dFbMjFJZTn0jHNVxK1ex4g6Hgymb/ttq8OA5SdVFBQuGbv5cW3cZaocrFHd5+wKkc3hzq8OtJEB1VuSgwNHX5clqEp51CH1PgBeRvNSHZsDi84lC5RnJ4LVsnihirsSvtKOFxl5kL47HqGeW/xanPKNaXSJulw51lVGjvqp4rq+VXmEY6FF1aSC06bhV9CBdnMqwsFVOceRmGxYul36Gj7vPo/V5JfwkaQfEsVjP8VXbkymw+ES9U+4uijv+vtftK4ey3dWxuFwkOqNq8k2p4VY2o7FP+UCEt3wrc3D4VSvNhWEdSQdGR6PDITEi2t8bcwtaWOqbw9i3X/ZLvh5XnRDEEMpBwYl8YXtE3Ca9FcGcGghsYLgzdYTWa7OYsKGUFbsafy48sPJIeYMm1qinVOtwzGpV7vnoBlQyKy/BwUsxK5wSum+0Y2Iw4OmkRoZACta9cZm5
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 14:25:05.0928
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f39353d-0110-4d57-7c11-08d77cb395e5
+X-MS-Exchange-CrossTenant-Id: 5afe0b00-7697-4969-b663-5eab37d5f47e
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=5afe0b00-7697-4969-b663-5eab37d5f47e;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2482
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKw7xyZ2VuIEdyb8OfIDxqZ3Jv
-c3NAc3VzZS5jb20+DQo+IFNlbnQ6IDA5IERlY2VtYmVyIDIwMTkgMTQ6MTANCj4gVG86IER1cnJh
-bnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+OyBSb2dlciBQYXUgTW9ubsOpDQo+IDxyb2dl
-ci5wYXVAY2l0cml4LmNvbT4NCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHhl
-bi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZzsgU3RlZmFubw0KPiBTdGFiZWxsaW5pIDxzc3Rh
-YmVsbGluaUBrZXJuZWwub3JnPjsgQm9yaXMgT3N0cm92c2t5DQo+IDxib3Jpcy5vc3Ryb3Zza3lA
-b3JhY2xlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtYZW4tZGV2ZWxdIFtQQVRDSCAyLzRdIHhlbmJ1
-czogbGltaXQgd2hlbiBzdGF0ZSBpcyBmb3JjZWQgdG8NCj4gY2xvc2VkDQo+IA0KPiBPbiAwOS4x
-Mi4xOSAxNTowNiwgRHVycmFudCwgUGF1bCB3cm90ZToNCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj4gPj4gRnJvbTogSsO8cmdlbiBHcm/DnyA8amdyb3NzQHN1c2UuY29tPg0KPiA+
-PiBTZW50OiAwOSBEZWNlbWJlciAyMDE5IDEzOjM5DQo+ID4+IFRvOiBEdXJyYW50LCBQYXVsIDxw
-ZHVycmFudEBhbWF6b24uY29tPjsgUm9nZXIgUGF1IE1vbm7DqQ0KPiA+PiA8cm9nZXIucGF1QGNp
-dHJpeC5jb20+DQo+ID4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB4ZW4tZGV2
-ZWxAbGlzdHMueGVucHJvamVjdC5vcmc7DQo+IFN0ZWZhbm8NCj4gPj4gU3RhYmVsbGluaSA8c3N0
-YWJlbGxpbmlAa2VybmVsLm9yZz47IEJvcmlzIE9zdHJvdnNreQ0KPiA+PiA8Ym9yaXMub3N0cm92
-c2t5QG9yYWNsZS5jb20+DQo+ID4+IFN1YmplY3Q6IFJlOiBbWGVuLWRldmVsXSBbUEFUQ0ggMi80
-XSB4ZW5idXM6IGxpbWl0IHdoZW4gc3RhdGUgaXMgZm9yY2VkDQo+IHRvDQo+ID4+IGNsb3NlZA0K
-PiA+Pg0KPiA+PiBPbiAwOS4xMi4xOSAxMzoxOSwgRHVycmFudCwgUGF1bCB3cm90ZToNCj4gPj4+
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+Pj4+IEZyb206IErDvHJnZW4gR3Jvw58g
-PGpncm9zc0BzdXNlLmNvbT4NCj4gPj4+PiBTZW50OiAwOSBEZWNlbWJlciAyMDE5IDEyOjA5DQo+
-ID4+Pj4gVG86IER1cnJhbnQsIFBhdWwgPHBkdXJyYW50QGFtYXpvbi5jb20+OyBSb2dlciBQYXUg
-TW9ubsOpDQo+ID4+Pj4gPHJvZ2VyLnBhdUBjaXRyaXguY29tPg0KPiA+Pj4+IENjOiBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmc7DQo+
-ID4+IFN0ZWZhbm8NCj4gPj4+PiBTdGFiZWxsaW5pIDxzc3RhYmVsbGluaUBrZXJuZWwub3JnPjsg
-Qm9yaXMgT3N0cm92c2t5DQo+ID4+Pj4gPGJvcmlzLm9zdHJvdnNreUBvcmFjbGUuY29tPg0KPiA+
-Pj4+IFN1YmplY3Q6IFJlOiBbWGVuLWRldmVsXSBbUEFUQ0ggMi80XSB4ZW5idXM6IGxpbWl0IHdo
-ZW4gc3RhdGUgaXMNCj4gZm9yY2VkDQo+ID4+IHRvDQo+ID4+Pj4gY2xvc2VkDQo+ID4+Pj4NCj4g
-Pj4+PiBPbiAwOS4xMi4xOSAxMzowMywgRHVycmFudCwgUGF1bCB3cm90ZToNCj4gPj4+Pj4+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+PiBGcm9tOiBKw7xyZ2VuIEdyb8OfIDxq
-Z3Jvc3NAc3VzZS5jb20+DQo+ID4+Pj4+PiBTZW50OiAwOSBEZWNlbWJlciAyMDE5IDExOjU1DQo+
-ID4+Pj4+PiBUbzogUm9nZXIgUGF1IE1vbm7DqSA8cm9nZXIucGF1QGNpdHJpeC5jb20+OyBEdXJy
-YW50LCBQYXVsDQo+ID4+Pj4+PiA8cGR1cnJhbnRAYW1hem9uLmNvbT4NCj4gPj4+Pj4+IENjOiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB4ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5v
-cmc7DQo+ID4+Pj4gU3RlZmFubw0KPiA+Pj4+Pj4gU3RhYmVsbGluaSA8c3N0YWJlbGxpbmlAa2Vy
-bmVsLm9yZz47IEJvcmlzIE9zdHJvdnNreQ0KPiA+Pj4+Pj4gPGJvcmlzLm9zdHJvdnNreUBvcmFj
-bGUuY29tPg0KPiA+Pj4+Pj4gU3ViamVjdDogUmU6IFtYZW4tZGV2ZWxdIFtQQVRDSCAyLzRdIHhl
-bmJ1czogbGltaXQgd2hlbiBzdGF0ZSBpcw0KPiA+PiBmb3JjZWQNCj4gPj4+PiB0bw0KPiA+Pj4+
-Pj4gY2xvc2VkDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gT24gMDkuMTIuMTkgMTI6MzksIFJvZ2VyIFBh
-dSBNb25uw6kgd3JvdGU6DQo+ID4+Pj4+Pj4gT24gVGh1LCBEZWMgMDUsIDIwMTkgYXQgMDI6MDE6
-MjFQTSArMDAwMCwgUGF1bCBEdXJyYW50IHdyb3RlOg0KPiA+Pj4+Pj4+PiBPbmx5IGZvcmNlIHN0
-YXRlIHRvIGNsb3NlZCBpbiB0aGUgY2FzZSB3aGVuIHRoZSB0b29sc3RhY2sgbWF5DQo+IG5lZWQN
-Cj4gPj4gdG8NCj4gPj4+Pj4+Pj4gY2xlYW4gdXAuIFRoaXMgY2FuIGJlIGRldGVjdGVkIGJ5IGNo
-ZWNraW5nIHdoZXRoZXIgdGhlIHN0YXRlIGluDQo+ID4+Pj4+PiB4ZW5zdG9yZQ0KPiA+Pj4+Pj4+
-PiBoYXMgYmVlbiBzZXQgdG8gY2xvc2luZyBwcmlvciB0byBkZXZpY2UgcmVtb3ZhbC4NCj4gPj4+
-Pj4+Pg0KPiA+Pj4+Pj4+IEknbSBub3Qgc3VyZSBJIHNlZSB0aGUgcG9pbnQgb2YgdGhpcywgSSB3
-b3VsZCBleHBlY3QgdGhhdCBhDQo+IGZhaWx1cmUNCj4gPj4gdG8NCj4gPj4+Pj4+PiBwcm9iZSBv
-ciB0aGUgcmVtb3ZhbCBvZiB0aGUgZGV2aWNlIHdvdWxkIGxlYXZlIHRoZSB4ZW5idXMgc3RhdGUg
-YXMNCj4gPj4+Pj4+PiBjbG9zZWQsIHdoaWNoIGlzIGNvbnNpc3RlbnQgd2l0aCB0aGUgYWN0dWFs
-IGRyaXZlciBzdGF0ZS4NCj4gPj4+Pj4+Pg0KPiA+Pj4+Pj4+IENhbiB5b3UgZXhwbGFpbiB3aGF0
-J3MgdGhlIGJlbmVmaXQgb2YgbGVhdmluZyBhIGRldmljZSB3aXRob3V0IGENCj4gPj4+Pj4+PiBk
-cml2ZXIgaW4gc3VjaCB1bmtub3duIHN0YXRlPw0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IEFuZCBtb3Jl
-IGNvbmNlcm5pbmc6IGRpZCB5b3UgY2hlY2sgdGhhdCBubyBmcm9udGVuZC9iYWNrZW5kIGlzDQo+
-ID4+Pj4+PiByZWx5aW5nIG9uIHRoZSBjbG9zZWQgc3RhdGUgdG8gYmUgdmlzaWJsZSB3aXRob3V0
-IGNsb3NpbmcgaGF2aW5nDQo+IGJlZW4NCj4gPj4+Pj4+IHNldCBiZWZvcmU/DQo+ID4+Pj4+DQo+
-ID4+Pj4+IEJsa2Zyb250IGRvZXNuJ3Qgc2VlbSB0byBtaW5kIGFuZCBJIGJlbGlldmUgdGhlIFdp
-bmRvd3MgUFYgZHJpdmVycw0KPiA+PiBjb3BlLA0KPiA+Pj4+IGJ1dCBJIGRvbid0IHJlYWxseSB1
-bmRlcnN0YW5kIHRoZSBjb21tZW50IHNpbmNlIHRoaXMgcGF0Y2ggaXMNCj4gYWN0dWFsbHkNCj4g
-Pj4+PiByZW1vdmluZyBhIGNhc2Ugd2hlcmUgdGhlIGJhY2tlbmQgdHJhbnNpdGlvbnMgZGlyZWN0
-bHkgdG8gY2xvc2VkLg0KPiA+Pj4+DQo+ID4+Pj4gSSdtIG5vdCBzcGVha2luZyBvZiBibGtmcm9u
-dC9ibGtiYWNrIG9ubHksIGJ1dCBvZiBuZXQsIHRwbSwgc2NzaSwNCj4gPj4gcHZjYWxsDQo+ID4+
-Pj4gZXRjLiBmcm9udGVuZHMvYmFja2VuZHMuIEFmdGVyIGFsbCB5b3UgYXJlIG1vZGlmeWluZyBh
-IGZ1bmN0aW9uDQo+IGNvbW1vbg0KPiA+Pj4+IHRvIGFsbCBQViBkcml2ZXIgcGFpcnMuDQo+ID4+
-Pj4NCj4gPj4+PiBZb3UgYXJlIHJlbW92aW5nIGEgc3RhdGUgc3dpdGMgdG8gImNsb3NlZCIgaW4g
-Y2FzZSB0aGUgc3RhdGUgd2FzDQo+IF9ub3RfDQo+ID4+Pj4gImNsb3NpbmciIGJlZm9yZS4NCj4g
-Pj4+DQo+ID4+PiBZZXMsIHdoaWNoIEFGQUlLIGlzIGFnYWluc3QgdGhlIGludGVudGlvbiBvZiB0
-aGUgZ2VuZXJpYyBQViBwcm90b2NvbA0KPiA+PiBzdWNoIHRoYXQgaXQgZXZlciBleGlzdGVkIGFu
-eXdheS4NCj4gPj4NCj4gPj4gV2hpbGUgdGhpcyBtaWdodCBiZSB0aGUgY2FzZSB3ZSBzaG91bGQg
-X25vdF8gYnJlYWsgYW55IGd1ZXN0cw0KPiA+PiBydW5uaW5nIG5vdy4gU28gdGhpcyBraW5kIG9m
-IHJlYXNvbmluZyBpcyBkYW5nZXJvdXMuDQo+ID4+DQo+ID4+Pg0KPiA+Pj4+IFNvIGFueSBQViBk
-cml2ZXIgcmVhY3RpbmcgdG8gImNsb3NlZCIgb2YgdGhlIG90aGVyIGVuZA0KPiA+Pj4+IGluIGNh
-c2UgdGhlIHByZXZpb3VzIHN0YXRlIG1pZ2h0IG5vdCBoYXZlIGJlZW4gImNsb3NpbmciIGJlZm9y
-ZSBpcyBhdA0KPiA+Pj4+IHJpc2sgdG8gbWlzYmVoYXZlIHdpdGggeW91ciBwYXRjaC4NCj4gPj4+
-DQo+ID4+PiBXZWxsLCB0aGV5IHdpbGwgc2VlIG5vdGhpbmcgbm93LiBJZiB0aGUgc3RhdGUgd2Fz
-IG5vdCBjbG9zaW5nLCBpdCBnZXRzDQo+ID4+IGxlZnQgYWxvbmUsIHNvIHRoZSBmcm9udGVuZCBz
-aG91bGRuJ3QgZG8gYW55dGhpbmcuIFRoZSBvbmx5IHJpc2sgdGhhdCBJDQo+ID4+IGNhbiBzZWUg
-aXMgdGhhdCBzb21lIGZyb250ZW5kL2JhY2tlbmQgcGFpciBuZWVkZWQgYSBkaXJlY3QgNCAtPiA2
-DQo+ID4+IHRyYW5zaXRpb24gdG8gc3VwcG9ydCAndW5iaW5kJyBiZWZvcmUgYnV0IEFGQUlLIG5v
-dGhpbmcgaGFzIGV2ZXINCj4gc3VwcG9ydGVkDQo+ID4+IHRoYXQsIGFuZCBibGsgYW5kIG5ldCBj
-cmFzaCduJ2J1cm4gaWYgeW91IHRyeSB0aGF0IG9uIHVwc3RyZWFtIGFzIGl0DQo+ID4+IHN0YW5k
-cy4gQSBjbGVhbiB1bnBsdWcgd291bGQgYWx3YXlzIHNldCBzdGF0ZSB0byA1IGZpcnN0LCBzaW5j
-ZSB0aGF0J3MNCj4gPj4gcGFydCBvZiB0aGUgdW5wbHVnIHByb3RvY29sLg0KPiA+Pg0KPiA+PiBU
-aGF0IHdhcyBteSBxdWVzdGlvbjogYXJlIHlvdSBzdXJlIGFsbCBjdXJyZW50IGFuZCBwcmV2aW91
-cw0KPiA+PiBndWVzdCBmcm9udGVuZHMgYW5kIGJhY2tlbmRzIGFyZSBoYW5kbGluZyB1bnBsdWcg
-dGhpcyB3YXk/DQo+ID4+DQo+ID4+IE5vdCAic2hvdWxkIGhhbmRsZSIsIGJ1dCAiZG8gaGFuZGxl
-Ii4NCj4gPg0KPiA+IFRoYXQgZGVwZW5kcyBvbiB0aGUgdG9vbHN0YWNrLiBJSVVDIHRoZSBvbmx5
-ICdzdXBwb3J0ZWQnIHRvb2xzdGFjayBpcw0KPiB4bC9saWJ4bCwgd2hpY2ggd2lsbCBzZXQgJ3N0
-YXRlJyB0byA1IGFuZCAnb25saW5lJyB0byAwIHRvIGluaXRpYXRlIGFuDQo+IHVucGx1Zy4NCj4g
-DQo+IEkgZ3Vlc3MgbGlidmlydC9saWJ4bCBpcyBkb2luZyB0aGUgc2FtZT8NCj4gDQoNClRoZSB1
-bnBsdWcgbWVjaGFuc2lzbSBpcyBhbGwgaW4gbGlieGwgQUZBSUNULCBzbyBpdCBzaG91bGQgYmUg
-aWRlbnRpY2FsLg0KDQo+IEF0IGxlYXN0IGF0IFNVU0Ugd2Ugc3RpbGwgaGF2ZSBzb21lIGN1c3Rv
-bWVycyBydW5uaW5nIHhlbmQgYmFzZWQNCj4gWGVuIGluc3RhbGxhdGlvbnMgd2l0aCByZWNlbnQg
-TGludXggb3IgV2luZG93cyBndWVzdHMuDQo+IA0KDQpJcyB0aGF0IHNvbWV0aGluZyB0aGUgdXBz
-dHJlYW0gY29kZSBjYW4vc2hvdWxkIHN1cHBvcnQgdGhvdWdoPyBJJ2QgYmUgc3VycHJpc2VkIGlm
-IHhlbmQgaXMgYWN0dWFsbHkgZG9pbmcgYW55dGhpbmcgZGlmZmVyZW50IHRvIGxpYnhsIHNpbmNl
-IEkndmUgYmVlbiBjb2RpbmcgdGhlIFdpbmRvd3MgUFYgZHJpdmVycyB0byB0cmlnZ2VyIG9mZiB0
-aGUgY29tYmluZWQgY2xvc2luZy9vbmxpbmUgdHJhbnNpdGlvbiBmb3IgYXMgbG9uZyBhcyBJIGNh
-biByZW1lbWJlci4NCg0KICBQYXVsDQoNCg==
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+
+Add the devicetree binding for xilinx APM.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+v2:
+patch added
+
+ .../devicetree/bindings/perf/xilinx_apm.txt        | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/xilinx_apm.txt
+
+diff --git a/Documentation/devicetree/bindings/perf/xilinx_apm.txt b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+new file mode 100644
+index 0000000..a11c82e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
+@@ -0,0 +1,44 @@
++* Xilinx AXI Performance monitor IP
++
++Required properties:
++- compatible: "xlnx,axi-perf-monitor"
++- interrupts: Should contain APM interrupts.
++- interrupt-parent: Must be core interrupt controller.
++- reg: Should contain APM registers location and length.
++- xlnx,enable-profile: Enables the profile mode.
++- xlnx,enable-trace: Enables trace mode.
++- xlnx,num-monitor-slots: Maximum number of slots in APM.
++- xlnx,enable-event-count: Enable event count.
++- xlnx,enable-event-log: Enable event logging.
++- xlnx,have-sampled-metric-cnt:Sampled metric counters enabled in APM.
++- xlnx,num-of-counters: Number of counters in APM
++- xlnx,metric-count-width: Metric Counter width (32/64)
++- xlnx,metrics-sample-count-width: Sampled metric counter width
++- xlnx,global-count-width: Global Clock counter width
++- clocks: Input clock specifier.
++
++Optional properties:
++- xlnx,id-filter-32bit: APM is in 32-bit mode
++
++Example:
++++++++++
++
++apm: apm@44a00000 {
++    compatible = "xlnx,axi-perf-monitor";
++    interrupt-parent = <&axi_intc_1>;
++    interrupts = <1 2>;
++    reg = <0x44a00000 0x1000>;
++    clocks = <&clkc 15>;
++    xlnx,enable-profile = <0>;
++    xlnx,enable-trace = <0>;
++    xlnx,num-monitor-slots = <4>;
++    xlnx,enable-event-count = <1>;
++    xlnx,enable-event-log = <1>;
++    xlnx,have-sampled-metric-cnt = <1>;
++    xlnx,num-of-counters = <8>;
++    xlnx,metric-count-width = <32>;
++    xlnx,metrics-sample-count-width = <32>;
++    xlnx,global-count-width = <32>;
++    xlnx,metric-count-scale = <1>;
++    xlnx,id-filter-32bit;
++};
+-- 
+2.1.1
+
