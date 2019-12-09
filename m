@@ -2,79 +2,94 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70968C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64538C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D852077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:33:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eNqP4p7o"
+	by mail.kernel.org (Postfix) with ESMTP id 365EC2077B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575916557;
+	bh=GWLcbVzNkovB1KVNZd1oUhbE5wXW6I2T0GXCvRnLLIM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ARRsGJ/C4QcC4AIKksjM7FiI7n9U1V/yCKhQfBWbBqwIN7PcdU/7lDl3fesvKoa2Q
+	 hFiaYatnyQhfqY+uUsZlCeQpIyVdsAjTutHt+waZx2Mo2pmajUXQrDOBO3SJCqAxuf
+	 AVmNxj0ZoRTdZyaWWAMTfjtnQwzI8KFWgOQV+1wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfLISdi (ORCPT
+        id S1726674AbfLISf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:33:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55824 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfLISdh (ORCPT
+        Mon, 9 Dec 2019 13:35:56 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36447 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfLISfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:33:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8zgmO8yIumpWTktN/WLnCjKv5dav9LhhmBQXS3TWUg8=; b=eNqP4p7owxWNWsbfq6onLxwlig
-        lmiOYyGS8vCUjkzr+ed5MFL4EZw8QPfltFoMQAMkTBGeglMNlCLuOkhY9HqyAN4GSkY0Vgva0cjJh
-        dmWKgQJXVQkyShp0GMPCz88nmEUCKdZIw7nghIelP7W3hYTXFI5RcPOmgPuyskrv8V8XxTaSPrVxg
-        LrdyC0smjo6V5/ylW+B1b70NTBYQWYdajHbKZGXMMJ2827jh/pnwREcdhyW7upbnOzab/uwTty5dV
-        MP3jnbgpGMQS4xifzcHuAgqGSySIt3EjNsS+HfsYY2ijlI/clx0qtibK0EJC9SjDZmwf9XRjOKTAi
-        rvapDXwg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieNqg-0000pS-2A; Mon, 09 Dec 2019 18:33:34 +0000
-Date:   Mon, 9 Dec 2019 10:33:33 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc: add support for folded p4d page tables
-Message-ID: <20191209183333.GG32169@bombadil.infradead.org>
-References: <20191209150908.6207-1-rppt@kernel.org>
- <7f4c038d-e971-b61f-3d3a-60a5faddfc0a@c-s.fr>
+        Mon, 9 Dec 2019 13:35:55 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n12so11545235lfe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:35:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=smeK7h0PjfsP8Sn0c3lvnZZ0hKKWhoHoLBfxcU0YfGU=;
+        b=dhJTWZ1l/vGwVDSU7uyPGZS3q3CFRyzBglkFEjU7Hrw0yv/ooPnacvPS2o9PASHsvy
+         DcTrnqBJVQ+MVjCwXZK0Sneg+KD2MuGD9YjJQfMoBg2AehkC4gOw6nqjCkFTiq0CoPJn
+         7K8bFRKq/cCCmCG0Dw/9rKgUAk3H7+hg1Gr9A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=smeK7h0PjfsP8Sn0c3lvnZZ0hKKWhoHoLBfxcU0YfGU=;
+        b=mmgaZxdiyWAb/4RvyPqpeUjJ7S8M4SLIQW/0Ia7tl6W+KZfWDbD/P+QCRVfBS9UbtN
+         xHvE/lXbr8HpYuqNRzu83pKoO63lhF0j+QzMZG8cXMOt9pWJgrtIXMRYVXR5nkxNo9yz
+         v5PvKtKL8wOWYsGCILJ7cEK68gpGqP8wYXimdepT68mObYeb8sSwUqo6zhZlt/lvV7b0
+         1s+YWk9/n+klJ2ivR9zwGMY3qzP5tI3GYqcCuPHkiwnieJTIsMlIzb+osN3gXiTTNdKo
+         1SoUGIYUJbB+Y7WP9XHPs81c2uVQbwDqvOENd/QdznWojZP0hOgN3UgwoVY5G/gwLGep
+         1bcQ==
+X-Gm-Message-State: APjAAAUsoXVatpxjmu/li8WZgoVxaQXqsaeXOHjRKt+HbKEDMZBTS+Si
+        uD9wfKYSpetaMSk5oy4jcuiA6IMoisQ=
+X-Google-Smtp-Source: APXvYqztkKDI8WVUlvGwH5jrnG50b4hsv07hsspxKFhkH24b5i8b1/4o4LWG0uFNge5jMcj/KefIPg==
+X-Received: by 2002:ac2:4194:: with SMTP id z20mr16507780lfh.20.1575916552573;
+        Mon, 09 Dec 2019 10:35:52 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id v5sm336532ljk.67.2019.12.09.10.35.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 10:35:51 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id r14so11532536lfm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 10:35:51 -0800 (PST)
+X-Received: by 2002:a19:23cb:: with SMTP id j194mr5037560lfj.79.1575916551241;
+ Mon, 09 Dec 2019 10:35:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7f4c038d-e971-b61f-3d3a-60a5faddfc0a@c-s.fr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191208153949.GJ32275@shao2-debian> <20191209085559.GA5868@dhcp22.suse.cz>
+In-Reply-To: <20191209085559.GA5868@dhcp22.suse.cz>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 9 Dec 2019 10:35:35 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whF0mbvWC=sYKWTrpymmjWkGZcX9hnHgnm1t1M++W66zA@mail.gmail.com>
+Message-ID: <CAHk-=whF0mbvWC=sYKWTrpymmjWkGZcX9hnHgnm1t1M++W66zA@mail.gmail.com>
+Subject: Re: [pipe] 3c0edea9b2: lmbench3.PIPE.bandwidth.MB/sec -17.0% regression
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 06:46:36PM +0100, Christophe Leroy wrote:
-> 
-> 
-> Le 09/12/2019 à 16:09, Mike Rapoport a écrit :
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Implement primitives necessary for the 4th level folding, add walks of p4d
-> > level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
-> > 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Tested on 8xx and 83xx, no problem observed (ie book3s/32 and nohash/32)
-> 
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> Christophe
+On Mon, Dec 9, 2019 at 12:56 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> Huh. How can something like that can even can get merged? No changelog,
+> no s-o-b?
 
-Did you add anything else to the next 1100 lines that you didn't bother
-to snip?  I can't be arsed to scroll through them all looking.
+Yeah, I missed that when pulling.
+
+I wish that had been the only problem we had with that code, but it wasn't.
+
+Anyway, I'm fairly certain the current git head should fix this
+lmbench3 performance regression too.
+
+                   Linus
