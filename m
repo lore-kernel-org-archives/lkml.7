@@ -2,226 +2,118 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C0FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9F9C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4236A2073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C8F2073D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 11:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="BS2aYFcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfLILX2 (ORCPT
+        id S1727427AbfLILZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 06:23:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:42379 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfLILX2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 06:23:28 -0500
-Received: from [79.140.120.104] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ieH8O-0002iR-E9; Mon, 09 Dec 2019 11:23:24 +0000
-Date:   Mon, 9 Dec 2019 12:23:23 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Jann Horn <jannh@google.com>, cyphar@cyphar.com,
-        oleg@redhat.com, Andy Lutomirski <luto@amacapital.net>,
-        viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 2/4] ptrace: add PTRACE_GETFD request to fetch file
- descriptors from tracees
-Message-ID: <20191209112323.crydahewnjxejizq@wittgenstein>
-References: <20191209070621.GA32450@ircssh-2.c.rugged-nimbus-611.internal>
- <20191209093944.g6lgt2cqkec7eaym@wittgenstein>
- <CAMp4zn8_CxB6C=4Myw7DrmWg5w3Qm+FwYVTQLnbCEBJXL4UKzg@mail.gmail.com>
+        Mon, 9 Dec 2019 06:25:38 -0500
+Received: from mail-bn7nam10on2068.outbound.protection.outlook.com ([40.107.92.68]:9184
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726297AbfLILZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 06:25:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eviTiRoRzmCBFVHqYKMtQJMsu7Kiz6pbV1i0QSM3cnNCZ2lmyl1czSoa52f3n3U8OZJTBy+ehDdTJofmnFK3NHq63wsUxEmgoIMMUYJ1ruV9KQvIN5oPimiP65dTgiSVAAPUK/7V3fscq9XE8sI86Bla+McGQKDqL6ZbJ+slot1rq8lkJOMh1YanwtCnUPTaMVbV8TfclUP9a/joXAw9SuMUD77YgV8VhUgC0gzXWbDm0VML3VvKFfV8tZjg4X489vSRc045rHttLUPdWQ3re8Fsm0v45dWQetKGCrqPqr2riTMzTds7tNWvj+gffUL+NG8mw2MxZjgm98ppMztnRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KSLeYpcm3zb/bI0q7qENHRdu6QFbYDztrn2uPDBXkCo=;
+ b=ejVYTK3p82HhQynxazbT9X/8yR6jrLxG0uJI5+LBEheyms7zb5gPrF3VnBPpQ0gBuTlCA7I/ddjwIQffytaoBpUQE6FcQMLbhqgjbPhRFEJa3D7Hu/LD0k1e2dzP6+ZR5qK31NXWj1MC/0INlZFY9l2uODVoPJOo8cCLiGFZW4NtGpaDc2Fi5NYfjZjV6lBCHzKtHBz11PHrNh/3iLijmx6dOyFWMeooxWCe7Bg0lR28EPXrHD0r0YhmcdS2J+RgM79DvOpV/unUCt5ct4TcVY4d0s2BIXj1NI30ESOR9PtRcwDWz6kDWNxL45w+ioWfdoj4S7HQv9xxXAz/3ju0+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KSLeYpcm3zb/bI0q7qENHRdu6QFbYDztrn2uPDBXkCo=;
+ b=BS2aYFcHw9YwA9TDV9YQbc/RJNbtLGDTktrVaatX/9v2fQGsKV6QE2D7U6W/OMeB/MAV+5aNhCwlL7Mwfew4KmepBbDrrvgco1FsJux29ppAocA1YUEiMjT54xa+nsxVWH4Nh7p0f6P/WExEfVZrlzvsMN3q8txjfs07SEGUjYc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3894.namprd13.prod.outlook.com (20.180.12.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.4; Mon, 9 Dec 2019 11:25:34 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2538.012; Mon, 9 Dec 2019
+ 11:25:34 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
+Cc:     palmer@dabbelt.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com,
+        allison@lohutok.net, alexios.zavras@intel.com, atish.patra@wdc.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/2] L2 ccache DT and cacheinfo support to read no. of L2 cache ways enabled
+Date:   Mon,  9 Dec 2019 16:55:04 +0530
+Message-Id: <1575890706-36162-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16)
+ To CH2PR13MB3368.namprd13.prod.outlook.com (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn8_CxB6C=4Myw7DrmWg5w3Qm+FwYVTQLnbCEBJXL4UKzg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00::16) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 9 Dec 2019 11:25:30 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [114.143.65.226]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 22561b52-52aa-4a99-ba30-08d77c9a81cf
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3894:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB38944DEC6C83058C0CBEE1758C580@CH2PR13MB3894.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 02462830BE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39840400004)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(6636002)(81166006)(6506007)(81156014)(6666004)(1006002)(6486002)(7416002)(44832011)(305945005)(316002)(478600001)(2906002)(26005)(2616005)(956004)(16526019)(186003)(52116002)(8676002)(4326008)(8936002)(86362001)(66946007)(107886003)(6512007)(5660300002)(4744005)(36756003)(66556008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3894;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3S9P/D1Rz8CfwM91IaGcRNQRtq+5SbbbKRNGI1FRmIq9tezADJif3eGw/sKSntWQyn1paOcGjaNRRhy35BTzKGi9QBIYliiliBgLwyjx6ZLMnWBcRPipIEXMwKe3HueJHixYyuk5CT0a0cgAJ9yUsAM4a9uOsQz2y483yLjYXQhlVLGO+He7XKElfVU8L9i7wDyuYX6NKZWk2I3CHYNhg0x/hAMDdFS2s6u3kbyEIMRkNVwTzpoDsXI3anYzjJawouAyFOD/2LhFryE0FDrP2HdMfHlk1VQmwwtqWCEfMFpt8QYtKaa1oo9dxEp9ySgvTvn7bPvhfcPqbaoZay6zpFggDuyJWWy0+kusZymo5DPM99wBno9vB6zW5ybfT5DawgavRPZyyLYT2T2wcGf6VT10xF9bci9g6u/EX9dWFH5dnhodY3nxkqkfmkIS3kFx
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22561b52-52aa-4a99-ba30-08d77c9a81cf
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2019 11:25:34.5244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 366v63BRIpKX5WT6Woa0CGZNSMs+nC7TzGHcueUMBYTsbz7dNXDO3xTSekIuSwhUM8y4IZGXYpMUWMXl7PovIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3894
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:55:40AM -0800, Sargun Dhillon wrote:
-> On Mon, Dec 9, 2019 at 1:39 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > Hey Sargun,
-> >
-> > Thanks for the patch!
-> Thanks for your review.
-> 
-> >
-> > Why not simply accept O_CLOEXEC as flag? If that's not possible for some
-> > reason I'd say
-> >
-> I did this initially. My plan is to use this options field for other
-> (future) things as well, like
-> clearing (cgroup) metadata on sockets (assuming we figure out a safe
-> way to do it).
-> If we use O_CLOEXEC, it takes up an arbitrary bit which is different
-> on different
-> platforms, and working around that seems messy
-> 
-> Another way around this would be to have two members. One member which
-> is something
-> like fdflags, that just takes the fd flags, like O_CLOEXEC, and then
-> later on, we can add
-> an options member to enable these future use cases.
+The patchset includes the patch to implement a private attribute named
+"number_of_ways_enabled" in the cacheinfo framework. Reading this
+attribute returns the number of L2 cache ways enabled at runtime,
+The patchset also include the patch to add DT node for SiFive L2 cache
+controller.
 
-That honestly sounds cleaner to me. I really don't like this flag
-explosion for CLOEXEC. Every new kernel api we add that deals with fds
-comes with their own set of CLOEXEC flags. The minimal thing to do is
-to make sure that at least
-NEW_CLOEXEC_THINGY == O_CLOEXEC.
+This patchset is based on Linux v5.4 and tested on HiFive Unleashed
+board. The cacheinfo patch depends on Christoph Hellwig's patch:
+"riscv: move sifive_l2_cache.c to drivers/soc"
 
-> 
-> What do you think?
-> > #define PTRACE_GETFD_O_CLOEXEC  O_CLOEXEC       /* open the fd with cloexec */
-> >
-> > is the right thing to do. This is fairly common:
-> >
-> > include/uapi/linux/timerfd.h:#define TFD_CLOEXEC O_CLOEXEC
-> > include/uapi/drm/drm.h:#define DRM_CLOEXEC O_CLOEXEC
-> > include/linux/userfaultfd_k.h:#define UFFD_CLOEXEC O_CLOEXEC
-> > include/linux/eventfd.h:#define EFD_CLOEXEC O_CLOEXEC
-> > include/uapi/linux/eventpoll.h:#define EPOLL_CLOEXEC O_CLOEXEC
-> > include/uapi/linux/inotify.h:/* For O_CLOEXEC and O_NONBLOCK */
-> > include/uapi/linux/inotify.h:#define IN_CLOEXEC O_CLOEXEC
-> > include/uapi/linux/mount.h:#define OPEN_TREE_CLOEXEC    O_CLOEXEC       /* Close the file on execve() */
-> >
-> > You can also add a compile-time assert to ptrace like we did for
-> > fs/namespace.c's OPEN_TREE_CLOEXEC:
-> >         BUILD_BUG_ON(OPEN_TREE_CLOEXEC != O_CLOEXEC);
-> >
-> > And I'd remove the  _O if you go with a separate flag, i.e.:
-> >
-> > #define PTRACE_GETFD_CLOEXEC    O_CLOEXEC       /* open the fd with cloexec */
-> >
-> > > +
-> > > +struct ptrace_getfd_args {
-> > > +     __u32 fd;       /* the tracee's file descriptor to get */
-> > > +     __u32 options;
-> >
-> > Nit and I'm not set on it at all but "flags" might just be better.
-> >
-> > > +} __attribute__((packed));
-> >
-> > What's the benefit in using __attribute__((packed)) here? Seems to me that:
-> >
-> 1) Are we always to assume that the compiler will give us 4-byte
-> alignment (paranoia)
-> 2) If we're to add new non-4-byte aligned members later on, is it
-> kosher to add packed
-> later on?
+Yash Shah (2):
+  riscv: dts: Add DT support for SiFive L2 cache controller
+  riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
 
-Using explicit padding is the more common way we do this (e.g. struct
-open_how, struct statx and a lot more add explicit padding to guarantee
-alignment.).
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 26 +++++++++++++++++++++++++
+ arch/riscv/include/asm/sifive_l2_cache.h   |  2 ++
+ arch/riscv/kernel/cacheinfo.c              | 31 ++++++++++++++++++++++++++++++
+ drivers/soc/sifive/sifive_l2_cache.c       |  5 +++++
+ 4 files changed, 64 insertions(+)
 
-> 
-> > +struct ptrace_getfd_args {
-> > +       __u32 fd;       /* the tracee's file descriptor to get */
-> > +       __u32 options;
-> > +};
-> >
-> > would just work fine.
-> >
-> > > +
-> > >  /*
-> > >   * These values are stored in task->ptrace_message
-> > >   * by tracehook_report_syscall_* to describe the current syscall-stop.
-> > > diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-> > > index cb9ddcc08119..8f619dceac6f 100644
-> > > --- a/kernel/ptrace.c
-> > > +++ b/kernel/ptrace.c
-> > > @@ -31,6 +31,7 @@
-> > >  #include <linux/cn_proc.h>
-> > >  #include <linux/compat.h>
-> > >  #include <linux/sched/signal.h>
-> > > +#include <linux/fdtable.h>
-> > >
-> > >  #include <asm/syscall.h>     /* for syscall_get_* */
-> > >
-> > > @@ -994,6 +995,33 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
-> > >  }
-> > >  #endif /* CONFIG_HAVE_ARCH_TRACEHOOK */
-> > >
-> > > +static int ptrace_getfd(struct task_struct *child, unsigned long user_size,
-> > > +                     void __user *datavp)
-> > > +{
-> > > +     struct ptrace_getfd_args args;
-> > > +     unsigned int fd_flags = 0;
-> > > +     struct file *file;
-> > > +     int ret;
-> > > +
-> > > +     ret = copy_struct_from_user(&args, sizeof(args), datavp, user_size);
-> > > +     if (ret)
-> > > +             goto out;
-> >
-> > Why is this goto out and not just return ret?
-> >
-> > > +     if ((args.options & ~(PTRACE_GETFD_O_CLOEXEC)) != 0)
-> > > +             return -EINVAL;
-> > > +     if (args.options & PTRACE_GETFD_O_CLOEXEC)
-> > > +             fd_flags &= O_CLOEXEC;
-> > > +     file = get_task_file(child, args.fd);
-> > > +     if (!file)
-> > > +             return -EBADF;
-> > > +     ret = get_unused_fd_flags(fd_flags);
-> >
-> > Why isn't that whole thing just:
-> >
-> > ret = get_unused_fd_flags(fd_flags & {PTRACE_GETFD_}O_CLOEXEC);
-> >
-> > > +     if (ret >= 0)
-> > > +             fd_install(ret, file);
-> > > +     else
-> > > +             fput(file);
-> > > +out:
-> > > +     return ret;
-> > > +}
-> >
-> > So sm like:
-> >
-> > static int ptrace_getfd(struct task_struct *child, unsigned long user_size,
-> >                         void __user *datavp)
-> > {
-> >         struct ptrace_getfd_args args;
-> >         unsigned int fd_flags = 0;
-> >         struct file *file;
-> >         int ret;
-> >
-> >         ret = copy_struct_from_user(&args, sizeof(args), datavp, user_size);
-> >         if (ret)
-> >                 return ret;
-> >
-> >         if ((args.options & ~(PTRACE_GETFD_O_CLOEXEC)) != 0)
-> >                 return -EINVAL;
-> >
-> >         file = get_task_file(child, args.fd);
-> >         if (!file)
-> >                 return -EBADF;
-> >
-> >         /* PTRACE_GETFD_CLOEXEC == O_CLOEXEC */
-> >         ret = get_unused_fd_flags(fd_flags & PTRACE_GETFD_O_CLOEXEC);
-> Wouldn't this always be 0, since fd_flags is always 0?
+-- 
+2.7.4
 
-You're right, I missed this. Maybe rather:
-
-if (args.options & PTRACE_GETFD_O_CLOEXEC)
-        fd_flags |= O_CLOEXEC;
-
-Another question is if we shouldn't just make them cloexec by default?
-The notifier fds and pidfds already are.
-
-Christian
