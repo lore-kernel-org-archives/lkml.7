@@ -2,154 +2,92 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C05C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ED2C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B68207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="IDuEoa2K"
+	by mail.kernel.org (Postfix) with ESMTP id 7710D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 17:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLIR4b (ORCPT
+        id S1726783AbfLIR5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 12:56:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37966 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfLIR4a (ORCPT
+        Mon, 9 Dec 2019 12:57:19 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:32976 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLIR5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 12:56:30 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so17236809wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47tOogRVPsN3pILBUcIR6sGq30lJrJOYcswpOnQA894=;
-        b=IDuEoa2KHRBJeiBgYDu5NZ6vKL18RxIuoD3iKPXfQJ7zGTuTDrAVjyP4wAO8GpJziY
-         MW728vtOw194Z5g51mEY9NBaRLEFERjtpmhWcnq4Mx0GieGw6N+a6ZqB6lA83f9QFNxt
-         hQzVVI99sWQcQ6g5Oofex8gJKVHIHEiRCuU7c=
+        Mon, 9 Dec 2019 12:57:18 -0500
+Received: by mail-yb1-f193.google.com with SMTP id o63so6480785ybc.0;
+        Mon, 09 Dec 2019 09:57:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=47tOogRVPsN3pILBUcIR6sGq30lJrJOYcswpOnQA894=;
-        b=h5HTLsUfxaZBwtXPs1fCMQiDnlpmCWCBU2ypZjKe92hneh4r3GR4xyKoUMnRewQ587
-         UXYMWB98p6WrkV4q2P3nuzGlbx5O3GqH+Un9xG+bf6LaX2R2uyKLpQQmq92D6AEAQYOl
-         Wb+G6QRUdFtv4ZCTurx5+3USjGvpt6cuS+Lrrr3aTVLXPXpkXrvO6j87CtYzCwG7TFLU
-         T2ASBVH0X7mJUEw1NRWZkujoWTfkyi2sGlAFfs9I8xCOSTSm5DvQSvoGUbOHmorUd5XP
-         8ao5fPwcaUOpFVP+UvQwzeojwgzhnW7uOmAmZs6MYpFUh/c1v/7Ou4gxkP5r91MgTZ4r
-         Z1fg==
-X-Gm-Message-State: APjAAAWsPB7PUaYRiXgfiOLPiPWjQsDL0/KQ0UXTTngoQ4mtqXbbd/pN
-        XI7RY9lgzm4sEi5ScTM835DjjmGelTFWlcW/8vBlmw==
-X-Google-Smtp-Source: APXvYqycZBNtjVcssdYNUEiUjN6BUWNv177Ygs2RaUu/gnTjTW5T7vkapAF+a9uP+gjA44AdmBD5A4NYl3QLote1QfI=
-X-Received: by 2002:adf:f103:: with SMTP id r3mr3385191wro.295.1575914188280;
- Mon, 09 Dec 2019 09:56:28 -0800 (PST)
+        bh=qei/AYQXNst4gEgpnVYA7NFVSVcsDop3iCvV2R7BSTI=;
+        b=P1IBwsVG1cGn0KRwtBdlP3FE3DN2EeipMvaoqqKHAet50Iw67U1scaq6LSIRaWKvP+
+         ygNvJNgjxAt/ShEVFQR8sw6h2ndKba+pN0ImbQAIJ6c7oGl8zcC3HUbr+MGczk20QGSc
+         Te8aYt+Q8vnExT6yJn3VqclBTk0jwOcFANGgX6zs3y3O/WuXOe6ecy3E73uv0m6jw9yZ
+         eYY7HOS5UF7+ZtTfMUo2uWSiYouXuX3bT8jJ5w7EWkcMyRauTr3ZNVwmlAtl58VY56Un
+         MxfxyrQU1CCaGofz24MkVyO73u04Sk/hjpWM5/2U6KW+ZgW7DPP45m6jZwbeqgL1zvzx
+         fhgQ==
+X-Gm-Message-State: APjAAAX/NN+9+p1X7c8PSZnpyyanv50BZNL5PJnc3KeOeozWIrK2gstV
+        NpGjCwJpMmf8poC2h2/+MUW36fHMJVgsJnz3HOE=
+X-Google-Smtp-Source: APXvYqz4DjmgUMCLAs/3U0LVrQER9vKVWUuTTZiInvynh57cPM6y1wIzI/89XHRRaXx6krX4w4Mo8IH1dWtwVlg6oGE=
+X-Received: by 2002:a25:5f4d:: with SMTP id h13mr21799718ybm.390.1575914237631;
+ Mon, 09 Dec 2019 09:57:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20191203160345.24743-1-labbott@redhat.com> <20191203170114.GB377782@localhost.localdomain>
- <9bc4b04b-a3cc-4e58-4c73-1d77b7ed05da@redhat.com> <CAFxkdAraVz6mbQ3OFRGF3DmfWMDNzuXd+HJ14ypex6bMm-oCGw@mail.gmail.com>
- <20191207173805.jvunyfnijgefn3z5@salvia>
-In-Reply-To: <20191207173805.jvunyfnijgefn3z5@salvia>
-From:   Justin Forbes <jmforbes@linuxtx.org>
-Date:   Mon, 9 Dec 2019 11:56:17 -0600
-Message-ID: <CAFxkdAqaOu98H5uaSr2DHrFoa+woB0ypt02y2rtau8x_gFj_eg@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: nf_flow_table_offload: Correct memcpy size for flow_overload_mangle
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Laura Abbott <labbott@redhat.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <CAKfTPtDBtPuvK0NzYC0VZgEhh31drCDN=o+3Hd3fUwoffQg0fw@mail.gmail.com> <CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com>
+From:   Akemi Yagi <toracat@elrepo.org>
+Date:   Mon, 9 Dec 2019 09:57:06 -0800
+Message-ID: <CABA31DqGSycoE2hxk92NZ8qb47DqTR0+UGMQN_or1zpoGCg9fw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        DJ Delorie <dj@redhat.com>, David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 7, 2019 at 11:38 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+On Mon, Dec 9, 2019 at 9:49 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> On Fri, Dec 06, 2019 at 04:58:30PM -0600, Justin Forbes wrote:
-> > On Tue, Dec 3, 2019 at 2:50 PM Laura Abbott <labbott@redhat.com> wrote:
-> > >
-> > > On 12/3/19 12:01 PM, Marcelo Ricardo Leitner wrote:
-> > > > On Tue, Dec 03, 2019 at 11:03:45AM -0500, Laura Abbott wrote:
-> > > >> The sizes for memcpy in flow_offload_mangle don't match
-> > > >> the source variables, leading to overflow errors on some
-> > > >> build configurations:
-> > > >>
-> > > >> In function 'memcpy',
-> > > >>      inlined from 'flow_offload_mangle' at net/netfilter/nf_flow_table_offload.c:112:2,
-> > > >>      inlined from 'flow_offload_port_dnat' at net/netfilter/nf_flow_table_offload.c:373:2,
-> > > >>      inlined from 'nf_flow_rule_route_ipv4' at net/netfilter/nf_flow_table_offload.c:424:3:
-> > > >> ./include/linux/string.h:376:4: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
-> > > >>    376 |    __read_overflow2();
-> > > >>        |    ^~~~~~~~~~~~~~~~~~
-> > > >> make[2]: *** [scripts/Makefile.build:266: net/netfilter/nf_flow_table_offload.o] Error 1
-> > > >>
-> > > >> Fix this by using the corresponding type.
-> > > >>
-> > > >> Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-> > > >> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> > > >> ---
-> > > >> Seen on a Fedora powerpc little endian build with -O3 but it looks like
-> > > >> it is correctly catching an error with doing a memcpy outside the source
-> > > >> variable.
-> > > >
-> > > > Hi,
-> > > >
-> > > > It is right but the fix is not. In that call trace:
-> > > >
-> > > > flow_offload_port_dnat() {
-> > > > ...
-> > > >          u32 mask = ~htonl(0xffff);
-> > > >          __be16 port;
-> > > > ...
-> > > >          flow_offload_mangle(entry, flow_offload_l4proto(flow), offset,
-> > > >                                   (u8 *)&port, (u8 *)&mask);
-> > > > }
-> > > >
-> > > > port should have a 32b storage as well, and aligned with the mask.
-> > > >
-> > > >> ---
-> > > >>   net/netfilter/nf_flow_table_offload.c | 4 ++--
-> > > >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >>
-> > > >> diff --git a/net/netfilter/nf_flow_table_offload.c b/net/netfilter/nf_flow_table_offload.c
-> > > >> index c54c9a6cc981..526f894d0bdb 100644
-> > > >> --- a/net/netfilter/nf_flow_table_offload.c
-> > > >> +++ b/net/netfilter/nf_flow_table_offload.c
-> > > >> @@ -108,8 +108,8 @@ static void flow_offload_mangle(struct flow_action_entry *entry,
-> > > >>      entry->id = FLOW_ACTION_MANGLE;
-> > > >>      entry->mangle.htype = htype;
-> > > >>      entry->mangle.offset = offset;
-> > > >> -    memcpy(&entry->mangle.mask, mask, sizeof(u32));
-> > > >> -    memcpy(&entry->mangle.val, value, sizeof(u32));
-> > > >                                     ^^^^^         ^^^ which is &port in the call above
-> > > >> +    memcpy(&entry->mangle.mask, mask, sizeof(u8));
-> > > >> +    memcpy(&entry->mangle.val, value, sizeof(u8));
-> > > >
-> > > > This fix would cause it to copy only the first byte, which is not the
-> > > > intention.
-> > > >
-> > >
-> > > Thanks for the review. I took another look at fixing this and I
-> > > think it might be better for the maintainer or someone who is more
-> > > familiar with the code to fix this. I ended up down a rabbit
-> > > hole trying to get the types to work and I wasn't confident about
-> > > the casting.
-> >
-> > Any update on this? It is definitely a problem on PPC LE.
+> [ Added DJ to the participants, since he seems to be the Fedora make
+> maintainer - DJ, any chance that this absolutely horrid 'make' buf can
+> be fixed in older versions too, not just rawhide? The bugfix is two
+> and a half years old by now, and the bug looks real and very serious ]
+(snip)
+> But sadly, there's no way I can push that fair pipe wakeup thing as
+> long as this horribly buggy version of make is widespread.
 >
-> I'm attaching a tentative patch to address this problem.
->
-This patch does in fact fix the build issue.
+>                  Linus
 
-Thanks,
-Justin
+In addition to the Fedora make-4.2.1-4.fc27 (1) mentioned by Linus,
+RHEL 8 make-4.2.1-9.el8 (2) is affected. The patch applied to Fedora
+make (3) has been confirmed to fix the issue in RHEL's make.
+
+Those are the only real-world examples I know of. I have no idea how
+widespread this thing is...
+
+Akemi
+
+(1) https://bugzilla.redhat.com/show_bug.cgi?id=1556839
+(2) https://bugzilla.redhat.com/show_bug.cgi?id=1774790
+(3) https://git.savannah.gnu.org/cgit/make.git/commit/?id=b552b05251980f693c729e251f93f5225b400714
