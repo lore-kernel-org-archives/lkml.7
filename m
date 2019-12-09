@@ -2,159 +2,137 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92932C04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39957C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 699CA2073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYWBiNew"
+	by mail.kernel.org (Postfix) with ESMTP id 0B048207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575906067;
+	bh=xchqQrFdZC9lF1bCvucvR91oCh8m2y80Hp0P0ydGrDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VWVRQ5SIVJVmDO6LpFFQxLdNZEI21rt5el0o+uoej36FpJm2eHs7sFCHjc1pAb3aN
+	 CZL1COwQtrPgQsnyhJ7e3fHttYhO8x+3SThfZmYkJzsoGogmZWQob5MmqSNyI8Sz7+
+	 ibMYLERGqGiyPMPzJd769ypO03+YwILz9qAg0hqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLIPio (ORCPT
+        id S1726562AbfLIPlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:38:44 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35586 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfLIPio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:38:44 -0500
-Received: by mail-io1-f65.google.com with SMTP id v18so15248226iol.2;
-        Mon, 09 Dec 2019 07:38:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZJHtdl64eSg7tX1bls5wY/hgwg2SeBy1mqhpZlCukvg=;
-        b=sYWBiNewuyqeitxp4PMfrWb8D5LArfvGYVlnna4mBtaRMWcybALmK4TSqg7M/HKA1i
-         85aVtTxdrFrUZO5be9qMmHnxoj2f16hCkwRN6gtWVx+L9JUsxL5DLcePNscgNynYhloC
-         VEm6MCqqrVLY1aRK63NYHp9pg3+pwb5JS4nOdvLU+JWQh1qcMOXZjhrE9qxaP0Q4BehK
-         Gsn2K/LiOp2/s0TUyEEvu1PvhZpNTUN8pemOAMe5iT4VX7Ac1b2opKqp8pl7TSLhmffY
-         HobeBr/5FkeX5fDbHWmaxUGCJKWKMFHairadzP8yQM6TqaCNEtvIec58Uw99BqricfOM
-         k+iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZJHtdl64eSg7tX1bls5wY/hgwg2SeBy1mqhpZlCukvg=;
-        b=r6HIcT/wrZJe5hli8ReOBHqc4OxKhzGQ74KXShZLl4f8SsMA1eG6OqULVmdZT7nw18
-         SpjYsPKSuIMmGJyJ6xgfGBcGMDt/lxEw/cRzLyJoVpDZI82m3G3JYAoVRLYmdNpFffBK
-         MsSYrGlYUeUgywN6lCfQ6BArlvX2o+t2Hl0mJhwnhPnVsJmpcyPOo0ypqVglZHU192Jf
-         cce9+5fLe6i/KVvyM5ouRqnQ80IvIxJPblqcFPnHfYe+NgHZmgTdv3Oi/fFFTIi8xLoe
-         WZC4GkhH1jIvKGY2AydgN4jEpkPRZwGtiI5v1BGHoXB7Jw9aoE09vGip1z5xNSt+vG1r
-         VC/Q==
-X-Gm-Message-State: APjAAAXUI3IaXwvGrumCBGnDZRNAmgQBOt5okZJhAsyK1HU2cIQNRG8G
-        DYuzdn7dpTduRAvOVVFy7ataENu4fhII2qNeCbM=
-X-Google-Smtp-Source: APXvYqyKe81SV620SWPT3vlC+s2nmZV57gLiyzYp6LoXO4TmESagI9KWQZJxUmkLqawCteKkmS0vffcB403S2IYmD8Y=
-X-Received: by 2002:a02:8817:: with SMTP id r23mr28310766jai.120.1575905923417;
- Mon, 09 Dec 2019 07:38:43 -0800 (PST)
+        Mon, 9 Dec 2019 10:41:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfLIPlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 10:41:05 -0500
+Received: from localhost (unknown [89.205.132.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E023C2073D;
+        Mon,  9 Dec 2019 15:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575906064;
+        bh=xchqQrFdZC9lF1bCvucvR91oCh8m2y80Hp0P0ydGrDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T6ptTT5Dvl7Ke0t4vlq8m8f4XwnvIcTx03hZ7ubXpADtuyaQreXvuWT/F3tAUw0iO
+         nv0m8FLvmrHqSej/FKphn7MbmX/ckC1wKOZ9PaDgJOXkqAH1c+1QVOtZrqdxcZIKLV
+         S5/fZKB6PwdMdpgk8HQYC1Tf4PzP6toHs+047CQY=
+Date:   Mon, 9 Dec 2019 16:41:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Krzysztof Halasa <khc@pm.waw.pl>, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Biggers <ebiggers@kernel.org>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
+        "R.J.Dunlop" <bob.dunlop@farsite.com>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
+        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
+Message-ID: <20191209154101.GB1284708@kroah.com>
+References: <20191209151256.2497534-1-arnd@arndb.de>
+ <20191209151256.2497534-4-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20191206184536.2507-1-linux.amoon@gmail.com> <20191206184536.2507-3-linux.amoon@gmail.com>
- <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
-In-Reply-To: <f1327196-66c9-d152-c0ca-914d43d6f55e@arm.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 9 Dec 2019 21:08:31 +0530
-Message-ID: <CANAwSgTSDX=36eF3UxVyVykguRjd90=x4iT27s=nJg5ezG_V7w@mail.gmail.com>
-Subject: Re: [RFCv1 2/8] mfd: rk808: use syscore for RK805 PMIC shutdown
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Daniel Schultz <d.schultz@phytec.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rockchip@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209151256.2497534-4-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On Mon, Dec 09, 2019 at 04:12:56PM +0100, Arnd Bergmann wrote:
+> syzbot keeps finding issues in the X.25 implementation that nobody is
+> interested in fixing.  Given that all the x25 patches of the past years
+> that are not global cleanups tend to fix user-triggered oopses, is it
+> time to just retire the subsystem?
+> 
+> I looked a bit closer and found:
+> 
+> - we used to support x25 hardware in linux, but with WAN_ROUTER
+>   removed in linux-3.9 and isdn4linux removed in 5.3, there is only hdlc,
+>   ethernet and the N_X25 tty ldisc left. Out of these, only HDLC_X25 made
+>   it beyond the experimental stage, so this is probably what everyone
+>   uses if there are users at all.
+> 
+> - The most common hdlc hardware that people seem to be using are
+>   the "farsync" PCIe and USB adapters. Linux only has drivers for the
+>   older PCI devices from that series, but no hardware that works on
+>   modern systems.
+> 
+> - The manufacturer still updates their own kernel drivers and provides
+>   support, but ships that with a fork or rewrite of the subsystem
+>   code now.  Kevin Curtis is also listed as maintainer, but appears to
+>   have given up in 2013 after [1].
+> 
+> - The most popular software implementation appears to be X25 over TCP
+>   (XOT), which is supported by Farsite and other out-of-tree stacks but
+>   never had an implementation in mainline.
+> 
+> - Most other supported HDLC hardware that we supoprt is for the ISA or
+>   PCI buses. There are newer PCIe or USB devices, but those all require
+>   a custom device driver and often a custom subsystem, none of which got
+>   submitted for mainline inclusion. This includes hardware from Microgate
+>   (SyncLink), Comtrol (RocketPort Express) and Sealevel (SeaMAC).
+> 
+> - The X.25 subsystem is listed as "odd fixes", but the last reply on
+>   the netdev mailing list from the maintainer was also in 2013[2].
+> 
+> - The HDLC subsystem itself is listed as maintained by Krzysztof Halasa,
+>   and there were new drivers merged for SoC based devices as late as
+>   2016 by Zhao Qiang: Freescale/NXP QUICC Engine and Maxim ds26522.
+>   There has not been much work on HDLC or drivers/net/wan recently,
+>   but both developers are still responsive on the mailing list and
+>   work on other parts of the kernel.
+> 
+> Based on the above, I would conclude that X.25 can probably get moved
+> to staging as keeping it in the kernel seems to do more harm than good,
+> but HDLC below it should probably stay as there it seems there are still
+> users of a small subset of the mainline drivers.
+> 
+> Move all of X.25 into drivers/staging for now, with a projected removal
+> date set for Linux-5.8.
+> 
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> Cc: Andrew Hendry <andrew.hendry@gmail.com>
+> Cc: linux-x25@vger.kernel.org
+> Cc: Kevin Curtis <kevin.curtis@farsite.com>
+> Cc: "R.J.Dunlop" <bob.dunlop@farsite.com>
+> Cc: Zhao Qiang <qiang.zhao@nxp.com>
+> Cc: Krzysztof Halasa <khc@pm.waw.pl>
+> Reported-by: syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com
+> Reported-by: syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?id=5b0ecf0386f56be7fe7210a14d0f62df765c0c39
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ----
+> 
+> If anyone has different views or additional information, let us know.
+> 
+> If you agree with the above, please Ack.
 
-On Mon, 9 Dec 2019 at 19:04, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 06/12/2019 6:45 pm, Anand Moon wrote:
-> > Use common syscore_shutdown for RK805 PMIC to do
-> > clean I2C shutdown, drop the unused pm_pwroff_prep_fn
-> > and pm_pwroff_fn function pointers.
->
-> Coincidentally, I've also been looking at RK805 for the sake of trying
-> to get suspend to behave on my RK3328 box, and I've ended up with some
-> slightly different cleanup patches - I'll tidy them up and post them for
-> comparison as soon as I can.
+ACK!
 
-No issue if their is better clean approach, I will definitely test that ser=
-ies.
->
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >   drivers/mfd/rk808.c | 33 +++++++++++++++++----------------
-> >   1 file changed, 17 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> > index e637f5bcc8bb..713d989064ba 100644
-> > --- a/drivers/mfd/rk808.c
-> > +++ b/drivers/mfd/rk808.c
-> > @@ -467,16 +467,6 @@ static void rk808_update_bits(unsigned int reg, un=
-signed int mask,
-> >                       "can't write to register 0x%x: %x!\n", reg, ret);
-> >   }
-> >
-> > -static void rk805_device_shutdown(void)
-> > -{
-> > -     rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DEV_OFF);
-> > -}
-> > -
-> > -static void rk805_device_shutdown_prepare(void)
-> > -{
-> > -     rk808_update_bits(RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SHUTDOWN_FUN=
-);
-> > -}
-> > -
-> >   static void rk808_device_shutdown(void)
-> >   {
-> >       rk808_update_bits(RK808_DEVCTRL_REG, DEV_OFF_RST, DEV_OFF_RST);
-> > @@ -491,10 +481,23 @@ static void rk8xx_syscore_shutdown(void)
-> >   {
-> >       struct rk808 *rk808 =3D i2c_get_clientdata(rk808_i2c_client);
-> >
-> > -     if (system_state =3D=3D SYSTEM_POWER_OFF &&
-> > -         (rk808->variant =3D=3D RK809_ID || rk808->variant =3D=3D RK81=
-7_ID)) {
-> > -             rk808_update_bits(RK817_SYS_CFG(3), RK817_SLPPIN_FUNC_MSK=
-,
-> > -                             SLPPIN_DN_FUN);
-> > +     if (system_state =3D=3D SYSTEM_POWER_OFF) {
-> > +             dev_info(&rk808_i2c_client->dev, "System Shutdown Event\n=
-");
-> > +
-> > +             switch (rk808->variant) {
-> > +             case RK805_ID:
-> > +                     rk808_update_bits(RK805_GPIO_IO_POL_REG,
-> > +                                     SLP_SD_MSK, SHUTDOWN_FUN);
-> > +                     rk808_update_bits(RK805_DEV_CTRL_REG, DEV_OFF, DE=
-V_OFF);
->
-> Why this change? Shutdown via the SLEEP pin is working just fine on my
-> box :/
->
-> Robin.
-
-As per RK-805 datasheet [0] below.
-For clean poweroff we need to set in DEV_CTRL_REG reg
-Bit 0 DEV_OFF: write =E2=80=9C1=E2=80=9D to turn down the PMU.
-
-[0] http://files.pine64.org/doc/rock64/Rockchip_RK805_Datasheet_V1.1%C2%A02=
-0160921.pdf
-
--Anand
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
