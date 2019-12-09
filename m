@@ -2,197 +2,103 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B1AC00454
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03DFC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC817207FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mgRkhidW"
+	by mail.kernel.org (Postfix) with ESMTP id BA286207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfLIOvv (ORCPT
+        id S1726956AbfLIOwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:51:51 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44780 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfLIOvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:51:50 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so7228532pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:51:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uaDYqsyc1Amfj+rSgV5LdqRPEszOSqeoO5bxQF6wI/8=;
-        b=mgRkhidWIwQrXgZ+53Q3ES0onwYvT97F/zSJomcMLUsE3rX1QvgnpHcPZGSNwySnyL
-         v4fWp3ofa4Ls1qwhijcJQIQeRtVEa7DifKsIRjyLmsfGNCv6gf6Ntb/rBTM1y39ufl4B
-         lHTGSCi6gahnJsCCQeNaViCA8QJnrfYvVWwbE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uaDYqsyc1Amfj+rSgV5LdqRPEszOSqeoO5bxQF6wI/8=;
-        b=gNlJ//FGA1uEtMSU6hPKfqK6uj3nh78k6OYFaEKu12gZpG6arRXOt6LPZBAA+augNI
-         UzcFLh/9BExuFmGe/Nml6U/W45cwd+ZQ4f4UYIKXkQZsrxOq41OSqJfghsRO+YaFKjR/
-         PiLW7Q7BbFFUbZbD94cMSwMqAgJ1Gy+Y2bRRyoWSNjk3gxHOHQxtg/bBEl8+wdAtSs8n
-         1A3+ET4Sg7z1giMNqOqInQJraRrnk5/CPzcHXcSOMelVhfVGFhrg36MqlUk1Dcntu5xH
-         YACyqmQzW/Duk7S364E5J+f4jmbKC5pS62EH8I6menBbYRJAQdheoU7VFYqvg+hywncj
-         8IKg==
-X-Gm-Message-State: APjAAAX4ZDQEvv7TURVm5oNw2JO1HpBnPOJuiTgHtVIXoOERWZemwdJ1
-        IJ13lDbJsK3gua2knt3hOT6JGA==
-X-Google-Smtp-Source: APXvYqzAxcbhb9dq2bTBZndMkD6J3hhmRbSgWIiplaCgX/EMjF8TeQ17Ny2l9Uhse5276EJgApSiUA==
-X-Received: by 2002:a65:5c0a:: with SMTP id u10mr18950072pgr.258.1575903110084;
-        Mon, 09 Dec 2019 06:51:50 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id k16sm29143119pfh.97.2019.12.09.06.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:51:49 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 9 Dec 2019 09:52:09 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:55212 "EHLO manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbfLIOwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 09:52:09 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by manjaro.org (Postfix) with ESMTP id ED77136E3C6B;
+        Mon,  9 Dec 2019 15:52:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ROUn39D3oXYX; Mon,  9 Dec 2019 15:52:04 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Subject: Re: [RFCv1 0/8] RK3399 clean shutdown issue
+To:     Peter Geis <pgwipeout@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Daniel Schultz <d.schultz@phytec.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Archit Taneja <architt@codeaurora.org>, p.zabel@pengutronix.de,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH RESEND 4/4] drm: bridge: anx7688: Support bypass GPIO feature
-Date:   Mon,  9 Dec 2019 22:50:16 +0800
-Message-Id: <20191209145016.227784-5-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.24.0.393.g34dc348eaf-goog
-In-Reply-To: <20191209145016.227784-1-hsinyi@chromium.org>
-References: <20191209145016.227784-1-hsinyi@chromium.org>
+        linux-arm-kernel@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+References: <20191206184536.2507-1-linux.amoon@gmail.com>
+ <724aa7db-3838-16f9-d344-1789ae2a5746@arm.com>
+ <CAMdYzYoZY5gau=DGtPhk9CPV_WcyM4wjR9o+rPyaQfOzoy2Y=Q@mail.gmail.com>
+Message-ID: <5baf8423-8aa6-21a4-b066-71e3d12330cd@manjaro.org>
+Date:   Mon, 9 Dec 2019 15:51:04 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMdYzYoZY5gau=DGtPhk9CPV_WcyM4wjR9o+rPyaQfOzoy2Y=Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support optional feature: bypass GPIO.
+Hi,
 
-Get GPIO status in irq handler. If GPIO is active, mode_fixup would be
-bypassed.
+> On Mon, Dec 9, 2019 at 8:29 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 06/12/2019 6:45 pm, Anand Moon wrote:
+>>> Most of the RK3399 SBC boards do not perform clean
+>>> shutdown and clean reboot.
+>> FWIW reboot problems on RK3399 have been tracked down to issues in
+>> upstream ATF, and are unrelated to the PMIC.
+>>
+>>> These patches try to help resolve the issue with proper
+>>> shutdown by turning off the PMIC.
+>> As mentioned elsewhere[1], although this is what the BSP kernel seems to
+>> do, and in practice it's unlikely to matter for the majority of devboard
+>> users like you and me, I still feel a bit uncomfortable with this
+>> solution for systems using ATF as in principle the secure world might
+>> want to know about orderly shutdowns, and this effectively makes every
+>> shutdown an unexpected power loss from secure software's point of view.
+>>
+>> Robin.
+> Since ATF is operating completely in volatile memory, and shouldn't be
+> touching hardware once it passes off control to the kernel anyways,
+> what is the harm of pulling the rug out from under it?
+> If this idea is to prevent issues in the future, such as if ATF does
+> gain the ability to preempt hardware control, then at that time ATF
+> will need to be able to handle actually powering off devices using the
+> same functionality.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/gpu/drm/bridge/analogix-anx7688.c | 57 +++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+As far as I know ATF implements PSCI, doesn't it? Thus I would assume 
+that it should most definitely handle power off for all platforms as 
+indicated by the presence of platform handlers in [1].
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
-index 5a3a2251c1c5..1d09db2cf8e9 100644
---- a/drivers/gpu/drm/bridge/analogix-anx7688.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
-@@ -5,11 +5,16 @@
-  * Copyright 2016 Google LLC
-  */
- 
-+#include <linux/gpio.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/regmap.h>
- #include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_probe_helper.h>
- 
- /* Register addresses */
- #define VENDOR_ID_REG 0x00
-@@ -31,6 +36,9 @@ struct anx7688 {
- 	struct i2c_client *client;
- 	struct regmap *regmap;
- 
-+	struct gpio_desc *gpiod_bypass;
-+	int bypass;
-+
- 	bool filter;
- };
- 
-@@ -49,6 +57,10 @@ static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
- 	int totalbw, requiredbw;
- 	int ret;
- 
-+	/* bypass anx mode fixup */
-+	if (anx7688->bypass)
-+		return true;
-+
- 	if (!anx7688->filter)
- 		return true;
- 
-@@ -93,6 +105,19 @@ static const struct drm_bridge_funcs anx7688_bridge_funcs = {
- 	.mode_fixup	= anx7688_bridge_mode_fixup,
- };
- 
-+static irqreturn_t gpio_display_mux_det_threaded_handler(int unused, void *data)
-+{
-+	struct anx7688 *anx7688 = data;
-+
-+	anx7688->bypass = gpiod_get_value(anx7688->gpiod_bypass);
-+	dev_dbg(&anx7688->client->dev, "Interrupt %d!\n", anx7688->bypass);
-+
-+	if (anx7688->bridge.dev)
-+		drm_kms_helper_hotplug_event(anx7688->bridge.dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static const struct regmap_config anx7688_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -156,6 +181,38 @@ static int anx7688_i2c_probe(struct i2c_client *client,
- 			 buffer[0], buffer[1]);
- 	}
- 
-+	/* Optional bypass-gpios */
-+	anx7688->gpiod_bypass = devm_gpiod_get_optional(dev, "bypass",
-+							GPIOD_IN);
-+	if (IS_ERR(anx7688->gpiod_bypass)) {
-+		ret = PTR_ERR(anx7688->gpiod_bypass);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "bypass-gpios assigned failed\n");
-+		return ret;
-+	}
-+	if (anx7688->gpiod_bypass) {
-+		int irq;
-+
-+		irq = gpiod_to_irq(anx7688->gpiod_bypass);
-+		if (irq < 0) {
-+			dev_err(dev, "Failed to get output irq %d\n", irq);
-+			return -ENODEV;
-+		}
-+
-+		anx7688->bypass = gpiod_get_value(anx7688->gpiod_bypass);
-+
-+		ret = devm_request_threaded_irq(dev, irq, NULL,
-+				gpio_display_mux_det_threaded_handler,
-+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
-+				IRQF_ONESHOT,
-+				"gpio-display-mux-det", anx7688);
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to request MUX_DET threaded irq\n");
-+			return ret;
-+		}
-+	}
-+
- 	anx7688->bridge.funcs = &anx7688_bridge_funcs;
- 	drm_bridge_add(&anx7688->bridge);
- 
--- 
-2.24.0.393.g34dc348eaf-goog
+> But as we discussed previously, ATF doesn't have this capability, so
+> in this case any board without a dedicated power-off gpio will be
+> unable to power off at all.
+> Also it seems that giving ATF this functionality, with the current
+> state of ATF, would be cost prohibitive.
+>
+> I personally feel that allowing the kernel to do this is a solution to
+> the problem we have now.
+
+Maybe I'm missing something here but I'd suggest that implementing an 
+i2c driver in the rockchip platform part of ATF using libfdt to find the 
+PMIC from the devicetree would be the way to go.
+
+[1] 
+https://github.com/ARM-software/arm-trusted-firmware/blob/master/lib/psci/psci_system_off.c#L31
 
