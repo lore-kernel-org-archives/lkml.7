@@ -2,160 +2,146 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C392BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905E7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F5D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573DF206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUULFXI0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SC3tCdn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLIITh (ORCPT
+        id S1727307AbfLIIUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:19:37 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45278 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfLIITb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:19:31 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so6319814pgk.12;
-        Mon, 09 Dec 2019 00:19:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lVXrcLZKGANsU8tPDGf4zTebGjz1MfI/kI2qeZ91X0c=;
-        b=pUULFXI00O+d51QO2CrfHOGqts6TkPmURJGFY2Hx5h5LRwjxA8LLpCl739Sn+zURkx
-         0Syf+TK2h/Gy3IEWyXtwGiSSI8r5LyVhyLmMuE4qdnTalI/GSRX75z8LVVBDRHvjD4uK
-         44YJRIWeyZWDrdfhwt/GJU3OhAVMeKiQ4eJl6CoJ3KMfSofmawBsx5aY/7Auz8E0kRIB
-         PR7j380sZmXieN2MoRKIyirgyajIskk1esqF7UiAeES30k4vtyX1yIXBr8uVfqxrleMa
-         oF3ec6yQxzRpJNi+CiWlZU+8BXzRYISf/Js/pT8DfV5An4n/FyQm9CrfUYI1Ln6gIr1s
-         vDUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lVXrcLZKGANsU8tPDGf4zTebGjz1MfI/kI2qeZ91X0c=;
-        b=dEffETPOJEtuVbHJFwZYBymxD/jLXDc247Tn8Z2RQDK47hRW8gKOgaRIN1cVqECOj5
-         8TI55zGVwbbu6nYycNHFhiU2Kq/QDM0jFp6sI/KlhHrQ3DMLqi97oV6Jnejt1Rwvyi4K
-         uWFeyJ6uoIJ77CLUfITFp/mUT/ySw6s1bvHF/HtBKGh/mCx+0Ie9QXHDiWmumTwc/IHv
-         BhAp18gL9HJCtrd+IRnGq96aW1vLKNE3Rn8wMm7ysaVhgf5DFzRHWmOUTz2rWpo4mMN3
-         ObNs4T1h0VBujuTDJ0/GenoI2vcsVjEG0C/nHpHU00YAIvosDwIkmzHmir680TRZLw/i
-         iQkQ==
-X-Gm-Message-State: APjAAAX+2RrVVCoEc1766763/bzVD1FjOr2mDwDjwj5xzSbG0UPx+l50
-        DQHM7WReqF7O2i8qwXB9WTqNlBBhLgP2DA==
-X-Google-Smtp-Source: APXvYqxbfbeTkbEc25PmFS4JfnnyWYkx3IwK3B0rBjv3tu1zrkK0Iv1wMQ6f28/CtpitvSTOFpYndg==
-X-Received: by 2002:a62:3892:: with SMTP id f140mr24826780pfa.190.1575879570010;
-        Mon, 09 Dec 2019 00:19:30 -0800 (PST)
-Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
-        by smtp.gmail.com with ESMTPSA id u2sm23810375pgc.19.2019.12.09.00.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:19:29 -0800 (PST)
-From:   Thomas Hebb <tommyhebb@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Cc:     Thomas Hebb <tommyhebb@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 4/4] kconfig: fix nesting of symbol help text
-Date:   Mon,  9 Dec 2019 00:19:19 -0800
-Message-Id: <4bbeef61f292caaeae4b555edf42820d113a4d4d.1575879069.git.tommyhebb@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1575879069.git.tommyhebb@gmail.com>
-References: <cover.1575879069.git.tommyhebb@gmail.com>
+        Mon, 9 Dec 2019 03:20:01 -0500
+Received: from mail-eopbgr30055.outbound.protection.outlook.com ([40.107.3.55]:33891
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727084AbfLIIUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 03:20:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A01GesBGeY3+jGz4ge0MqBK0dZNm00mOGKIs/d7L+wFVLuOHgO8843Cq4gzjchnTQCgju3NlYO5/844pCxEc0JnGdNBvXZoxOO/0nYXKW5gZgqPz5Sp1iNlkeoIcFPGNu61kTo2dwHNg6LHTTeifFbxclBkWIbhkq9bm2t9Gx9upnjxBWq3W8Ih8VTloMNZXu+CDvgabI7r8IFUxKO5OgcTkyPRjcHGIqCANasiJo9BKFtiDDO/AzVE92AcD3O8wFfri2GDiDXdHuGJm+YSUXXcSjqYy2vV3bRhih2G8oOL7KvBmjyAcfSYZSepmSm6bhJ+bIOc+Iw/BHfO81RQnHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V/0nlNRR4KsLmjhSPFU0wvPfWw8ccbIg1qKl7F9TlC8=;
+ b=f7SgTj3BdGgBQOgQig/CboQN0/mWqevHYWceMMTUCVecfECXLMf6jgEbaKEYHAhUYSJ8sNs5TTjfXcvEng/ai8ivh95vrSdNbtsW1aMeEwDdq4LVpo69LQLN2eu3PcblEs7qxHUVq4+u1rODohsyN797au6Regxbddp2AfxLOsOkpmMIkV0jk3Yo1bCtqG5dZ+KJQe25IjwnX6G+j3njzmC6dnAH2+6v9tq0COwXHRp7tSs6rD0XsIgUZInmAYDVPuxPSxEvlMOuVIGxFC4cT66zD9t2siA+bjdhjhGxpM+9+9LQcMRU62Jy+LPzmyaUO6+1UArlNRfhzW7mPxQwdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V/0nlNRR4KsLmjhSPFU0wvPfWw8ccbIg1qKl7F9TlC8=;
+ b=SC3tCdn2cBgz+uk0FrQpiMxdXlRZNPPGlweIN3UroDwEX8YMonNR7V32motrP28Do7mbkO/WWr88igVzLIHEhG4t4Xxwp4izZFV66m/c2ZOt2H8A/bFLcDtK8wdzm3WfsQtrG3So0zM02Hdf5ot1RUS2kkd/Qf6eJKB+Zdy+3xY=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5123.eurprd04.prod.outlook.com (20.176.214.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Mon, 9 Dec 2019 08:19:55 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 08:19:55 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH V2] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Topic: [PATCH V2] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Index: AQHVrmlwcc3x7P8/l0KrSdq2pbgfNA==
+Date:   Mon, 9 Dec 2019 08:19:55 +0000
+Message-ID: <1575879445-15386-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0065.apcprd03.prod.outlook.com
+ (2603:1096:202:17::35) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 422d5345-ed97-4948-1e84-08d77c80928f
+x-ms-traffictypediagnostic: AM0PR04MB5123:|AM0PR04MB5123:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5123FCD5915FF4D731CB9A3E88580@AM0PR04MB5123.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:497;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(189003)(199004)(86362001)(478600001)(99286004)(6636002)(66556008)(66476007)(305945005)(2906002)(5660300002)(6486002)(54906003)(110136005)(66446008)(64756008)(4744005)(316002)(36756003)(8676002)(44832011)(2616005)(6506007)(186003)(52116002)(6512007)(4326008)(50226002)(102836004)(66946007)(26005)(8936002)(81166006)(81156014)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5123;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nlvcYqQGmh57h6cyRUJrklFdRNq//zRXD6Wv1AckfX7sBV+ol9cx/uBcHsoqsHHr4RqcLOpEUCtzxZSoC2WxQdVlnuQWBmIqvoEQvBzcbf5OdEt8BMMaeORQmHcaJGuLd44B8Yamq63DwBH1D+sWEEERbb9A7dsl+skZPK3KDA8H9sX7TUcrGPxDZUwZvYggwYzBpzVPyuDp3C6j2m6PL3KRrwkfkdbyxsbeHj2tc74OPw4XJIcpl+N99FKFu9OAHCcSMBl4ifxLy/I6QNBY4S02eoIyj5NYedDm9w/65Wmb43QhDL9V2XTeRaEdRFdb9T46qHVItL2YSW6G7yMx12JJCJgfkEeGZk5xrGTqkYH7h6j2O4/d/HKK9iAul01+6WWLboDCMrHe8Quu29HBFwnAg2kGYX6X+l/fBOKn1SmvVH4JRx2ehl/fUwI/dJTP
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 422d5345-ed97-4948-1e84-08d77c80928f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 08:19:55.6283
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rFA4Y43uULC2pAP7QYKWszpu0DsZYwip+1l8LI/AWSOlHc2T3xNCfHHQRxoUIR8FWPzYt57YeVd/bR1NqN60dQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we generate the help text of a symbol (e.g. when a user presses '?'
-in menuconfig), we do two things:
+From: Peng Fan <peng.fan@nxp.com>
 
- 1. We iterate through every prompt that belongs to that symbol,
-    printing its text and its location in the menu tree.
- 2. We print symbol-wide information that's not linked to a particular
-    prompt, such as what it selects/is selected by and what it
-    implies/is implied by.
+The usage of readl_poll_timeout is wrong, the 3rd parameter(cond)
+should be "val & LOCK_STATUS" not "val & LOCK_TIMEOUT_US",
+It is not check whether the pll locked, LOCK_STATUS reflects the mask,
+not LOCK_TIMEOUT_US.
 
-Each prompt we print for 1 starts with a line that's not indented
-indicating where the prompt is defined, then continues with indented
-lines that describe properties of that particular definition.
-
-Once we get to 2, however, we print all the global data indented as
-well! Visually, this makes it look like the symbol-wide data is
-associated with the last prompt we happened to print rather than
-the symbol as a whole.
-
-Fix this by removing the indentation for symbol-wide information.
-
-Before:
-
-  Symbol: CPU_FREQ [=n]
-  Type  : bool
-  Defined with prompt at drivers/cpufreq/Kconfig:4
-    Prompt: CPU Frequency scaling
-    Location:
-      -> CPU Power Management
-        -> CPU Frequency scaling
-    Selects: SRCU [=n]
-    Selected by [n]:
-    - ARCH_SA1100 [=n] && <choice>
-
-After:
-
-  Symbol: CPU_FREQ [=n]
-  Type  : bool
-  Defined with prompt at drivers/cpufreq/Kconfig:4
-    Prompt: CPU Frequency scaling
-    Location:
-      -> CPU Power Management
-        -> CPU Frequency scaling
-  Selects: SRCU [=n]
-  Selected by [n]:
-    - ARCH_SA1100 [=n] && <choice>
-
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- scripts/kconfig/menu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index 4d0542875d70..25d836aa60fc 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -831,18 +831,18 @@ static void get_symbol_str(struct gstr *r, struct symbol *sym,
- 		}
- 	}
- 
--	get_symbol_props_str(r, sym, P_SELECT, "  Selects: ");
-+	get_symbol_props_str(r, sym, P_SELECT, "Selects: ");
- 	if (sym->rev_dep.expr) {
--		expr_gstr_print_revdep(sym->rev_dep.expr, r, yes, "  Selected by [y]:\n");
--		expr_gstr_print_revdep(sym->rev_dep.expr, r, mod, "  Selected by [m]:\n");
--		expr_gstr_print_revdep(sym->rev_dep.expr, r, no, "  Selected by [n]:\n");
-+		expr_gstr_print_revdep(sym->rev_dep.expr, r, yes, "Selected by [y]:\n");
-+		expr_gstr_print_revdep(sym->rev_dep.expr, r, mod, "Selected by [m]:\n");
-+		expr_gstr_print_revdep(sym->rev_dep.expr, r, no, "Selected by [n]:\n");
- 	}
- 
--	get_symbol_props_str(r, sym, P_IMPLY, "  Implies: ");
-+	get_symbol_props_str(r, sym, P_IMPLY, "Implies: ");
- 	if (sym->implied.expr) {
--		expr_gstr_print_revdep(sym->implied.expr, r, yes, "  Implied by [y]:\n");
--		expr_gstr_print_revdep(sym->implied.expr, r, mod, "  Implied by [m]:\n");
--		expr_gstr_print_revdep(sym->implied.expr, r, no, "  Implied by [n]:\n");
-+		expr_gstr_print_revdep(sym->implied.expr, r, yes, "Implied by [y]:\n");
-+		expr_gstr_print_revdep(sym->implied.expr, r, mod, "Implied by [m]:\n");
-+		expr_gstr_print_revdep(sym->implied.expr, r, no, "Implied by [n]:\n");
- 	}
- 
- 	str_append(r, "\n\n");
--- 
-2.24.0
+V2:
+ Update commit log, and add tag.
+
+ drivers/clk/imx/clk-pll14xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+index a6d31a7262ef..e2384271ed83 100644
+--- a/drivers/clk/imx/clk-pll14xx.c
++++ b/drivers/clk/imx/clk-pll14xx.c
+@@ -166,7 +166,7 @@ static int clk_pll14xx_wait_lock(struct clk_pll14xx *pl=
+l)
+ {
+ 	u32 val;
+=20
+-	return readl_poll_timeout(pll->base, val, val & LOCK_TIMEOUT_US, 0,
++	return readl_poll_timeout(pll->base, val, val & LOCK_STATUS, 0,
+ 			LOCK_TIMEOUT_US);
+ }
+=20
+--=20
+2.16.4
 
