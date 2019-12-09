@@ -2,167 +2,206 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FACC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DD42072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FYhpnVQx"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5A824683
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfLIJyC (ORCPT
+        id S1727387AbfLIJya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:54:02 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37819 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfLIJyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:54:01 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so10179587lfc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SrN+istqMjTsOK45GjMp/wgqCgFHWcl6iEK6o+bDYyM=;
-        b=FYhpnVQxjhJIIqGoA+uTyUBGndUjSdhRjhXD+hmCdSzrzcpK+TmYWixigujmqBc29g
-         cQw4LhNbscwXEXbw3rcU3LO+yNZN4dWwwT14yLzwBt9UGVsjKQbYKzNpmVOFq7TREiV0
-         tqL0VFCdHZ7v3c0GfjYLk46UAROJtl3WhUQa0/HUPL0P9aGB82cOgEJhIJuPNXgtlTgv
-         XChrtF2KrAZb9Z8WH9sR7PodmzJ/MB6tRnFFCYP7241+kzzZXN0qeNTcontRvE52wIaE
-         rVJuNBmIDPVwSZFdkYk198+xipgQqNpucAQrUMGlkaE0GDJ7z7nae9MUvq4veoX7s7YH
-         UZXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SrN+istqMjTsOK45GjMp/wgqCgFHWcl6iEK6o+bDYyM=;
-        b=ff9b7lyFvSCn9gBTEJhOJCgYfwV3+83lpMmjJdzTYhgIIkx0BYBLt3qcYFYd4kJ7cH
-         sCO50dTE7PoLjFWFG438OyrdWAiXegKjuM3mmRYOO3z8wiIoxArLf8wAHTpyLuaMYwyE
-         OSisWUmzLs1pa3GeBXCVS6YDknJi6ntL8WxlU1yWQckToFHZGWwP/iHx90G4tX8TqT2K
-         UCOP6NUa5HBPPQX/f/iSauh3D3ADxxAW2JQpStTiULfNs3w2+/kQkPMZ4GKckLiPMQCQ
-         Xr2Z2f6rQ1292q1x5OsJwOjKIM6deqpXB90YKkxFyaAC4CgZZHTFZBmf78P96J/AZ3tP
-         69NQ==
-X-Gm-Message-State: APjAAAUIb9wXho8eZGhEXXYF82p8AsOBUVtdygYKHFuzOnDkktXWH2XJ
-        OVPnHHJmmiOsvsN5gC0a4Lx4JFzPqhsl+qwygCrwfA==
-X-Google-Smtp-Source: APXvYqwfvOkeVUH5fg2kwnMXipvPVRUV+ZauWZg2WGQOLmGb4ZjQarFMEQy8e9EIVX91PBR/vHMnpU9Wsyptxc0KP8Y=
-X-Received: by 2002:ac2:43a7:: with SMTP id t7mr13538590lfl.125.1575885238439;
- Mon, 09 Dec 2019 01:53:58 -0800 (PST)
-MIME-Version: 1.0
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
- <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
- <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com> <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-In-Reply-To: <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 9 Dec 2019 10:53:46 +0100
-Message-ID: <CAKfTPtDBtPuvK0NzYC0VZgEhh31drCDN=o+3Hd3fUwoffQg0fw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 9 Dec 2019 04:54:30 -0500
+Received: from comms.puri.sm ([159.203.221.185]:34112 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727144AbfLIJya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 04:54:30 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 02510E0E8A;
+        Mon,  9 Dec 2019 01:54:29 -0800 (PST)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Pl6w9f2EDwrM; Mon,  9 Dec 2019 01:54:28 -0800 (PST)
+Subject: Re: [PATCH V4 4/4] thermal/drivers/cpu_cooling: Rename to
+ cpufreq_cooling
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, edubezval@gmail.com,
+        rui.zhang@intel.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20191204153930.9128-4-daniel.lezcano@linaro.org>
+ <20191206113315.18954-1-martin.kepplinger@puri.sm>
+ <e6cbe4fb-8b04-cff6-f2af-6c5829d9deb1@linaro.org>
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
+ 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
+ ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
+Message-ID: <7ae753bd-8330-6652-0207-0c884d722a6c@puri.sm>
+Date:   Mon, 9 Dec 2019 10:54:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <e6cbe4fb-8b04-cff6-f2af-6c5829d9deb1@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 7 Dec 2019 at 23:48, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Dec 6, 2019 at 7:50 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > The "make goes slow" problem bisects down to b667b8673443 ("pipe:
-> > Advance tail pointer inside of wait spinlock in pipe_read()").
->
-> I'm not entirely sure that ends up being 100% true. It did bisect to
-> that, but the behavior wasn't entirely stable. There definitely is
-> some nasty timing trigger.
->
-> But I did finally figure out what seems to have been going on with at
-> least the biggest part of the build performance regression. It's seems
-> to be a nasty interaction with the scheduler and the GNU make
-> jobserver, and in particular the pipe wakeups really _really_ do seem
-> to want to be synchronous both for the readers and the writers.
->
-> When a writer wakes up a reader, we want the reader to react quickly
-> and vice versa. The most obvious case was for the GNU make jobserver,
-> where sub-makes would do a single-byte write to the jobserver pipe,
-> and we want to wake up the reader *immediatly*, because the reader is
-> actually a lot more important than the writer. The reader is what gets
-> the next job going, the writer just got done with the last one.
->
-> And when a reader empties a full pipe, it's because the writer is
-> generating data, and you want to just get the writer going again asap.
->
-> Anyway, I've spent way too much time looking at this and wondering
-> about odd performance patterns. It seems to be mostly back up to
-> normal.
->
-> I say "mostly", because I still see times of "not as many concurrent
-> compiles going as I'd expect". It might be a kbuild problem, it might
-> be an issue with GNU make (I've seen problems with the make jobserver
-> wanting many more tokens than expected before and the kernel makefiles
-> - it migth be about deep subdirectories etc), and it might be some
-> remaining pipe issue. But my allmodconfig builds aren't _enormously_
-> slower than they used to be.
->
-> But there's definitely some unhappy interaction with the jobserver. I
-> have 16 threads (8 cores with HT), and I generally use "make -j32" to
-> keep them busy because the jobserver isn't great. The pipe rework made
-> even that 2x slop not work all that well. Something held on to tokens
-> too long, and there was definitely some interaction with the pipe
-> wakeup code. Using "-j64" hid the problem, but it was a problem.
->
-> It might be the new scheduler balancing changes that are interacting
-> with the pipe thing. I'm adding PeterZ, Ingo and Vincent to the cc,
-> because I hadn't realized just how important the sync wakeup seems to
-> be for pipe performance even at a big level.
 
-Which version of make should I use to reproduce the problem ?
-My setup is not the same and my make is a bit old but I haven't been
-able to reproduce the problem described above on my arm64 octa cores
-system and v5.5-rc1.
-All cores are busy with -j16. And even -j8 keeps the cores almost always busy
 
->
-> I've pushed out my pipe changes. I really didn't want to do that kind
-> of stuff at the end of the merge window, but I spent a lot more time
-> than I wanted looking at this code, because I was getting to the point
-> where the alternative was to just revert it all.
->
-> DavidH, give these a look:
->
->   85190d15f4ea pipe: don't use 'pipe_wait() for basic pipe IO
->   a28c8b9db8a1 pipe: remove 'waiting_writers' merging logic
->   f467a6a66419 pipe: fix and clarify pipe read wakeup logic
->   1b6b26ae7053 pipe: fix and clarify pipe write wakeup logic
->   ad910e36da4c pipe: fix poll/select race introduced by the pipe rework
->
-> the top two of which are purely "I'm fed up looking at this code, this
-> needs to go" kind of changes.
->
-> In particular, that last change is because I think the GNU jobserver
-> problem is partly a thundering herd issue: when a job token becomes
-> free (ie somebody does a one-byte write to an empty jobserver pipe),
-> it wakes up *everybody* who is waiting for a token. One of them will
-> get it, and the others will go to sleep again. And then it repeats all
-> over. I didn't fix it, but it _could_ be fixed with exclusive waits
-> for readers/writers, but that means more smarts than pipe_wait() can
-> do. And because the jobserver isn't great at keeping everybody happy,
-> I'm using a much bigger "make -jX" value than the number of CPU's I
-> have, which makes the herd bigger. And I suspect none of this helps
-> the scheduler pick the _right_ process to run, which just makes
-> scheduling an even bigger problem.
->
->             Linus
+On 06.12.19 15:15, Daniel Lezcano wrote:
+> On 06/12/2019 12:33, Martin Kepplinger wrote:
+>> I tested this on the librem5-devkit and see the
+>> cooling devices in sysfs. I configure ARM_PSCI_CPUIDLE, not ARM_CPUIDLE and
+>> add the patch below in register the cooling device there. "psci_idle"
+>> is listed as the cpuidle_driver.
+>>
+>> That's what I'm running, in case you want to see it all:
+>> https://source.puri.sm/martin.kepplinger/linux-next/commits/next-20191205/librem5_cpuidle_mainline_atf
+>>
+>> so I add a trip temperature description like this:
+>> https://source.puri.sm/martin.kepplinger/linux-next/commit/361f49f93ae2c477fd012790831cabd0ed976660
+>>
+>> When I let the SoC heat up, cpuidle cooling won't kick it. In sysfs:
+>>
+>> catting the relevant files in /sys/class/thermal after heating up,
+>> if that makes sense:
+>>
+>> 87000
+>> 85000
+>> 85000
+>> thermal-cpufreq-0
+>> 1
+>> thermal-idle-0
+>> 0
+>> thermal-idle-1                                                                  
+>> 0                                                                               
+>> thermal-idle-2
+>> 0
+>> thermal-idle-3
+>> 0
+>>
+>> with ARM_CPUIDLE instead of ARM_PSCI_CPUIDLE (and registering the cooling dev
+>> during cpuidle-arm.c init) I won't have a cpuidle driver and thus no cpu-sleep
+>> state at all.
+>>
+>> Can you see where the problem here lies?
+> 
+> Yes, I removed the registration via the DT.
+> 
+> Can you try the following:
+> 
+> diff --git a/drivers/cpuidle/dt_idle_states.c
+> b/drivers/cpuidle/dt_idle_states.c
+> index d06d21a9525d..01367ddec49a 100644
+> --- a/drivers/cpuidle/dt_idle_states.c
+> +++ b/drivers/cpuidle/dt_idle_states.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/cpu_cooling.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> 
+> @@ -205,6 +206,9 @@ int dt_init_idle_driver(struct cpuidle_driver *drv,
+>  			err = -EINVAL;
+>  			break;
+>  		}
+> +
+> +		cpuidle_of_cooling_register(state_node, drv);
+> +
+>  		of_node_put(state_node);
+>  	}
+> 
+> That's a hack for the moment.
+> 
+
+thanks. I could test that successfully. The only question would be: Is
+is intentional how "non-aggressive" the cooling driver cools? I would
+have expected it to basically inject more idle cycles earlier. I'd set
+75 degrees as trip point and at 85 degress is would only inject about 30
+(of 100).
+
+You describe the "config values" in question in the documentation, but
+I'm not sure what's the correct way to change them.
+
+thanks,
+
+                                      martin
