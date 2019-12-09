@@ -2,183 +2,148 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E61C2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED05DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6492072D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3F62072D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 09:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bhDV/olP"
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="nIRaegXK";
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SuMFst1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLIJQh (ORCPT
+        id S1727506AbfLIJQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 04:16:37 -0500
-Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:29832
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727370AbfLIJQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:16:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BWDzhDzFKd7DEVP+SrmN1fbkpjvxu0XDt6M0SuxMGZFqpckQcirCwCIq/6XAUn6lvmBqLitLSMrrQ3dAEAwg0UNQiAPWiSarKvVYiF4H32RmtmGdr3RbXoDGDpsUOPaYJLkY8Z6hfBQgp/p6JAkZwjXfbzDys/2E04kUc/nmykAvY91lY+QubH2zgwBl6jsYKc7d7bRN58kaP3X5bCoCkNyd11xSDhs5X/GrB2n69JbL1DIpvVAxWeWumqNu3Z1OFhoG/x5DLFBS4TnOlFhD6sEbuLjO51mwbxipuy74sAFEPccw09UXu5hXzUmmy16Dt8LVT4IzcUT9FV0ge8mVAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ACUsr9MeoTLaHsFYoBOt5PpAow2E2HFdETLHOrvG7k=;
- b=YakHlpjQT6VBbGfM+DPcbY47ht2qASKvGZEo9d8+gl3S/s1VhJ7NN1yC1xhmgh7e1qJUEsQDLpZ7q+SxpXOQp3Qn71Yk1ymIvwgLBzJLnPWk1mpWl76/DTOZ6ioNM2rkcW6nKj1HmUgyLs24K8V2NKNthhPoSG6PIGq+/qQm+gtBjlFm/Y9o7+ZzqX9QaV0JdliJlJNXpfcoeTymQerbUWWhWJfWFnuLtkfNAodcUh8/6qdpKZ+SeKpwFWRvf4Y7seJZPDe2GdjqcJR17A+IemQQ/wtHpadgRv5P0D2AJqDwPADXR3jUSxcCT/3lfobxvz9HbZ+6w7dcTtiSxmVKOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ACUsr9MeoTLaHsFYoBOt5PpAow2E2HFdETLHOrvG7k=;
- b=bhDV/olPjsB9Zd31YDVYIX6AwCbfqiXi4lWTureawv1jUrf/Dz2vi5dpvvxr+6W8lThxJ47E4edgcw3hQp50MMAtHhSYwlrxPpvUnK4NmkcmQ08gkZaKL6CGVU0OHVN3RP9p/H06EA5kff/cWg0aU+XD00uL+11rPj+RIvydPUs=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6493.eurprd04.prod.outlook.com (20.179.233.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Mon, 9 Dec 2019 09:15:50 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 09:15:50 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [v3] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Topic: [v3] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Index: AQHVrm9ixVNwnMvsy0G4gu21x4yF3Kexg4wg
-Date:   Mon, 9 Dec 2019 09:15:50 +0000
-Message-ID: <VE1PR04MB6638C13336F3F87585AC17F189580@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20191209090110.20240-1-peng.ma@nxp.com>
-In-Reply-To: <20191209090110.20240-1-peng.ma@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 945531f5-d8c3-475b-a730-08d77c88629d
-x-ms-traffictypediagnostic: VE1PR04MB6493:|VE1PR04MB6493:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6493278E688D1EEED75AEAC189580@VE1PR04MB6493.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(199004)(189003)(74316002)(8676002)(110136005)(8936002)(26005)(305945005)(33656002)(9686003)(2906002)(71200400001)(81166006)(186003)(81156014)(316002)(71190400001)(54906003)(55016002)(76116006)(4326008)(66946007)(76176011)(7696005)(66446008)(64756008)(99286004)(66476007)(66556008)(5660300002)(53546011)(6506007)(52536014)(86362001)(6636002)(478600001)(102836004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6493;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JZS/xMy5IfJvOEa3cyTLmFq0O4qSNpT0eYZAQ1SjLq4EsxJJkTEA6kZFRdJTRistL0xB+e0k40sFmhaAUkdgrIYJZ8sOR2S8e/ovhjw572MXzwQ80XPGUpPaM1jEa/a4HqhicJhWbeHgMm2Bk2nBaenOIZZ5Pjc5kXbQoWQLz5ajirnQCKdmIGBTAVjdrvd4EoyF1nM3ShldAmEViS70W+pw3M/CPk0YTLeO9sXNJTPZvZOs0F2XvfCh1iGVQ1OWj85q6gGvAiyT94lBqC2OydcTx7OqURbqupTb01rhRah6kTGIELzFEKkovTb/6IFamk1HiV+krSa2jIGDWVrMbRB4odLAxzL5ecLq/dBsCkS1pq17TrDaTYPdDSdsQG0qzGKgONkKF+izBUi9qmRpOMFWwclgY7KiVnU7AyXtrJS9bgvao2qYCXZmbdBtIw5i
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Dec 2019 04:16:43 -0500
+Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:49732 "EHLO
+        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727496AbfLIJQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 04:16:42 -0500
+Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
+        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99FEFh021367
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 09:16:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
+ cc : references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp;
+ bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
+ b=nIRaegXKspiKE88HxNH6WjH7FyQNO5dMclhW890Uu2Fdq29E7bj8StIEi3DIiLDpD5Tt
+ woBdm74F/5iAx90vefct5/fTyXpfgeTkevSleiiFaEjhwa0ZYrm8fvdYIrsMzpUq+mH0
+ ELbzSFy9yrBQ4PbhZpAMiUzVsUzH6WjYy1WTDwbMP8o144d1ZtWAxqy3Tk0VPIQlScaC
+ AjhScw409wDtubAiG9otQOfwCsqUgFXY27h13RIYhHUErGtT+kJ2+5KD3r2I0IOe0kFd
+ G/tEXbDtsONuRzRnOqZnfZ4Jzqxa4ezZmUsczCBH9Rd+D6pY2OuZQXztnpULZrn7JGlt Dg== 
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        by mx08-00252a01.pphosted.com with ESMTP id 2wr1er0vff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 09:16:39 +0000
+Received: by mail-wm1-f70.google.com with SMTP id y125so6862285wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 01:16:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
+        b=SuMFst1GNtlvgI4cGzuoakXgAu2yerkgS/GDEcxL7qi9KS61f4biV8Fp04WzdqOFvn
+         j1Gp7UyQPmGUKIx4MxpdKsGM24SzZGWzt/fIRXi8bPyMFBERrKD4MBhBhYMoo8ZXUIxP
+         P48gvIosiJqetY/6b62Qk027EewfB7LmrwKB2YskMOKcQEClBnyig6OPlKOUeXTP095S
+         EbgVNQobXZjDI8CK0EhfTfs03R7Fzsd0/Uh0xNVlFtrxShdzlqfsT/p7ZEA7VFEGhgFc
+         R+Iqq3a32SCC7tlondsDN8+BEzTPt30nffEsF+4JSL4340+SFl0EpRmqR4Zs17A5lGt7
+         aYsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mYEfhxjM0ILb+XMlHOtp9XHaBPVEI+/6QQqocgNXGdY=;
+        b=F1vYTkCU+svXygNYDbzt9DNHIbgnmaSsvS7d13dw1xsCbI2uWFVeHgJgXE5k6F7mri
+         bOpzjuA/b+IOefeHvOxck6BZctv5UKpDlEgBrbEe1Hu78Z3DMfOyL+DQNGImv2CGeH+r
+         2ivJlNWL6nG3oVm53b/E9JMan9qbfpMmlwAlPDfhjrVJoYoYbl48ZddldouXsYsStTYa
+         ANter6K9xNvYP1X79SxnRIeU3iMkqLRavo7/jlpOEOJUk9etDO8Z8m3KVDJPd1Za1AHl
+         EJc0TC6VMqQuLqG+MpqnyiQ/eRn77ce5KypXnorYoRSDNq5KL646m6hAG57c3wXHY9qw
+         d58g==
+X-Gm-Message-State: APjAAAXK+rMUPq6efVDSt9JTAq06REVB1LTM22eKH6xIA1pZ8idVUoeK
+        S1xiytT8g/94znFbUIhF6LZTdGqw+YgsJl4BbXBw++J5hidxfRbEJop/Q8OhiY87ToBaWPQfUhr
+        7IWF7f3GYFcClbYKgC9a272I+
+X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845429wrk.53.1575882998149;
+        Mon, 09 Dec 2019 01:16:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzT3Io5pOspq+kl6pPKQBqKVgBf9LVLOJQm7nVHNRzkVmlSJL3zQmrWoRTiXlnHeBQS8aQY4w==
+X-Received: by 2002:adf:d4ca:: with SMTP id w10mr845391wrk.53.1575882997834;
+        Mon, 09 Dec 2019 01:16:37 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:340b:2c9a:9ebb:aeea? ([2a00:1098:3142:14:340b:2c9a:9ebb:aeea])
+        by smtp.gmail.com with ESMTPSA id f1sm12909270wml.11.2019.12.09.01.16.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 01:16:36 -0800 (PST)
+Subject: Re: [PATCH] ARM: dts: bcm2711: fix soc's node dma-ranges
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>
+Cc:     mbrugger@suse.com, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191204125633.27696-1-nsaenzjulienne@suse.de>
+ <711470d3-e683-69d4-8f4e-791a76faab29@gmail.com>
+ <e72de603-2ad9-5a3b-109e-8ee14bf3293c@raspberrypi.org>
+ <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
+From:   Phil Elwell <phil@raspberrypi.org>
+Message-ID: <c085e99f-c1b3-1729-0170-fa17a1aea995@raspberrypi.org>
+Date:   Mon, 9 Dec 2019 09:16:35 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 945531f5-d8c3-475b-a730-08d77c88629d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 09:15:50.6640
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4OQr3t9+cl0trjt88J3TqbvYsf/bqhvlPD7XBXBciJ1h2MQsz20nd6eQ3phQBy8fJGLoKkq/lKypRhAoAtvBMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
+In-Reply-To: <b778e086-378d-9271-6370-7fd4e60ae250@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/9 17:03 Peng Ma <peng.ma@nxp.com> wrote:
-> Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with
-> below registers(CHCFG0 - CHCFG15) of eDMA as follows:
-> *-----------------------------------------------------------*
-> |     Offset   |	OTHERS      |		LS1028A	    |
-> |--------------|--------------------|-----------------------|
-> |     0x0      |        CHCFG0      |           CHCFG3      |
-> |--------------|--------------------|-----------------------|
-> |     0x1      |        CHCFG1      |           CHCFG2      |
-> |--------------|--------------------|-----------------------|
-> |     0x2      |        CHCFG2      |           CHCFG1      |
-> |--------------|--------------------|-----------------------|
-> |     0x3      |        CHCFG3      |           CHCFG0      |
-> |--------------|--------------------|-----------------------|
-> |     ...      |        ......      |           ......      |
-> |--------------|--------------------|-----------------------|
-> |     0xC      |        CHCFG12     |           CHCFG15     |
-> |--------------|--------------------|-----------------------|
-> |     0xD      |        CHCFG13     |           CHCFG14     |
-> |--------------|--------------------|-----------------------|
-> |     0xE      |        CHCFG14     |           CHCFG13     |
-> |--------------|--------------------|-----------------------|
-> |     0xF      |        CHCFG15     |           CHCFG12     |
-> *-----------------------------------------------------------*
->=20
-> This patch is to improve edma driver to fit LS1028A platform.
->=20
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
-> Changed for v3:
-> 	- Rename struct soc_device_attribute
->=20
->  drivers/dma/fsl-edma-common.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/drivers/dma/fsl-edma-common.c
-> b/drivers/dma/fsl-edma-common.c index b1a7ca9..10234e1 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -7,6 +7,7 @@
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/sys_soc.h>
->=20
->  #include "fsl-edma-common.h"
->=20
-> @@ -42,6 +43,11 @@
->=20
->  #define EDMA_TCD		0x1000
->=20
-> +static struct soc_device_attribute mux_byte_swap_quirk[] =3D {
-> +	{ .family =3D "QorIQ LS1028A"},
-> +	{ },
-> +};
-> +
-How about add 'mux_swap' into 'struct fsl_edma_drvdata' instead
-of involving any soc type into the common fsl-edma-common.c? Then
-soc type could be added into chip level driver fsl-edma.c like "fsl,vf610-e=
-dma"/
-"fsl,imx7ulp-edma".
+On 06/12/2019 18:13, Florian Fainelli wrote:
+> On 12/6/19 2:16 AM, Phil Elwell wrote:
+>> Hi Nicolas,
+>>
+>> On 06/12/2019 00:08, Florian Fainelli wrote:
+>>> On 12/4/19 4:56 AM, Nicolas Saenz Julienne wrote:
+>>>> Raspberry Pi's firmware has a feature to select how much memory to
+>>>> reserve for its GPU called 'gpu_mem'. The possible values go from 16MB
+>>>> to 944MB, with a default of 64MB. This memory resides in the topmost
+>>>> part of the lower 1GB memory area and grows bigger expanding towards the
+>>>> begging of memory.
+>>>>
+>>>> It turns out that with low 'gpu_mem' values (16MB and 32MB) the size of
+>>>> the memory available to the system in the lower 1GB area can outgrow the
+>>>> interconnect's dma-range as its size was selected based on the maximum
+>>>> system memory available given the default gpu_mem configuration. This
+>>>> makes that memory slice unavailable for DMA. And may cause nasty kernel
+>>>> warnings if CMA happens to include it.
+>>>>
+>>>> Change soc's dma-ranges to really reflect it's HW limitation, which is
+>>>> being able to only DMA to the lower 1GB area.
+>>>>
+>>>> Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
+>>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>>> ---
+>>>>
+>>>> NOTE: I'd appreciate if someone from the RPi foundation commented on
+>>>> this as it's something that I'll propose to be backported to their tree.
+>>
+>> The 0x3c000000 size was a mistake that arose from c0000000 + 3c000000 =
+>> fc000000, but that is mixing apples and oranges (actually DMA addresses
+>> and host physical addresses). Please correct it as you are proposing.
+> 
+> Do you want to add an Acked-by or Reviewed-by tag to make this statement
+> official?
 
->  static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)  {
->  	struct edma_regs *regs =3D &fsl_chan->edma->regs; @@ -109,10 +115,16
-> @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
->  	u32 ch =3D fsl_chan->vchan.chan.chan_id;
->  	void __iomem *muxaddr;
->  	unsigned int chans_per_mux, ch_off;
-> +	int endian_diff[4] =3D {3, 1, -1, -3};
->  	u32 dmamux_nr =3D fsl_chan->edma->drvdata->dmamuxs;
->=20
->  	chans_per_mux =3D fsl_chan->edma->n_chans / dmamux_nr;
->  	ch_off =3D fsl_chan->vchan.chan.chan_id % chans_per_mux;
-> +
-> +	if (!fsl_chan->edma->big_endian &&
-> +	    soc_device_match(mux_byte_swap_quirk))
-> +		ch_off +=3D endian_diff[ch_off % 4];
-> +
->  	muxaddr =3D fsl_chan->edma->muxbase[ch / chans_per_mux];
->  	slot =3D EDMAMUX_CHCFG_SOURCE(slot);
->=20
-> --
-> 2.9.5
+Here you go:
 
+Reviewed-by: Phil Elwell <phil@raspberrypi.org>
