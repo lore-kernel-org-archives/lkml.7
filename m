@@ -2,195 +2,113 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703D2C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7718EC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3341C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D48206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 18:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575917957;
-	bh=7ajHhqLPRSdhijGUTDGrfPaimYZfeDzD4uktbE6S/BI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=V6B4hbr9832FKlznm42mwOTD0Ob1FXwCuEt8WyM3Ps3xTLkEmmLnw4ZEW4VG0f5sl
-	 pidvHbcn/wHaRI9TsHKZdquqIo1vHK3tHG1CoY0zZOts28BuzLsh4zfBPJTT9zOcGP
-	 HcmWGy5dtY6t/3gxR2PRdt71ajzuR5PgKFyEHy6A=
+	s=default; t=1575917959;
+	bh=Vy4MUVoRBlidaLMAoUT4DKcsJCcwD8J1i7daM5nc1NM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Qx2zwoBjW3086sAad8j6A5cDqH1YPj9f8ulsq1/KML7QVknf9JUVVQ3MJSyn3G2O2
+	 Kce6AhCsVf0Fjb9JuAOQCbFxBRJhLBVCX/IOyeHqn+TommIRnuxHliTv4Uc4chatkX
+	 Kzlot9oR1ga+zkT169Bal8UDaJTyJk5hgzuBaS5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLIS7P (ORCPT
+        id S1726843AbfLIS7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 13:59:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 13:59:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:42306 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfLIS7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:59:10 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75DF4205C9;
-        Mon,  9 Dec 2019 18:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575917949;
-        bh=7ajHhqLPRSdhijGUTDGrfPaimYZfeDzD4uktbE6S/BI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PCXMJjPxKyI6EGqlYmAB0QWzvgOt7Uwl8SJqbKiC3aPvMYqPrN3IjC1KVBhmlPw5y
-         RAEzCQIiVc8PCkmIajEDA+xudwyx1+jGf/yNHsD4OAowqLXzUcq6PJbnuUMc+WSokd
-         lIz5ItX0BqESfTxcRNGHU3ZZ4j8ALyDZVaKhrOh4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 023343522769; Mon,  9 Dec 2019 10:59:08 -0800 (PST)
-Date:   Mon, 9 Dec 2019 10:59:08 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191209185908.GA8470@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191129155850.GA17002@paulmck-ThinkPad-P72>
- <20191202015548.GA13391@paulmck-ThinkPad-P72>
- <20191202201338.GH16681@devbig004.ftw2.facebook.com>
- <20191203095521.GH2827@hirez.programming.kicks-ass.net>
- <20191204201150.GA14040@paulmck-ThinkPad-P72>
- <20191205102928.GG2810@hirez.programming.kicks-ass.net>
- <20191205103213.GB2871@hirez.programming.kicks-ass.net>
- <20191205144805.GR2889@paulmck-ThinkPad-P72>
- <20191206185208.GA25636@paulmck-ThinkPad-P72>
- <20191206220020.GA27511@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191206220020.GA27511@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726354AbfLIS7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 13:59:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1472513A1;
+        Mon,  9 Dec 2019 10:59:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88FDE3F6CF;
+        Mon,  9 Dec 2019 10:59:10 -0800 (PST)
+Date:   Mon, 09 Dec 2019 18:59:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Subject: Applied "ASoC: fix soc-core.c kernel-doc warning" to the asoc tree
+In-Reply-To: <2215ee04-e870-5eea-a00c-9a5caf06faae@infradead.org>
+Message-Id: <applied-2215ee04-e870-5eea-a00c-9a5caf06faae@infradead.org>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 02:00:20PM -0800, Paul E. McKenney wrote:
-> On Fri, Dec 06, 2019 at 10:52:08AM -0800, Paul E. McKenney wrote:
-> > On Thu, Dec 05, 2019 at 06:48:05AM -0800, Paul E. McKenney wrote:
-> > > On Thu, Dec 05, 2019 at 11:32:13AM +0100, Peter Zijlstra wrote:
-> > > > On Thu, Dec 05, 2019 at 11:29:28AM +0100, Peter Zijlstra wrote:
-> > > > > On Wed, Dec 04, 2019 at 12:11:50PM -0800, Paul E. McKenney wrote:
-> > > > > 
-> > > > > > And the good news is that I didn't see the workqueue splat, though my
-> > > > > > best guess is that I had about a 13% chance of not seeing it due to
-> > > > > > random chance (and I am currently trying an idea that I hope will make
-> > > > > > it more probable).  But I did get a couple of new complaints about RCU
-> > > > > > being used illegally from an offline CPU.  Splats below.
-> > > > > 
-> > > > > Shiny!
-> > > 
-> > > And my attempt to speed things up did succeed, but the success was limited
-> > > to finding more places where rcutorture chokes on CPUs being slow to boot.
-> > > Fixing those and trying again...
-> > 
-> > And I finally did manage to get a clean run.  There are probably a few
-> > more things that a large slow-booting hyperthreaded system can do to
-> > confuse rcutorture, but it is at least down to a dull roar.
-> > 
-> > > > > > Your patch did rearrange the CPU-online sequence, so let's see if I
-> > > > > > can piece things together...
-> > > > > > 
-> > > > > > RCU considers a CPU to be online at rcu_cpu_starting() time.  This is
-> > > > > > called from notify_cpu_starting(), which is called from the arch-specific
-> > > > > > CPU-bringup code.  Any RCU readers before rcu_cpu_starting() will trigger
-> > > > > > the warning I am seeing.
-> > > > > 
-> > > > > Right.
-> > > > > 
-> > > > > > The original location of the stop_machine_unpark() was in
-> > > > > > bringup_wait_for_ap(), which is called from bringup_cpu(), which is in
-> > > > > > the CPUHP_BRINGUP_CPU entry of cpuhp_hp_states[].  Which, if I am not
-> > > > > > too confused, is invoked by some CPU other than the to-be-incoming CPU.
-> > > > > 
-> > > > > Correct.
-> > > > > 
-> > > > > > The new location of the stop_machine_unpark() is in cpuhp_online_idle(),
-> > > > > > which is called from cpu_startup_entry(), which is invoked from
-> > > > > > the arch-specific bringup code that runs on the incoming CPU.
-> > > > > 
-> > > > > The new place is the final piece of bringup, it is right before where
-> > > > > the freshly woken CPU will drop into the idle loop and start scheduling
-> > > > > (for the first time).
-> > > > > 
-> > > > > > Which
-> > > > > > is the same code that invokes notify_cpu_starting(), so we need
-> > > > > > notify_cpu_starting() to be invoked before cpu_startup_entry().
-> > > > > 
-> > > > > Right, that is right before we run what used to be the CPU_STARTING
-> > > > > notifiers. This is in fact (on x86) before the CPU is marked
-> > > > > cpu_online(). It has to be before cpu_startup_entry(), before this is
-> > > > > ran with IRQs disabled, while cpu_startup_entry() demands IRQs are
-> > > > > enabled.
-> > > > > 
-> > > > > > The order is not immediately obvious on IA64.  But it looks like
-> > > > > > everything else does it in the required order, so I am a bit confused
-> > > > > > about this.
-> > > > > 
-> > > > > That makes two of us, afaict we have RCU up and running when we get to
-> > > > > the idle loop.
-> > > > 
-> > > > Or did we need rcutree_online_cpu() to have ran? Because that is ran
-> > > > much later than this...
-> > > 
-> > > No, rcu_cpu_starting() does the trick.  So I remain confused.
-> > > 
-> > > My thought is to add some printk()s or tracing to rcu_cpu_starting()
-> > > and its counterpart, rcu_report_dead().  But is there a better way?
-> > 
-> > And the answer is...
-> > 
-> > This splat happens even without your fix!
-> > 
-> > Which goes a long way to explaining why neither of us could figure out
-> > how your fix could have caused it.  It apparently was the increased
-> > stress required to reproduce quickly rather than your fix that made it
-> > happen more frequently.  Though there are few enough occurrences that
-> > it might just be random chance.
-> > 
-> > Thoughts?
-> 
-> I now have 12 of these, and my best guess is that this is happening
-> from kvm_guest_cpu_init() when it prints "KVM setup async PF for cpu",
-> given that this message is always either the line immediately
-> following the splat or the one after that.  So let's see if I can
-> connect the dots between kvm_guest_cpu_init() and start_secondary().
-> The "? slow_virt_to_phys()" makes sense, as it is invoked by
-> kvm_guest_cpu_init() just before the suspect printk().
-> 
-> kvm_guest_cpu_init() is invoked by kvm_smp_prepare_boot_cpu(),
-> kvm_cpu_online(), and kvm_guest_init().  Since the boot CPU came
-> up long ago and since rcutorture CPU hotplug should be on the job
-> at the time of all of these splats, I am guessing kvm_cpu_online().
-> But kvm_cpu_online() is invoked by kvm_guest_init(), so all non-boot-CPU
-> roads lead to kvm_guest_init() anyway.
-> 
-> But kvm_guest_init() is an postcore_initcall() function.
-> It is also placed in x86_hyper_kvm.init.guest_late_init().
-> The postcore_initcall() looks unconditional, but does not appear in
-> dmesg.  Besides which, at the time of the splat, boot is working on
-> late_initcall()s rather than postcore_initcalls().  So let's look at
-> x86_hyper_kvm.init.guest_late_init(), which is invoked in setup_arch(),
-> which is in turn invoked way early in boot, before rcu_init().
-> 
-> So neither seem to make much sense here.
-> 
-> On the other hand, rcutorture's exercising of CPU hotplug before init
-> has been spawned might not make the most sense, either.  So I will queue
-> a patch that makes rcutorture hold off on the hotplug until boot is a
-> bit further along.
-> 
-> And then hammer this a bit over the weekend, this time with Peter's
-> alleged fix.  ;-)
+The patch
 
-And it survived!  ;-)
+   ASoC: fix soc-core.c kernel-doc warning
 
-Peter, could I please have your Signed-off-by?  Or take my Tested-by if
-you would prefer to send it up some other way.
+has been applied to the asoc tree at
 
-							Thanx, Paul
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From bc9a665581b3c6c82c9220a47f6573b49ce2df0b Mon Sep 17 00:00:00 2001
+From: Randy Dunlap <rdunlap@infradead.org>
+Date: Sun, 8 Dec 2019 20:37:04 -0800
+Subject: [PATCH] ASoC: fix soc-core.c kernel-doc warning
+
+Fix a kernel-doc warning in soc-core.c by adding notation for
+@legacy_dai_naming.
+
+../sound/soc/soc-core.c:2509: warning: Function parameter or member 'legacy_dai_naming' not described in 'snd_soc_register_dai'
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
+Link: https://lore.kernel.org/r/2215ee04-e870-5eea-a00c-9a5caf06faae@infradead.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 062653ab03a3..1a362a799dbb 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2498,6 +2498,8 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_dai);
+  *
+  * @component: The component the DAIs are registered for
+  * @dai_drv: DAI driver to use for the DAI
++ * @legacy_dai_naming: if %true, use legacy single-name format;
++ * 	if %false, use multiple-name format;
+  *
+  * Topology can use this API to register DAIs when probing a component.
+  * These DAIs's widgets will be freed in the card cleanup and the DAIs
+-- 
+2.20.1
+
