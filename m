@@ -2,132 +2,241 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBDAC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE4DC04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1312077B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55DE020828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 10:20:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ZK8AnW3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLIKUI (ORCPT
+        id S1727434AbfLIKUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 05:20:08 -0500
-Received: from authsmtp31.register.it ([81.88.54.72]:44115 "EHLO
-        authsmtp.register.it" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726279AbfLIKUE (ORCPT
+        Mon, 9 Dec 2019 05:20:11 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:60747 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfLIKUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 05:20:04 -0500
-X-Greylist: delayed 642 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 05:20:03 EST
-Received: from [192.168.1.1] ([93.41.32.9])
-        by cmsmtp with ESMTPSA
-        id eFwHidjUzRIgteFwHisCIW; Mon, 09 Dec 2019 11:06:50 +0100
-X-Rid:  guido@trentalancia.com@93.41.32.9
-Message-ID: <1575886009.5344.17.camel@trentalancia.com>
-Subject: [PATCH v2] scsi: ignore Synchronize Cache command failures to keep
- using drives not supporting it
-From:   Guido Trentalancia <guido@trentalancia.com>
-To:     linux-scsi@vger.kernel.org
-Cc:     drew@colorado.edu, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Dec 2019 11:06:49 +0100
-X-Priority: 1
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPdHbJXj2Dh+hR6D3iWJA9SqLmvvYMfvd3NxBZs+adXa33U2fMEX+s0reVw7wu4hMRTjURDbaqwlk2lPOVMoDp3r2fkAGMWPjLJP96Qc69vQqkRSqK7K
- qv4Mw84x504BjqSE9xGtFnnGnRE4pI1z5v4rPvOSHwCbp51H2NKhaDDg6J45EQr117CaGujz+RUae0astppuV8zcBPNHQ9g5TDOKvNYN1fTKpiCWa6jmki0S
- RtZ90dDh5beeCFjGwsukRMUQ2QI2aIBv7ZLjeaRf5FU=
+        Mon, 9 Dec 2019 05:20:08 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: RKxU376FLUSKcuqbPLipdNyCibv+lxeHs5PmDMLcdvXSyRIEc7llVZfgYOo+XwWWb5Oplmxd4T
+ T/CP3KZAgY+/EEynQaZrAs44aCc0Xwb4SH2AoVWlcZX2y5C5LydZUWs8yyf7mj8XHbey+DlsnK
+ eniDFDaU6HWMNaoapqc0xPTH376mL2qtnGf6JXgY72f4+DAP3zghxGoDUqsvua3v9NUbvc+77s
+ amDKknvkJtZC5BfHKgZmPy26//Pq2If8/YTiELP2vdft3piGx/2qgSfkAhk1/UkNdsNlteksKH
+ Ots=
+X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
+   d="scan'208";a="61051880"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Dec 2019 03:20:07 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 9 Dec 2019 03:20:06 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 9 Dec 2019 03:20:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E7dUMRahl0KeLv7vWcHR9FyyoTXxA3abjsHm4Qkf9YNezUntm/1Rih/52MvBh4CVGCqgVF5O4BJRGgksQt779bYUg+mUdKqz2up8u4+I1wgOC1YJxgui4Idpyj2ZdHBirwmZ2ia9fvW/AT9wk+nabeJj838VCrd4cLMm4r+QQCawRnfum1MqXd6XzzVVox4N57v2xJeqVV1D51efcm/gHq8L5nhTL1Lp55Yoa0bY9DNzWeug6vbK6Q9Pgl98K3gyFEnguhWnkQ2lVTVb1jti5wvIQoftPXlL2oiXjDOfvhwAPlaem0b5Boga/v0JyoFawi+50lLJePgrMLpT28hhdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G6I/whi14GuBMWM1UcH8n1xjUzpiDqD+1iO9u21AJvw=;
+ b=k6QyGcGpIqDEyzS46nrin6aDhp5KTJtJZzhqRQ9ONj2qfvZAlqnw79IIFaQ6QbBkvcp1MWCx5CpI+SH3caAW3KzONnn5VwCwmoCzHHXFLi+Xxfp3NjAk5iB87W/1ZpvHeDcjjR1pCQfQsITMRHd0/DCB7d0mk0z3M1QLpaJDFDZ0/cNqYpZYJy7rlj05TIT9+t+dF55CS9ODG6+ckPhAaD35YDIhp5C/f4hwBJ9nPLX6kS5YjWfIE0BI9tYnObxaeKszfYJegJxCggn3KiOKah+bwFeIB2rZXDQ36HS+Tp79zPDJRqwooKvjvXJ0O8sYQIouPgOmTM3p19x2L3mbTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G6I/whi14GuBMWM1UcH8n1xjUzpiDqD+1iO9u21AJvw=;
+ b=ZK8AnW3FDf5vb+jVFTAW6PDz3AuSKHrP6VwL61Nq8w4KHgqWjPFrvPZaHZ+rrq4TZt7lB40MWirh2cFvGAIlIgTwJwO584QkOKlUHJJZSBZmp0mcK1/YFGjK9lGEjQOvA0bM3Lrgg3aJRAbueSE8MRGd5QbZrmtPLAQuL1xoZm8=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1884.namprd11.prod.outlook.com (10.175.91.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.17; Mon, 9 Dec 2019 10:20:05 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::9039:e0e8:9032:20c1]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::9039:e0e8:9032:20c1%12]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 10:20:05 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh@kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <wsa@the-dreams.de>
+CC:     <peda@axentia.se>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Codrin.Ciubotariu@microchip.com>,
+        <Eugen.Hristev@microchip.com>
+Subject: [PATCH v3 3/4] i2c: at91: remote default value initialization
+Thread-Topic: [PATCH v3 3/4] i2c: at91: remote default value initialization
+Thread-Index: AQHVrno5vwZNe+GgDE+ENghifq2hAQ==
+Date:   Mon, 9 Dec 2019 10:20:05 +0000
+Message-ID: <1575886763-19089-3-git-send-email-eugen.hristev@microchip.com>
+References: <1575886763-19089-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1575886763-19089-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0039.eurprd02.prod.outlook.com
+ (2603:10a6:208:d2::16) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-mailer: git-send-email 2.7.4
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa5b36d1-abc2-48fb-e9b2-08d77c915bd6
+x-ms-traffictypediagnostic: DM5PR11MB1884:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1884FD6A635FE803D45912F3E8580@DM5PR11MB1884.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 02462830BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(366004)(39860400002)(136003)(189003)(199004)(54906003)(110136005)(36756003)(186003)(2616005)(26005)(2906002)(316002)(6506007)(478600001)(6512007)(107886003)(64756008)(66556008)(66946007)(8676002)(81166006)(81156014)(71190400001)(5660300002)(71200400001)(8936002)(4326008)(6486002)(66446008)(52116002)(305945005)(66476007)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1884;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lEE3d15Qo+FdCZ32PkYw+/xhAfTOvSlr0OqGIJ5Tj3+S729fZ+1k2Msrcl1xf1SUZ20d7CbOZPEKjTCN/WED+G+1Z0hpJR3u1r2vFxXbvUrhNtKHKmTrSulIIQwC9DEy/Vr2vBzz3UqgxLPGGILzuipavLCVTkf8uRZmhGPKB+jLYGxxEWBEq0+qZRUckizNqudy7cKwZPlpGiolTBP0iobnZB9l4ZUmNM+ho/3SpM2IKMOPTXpcJAxUnzlbm1HEzpyS4PTnV47euiaRPmKANYyjgUihHMlHBySOYLvX2aCozx1MMdn+B6tmVHkPuyFjLRe8e4ClbsknTw5WxbiihkWdKTqjEWSs4T8iuRRHFMCtZR+3ipJJCNeMpZbZlBdbg/ZRTlvPU9K2W/0PwWu4BZ9fjGLsftyJjHS85kKY7htE+bwKWRDo7Fx6Ombj1x8h
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa5b36d1-abc2-48fb-e9b2-08d77c915bd6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 10:20:05.1636
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wUelgepd+DgGSLdQYiEmLoyDxKrkkSWMOYPiNabrBkeAD/KWI0RR2W3iaivHJ/aq92ezvSMmJRHGpktmqaM+oXVYh0snqezjYjsy8PGzEAU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1884
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many obsolete hard drives do not support the Synchronize Cache SCSI
-command. Such command is generally issued during fsync() calls which
-at the moment therefore fail with the ILLEGAL_REQUEST sense key.
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Since this failure is currently treated as critical in the kernel SCSI
-disk driver, such obsolete hard drives cannot be used anymore (at least
-since kernel 4.10, maybe even earlier): they cannot be formatted,
-mounted and/or checked using tools such as e2fsprogs.
+Platform data structs are initialized by default with zero values.
+Thus it becomes redundant to initialize them manually to zero (false).
+Remove extra false initialization for field members in structs.
 
-Because there is nothing which can be done if the drive does not support
-such command, such ILLEGAL_REQUEST should be treated as non-critical so
-that the underlying operation does not fail and the obsolete hard drive
-can be used normally.
-
-This second version of the patch (v2) disables the Write Cache feature
-as a precaution on hard drives which do not support the Synchronize Cache
-command and therefore the cache flushing functionality.
-
-Although the Write Cache is disabled (v2) when using such hard drives
-which do not feature the Synchronize Cache SCSI command, there is still
-some risk of data loss in case of power cuts, USB cable disconnects and
-so on, which depend on the drive itself and not on this patch or the
-rest of the kernel code: YOU HAVE BEEN WARNED - THE DRIVE MANIFACTURER
-SHOULD HAVE BEEN WARNED YOU IN THE FIRST PLACE - IN DOUBT, UPGRADE TO A
-NEWER HARD DRIVE !!
-
-Tested on a Maxtor OneTouch USB 200Gb External Hard Drive.
-
-Signed-off-by: Guido Trentalancia <guido@trentalancia.com>
+Suggested-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 ---
- drivers/scsi/sd.c |   29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/i2c/busses/i2c-at91-core.c | 39 ----------------------------------=
+----
+ 1 file changed, 39 deletions(-)
 
-diff -pru a/drivers/scsi/sd.c b/drivers/scsi/sd.c
---- a/drivers/scsi/sd.c	2019-03-17 18:22:04.822720851 +0100
-+++ b/drivers/scsi/sd.c	2019-03-20 17:41:44.526957307 +0100
-@@ -22,6 +22,10 @@
-  *	 - Badari Pulavarty <pbadari@us.ibm.com>, Matthew Wilcox 
-  *	   <willy@debian.org>, Kurt Garloff <garloff@suse.de>: 
-  *	   Support 32k/1M disks.
-+ *	 - Guido Trentalancia <guido@trentalancia.com> ignore Synchronize
-+ *	   Cache command failures on hard-drives that do not support it
-+ *	   and disable the Write Cache functionality on such devices as a
-+ *	   precaution: this allows to keep using several obsolete drives.
-  *
-  *	Logging policy (needs CONFIG_SCSI_LOGGING defined):
-  *	 - setting up transfer: SCSI_LOG_HLQUEUE levels 1 and 2
-@@ -1633,6 +1637,20 @@ static int sd_sync_cache(struct scsi_dis
- 	}
- 
- 	if (res) {
-+		/*
-+		 * sshdr.sense_key == ILLEGAL_REQUEST means this drive
-+		 * doesn't support sync. There's not much to do and
-+		 * sync shouldn't fail.
-+		 */
-+		if (sshdr->sense_key == ILLEGAL_REQUEST && sshdr->asc == 0x20) {
-+			if (sdkp->WCE) {
-+				sdkp->WCE = 0;
-+				sd_printk(KERN_NOTICE, sdkp, "Drive does not support Synchronize Cache(10) command: disabling write cache.\n");
-+				sd_set_flush_flag(sdkp);
-+			}
-+			return 0;
-+		}
-+
- 		sd_print_result(sdkp, "Synchronize Cache(10) failed", res);
- 
- 		if (driver_byte(res) == DRIVER_SENSE)
-@@ -2022,6 +2040,17 @@ static int sd_done(struct scsi_cmnd *SCp
- 					req->rq_flags |= RQF_QUIET;
- 				}
- 				break;
-+			case SYNCHRONIZE_CACHE:
-+				if (sshdr.asc == 0x20) {
-+					if (sdkp->WCE) {
-+						sdkp->WCE = 0;
-+						sd_printk(KERN_NOTICE, sdkp, "Drive does not support Synchronize Cache(10) command: disabling write cache.\n");
-+						sd_set_flush_flag(sdkp);
-+					}
-+					SCpnt->result = 0;
-+					good_bytes = scsi_bufflen(SCpnt);
-+				}
-+				break;
- 			}
- 		}
- 		break;
+diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at=
+91-core.c
+index 5137e62..3da1a8a 100644
+--- a/drivers/i2c/busses/i2c-at91-core.c
++++ b/drivers/i2c/busses/i2c-at91-core.c
+@@ -66,55 +66,26 @@ static struct at91_twi_pdata at91rm9200_config =3D {
+ 	.clk_max_div =3D 5,
+ 	.clk_offset =3D 3,
+ 	.has_unre_flag =3D true,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata at91sam9261_config =3D {
+ 	.clk_max_div =3D 5,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata at91sam9260_config =3D {
+ 	.clk_max_div =3D 7,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata at91sam9g20_config =3D {
+ 	.clk_max_div =3D 7,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata at91sam9g10_config =3D {
+ 	.clk_max_div =3D 7,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static const struct platform_device_id at91_twi_devtypes[] =3D {
+@@ -142,23 +113,13 @@ static const struct platform_device_id at91_twi_devty=
+pes[] =3D {
+ static struct at91_twi_pdata at91sam9x5_config =3D {
+ 	.clk_max_div =3D 7,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+-	.has_hold_field =3D false,
+-	.has_dig_filtr =3D false,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata sama5d4_config =3D {
+ 	.clk_max_div =3D 7,
+ 	.clk_offset =3D 4,
+-	.has_unre_flag =3D false,
+-	.has_alt_cmd =3D false,
+ 	.has_hold_field =3D true,
+ 	.has_dig_filtr =3D true,
+-	.has_adv_dig_filtr =3D false,
+-	.has_ana_filtr =3D false,
+ };
+=20
+ static struct at91_twi_pdata sama5d2_config =3D {
+--=20
+2.7.4
+
