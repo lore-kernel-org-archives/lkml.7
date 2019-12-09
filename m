@@ -2,129 +2,103 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F639C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F03C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCA12071E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81DD2071E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 07:51:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N79GCO9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfLIHnc convert rfc822-to-8bit (ORCPT
+        id S1727166AbfLIHvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 02:43:32 -0500
-Received: from mail1.windriver.com ([147.11.146.13]:58702 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbfLIHnb (ORCPT
+        Mon, 9 Dec 2019 02:51:04 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33113 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbfLIHvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 02:43:31 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id xB97hRk7000195
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 8 Dec 2019 23:43:27 -0800 (PST)
-Received: from ALA-MBD.corp.ad.wrs.com ([169.254.3.163]) by
- ALA-HCA.corp.ad.wrs.com ([147.11.189.40]) with mapi id 14.03.0468.000; Sun, 8
- Dec 2019 23:43:27 -0800
-From:   "Yin, Xiaotao" <Xiaotao.Yin@windriver.com>
-To:     "joro@8bytes.org" <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hao, Kexin" <Kexin.Hao@windriver.com>
-Subject: RE: [PATCH] iommu/iova: Init the struct iova to fix the possible
- memleak
-Thread-Topic: [PATCH] iommu/iova: Init the struct iova to fix the possible
- memleak
-Thread-Index: AdWuYWhN+RMb9/KAQCCIN3aLHnhZIQAAuwdA
-Date:   Mon, 9 Dec 2019 07:43:26 +0000
-Message-ID: <47B7036B26F82C43B9F7EAE984D54CB459DB4D@ALA-MBD.corp.ad.wrs.com>
-References: <47B7036B26F82C43B9F7EAE984D54CB459DB0C@ALA-MBD.corp.ad.wrs.com>
-In-Reply-To: <47B7036B26F82C43B9F7EAE984D54CB459DB0C@ALA-MBD.corp.ad.wrs.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [128.224.162.224]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Mon, 9 Dec 2019 02:51:04 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y206so6793944pfb.0;
+        Sun, 08 Dec 2019 23:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=T93KpotdGkFqtc77qF2EAzOUEnvgTHpxwI5GuqbP7b4=;
+        b=N79GCO9lrJQ9kFidXylgJv1/NvbaQAqEtR6ip+va41MyO8Wgd+bFaBgZEiMHDCDrVq
+         /O7SGbGzDccjAXV+VBWPQxIv1atxpYo3eQLR5auqJD4thxtmZvN+aL3Yytab6RYvg9lv
+         1V6p6yZ/oPNWMWtS6hQQjdoTItOaYTHN1hiV3bLulK+0xwjDK2U+yp9wJ+nWKG2Wq07f
+         G6LBjWE+zT+vPRZPAfr68TWQb/hn3uJUYymefKC/jQt7eKAhNf0qBtURZgB1PtIS0Q5e
+         DDE9Li0cONlHxzXeylpBE04Z2FrtzF8auwGonb4CCCVaDr2H5kpXJEVBustMlQqKcSlt
+         s5pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T93KpotdGkFqtc77qF2EAzOUEnvgTHpxwI5GuqbP7b4=;
+        b=uI2hccKbWAcBaDU8OfRrNHGv9NjBAWrRVvmowIg0aX3WK6069zraJYMQPuTpsxKUnb
+         67/zyk/rNnBYSkSJYJceYmFnjxUmEGe8FfOBkJkawHLMgj6DkkjxGt3GuZy5LM14dT7F
+         4rh+mJ1N6Ky45XI+jKzApPoeDttpl5UXLJpB95WpCpmavVcdTJ4oiy15GkeRftm7FDmm
+         ichtWK822XftG2Putu1ZEXxf/ozr4q21UkhinxDVa1vaSm+7UxT257dAxqP4r05s8ria
+         WE3qB1VceWLSW1eaV1Tum7zpWSBgtpyI8aWupk1Cx3eMt1rLwqFJzkGr4KZhmu4F9uDQ
+         3VpA==
+X-Gm-Message-State: APjAAAXIz+uFDgyuUeYCkIZmAFTEkbiHs2QowUox13TOslQcKrTdR00m
+        6WMXzH82V0Iut0+ktoGQx6WJuV1DAyQ=
+X-Google-Smtp-Source: APXvYqwNTJADqjLqVulG110m73ntGwb1QV+9AeWkSqjiWMdSBPgBwYxtAeEGWPWOQtdlvx/w1QW8SQ==
+X-Received: by 2002:aa7:8096:: with SMTP id v22mr976843pff.240.1575877863074;
+        Sun, 08 Dec 2019 23:51:03 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:13bf:5229:e955:851e:da75:6e07])
+        by smtp.gmail.com with ESMTPSA id z10sm2881079pfa.184.2019.12.08.23.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Dec 2019 23:51:02 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     paulmck@kernel.org, joel@joelfernandes.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] rculist.h: Add list_tail_rcu()
+Date:   Mon,  9 Dec 2019 13:20:43 +0530
+Message-Id: <20191209075043.17947-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this one, I'll send v2.
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Br.
+This patch adds the macro list_tail_rcu() and document it.
 
------Original Message-----
-From: Yin, Xiaotao <Xiaotao.Yin@windriver.com> 
-Sent: Monday, December 9, 2019 3:24 PM
-To: Yin, Xiaotao <Xiaotao.Yin@windriver.com>; joro@8bytes.org; iommu@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org; Hao, Kexin <Kexin.Hao@windriver.com>
-Subject: RE: [PATCH] iommu/iova: Init the struct iova to fix the possible memleak
-
-Changed the title to "Init the struct iova to fix the possible memleak".
-
-Thanks~
-Br.
------Original Message-----
-From: Xiaotao Yin <xiaotao.yin@windriver.com> 
-Sent: Monday, December 9, 2019 3:16 PM
-To: joro@8bytes.org; iommu@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org; Hao, Kexin <Kexin.Hao@windriver.com>; Yin, Xiaotao <Xiaotao.Yin@windriver.com>
-Subject: [PATCH] iommu/iova: Init the struct iova to fix the possible memleak
-
-During ethernet(Marvell octeontx2) set ring buffer test:
-ethtool -G eth1 rx <rx ring size> tx <tx ring size> following kmemleak will happen sometimes:
-
-unreferenced object 0xffff000b85421340 (size 64):
-  comm "ethtool", pid 867, jiffies 4295323539 (age 550.500s)
-  hex dump (first 64 bytes):
-    80 13 42 85 0b 00 ff ff ff ff ff ff ff ff ff ff  ..B.............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000001b204ddf>] kmem_cache_alloc+0x1b0/0x350
-    [<00000000d9ef2e50>] alloc_iova+0x3c/0x168
-    [<00000000ea30f99d>] alloc_iova_fast+0x7c/0x2d8
-    [<00000000b8bb2f1f>] iommu_dma_alloc_iova.isra.0+0x12c/0x138
-    [<000000002f1a43b5>] __iommu_dma_map+0x8c/0xf8
-    [<00000000ecde7899>] iommu_dma_map_page+0x98/0xf8
-    [<0000000082004e59>] otx2_alloc_rbuf+0xf4/0x158
-    [<000000002b107f6b>] otx2_rq_aura_pool_init+0x110/0x270
-    [<00000000c3d563c7>] otx2_open+0x15c/0x734
-    [<00000000a2f5f3a8>] otx2_dev_open+0x3c/0x68
-    [<00000000456a98b5>] otx2_set_ringparam+0x1ac/0x1d4
-    [<00000000f2fbb819>] dev_ethtool+0xb84/0x2028
-    [<0000000069b67c5a>] dev_ioctl+0x248/0x3a0
-    [<00000000af38663a>] sock_ioctl+0x280/0x638
-    [<000000002582384c>] do_vfs_ioctl+0x8b0/0xa80
-    [<000000004e1a2c02>] ksys_ioctl+0x84/0xb8
-
-The reason:
-When alloc_iova_mem() without initial with Zero, sometimes fpn_lo will equal to IOVA_ANCHOR by chance, so when return from __alloc_and_insert_iova_range() with -ENOMEM(iova32_full), the new_iova will not be freed in free_iova_mem().
-
-Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
-Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 ---
- drivers/iommu/iova.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/rculist.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c index 41c605b0058f..2c27a661632c 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -233,7 +233,7 @@ static DEFINE_MUTEX(iova_cache_mutex);
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index 4b7ae1bf50b3..9f21efa525ab 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -40,6 +40,16 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+  */
+ #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
  
- struct iova *alloc_iova_mem(void)
- {
--	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
-+	return kmem_cache_alloc(iova_cache, GFP_ATOMIC | __GFP_ZERO);
- }
- EXPORT_SYMBOL(alloc_iova_mem);
- 
---
++/**
++ * list_tail_rcu - returns the prev pointer of the head of the list
++ * @head: the head of the list
++ *
++ * Note: This should only be used with the list header,
++ * but only if list_del() and similar primitives are not
++ * also used on the list header.
++ */
++#define list_tail_rcu(head)	(*((struct list_head __rcu **)(&(head)->prev)))
++
+ /*
+  * Check during list traversal that we are within an RCU reader
+  */
+-- 
 2.17.1
 
