@@ -2,203 +2,112 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E35C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56DEC00454
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204C520637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="b6YBuviK"
+	by mail.kernel.org (Postfix) with ESMTP id B8F1D20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575924459;
+	bh=xjQtbBTSqhoMGJwn3RUeOi50GwFWIhX8xMZTaQKQu9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zG2kjaHraAkh2YEaH3FSVF9ZqFTrJ6qaVrsbUlNnwiD7V7XVpd2XIY+S8J3/no29X
+	 cyTgeqe66KdweiPD12GKyuNuHPderVqGZq9Q6YPwvKEdM7tm/W+dsWSNlyHBEV6Rvh
+	 r8A5hBDgNHNJ55LvvCbCHpFi8DHuSRfb3SLaW/Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLIUqw (ORCPT
+        id S1726708AbfLIUrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:46:52 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17946 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfLIUqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:46:49 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5deeb2a40000>; Mon, 09 Dec 2019 12:46:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 09 Dec 2019 12:46:48 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 12:46:48 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
- 2019 20:46:48 +0000
-Received: from [10.110.103.72] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
- 20:46:47 +0000
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+        Mon, 9 Dec 2019 15:47:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:45592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfLIUri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:47:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E147A328;
+        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E6833F718;
+        Mon,  9 Dec 2019 12:47:37 -0800 (PST)
+Date:   Mon, 9 Dec 2019 20:47:35 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, allison@lohutok.net, pdeschrijver@nvidia.com,
+        pgaikwad@nvidia.com, mturquette@baylibre.com,
+        horms+renesas@verge.net.au, Jisheng.Zhang@synaptics.com,
+        krzk@kernel.org, arnd@arndb.de, spujar@nvidia.com,
+        josephl@nvidia.com, vidyas@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alexios.zavras@intel.com, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
+Message-ID: <20191209204735.GK5483@sirena.org.uk>
 References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
- <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
- <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
-Date:   Mon, 9 Dec 2019 12:46:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
+ <20191209164027.GG5483@sirena.org.uk>
+ <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1575924388; bh=EzMcY5EH1HPPtBABtPuzyaPnDxK3oQGZa8NtBQJRBe0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=b6YBuviKWQvdnm1zTYfZwP1bzYX/6lSCevJPDkGawP9JGokW20vDiftTNmF2+w9Da
-         Ick/ohYM2GcyhDDtgK1rRMp6Inb4mUYHzU7SG2bmTgj2Qmy+ni+toLUedA8KpAWAzP
-         Q4RjkSdjKV+12pfNYXPR28Seknt4bIeK+b3GWmPRhbJkJwzYA40VSi8Yak8R8v9bcs
-         CVDIrA1YEOgpp9knGe32CXJQe7t0ND+pRzzadODiuXgOygBjWiKHm1N1tSjXaoSqbd
-         9cBV1TTwR7e3HVCyA1jDfp91J6EomW4f9YdQlbqPFEdTNfRO/7xZvdEJA5wwftbg5s
-         cKvbeVEfzK73w==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LQ77YLfPrO/qF/pM"
+Content-Disposition: inline
+In-Reply-To: <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
+X-Cookie: We read to say that we have read.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
-> 08.12.2019 00:36, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
->>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
->>>> 07.12.2019 18:53, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> 07.12.2019 18:47, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> 07.12.2019 17:28, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=
-=82:
->>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2, clk_out_3
->>>>>>>> with
->>>>>>>> mux and gate for each of these clocks.
->>>>>>>>
->>>>>>>> Currently these PMC clocks are registered by Tegra clock driver
->>>>>>>> using
->>>>>>>> clk_register_mux and clk_register_gate by passing PMC base address
->>>>>>>> and register offsets and PMC programming for these clocks happens
->>>>>>>> through direct PMC access by the clock driver.
->>>>>>>>
->>>>>>>> With this, when PMC is in secure mode any direct PMC access from t=
-he
->>>>>>>> non-secure world does not go through and these clocks will not be
->>>>>>>> functional.
->>>>>>>>
->>>>>>>> This patch adds these clocks registration with PMC as a clock
->>>>>>>> provider
->>>>>>>> for these clocks. clk_ops callback implementations for these clock=
-s
->>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
->>>>>>>> programming
->>>>>>>> in secure mode and non-secure mode.
->>>>>>>>
->>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>> ---
->>>>>> [snip]
->>>>>>
->>>>>>>> +
->>>>>>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
->>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
->>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
->>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
->>>>>>>> +};
->>>>>>> What's the benefit of separating GATE from the MUX?
->>>>>>>
->>>>>>> I think it could be a single clock.
->>>>>> According to TRM:
->>>>>>
->>>>>> 1. GATE and MUX are separate entities.
->>>>>>
->>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram in TRM=
-).
->>>>>>
->>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable" it,
->>>>>> correct?
->> Was following existing clk-tegra-pmc as I am not sure of reason for
->> having these clocks registered as separate mux and gate clocks.
->>
->> Yes, PMC clocks can be registered as single clock and can use clk_ops
->> for set/get parent and enable/disable.
->>
->> enable/disable of PMC clocks is for force-enable to force the clock to
->> run regardless of ACCEPT_REQ or INVERT_REQ.
->>
->>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these clocks
->>>>> should belong to PMC.
->>>> Also, it should be "osc" and not "clk_m".
->>> I followed the same parents as it were in existing clk-tegra-pmc driver=
-.
->>>
->>> Yeah they are wrong and they should be from osc and not clk_m.
->>>
->>> Will fix in next version.
->>>
-> Could you please describe the full EXTPERIPH clock topology and how the
-> pinmux configuration is related to it all?
->
-> What is internal to the Tegra chip and what are the external outputs?
->
-> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
+--LQ77YLfPrO/qF/pM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,=20
-EXTPERIPH from CAR.
+On Mon, Dec 09, 2019 at 11:31:59PM +0300, Dmitry Osipenko wrote:
+> 09.12.2019 19:40, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-OSC_DIV1/2/4 are with internal dividers at the OSC Pads
+> > Why would this need to be a stable fix?  Presumably people with stable
+> > kernels are using the old device tree anyway?
 
-EXTPERIPH is from CAR and it has reset and enable controls along with=20
-clock source selections to choose one of the PLLA_OUT0, CLK_S,=20
-PLLP_OUT0, CLK_M, PLLE_OUT0
+> At least Rob Herring is asking to maintain backwards compatibility
+> because some ditros are using newer device-trees with stable kernels.
 
-So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2, OSC_DIV4, EXTERN.
+You're talking about forwards compatibility not backwards here.  Are
+those distros actually using LTS kernels?
 
+> I'm personally also tending to use the newer DTB with older kernel
+> version whenever there is a need to check something using stable kernel.
+> Perhaps losing sound is not very important, but will be nicer if that
+> doesn't happen.
 
-CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these pins.
+That really does sound like a "you broke it, you get all the pieces"
+situation TBH...  I'd be a lot more comfortable if the stable kernels
+were sticking to bugfix only though I do appreciate that they're not
+really that any more.
 
+--LQ77YLfPrO/qF/pM
+Content-Type: application/pgp-signature; name="signature.asc"
 
-When EXTERN output clock is selected for these PMC clocks thru=20
-CLKx_SRC_SEL, output clock is from driver by EXTPERIPH from CAR via=20
-Pinmux logic or driven as per CLKx_SRC_SEL bypassing pinmux based on=20
-CLKx_ACCEPT_REQ bit.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3usucACgkQJNaLcl1U
+h9DLZgf/bl+y6tN1f9+6Q5i4PkGjVAppOzDxi0mDZ6TrvcSLsNfAhK9+1IH7w0+x
+F90tauu6Flsm9/TnoDK5Csuotm+nKlkXidXNL5qfSzW4azrXes5gdOrwpicKOnEG
+7T92jLjHOCPaANNqKrtX+29qAamyxmKOCW/8AKH8SNjerkCDZfZks3yjqilm4i4A
+6jwUUAi9ij8TvZlSGteUlqfmib7FdxodH0Gud2q3lYFUKWrKpGnPh823iHtTpiKK
+EGDYhbcuS1BeEP6dB/7baejQjkrEjpz7YslmD2KjGlUWIRVEpKPqU/SY63e7mChB
+UDCefmC858Tzlkyi7AFFmjnFrTfrMQ==
+=IA00
+-----END PGP SIGNATURE-----
 
-PMC Clock control register has bit CLKx_ACCEPT_REQ
-When CLKx_ACCEPT_REQ =3D 0, output clock driver is from by EXTPERIPH=20
-through the pinmux
-When CLKx_ACCEPT_REQ =3D 1, output clock is based on CLKx_SRC_SEL bits=20
-(OSC_DIV1/2/4 and EXTPERIPH clock bypassing the pinmux)
-
-FORCE_EN bit in PMC CLock control register forces the clock to run=20
-regardless of this.
+--LQ77YLfPrO/qF/pM--
