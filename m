@@ -4,48 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F60AC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CAAC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA1820836
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461D52080D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575918008;
-	bh=yEUPCbKiUErbYBLYicuO3KmEB/AU+DrFOWBI63xwUX0=;
+	s=default; t=1575918011;
+	bh=kDFxT9KLYJZ4ZcQDycAFIsQPVD+tEtujbm7qGJh1kDc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=LG3sJo1/IOLDf9GlJIvQeHCNBaduK/8rCXNQ9Fppt/Q5d/IPN08qOjKZlkss8Pq7+
-	 iahCRpgum1289klV4pWCKI585i1OAeFIZzSEVBnf1A7x4xiC7K6VFvIFMrqY5uDcdy
-	 BJE1aFxhhJlz6UqBZOs+Dy59b5uQmCgBSJ25o90E=
+	b=eyODK81oE1/2tUP0QZyyXzUrSLhs3dClI49uXPa1/shLgOMqMZQhbIxE6IJcqRga8
+	 oJkGzJ3BpqnILLi/H5s+mwVodDL81RObxyTczurk+TsLoh9jAliWbzkqGInoDSWpgv
+	 Jox/Gb5WvwJAl27yEsABi7XZmOq67XaOsBBoy9HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfLITAG (ORCPT
+        id S1726999AbfLITAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:00:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:42588 "EHLO foss.arm.com"
+        Mon, 9 Dec 2019 14:00:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:42602 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfLITAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:00:04 -0500
+        id S1726354AbfLITAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 14:00:07 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36BCA328;
-        Mon,  9 Dec 2019 11:00:04 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D771E328;
+        Mon,  9 Dec 2019 11:00:06 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8BC53F6CF;
-        Mon,  9 Dec 2019 11:00:03 -0800 (PST)
-Date:   Mon, 09 Dec 2019 19:00:02 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48C263F6CF;
+        Mon,  9 Dec 2019 11:00:06 -0800 (PST)
+Date:   Mon, 09 Dec 2019 19:00:04 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     alexandre.torgue@st.com, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>, lgirdwood@gmail.com,
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Applied "dt-bindings: regulator: Convert stm32 booster bindings to json-schema" to the regulator tree
-In-Reply-To: <20191122104536.20283-1-benjamin.gaignard@st.com>
-Message-Id: <applied-20191122104536.20283-1-benjamin.gaignard@st.com>
+        Mark Brown <broonie@kernel.org>, u.kleine-koenig@pengutronix.de
+Subject: Applied "regulator: rk808: Lower log level on optional GPIOs being not available" to the regulator tree
+In-Reply-To: <20191203164709.11127-1-miquel.raynal@bootlin.com>
+Message-Id: <applied-20191203164709.11127-1-miquel.raynal@bootlin.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -54,7 +50,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: regulator: Convert stm32 booster bindings to json-schema
+   regulator: rk808: Lower log level on optional GPIOs being not available
 
 has been applied to the regulator tree at
 
@@ -79,102 +75,43 @@ to this mail.
 Thanks,
 Mark
 
-From 681700c38f3e989a3da940d0120b0268c25c54d8 Mon Sep 17 00:00:00 2001
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Date: Fri, 22 Nov 2019 11:45:35 +0100
-Subject: [PATCH] dt-bindings: regulator: Convert stm32 booster bindings to
- json-schema
+From b8a039d37792067c1a380dc710361905724b9b2f Mon Sep 17 00:00:00 2001
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Date: Tue, 3 Dec 2019 17:47:09 +0100
+Subject: [PATCH] regulator: rk808: Lower log level on optional GPIOs being not
+ available
 
-Convert the STM32 regulator booster binding to DT schema format using json-schema
+RK808 can leverage a couple of GPIOs to tweak the ramp rate during DVS
+(Dynamic Voltage Scaling). These GPIOs are entirely optional but a
+dev_warn() appeared when cleaning this driver to use a more up-to-date
+gpiod API. At least reduce the log level to 'info' as it is totally
+fine to not populate these GPIO on a hardware design.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191122104536.20283-1-benjamin.gaignard@st.com
+This change is trivial but it is worth not polluting the logs during
+bringup phase by having real warnings and errors sorted out
+correctly.
+
+Fixes: a13eaf02e2d6 ("regulator: rk808: make better use of the gpiod API")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20191203164709.11127-1-miquel.raynal@bootlin.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/regulator/st,stm32-booster.txt   | 18 --------
- .../bindings/regulator/st,stm32-booster.yaml  | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 18 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
+ drivers/regulator/rk808-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt b/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-deleted file mode 100644
-index 479ad4c8758e..000000000000
---- a/Documentation/devicetree/bindings/regulator/st,stm32-booster.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--STM32 BOOSTER - Booster for ADC analog input switches
--
--Some STM32 devices embed a 3.3V booster supplied by Vdda, that can be used
--to supply ADC analog input switches.
--
--Required properties:
--- compatible: Should be one of:
--  "st,stm32h7-booster"
--  "st,stm32mp1-booster"
--- st,syscfg: Phandle to system configuration controller.
--- vdda-supply: Phandle to the vdda input analog voltage.
--
--Example:
--	booster: regulator-booster {
--		compatible = "st,stm32mp1-booster";
--		st,syscfg = <&syscfg>;
--		vdda-supply = <&vdda>;
--	};
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml b/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
-new file mode 100644
-index 000000000000..64f1183ce841
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32-booster.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/st,stm32-booster.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 booster for ADC analog input switches bindings
-+
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+description: |
-+  Some STM32 devices embed a 3.3V booster supplied by Vdda, that can be used
-+  to supply ADC analog input switches.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-booster
-+      - st,stm32mp1-booster
-+
-+  st,syscfg:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: phandle to system configuration controller.
-+
-+  vdda-supply:
-+    description: phandle to the vdda input analog voltage.
-+
-+required:
-+  - compatible
-+  - st,syscfg
-+  - vdda-supply
-+
-+examples:
-+  - |
-+    regulator-booster {
-+      compatible = "st,stm32mp1-booster";
-+      st,syscfg = <&syscfg>;
-+      vdda-supply = <&vdda>;
-+    };
-+
-+...
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index 5b4003226484..31f79fda3238 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -1282,7 +1282,7 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
+ 		}
+ 
+ 		if (!pdata->dvs_gpio[i]) {
+-			dev_warn(dev, "there is no dvs%d gpio\n", i);
++			dev_info(dev, "there is no dvs%d gpio\n", i);
+ 			continue;
+ 		}
+ 
 -- 
 2.20.1
 
