@@ -2,121 +2,155 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E061DC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729ECC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12272068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425542068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 15:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="faTaDHM7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/OUcju8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfLIPYF (ORCPT
+        id S1726783AbfLIPYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 10:24:05 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30924 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726197AbfLIPYF (ORCPT
+        Mon, 9 Dec 2019 10:24:35 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38829 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbfLIPYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:24:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575905044;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cUyKBa+6w/X0SFxnoHv5d6eKbbOBp+7aIKnhyd8PFa4=;
-        b=faTaDHM7LjO2OZrfpBfq87TjH7JA6iUkK+OqYXo1/pqSY/npHCYB7qkSrqILmu2Mlqkrw/
-        PfmvwYjjZLmCQb9RBOlGXHPBUHtSx72W2HX/puGYJglm+VbVzT1N6vTC61aCEaWBEIfc9k
-        /ZiKmZB9jlqhtbXDxHnxurZi4Tgw1rw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-My02kDJ8NJ-AR9Eq3_5uGQ-1; Mon, 09 Dec 2019 10:23:18 -0500
-Received: by mail-wm1-f71.google.com with SMTP id y125so60189wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 07:23:18 -0800 (PST)
+        Mon, 9 Dec 2019 10:24:35 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so15381744wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 07:24:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r3aQgCzVXGjFTrtUbOB4wjQrTUXreQPJyiEx8595ZYo=;
+        b=N/OUcju85TvBwEvD5Vm1yWqriQfQ9gJvf/eV0DfrvcmSyj9IR+tj1Mzx8pFVYPugVo
+         h9QmytyNRp3GxENU3fqcGfdoqXEU5nm2t52FxN0RE8OIcZKglKfg4hJTxykmKxAOgL5k
+         Z9swL+oiNTi3Db4nhRRkArw9hteRcCIkHEWxt4sK8Zz8fCfSzleaChLXd8Tj8d/aamvM
+         fd8CuQKicbp/cD33vjNfxXzt/fg2jyjcD26RJD1brI1NLCZUynN0vpEgr9mBYQya9PJl
+         AO7LxCzoyICLF7Spr3xox0p/UWYQ/6+90gWX45/UXxzCwl8i9m65QpxKmsCmcddQO0vU
+         BPtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cUyKBa+6w/X0SFxnoHv5d6eKbbOBp+7aIKnhyd8PFa4=;
-        b=QmxcA2XKItjiTOgrqy3BMS5zTi33hcCq9ZD92h2RaWpp2BTzfH1xSAPjjx06t6qIEC
-         LQodR9gy26vNhHwO3oI4W4eOnswNKGic02KeV1pcTLx2zQT/esK1V8pG0UABJuHrrkKN
-         HH+eLvHWOPQu65b8xX4lcxwHL+zmqwQq1f1oa/Ct2XE/e9ssdCvyi49sH+lcGuYJ4SJ/
-         FH8YjVco0J+ojqq0g0QopkV1QyRPSLno4O0B/CBqQF/UfQou7uI7rj33Ki+iSLUpB0+S
-         wvuZT6r1mRNYBS7R9eI0hxVwfTrrbqaujt0yqEanoNYEUAJXF+Gmm+68z0Chd4GK2a9E
-         FTOQ==
-X-Gm-Message-State: APjAAAXZ+mh7aDY6Wb51HSqwswLWFvzCipmLLI0hgb7eO5c3MwPmoaKc
-        m24k5bCrK8C3pk2vog262hSPbQ+iflQk4MAZKLllnLm+SEe9cSw6TZxzY5T5AIY3zJbHWf+Uley
-        Fm4CfwRjcj7mC9asywiEomjNv
-X-Received: by 2002:a5d:6b82:: with SMTP id n2mr2789655wrx.153.1575904997175;
-        Mon, 09 Dec 2019 07:23:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx0NPr9yEyNrwcLoT342Axfuw2Fk6VGQtA0whJ8WufzbYGTUyCLQ/P9d/nSqFiXLn6bdXvtHg==
-X-Received: by 2002:a5d:6b82:: with SMTP id n2mr2789639wrx.153.1575904996946;
-        Mon, 09 Dec 2019 07:23:16 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id d16sm29936960wrg.27.2019.12.09.07.23.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 07:23:16 -0800 (PST)
-Subject: Re: [PATCH 0/3] Reanme the definitions of INTERRUPT_PENDING,
- NMI_PENDING and TSC_OFFSETING
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20191206084526.131861-1-xiaoyao.li@intel.com>
- <20191206204747.GD5433@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2beeb1fb-7d3a-d829-38e0-ddf76b65bd3c@redhat.com>
-Date:   Mon, 9 Dec 2019 16:23:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r3aQgCzVXGjFTrtUbOB4wjQrTUXreQPJyiEx8595ZYo=;
+        b=EcBIIw3G8LsWjD40Kb/b8ikQhI57y1ZzgBvTgx0Jw1Yf0GVmLyJK8SRDX0sshxmizN
+         cd8r6CQ7OT+tQq7XK1rMy+/Zx4vPEwTEBNRJ+ors3dd4n+vbYUKyyiPaByFrJcY986Qn
+         +KHqwzAvgVSMcbVklM/lr6VCd+2dg8rsNmfHAcPA4JmNMqseqzZHNgB0/Z1gIppIwUqk
+         49vQli0oD1jmrnvdlOaJKn6QJmPgfQRW0l+o2qxMUB/oPvxS3AqX+7LO3SvdBldie16R
+         mdY7Dl7Ov98qLTqu5E3z7SvYkqN9r2DguBaYycbGscTh0DvF5cI72R5CBlqSaFpFUyzR
+         +fYA==
+X-Gm-Message-State: APjAAAVhO0PLvpMW1/ecXHIClJHqFy2fwyrpTJcz50CliRwja19LBJD7
+        fUwBTHyAwNJc577Fh4s8Q5H4uxeCkiqxtytkJ1E=
+X-Google-Smtp-Source: APXvYqzAs6PasDmMLo5/mmYTFJLJlTtMzommONDNOTOvYCBpIrsKmuPFEzdq8E2lVXj0f4mHvgzuMsSIyP0wd2Z2rxw=
+X-Received: by 2002:a05:600c:2951:: with SMTP id n17mr8752023wmd.75.1575905072548;
+ Mon, 09 Dec 2019 07:24:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191206204747.GD5433@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: My02kDJ8NJ-AR9Eq3_5uGQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+References: <20191209050857.31624-1-andrew.smirnov@gmail.com>
+ <20191209050857.31624-3-andrew.smirnov@gmail.com> <45afdff8-4f91-f5be-a299-d0c7fed71ea7@ti.com>
+ <CAHQ1cqH8XTYysd1Nv2Q0EziXfJWeemZeyyZZ3OKoCv8=XrHZWA@mail.gmail.com> <f873e4de-eabf-2746-8ad8-3d3c7d64a270@ti.com>
+In-Reply-To: <f873e4de-eabf-2746-8ad8-3d3c7d64a270@ti.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Mon, 9 Dec 2019 07:24:21 -0800
+Message-ID: <CAHQ1cqE-7qof2ogCv-00uK9KBk+Uy2xFQ8RsxKFm_ts1EH75fw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] drm/bridge: tc358767: Expose test mode
+ functionality via debugfs
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/12/19 21:47, Sean Christopherson wrote:
->> When reading the codes, I find the definitions of interrupt-window exiting
->> and nmi-window exiting don't match the names in latest intel SDM.
-> I prefer KVM's names even though they diverge from the SDM.  The "window
-> exiting" terminology is very literal, which is desirable for the SDM
-> because it doesn't leave any wiggle room.  But for software, IMO the
-> "event pending" terminology is preferable as it's more descriptive of the
-> intended use of the control, e.g. KVM sets VIRTUAL_{INTR,NMI}_PENDING when
-> it has a virtual event to inject and clears it after injecting said event.
-> 
+On Mon, Dec 9, 2019 at 7:05 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>
+> On 09/12/2019 16:38, Andrey Smirnov wrote:
+> > On Mon, Dec 9, 2019 at 1:38 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> >>
+> >> (Cc'ing Daniel for the last paragraph)
+> >>
+> >> On 09/12/2019 07:08, Andrey Smirnov wrote:
+> >>> Presently, the driver code artificially limits test pattern mode to a
+> >>> single pattern with fixed color selection. It being a kernel module
+> >>> parameter makes switching "test pattern" <-> "proper output" modes
+> >>> on-the-fly clunky and outright impossible if the driver is built into
+> >>> the kernel.
+> >>
+> >> That's not correct, /sys/module/tc358767/parameters/test is there even if the driver is built-in.
+> >>
+> >
+> > True, I'll drop the "impossible" part of the descrption. Having to
+> > unbind and bind device to the driver to use that parameter definitely
+> > falls under "clunky" for me still, so I'll just stick to that in the
+> > description.
+>
+> You don't need to re-bind. You can change the module parameter at runtime, and if the driver happens
+> to use the value, then it uses the new value. If I recall right, changing the module parameter and
+> then doing a full modeset from userspace made the driver to use the test mode (I'm not 100% sure,
+> though).
+>
+> In any case, I'm not advocating for the use of module parameter here =)
+>
+> >> Hmm, actually, just echoing 0 to tstctl multiple times, it makes the screen go black and then
+> >> restores it with every other echo.
+> >>
+> >
+> > Strange, works on my setup every time. No error messages in kernel log
+> > I assume? Probably unrelated, but when you echo "0" and the screen
+>
+> No errors.
+>
+> > stays black, what do you see in DP_SINK_STATUS register:
+> >
+> > dd if=/dev/drm_dp_aux0 bs=1 skip=$((0x205)) count=1 2>/dev/null | hexdump -Cv
+> >
+> > ? Note that this needs CONFIG_DRM_DP_AUX_CHARDEV to be enabled.
+>
+> I'll check this later, and do a few more tests.
+>
+> >>> +     debugfs = debugfs_create_dir(dev_name(dev), NULL);
+> >>> +     if (!IS_ERR(debugfs)) {
+> >>> +             debugfs_create_file_unsafe("tstctl", 0200, debugfs, tc,
+> >>> +                                        &tc_tstctl_fops);
+> >>> +             devm_add_action_or_reset(dev, tc_remove_debugfs, debugfs);
+> >>> +     }
+> >>> +
+> >>
+> >> For me this creates debugfs/3-000f/tstctl. I don't think that's a clear or usable path, and could
+> >> even cause a name conflict in the worst case.
+> >>
+> >
+> > I agree on usability aspect, but I am not sure I can see how a
+> > conflict can happen. What scenario do you have in mind that would
+> > cause that? My thinking was that the combination of I2C bus number +
+> > I2C address should always be unique on the system, but maybe I am
+> > missing something?
+>
+> Well, the dir name doesn't have "i2c" anywhere, so at least in theory, some other bus could have
+> "3-000f" address too.
+>
+> Maybe bigger problem is that it's not at all obvious what "3-000f" means. All the other debugfs dirs
+> make sense when you look at the name, and "3-000f" looks very odd there.
+>
 
-On the other hand:
+Fair enough, so what if we changed the name say "tc358767-3-000f" (i.
+e. used "tc358767-" + dev_name(dev)), would that be a reasonable path
+forward?
 
-static void enable_irq_window(struct kvm_vcpu *vcpu)
-{
-        exec_controls_setbit(to_vmx(vcpu), CPU_BASED_VIRTUAL_INTR_PENDING);
-}
-
-static void enable_nmi_window(struct kvm_vcpu *vcpu)
-{
-        if (!enable_vnmi ||
-            vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) & GUEST_INTR_STATE_STI) {
-                enable_irq_window(vcpu);
-                return;
-        }
-
-        exec_controls_setbit(to_vmx(vcpu), CPU_BASED_VIRTUAL_NMI_PENDING);
-}
-
-so we're already using a lot the "window" nomenclature in KVM.  I've applied Xiaoyao's patches.
-
-Paolo
-
+Thanks,
+Andrey Smirnov
