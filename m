@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C97DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B0DC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB432073D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D6920828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pP/6yFBS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9gYohOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLIIjg (ORCPT
+        id S1727433AbfLIIjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:39:36 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:47066 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfLIIjW (ORCPT
+        Mon, 9 Dec 2019 03:39:43 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33703 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfLIIjT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:39:22 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z17so14539182ljk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 00:39:21 -0800 (PST)
+        Mon, 9 Dec 2019 03:39:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id 21so14644078ljr.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 00:39:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
-        b=pP/6yFBSAEaUiUH7CRhehuzaeVIWOjsGGhLeEuAGrVx2W2kXBMCABusQnG2xt+qaa3
-         9+6vOi7s+y77yQ6gFflSeY7pd9YAAoWss/Xve7ocv7TpCjMOqVCjJa9RjV9J9Ze9bLbv
-         6rEQo5qGbCne/g7FopoIkF7Q97iFLbFh3OyHWPHfzcCwaYpdCD2qfqGj0t2V3BeNv7DP
-         g7e2kYRRKvOWqabt4DztTDYSMjopZgfBrN/hARbEtiv2E/bu05Jl4KRmTaaH4aNFlo65
-         3Y0yQei9g9/tTcqXsfk2+gm7OplpDCi+a7aim/o5HUzxNWdLWvHRyrJ2FDppvZ/WkOA0
-         /zoA==
+        bh=v49ydhRHchofWzIVQxqpzPrTtsddtPryUTJT2t4dhHg=;
+        b=v9gYohOsVaW5DeUzwcntIszGR11cpCwA1aGZQI/0YtSyva2+iY9Ho4nwPh1XkuEEcs
+         ePzEjiMXfOWUfjkuL6au580P6z9q6aTIQ4BAFKeXFDBtnUhU+aVTh0lEAgY4C7HCpSV9
+         ORwIprAIN+8zsxiBuym7PqglNRmEVQycLevLaHhL1ebSrdLLpkdVn/rdkrrGJkyYQf8v
+         c/52xy2F25iRJr8xYXD9Nv2jRKO5G/tG/EsYycAbXnJ/v4Fz6AxBSvRdmt06fg7z7xF1
+         U0uhvGFU/i/H8jRdR5icC6XyPExufkNMMEEbkYwB0qS9424ytO17ogMD6Dgb8ahdoFI9
+         ukiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
-        b=T/sjhQUVwCBXrhTADYyG6I6CQpCcvsn6r0h9MikG2s+Of6CnPD1kzuCNijgVRmOkDf
-         vf1jNaZ0BAHagZo/0nhIskaE4BfEGfPJPJ02EgcI83OMhvyZDdiM3p7TtaarC+6xH96D
-         YnuxFffI64Ieh3ZkelISEA5PdR5FhM2ZJuUPyn3k7fB+WciQZGluNM2a11VcsPRzm0t9
-         7w1AjSKkIoSeH1HnUoUpIyJRZDo0u1bjOLnRvSdYzp/qNqPXkDfkB9CRRR2N2ZCCm7Zq
-         1QR6+2OamGjnycMLQTFEkLUJ5z+cXMiq609t0pXeflzRB5d1VHnc14y4DLg0rH7KPEtV
-         8opg==
-X-Gm-Message-State: APjAAAUnqK0FU1BV6qws12ZEWLZ/iIL0o31uz0TJ2vNpN2/KIUV1ePoS
-        qNqc9/ifh02st799oR6ZZQAvyQ==
-X-Google-Smtp-Source: APXvYqynMar8YEFWbO4Rp+sphv+VAYBcOnLMWnfw760ddHNzTaxqy4s0hXFAhu9ZcxfqEEAKn9wL6Q==
-X-Received: by 2002:a2e:9708:: with SMTP id r8mr16116609lji.92.1575880760335;
-        Mon, 09 Dec 2019 00:39:20 -0800 (PST)
+        bh=v49ydhRHchofWzIVQxqpzPrTtsddtPryUTJT2t4dhHg=;
+        b=OM1OE6SP7VPhqJB3qE7bt805TdVPc15YbN+oak3vTeTU+il+fHa7SMhexoNKhy2P1w
+         TQUoD0ZK6wyf5Gs6iANccTIwTLy7vZCE2paEmjG9n1of5RX3bkIPxIzThZXuahUB/Vfn
+         v/hIUACshS/lyykJHvgCnB1PswK06885tn0eXyDBKa+WFWbrW2Qw6Zua0MqkkEyELOy3
+         h52ZBAS4Q/zfE+Vcfhp9N2Nkk4f/87qCpRIt5Rd1kwq4+AuSOGU3Ap9YswUe6CgnT0C6
+         L9rp8FG1ZM+MquXK8qC9ObzPvqyboFz2VopOxrS1FC6m2WssTv0dXrOtEcUM+dK1Unvv
+         CkfQ==
+X-Gm-Message-State: APjAAAWjWRp5Egb8RAHeF8LOc5hAvQeOSxnhgAR1rkjbTeG2K59X9sXe
+        H8DfbaJNvoRDjLsAnWNxgMIr2rC+X7c=
+X-Google-Smtp-Source: APXvYqw8SpOAGnK9Y6ldb09TK9z4GTkamwKgzyRGZM1ZhvBxsbDATkag4guNVGmYYMSeCsQjPFddtA==
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr15268982ljg.151.1575880757072;
+        Mon, 09 Dec 2019 00:39:17 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id r26sm10438971lfm.82.2019.12.09.00.39.19
+        by smtp.gmail.com with ESMTPSA id r26sm10438971lfm.82.2019.12.09.00.39.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 00:39:19 -0800 (PST)
+        Mon, 09 Dec 2019 00:39:16 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
         Tomasz Figa <tfiga@chromium.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 5/6] v4l: Add source event change for bit-depth
-Date:   Mon,  9 Dec 2019 10:38:23 +0200
-Message-Id: <20191209083824.806-6-stanimir.varbanov@linaro.org>
+Subject: [PATCH 3/6] arm64: dts: sdm845: move venus clocks and pmdomains in parent
+Date:   Mon,  9 Dec 2019 10:38:21 +0200
+Message-Id: <20191209083824.806-4-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191209083824.806-1-stanimir.varbanov@linaro.org>
 References: <20191209083824.806-1-stanimir.varbanov@linaro.org>
@@ -72,63 +72,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This event indicate that the source color bit-depth is changed
-during run-time. The client must get the new format and re-allocate
-buffers for it. This can usually happens with video decoder (encoders)
-when the bit-stream color bit-depth is changed from 8 to 10bits
-or vice versa.
+Move venus DT subnode resources like clocks and pmdomains in the
+parent Venus DT node. This will make possible to support dynamic
+core selection on Venus v4.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
- Documentation/media/videodev2.h.rst.exceptions  | 1 +
- include/uapi/linux/videodev2.h                  | 1 +
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-index 42659a3d1705..fad853d440cf 100644
---- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-@@ -402,7 +402,13 @@ call.
- 	that many Video Capture devices are not able to recover from a temporary
- 	loss of signal and so restarting streaming I/O is required in order for
- 	the hardware to synchronize to the video signal.
--
-+    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
-+      - 0x0002
-+      - This event gets triggered when color bit-depth change is detected
-+	from a video decoder. Applications will have to query the new pixel
-+	format and re-negotiate the queue. In most cases the streaming must be
-+	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
-+	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index f406a4340b05..540028fed3ae 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2571,29 +2571,30 @@
+ 			compatible = "qcom,sdm845-venus";
+ 			reg = <0 0x0aa00000 0 0xff000>;
+ 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&videocc VENUS_GDSC>;
++			power-domains = <&videocc VENUS_GDSC>,
++					<&videocc VCODEC0_GDSC>,
++					<&videocc VCODEC1_GDSC>;
++			power-domain-names = "venus", "vcodec0", "vcodec1";
+ 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+ 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+-				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+-			clock-names = "core", "iface", "bus";
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
++			clock-names = "core", "iface", "bus",
++				      "vcodec0_core", "vcodec0_bus",
++				      "vcodec1_core", "vcodec1_bus";
+ 			iommus = <&apps_smmu 0x10a0 0x8>,
+ 				 <&apps_smmu 0x10b0 0x0>;
+ 			memory-region = <&venus_mem>;
  
- Return Value
- ============
-diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-index cb6ccf91776e..209709114378 100644
---- a/Documentation/media/videodev2.h.rst.exceptions
-+++ b/Documentation/media/videodev2.h.rst.exceptions
-@@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
- replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+ 			video-core0 {
+ 				compatible = "venus-decoder";
+-				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+-					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+-				clock-names = "core", "bus";
+-				power-domains = <&videocc VCODEC0_GDSC>;
+ 			};
  
- replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
-+replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+ 			video-core1 {
+ 				compatible = "venus-encoder";
+-				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+-					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+-				clock-names = "core", "bus";
+-				power-domains = <&videocc VCODEC1_GDSC>;
+ 			};
+ 		};
  
- replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
- 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 04481c717fee..2a5138ac6d25 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -2307,6 +2307,7 @@ struct v4l2_event_frame_sync {
- };
- 
- #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
-+#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
- 
- struct v4l2_event_src_change {
- 	__u32 changes;
 -- 
 2.17.1
 
