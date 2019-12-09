@@ -2,116 +2,113 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DADEC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFB6C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0C1206D3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40400206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kZYKAyg3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SnYpIJZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfLITx1 (ORCPT
+        id S1726668AbfLITyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:53:27 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45862 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfLITx1 (ORCPT
+        Mon, 9 Dec 2019 14:54:39 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19955 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLITyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:53:27 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so13298806otp.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FnbzGoTl5WhmCbrdoUFbCzn04dh+Cx2Q09zX/BBcpeM=;
-        b=kZYKAyg3zh7SfpwrhnpmZt45qa0HvkA5Rt5j9QDeedmJ+DNWXmiXSLpCEBOrf6589C
-         F/JfP0Ttm8tTDqEz+D4f2MXDQS0fj+PPn4mREssvR2mpBQWOXzbFQTNWyEz5dE8RH2xq
-         2Dv5rkXlth+CUBOS7jjs4hcCZnYdbfwtosMTvjhoZ+yiI+nv5oLv3nE4QKB5taZ3rULD
-         hnI3WfixW34/lRc5dD+X7K8tseAwMzRWOmK3Unmg25ZkD+oDI3qGH1OK5VjS/rLNqYL9
-         SA/MNAmzf8XY3PTuQ+Ra/SrXaEGmjnXwltP2L0gC5udli0cSR7zQ9585rkRdVC0CIhdM
-         3reQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FnbzGoTl5WhmCbrdoUFbCzn04dh+Cx2Q09zX/BBcpeM=;
-        b=al3ZjjGsUksxGPd6x1Pcs5ALHDOnbG0KsCngLNIWoAzZrGc6v38cqyuuv2K5xqx561
-         WOHJvOxpG1crwc1OUenSnM4FjhTsIt4VQyfI1lLWgbEF8Jl9tUk5QKSPG4IuF6CwnnY8
-         hW5n2WJXfh39h2JJtTRIYzSl6CdiWuRpC5Mo58FgQzcuWT4oCCAdalwI40IJBea4oKmW
-         PALarveyleW9Ztr+tqpgJH88RyTV/2E8OLP2uJIyU1xDpc6zuzWc/q2VZei8jNtdcVu8
-         8k7iuzIVgNLxW9twUex1gMOwmf4axRjiPaVAuihxB1P9IsvwVF+/OVaMTWLxbrJdROCQ
-         bxrA==
-X-Gm-Message-State: APjAAAVTgtrOn1Hcem5yHlI2F1O9+pspTAkciJadqPEW3bd7QQxTFyPM
-        5HMkddproBqEBoC/7Cw61vv+v0D/uqVl8YiUSX03vA==
-X-Google-Smtp-Source: APXvYqy4VB/OSt4mHS6vZdI9+mUErw54dRofHqmMIQfFdqIBE2RR5xMEQIHA9x0Ywj6cmZ37PN3QvsT0YhVg91nQCLQ=
-X-Received: by 2002:a05:6830:1cf:: with SMTP id r15mr23899350ota.231.1575921205920;
- Mon, 09 Dec 2019 11:53:25 -0800 (PST)
+        Mon, 9 Dec 2019 14:54:38 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5deea6770001>; Mon, 09 Dec 2019 11:54:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 11:54:37 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 11:54:37 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec
+ 2019 19:54:37 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Dec 2019
+ 19:54:37 +0000
+Subject: Re: [PATCH v2 1/2] mm/gup: allow FOLL_FORCE for get_user_pages_fast()
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20191204213603.464373-1-jhubbard@nvidia.com>
+ <20191204213603.464373-2-jhubbard@nvidia.com> <20191209182536.GC67461@unreal>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <7ceb9a54-6e2f-6d1f-70ba-f6ad5ba0b37f@nvidia.com>
+Date:   Mon, 9 Dec 2019 11:54:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
-In-Reply-To: <20191209193303.1694546-1-gregkh@linuxfoundation.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 9 Dec 2019 11:52:50 -0800
-Message-ID: <CAGETcx8s4KCP=ZiYuU6oEpSrzgUyV4JeXpVKxXcWeiNiKgYKKA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] device.h: split up into smaller pieces
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191209182536.GC67461@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575921271; bh=aYYf+3MgNx882/6bWA0YHWVT6GLALSpA6F24y/9AlO0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=SnYpIJZa36DGx3o90G2KZqfxdnVww5TQO7kjIc3RDrtpF/iyFp2WoOL6Yz2JLgp37
+         Vhjgo48MYabYW7yhYCN/bPjnZAs/EZJgAH2u5TtH+05tdTxM/H3tAFtmYZETQ8PYuB
+         qAB1nLeSN+ROLL4dEdqKgJkiuriINbvQyu0gCzeaFRrQJrAlrlBBYxhnFkMMLU3mMJ
+         h1epTVMihjJIV9dv9Fa+7Z2z33mn71vAU1s0XcMnB6brv+gco7gWPN2vInCq+e4xs+
+         1GvK0+aUaComW80KYf6KZcqAa5BBR2jqqE1Lpx4nUm091EZ2LH9C7IaGxgIrAMXbuH
+         Xy83MRJlaAAPg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 11:33 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> During the 5.4-rc merge Linus complained about the size of device.h and
-> how it can be a pain to merge things into at times.  It's also become
-> kind of a "kitchen sink" for anything related to drivers / devices /
-> busses / classes and is the 10th largest include/linux/*.h file by size.
->
-> So let's split it up into smaller pieces, moving things out by logical
-> parts where it can be.
+On 12/9/19 10:25 AM, Leon Romanovsky wrote:
+> On Wed, Dec 04, 2019 at 01:36:02PM -0800, John Hubbard wrote:
+>> Commit 817be129e6f2 ("mm: validate get_user_pages_fast flags") allowed
+>> only FOLL_WRITE and FOLL_LONGTERM to be passed to get_user_pages_fast().
+>> This, combined with the fact that get_user_pages_fast() falls back to
+>> "slow gup", which *does* accept FOLL_FORCE, leads to an odd situation:
+>> if you need FOLL_FORCE, you cannot call get_user_pages_fast().
+>>
+>> There does not appear to be any reason for filtering out FOLL_FORCE.
+>> There is nothing in the _fast() implementation that requires that we
+>> avoid writing to the pages. So it appears to have been an oversight.
+>>
+>> Fix by allowing FOLL_FORCE to be set for get_user_pages_fast().
+>>
+>> Fixes: 817be129e6f2 ("mm: validate get_user_pages_fast flags")
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
+>>  mm/gup.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+> 
+> Thanks,
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> 
 
-Yes please! Took a cursory look at the series (except 1/6) and it
-looks okay to me. However, didn't check for copy-pastas or anything
-that was left in device.h that could have been moved out. I'll try to
-do the latter, later.
+Hi Leon, thanks for the reviews, great timing! I'll add the tags to
+the commits, which I'm just about to post as part of the larger 
+"pin user pages" patchset.
 
--Saravana
 
-> Greg Kroah-Hartman (6):
->   drivers/base: base.h: add proper copyright and header info
->   device.h: move devtmpfs prototypes out of the file
->   device.h: move dev_printk()-like functions to dev_printk.h
->   device.h: move 'struct bus' stuff out to device/bus.h
->   device.h: move 'struct class' stuff out to device/class.h
->   device.h: move 'struct driver' stuff out to device/driver.h
->
->  drivers/base/base.h           |  19 +
->  drivers/base/bus.c            |   1 +
->  drivers/base/class.c          |   1 +
->  drivers/base/driver.c         |   1 +
->  include/linux/dev_printk.h    | 235 ++++++++
->  include/linux/device.h        | 999 +---------------------------------
->  include/linux/device/bus.h    | 288 ++++++++++
->  include/linux/device/class.h  | 266 +++++++++
->  include/linux/device/driver.h | 292 ++++++++++
->  init/main.c                   |   2 +-
->  10 files changed, 1108 insertions(+), 996 deletions(-)
->  create mode 100644 include/linux/dev_printk.h
->  create mode 100644 include/linux/device/bus.h
->  create mode 100644 include/linux/device/class.h
->  create mode 100644 include/linux/device/driver.h
->
-> --
-> 2.24.0
->
+thanks,
+-- 
+John Hubbard
+NVIDIA
