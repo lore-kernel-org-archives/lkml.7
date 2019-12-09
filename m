@@ -2,127 +2,95 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AC5C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DADC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC85205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99EAC206D3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 08:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXKonuv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLIISU (ORCPT
+        id S1727206AbfLIITZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 03:18:20 -0500
-Received: from regular1.263xmail.com ([211.150.70.206]:36170 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfLIIST (ORCPT
+        Mon, 9 Dec 2019 03:19:25 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:47011 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfLIITZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 03:18:19 -0500
-Received: from localhost (unknown [192.168.167.16])
-        by regular1.263xmail.com (Postfix) with ESMTP id 87D59296;
-        Mon,  9 Dec 2019 16:18:01 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.9] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P30016T140340956382976S1575879481407888_;
-        Mon, 09 Dec 2019 16:18:02 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <8481befb3c8f69f16db87c6b1a8b1d32>
-X-RL-SENDER: kever.yang@rock-chips.com
-X-SENDER: yk@rock-chips.com
-X-LOGIN-NAME: kever.yang@rock-chips.com
-X-FST-TO: maxime.chevallier@bootlin.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH] MAINTAINERS: rockchip: Track more files
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>
-References: <20191204090710.11646-1-miquel.raynal@bootlin.com>
-From:   Kever Yang <kever.yang@rock-chips.com>
-Message-ID: <e4dc0f27-6a26-3b29-11fd-231f686fce91@rock-chips.com>
-Date:   Mon, 9 Dec 2019 16:18:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 03:19:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y14so6800698pfm.13;
+        Mon, 09 Dec 2019 00:19:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BW2JC8CibFxf+Dge/CzEZTyOy7IPvbzIRB6gv0bABEo=;
+        b=kXKonuv8thAwKbXslv4/2dVUyz7NBwJgHDZq9rZwN3i7FEgU7x9urLVG5NeDV4AUz1
+         eZ764Sgu6QA6wz0cmM2L6DlxMCCAUrZEoJXbYTVqtOfiP5BO9lVsWMERJexyq2WVMbY+
+         vYrFOJMyjKCbAsDfZFybEYIofpuZRw/AfBwt6mpTtz1wcLAxljpdY4nB1u3TAiSOqQ24
+         RZoo/Xq4zf8KC6/q3joShmpK8wp+duR/k7NGNl1bJ8necOcMzyUvMd+GQlvjXHG8YKLX
+         OpwTbDCV2zJuFWQmZ7E8/OeZBiOLx5cHZq0nBZYXoekchBxBPyKsS9RpV0myvQh4FPTR
+         SxwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BW2JC8CibFxf+Dge/CzEZTyOy7IPvbzIRB6gv0bABEo=;
+        b=GnNQ252JLqAkgSd6r6vBVYnbVRkYVxm0xTmBhItqSGCpc5YWjHm92zQrNx16p6nBxN
+         zEJ8iqDRNRC/ilWgJ6HXtjN0y/nH1VmDBXmTPhir/lN7rsL7JA0Jawbw0YTdP5GFzWru
+         9wHPKYXgf6kw0Cfb65fnVnytB8fwmwSmRfHPHEFZ4DjTSMyGJeR7zijS2TKxc5IGHdB5
+         pq82ZT2h5mJfbeVYgbA7KJOV2chXrE0vSNsnqtMpYZljJnp49mycBl2lmUtSmzkVnzGP
+         NPTiHLgQO6W/JPeKnF4yEoLm1n0moLhteCkfFHD04+E73/ZmTN9x9laDPDDsZWobaeMi
+         D+6g==
+X-Gm-Message-State: APjAAAXiSWrScZUSyhwj7oNw59vEeKCe6CeFRzmsNbhbSnD/+CpMsAsY
+        na2rdoU4pzaeezdRkjFGnSIv+3MWieM=
+X-Google-Smtp-Source: APXvYqxglM6pH30hxnbVxJcIrTmAVwuGTxn/IVRAvqblND7gJtES4K9XiNLt6pRrVrJrAV0URUep/g==
+X-Received: by 2002:a65:6898:: with SMTP id e24mr18234471pgt.59.1575879564422;
+        Mon, 09 Dec 2019 00:19:24 -0800 (PST)
+Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
+        by smtp.gmail.com with ESMTPSA id u2sm23810375pgc.19.2019.12.09.00.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 00:19:23 -0800 (PST)
+From:   Thomas Hebb <tommyhebb@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Cc:     Thomas Hebb <tommyhebb@gmail.com>
+Subject: [PATCH 0/4] kconfig: rework symbol help text
+Date:   Mon,  9 Dec 2019 00:19:15 -0800
+Message-Id: <cover.1575879069.git.tommyhebb@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191204090710.11646-1-miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+This series fixes several issues with help text generated by Kconfig,
+mainly affecting symbols that are defined in multiple places. Although
+results of these patches are somewhat visible for the symbols in Linux,
+what prompted me to write the series was working on U-Boot, which also
+uses Kconfig and makes very heavy use of multiple definitions (e.g. for
+overriding defaults). I have provided Linux examples where I could find
+them, but the example for the biggest patch (the first one) is taken
+from U-Boot because it was more illustrative than anything I could find
+in Linux.
 
-On 2019/12/4 下午5:07, Miquel Raynal wrote:
-> The current list misses a lot of drivers not prefixed or suffixed by
-> "rockchip". For instance, there are plenty drivers called rk808 and
-> rk805 which are currently not tracked (clk, regulator, pinctrl, RTC,
-> MFD, includes, bindings). Add them to the list under the Rockchip
-> entry.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->
-> Hi Heiko,
->
-> You are right we should try to check more often your tree. Also, here
-> is a patch so that you are Cc'ed for all Rockchip related patches
-> because the current list is not exhaustive at all (not sure it is
-> voluntary or not though).
->
-> Cheers,
-> Miquèl
->
->   MAINTAINERS | 4 ++++
->   1 file changed, 4 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba1095547fd..a9564e6cb872 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2198,12 +2198,16 @@ L:	linux-rockchip@lists.infradead.org
->   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
->   S:	Maintained
->   F:	Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-> +F:	Documentation/devicetree/bindings/*/*rk80*
->   F:	arch/arm/boot/dts/rk3*
->   F:	arch/arm/boot/dts/rv1108*
->   F:	arch/arm/mach-rockchip/
-> +F:	include/*/*/rk808.h
-> +F:	include/*/*/*/rk808.h
->   F:	drivers/clk/rockchip/
->   F:	drivers/i2c/busses/i2c-rk3x.c
->   F:	drivers/*/*rockchip*
-> +F:	drivers/*/*rk80*
->   F:	drivers/*/*/*rockchip*
->   F:	sound/soc/rockchip/
->   N:	rockchip
-For the Rockchip PMIC, is it better to have a NEW MAINTAINER entry like 
-"ROCKCHIP PMIC DRIVER"
-which share the same mailing list linux-rockchip@, because there is not 
-only rk808,
-but also rk805, rk809, rk817, rk818, and may be more to come.
+Thomas Hebb (4):
+  kconfig: list all definitions of a symbol in help text
+  kconfig: don't crash on NULL expressions in expr_eq()
+  kconfig: distinguish between dependencies and visibility in help text
+  kconfig: fix nesting of symbol help text
 
-BTW, we should use 'rk8' instead of 'rk80' to match all the Rockchip PMICs.
+ scripts/kconfig/expr.c |  8 +++--
+ scripts/kconfig/expr.h |  1 +
+ scripts/kconfig/menu.c | 75 ++++++++++++++++++++++++------------------
+ 3 files changed, 50 insertions(+), 34 deletions(-)
 
-
-Thanks,
-- Kever
-
-
+-- 
+2.24.0
 
