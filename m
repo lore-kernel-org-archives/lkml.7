@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE51C43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC28C04E30
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134C22068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4169E207FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 14:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WohFdDSS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYdOxD2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfLIOuP (ORCPT
+        id S1726691AbfLIOuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 09:50:15 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41682 "EHLO
+        Mon, 9 Dec 2019 09:50:22 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40590 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfLIOuO (ORCPT
+        with ESMTP id S1726522AbfLIOuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 09:50:14 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so16517857wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:50:13 -0800 (PST)
+        Mon, 9 Dec 2019 09:50:20 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so16508074wrn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 06:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kbWhKztcZroEY9HZuAqBCwxCkxfV0uGPkkrZZcpYU3k=;
-        b=WohFdDSSvA/Lq0puBHpDkCHxitGoNFR5CPbiG8Gh21dQjYBEkHxEkHz5pt/EggFEGl
-         MSvwQoA3HUt5LeOuCAVKw8u5l406d5KYqeeFyIeFPzsckZ7tZdkPITK7DSVqTN1HmmUa
-         4jlRRbP20cLG2MJQUkku/EcxdimGb9pe30RNy/jg0N4fqT4rcp/oaGhGBcw66COjVv4U
-         n50RxnFr9la4TIBdU9QlX9rBxSD5HoaS24xeu/PXIeqCxzva7HkNTNabB1YAzLW4TQbo
-         JVFhCRcEHP3Lt66CiAAt32vwjUldm1KWQS2w2y2cDLyiBjRCa1/c7hKvPAxw2E9zGn5z
-         zU6Q==
+        bh=I3aVjWdLXvLOfDvHl+80UOXgd4T3MYRIvZkx/WAfvow=;
+        b=XYdOxD2z70YIt3ZS9joDPOLCuZDMHOr+p5n+49OM1+kg4Yc/Hxhrk5rkXDN4vE8qEl
+         dQYNDkBLp/eGMnRMlGljZnwMFHJV+E147Pvt2Acjoc+c+81H012A8L14Uy5ZN4+i/SKl
+         7S7a4eteQjj9rVp7uX9smhSTLH0jqehZdOB940kVbuSiI6RoMRiax35WQ9KxsrlYUPbA
+         jR0uSuV6tFMZKWuZNPY+UDm8OcIR95YPafvM7+wGa4ufN5NPyemPAjtFMtXmyYtnGVyM
+         RHD4FmCCnCamgojLAXcDcLT6ZJRRZ68IGI393N4Aa7h9N1Sv9zUIJ6OA4cVV8XXMeg//
+         tdtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kbWhKztcZroEY9HZuAqBCwxCkxfV0uGPkkrZZcpYU3k=;
-        b=Nr1wxLFwuVEfi5vItIEhExmLCNxvuKsi1jSPZXiyIdEvkmTbvqCiN4j7FTKoLvZlKM
-         X3grCRdOssZn/w15lkq1Vtdo3NJ17w9wj2EHHQz2n5v6eduCh4Lp8mZJvEdfftU37718
-         P84vvzgGzKbNDcZi90jBW7kAx80R/HYIWjNQnPRxE/47J8cgUcoBD6SZdlyXEDRFyO9e
-         igXZFpG0VjiI/+TjCbYDnTq1APmqwpzT62f5Jjj8Tifz5bSSqa3bmKc6v3dP4sufYPqn
-         +2Y60xUIg0lyzR94UUETP3hTfRbWt1nLBoi5CezLtojfzmF/O8ftZwbFNL1eieWTf2dA
-         b47A==
-X-Gm-Message-State: APjAAAWRmYiTJsXGz/IAPmdkKBqTPqPcjqvpdY0MJggQO4GVYmy/D427
-        zkXmjOjhsYXxAsmCSFzSI/U=
-X-Google-Smtp-Source: APXvYqzhZIggnLvtoyIgmYrF5RPdWaQ6t5xLlPHAXblTPP1Yw9lYQBIUb9qRPlNBGVW4ZHPpf+YYAg==
-X-Received: by 2002:a5d:50d2:: with SMTP id f18mr2616447wrt.366.1575903012744;
-        Mon, 09 Dec 2019 06:50:12 -0800 (PST)
+        bh=I3aVjWdLXvLOfDvHl+80UOXgd4T3MYRIvZkx/WAfvow=;
+        b=BztPm1LNc58bA0j0xkryjdLxCQTdhgoaSesgMqfebT4mldgRvDiSmglc75xmwNIiIM
+         8hXXl+n9ENqvBAQ+PB9r5iHMhYmdPDBDCAot5aT3wtuVysdfh3JFIdDE0tv5iqQGPqgk
+         r4dhgRgp1JcROQWBiBgIy4dmmDQl55qmNoCGsInTs2H51XegLG9VibEUdOD0Kyn0+cGU
+         uzaueCo0Oj+Cs7MX7gTI9TlgMfRlnpZ4BBj0Zwh9bForQCGR2w4H5gPSJox03DUATE56
+         Hy3TaKEbSMCpCCywCi7mT/6X/waGTTZn0X15TJQGf6tr8iLeVp0hAcUY0zWWe2W4Q2dY
+         Gixw==
+X-Gm-Message-State: APjAAAUkBbqdfoarPGrLBVH4PBLP7NhAnlzXLiWaAQiM5LUIuldndBKw
+        c8CT1BItRobBVSG12KDOiOJhxK2F
+X-Google-Smtp-Source: APXvYqyzb+Gr3fnT6bZnw6Qeyd7z43gdd6oakIDoqaNzca4I3GYvDjohjO+w8mvyuTBM2hpMZlM+/Q==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr2615868wrl.117.1575903018924;
+        Mon, 09 Dec 2019 06:50:18 -0800 (PST)
 Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id u205sm10174718wmu.35.2019.12.09.06.50.11
+        by smtp.gmail.com with ESMTPSA id x17sm27547138wrt.74.2019.12.09.06.50.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 06:50:11 -0800 (PST)
+        Mon, 09 Dec 2019 06:50:17 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
@@ -67,9 +67,9 @@ Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] iommu: Implement iommu_put_resv_regions_simple()
-Date:   Mon,  9 Dec 2019 15:50:03 +0100
-Message-Id: <20191209145007.2433144-2-thierry.reding@gmail.com>
+Subject: [PATCH v2 4/5] iommu: intel: Use iommu_put_resv_regions_simple()
+Date:   Mon,  9 Dec 2019 15:50:06 +0100
+Message-Id: <20191209145007.2433144-5-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191209145007.2433144-1-thierry.reding@gmail.com>
 References: <20191209145007.2433144-1-thierry.reding@gmail.com>
@@ -82,59 +82,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Implement a generic function for removing reserved regions. This can be
-used by drivers that don't do anything fancy with these regions other
-than allocating memory for them.
+Use the new standard function instead of open-coding it.
 
+Cc: David Woodhouse <dwmw2@infradead.org>
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/iommu/iommu.c | 19 +++++++++++++++++++
- include/linux/iommu.h |  2 ++
- 2 files changed, 21 insertions(+)
+ drivers/iommu/intel-iommu.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index db7bfd4f2d20..a46d3bcafa06 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2229,6 +2229,25 @@ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
- 		ops->put_resv_regions(dev, list);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 0c8d81f56a30..480f424f6a47 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5752,15 +5752,6 @@ static void intel_iommu_get_resv_regions(struct device *device,
+ 	list_add_tail(&reg->list, head);
  }
  
-+/**
-+ * iommu_put_resv_regions_simple - Reserved region driver helper
-+ * @dev: device for which to free reserved regions
-+ * @list: reserved region list for device
-+ *
-+ * IOMMU drivers can use this to implement their .put_resv_regions() callback
-+ * for simple reservations. Memory allocated for each reserved region will be
-+ * freed. If an IOMMU driver allocates additional resources per region, it is
-+ * going to have to implement a custom callback.
-+ */
-+void iommu_put_resv_regions_simple(struct device *dev, struct list_head *list)
-+{
-+	struct iommu_resv_region *entry, *next;
-+
-+	list_for_each_entry_safe(entry, next, list, list)
-+		kfree(entry);
-+}
-+EXPORT_SYMBOL(iommu_put_resv_regions_simple);
-+
- struct iommu_resv_region *iommu_alloc_resv_region(phys_addr_t start,
- 						  size_t length, int prot,
- 						  enum iommu_resv_type type)
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 1b4fbe703950..a249aa55596b 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -477,6 +477,8 @@ extern void iommu_set_fault_handler(struct iommu_domain *domain,
- 
- extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
- extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
-+extern void iommu_put_resv_regions_simple(struct device *dev,
-+					  struct list_head *list);
- extern int iommu_request_dm_for_dev(struct device *dev);
- extern int iommu_request_dma_domain_for_dev(struct device *dev);
- extern void iommu_set_default_passthrough(bool cmd_line);
+-static void intel_iommu_put_resv_regions(struct device *dev,
+-					 struct list_head *head)
+-{
+-	struct iommu_resv_region *entry, *next;
+-
+-	list_for_each_entry_safe(entry, next, head, list)
+-		kfree(entry);
+-}
+-
+ int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev)
+ {
+ 	struct device_domain_info *info;
+@@ -5995,7 +5986,7 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.add_device		= intel_iommu_add_device,
+ 	.remove_device		= intel_iommu_remove_device,
+ 	.get_resv_regions	= intel_iommu_get_resv_regions,
+-	.put_resv_regions	= intel_iommu_put_resv_regions,
++	.put_resv_regions	= iommu_put_resv_regions_simple,
+ 	.apply_resv_region	= intel_iommu_apply_resv_region,
+ 	.device_group		= pci_device_group,
+ 	.dev_has_feat		= intel_iommu_dev_has_feat,
 -- 
 2.23.0
 
