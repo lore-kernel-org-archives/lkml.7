@@ -2,125 +2,149 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142DCC04E30
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BBDC43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFB620637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B6C20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 19:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lCdRbY8A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l57bR7j5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfLITef (ORCPT
+        id S1726986AbfLITeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 14:34:35 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35463 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfLITee (ORCPT
+        Mon, 9 Dec 2019 14:34:44 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39024 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfLITen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 14:34:34 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s10so6220690plp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 11:34:34 -0800 (PST)
+        Mon, 9 Dec 2019 14:34:43 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so13275655oty.6;
+        Mon, 09 Dec 2019 11:34:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ZXNGLW7mFianPc1VWLK8THUd4ZKwccb4YrTIuoMnGk0=;
-        b=lCdRbY8AJYLHMjRur+qXl1k3An/CDtGgqw6W8jfX9s8665NNeVLR4dOHO7yRDfyr78
-         GdGOWIaxq9afq2lFh621TEzdsn6+HdWl24evVkKZhm7dI+0z6KB6jK9Bln9LT2lPDllA
-         snBmS3jLAwtnY78Mxg1+BhZUa2o3YY9qILbnU=
+        bh=PFE1nWxTiyfBRgn/J6q9Y8I6dNPJrpPO2zwkS+e8TbI=;
+        b=l57bR7j5YoTdsraECl+v5XCXZ2L9yCiOQaei6qnxTgzBKu6DHPdEP2L91+oIkroRMl
+         dBW16Yn7M2d5zqpGrKHHu9zqC1Iwdbrm/Bior7UUkbmS7Dzt7c2vA1rIVGXy7w1Xq7jI
+         7cTqZ73LSKdFPLYOPe9dsTyCkkvaHQTmaqpczWxscNNewc8+95w6VQ25TW+OJnEExH9R
+         TrA/R3/6pFOehNsWxcSaOGZ1Crp1aSlN3xuRW9HZitoMTe6QRU4p/4G7m3uVAmI3K8+1
+         St0Rh2zNQH94IiQoZhUthkIOMFEG13Y9CSu0Mg3X/4ibfQ9xRUJCsmdzpZFts0nuLUJE
+         Je0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZXNGLW7mFianPc1VWLK8THUd4ZKwccb4YrTIuoMnGk0=;
-        b=DPzHLl/nD++lYU9JyIjuMalCIWDXmic1V6i6WqSvcE21MX/UzUg5ZmfIwh7kf/zjOD
-         Rk2vbYOrEVQ0MxCNnnB7/yklRJzIiBNTAGbldOYRfQBZCsEv22ACl3ssOsxZLXBGRTyt
-         pF5zfDCxC/X6Vd3OeBbR8IYaN9dtbQs0gclVvMr2dHURziUcu+WedEa0+DBZ/Nk8oi76
-         j3MpqS1c/CtVxexfLajsHd5Z60dX2ODRbeRCZ8XJHpnbt0zgP/f6K2qLqx2ebf2QUZzh
-         S/VajZr2rNaksiD/TjM0RdTgKfk2fI9Xw4v+chQrU/Hi3xp9xM+FnEjQ+qNP5RzCH+fd
-         EK2g==
-X-Gm-Message-State: APjAAAXKtYKYXjel0oIdJoPem8unTUzM31btVgW6sOokrrEq+XhGNH32
-        LLBHXI94EtxpDOSHIPUpTS2ayA==
-X-Google-Smtp-Source: APXvYqyyadS5sS/1VnJWvbDbKx1ZcI7p3t0CLn71BLe7STUeHfSNIWMnpEdjyK8JcF/LTYJeq9PVpQ==
-X-Received: by 2002:a17:902:363:: with SMTP id 90mr9706773pld.71.1575920074056;
-        Mon, 09 Dec 2019 11:34:34 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id e11sm155563pjj.26.2019.12.09.11.34.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 11:34:33 -0800 (PST)
-Date:   Mon, 9 Dec 2019 11:34:32 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH 3/4] PM / devfreq: Kconfig: add DEVFREQ_DELAYED_TIMER
- option
-Message-ID: <20191209193432.GQ228856@google.com>
-References: <20191209144425.13321-1-k.konieczny@samsung.com>
- <CGME20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91@eucas1p1.samsung.com>
- <20191209144425.13321-4-k.konieczny@samsung.com>
+        bh=PFE1nWxTiyfBRgn/J6q9Y8I6dNPJrpPO2zwkS+e8TbI=;
+        b=UdUmEu1Kl8uHkcS6c/u/GFnAv22Rs0oSfyd/St7MQsf3TR/FtHw+cU8S+dJKylpOEw
+         1R4cVWM4J5liRRJxTJMRgIX7YjLxqkisSOlQfShaP7teSwqiJEPIUHt/xrAH6GmRMz5B
+         NLm6igUGZwhxprsscCExYyTtp2M789I8BMZFBxtyBYxYIxkJD8gUngeLwr6nFP5v5TjN
+         PjwVQcFZV6NdMVoy/H9AVH+t+sdTkdttWg8OkLChRIK93u2q8G2XvH+rGSLvKgPivSrf
+         /U856LyWEm3ZCBuVja92gBXHu//yzsEjzYUQ82fCQ8Cm64POEatIJmR8Xlt5eDInoKI9
+         p6rg==
+X-Gm-Message-State: APjAAAU8R5vUAZonjbdqI4xS3OZUtWGch9rgqLsM+V/WmrDyK2+V0EPD
+        Tpd45f6jnu6S8Lt5RhknpP0=
+X-Google-Smtp-Source: APXvYqxSnopGKPKS40Fp2UWWVvhccgBBkC3FGIBGVtKql552IcLIhIyHMgbgNBjN89Vl/gf2tP5iZg==
+X-Received: by 2002:a9d:6a92:: with SMTP id l18mr23312145otq.37.1575920082851;
+        Mon, 09 Dec 2019 11:34:42 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id x16sm296462oto.41.2019.12.09.11.34.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Dec 2019 11:34:42 -0800 (PST)
+Date:   Mon, 9 Dec 2019 12:34:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Julio Faracco <jcfaracco@gmail.com>,
+        netdev@vger.kernel.org, davem@davemloft.net, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Shannon Nelson <snelson@pensando.io>,
+        Martin Habets <mhabets@solarflare.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH net-next v9 1/3] netdev: pass the stuck queue to the
+ timeout handler
+Message-ID: <20191209193440.GA15189@ubuntu-m2-xlarge-x86>
+References: <20191209162727.10113-1-mst@redhat.com>
+ <20191209162727.10113-2-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209144425.13321-4-k.konieczny@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191209162727.10113-2-mst@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 03:44:24PM +0100, Kamil Konieczny wrote:
-> Add Kconfig option DEVFREQ_DELAYED_TIMER. If set, devfreq workqueue
-> will use delayed timer from its start.
+Hi Michael,
 
-s/from its start/by default/
-
+On Mon, Dec 09, 2019 at 11:29:03AM -0500, Michael S. Tsirkin wrote:
+> This allows incrementing the correct timeout statistic without any mess.
+> Down the road, devices can learn to reset just the specific queue.
 > 
-> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+> The patch was generated with the following script:
+> 
+<snip>
+> 
+> where the list of files and functions is simply from:
+> 
+> git grep ndo_tx_timeout, with manual addition of headers
+> in the rare cases where the function is from a header,
+> then manually changing the few places which actually
+> call ndo_tx_timeout.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> Acked-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Acked-by: Shannon Nelson <snelson@pensando.io>
+> Reviewed-by: Martin Habets <mhabets@solarflare.com>
+> 
+> changes from v8:
+> 	fix up a missing direct call to timeout
+> 	rebased on net-next
+> changes from v7:
+> 	fixup leftovers from v3 change
+> changes from v6:
+> 	fix typo in rtl driver
+> changes from v5:
+> 	add missing files (allow any net device argument name)
+> changes from v4:
+> 	add a missing driver header
+> changes from v3:
+>         change queue # to unsigned
+> Changes from v2:
+>         added headers
+> Changes from v1:
+>         Fix errors found by kbuild:
+>         generalize the pattern a bit, to pick up
+>         a couple of instances missed by the previous
+>         version.
 > ---
->  drivers/devfreq/Kconfig | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 38a94df749a2..c799917c34c9 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -74,6 +74,18 @@ config DEVFREQ_GOV_PASSIVE
->  	  through sysfs entries. The passive governor recommends that
->  	  devfreq device uses the OPP table to get the frequency/voltage.
+<snip>
+> diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> index 6a9d12dad5d9..ad0ecebb1b34 100644
+> --- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> +++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+> @@ -288,7 +288,7 @@ static int dpaa_stop(struct net_device *net_dev)
+>  	return err;
+>  }
 >  
-> +comment "DEVFREQ Options"
-> +
-> +config DEVFREQ_DELAYED_TIMER
-> +	bool "Use delayed timer in Simple Ondemand Governor"
+> -static void dpaa_tx_timeout(struct net_device *net_dev)
+> +static void dpaa_tx_timeout(struct net_device *net_dev, int txqueue)
 
-Is the use really limited to the Simple Ondemand Governor? I don't think
-so, at least the Tegra devfreq driver also does monitoring and others
-might follow.
+This needs to be unsigned int, otherwise there is a build error:
 
+../drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2622:20: error: incompatible pointer types initializing 'void (*)(struct net_device *, unsigned int)' with an expression of type 'void (struct net_device *, int)' [-Werror,-Wincompatible-pointer-types]
+        .ndo_tx_timeout = dpaa_tx_timeout,
+                          ^~~~~~~~~~~~~~~
+1 error generated.
 
-> +	default false
-> +	help
-> +	  Simple Ondemand Governor uses polling for reading buses counters.
-> +	  A default timer used is deferred, which saves power, but can
-> +	  miss increased demand for higher bus frequency if timer was
-> +	  assigned to idle cpu. If you want to change this to delayed
-> +	  timer at the cost of more power used, say Yes here.
-> +
->  comment "DEVFREQ Drivers"
->  
->  config ARM_EXYNOS_BUS_DEVFREQ
-
-
-This patch on it's own does nothing. Squash it with '[4/4] PM / devfreq:
-use delayed work if DEVFREQ_DELAYED_TIMER set'.
+Cheers,
+Nathan
