@@ -2,114 +2,129 @@ Return-Path: <SRS0=ag/Q=Z7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5FC43603
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48780C43603
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBA32068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPEOa+5E"
+	by mail.kernel.org (Postfix) with ESMTP id 2130B2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Dec 2019 20:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLIUW6 (ORCPT
+        id S1726675AbfLIUYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 15:22:58 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:45460 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfLIUW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 15:22:58 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so6350459pjp.12;
-        Mon, 09 Dec 2019 12:22:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=AhU4In8PuotkeDP8I8PPfaY0k5IvXY23cMJR6CcYwQM=;
-        b=CPEOa+5E8a6FVpvVq1/JmZbb6VFSoZaSXO+RQfKShpU0GPe52p7gyhCymEzGUEuSql
-         uAtr+ryGKEdtn535Zagjq1GHBk+AYjLmqxhwwLkMFOZvRxyE9cZPKoDjjRs+OrB5R2io
-         iZWBqVgryg3fsVGirPINrXiG/Y0hK/BD4Csj1jboMpEUaRushJt5S7j5bbPf1HNyOdI8
-         gdbL5dvZsPICZSsYeNYsLCZsV7a6/lcMSmvVHZLC1J8EMhqRwv6PlTEuDM0w5vccnh6w
-         Hg/WJTAGm9M2vjcbGs8sIlQ80p3jDiUrnsVb5GH/rk5cf4zaWj08gyz4Bf+AhONd5Uqo
-         BM0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=AhU4In8PuotkeDP8I8PPfaY0k5IvXY23cMJR6CcYwQM=;
-        b=dktYa19GkTHZtsaw6kfAyIB8igww5E7Af7YZBa62IFpQDALxlFS6lFhT7aUpQGLV9B
-         8eDfah/WDFyYlJb+TvJYpl4Z0cEj1i1oSJVnqbEoQNFW+eclG9hJ3J9THZwPPuKG3XUI
-         JWLR1dTW/Lwj4odn6VHCZNdnITYjsiqBgfQ/NiTCD+bCJcY0f2bCG01t2QIKFBGTC9ho
-         sgs+wyLzwCsZKQkmTeB6KbJ/uiobd7Bjpx7RGsi9oRDzF6l0/VbPnQwOa/gUaW8C8XKX
-         yfQVk3j8MX3Pki9rxSYzVr7fEpprhll0GVstvtbwl3Ld371JfgIWvAAMkIa9QI3SIyRj
-         NUQA==
-X-Gm-Message-State: APjAAAW1jitwfobkHS66jP/jlbsesF3iqC11PJb8R1cpU1CvpqI7jATv
-        EWGDEL3K2CTtlWpKPPh9UxpGOFAP
-X-Google-Smtp-Source: APXvYqzLAsJa9qz9gsQbh6zx0DgPAVUUC1XbOfkQJSfdhrYsknBepYWuw19yhS9AE5p+Q+aYP6qcJQ==
-X-Received: by 2002:a17:90a:2201:: with SMTP id c1mr982341pje.31.1575922977242;
-        Mon, 09 Dec 2019 12:22:57 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id e11sm208108pjj.26.2019.12.09.12.22.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 12:22:56 -0800 (PST)
-Date:   Mon, 9 Dec 2019 12:22:54 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: uinput - always report EPOLLOUT
-Message-ID: <20191209202254.GA107567@dtor-ws>
+        Mon, 9 Dec 2019 15:24:54 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:58624 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfLIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 15:24:53 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iePa0-0003kM-0J; Mon, 09 Dec 2019 13:24:29 -0700
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@suse.com>
+References: <20191209191346.5197-1-logang@deltatee.com>
+ <20191209191346.5197-6-logang@deltatee.com>
+ <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
+Date:   Mon, 9 Dec 2019 13:24:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: mhocko@suse.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, akpm@linux-foundation.org, dan.j.williams@intel.com, hch@lst.de, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david@redhat.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t
+ in arch_add_memory()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uinput device is always available for writing so we should always report
-EPOLLOUT and EPOLLWRNORM bits, not only when there is nothing to read from
-the device.
-
-Fixes: d4b675e1b527 ("Input: uinput - fix returning EPOLLOUT from uinput_poll")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/misc/uinput.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index fd253781be71..0bb456015d8f 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -689,13 +689,14 @@ static ssize_t uinput_read(struct file *file, char __user *buffer,
- static __poll_t uinput_poll(struct file *file, poll_table *wait)
- {
- 	struct uinput_device *udev = file->private_data;
-+	__poll_t mask = EPOLLOUT | EPOLLWRNORM; /* uinput is always writable */
- 
- 	poll_wait(file, &udev->waitq, wait);
- 
- 	if (udev->head != udev->tail)
--		return EPOLLIN | EPOLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 
--	return EPOLLOUT | EPOLLWRNORM;
-+	return mask;
- }
- 
- static int uinput_release(struct inode *inode, struct file *file)
--- 
-2.24.0.393.g34dc348eaf-goog
 
 
--- 
-Dmitry
+On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
+> On 09.12.19 20:13, Logan Gunthorpe wrote:
+>> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+>> struct page mappings for IO memory. At present, these mappings are created
+>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+>> x86, an mtrr register will typically override this and force the cache
+>> type to be UC-. In the case firmware doesn't set this register it is
+>> effectively WB and will typically result in a machine check exception
+>> when it's accessed.
+>>
+>> Other arches are not currently likely to function correctly seeing they
+>> don't have any MTRR registers to fall back on.
+>>
+>> To solve this, add an argument to arch_add_memory() to explicitly
+>> set the pgprot value to a specific value.
+>>
+>> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
+>> simple change to pass the pgprot_t down to their respective functions
+>> which set up the page tables. For x86_32, set the page tables explicitly
+>> using _set_memory_prot() (seeing they are already mapped). For sh, reject
+>> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
+>> sh doesn't support ZONE_DEVICE anyway.
+>>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> ---
+>>  arch/arm64/mm/mmu.c            | 4 ++--
+>>  arch/ia64/mm/init.c            | 5 ++++-
+>>  arch/powerpc/mm/mem.c          | 4 ++--
+>>  arch/s390/mm/init.c            | 4 ++--
+>>  arch/sh/mm/init.c              | 5 ++++-
+>>  arch/x86/mm/init_32.c          | 7 ++++++-
+>>  arch/x86/mm/init_64.c          | 4 ++--
+>>  include/linux/memory_hotplug.h | 2 +-
+>>  mm/memory_hotplug.c            | 2 +-
+>>  mm/memremap.c                  | 2 +-
+>>  10 files changed, 25 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 60c929f3683b..48b65272df15 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>>  }
+>>  
+>>  #ifdef CONFIG_MEMORY_HOTPLUG
+>> -int arch_add_memory(int nid, u64 start, u64 size,
+>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
+>>  			struct mhp_restrictions *restrictions)
+> 
+> Can we fiddle that into "struct mhp_restrictions" instead?
+
+Yes, if that's what people want, it's pretty trivial to do. I chose not
+to do it that way because it doesn't get passed down to add_pages() and
+it's not really a "restriction". If I don't hear any objections, I will
+do that for v2.
+
+Thanks,
+
+Logan
