@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A70C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAF8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C529207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E2D207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017519;
-	bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
+	s=default; t=1576017526;
+	bh=oOxMJ+A2UfXI1FaJjvAhzHsorqxw6QouucVm0mMiEqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHvRY3eDXec99EGgmIRdunpGOuSM36q0E3DkfwZMpko+BHQIS2JRjxbmKBmlYBjB5
-	 MXcpDixH589dSOTboIbENHEk/6bZqjHb3bJj83CnJEjxzCLt2wVXtXWEu/UE3U1TYT
-	 bzJs+Bo+dlQL6lgbFOEWeRBbdrmMbm7mXolF6WCw=
+	b=Kg5Ci8wG0cgc4NiIFX0qZ5b8QD4Sc1AYBSoO1NKNHO2c2jIeqUCJ8KKa4gmhsS1+R
+	 OjYRfV7rMSLSYdj5GsnTxNn/5zbnDGJ3H1d8AC1GkXWZo9PTtk/oEhW0qSbPzgS3Mp
+	 1HJ/cYGz74yZe4c+t9yLAVFHqIiziZ7Wk45v2+pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfLJWii (ORCPT
+        id S1730042AbfLJWip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:38:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:38:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbfLJWdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:38 -0500
+        id S1729857AbfLJWdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84BDB24653;
-        Tue, 10 Dec 2019 22:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 637CD20838;
+        Tue, 10 Dec 2019 22:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017217;
-        bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
+        s=default; t=1576017216;
+        bh=oOxMJ+A2UfXI1FaJjvAhzHsorqxw6QouucVm0mMiEqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7rhFT/juprP/Ki+dAMTz8DK4TBRqxJhN3hboutnsDwwimeXMnxtVUBNgMx5AZPaY
-         Oz3rt+CX2m1bc5uWbecatlwfAjQryexC2S8Ab3GMJn01WCzVuqJFg/WkGkItbGTdN1
-         rePdOpLarDClX7ty/KbG2LLsQRsZfSs9QEtUfo5I=
+        b=vv8kv61PuSQ5/Tw7o6Hz2ReheVEJCnRrGKoH+JE2L3iEXO3iB1h8m4GBRQSxu59Vv
+         k7lWfWfBFb0w+pDtkQvi8HVe/LChbsmqkjqp8CKWINnlILKB2VdOVa/x4i1uNzzXeQ
+         ifJRxx2ZAm42S0yqfJIsPJo/7pslOw3Jhx4xC3J4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 17/71] samples: pktgen: fix proc_cmd command result check logic
-Date:   Tue, 10 Dec 2019 17:32:22 -0500
-Message-Id: <20191210223316.14988-17-sashal@kernel.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/71] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Tue, 10 Dec 2019 17:32:21 -0500
+Message-Id: <20191210223316.14988-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -60,80 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-For clarity of an execution flow, 'errexit' flag has been set.
-
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index 205e4cde46012..065a7e296ee31 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
- 
-+set -o errexit
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index 83d3a5cf272f2..932fa31e0624a 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -474,7 +474,13 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
+ {
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
 +
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
- 
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
- 
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
 +
- ## -- General shell tricks --
- 
- function root_check_run_with_sudo() {
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
 -- 
 2.20.1
 
