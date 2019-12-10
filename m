@@ -4,51 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306A1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20172C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047D420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50BF20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014012;
-	bh=hzr0+RYl1LfimtxMSPA8uEVGYwsm5C0ktaBByI12+1Q=;
+	s=default; t=1576014016;
+	bh=sU/hv5OnzgjSlrQPBJsVkApxWD7ChcuCQUDBHs/gNrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yqXCIXI7N1RxIAw8KJUB3tvjI5Rxqizuf4w8Qv0ao+TXofwG1sTvK7vwm87jmLX5Z
-	 +WpgquGkg3kJFIBezHu3hzWPtQLZsLZm5TOYZTLyqfY986TDacD0sh23ETljbSaujM
-	 qQFzEfy3JZNl2rUJbTmchYuuCO4yZO7u9aZ3g6XM=
+	b=vq4Sy8eGfUDCbQsvj39ZhGM9yjxbcoSki1yTGFnsqn1eA4lIJE05dCKbeDGXWqBDi
+	 vM+4yROM+Trrc4gsUEuWCY62SstfM6xewk8R6KxaIdqctK0dCURY7GU9hgQnZQmsb2
+	 xxhPi2HRU/axax4wS/+a52mRNyVBh0ORpFPuYuBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfLJVkK (ORCPT
+        id S1729241AbfLJVkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:40:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:40:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729664AbfLJVeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:36 -0500
+        id S1730058AbfLJVef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0E21205C9;
-        Tue, 10 Dec 2019 21:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7AC22464;
+        Tue, 10 Dec 2019 21:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013675;
-        bh=hzr0+RYl1LfimtxMSPA8uEVGYwsm5C0ktaBByI12+1Q=;
+        s=default; t=1576013674;
+        bh=sU/hv5OnzgjSlrQPBJsVkApxWD7ChcuCQUDBHs/gNrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=usi7eIoJcgpkfXL33Hs2LDMY3yG8eJ84CPQATXp9y2YoYRx/8gcBI1dagdYsnqgZG
-         UXd8cAtnvLJNAKzdw8ysMSi31VFP+xvzLCkB7RoWgaEAdImw6QmL9MUyZnHBBudi+C
-         EnZtT/kOj/SN0DYZygaSxYOYc9717L8Vquoyzpyc=
+        b=KLKsH/M/Qa47ad4meD7NHHSwgGitUfUMSA1TV1ltoDA0OP4ia62yFlIX8/jTFQ9it
+         5YfFAHbM+iZosOdgASGkHR0Rb+GHKn7KeWq43mtyvPVywSD3ISwZUMneafjKamWcpB
+         7rzlQS1gmaWqHTB3AvZ5KW8jiGyCNVemj5IH++1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Luke Mujica <lukemujica@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Zenghui Yu <yuzenghui@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 111/177] perf probe: Walk function lines in lexical blocks
-Date:   Tue, 10 Dec 2019 16:31:15 -0500
-Message-Id: <20191210213221.11921-111-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 110/177] perf jevents: Fix resource leak in process_mapfile() and main()
+Date:   Tue, 10 Dec 2019 16:31:14 -0500
+Message-Id: <20191210213221.11921-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,74 +71,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
+[ Upstream commit 1785fbb73896dbd9d27a406f0d73047df42db710 ]
 
-Since some inlined functions are in lexical blocks of given function, we
-have to recursively walk through the DIE tree.  Without this fix,
-perf-probe -L can miss the inlined functions which is in a lexical block
-(like if (..) { func() } case.)
+There are memory leaks and file descriptor resource leaks in
+process_mapfile() and main().
 
-However, even though, to walk the lines in a given function, we don't
-need to follow the children DIE of inlined functions because those do
-not have any lines in the specified function.
+Fix this by adding free(), fclose() and free_arch_std_events() on the
+error paths.
 
-We need to walk though whole trees only if we walk all lines in a given
-file, because an inlined function can include another inlined function
-in the same file.
-
-Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
+Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Luke Mujica <lukemujica@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ tools/perf/pmu-events/jevents.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 5bbb87f63ecba..6e7cb3537ce01 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -691,10 +691,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
- 		}
-+		if (!lw->recursive)
-+			return DIE_FIND_CB_SIBLING;
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 6cd9623ebc93b..38b5888ef7b38 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -754,6 +754,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	char *line, *p;
+ 	int line_num;
+ 	char *tblname;
++	int ret = 0;
+ 
+ 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+ 
+@@ -765,6 +766,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	if (!mapfp) {
+ 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+ 				fpath);
++		free(line);
+ 		return -1;
  	}
--	if (!lw->recursive)
--		/* Don't need to search recursively */
--		return DIE_FIND_CB_SIBLING;
  
- 	if (addr) {
- 		fname = dwarf_decl_file(in_die);
-@@ -741,6 +740,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
- {
- 	struct __line_walk_param *lw = data;
+@@ -791,7 +793,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 			/* TODO Deal with lines longer than 16K */
+ 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+ 					prog, fpath, line_num);
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		line[strlen(line)-1] = '\0';
  
-+	/*
-+	 * Since inlined function can include another inlined function in
-+	 * the same file, we need to walk in it recursively.
-+	 */
- 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
- 	if (lw->retval != 0)
- 		return DWARF_CB_ABORT;
-@@ -830,8 +833,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	 */
- 	if (rt_die != cu_die)
- 		/*
--		 * Don't need walk functions recursively, because nested
--		 * inlined functions don't have lines of the specified DIE.
-+		 * Don't need walk inlined functions recursively, because
-+		 * inner inlined functions don't have the lines of the
-+		 * specified function.
- 		 */
- 		ret = __die_walk_funclines(rt_die, false, callback, data);
- 	else {
+@@ -821,7 +824,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 
+ out:
+ 	print_mapping_table_suffix(outfp);
+-	return 0;
++	fclose(mapfp);
++	free(line);
++	return ret;
+ }
+ 
+ /*
+@@ -1118,6 +1123,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1130,6 +1136,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1147,6 +1154,8 @@ int main(int argc, char *argv[])
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+ 		/* Make build fail */
++		fclose(eventsfp);
++		free_arch_std_events();
+ 		return 1;
+ 	}
+ 
 -- 
 2.20.1
 
