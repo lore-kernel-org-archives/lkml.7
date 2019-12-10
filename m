@@ -2,64 +2,69 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113BCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA1FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19BF2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEC72073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575977871;
-	bh=jnMJOT8ZUpaiICJBhq1tb7n9Bk7PdqFGIl3ay2GHGMQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yJ3cnFNs4VhaCSGPBaVWzMKNukWmIhKvUB7IyvOL6MS7f69Upk5W+CJqmnlhZ+nF9
-	 Dh7KmqnlqY5xmxDiItBktq4oMECa7eGcRDF/ncJwbKsAaaSI3anwJ+TVEtsNzuITcx
-	 AfQj1zCBOwTXanQdGLlgcN8yVZbGfdrfHbYGdFdM=
+	s=default; t=1575977876;
+	bh=IxACIjreGJ4j0wFz3T0BYh3M2Z/+AqaqcbugnaXpsow=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N1igpuCKWQsUjpYEjy2uTmc58QSEDwtGBiwynIq9eMxoOExE17yNQ+ovqrsCem/SU
+	 wFLoKl+schZF+L7VwgCSx9MW+sXNyo4veuQ4V05rD5MdjzO2qEOvBI6VHjni10HAMy
+	 ZxCpwlPKOfpdf3Md8hANnBWRvWszNHFIWoJedd8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLJLhv (ORCPT
+        id S1727443AbfLJLhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:37:51 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36585 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfLJLhu (ORCPT
+        Tue, 10 Dec 2019 06:37:55 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37665 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJLhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:37:50 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n12so13449726lfe.3;
-        Tue, 10 Dec 2019 03:37:48 -0800 (PST)
+        Tue, 10 Dec 2019 06:37:52 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so13422351lfc.4;
+        Tue, 10 Dec 2019 03:37:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eZNh4wJZKItTijN7b21HY0LHSvrpQd4qo9HGr6Bov0E=;
-        b=opQkfcEyqSy+csA1rofEkp47kBDF+RS+7SAIVI79+qe5WO8ojUs0ORHYwePDZDsOzQ
-         ZDedP4lG/VtxU6JXvO1HZkQVErAI3YmzE33X4v7E2H/vFW058hQ+9LxPgkQjywiTBV5C
-         9UcgjnI8FPWrNiGEfN0z/4K8ndKzt/4hhpDWclwPAZH+0CXpxL4yQv9Q77lrz9DFboUF
-         +26NiMEFgCiGfXs90/R1KbedPKFJJb+1TrHSHhc5/MwVVSZsufH1xeU2VtRLZVVmcbFl
-         DSuXEKwVHZ6AO6yo1MAOBs/X0G8KXAEvIWN5vTlr1U7176qEjL98wH5uvn5i6w9Wht73
-         sKbQ==
-X-Gm-Message-State: APjAAAUpKN5ZGiVKyFLM9pbbDqg+u8FV+YQ99RN3yL03KV8P67g1P4nj
-        EcOeqg3HD30tdPruYmQwNZM=
-X-Google-Smtp-Source: APXvYqyH2sZx4j1DatpQAz63dwGw0x8MR1eQzWOeAfY68uPQNR5xqAk6lAkC2IotvJr0VQ7gi2dqfQ==
-X-Received: by 2002:a19:f514:: with SMTP id j20mr17098761lfb.31.1575977868238;
-        Tue, 10 Dec 2019 03:37:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EqNpTSkza+eQj8K2xj20PlaT6wotGOHkK97zIiEKJAQ=;
+        b=KzN0d8GZAC4erZ09TcavQa5ecG7zuCLKWzEsHufEPKzXWEpD7o7OvLVHQNe7kLHzLL
+         TBhcXmxr6P6Uxj5Q8ZycE8uLfFx36xHj3ifYV1OFu7xhbitEi3ojQM0809wA25Jwh0QQ
+         qm7eqUBevtU3etyWPLJgTkVM9VgOjiLRyAvTWu46WFsRr/aNQkjKTQ2KEvzy7+kyypPp
+         Xmf6tCeYQQlDKGr1VZ3qEc2oA4w+RZT2IWsXDoq9tiRupRxg2la4TMVrVJquOXXfAVzB
+         YTgMgqdTwe0lEMplzCmxp29hrfjY3i54mQitDc0kzwLHQzCgsj87AE3WRYOuqaV6CNJw
+         U2fg==
+X-Gm-Message-State: APjAAAU0tx4GejOBDrFzK3stZCy3VQ0sEj+8gcaZjNAhdC6K4eZeuqGN
+        raxKkmIPmv85sVbq/nWY2g/ed4vH
+X-Google-Smtp-Source: APXvYqz3AlE6wPReZrV2ucIUecMHpCKtz7S6dDKY5ME3aa+t3OyIfslalKBvUVIPeddGQ3/bulIcZQ==
+X-Received: by 2002:a19:cc49:: with SMTP id c70mr11667364lfg.73.1575977869953;
+        Tue, 10 Dec 2019 03:37:49 -0800 (PST)
 Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id q27sm1628548ljc.65.2019.12.10.03.37.47
+        by smtp.gmail.com with ESMTPSA id u24sm1569296ljo.77.2019.12.10.03.37.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 10 Dec 2019 03:37:47 -0800 (PST)
 Received: from johan by xi.terra with local (Exim 4.92.3)
         (envelope-from <johan@xi.terra>)
-        id 1iedpt-00013f-Mb; Tue, 10 Dec 2019 12:37:49 +0100
+        id 1iedpt-00013n-Tc; Tue, 10 Dec 2019 12:37:49 +0100
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 0/7] Input: fix USB alsetting bugs
-Date:   Tue, 10 Dec 2019 12:37:30 +0100
-Message-Id: <20191210113737.4016-1-johan@kernel.org>
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Vladis Dronov <vdronov@redhat.com>
+Subject: [PATCH 2/7] Input: aiptek: fix endpoint sanity check
+Date:   Tue, 10 Dec 2019 12:37:32 +0100
+Message-Id: <20191210113737.4016-3-johan@kernel.org>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191210113737.4016-1-johan@kernel.org>
+References: <20191210113737.4016-1-johan@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,33 +72,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We had quite a few driver using the first alternate setting instead of
-the current one when doing descriptor sanity checks. This is mostly an
-issue on kernels with panic_on_warn set due to a WARN() in
-usb_submit_urn(). Since we've started backporting such fixes (e.g. as
-reported by syzbot), I've marked these for stable as well.
+The driver was checking the number of endpoints of the first alternate
+setting instead of the current one, something which could lead to the
+driver binding to an invalid interface.
 
-Included are also a couple of related clean ups to prevent future
-issues.
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Johan
+Fixes: 8e20cf2bce12 ("Input: aiptek - fix crash on detecting device without endpoints")
+Cc: stable <stable@vger.kernel.org>     # 4.4
+Cc: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/input/tablet/aiptek.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-Johan Hovold (7):
-  Input: pegasus_notetaker: fix endpoint sanity check
-  Input: aiptek: fix endpoint sanity check
-  Input: aiptek: use descriptors of current altsetting
-  Input: gtco: fix endpoint sanity check
-  Input: gtco: fix extra-descriptor debug message
-  Input: gtco: drop redundant variable reinit
-  Input: sur40: fix interface sanity checks
-
- drivers/input/tablet/aiptek.c            |  8 ++++----
- drivers/input/tablet/gtco.c              | 13 ++++---------
- drivers/input/tablet/pegasus_notetaker.c |  2 +-
- drivers/input/touchscreen/sur40.c        |  2 +-
- 4 files changed, 10 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
+index 2ca586fb914f..06d0ffef4a17 100644
+--- a/drivers/input/tablet/aiptek.c
++++ b/drivers/input/tablet/aiptek.c
+@@ -1802,14 +1802,14 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 	input_set_abs_params(inputdev, ABS_WHEEL, AIPTEK_WHEEL_MIN, AIPTEK_WHEEL_MAX - 1, 0, 0);
+ 
+ 	/* Verify that a device really has an endpoint */
+-	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
++	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
+ 		dev_err(&intf->dev,
+ 			"interface has %d endpoints, but must have minimum 1\n",
+-			intf->altsetting[0].desc.bNumEndpoints);
++			intf->cur_altsetting->desc.bNumEndpoints);
+ 		err = -EINVAL;
+ 		goto fail3;
+ 	}
+-	endpoint = &intf->altsetting[0].endpoint[0].desc;
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
+ 
+ 	/* Go set up our URB, which is called when the tablet receives
+ 	 * input.
 -- 
 2.24.0
 
