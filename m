@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6568C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20794C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7FE214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64DD24653
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012355;
-	bh=HXpil44N5GmNjtAl+3KxceguPapHwyWGDSjDexNxcz4=;
+	s=default; t=1576012368;
+	bh=TRwGKMpNMAvDMTxkNkuhEWzAfg0IAMCbSfX9dgiBUaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DXvVs+FLfJQbZ+8iDlnNLa/fq9GtNAy4kYIoOD9KUZnydR4jmtfn75GLfc4ZvWf5T
-	 zP5RwrQYnX6/wTqlFS0gLqKBaCpADVWep8BM8exPEsSYTn7azZRy6T/Lt5TADHLrM0
-	 gAXFlx3Hf/0wknM/Iq4+mvzORlRdcnJ032J/aM3w=
+	b=WKBlCWqzd20IshqA2ro3lYWATeHhvPG3s9i3ystxRgQrZf+QpZCNYfBhA5Hc0n/D9
+	 Exh5wBKijL7T608fN8UVSc3uVCzdHyexnM6kewvbwukmRwH6UbbtOioCe03gA8GKYc
+	 bfmgWRZZ/UGpmhC71XTEtivzMBnh1vqj6AXT3860=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbfLJVMe (ORCPT
+        id S1729097AbfLJVMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbfLJVMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:21 -0500
+        id S1729037AbfLJVMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964752077B;
-        Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A3D208C3;
+        Tue, 10 Dec 2019 21:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012341;
-        bh=HXpil44N5GmNjtAl+3KxceguPapHwyWGDSjDexNxcz4=;
+        s=default; t=1576012358;
+        bh=TRwGKMpNMAvDMTxkNkuhEWzAfg0IAMCbSfX9dgiBUaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZ6LBMwcraBffM3qH9NBwwVOIn1l77hZKbeSx0RaqUxOOPO0IioBaDNHEtSfJ8KOL
-         vGvEvOT+5ubZ8/BBrwkjrfbVTwGwRTBE4QJJM6cW0BJicq1MDWuLlEzd3PT6jzHall
-         os5qmCzyasKF0E39WKtBDWdSDqRSgl5wY4pMPocE=
+        b=IsY0KZh1JFaZUWBabwhX1b9egKpM+hW6a+UeGCr71ww1JIhK7A3T6HLWhWlpE9+gf
+         avfYq07ptdPuqNkfRFMHZaf7PAItraq4W0pO5mNhvnzVdMqC5kmbhVOP0XZsKAVIJR
+         Lwqr0diP0Qq1NK2jSMbLsz/2VHmaLjJka5oKMeYc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 272/350] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 16:06:17 -0500
-Message-Id: <20191210210735.9077-233-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Daniel Kranzdorf <dkkranzd@amazon.com>,
+        Firas JahJah <firasj@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 286/350] RDMA/efa: Clear the admin command buffer prior to its submission
+Date:   Tue, 10 Dec 2019 16:06:31 -0500
+Message-Id: <20191210210735.9077-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,71 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+[ Upstream commit 64c264872b8879e2ab9017eefe9514d4c045c60e ]
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+We cannot rely on the entry memcpy as we only copy the actual size of the
+command, the rest of the bytes must be memset to zero.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+Currently providing non-zero memory will not have any user visible impact.
+However, since admin commands are extendable (in a backwards compatible
+way) everything beyond the size of the command must be cleared to prevent
+issues in the future.
 
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 0420e542569b ("RDMA/efa: Implement functions that submit and complete admin commands")
+Link: https://lore.kernel.org/r/20191112092608.46964-1-galpress@amazon.com
+Reviewed-by: Daniel Kranzdorf <dkkranzd@amazon.com>
+Reviewed-by: Firas JahJah <firasj@amazon.com>
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/infiniband/hw/efa/efa_com.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index 7abe6ae261b42..f304802ecf7be 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -461,10 +461,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
-+
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -536,7 +537,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -564,7 +565,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
+diff --git a/drivers/infiniband/hw/efa/efa_com.c b/drivers/infiniband/hw/efa/efa_com.c
+index 3c412bc5b94f1..0778f4f7dccd7 100644
+--- a/drivers/infiniband/hw/efa/efa_com.c
++++ b/drivers/infiniband/hw/efa/efa_com.c
+@@ -317,6 +317,7 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
+ 						       struct efa_admin_acq_entry *comp,
+ 						       size_t comp_size_in_bytes)
+ {
++	struct efa_admin_aq_entry *aqe;
+ 	struct efa_comp_ctx *comp_ctx;
+ 	u16 queue_size_mask;
+ 	u16 cmd_id;
+@@ -350,7 +351,9 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
+ 
+ 	reinit_completion(&comp_ctx->wait_event);
+ 
+-	memcpy(&aq->sq.entries[pi], cmd, cmd_size_in_bytes);
++	aqe = &aq->sq.entries[pi];
++	memset(aqe, 0, sizeof(*aqe));
++	memcpy(aqe, cmd, cmd_size_in_bytes);
+ 
+ 	aq->sq.pc++;
+ 	atomic64_inc(&aq->stats.submitted_cmd);
 -- 
 2.20.1
 
