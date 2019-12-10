@@ -2,101 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6C2C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1550920637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TOlR71rG"
+	by mail.kernel.org (Postfix) with ESMTP id 838CC2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575939392;
+	bh=BbLBjR8wcrsANoTlWrEqQPyK+DvAKxv254F1InccAcs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=aQzfruxUKVQlAvA+Ns0mq0pAH9CB66OzWigI8pwo2shaorNr3lhrH9Go/J9jFDfAU
+	 owdTzbOK2JFngPUO2JMy7dtrzXhrgVFfjyGOA6ElbHgKC1+4+2iJpQND92t+yU1s8Y
+	 wnTc4Jo0Begr92EWT0je9PKZewHNDeefDcRWIoyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLJAyq (ORCPT
+        id S1727587AbfLJA4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:54:46 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:59176 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfLJAyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:54:45 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBA0iAIS071063;
-        Tue, 10 Dec 2019 00:54:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=e3cl4wKiP2m9gerRTdI/Zvi5abkL8narEviaojDWOEk=;
- b=TOlR71rGnXfRnjL5g+SYlAWR9ROiIZNn7pBEj7RUmsTdhpSmX3v6b7u7OgDm3gtbZb+7
- 2FD7yOE3xtY0wIDr35dFFkfRmVrWjYh83xfrcaBRvbn4ZO/M5Hku3HdvvBmZShO27ng+
- AzCysEHBhz6NhllPC5NKyCg3HsUH9LvrMfhB4NKNs0CNJOttTo15VElUGOXyHErU7JiB
- A1AT95ziN2MxVZDgz37yRYShIQhl2ChCEugidRuwS9fWhcFQlsmBsBiVwjtEQigOizGy
- /T4rIGvvwq8Rj+qmBDzpvcjOs4LRotHoNr0Te3cY8Upgz5wZdCI3eMJbpLqw5GD8u3P3 CQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2wrw4myuhh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 00:54:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBA0sDoo073282;
-        Tue, 10 Dec 2019 00:54:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wsv8av5na-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 00:54:21 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBA0sGaO017826;
-        Tue, 10 Dec 2019 00:54:16 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Dec 2019 16:54:15 -0800
-To:     sheebab <sheebab@cadence.com>
-Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
-        <beanhuo@micron.com>, <yuehaibing@huawei.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vigneshr@ti.com>, <rafalc@cadence.com>, <mparab@cadence.com>
-Subject: Re: [PATCH v2] scsi: ufs: Update L4 attributes on manual hibern8 exit in  Cadence UFS.
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
-Date:   Mon, 09 Dec 2019 19:54:12 -0500
-In-Reply-To: <1575606303-10917-1-git-send-email-sheebab@cadence.com>
-        (sheebab@cadence.com's message of "Fri, 6 Dec 2019 05:25:03 +0100")
-Message-ID: <yq1d0cxngp7.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912100006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912100005
+        Mon, 9 Dec 2019 19:56:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726743AbfLJA4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 19:56:30 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE73720637;
+        Tue, 10 Dec 2019 00:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575939389;
+        bh=BbLBjR8wcrsANoTlWrEqQPyK+DvAKxv254F1InccAcs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uQ6utAA370KB9xY5+qeGGsoo1HH/Hnt/LDZgeHbTSoRMRHkI8VQJNf4H7ZKlSmj42
+         WZSNKaK/IM6JgWSl9QfalBJQuyJfmeZpwpLLwj0NmbsOrQL4FJSoG0TjuPsUzwfCOi
+         N9YkLgu4ONG2hyyuwLyRSMczlQwBZdl/iQWpJ6W0=
+Date:   Mon, 9 Dec 2019 16:56:27 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?ISO-8859-1?Q?J=E9r?= =?ISO-8859-1?Q?=F4me?= Glisse 
+        <jglisse@redhat.com>, Magnus Karlsson <magnus.karlsson@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH v8 17/26] media/v4l2-core: set pages dirty upon
+ releasing DMA buffers
+Message-Id: <20191209165627.bf657cb8fdf660e8f91e966c@linux-foundation.org>
+In-Reply-To: <20191209225344.99740-18-jhubbard@nvidia.com>
+References: <20191209225344.99740-1-jhubbard@nvidia.com>
+        <20191209225344.99740-18-jhubbard@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 9 Dec 2019 14:53:35 -0800 John Hubbard <jhubbard@nvidia.com> wrote:
 
-sheebab,
+> After DMA is complete, and the device and CPU caches are synchronized,
+> it's still required to mark the CPU pages as dirty, if the data was
+> coming from the device. However, this driver was just issuing a
+> bare put_page() call, without any set_page_dirty*() call.
+> 
+> Fix the problem, by calling set_page_dirty_lock() if the CPU pages
+> were potentially receiving data from the device.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: <stable@vger.kernel.org>
 
-> Backup L4 attributes duirng manual hibern8 entry and restore the L4
-> attributes on manual hibern8 exit as per JESD220C.
->
-> Signed-off-by: Sheeba B <sheebab@cadence.com>
+What are the user-visible effects of this change?
 
-Please make sure your Author: matches your Signed-off-by:.
+As it's cc:stable I'd normally send this to Linus within 1-2 weeks, or
+sooner.  Please confirm that this is a standalone fix, independent of
+the rest of this series.
 
-Applied to 5.6/scsi-queue, thanks!
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
