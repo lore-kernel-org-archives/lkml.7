@@ -2,116 +2,129 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2847C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC04C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4EAC20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E710B20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkWDO0W2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCtNVB18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLJCM2 (ORCPT
+        id S1726683AbfLJCPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:12:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50580 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726602AbfLJCM1 (ORCPT
+        Mon, 9 Dec 2019 21:15:54 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44247 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfLJCPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:12:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575943946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AqNXb1DdFGH0UEVoh/67mONToQvKGHBSfZkAshMis24=;
-        b=OkWDO0W2Y/Td11zNJQipGS2QyxGSwwGIyTvxtYMLqp5NKx9EiFQ8oQ6iL9xQ3tr7r6XlvD
-        mJzHGWfIeEYv2HzYab/EJZUOQV/+PjNNxU7n0KcU5LMATyAIBu6mucWf8btKW16LP17+In
-        MMG0l9+nEB9Tx8qsQLOwkcfK3N+0izc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-YLXilXRBOQ-dHbPintc99A-1; Mon, 09 Dec 2019 21:12:23 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E60FE801E53;
-        Tue, 10 Dec 2019 02:12:21 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 522541001925;
-        Tue, 10 Dec 2019 02:12:14 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 10:12:10 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] block: fix "check bi_size overflow before merge"
-Message-ID: <20191210021210.GB25022@ming.t460p>
-References: <20191209191114.17266-1-agruenba@redhat.com>
+        Mon, 9 Dec 2019 21:15:53 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x7so8068140pgl.11;
+        Mon, 09 Dec 2019 18:15:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
+        b=qCtNVB18l4AXH3spU0ssTTWN9LziniY+tGLO5PgmoQBm4LP2kr+u/IstmffKCZ199+
+         tOVBNiCcnXHk9jnv8HAozN/t8h1b59cHEZRCxBx9YzTnEZVe7f/LX1efff9NM7OG7UHR
+         66XR/yfafX6snheRcg+Yj6jo8rVHZ4JqzC0DdnH200Z5LbVaxzs6VAOE327E9r/9KO0d
+         np81G6P60lGqE+BOII9bDmZVQTSCtQORPqDq43lmZzX41w1I24y6dJq5F6uc4ZUaDqV3
+         ZxBG/QnLQ+PBSgXEhGWRP/z/RVdWoqG+/6hwAbEHG3rxjmyXH/pgplvucJJ5hc0x2xJ5
+         n9yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
+        b=jwAAEQD5vKJJgxfiwBxxJsKYcY6W7dVuMeKhgOdqxuLFcR1dAHU/cwVq7OzFV/ce3x
+         v3bgcDjCMVnbt0bid5Dwb7Vah76EXAqVaaLQZgqQB+dm2eOpWIffgy5ppDbXVaOZEBRS
+         j0Fei5GZIqYoSBMUCUhHTDH50YXP3Y+uin1ukamZ6KkZBgEsT+i32h+wjQlC3Ip4eJki
+         ontnpdaQ12n5LXS9Zga9VeVw5rkVzKlWsbAJqNn+xtIte26X/aq6jHJa8DGTA6kgziiF
+         uTbM5LWBP9EY2SDDwEGX2od+D4aWu3NJMU66hmHyZDh6nOxgCWH7w1vdN7U8JA6YF35B
+         kLpw==
+X-Gm-Message-State: APjAAAXKFQ5kk0Hr+WwqDvLrLLfOGWDpMCAXPZU0vqYzi8eQham9F7kZ
+        K/Zp6W8sW34LHmdxi7PjGZd4kw8F
+X-Google-Smtp-Source: APXvYqy0qwnCTB1mskWQjDuVFXOnTeLnHaka5/VTEI+Bs7ZCHYEqRCkGA0QcpPA+DbJVCWkzmd+F2g==
+X-Received: by 2002:a62:1d55:: with SMTP id d82mr32879494pfd.165.1575944152488;
+        Mon, 09 Dec 2019 18:15:52 -0800 (PST)
+Received: from sol.lan (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id m13sm790391pga.70.2019.12.09.18.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 18:15:51 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        bamv2005@gmail.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Date:   Tue, 10 Dec 2019 10:15:25 +0800
+Message-Id: <20191210021525.13455-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191209191114.17266-1-agruenba@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: YLXilXRBOQ-dHbPintc99A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 08:11:14PM +0100, Andreas Gruenbacher wrote:
-> This partially reverts commit e3a5d8e386c3fb973fa75f2403622a8f3640ec06.
->=20
-> Commit e3a5d8e386c3 ("check bi_size overflow before merge") adds a bio_fu=
-ll
-> check to __bio_try_merge_page.  This will cause __bio_try_merge_page to f=
-ail
-> when the last bi_io_vec has been reached.  Instead, what we want here is =
-only
-> the bi_size overflow check.
->=20
-> Fixes: e3a5d8e386c3 ("block: check bi_size overflow before merge")
-> Cc: stable@vger.kernel.org # v5.4+
-> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> ---
->  block/bio.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/block/bio.c b/block/bio.c
-> index 9d54aa37ce6c..a5d75f6bf4c7 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -754,10 +754,12 @@ bool __bio_try_merge_page(struct bio *bio, struct p=
-age *page,
->  =09if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
->  =09=09return false;
-> =20
-> -=09if (bio->bi_vcnt > 0 && !bio_full(bio, len)) {
-> +=09if (bio->bi_vcnt > 0) {
->  =09=09struct bio_vec *bv =3D &bio->bi_io_vec[bio->bi_vcnt - 1];
-> =20
->  =09=09if (page_is_mergeable(bv, page, len, off, same_page)) {
-> +=09=09=09if (bio->bi_iter.bi_size > UINT_MAX - len)
-> +=09=09=09=09return false;
->  =09=09=09bv->bv_len +=3D len;
->  =09=09=09bio->bi_iter.bi_size +=3D len;
->  =09=09=09return true;
+Restore the external behavior of gpio-mockup to what it was prior to the
+change to using GPIO_LINE_DIRECTION.
 
-page merging doesn't consume new bvec, so this patch is correct:
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Fix a regression introduced in v5.5-rc1.
 
-Thanks,
-Ming
+The change to GPIO_LINE_DIRECTION reversed the polarity of the
+dir field within gpio-mockup.c, but overlooked inverting the value on
+initialization and when returned by gpio_mockup_get_direction.
+The latter is a bug.
+The former is a problem for tests which assume initial conditions,
+specifically the mockup used to initialize chips with all lines as inputs.
+That superficially appeared to be the case after the previous patch due
+to the bug in gpio_mockup_get_direction.
+
+ drivers/gpio/gpio-mockup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 56d647a30e3e..c4fdc192ea4e 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 	int direction;
+ 
+ 	mutex_lock(&chip->lock);
+-	direction = !chip->lines[offset].dir;
++	direction = chip->lines[offset].dir;
+ 	mutex_unlock(&chip->lock);
+ 
+ 	return direction;
+@@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	struct gpio_chip *gc;
+ 	struct device *dev;
+ 	const char *name;
+-	int rv, base;
++	int rv, base, i;
+ 	u16 ngpio;
+ 
+ 	dev = &pdev->dev;
+@@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	if (!chip->lines)
+ 		return -ENOMEM;
+ 
++	for (i = 0; i < gc->ngpio; i++)
++		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
++
+ 	if (device_property_read_bool(dev, "named-gpio-lines")) {
+ 		rv = gpio_mockup_name_lines(dev, chip);
+ 		if (rv)
+-- 
+2.24.0
 
