@@ -2,92 +2,122 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4DCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E237BC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC6DA2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aGoM1Sg4"
+	by mail.kernel.org (Postfix) with ESMTP id C26E22053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfLJKSz (ORCPT
+        id S1727487AbfLJKTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:18:55 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46409 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfLJKSz (ORCPT
+        Tue, 10 Dec 2019 05:19:00 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57218 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727032AbfLJKS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:18:55 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so8658352pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:18:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MjJMrLdfpPJ4Sc3kZhH/VjXjH5+SHZoVHKv3pR43FLk=;
-        b=aGoM1Sg4g9adkhnRSZkca8ipBYqH5zDXO6Sn8dVvkuMuBaD0+kTFKL8siM4sm9zEp7
-         lGLuxvo/M9CNikbqj3KnIxLENsqlMB9CZ8PPWH5BrjONlfLYN1Pc3R5CDMeM0B96mIst
-         p1VtxX7v/OfIUeBmMI+Wkm0Qnpv7Wmi0KqEBGkU9Won8QYiXe83qsocnN3L0z2o3lFyP
-         8ftiMcAZXD8h9ZQkzg/OQiOYqfFuSPDH8PynDld/iot3oJPCg4ol6S+rLBR87MDV1PJB
-         xCVbzdQ8FISzsF9bgU3shE4ipMBny5JTBWws2h6l2pV7y7EHlhjtTatKLqNIupIwgRnI
-         JcaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MjJMrLdfpPJ4Sc3kZhH/VjXjH5+SHZoVHKv3pR43FLk=;
-        b=i1NHEe512IDolywS/rwHv+v+fD2+nxuruAeTUNXdIFODFvyKhqiSzTjg6yuQPu3cPS
-         MSER4YidAeA0YNs3en7KvRe+FAmFESZ6c6eeJh6DJAEUCoexPZgY0uW8keNuKuwjegSz
-         s9sXAmTzqWj9Y1n8mTwu4jC8Gd7ZPsDGr/ZM33EvpyS6Zx/7wG7vI2F6HnR+k27l1PYc
-         GZcdpXModYYju7abVMqUSYQU9SPGMS9rT42YTIKhQxxDxY+Nm6H2AkFXmLCXSXdtnpXd
-         ycu/Hofh/r57DTtrcJqMsbPDuxgdjBiMsISs2cr3YfpIQSp75xVoOedrOCLT/kF/w3aI
-         JS1w==
-X-Gm-Message-State: APjAAAWkCR+uKcujI+FnMdzHy2ItBPie2FPk9tgvMNXUMoqX+cG+t7JP
-        YDFZ47/VETs4NLIGY4lUvTcpAQ==
-X-Google-Smtp-Source: APXvYqxyHPhqMG4TPXyS2uSioe8CvqmwehPnF4vkNuYU85Y8GyvvVGdr/eAXk14Erkx4+waKABZllQ==
-X-Received: by 2002:a63:e648:: with SMTP id p8mr23578874pgj.259.1575973134356;
-        Tue, 10 Dec 2019 02:18:54 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id p16sm2723690pgm.8.2019.12.10.02.18.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 02:18:53 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:48:51 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20191210101851.gpayo7bnyf54opyu@vireshk-i7>
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <20191203120002.GB4171@bogus>
+        Tue, 10 Dec 2019 05:18:59 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAAHf33060210
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:18:57 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt59kang-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:18:57 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 10 Dec 2019 10:18:55 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 10:18:51 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAAI8Sh24052094
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 10:18:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B8CB42045;
+        Tue, 10 Dec 2019 10:18:50 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 701234204D;
+        Tue, 10 Dec 2019 10:18:47 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 10 Dec 2019 10:18:47 +0000 (GMT)
+Date:   Tue, 10 Dec 2019 15:48:46 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
+ kthread
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210092601.GK2844@hirez.programming.kicks-ass.net>
+ <20191210093338.GF2871@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191203120002.GB4171@bogus>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191210093338.GF2871@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19121010-0008-0000-0000-0000033F6A17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121010-0009-0000-0000-00004A5E9A5F
+Message-Id: <20191210101846.GC9139@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 spamscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-12-19, 12:00, Sudeep Holla wrote:
-> I am more interested in this part. As I am aware the only 2 other
-> transport being discussed is SMC/HVC and new/yet conceptual SPCI(built
-> on top of SMC/HVC). There are already discussions on the list to make
-> former as mailbox[1]. While I see both pros and cons with that approach,
-> there's a need to converge. One main advantage I see with SMC/HVC mailbox
-> is that it can be used with any other client and not just SCMI. Equally,
-> the queuing in the mailbox may not be needed with fast SMC/HVC but may
-> be needed for new SPCI(not yet fully analysed).
- 
-We were also looking for OPTEE based mailbox which is similar to SPCI.
+* Peter Zijlstra <peterz@infradead.org> [2019-12-10 10:33:38]:
+
+> On Tue, Dec 10, 2019 at 10:26:01AM +0100, Peter Zijlstra wrote:
+> 
+> > > @@ -6716,7 +6737,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+> > >  	find_matching_se(&se, &pse);
+> > >  	update_curr(cfs_rq_of(se));
+> > >  	BUG_ON(!pse);
+> > > -	if (wakeup_preempt_entity(se, pse) == 1) {
+> > > +	if (wakeup_preempt_entity(se, pse) == 1 || kthread_wakeup_preempt(rq, p, wake_flags)) {
+> > >  		/*
+> > >  		 * Bias pick_next to pick the sched entity that is
+> > >  		 * triggering this preemption.
+> > 
+> > How about something like:
+> > 
+> 	if (wakeup_preempt_entity(se, pse) >= !(wake_flags & WF_KTHREAD))
+>
+> That's a slightly less convoluted expression for the same value :-)	
+
+Yes, this should work, let me try and get back to you.
 
 -- 
-viresh
+Thanks and Regards
+Srikar Dronamraju
+
