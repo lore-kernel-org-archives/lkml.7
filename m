@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72151C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013C1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F49205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013058;
-	bh=iKHzYfg2mi5+rXn4bwwSLeTeA/Prirx9XvsHR+GrqNA=;
+	s=default; t=1576013063;
+	bh=5h334oil8b9BE4AdJTlzTqznOyqxlcpwG2PSJfE1q/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEuf2f8oEorfxHg2r+hvbA+KPsjmhTzfBfxSMfx27PqSBQgk6zOK3RKRgmdVUaMUz
-	 E7DRhw4nNkP8mqyMEFvbdHJzPCL3B2jKzn18Ar6qslhtHRS9P1aj5xG8hud7CTl0ZO
-	 0X4euQUWVWgpstcmYcGBQwiTxmYFcCgH21NApX/A=
+	b=n4pyNyWmUQgd6NngkMIyNvQLwNApHW7AOUOUuXHYhRU9OfCohxN5+Cy/4kpBv6As8
+	 3i31jLs0nTA8ZgW38ri8V+L/5xA2+kTjdS4T4i+HsS31UuezkPwuUPkABd4xu8GdsP
+	 pwKPfs8MwZ5kujnRqV0vtRzL3O5v2PPV+q7K+Ujo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfLJVYQ (ORCPT
+        id S1726689AbfLJVYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727500AbfLJVKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:55 -0500
+        id S1727958AbfLJVKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D51246AE;
-        Tue, 10 Dec 2019 21:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F49246B8;
+        Tue, 10 Dec 2019 21:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012254;
-        bh=iKHzYfg2mi5+rXn4bwwSLeTeA/Prirx9XvsHR+GrqNA=;
+        s=default; t=1576012252;
+        bh=5h334oil8b9BE4AdJTlzTqznOyqxlcpwG2PSJfE1q/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4sagRIvW9990KfUKB6onyejIIjyx/Xi3LNSViu1NLzmTPHrslZQizeYb0lUdOc7E
-         bsvtQgtwhOsn2x5VF/JTf8zDKhVt8gJTFplzgB1bbshq+qaXxyeuS1EblgP/lvJsn/
-         K5kWwtJF77fnLA3YCVIsTcBbUE66aaJCyjNp8uQQ=
+        b=pUCOdgqTth2aLjqeG59ORYdRBHUGC/PE6+VnOZ1R73MOUc8TXNwYgv7ke9BxHXsTt
+         MulKs78mtWP+dYl18iw1l4DTtwvrm5tlWziT4z+P0GlLpMMxyZMDLuzlABGXLtTF+s
+         HK03i+sFaXUKHlC2jdbT4945LOQg9Qc7W7nxm5k0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 201/350] cpufreq: sun50i: Fix CPU speed bin detection
-Date:   Tue, 10 Dec 2019 16:05:06 -0500
-Message-Id: <20191210210735.9077-162-sashal@kernel.org>
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 199/350] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
+Date:   Tue, 10 Dec 2019 16:05:04 -0500
+Message-Id: <20191210210735.9077-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,87 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
 
-[ Upstream commit c23734487fb44ee16c1b007ba72d793c085e4ec4 ]
+[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
 
-I have observed failures to boot on Orange Pi 3, because this driver
-determined that my SoC is from the normal bin, but my SoC only works
-reliably with the OPP values for the slowest bin.
+The regs pointer in amd_gpio_irq_handler() should have __iomem
+on it, so add that to fix the following sparse warnings:
 
-By querying H6 owners, it was found that e-fuse values found in the wild
-are in the range of 1-3, value of 7 was not reported, yet. From this and
-from unused defines in BSP code, it can be assumed that meaning of efuse
-values on H6 actually is:
+drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
+drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
+drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
 
-- 1 = slowest bin
-- 2 = normal bin
-- 3 = fastest bin
-
-Vendor code actually treats 0 and 2 as invalid efuse values, but later
-treats all invalid values as a normal bin. This looks like a mistake in
-bin detection code, that was plastered over by a hack in cpufreq code,
-so let's not repeat it here. It probably only works because there are no
-SoCs in the wild with efuse value of 0, and fast bin SoCs are made to
-use normal bin OPP tables, which is also safe.
-
-Let's play it safe and interpret 0 as the slowest bin, but fix detection
-of other bins to match this research. More research will be done before
-actual OPP tables are merged.
-
-Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/sun50i-cpufreq-nvmem.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ drivers/pinctrl/pinctrl-amd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-index eca32e443716c..9907a165135b7 100644
---- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-@@ -25,7 +25,7 @@
- static struct platform_device *cpufreq_dt_pdev, *sun50i_cpufreq_pdev;
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 2c61141519f80..eab078244a4c3 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -540,7 +540,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned int i, irqnr;
+ 	unsigned long flags;
+-	u32 *regs, regval;
++	u32 __iomem *regs;
++	u32  regval;
+ 	u64 status, mask;
  
- /**
-- * sun50i_cpufreq_get_efuse() - Parse and return efuse value present on SoC
-+ * sun50i_cpufreq_get_efuse() - Determine speed grade from efuse value
-  * @versions: Set to the value parsed from efuse
-  *
-  * Returns 0 if success.
-@@ -69,21 +69,16 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
- 		return PTR_ERR(speedbin);
- 
- 	efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
--	switch (efuse_value) {
--	case 0b0001:
--		*versions = 1;
--		break;
--	case 0b0011:
--		*versions = 2;
--		break;
--	default:
--		/*
--		 * For other situations, we treat it as bin0.
--		 * This vf table can be run for any good cpu.
--		 */
-+
-+	/*
-+	 * We treat unexpected efuse values as if the SoC was from
-+	 * the slowest bin. Expected efuse values are 1-3, slowest
-+	 * to fastest.
-+	 */
-+	if (efuse_value >= 1 && efuse_value <= 3)
-+		*versions = efuse_value - 1;
-+	else
- 		*versions = 0;
--		break;
--	}
- 
- 	kfree(speedbin);
- 	return 0;
+ 	/* Read the wake status */
 -- 
 2.20.1
 
