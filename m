@@ -2,103 +2,83 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F1AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645E9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC95E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED4C20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575989261;
-	bh=t9mW6I2dr+Dg2/7uKgcBKKAq/tKRT4xQ0h18PE3NDVU=;
+	s=default; t=1575989307;
+	bh=2yt/Wrf16n/sFPmsM45iBIgA3Yg7DHwv+gBrMNLCoTY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sqZmNPFHkNR7kBuwU/aBdUALstn6JdmO213hudiQwM7cUMrEDYwq0ggwx/Ch0IK5w
-	 N3Bc3QAMT15iiyIkuFBPP2LfKU5S9GLEbM/8RNXJXWHnLXID+dFkwX1uCniEJJVJu3
-	 4itAPshMrfh+7zp2hC5xaKJAdgujbCdrD+dwd+kI=
+	b=r5MuXT5BwazYkpv9A2BWydwYAcCJUcfiQHiMkQ3qDAF3h7fe4F3U4Ae3W7Hiesl1h
+	 afH3HdZO4Dwq6KHKgUr3gm0gZAJ8VbKXqoWfmucFFyJ3eRHNr1OBkZxpj+pf+w/8yD
+	 B3ESufoYKatYcYu+zP908pmhiMra3RqzvxKw1EO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLJOrk (ORCPT
+        id S1727541AbfLJOs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:47:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfLJOrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:47:40 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3581120637;
-        Tue, 10 Dec 2019 14:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575989259;
-        bh=t9mW6I2dr+Dg2/7uKgcBKKAq/tKRT4xQ0h18PE3NDVU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kb15QnBe5+/0sGZPyfGV8xt6u5BKJLLdRfMUCmYQcSGRu4ORb3O4vWwvAc/HQNWMy
-         c13OUy+ybJRy5GsVg1p/JFFwTSvpcNhidAzGa0Nbd8uHjkaH89Td880BBGrk8Vj1j3
-         E5rdW5bkfTd3idM8bNpf5rTqvLYbpcqxcWg68C3s=
-Date:   Tue, 10 Dec 2019 15:47:37 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     Will Deacon <will@kernel.org>,
-        Felix Schnizlein <fschnizlein@suse.com>,
-        linux-kernel@vger.kernel.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
-Message-ID: <20191210144737.GB3975980@kroah.com>
-References: <20191206162421.15050-1-trenn@suse.de>
- <25032400.G9DUGnJgnc@skinner.arch.suse.de>
- <20191209173804.GD7489@willie-the-truck>
- <11195456.EmMzWPVPDU@skinner.arch.suse.de>
+        Tue, 10 Dec 2019 09:48:26 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43343 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfLJOs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:48:26 -0500
+Received: by mail-ed1-f65.google.com with SMTP id dc19so16160735edb.10;
+        Tue, 10 Dec 2019 06:48:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0EAXVyH4ukLLoAvN9134a+PTWSnV2rVkKA3kz84w454=;
+        b=h5KeXgX2fo3TfT9n9FU16T6O+zty6qyQjrQ4oW305w3zt0Vy8Y/QCzj9r3ETcD1UVA
+         EucQjAUFKUxy5FEdgC8L1nIc3sQfVoQqM9pqJ8NJ98rC82hxytf6RrIO0k68+QilRLc1
+         TB8JSwS2dxDCE065Iu1CGVshIs7TJeqszMDt1xadcRFojiYilxrnipsJXO4v6KnBJVtV
+         D3bFU7SnIJiqq5xTTewoqPpAM3zdIuOIpZHMo0JhHt0hQez8la6rqpC/6pUj80DR7KSP
+         8lif7iRsy7aJqklvHqouLjXKqlGYe3SOTblEtWQf+Ub6vKS8KGGaQfm1Du9S/eXexCYR
+         4LOg==
+X-Gm-Message-State: APjAAAVpFTX88AAmaYhjR01orgcY+tOkt0lx6DUzomfU347ZaQf0E2H/
+        IDLbVvjjrOkwEk7PxbkFCZQ=
+X-Google-Smtp-Source: APXvYqzkz+9tUg97oDzo/5cpkoWY+HXY09yTxmkmj/tzpdgZ3zzzXDjzNsMv2ejroiWIPfLn7GLR2g==
+X-Received: by 2002:a17:906:4e96:: with SMTP id v22mr4076976eju.219.1575989304153;
+        Tue, 10 Dec 2019 06:48:24 -0800 (PST)
+Received: from pi3 ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id s16sm82829edy.51.2019.12.10.06.48.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 06:48:23 -0800 (PST)
+Date:   Tue, 10 Dec 2019 15:48:21 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Hyunki Koo <kkoos00@naver.com>,
+        HYUN-KI KOO <hyunki00.koo@samsung.com>,
+        Shinbeom Choi <sbeom.choi@samsung.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] tty: serial: samsung_tty: fix build warning
+Message-ID: <20191210144821.GB11222@pi3>
+References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
+ <20191210143706.3928480-2-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <11195456.EmMzWPVPDU@skinner.arch.suse.de>
+In-Reply-To: <20191210143706.3928480-2-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 02:33:07PM +0100, Thomas Renninger wrote:
-> On Monday, December 9, 2019 6:38:05 PM CET Will Deacon wrote:
-> > On Mon, Dec 09, 2019 at 12:28:44PM +0100, Thomas Renninger wrote:
-> > > On Monday, December 9, 2019 11:31:11 AM CET Will Deacon wrote:
-> > > > On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
-> > > > > From: Felix Schnizlein <fschnizlein@suse.de>
-> > > > > 
-> > > > > Export all information from /proc/cpuinfo to sysfs:
-> > > > > implementer, architecture, variant, part, revision,
-> > > > > bogomips and flags are exported.
-> > > > > 
-> > > > > Example:
-> > > > > /sys/devices/system/cpu/cpu1/info/:[0]# head *
-> > > 
-> > > ...
-> > > 
-> > > > > ==> flags <==
-> > > > > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
-> > > 
-> > > ...
-> > > 
-> > > > I don't understand why we need this on arm64
+On Tue, Dec 10, 2019 at 03:36:58PM +0100, Greg Kroah-Hartman wrote:
+> Fix a build warning on systems that do not have CONFIG_OF enabled.
 > 
-> Again: proc is moving to sys.
 
-No.  New stuff is to be added to /sys/, don't add new things to /proc
-unless it deals with processes.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-There is no mass-migration of existing /proc files to sysfs for no good
-reason.
+Best regards,
+Krzysztof
 
-> You probably export feature flags in /proc/cpuinfo for a good reason.
-> So where in sysfs should this show up?
-
-Why does it have to live in sysfs if it is already in /proc and parsed
-properly by tools?
-
-thanks,
-
-greg k-h
