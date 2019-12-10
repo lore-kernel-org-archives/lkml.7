@@ -2,177 +2,149 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C68DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06280C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304402073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014731;
-	bh=haEPsc2yk+K9gE7Q79DHnfLRnG8eqSnhALg/2VZ68rs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjZO1mjzaLNpTEcHASeeirq+SFKaunzGhbJAmDNX7LpyrHSajpiBVOjSSpFwRMbAI
-	 t5ozH6yc28JAo+q9n95z/kjuTlerunSGgk/2TqaSvzFjIjGBJ9RzssZse4DuOs+znA
-	 pqTUEBXCKKgiRd+6KtoLpL++XS8A1t6sRamE+01g=
+	by mail.kernel.org (Postfix) with ESMTP id BE7A82073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TN/QOr87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfLJVwJ (ORCPT
+        id S1730249AbfLJVwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfLJVHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:48 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E0724687;
-        Tue, 10 Dec 2019 21:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012067;
-        bh=haEPsc2yk+K9gE7Q79DHnfLRnG8eqSnhALg/2VZ68rs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDSbtHDcb5PUAx59sI1U+1ftHFouuLji+F9FdnMLwOl8k05sPzJaQwH8RM+iDvJsg
-         HQy2A+hF6qZQQubYshddlfW1TjBc6uSQFmSbelVF5P2op3AzU8b8jRdqd0rsz1fHjJ
-         1WbxoZq/F2Vtji1H3ITwbLMFdKXzqlYJ9+BEL8xM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Greear <greearb@candelatech.com>,
-        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 048/350] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
-Date:   Tue, 10 Dec 2019 16:02:33 -0500
-Message-Id: <20191210210735.9077-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:52:14 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33514 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbfLJVwK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:52:10 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so9542004pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:52:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=x1llI4VQgR/NNv9VK0TWAuEng4/7tgvnedskGQElizQ=;
+        b=TN/QOr87yPqhW/2lzNiPS+Jz3xhAwg45MFbe+8DISDcdLzuEBd561ejk5h0oCDb20M
+         cyLB2KMxESf4Ub5nYgtAAseJcF8JrG2TpoOOK8qfqxLY6L6KKBaLA7FApvFfMTJYJ/nD
+         rzvsG3Hy5V1bVEoDwP+bo3VLKfoUq4aXJ0+Xo3Cp173dvNPBZF+DAqX8e0nbD2CZKk9O
+         p8kMwBsQHh50nLmmwHguAwJKH8eve5hwTsj2EHRkq2Yn4/MIPkhixNEv6PV5mPIdAWdX
+         BfndNieAlydYIPORzdzVGct5J8O1VK1nNaPidFt04JpeZqNZDd0NoNb9YkalSivZSsmd
+         CHKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=x1llI4VQgR/NNv9VK0TWAuEng4/7tgvnedskGQElizQ=;
+        b=tH+G/j6RbBvbksIQ/e219BV8vqD3JrN7forRcm9ebS0zV1HGekGJDZAN9VHaOJdHH/
+         s/uYUTFqWGzy57YADRgPU94KkyPuOc0OsWf+PoNVsOf2t86MMMmSZGuc1G1ohL4wdIk8
+         dm3nw/ob+kdo49StCU8kJbJv7zqMIdofMzpQbR/eI0q/zquu7Ud8fgOD0gQJ29g9L0Ie
+         BwVlnjiULrMN8LNBVET8b3PwPYefL67VxFHsHCx9Xkh9XhZ/Jy88PvFP5YGA9LHdw6bw
+         Sn0q1gC82+Ji0loTRneB7U7lH9IR7qBpPlIG3A/5SVP6DgNUb14JjBkyXBnkOZnGYAFx
+         Oa7A==
+X-Gm-Message-State: APjAAAVJm4ib1Gbals3b0+PonZ/8KslhQuceHkuEypfIHoJmEtFnj55B
+        Y/YeIyZTHkQ+jpwh8u0EwPMOvw==
+X-Google-Smtp-Source: APXvYqxXcor3tR+WOkruu/D28GkGpulVaBRaudEGLcLcwEBe3xdOjEwVkq8bKvNdtbH3cY30xIG6Mg==
+X-Received: by 2002:a63:213:: with SMTP id 19mr329909pgc.160.1576014729720;
+        Tue, 10 Dec 2019 13:52:09 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id z13sm3865986pjz.15.2019.12.10.13.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 13:52:09 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:52:05 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
+ ksyms
+Message-ID: <20191210135205.529044a4@cakuba.netronome.com>
+In-Reply-To: <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
+References: <20191210181412.151226-1-toke@redhat.com>
+        <20191210125457.13f7821a@cakuba.netronome.com>
+        <87eexbhopo.fsf@toke.dk>
+        <20191210132428.4470a7b0@cakuba.netronome.com>
+        <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+On Tue, 10 Dec 2019 13:31:50 -0800, Alexei Starovoitov wrote:
+> On Tue, Dec 10, 2019 at 01:24:28PM -0800, Jakub Kicinski wrote:
+> > On Tue, 10 Dec 2019 22:09:55 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wr=
+ote: =20
+> > > Jakub Kicinski <jakub.kicinski@netronome.com> writes: =20
+> > > > On Tue, 10 Dec 2019 19:14:12 +0100, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:   =20
+> > > >> When the kptr_restrict sysctl is set, the kernel can fail to return
+> > > >> jited_ksyms or jited_prog_insns, but still have positive values in
+> > > >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash wh=
+en trying
+> > > >> to dump the program because it only checks the len fields not the =
+actual
+> > > >> pointers to the instructions and ksyms.
+> > > >>=20
+> > > >> Fix this by adding the missing checks.
+> > > >>=20
+> > > >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> =
+  =20
+> > > >
+> > > > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+> > > >
+> > > > and
+> > > >
+> > > > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using i=
+mm field")
+> > > >
+> > > > ?   =20
+> > >=20
+> > > Yeah, guess so? Although I must admit it's not quite clear to me whet=
+her
+> > > bpftool gets stable backports, or if it follows the "only moving
+> > > forward" credo of libbpf? =20
+> >=20
+> > bpftool does not have a GH repo, and seeing strength of Alexei's
+> > arguments in the recent discussion - I don't think it will. So no
+> > reason for bpftool to be "special" =20
+>=20
+> bpftool always was and will be a special user of libbpf.
 
-[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
+There we go again. Making proclamations without any justification or
+explanation.
 
-Offchannel management frames were failing:
+Maybe there is a language barrier between us, but I wrote the initial
+bpftool code, so I don't see how you (who authored one patch) can say
+what it was or is. Do you mean to say what you intend to make it?
 
-[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
-[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+bpftool was intended to be a CLI to BPF _kernel_ interface. libbpf was
+just the library that we all agreed to use moving forward for ELF
+loading.
 
-This bug appears to have been added between 4.0 (which works for us),
-and 4.4, which does not work.
+I'm not going to argue with you again. You kept bad mouthing iproute2
+and then your only argument was the reviews sometimes take longer than
+24 hours. Which I'm sure you have a lot of experience with:
 
-I think this is because the tx-offchannel logic gets in a loop when
-ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
-sent to the firmware for transmit.
+  iproute2$ git log --author=3DStarov --oneline=20
+4bfe68253670 iptnl: add support for collect_md flag in IPv4 and IPv6 tunnels
 
-This patch fixes the problem on 4.9 for me, and now HS20 clients
-can work again with my firmware.
+  iproute2$ git log --author=3Dfb.com --oneline=20
+3da6d055d93f bpf: add btf func and func_proto kind support
+7a04dd84a7f9 bpf: check map symbol type properly with newer llvm compiler
+73451259daaa tc: fix ipv6 filter selector attribute for some prefix lengths
+0b4ea60b5a48 bpf: Add support for IFLA_XDP_PROG_ID
+4bfe68253670 iptnl: add support for collect_md flag in IPv4 and IPv6 tunnels
+414aeec90f82 ss: Add tcp_info fields data_segs_in/out
+409998c5a4eb iproute: ip-gue/ip-fou manpages
 
-Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
-
-Signed-off-by: Ben Greear <greearb@candelatech.com>
-Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
-[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 40889b79fc70d..a40e1a998f4cd 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3708,7 +3708,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 			 struct ieee80211_vif *vif,
- 			 enum ath10k_hw_txrx_mode txmode,
- 			 enum ath10k_mac_tx_path txpath,
--			 struct sk_buff *skb)
-+			 struct sk_buff *skb, bool noque_offchan)
- {
- 	struct ieee80211_hw *hw = ar->hw;
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-@@ -3738,10 +3738,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 		}
- 	}
- 
--	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
-+	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
- 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
--			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
--				   skb);
-+			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
-+				   skb, skb->len);
- 
- 			skb_queue_tail(&ar->offchan_tx_queue, skb);
- 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
-@@ -3803,8 +3803,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 
- 		mutex_lock(&ar->conf_mutex);
- 
--		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
--			   skb);
-+		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
-+			   skb, skb->len);
- 
- 		hdr = (struct ieee80211_hdr *)skb->data;
- 		peer_addr = ieee80211_get_DA(hdr);
-@@ -3850,7 +3850,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
- 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
- 
--		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
- 		if (ret) {
- 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
- 				    ret);
-@@ -3860,8 +3860,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		time_left =
- 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
- 		if (time_left == 0)
--			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
--				    skb);
-+			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
-+				    skb, skb->len);
- 
- 		if (!peer && tmp_peer_created) {
- 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
-@@ -4097,7 +4097,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (unlikely(ret)) {
- 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
- 
-@@ -4378,7 +4378,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
- 		if (is_htt) {
--- 
-2.20.1
-
+Upstreaming bpftool was a big mistake, but we live and we learn.
