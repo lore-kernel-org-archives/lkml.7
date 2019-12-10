@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DB2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 340A9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE708206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013210;
-	bh=3JnKWrUzyR8mPCjfxk/OBJBBsTIQrl+UVRJMS9oTQU8=;
+	s=default; t=1576013215;
+	bh=cvw1KCORa5AkHeJ7EQolnCZNyIIt229G/CUYF9w/7eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hNJ5o76uf7yN8eWkDcG4xdxS+Jxr4EwGDkubtNxuX4A36xrqA7/yrSDj0spGglkdj
-	 Uzhb8WL1gK7/3pB57AY+k0ctxdcRNz2IK9uhjYo0aqH/Uwz/oDJiftbOtR5yMsDzQa
-	 xiylwMeGg5eaIk5UK+KcTAYLawNCy18POADB/Slc=
+	b=LtPdPxmWwkoBAGH4mGNp07HxSMswu0/W+zK7zsb+nOrAu76/hgjeE/GcsdKJrO3jL
+	 wtZg8V/0RFi2xJrbveNEpdcOA0cB0tJnod0NaBE4zHDRjU5RO45g1gjycdEmY66kOF
+	 UK3jJiFTZT8+1QAkSE4O3plCZohvr7TSbKpwx+xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLJV0s (ORCPT
+        id S1727305AbfLJV0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:26:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:26:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfLJVZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:35 -0500
+        id S1729030AbfLJVZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B9C21D7D;
-        Tue, 10 Dec 2019 21:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84A520836;
+        Tue, 10 Dec 2019 21:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013135;
-        bh=3JnKWrUzyR8mPCjfxk/OBJBBsTIQrl+UVRJMS9oTQU8=;
+        s=default; t=1576013132;
+        bh=cvw1KCORa5AkHeJ7EQolnCZNyIIt229G/CUYF9w/7eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNawfulgIet3hEmroLXEZEfBEKTMTiVuBe2PZ27ebooayqP2ELW5eSeCGj/8WDXhA
-         5Epl8yFPlNra5Qe9YDegPzu3ER+LOSfYSe7KBScmTc1LPkP310/deDOPRryjw0N8UA
-         hepKwvFpri/2UUZIbF9fO8egZQLSAndtiPvaZ5hM=
+        b=u84zen91e6Sx5xo8SZpsoTbyyfqfhDVTBj/TxX6sssDyyC0G41mN3Ytd1GHRCXZtw
+         k+F3R5pu2hXhYlTh/VytptOpj+lTgmkypMETXRwQTE2WRyhH9PXNA52zJn8LGCgOan
+         LwWx6SzJcq8dD02ZB2ENBH2XrP9sO+w41m6iPYRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 019/292] objtool: add kunit_try_catch_throw to the noreturn list
-Date:   Tue, 10 Dec 2019 16:20:38 -0500
-Message-Id: <20191210212511.11392-19-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.3 017/292] staging: rtl8192u: fix multiple memory leaks on error path
+Date:   Tue, 10 Dec 2019 16:20:36 -0500
+Message-Id: <20191210212511.11392-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -62,42 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
+[ Upstream commit ca312438cf176a16d4b89350cade8789ba8d7133 ]
 
-Fix the following warning seen on GCC 7.3:
-  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+In rtl8192_tx on error handling path allocated urbs and also skb should
+be released.
 
-kunit_try_catch_throw is a function added in the following patch in this
-series; it allows KUnit, a unit testing framework for the kernel, to
-bail out of a broken test. As a consequence, it is a new __noreturn
-function that objtool thinks is broken (as seen above). So fix this
-warning by adding kunit_try_catch_throw to objtool's noreturn list.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20190920025137.29407-1-navid.emamdoost@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 176f2f0840609..0c8e17f946cda 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -145,6 +145,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"usercopy_abort",
- 		"machine_real_restart",
- 		"rewind_stack_do_exit",
-+		"kunit_try_catch_throw",
- 	};
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index fe1f279ca368b..b62b03802b1b6 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -1422,7 +1422,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		(struct tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
+ 	struct usb_device *udev = priv->udev;
+ 	int pend;
+-	int status;
++	int status, rt = -1;
+ 	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
+ 	unsigned int idx_pipe;
  
- 	if (!func)
+@@ -1566,8 +1566,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		}
+ 		if (bSend0Byte) {
+ 			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
+-			if (!tx_urb_zero)
+-				return -ENOMEM;
++			if (!tx_urb_zero) {
++				rt = -ENOMEM;
++				goto error;
++			}
+ 			usb_fill_bulk_urb(tx_urb_zero, udev,
+ 					  usb_sndbulkpipe(udev, idx_pipe),
+ 					  &zero, 0, tx_zero_isr, dev);
+@@ -1577,7 +1579,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 					 "Error TX URB for zero byte %d, error %d",
+ 					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 					 status);
+-				return -1;
++				goto error;
+ 			}
+ 		}
+ 		netif_trans_update(dev);
+@@ -1588,7 +1590,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
+ 		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 		 status);
+-	return -1;
++
++error:
++	dev_kfree_skb_any(skb);
++	usb_free_urb(tx_urb);
++	usb_free_urb(tx_urb_zero);
++	return rt;
+ }
+ 
+ static short rtl8192_usb_initendpoints(struct net_device *dev)
 -- 
 2.20.1
 
