@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2384C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7D4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F3F20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22F720637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014453;
-	bh=OQq0SJnACQQXPv+cvqUsF6hu4trKUwzYmaEDPEwK4JM=;
+	s=default; t=1576014462;
+	bh=10t/UT/PeC75TXkxlx9sgFx10KLPZyqcib845xRxFh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xvb9ZA9Cdu3XI4zoKWT5QUr61FVTdarSpA4YeG/NFTIA7BaPVyQ7RzCC0scKLh95Z
-	 tWZAqAa/a+xpXPFvzz/UieMvpYzSIswSSzVgpvNl2YhCyU6374NvG5eUdJwxA5kX6T
-	 es74kcU1O0ke6JP1V/iaQGfLz7gJcp1dxYOt7LWU=
+	b=mYJ+cUcW34xqzGlfQ3pvL+KGOm0WWSK9AL0vDQ00c8QqG81ditaZmMaOhjH3n7zwR
+	 lAFHffv/Hz21PFFntUne6Qxh4+ul84LVJJK8dLOfp8S5gzRsuIy+nNk1WMDYMcmtnC
+	 eAgdKMV1L6VesfYzdFvNF+Qcs247Snq244KFPzWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfLJVrc (ORCPT
+        id S1730028AbfLJVrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:47:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:47:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727229AbfLJVc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:26 -0500
+        id S1728078AbfLJVJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92E1D208C3;
-        Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB0E2077B;
+        Tue, 10 Dec 2019 21:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013546;
-        bh=OQq0SJnACQQXPv+cvqUsF6hu4trKUwzYmaEDPEwK4JM=;
+        s=default; t=1576012151;
+        bh=10t/UT/PeC75TXkxlx9sgFx10KLPZyqcib845xRxFh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WK9VnRSgxwlLiVclryR5ow1+Qj+w8+Xf7SD8Tk0l0wljfQ0N1GDWq4EWpjUncVyMv
-         PP29TEKwugiBdvkX8rGe8oIuv25FRpDvzPZbGoVd30sdWvG/oCVakVBMOE6KrP0DOC
-         gWALswCxU8u3psksGtMw5s9v8ACOACsr7DAHXS/w=
+        b=DL8/4XsSPMhZJdplsrpqxWV3Kscz3VTppw0Yywfpp80Ux9cfyzs11deBI57rcN+Az
+         AwB0v8DJqGB+vQGeejomVdig4eOJsMz8WCZSSkz3W9iHYPeYfq/zxn2eGO/GKoU3Qm
+         /KZEhNpCWnUWg7rCggGbkm24eA4tczOG3iUqQX+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 003/177] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
-Date:   Tue, 10 Dec 2019 16:29:27 -0500
-Message-Id: <20191210213221.11921-3-sashal@kernel.org>
+Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 114/350] usb: usbfs: Suppress problematic bind and unbind uevents.
+Date:   Tue, 10 Dec 2019 16:03:39 -0500
+Message-Id: <20191210210735.9077-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
-References: <20191210213221.11921-1-sashal@kernel.org>
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,48 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
 
-[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
+[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
 
-Silence two warning messages that occur due to -EPROBE_DEFER errors to
-help cleanup the system boot log.
+commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
+to a driver") added bind and unbind uevents when a driver is bound or
+unbound to a physical device.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+For USB devices which are handled via the generic usbfs layer (via
+libusb for example), this is problematic:
+Each time a user space program calls
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+and then later
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+The kernel will now produce a bind or unbind event, which does not
+really contain any useful information.
+
+This allows a user space program to run a DoS attack against programs
+which listen to uevents (in particular systemd/eudev/upowerd):
+A malicious user space program just has to call in a tight loop
+
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+
+With this loop the malicious user space program floods the kernel and
+all programs listening to uevents with tons of bind and unbind
+events.
+
+This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
+USBDEVFS_RELEASEINTERFACE.
+
+Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/core/devio.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index f8433c93f4634..cc820e9aea1db 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -725,7 +725,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
- 	/* 1.0V digital core power regulator  */
- 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
- 	if (IS_ERR(pdata->dvdd10)) {
--		DRM_ERROR("DVDD10 regulator not found\n");
-+		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
-+			DRM_ERROR("DVDD10 regulator not found\n");
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index 3f899552f6e3c..6ca40d135430b 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -764,8 +764,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	intf = usb_ifnum_to_if(dev, ifnum);
+ 	if (!intf)
+ 		err = -ENOENT;
+-	else
++	else {
++		unsigned int old_suppress;
 +
- 		return PTR_ERR(pdata->dvdd10);
- 	}
- 
-@@ -1341,7 +1343,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
- 
- 	err = anx78xx_init_pdata(anx78xx);
- 	if (err) {
--		DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		/* suppress uevents while claiming interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
++	}
+ 	if (err == 0)
+ 		set_bit(ifnum, &ps->ifclaimed);
+ 	return err;
+@@ -785,7 +792,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	if (!intf)
+ 		err = -ENOENT;
+ 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
++		unsigned int old_suppress;
 +
- 		return err;
++		/* suppress uevents while releasing interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		usb_driver_release_interface(&usbfs_driver, intf);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
+ 		err = 0;
  	}
- 
+ 	return err;
 -- 
 2.20.1
 
