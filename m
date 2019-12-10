@@ -2,154 +2,183 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A04FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64191C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB3A20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="Opz6Maoz"
+	by mail.kernel.org (Postfix) with ESMTP id 34F1120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014260;
+	bh=T9m8SXWfl5H4z2L8fZVt30eVvsbmwwU57qc76vLpFLI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Zcnym9gc/G+BC478FOCkKBlQn4NPcDifqkCQ1xmMcI0k8galgLOkpVdwI769ZLPc3
+	 CXRJRPVempOiZeQP1lA1MoB2DOIqYz+J4YjgCk5dr9u3R+PBFn7gPMZvX1d4pUndb+
+	 sQytVw4OOjKPU1zbJ1N5OhJcZf8a5UiYdoocY8m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfLJVoO (ORCPT
+        id S1729708AbfLJVd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:44:14 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44473 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbfLJVoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:44:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so9503163pgl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:44:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rbDSY7BhbJlGS6xc6VP5L8tKfoVk8+COFSDA6dXVjXU=;
-        b=Opz6Maozl5h7QbetuxnDAJFYxvAdJLiYDedHjKHToRukFk/7EvtjEfzg7QPPlJOYrZ
-         MJUbx2xz2D/RAp5XlyqcTD2ZSWAW7H/qg/5L3B3tTvJHIWER9e/6ND8Szlxqk2xHJhzi
-         5o5Jl/4oQugEo6HZ/8FxbUR7h//v2UGEm0l+BEG+roaUApZiOOTtdVoDRpJjhdnyGUKT
-         /7z8OXhudAgyNoLlFZ+VVWxFiumpQALAlStmZ/sYhgygl/kp7kYmejfV0/7fKvWvCFfc
-         yXtWaVd3u+FscEs2zprTWQuN4XWNGe7QtIBmZJ+aBVhzud87lVTWdAsmxmGEkDlCVHlU
-         vrgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rbDSY7BhbJlGS6xc6VP5L8tKfoVk8+COFSDA6dXVjXU=;
-        b=OFASEJajCZZQcXvAwjbYP7FGtioqJJvWIwKX3sEO+bDhSxDH0DZKVZHvm2E5cmQnCV
-         5EMvztgVGtP4/MwrQJJhGu5L/jH+VKt7tpdtqt3tQzvOmwa1MTULUIF1xUsubbRTnheg
-         3Ldxf45Nwp52nVlydd9whsDxFa5dnLUNDJOlgJYKlMOzeFXflLn/nSFd+C6A1JLnPWuO
-         sacVFcEh6qP1/lkMu8iFk1uXKwo1hiMTXmHHPxHYNXw/ajwy4h1WdrqKoc4cfRqboM6V
-         7q6vEOreq73iqYiQMukeDZYoRNDMNdE7K10eFo9YlKv7gEiskUBlukcUoWK0VnGos7GQ
-         oNkQ==
-X-Gm-Message-State: APjAAAU8nTy2XUaErRBV58Lri6g0whbrTmAT+08YmQOnNcljQMs3m/ae
-        VkAzcLoYqFIbWnZp0F2eK+1mTA==
-X-Google-Smtp-Source: APXvYqzFb8FwEWyCqj/CK3r9T7XNwfUPPcS3Ncv1VkU4Br0WAOSshQ59ny7UTrZIkpCSpfrnXnY7aw==
-X-Received: by 2002:a63:696:: with SMTP id 144mr294509pgg.260.1576014249158;
-        Tue, 10 Dec 2019 13:44:09 -0800 (PST)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id q13sm3900429pjc.4.2019.12.10.13.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:44:08 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:44:07 -0800
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-Message-ID: <20191210214407.GA3105713@mini-arch>
-References: <20191210011438.4182911-1-andriin@fb.com>
- <20191210011438.4182911-12-andriin@fb.com>
- <20191209175745.2d96a1f0@cakuba.netronome.com>
- <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
- <20191210100536.7a57d5e1@cakuba.netronome.com>
+        Tue, 10 Dec 2019 16:33:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728344AbfLJVdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4051B20836;
+        Tue, 10 Dec 2019 21:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576013597;
+        bh=T9m8SXWfl5H4z2L8fZVt30eVvsbmwwU57qc76vLpFLI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ncG+8v03Q2qcQr7TwfXIw9njbiMd9+3IZ26pTseeSfRGEdR/OMlAcCKY6tgMJ4P0c
+         gOThPm/7mkSJmyoslZJgzhBNa0F4E9cZQtBcJSnBv51JPxxHFwjqEsfZvTDalooh7o
+         lzN+zKLDi7oS4zCOhqQJpkPflJdUBoFbtNRr5iwI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 046/177] media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort cases
+Date:   Tue, 10 Dec 2019 16:30:10 -0500
+Message-Id: <20191210213221.11921-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210100536.7a57d5e1@cakuba.netronome.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10, Jakub Kicinski wrote:
-> On Tue, 10 Dec 2019 09:11:31 -0800, Andrii Nakryiko wrote:
-> > On Mon, Dec 9, 2019 at 5:57 PM Jakub Kicinski wrote:
-> > > On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:  
-> > > > struct <object-name> {
-> > > >       /* used by libbpf's skeleton API */
-> > > >       struct bpf_object_skeleton *skeleton;
-> > > >       /* bpf_object for libbpf APIs */
-> > > >       struct bpf_object *obj;
-> > > >       struct {
-> > > >               /* for every defined map in BPF object: */
-> > > >               struct bpf_map *<map-name>;
-> > > >       } maps;
-> > > >       struct {
-> > > >               /* for every program in BPF object: */
-> > > >               struct bpf_program *<program-name>;
-> > > >       } progs;
-> > > >       struct {
-> > > >               /* for every program in BPF object: */
-> > > >               struct bpf_link *<program-name>;
-> > > >       } links;
-> > > >       /* for every present global data section: */
-> > > >       struct <object-name>__<one of bss, data, or rodata> {
-> > > >               /* memory layout of corresponding data section,
-> > > >                * with every defined variable represented as a struct field
-> > > >                * with exactly the same type, but without const/volatile
-> > > >                * modifiers, e.g.:
-> > > >                */
-> > > >                int *my_var_1;
-> > > >                ...
-> > > >       } *<one of bss, data, or rodata>;
-> > > > };  
-> > >
-> > > I think I understand how this is useful, but perhaps the problem here
-> > > is that we're using C for everything, and simple programs for which
-> > > loading the ELF is majority of the code would be better of being
-> > > written in a dynamic language like python?  Would it perhaps be a
-> > > better idea to work on some high-level language bindings than spend
-> > > time writing code gens and working around limitations of C?  
-> > 
-> > None of this work prevents Python bindings and other improvements, is
-> > it? Patches, as always, are greatly appreciated ;)
-> 
-> This "do it yourself" shit is not really funny :/
-> 
-> I'll stop providing feedback on BPF patches if you guy keep saying 
-> that :/ Maybe that's what you want.
-> 
-> > This skeleton stuff is not just to save code, but in general to
-> > simplify and streamline working with BPF program from userspace side.
-> > Fortunately or not, but there are a lot of real-world applications
-> > written in C and C++ that could benefit from this, so this is still
-> > immensely useful. selftests/bpf themselves benefit a lot from this
-> > work, see few of the last patches in this series.
-> 
-> Maybe those applications are written in C and C++ _because_ there 
-> are no bindings for high level languages. I just wish BPF programming
-> was less weird and adding some funky codegen is not getting us closer
-> to that goal.
-> 
-> In my experience code gen is nothing more than a hack to work around
-> bad APIs, but experiences differ so that's not a solid argument.
-*nod*
+From: Benoit Parrot <bparrot@ti.com>
 
-We have a nice set of C++ wrappers around libbpf internally, so we can do
-something like BpfMap<key type, value type> and get a much better interface
-with type checking. Maybe we should focus on higher level languages instead?
-We are open to open-sourcing our C++ bits if you want to collaborate.
+[ Upstream commit cf6acb73b050e98b5cc435fae0e8ae0157520410 ]
 
-(I assume most of the stuff you have at fb is also non-c and one of
-c++/python/php/rust/go/whatver).
+v4l2-compliance fails with this message:
+
+   fail: v4l2-test-buffers.cpp(691): ret == 0
+   fail: v4l2-test-buffers.cpp(974): captureBufs(node, q, m2m_q,
+frame_count, true)
+   test MMAP: FAIL
+
+This caused the following Kernel Warning:
+
+WARNING: CPU: 0 PID: 961 at
+drivers/media/v4l2-core/videobuf2-core.c:1658
+__vb2_queue_cancel+0x174/0x1d8
+...
+CPU: 0 PID: 961 Comm: v4l2-compliance Not tainted
+4.14.62-01720-g20ecd717e87a #6
+Hardware name: Generic DRA72X (Flattened Device Tree)
+Backtrace:
+[<c020b5bc>] (dump_backtrace) from [<c020b8a0>] (show_stack+0x18/0x1c)
+ r7:00000009 r6:60070013 r5:00000000 r4:c1053824
+[<c020b888>] (show_stack) from [<c09232e8>] (dump_stack+0x90/0xa4)
+[<c0923258>] (dump_stack) from [<c022b740>] (__warn+0xec/0x104)
+  r7:00000009 r6:c0c0ad50 r5:00000000 r4:00000000
+[<c022b654>] (__warn) from [<c022b810>] (warn_slowpath_null+0x28/0x30)
+  r9:00000008 r8:00000000 r7:eced4808 r6:edbc9bac r5:eced4844
+r4:eced4808
+[<c022b7e8>] (warn_slowpath_null) from [<c0726f48>]
+(__vb2_queue_cancel+0x174/0x1d8)
+[<c0726dd4>] (__vb2_queue_cancel) from [<c0727648>]
+(vb2_core_queue_release+0x20/0x40)
+  r10:ecc7bd70 r9:00000008 r8:00000000 r7:edb73010 r6:edbc9bac
+r5:eced4844
+  r4:eced4808 r3:00000004
+[<c0727628>] (vb2_core_queue_release) from [<c0729528>]
+(vb2_queue_release+0x10/0x14)
+  r5:edbc9810 r4:eced4800
+[<c0729518>] (vb2_queue_release) from [<c0724d08>]
+(v4l2_m2m_ctx_release+0x1c/0x30)
+[<c0724cec>] (v4l2_m2m_ctx_release) from [<bf0e8f28>]
+(vpe_release+0x74/0xb0 [ti_vpe])
+  r5:edbc9810 r4:ed67a400
+[<bf0e8eb4>] (vpe_release [ti_vpe]) from [<c070fccc>]
+(v4l2_release+0x3c/0x80)
+  r7:edb73010 r6:ed176aa0 r5:edbc9868 r4:ed5119c0
+[<c070fc90>] (v4l2_release) from [<c033cf1c>] (__fput+0x8c/0x1dc)
+  r5:ecc7bd70 r4:ed5119c0
+[<c033ce90>] (__fput) from [<c033d0cc>] (____fput+0x10/0x14)
+  r10:00000000 r9:ed5119c0 r8:ece392d0 r7:c1059544 r6:ece38d80
+r5:ece392b4
+  r4:00000000
+[<c033d0bc>] (____fput) from [<c0246e00>] (task_work_run+0x98/0xb8)
+[<c0246d68>] (task_work_run) from [<c022f1d8>] (do_exit+0x170/0xa80)
+  r9:ece351fc r8:00000000 r7:ecde3f58 r6:ffffe000 r5:ece351c0
+r4:ece38d80
+[<c022f068>] (do_exit) from [<c022fb6c>] (do_group_exit+0x48/0xc4)
+  r7:000000f8
+[<c022fb24>] (do_group_exit) from [<c022fc00>]
+(__wake_up_parent+0x0/0x28)
+  r7:000000f8 r6:b6c6a798 r5:00000001 r4:00000001
+[<c022fbe8>] (SyS_exit_group) from [<c0207c80>]
+(ret_fast_syscall+0x0/0x4c)
+
+These warnings are caused by buffers which not properly cleaned
+up/release during an abort use case.
+
+In the abort cases the VPDMA desc buffers would still be mapped and the
+in-flight VB2 buffers would not be released properly causing a kernel
+warning from being generated by the videobuf2-core level.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/ti-vpe/vpe.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 54f0d9d3cc491..52d5aebe0fb81 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1418,9 +1418,6 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
+ 	 /* the previous dst mv buffer becomes the next src mv buffer */
+ 	ctx->src_mv_buf_selector = !ctx->src_mv_buf_selector;
+ 
+-	if (ctx->aborting)
+-		goto finished;
+-
+ 	s_vb = ctx->src_vbs[0];
+ 	d_vb = ctx->dst_vb;
+ 
+@@ -1485,6 +1482,9 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
+ 	ctx->src_vbs[0] = NULL;
+ 	ctx->dst_vb = NULL;
+ 
++	if (ctx->aborting)
++		goto finished;
++
+ 	ctx->bufs_completed++;
+ 	if (ctx->bufs_completed < ctx->bufs_per_job && job_ready(ctx)) {
+ 		device_run(ctx);
+@@ -2383,6 +2383,12 @@ static int vpe_release(struct file *file)
+ 
+ 	mutex_lock(&dev->dev_mutex);
+ 	free_mv_buffers(ctx);
++
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->desc_list.buf);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->mmr_adb);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_h);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_v);
++
+ 	vpdma_free_desc_list(&ctx->desc_list);
+ 	vpdma_free_desc_buf(&ctx->mmr_adb);
+ 
+-- 
+2.20.1
+
