@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67471C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13F2C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292DD206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D358206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="0NT2mc3M";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="0NT2mc3M"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="5fr9elvz";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="5fr9elvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfLJItG (ORCPT
+        id S1727110AbfLJItF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:49:06 -0500
-Received: from mail-eopbgr50082.outbound.protection.outlook.com ([40.107.5.82]:45889
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Tue, 10 Dec 2019 03:49:05 -0500
+Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:43492
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfLJItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726843AbfLJItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 03:49:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/d4jIzeQVWkCBWXx8R3XHSN3jQW91VW1gzlK5vWQXA=;
- b=0NT2mc3MDyVkZJl3sU5mSmS25Syp7XFd6puHbiqBKriAuozDDh1uNx+Ie3OyvmrzJDZ8KfAw672Ai38/KZkS+EcjOcKORQqRBnmrobh9bqxpNhdol/MvIYpeLAgRyoRaJfoZL7EY3PfgCyv1DT0leqzpbsTOTPre7MCXP4jSoj8=
-Received: from VI1PR08CA0121.eurprd08.prod.outlook.com (2603:10a6:800:d4::23)
- by DBBPR08MB4314.eurprd08.prod.outlook.com (2603:10a6:10:ce::16) with
+ bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
+ b=5fr9elvzsr6sOvugAnOl+cXEweumTZsh7X7/S18GhfUu8H7oFfgJ0UZzjAZoIHeMPe6a3OHIaLXJDmvHNl4RbzCSSFx23kzCvFeP9huHiuegcZY/T8mUHgbH1QpMu56Ku76Ne4Q0CmydYM0aJcpHjLe24VpnBDwbPLQaz1ANkWo=
+Received: from VI1PR08CA0268.eurprd08.prod.outlook.com (2603:10a6:803:dc::41)
+ by DB6PR08MB2789.eurprd08.prod.outlook.com (2603:10a6:6:20::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.14; Tue, 10 Dec
- 2019 08:48:55 +0000
-Received: from DB5EUR03FT044.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::203) by VI1PR08CA0121.outlook.office365.com
- (2603:10a6:800:d4::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Tue, 10 Dec
+ 2019 08:48:58 +0000
+Received: from VE1EUR03FT025.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::206) by VI1PR08CA0268.outlook.office365.com
+ (2603:10a6:803:dc::41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
- Transport; Tue, 10 Dec 2019 08:48:55 +0000
+ Transport; Tue, 10 Dec 2019 08:48:58 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
  header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
@@ -47,43 +47,43 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT044.mail.protection.outlook.com (10.152.21.167) with Microsoft SMTP
+ VE1EUR03FT025.mail.protection.outlook.com (10.152.18.74) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18 via Frontend Transport; Tue, 10 Dec 2019 08:48:54 +0000
-Received: ("Tessian outbound d87d9aeb44be:v37"); Tue, 10 Dec 2019 08:48:54 +0000
+ 15.20.2495.18 via Frontend Transport; Tue, 10 Dec 2019 08:48:58 +0000
+Received: ("Tessian outbound 25173d5f5683:v37"); Tue, 10 Dec 2019 08:48:58 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 33ba96f2eead3c02
+X-CR-MTA-CID: c62a380993af5820
 X-CR-MTA-TID: 64aa7808
-Received: from 0edf5832a06f.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id CFB6E7E4-697A-47A6-89FB-09567E8C3C2A.1;
-        Tue, 10 Dec 2019 08:48:49 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0edf5832a06f.2
+Received: from 4d760b48d4b6.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DDF5CBD7-AD5D-469C-A1D9-9F1818DB3B99.1;
+        Tue, 10 Dec 2019 08:48:52 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4d760b48d4b6.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 10 Dec 2019 08:48:49 +0000
+    Tue, 10 Dec 2019 08:48:52 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tfprypp5FvLmpwoU6cqVW1o5MX2FwOVtlfrj0dx8iHyAq6R/eIufblEEiq9ZPICNohKw12gsEz2UYUbjPrw5PylYuaYWZQ2VEhBkZ/tbzaiWYlSKQyABAK9F3XG+Z7DFfYQQRHzIJJJTbEFBlttAY39b1EyTCIRgty/Zdp1TK8q0dkzBKrMY7Q6ICDHMLeZRfguGLixswMuvQs+UQPUxeTeJpnwLkj92XBJIepfesFg6xPQEXm3lX8+KkHrqgTbNG+hkKvCqFh792VizvYbf/An7vuid7EDwIlmXDNLeX/kuCJ9G4dIYSVdEqVI0wyqoNAXpMhdX3XFZfLHW2HPoPQ==
+ b=GMjBRjUxL37PhaKD4mkQGrT3qp/2foFMP5yM1IbqAqLavNHbLnCOSwGpikhaFT4GYUH2gphuN2l1J2vgcqrSYxXgiW2JCCPwVTnMyQsdIjeZ1qRTLhgzaQ7nEyvevgzGIMFH7t+shwYoOSjmQJzcF0nXGRCKbYcFH1VhKqY5XyRklLMkLx+8jiZHhhSE/vKWKINuduMz9+CInMxIhrsJlmDDYrgwZeljAYM64Nbq5iLvmNIOiBUIRwMuxYBSzKMzN6ACYYe6X6ec9QDKHB2ZJMdAD7SzecQq7Ooe22Vt5Qp/G1xN67D7Y9P4MsrwG9nm1HCIM8Zz4Fs9Oj7wlL+vTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/d4jIzeQVWkCBWXx8R3XHSN3jQW91VW1gzlK5vWQXA=;
- b=VFev+eiDh2LUGUEFJcIAGw6JhGlmnpHZgM6xoHfoDnTy4MUUpC0rqHIVeUrK3dNrHqZ5XNlBTOPcWe8jpu/NuNDEb87vTAHSBHRXS0Xy/XdOsPdvgYNz8Dpv0CiC5QjHTIGHSGbjBDaVeuSPWwC7dtko8pfRz2WGO6M8rS70P1hOvbm/ioI2e7NHfgBpE49zgbGpIJPWfP++rW755maRAabiH8JYNajLjZkwMBjNjLH0v2oXRjqVp7n/wBqJdL4I+y1fZ/THz4vEnj7Q+60VPCcIjOzy8tJ4viDRDkBWIdA8JLEGzyygYNIyIyrxQITJznVQDYU6lvpYu0G72FcRow==
+ bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
+ b=EhGm9iAfIusqC5/g0wuECrSKKcTyH+UiI1APW2EVyVHClQK5r+PR4HZ0AQ7t5OSVSqhvxHEZQ0T/mqlNb6aKZ1Yo4MiyaOb9qZ0rTpGWuw+VhBCHAV85o7XQbWuIyni0T65k+LeBZGj1KQTmwJmJ7EHMJGZSWN/R+JDo5dHK5VzuyFxh42CaWFOC42A1rI8ZrlyxCUiYenFS/lPkQBtsCKS9gbqUz2QvcxvKFp61t3Dgr/JmhHrSbmro9KMJQlvDORWB5BPwDjRPv3lWItYauEhYagaRRs4jPWhhaYzQaTUmUB0vk5BKRw5w+4nQ2ScjzxmG2Bwg5GgpAHQWSBtHWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/d4jIzeQVWkCBWXx8R3XHSN3jQW91VW1gzlK5vWQXA=;
- b=0NT2mc3MDyVkZJl3sU5mSmS25Syp7XFd6puHbiqBKriAuozDDh1uNx+Ie3OyvmrzJDZ8KfAw672Ai38/KZkS+EcjOcKORQqRBnmrobh9bqxpNhdol/MvIYpeLAgRyoRaJfoZL7EY3PfgCyv1DT0leqzpbsTOTPre7MCXP4jSoj8=
+ bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
+ b=5fr9elvzsr6sOvugAnOl+cXEweumTZsh7X7/S18GhfUu8H7oFfgJ0UZzjAZoIHeMPe6a3OHIaLXJDmvHNl4RbzCSSFx23kzCvFeP9huHiuegcZY/T8mUHgbH1QpMu56Ku76Ne4Q0CmydYM0aJcpHjLe24VpnBDwbPLQaz1ANkWo=
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
  VE1PR08MB5182.eurprd08.prod.outlook.com (20.179.31.89) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Tue, 10 Dec 2019 08:48:46 +0000
+ 15.20.2516.14; Tue, 10 Dec 2019 08:48:51 +0000
 Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::f984:b0c7:bce9:144e]) by VE1PR08MB5006.eurprd08.prod.outlook.com
  ([fe80::f984:b0c7:bce9:144e%2]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 08:48:46 +0000
+ 08:48:51 +0000
 From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
 To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
 CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
@@ -96,11 +96,11 @@ CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
         "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
         "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
         "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v3 1/2] drm/komeda: Update the chip identify
-Thread-Topic: [PATCH v3 1/2] drm/komeda: Update the chip identify
-Thread-Index: AQHVrzaiCeAK5VTajE2NZYt9uO0vcg==
-Date:   Tue, 10 Dec 2019 08:48:46 +0000
-Message-ID: <20191210084828.19664-2-james.qian.wang@arm.com>
+Subject: [PATCH v3 2/2] drm/komeda: Enable new product D32 support
+Thread-Topic: [PATCH v3 2/2] drm/komeda: Enable new product D32 support
+Thread-Index: AQHVrzaleAtsmVu8OkaYqJLyku2PnQ==
+Date:   Tue, 10 Dec 2019 08:48:51 +0000
+Message-ID: <20191210084828.19664-3-james.qian.wang@arm.com>
 References: <20191210084828.19664-1-james.qian.wang@arm.com>
 In-Reply-To: <20191210084828.19664-1-james.qian.wang@arm.com>
 Accept-Language: en-US
@@ -117,19 +117,19 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 733b65f0-d246-4738-869f-08d77d4dc9ed
-X-MS-TrafficTypeDiagnostic: VE1PR08MB5182:|VE1PR08MB5182:|DBBPR08MB4314:
+X-MS-Office365-Filtering-Correlation-Id: edce7f9e-bd1f-4cb3-ddc5-08d77d4dcc05
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5182:|VE1PR08MB5182:|DB6PR08MB2789:
 x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DBBPR08MB4314AA4D4F4C3A64C6B4178FB35B0@DBBPR08MB4314.eurprd08.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DB6PR08MB2789EA036287FA0642BFD4D6B35B0@DB6PR08MB2789.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:4125;OLM:4125;
+x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:8273;
 x-forefront-prvs: 02475B2A01
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(54906003)(4326008)(66446008)(26005)(1076003)(103116003)(66556008)(37006003)(186003)(66946007)(64756008)(8676002)(66476007)(36756003)(6862004)(305945005)(2616005)(2906002)(15650500001)(71200400001)(6486002)(86362001)(478600001)(6512007)(6636002)(316002)(71190400001)(5660300002)(55236004)(81156014)(81166006)(8936002)(52116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5182;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(54906003)(4326008)(66446008)(26005)(1076003)(103116003)(66556008)(37006003)(186003)(66946007)(64756008)(8676002)(66476007)(36756003)(6862004)(305945005)(2616005)(2906002)(71200400001)(6486002)(86362001)(478600001)(6512007)(6636002)(316002)(71190400001)(5660300002)(55236004)(81156014)(81166006)(8936002)(52116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5182;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: hB+UJysy64OneczNQ5E9t3ObK8UyqRPapB2BqJd7Kx7UJsvgZ0q0lDGQMtCRKnaSo97FtsyxUi6gPeMiAt7FQjyspMm216s0aA0zhO9GU4QuUBf0kj3JOZN4rXxY/SE2D1L3oHu8AMMJswz/I4IUIXwOE+w+asvHLBKrwtaMm4U/7Aa3i9moGt0b7rAQ9bKkvyP22xFYreBsivvzC+rB6eBkNDvoMsFnoXw9svSUv1xhnMnOzhnwU+YKD62LpsySEUPqgKQqxpXZH96AMlAmzWcOdQE8k4e0MECbvWrVOwqlmoYSscjXagHkRxej90xSeQUGR/x8DgftH0Lmkv/guZlO+3Kcl5y8OvEVx1Oe5HJKi8f12RU4WPFNJBvgAJevKS0mfCNq+fVuw1rlnO/HBdibkrSh0HBdcMRThFDsZbxKeg0wa7yLA9a4eBXG5ab/
+X-Microsoft-Antispam-Message-Info-Original: KsSO07UuusPkwFdrCldGUD1EEVXP4ugytbcJ5GNYeLC8/4LsqBlfsegvpYXNMXmuvaqCF7pi4+QgCxrVOKkXl6qE9gXYm8sK0J2F8zmJGZBL0/Yra8E3lwLIGAwaGc9N2YdfK+DzNkJd3QpXYpF2qiJE0vIgX+tMHC4OpR5KKdvLDFqjWmfWoN4g+TLMFcJLvs858bVs2S8f8M6hBKRjpQ3pjX69mTePRLOtFttwjl7ZrvKNLyMLVgnry4XtWNxJd9mAyBO1BX2VUH1uOvGZQxf4mJlQprBIvsNv07BRml5g5r9TmYtDoBR/q2c9T65I1I3iOfTMI7kMbtyp27TfVn5rRxbpapwYdMoH/f7tfA3d0JR1cg19Q2grWy68NWhb+Leb+Fgkyh3ASSKYCP6vlmChnej3rqt/Pkar7ZNKaJhC+hS/sx5avtF7pQCdZAwy
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
@@ -137,266 +137,171 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5182
 Original-Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=james.qian.wang@arm.com; 
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT044.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(86362001)(8936002)(6506007)(2906002)(2616005)(26005)(1076003)(356004)(76130400001)(70586007)(70206006)(186003)(15650500001)(4326008)(478600001)(305945005)(6862004)(336012)(26826003)(6512007)(5660300002)(103116003)(36756003)(6486002)(6636002)(37006003)(81166006)(81156014)(54906003)(8676002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4314;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 88c2a7d0-b516-4dfa-8767-08d77d4dc4cb
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT025.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(189003)(199004)(70206006)(2616005)(26005)(36756003)(6862004)(8936002)(6506007)(70586007)(103116003)(6512007)(4326008)(336012)(26826003)(86362001)(305945005)(37006003)(54906003)(81156014)(356004)(478600001)(81166006)(8676002)(316002)(76130400001)(6636002)(36906005)(1076003)(6486002)(5660300002)(186003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR08MB2789;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 6f5184c5-d7d7-47ae-3c7b-08d77d4dc783
 NoDisclaimer: True
 X-Forefront-PRVS: 02475B2A01
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EdWcSG4yR92PRS2ZoHQE/2F/I1exKPaoGTYWVIt7wMjMo01y+FQIEJubANxo8T1qMeOOJgpFxqpBmmKsZ8tVJ50OFcUMX2BLhoOO40g2GMZQ+9ZT9d4D2cC6ta3iyKzAX1CjQ/zKpgctfkJnE09GAvn4VrVI1G8n1xCr8Jvwyq2r9Z8HT+55684720+NX3IFRzr1/jUi4YwWpjUHUjgtVBTHBYWZFANkqQhXN3eLkWCAcoDJVXciLNCOX6RpCB0EkeIB1aMdZF/AcCkV96mz8ByT4ESKVJvHo0TM2qJs0L+3pM5pS9RzWa8wrrbbILwzkKsZF/wTPqJ2kZ6zctPrHLsBrianTKR6mz3Rs1ArR+RC9IQaDCiKRNGyzqa2wXjTHCiSKJXwTU+hBpMFgjAr39RoHayRD2UBwrohaNboCEaGC+x40KGdrfhHflz1sR79
+X-Microsoft-Antispam-Message-Info: GgEcmBhs7RtbbKyD4V7QzCd6olsVniaFz2Mw/4bONE8DsBjEResKV47+wtK5X7xvuVLWve+KVGVMDk6TaInSHq4r1pB1wpSPsli1m3jDrnhh2gn/chSioLWljrn2FcXJ6xReUdwJtpCuBjj62aiPVzNSuqkWYbAXk/O3PWfmVIISbW72Mo8u8pnEExqZnHAVzPpPzmfZiIofm7J8Nj2Iibtbq3qEA6eVi45u9Fq08itzAS5wUlQa9cwcWVZQ1fPAbwsJNwxTjiFj5WB8DhX8QaK7qg9DLOv82QaHnJAaeYrPiDkYE0gCXglkhn7x+gYqUV0S4e3fm7LJZgsQRkZ0eOrg8Vz2eWiXv8P864PMSjw22KbEV4IyvQm8t6px/viunkhW+ydhyMbC+Ii8VZPAZHjtGKfXmbNa4Q5MLwtSJef2UI/A2dbIHQzQQXacn7QH
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 08:48:54.9244
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 08:48:58.3977
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 733b65f0-d246-4738-869f-08d77d4dc9ed
+X-MS-Exchange-CrossTenant-Network-Message-Id: edce7f9e-bd1f-4cb3-ddc5-08d77d4dcc05
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4314
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2789
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Drop komeda-CORE product id comparison and put it into the d71_identify
-2. Update pipeline node DT-binding:
-   (a). Skip the needless pipeline DT node.
-   (b). Return fail if the essential pipeline DT node is missing.
+D32 is simple version of D71, the difference is:
+- Only has one pipeline
+- Drop the periph block and merge it to GCU
 
-With these changes, for chips in same family no need to change the DT.
+v2: Rebase.
+v3: Isolate the block counting fix to a new patch
 
-v2: Rebase
-v3: Address Mihail's comments.
-
-Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.=
+Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
 com>
-Reviewed-by: Mihail Atanassov <mihail.atanassov@arm.com>
 ---
- .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 19 +++++-
- .../gpu/drm/arm/display/komeda/komeda_dev.c   | 61 ++++++++++---------
- .../gpu/drm/arm/display/komeda/komeda_dev.h   | 14 +----
- .../gpu/drm/arm/display/komeda/komeda_drv.c   |  9 +--
- 4 files changed, 54 insertions(+), 49 deletions(-)
+ .../drm/arm/display/include/malidp_product.h  |  3 +-
+ .../arm/display/komeda/d71/d71_component.c    |  2 +-
+ .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 39 ++++++++++++-------
+ .../gpu/drm/arm/display/komeda/d71/d71_regs.h | 13 +++++++
+ .../gpu/drm/arm/display/komeda/komeda_drv.c   |  1 +
+ 5 files changed, 42 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/gpu/drm/arm/display/include/malidp_product.h b/drivers=
+/gpu/drm/arm/display/include/malidp_product.h
+index 1053b11352eb..16a8a2c22c42 100644
+--- a/drivers/gpu/drm/arm/display/include/malidp_product.h
++++ b/drivers/gpu/drm/arm/display/include/malidp_product.h
+@@ -18,7 +18,8 @@
+ #define MALIDP_CORE_ID_STATUS(__core_id)     (((__u32)(__core_id)) & 0xFF)
+=20
+ /* Mali-display product IDs */
+-#define MALIDP_D71_PRODUCT_ID   0x0071
++#define MALIDP_D71_PRODUCT_ID	0x0071
++#define MALIDP_D32_PRODUCT_ID	0x0032
+=20
+ union komeda_config_id {
+ 	struct {
+diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drive=
+rs/gpu/drm/arm/display/komeda/d71/d71_component.c
+index b6517c46e670..8a02ade369db 100644
+--- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
++++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
+@@ -1270,7 +1270,7 @@ static int d71_timing_ctrlr_init(struct d71_dev *d71,
+=20
+ 	ctrlr =3D to_ctrlr(c);
+=20
+-	ctrlr->supports_dual_link =3D true;
++	ctrlr->supports_dual_link =3D d71->supports_dual_link;
+=20
+ 	return 0;
+ }
 diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/gpu=
 /drm/arm/display/komeda/d71/d71_dev.c
-index d53f95dea0a1..7e79c2e88421 100644
+index 7e79c2e88421..dd1ecf4276d3 100644
 --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
 +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-@@ -597,10 +597,25 @@ static const struct komeda_dev_funcs d71_chip_funcs =
-=3D {
- const struct komeda_dev_funcs *
- d71_identify(u32 __iomem *reg_base, struct komeda_chip_info *chip)
- {
-+	const struct komeda_dev_funcs *funcs;
-+	u32 product_id;
-+
-+	chip->core_id =3D malidp_read32(reg_base, GLB_CORE_ID);
-+
-+	product_id =3D MALIDP_CORE_ID_PRODUCT_ID(chip->core_id);
-+
-+	switch (product_id) {
-+	case MALIDP_D71_PRODUCT_ID:
-+		funcs =3D &d71_chip_funcs;
-+		break;
-+	default:
-+		DRM_ERROR("Unsupported product: 0x%x\n", product_id);
-+		return NULL;
-+	}
-+
- 	chip->arch_id	=3D malidp_read32(reg_base, GLB_ARCH_ID);
--	chip->core_id	=3D malidp_read32(reg_base, GLB_CORE_ID);
- 	chip->core_info	=3D malidp_read32(reg_base, GLB_CORE_INFO);
- 	chip->bus_width	=3D D71_BUS_WIDTH_16_BYTES;
-=20
--	return &d71_chip_funcs;
-+	return funcs;
- }
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.c
-index 4e46f650fddf..38b832804bad 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-@@ -115,22 +115,14 @@ static struct attribute_group komeda_sysfs_attr_group=
- =3D {
- 	.attrs =3D komeda_sysfs_entries,
- };
-=20
--static int komeda_parse_pipe_dt(struct komeda_dev *mdev, struct device_nod=
-e *np)
-+static int komeda_parse_pipe_dt(struct komeda_pipeline *pipe)
- {
--	struct komeda_pipeline *pipe;
-+	struct device_node *np =3D pipe->of_node;
- 	struct clk *clk;
--	u32 pipe_id;
--	int ret =3D 0;
--
--	ret =3D of_property_read_u32(np, "reg", &pipe_id);
--	if (ret !=3D 0 || pipe_id >=3D mdev->n_pipelines)
--		return -EINVAL;
--
--	pipe =3D mdev->pipelines[pipe_id];
-=20
- 	clk =3D of_clk_get_by_name(np, "pxclk");
- 	if (IS_ERR(clk)) {
--		DRM_ERROR("get pxclk for pipeline %d failed!\n", pipe_id);
-+		DRM_ERROR("get pxclk for pipeline %d failed!\n", pipe->id);
- 		return PTR_ERR(clk);
- 	}
- 	pipe->pxlclk =3D clk;
-@@ -144,7 +136,6 @@ static int komeda_parse_pipe_dt(struct komeda_dev *mdev=
-, struct device_node *np)
- 		of_graph_get_port_by_id(np, KOMEDA_OF_PORT_OUTPUT);
-=20
- 	pipe->dual_link =3D pipe->of_output_links[0] && pipe->of_output_links[1];
--	pipe->of_node =3D of_node_get(np);
-=20
- 	return 0;
- }
-@@ -153,7 +144,9 @@ static int komeda_parse_dt(struct device *dev, struct k=
-omeda_dev *mdev)
- {
- 	struct platform_device *pdev =3D to_platform_device(dev);
- 	struct device_node *child, *np =3D dev->of_node;
--	int ret;
-+	struct komeda_pipeline *pipe;
-+	u32 pipe_id =3D U32_MAX;
-+	int ret =3D -1;
-=20
- 	mdev->irq  =3D platform_get_irq(pdev, 0);
- 	if (mdev->irq < 0) {
-@@ -168,28 +161,42 @@ static int komeda_parse_dt(struct device *dev, struct=
- komeda_dev *mdev)
- 	ret =3D 0;
-=20
- 	for_each_available_child_of_node(np, child) {
--		if (of_node_cmp(child->name, "pipeline") =3D=3D 0) {
--			ret =3D komeda_parse_pipe_dt(mdev, child);
--			if (ret) {
--				DRM_ERROR("parse pipeline dt error!\n");
--				of_node_put(child);
--				break;
-+		if (of_node_name_eq(child, "pipeline")) {
-+			of_property_read_u32(child, "reg", &pipe_id);
-+			if (pipe_id >=3D mdev->n_pipelines) {
-+				DRM_WARN("Skip the redundant DT node: pipeline-%u.\n",
-+					 pipe_id);
-+				continue;
- 			}
-+			mdev->pipelines[pipe_id]->of_node =3D of_node_get(child);
- 		}
+@@ -371,23 +371,33 @@ static int d71_enum_resources(struct komeda_dev *mdev=
+)
+ 		goto err_cleanup;
  	}
 =20
--	return ret;
-+	for (pipe_id =3D 0; pipe_id < mdev->n_pipelines; pipe_id++) {
-+		pipe =3D mdev->pipelines[pipe_id];
+-	/* probe PERIPH */
++	/* Only the legacy HW has the periph block, the newer merges the periph
++	 * into GCU
++	 */
+ 	value =3D malidp_read32(d71->periph_addr, BLK_BLOCK_INFO);
+-	if (BLOCK_INFO_BLK_TYPE(value) !=3D D71_BLK_TYPE_PERIPH) {
+-		DRM_ERROR("access blk periph but got blk: %d.\n",
+-			  BLOCK_INFO_BLK_TYPE(value));
+-		err =3D -EINVAL;
+-		goto err_cleanup;
++	if (BLOCK_INFO_BLK_TYPE(value) !=3D D71_BLK_TYPE_PERIPH)
++		d71->periph_addr =3D NULL;
 +
-+		if (!pipe->of_node) {
-+			DRM_ERROR("Pipeline-%d doesn't have a DT node.\n",
-+				  pipe->id);
-+			return -EINVAL;
-+		}
-+		ret =3D komeda_parse_pipe_dt(pipe);
-+		if (ret)
-+			return ret;
-+	}
++	if (d71->periph_addr) {
++		/* probe PERIPHERAL in legacy HW */
++		value =3D malidp_read32(d71->periph_addr, PERIPH_CONFIGURATION_ID);
 +
-+	return 0;
- }
-=20
- struct komeda_dev *komeda_dev_create(struct device *dev)
- {
- 	struct platform_device *pdev =3D to_platform_device(dev);
--	const struct komeda_product_data *product;
-+	komeda_identify_func komeda_identify;
- 	struct komeda_dev *mdev;
- 	int err =3D 0;
-=20
--	product =3D of_device_get_match_data(dev);
--	if (!product)
-+	komeda_identify =3D of_device_get_match_data(dev);
-+	if (!komeda_identify)
- 		return ERR_PTR(-ENODEV);
-=20
- 	mdev =3D devm_kzalloc(dev, sizeof(*mdev), GFP_KERNEL);
-@@ -217,11 +224,9 @@ struct komeda_dev *komeda_dev_create(struct device *de=
-v)
-=20
- 	clk_prepare_enable(mdev->aclk);
-=20
--	mdev->funcs =3D product->identify(mdev->reg_base, &mdev->chip);
--	if (!komeda_product_match(mdev, product->product_id)) {
--		DRM_ERROR("DT configured %x mismatch with real HW %x.\n",
--			  product->product_id,
--			  MALIDP_CORE_ID_PRODUCT_ID(mdev->chip.core_id));
-+	mdev->funcs =3D komeda_identify(mdev->reg_base, &mdev->chip);
-+	if (!mdev->funcs) {
-+		DRM_ERROR("Failed to identify the HW.\n");
- 		err =3D -ENODEV;
- 		goto disable_clk;
++		d71->max_line_size	=3D value & PERIPH_MAX_LINE_SIZE ? 4096 : 2048;
++		d71->max_vsize		=3D 4096;
++		d71->num_rich_layers	=3D value & PERIPH_NUM_RICH_LAYERS ? 2 : 1;
++		d71->supports_dual_link	=3D !!(value & PERIPH_SPLIT_EN);
++		d71->integrates_tbu	=3D !!(value & PERIPH_TBU_EN);
++	} else {
++		value =3D malidp_read32(d71->gcu_addr, GCU_CONFIGURATION_ID0);
++		d71->max_line_size	=3D GCU_MAX_LINE_SIZE(value);
++		d71->max_vsize		=3D GCU_MAX_NUM_LINES(value);
++
++		value =3D malidp_read32(d71->gcu_addr, GCU_CONFIGURATION_ID1);
++		d71->num_rich_layers	=3D GCU_NUM_RICH_LAYERS(value);
++		d71->supports_dual_link	=3D GCU_DISPLAY_SPLIT_EN(value);
++		d71->integrates_tbu	=3D GCU_DISPLAY_TBU_EN(value);
  	}
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
-drm/arm/display/komeda/komeda_dev.h
-index d406a4d83352..4a67a80d5fcf 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-@@ -58,11 +58,6 @@
- 			    | KOMEDA_EVENT_MODE \
- 			    )
 =20
--/* malidp device id */
--enum {
--	MALI_D71 =3D 0,
--};
+-	value =3D malidp_read32(d71->periph_addr, PERIPH_CONFIGURATION_ID);
 -
- /* pipeline DT ports */
- enum {
- 	KOMEDA_OF_PORT_OUTPUT		=3D 0,
-@@ -76,12 +71,6 @@ struct komeda_chip_info {
- 	u32 bus_width;
- };
-=20
--struct komeda_product_data {
--	u32 product_id;
--	const struct komeda_dev_funcs *(*identify)(u32 __iomem *reg,
--					     struct komeda_chip_info *info);
--};
+-	d71->max_line_size	=3D value & PERIPH_MAX_LINE_SIZE ? 4096 : 2048;
+-	d71->max_vsize		=3D 4096;
+-	d71->num_rich_layers	=3D value & PERIPH_NUM_RICH_LAYERS ? 2 : 1;
+-	d71->supports_dual_link	=3D value & PERIPH_SPLIT_EN ? true : false;
+-	d71->integrates_tbu	=3D value & PERIPH_TBU_EN ? true : false;
 -
- struct komeda_dev;
+ 	for (i =3D 0; i < d71->num_pipelines; i++) {
+ 		pipe =3D komeda_pipeline_add(mdev, sizeof(struct d71_pipeline),
+ 					   &d71_pipeline_funcs);
+@@ -606,6 +616,7 @@ d71_identify(u32 __iomem *reg_base, struct komeda_chip_=
+info *chip)
 =20
- struct komeda_events {
-@@ -234,6 +223,9 @@ komeda_product_match(struct komeda_dev *mdev, u32 targe=
-t)
- 	return MALIDP_CORE_ID_PRODUCT_ID(mdev->chip.core_id) =3D=3D target;
- }
+ 	switch (product_id) {
+ 	case MALIDP_D71_PRODUCT_ID:
++	case MALIDP_D32_PRODUCT_ID:
+ 		funcs =3D &d71_chip_funcs;
+ 		break;
+ 	default:
+diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h b/drivers/gp=
+u/drm/arm/display/komeda/d71/d71_regs.h
+index 1727dc993909..81de6a23e7f3 100644
+--- a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
++++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
+@@ -72,6 +72,19 @@
+ #define GCU_CONTROL_MODE(x)	((x) & 0x7)
+ #define GCU_CONTROL_SRST	BIT(16)
 =20
-+typedef const struct komeda_dev_funcs *
-+(*komeda_identify_func)(u32 __iomem *reg, struct komeda_chip_info *chip);
++/* GCU_CONFIGURATION registers */
++#define GCU_CONFIGURATION_ID0	0x100
++#define GCU_CONFIGURATION_ID1	0x104
 +
- const struct komeda_dev_funcs *
- d71_identify(u32 __iomem *reg, struct komeda_chip_info *chip);
-=20
++/* GCU configuration */
++#define GCU_MAX_LINE_SIZE(x)	((x) & 0xFFFF)
++#define GCU_MAX_NUM_LINES(x)	((x) >> 16)
++#define GCU_NUM_RICH_LAYERS(x)	((x) & 0x7)
++#define GCU_NUM_PIPELINES(x)	(((x) >> 3) & 0x7)
++#define GCU_NUM_SCALERS(x)	(((x) >> 6) & 0x7)
++#define GCU_DISPLAY_SPLIT_EN(x)	(((x) >> 16) & 0x1)
++#define GCU_DISPLAY_TBU_EN(x)	(((x) >> 17) & 0x1)
++
+ /* GCU opmode */
+ #define INACTIVE_MODE		0
+ #define TBU_CONNECT_MODE	1
 diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/=
 drm/arm/display/komeda/komeda_drv.c
-index d6c2222c5d33..b7a1097c45c4 100644
+index b7a1097c45c4..ad38bbc7431e 100644
 --- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
 +++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-@@ -123,15 +123,8 @@ static int komeda_platform_remove(struct platform_devi=
-ce *pdev)
- 	return 0;
- }
+@@ -125,6 +125,7 @@ static int komeda_platform_remove(struct platform_devic=
+e *pdev)
 =20
--static const struct komeda_product_data komeda_products[] =3D {
--	[MALI_D71] =3D {
--		.product_id =3D MALIDP_D71_PRODUCT_ID,
--		.identify =3D d71_identify,
--	},
--};
--
  static const struct of_device_id komeda_of_match[] =3D {
--	{ .compatible =3D "arm,mali-d71", .data =3D &komeda_products[MALI_D71], }=
-,
-+	{ .compatible =3D "arm,mali-d71", .data =3D d71_identify, },
+ 	{ .compatible =3D "arm,mali-d71", .data =3D d71_identify, },
++	{ .compatible =3D "arm,mali-d32", .data =3D d71_identify, },
  	{},
  };
 =20
