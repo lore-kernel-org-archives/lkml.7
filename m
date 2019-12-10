@@ -2,232 +2,125 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAEAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C65C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07694207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16B820652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MUQzmcaW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iLjkWXF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLJODv (ORCPT
+        id S1727385AbfLJOFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:03:51 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31454 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727131AbfLJODu (ORCPT
+        Tue, 10 Dec 2019 09:05:44 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43312 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727131AbfLJOFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:03:50 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAE3Wsi012011;
-        Tue, 10 Dec 2019 15:03:36 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=N8+PdFVjbmmTn2I/xjA82hSahC5K+ZEGZOWc06jsdSY=;
- b=MUQzmcaWPIYcSTlCzircMy1rPaaNiXBKIacp8SocnyDqAKPN7Z6dONkspE43CLAWPuxn
- MuhY7GGaTL3JH06njZs7ClppQ5+O8T7WrcrMbdTTQkTs8tNnpbwhYUoqZwH7iX83doNo
- sEZiXhumdCk9xi1hE+P304zPUqOIAVrEGOURZw3y7a6oL6IEGq5vWSuEzvLeEV0xf7rd
- r/ayH/N7mh7TdKlQKS0Tew9NuXH4aIL14zSuX7vO6peXhQll1/WdDlbMK6JfBupHMusY
- +IwBIx4jMvin82oJ4JihyvzDFNMfruaYLHntijqA0T/5j6NfRd82NJqYoYxxSHY2VPzR fA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfcuhe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Dec 2019 15:03:33 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6FC4610003A;
-        Tue, 10 Dec 2019 15:03:16 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5AD3E2BC7B8;
-        Tue, 10 Dec 2019 15:03:16 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.47) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
- 2019 15:03:14 +0100
-Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
- non-functional state
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191113172514.19052-1-ludovic.Barre@st.com>
- <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <2e5639cd-0dea-8cc1-d1aa-721025d66bac@st.com>
-Date:   Tue, 10 Dec 2019 15:03:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 10 Dec 2019 09:05:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575986743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SOYnZuCbc+qSbe4PVmdcAeY7lsD1liv9hGkxVuOBR+k=;
+        b=iLjkWXF2tkSUuTegqgPuvaIsHgJI9qYuoPoRv5i0tBXbe8upa8IreRscCcLzRj85oCSiwm
+        S/0OzqHFfs/Urpw9McIsprRxUA1mCZRe7DLyRE2pXFkEPP2bhes6/UFzExfsuMn0rFqo6N
+        exaeHRu412IQP5hP+y+LcnbKXCRBZtA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-BlQbeN4EOXuXUKazet-nYw-1; Tue, 10 Dec 2019 09:05:39 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13ACC1800D45;
+        Tue, 10 Dec 2019 14:05:38 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F2D3605C9;
+        Tue, 10 Dec 2019 14:05:37 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 22:05:34 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Message-ID: <20191210140534.GB28917@MiWiFi-R3L-srv>
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <20191210072453.GI2984@MiWiFi-R3L-srv>
+ <20191210102834.GE10404@dhcp22.suse.cz>
+ <20191210104303.GN2984@MiWiFi-R3L-srv>
+ <20191210113341.GG10404@dhcp22.suse.cz>
+ <20191210125557.GA28917@MiWiFi-R3L-srv>
+ <20191210133202.GJ10404@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_03:2019-12-10,2019-12-10 signatures=0
+In-Reply-To: <20191210133202.GJ10404@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: BlQbeN4EOXuXUKazet-nYw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+On 12/10/19 at 02:32pm, Michal Hocko wrote:
+> On Tue 10-12-19 20:55:57, Baoquan He wrote:
+> [...]
+> > Btw, as you said at above, I am confused by the '[KNL,BOOT]', what does
+> > the 'BOOT' mean in the documentation of 'mem=3D'? I checked all paramet=
+ers
+> > with 'BOOT', still don't get it clearly.
+>=20
+> This is a good question indeed. I have checked closer and this is what
+> documentation says
+> Documentation/admin-guide/kernel-parameters.rst
+> "
+>         BOOT    Is a boot loader parameter.
+>=20
+> Parameters denoted with BOOT are actually interpreted by the boot
+> loader, and have no meaning to the kernel directly.
+> "
+>=20
+> and that really doesn't fit, right? So I went to check the full history
+> git tree just to get to 2.4.0-test5 and no explanation whatsoever.
+> Fun, isn't it? ;)
 
-Le 12/10/19 à 1:30 PM, Ulf Hansson a écrit :
-> On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> If datatimeout occurs on R1B request, the Data Path State Machine stays
->> in busy and is non-functional. Only a reset aborts the DPSM.
->>
->> Like a reset must be outside of critical section, this patch adds
->> threaded irq function to release state machine. In this case,
->> the mmc_request_done is called at the end of threaded irq and
->> skipped into irq handler.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
->>   drivers/mmc/host/mmci.h |  1 +
->>   2 files changed, 40 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 40e72c30ea84..ec6e249c87ca 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
->>   static void
->>   mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
->>   {
->> +       if (host->irq_action == IRQ_WAKE_THREAD)
->> +               return;
->> +
-> 
-> It seems a bit unnecessary to check this every time mmci_request_end()
-> is called.
-> 
-> How about avoiding to call mmci_request_end() for the one specific
-> condition instead? See more below.
-> 
->>          writel(0, host->base + MMCICOMMAND);
->>
->>          BUG_ON(host->data);
->> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>          } else if (host->variant->busy_timeout && busy_resp &&
->>                     status & MCI_DATATIMEOUT) {
->>                  cmd->error = -ETIMEDOUT;
->> +               host->irq_action = IRQ_WAKE_THREAD;
-> 
-> You could check this flag a few lines below and if it's set to
-> IRQ_WAKE_THREAD, avoid to call mmci_request_end().
+Yeah, very interesting. Finally I got their original purpose from
+Documentation/x86/boot.rst.
 
-yes, it was my first implementation. after, I wanted to centralize this,
-if the irq threaded would be extend.
-But you are right, it's not the goal of this commit.
 
-I resend a v2
+Special Command Line Options
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
 
-> 
->>          } else {
->>                  cmd->resp[0] = readl(base + MMCIRESPONSE0);
->>                  cmd->resp[1] = readl(base + MMCIRESPONSE1);
->> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>   {
->>          struct mmci_host *host = dev_id;
->>          u32 status;
->> -       int ret = 0;
->>
->>          spin_lock(&host->lock);
->> +       host->irq_action = IRQ_HANDLED;
->>
->>          do {
->>                  status = readl(host->base + MMCISTATUS);
->> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->>                  if (host->variant->busy_detect_flag)
->>                          status &= ~host->variant->busy_detect_flag;
->>
->> -               ret = 1;
->>          } while (status);
->>
->>          spin_unlock(&host->lock);
->>
->> -       return IRQ_RETVAL(ret);
->> +       return host->irq_action;
->> +}
->> +
->> +/*
->> + * mmci_irq_threaded is call if the mmci host need to release state machines
->> + * before to terminate the request.
->> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
->> + * in busy and is non-functional. Only a reset can to abort the DPSM.
->> + */
->> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
->> +{
->> +       struct mmci_host *host = dev_id;
->> +       unsigned long flags;
->> +
->> +       if (host->rst) {
->> +               reset_control_assert(host->rst);
->> +               udelay(2);
->> +               reset_control_deassert(host->rst);
->> +       }
->> +
->> +       spin_lock_irqsave(&host->lock, flags);
->> +       writel(host->clk_reg, host->base + MMCICLOCK);
->> +       writel(host->pwr_reg, host->base + MMCIPOWER);
->> +       writel(MCI_IRQENABLE | host->variant->start_err,
->> +              host->base + MMCIMASK0);
->> +
->> +       host->irq_action = IRQ_HANDLED;
->> +       mmci_request_end(host, host->mrq);
->> +       spin_unlock_irqrestore(&host->lock, flags);
->> +
->> +       return host->irq_action;
->>   }
->>
->>   static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
->>                          goto clk_disable;
->>          }
->>
->> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
->> -                       DRIVER_NAME " (cmd)", host);
->> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
->> +                                       mmci_irq_threaded, IRQF_SHARED,
->> +                                       DRIVER_NAME " (cmd)", host);
->>          if (ret)
->>                  goto clk_disable;
->>
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index 158e1231aa23..5e63c0596364 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -412,6 +412,7 @@ struct mmci_host {
->>
->>          struct timer_list       timer;
->>          unsigned int            oldstat;
->> +       u32                     irq_action;
->>
->>          /* pio stuff */
->>          struct sg_mapping_iter  sg_miter;
->> --
->> 2.17.1
->>
-> 
-> Otherwise this looks good, besides my other earlier comments, of course.
-> 
-> Kind regards
-> Uffe
-> 
+If the command line provided by the boot loader is entered by the
+user, the user may expect the following command line options to work.
+They should normally not be deleted from the kernel command line even
+though not all of them are actually meaningful to the kernel.  Boot
+loader authors who need additional command line options for the boot
+loader itself should get them registered in
+Documentation/admin-guide/kernel-parameters.rst to make sure they will not
+conflict with actual kernel options now or in the future.
+
+...
+
+So here, [KNL,BOOT], KNL means it's used for kernel, BOOT means it's
+needed by boot loader.
+
+I think we should at least add a note in kernel-parameters.txt to
+explain this. Will add it.
+
+Thanks
+Baoquan
+
