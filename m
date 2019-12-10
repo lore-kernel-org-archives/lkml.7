@@ -4,649 +4,439 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA548C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B579C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA53920637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2120920637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfLJP0c (ORCPT
+        id S1727522AbfLJP1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:26:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55650 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727330AbfLJP0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:26:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1EAC1AC3E;
-        Tue, 10 Dec 2019 15:26:28 +0000 (UTC)
-Subject: Re: [PATCH] drm: remove drm_bridge->dev
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc:     nd <nd@arm.com>, Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Peter Senna Tschudin <peter.senna@gmail.com>,
-        Martyn Welch <martyn.welch@collabora.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-References: <20191205163028.19941-1-mihail.atanassov@arm.com>
- <20191210151111.21510-1-mihail.atanassov@arm.com>
- <03fe8874-a969-8c82-6a29-aca0d6754ee7@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <8b61418b-c41b-ca2f-b230-ce8cb7bc691a@suse.de>
-Date:   Tue, 10 Dec 2019 16:26:26 +0100
+        Tue, 10 Dec 2019 10:27:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33489 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfLJP1k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:27:40 -0500
+Received: from erbse.hi.pengutronix.de ([2001:67c:670:100:9e5c:8eff:fece:cdfe])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <bst@pengutronix.de>)
+        id 1iehQJ-0000QG-8V; Tue, 10 Dec 2019 16:27:39 +0100
+From:   Bastian Krause <bst@pengutronix.de>
+Subject: Re: [PATCH 08/12] crypto: caam - support crypto_engine framework for
+ SKCIPHER algorithms
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx <linux-imx@nxp.com>,
+        kernel@pengutronix.de
+References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
+ <1574029845-22796-9-git-send-email-iuliana.prodan@nxp.com>
+Message-ID: <c0fa1e68-107d-f9ee-fbf2-0d0e6ef8d39d@pengutronix.de>
+Date:   Tue, 10 Dec 2019 16:27:36 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <03fe8874-a969-8c82-6a29-aca0d6754ee7@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="tvJaUMtivJLXKj0faQf5IftUJiZueSbey"
+In-Reply-To: <1574029845-22796-9-git-send-email-iuliana.prodan@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:9e5c:8eff:fece:cdfe
+X-SA-Exim-Mail-From: bst@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---tvJaUMtivJLXKj0faQf5IftUJiZueSbey
-Content-Type: multipart/mixed; boundary="9e7UktxUwPOJzu0QgsVxegY2pN3qh4DvN";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Mihail Atanassov <Mihail.Atanassov@arm.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc: nd <nd@arm.com>, Andrzej Hajda <a.hajda@samsung.com>,
- Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>,
- Daniel Vetter <daniel@ffwll.ch>, Peter Senna Tschudin
- <peter.senna@gmail.com>, Martyn Welch <martyn.welch@collabora.co.uk>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Clark <robdclark@gmail.com>,
- Sean Paul <sean@poorly.run>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
- "freedreno@lists.freedesktop.org" <freedreno@lists.freedesktop.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Message-ID: <8b61418b-c41b-ca2f-b230-ce8cb7bc691a@suse.de>
-Subject: Re: [PATCH] drm: remove drm_bridge->dev
-References: <20191205163028.19941-1-mihail.atanassov@arm.com>
- <20191210151111.21510-1-mihail.atanassov@arm.com>
- <03fe8874-a969-8c82-6a29-aca0d6754ee7@suse.de>
-In-Reply-To: <03fe8874-a969-8c82-6a29-aca0d6754ee7@suse.de>
 
---9e7UktxUwPOJzu0QgsVxegY2pN3qh4DvN
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi Iulia,
 
+On 11/17/19 11:30 PM, Iuliana Prodan wrote:
+> Integrate crypto_engine into CAAM, to make use of the engine queue.
+> Add support for SKCIPHER algorithms.
+> 
+> This is intended to be used for CAAM backlogging support.
+> The requests, with backlog flag (e.g. from dm-crypt) will be listed
+> into crypto-engine queue and processed by CAAM when free.
+> This changes the return codes for caam_jr_enqueue:
+> -EINPROGRESS if OK, -EBUSY if request is backlogged,
+> -ENOSPC if the queue is full, -EIO if it cannot map the caller's
+> descriptor, -EINVAL if crypto_tfm not supported by crypto_engine.
+> 
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
+> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+> ---
+>  drivers/crypto/caam/Kconfig   |  1 +
+>  drivers/crypto/caam/caamalg.c | 84 +++++++++++++++++++++++++++++++++++--------
+>  drivers/crypto/caam/intern.h  |  2 ++
+>  drivers/crypto/caam/jr.c      | 51 ++++++++++++++++++++++++--
+>  4 files changed, 122 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig
+> index 87053e4..1930e19 100644
+> --- a/drivers/crypto/caam/Kconfig
+> +++ b/drivers/crypto/caam/Kconfig
+> @@ -33,6 +33,7 @@ config CRYPTO_DEV_FSL_CAAM_DEBUG
+>  
+>  menuconfig CRYPTO_DEV_FSL_CAAM_JR
+>  	tristate "Freescale CAAM Job Ring driver backend"
+> +	select CRYPTO_ENGINE
+>  	default y
+>  	help
+>  	  Enables the driver module for Job Rings which are part of
+> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+> index abebcfc..23de94d 100644
+> --- a/drivers/crypto/caam/caamalg.c
+> +++ b/drivers/crypto/caam/caamalg.c
+> @@ -56,6 +56,7 @@
+>  #include "sg_sw_sec4.h"
+>  #include "key_gen.h"
+>  #include "caamalg_desc.h"
+> +#include <crypto/engine.h>
+>  
+>  /*
+>   * crypto alg
+> @@ -101,6 +102,7 @@ struct caam_skcipher_alg {
+>   * per-session context
+>   */
+>  struct caam_ctx {
+> +	struct crypto_engine_ctx enginectx;
+>  	u32 sh_desc_enc[DESC_MAX_USED_LEN];
+>  	u32 sh_desc_dec[DESC_MAX_USED_LEN];
+>  	u8 key[CAAM_MAX_KEY_SIZE];
+> @@ -114,6 +116,12 @@ struct caam_ctx {
+>  	unsigned int authsize;
+>  };
+>  
+> +struct caam_skcipher_req_ctx {
+> +	struct skcipher_edesc *edesc;
+> +	void (*skcipher_op_done)(struct device *jrdev, u32 *desc, u32 err,
+> +				 void *context);
+> +};
+> +
+>  static int aead_null_set_sh_desc(struct crypto_aead *aead)
+>  {
+>  	struct caam_ctx *ctx = crypto_aead_ctx(aead);
+> @@ -992,13 +1000,15 @@ static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
+>  	struct caam_jr_request_entry *jrentry = context;
+>  	struct skcipher_request *req = skcipher_request_cast(jrentry->base);
+>  	struct skcipher_edesc *edesc;
+> +	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
+>  	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+> +	struct caam_drv_private_jr *jrp = dev_get_drvdata(jrdev);
+>  	int ivsize = crypto_skcipher_ivsize(skcipher);
+>  	int ecode = 0;
+>  
+>  	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
+>  
+> -	edesc = container_of(desc, struct skcipher_edesc, hw_desc[0]);
+> +	edesc = rctx->edesc;
+>  	if (err)
+>  		ecode = caam_jr_strstatus(jrdev, err);
+>  
+> @@ -1024,7 +1034,14 @@ static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
+>  
+>  	kfree(edesc);
+>  
+> -	skcipher_request_complete(req, ecode);
+> +	/*
+> +	 * If no backlog flag, the completion of the request is done
+> +	 * by CAAM, not crypto engine.
+> +	 */
+> +	if (!jrentry->bklog)
+> +		skcipher_request_complete(req, ecode);
+> +	else
+> +		crypto_finalize_skcipher_request(jrp->engine, req, ecode);
+>  }
+>  
+>  /*
+> @@ -1553,6 +1570,7 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
+>  {
+>  	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+>  	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+> +	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
+>  	struct device *jrdev = ctx->jrdev;
+>  	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+>  		       GFP_KERNEL : GFP_ATOMIC;
+> @@ -1653,6 +1671,9 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
+>  						  desc_bytes);
+>  	edesc->jrentry.base = &req->base;
+>  
+> +	rctx->edesc = edesc;
+> +	rctx->skcipher_op_done = skcipher_crypt_done;
+> +
+>  	/* Make sure IV is located in a DMAable area */
+>  	if (ivsize) {
+>  		iv = (u8 *)edesc->sec4_sg + sec4_sg_bytes;
+> @@ -1707,13 +1728,37 @@ static struct skcipher_edesc *skcipher_edesc_alloc(struct skcipher_request *req,
+>  	return edesc;
+>  }
+>  
+> +static int skcipher_do_one_req(struct crypto_engine *engine, void *areq)
+> +{
+> +	struct skcipher_request *req = skcipher_request_cast(areq);
+> +	struct caam_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
+> +	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
+> +	struct caam_jr_request_entry *jrentry;
+> +	u32 *desc = rctx->edesc->hw_desc;
+> +	int ret;
+> +
+> +	jrentry = &rctx->edesc->jrentry;
+> +	jrentry->bklog = true;
+> +
+> +	ret = caam_jr_enqueue_no_bklog(ctx->jrdev, desc,
+> +				       rctx->skcipher_op_done, jrentry);
+> +
+> +	if (ret != -EINPROGRESS) {
+> +		skcipher_unmap(ctx->jrdev, rctx->edesc, req);
+> +		kfree(rctx->edesc);
+> +	} else {
+> +		ret = 0;
+> +	}
+> +
+> +	return ret;
 
+While testing this on a i.MX6 DualLite I see -ENOSPC being returned here
+after a couple of GiB of data being encrypted (via dm-crypt with LUKS
+extension). This results in these messages from crypto_engine:
 
-Am 10.12.19 um 16:25 schrieb Thomas Zimmermann:
->=20
->=20
-> Am 10.12.19 um 16:11 schrieb Mihail Atanassov:
->> As suggested in [1], the 'dev' field is a bit repetitive, since it 1:1=
+  caam_jr 2101000.jr0: Failed to do one request from queue: -28
 
->> follows the setting and NULLing of the 'encoder' field. Therefore, use=
+And later..
 
->> drm_bridge->encoder->dev in place of drm_bridge->dev.
->>
->> [1] https://patchwork.freedesktop.org/patch/343824/
->>
->> Cc: Daniel Vetter <daniel@ffwll.ch>
->> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
->=20
-> Nice.
->=20
-> Acked-by: Thomas Zimmermann
+  Buffer I/O error on device dm-0, logical block 59392
+  JBD2: Detected IO errors while flushing file data on dm-0-8
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reproducible with something like this:
 
->=20
->> ---
->>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c           |  2 +-
->>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c     |  2 +-
->>  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c     |  2 +-
->>  drivers/gpu/drm/bridge/cdns-dsi.c                      |  2 +-
->>  drivers/gpu/drm/bridge/dumb-vga-dac.c                  |  2 +-
->>  .../gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c   |  2 +-
->>  drivers/gpu/drm/bridge/nxp-ptn3460.c                   |  2 +-
->>  drivers/gpu/drm/bridge/panel.c                         |  2 +-
->>  drivers/gpu/drm/bridge/parade-ps8622.c                 |  2 +-
->>  drivers/gpu/drm/bridge/sii902x.c                       |  6 +++---
->>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c              |  6 +++---
->>  drivers/gpu/drm/bridge/tc358764.c                      |  4 ++--
->>  drivers/gpu/drm/bridge/tc358767.c                      |  6 +++---
->>  drivers/gpu/drm/bridge/ti-sn65dsi86.c                  |  2 +-
->>  drivers/gpu/drm/bridge/ti-tfp410.c                     |  6 +++---
->>  drivers/gpu/drm/drm_bridge.c                           | 10 ++++-----=
--
->>  drivers/gpu/drm/i2c/tda998x_drv.c                      |  2 +-
->>  drivers/gpu/drm/mcde/mcde_dsi.c                        |  2 +-
->>  drivers/gpu/drm/msm/edp/edp_bridge.c                   |  2 +-
->>  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c                 |  4 ++--
->>  drivers/gpu/drm/rcar-du/rcar_lvds.c                    |  3 ++-
->>  include/drm/drm_bridge.h                               |  2 --
->>  22 files changed, 35 insertions(+), 38 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gp=
-u/drm/bridge/adv7511/adv7511_drv.c
->> index 9e13e466e72c..009cf1fef8d4 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> @@ -863,7 +863,7 @@ static int adv7511_bridge_attach(struct drm_bridge=
- *bridge)
->>  		adv->connector.polled =3D DRM_CONNECTOR_POLL_CONNECT |
->>  				DRM_CONNECTOR_POLL_DISCONNECT;
->> =20
->> -	ret =3D drm_connector_init(bridge->dev, &adv->connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, &adv->connector,
->>  				 &adv7511_connector_funcs,
->>  				 DRM_MODE_CONNECTOR_HDMIA);
->>  	if (ret) {
->> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/driv=
-ers/gpu/drm/bridge/analogix/analogix-anx6345.c
->> index 9917ce0d86a0..5b806d23fcb3 100644
->> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
->> @@ -541,7 +541,7 @@ static int anx6345_bridge_attach(struct drm_bridge=
- *bridge)
->>  		return err;
->>  	}
->> =20
->> -	err =3D drm_connector_init(bridge->dev, &anx6345->connector,
->> +	err =3D drm_connector_init(bridge->encoder->dev, &anx6345->connector=
-,
->>  				 &anx6345_connector_funcs,
->>  				 DRM_MODE_CONNECTOR_eDP);
->>  	if (err) {
->> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c b/driv=
-ers/gpu/drm/bridge/analogix/analogix-anx78xx.c
->> index 41867be03751..7463537950cb 100644
->> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
->> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
->> @@ -908,7 +908,7 @@ static int anx78xx_bridge_attach(struct drm_bridge=
- *bridge)
->>  		return err;
->>  	}
->> =20
->> -	err =3D drm_connector_init(bridge->dev, &anx78xx->connector,
->> +	err =3D drm_connector_init(bridge->encoder->dev, &anx78xx->connector=
-,
->>  				 &anx78xx_connector_funcs,
->>  				 DRM_MODE_CONNECTOR_DisplayPort);
->>  	if (err) {
->> diff --git a/drivers/gpu/drm/bridge/cdns-dsi.c b/drivers/gpu/drm/bridg=
-e/cdns-dsi.c
->> index 3a5bd4e7fd1e..32863e3ad537 100644
->> --- a/drivers/gpu/drm/bridge/cdns-dsi.c
->> +++ b/drivers/gpu/drm/bridge/cdns-dsi.c
->> @@ -651,7 +651,7 @@ static int cdns_dsi_bridge_attach(struct drm_bridg=
-e *bridge)
->>  	struct cdns_dsi *dsi =3D input_to_dsi(input);
->>  	struct cdns_dsi_output *output =3D &dsi->output;
->> =20
->> -	if (!drm_core_check_feature(bridge->dev, DRIVER_ATOMIC)) {
->> +	if (!drm_core_check_feature(bridge->encoder->dev, DRIVER_ATOMIC)) {
->>  		dev_err(dsi->base.dev,
->>  			"cdns-dsi driver is only compatible with DRM devices supporting at=
-omic updates");
->>  		return -ENOTSUPP;
->> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/b=
-ridge/dumb-vga-dac.c
->> index cc33dc411b9e..67ad6cecf68d 100644
->> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
->> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
->> @@ -112,7 +112,7 @@ static int dumb_vga_attach(struct drm_bridge *brid=
-ge)
->> =20
->>  	drm_connector_helper_add(&vga->connector,
->>  				 &dumb_vga_con_helper_funcs);
->> -	ret =3D drm_connector_init_with_ddc(bridge->dev, &vga->connector,
->> +	ret =3D drm_connector_init_with_ddc(bridge->encoder->dev, &vga->conn=
-ector,
->>  					  &dumb_vga_con_funcs,
->>  					  DRM_MODE_CONNECTOR_VGA,
->>  					  vga->ddc);
->> diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c =
-b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
->> index e8a49f6146c6..c914f01e4707 100644
->> --- a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
->> +++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
->> @@ -223,7 +223,7 @@ static int ge_b850v3_lvds_attach(struct drm_bridge=
- *bridge)
->>  	drm_connector_helper_add(connector,
->>  				 &ge_b850v3_lvds_connector_helper_funcs);
->> =20
->> -	ret =3D drm_connector_init(bridge->dev, connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, connector,
->>  				 &ge_b850v3_lvds_connector_funcs,
->>  				 DRM_MODE_CONNECTOR_DisplayPort);
->>  	if (ret) {
->> diff --git a/drivers/gpu/drm/bridge/nxp-ptn3460.c b/drivers/gpu/drm/br=
-idge/nxp-ptn3460.c
->> index 57ff01339559..3999bb864eb9 100644
->> --- a/drivers/gpu/drm/bridge/nxp-ptn3460.c
->> +++ b/drivers/gpu/drm/bridge/nxp-ptn3460.c
->> @@ -247,7 +247,7 @@ static int ptn3460_bridge_attach(struct drm_bridge=
- *bridge)
->>  	}
->> =20
->>  	ptn_bridge->connector.polled =3D DRM_CONNECTOR_POLL_HPD;
->> -	ret =3D drm_connector_init(bridge->dev, &ptn_bridge->connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, &ptn_bridge->connec=
-tor,
->>  			&ptn3460_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
->>  	if (ret) {
->>  		DRM_ERROR("Failed to initialize connector with drm\n");
->> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/p=
-anel.c
->> index f66777e24968..4ba4e9d9537a 100644
->> --- a/drivers/gpu/drm/bridge/panel.c
->> +++ b/drivers/gpu/drm/bridge/panel.c
->> @@ -67,7 +67,7 @@ static int panel_bridge_attach(struct drm_bridge *br=
-idge)
->>  	drm_connector_helper_add(connector,
->>  				 &panel_bridge_connector_helper_funcs);
->> =20
->> -	ret =3D drm_connector_init(bridge->dev, connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, connector,
->>  				 &panel_bridge_connector_funcs,
->>  				 panel_bridge->connector_type);
->>  	if (ret) {
->> diff --git a/drivers/gpu/drm/bridge/parade-ps8622.c b/drivers/gpu/drm/=
-bridge/parade-ps8622.c
->> index 10c47c008b40..c32af9c2bbcc 100644
->> --- a/drivers/gpu/drm/bridge/parade-ps8622.c
->> +++ b/drivers/gpu/drm/bridge/parade-ps8622.c
->> @@ -487,7 +487,7 @@ static int ps8622_attach(struct drm_bridge *bridge=
-)
->>  	}
->> =20
->>  	ps8622->connector.polled =3D DRM_CONNECTOR_POLL_HPD;
->> -	ret =3D drm_connector_init(bridge->dev, &ps8622->connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, &ps8622->connector,=
+  echo "testkey" | cryptsetup luksFormat \
+    --cipher=aes-cbc-essiv:sha256 \
+    --key-file=- \
+    --key-size=256 \
+    /dev/mmcblk1p8
+  echo "testkey" | cryptsetup open \
+    --type luks \
+    --key-file=- \
+    /dev/mmcblk1p8 data
 
->>  			&ps8622_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
->>  	if (ret) {
->>  		DRM_ERROR("Failed to initialize connector with drm\n");
->> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge=
-/sii902x.c
->> index b70e8c5cf2e1..6ca297d78a26 100644
->> --- a/drivers/gpu/drm/bridge/sii902x.c
->> +++ b/drivers/gpu/drm/bridge/sii902x.c
->> @@ -402,7 +402,7 @@ static void sii902x_bridge_mode_set(struct drm_bri=
-dge *bridge,
->>  static int sii902x_bridge_attach(struct drm_bridge *bridge)
->>  {
->>  	struct sii902x *sii902x =3D bridge_to_sii902x(bridge);
->> -	struct drm_device *drm =3D bridge->dev;
->> +	struct drm_device *drm =3D bridge->encoder->dev;
->>  	int ret;
->> =20
->>  	drm_connector_helper_add(&sii902x->connector,
->> @@ -820,8 +820,8 @@ static irqreturn_t sii902x_interrupt(int irq, void=
- *data)
->> =20
->>  	mutex_unlock(&sii902x->mutex);
->> =20
->> -	if ((status & SII902X_HOTPLUG_EVENT) && sii902x->bridge.dev)
->> -		drm_helper_hpd_irq_event(sii902x->bridge.dev);
->> +	if ((status & SII902X_HOTPLUG_EVENT) && sii902x->bridge.encoder)
->> +		drm_helper_hpd_irq_event(sii902x->bridge.encoder->dev);
->> =20
->>  	return IRQ_HANDLED;
->>  }
->> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/d=
-rm/bridge/synopsys/dw-hdmi.c
->> index dbe38a54870b..99274ca0fdf6 100644
->> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
->> @@ -2346,7 +2346,7 @@ static int dw_hdmi_bridge_attach(struct drm_brid=
-ge *bridge)
->> =20
->>  	drm_connector_helper_add(connector, &dw_hdmi_connector_helper_funcs)=
-;
->> =20
->> -	drm_connector_init_with_ddc(bridge->dev, connector,
->> +	drm_connector_init_with_ddc(bridge->encoder->dev, connector,
->>  				    &dw_hdmi_connector_funcs,
->>  				    DRM_MODE_CONNECTOR_HDMIA,
->>  				    hdmi->ddc);
->> @@ -2554,8 +2554,8 @@ static irqreturn_t dw_hdmi_irq(int irq, void *de=
-v_id)
->>  	if (intr_stat & HDMI_IH_PHY_STAT0_HPD) {
->>  		dev_dbg(hdmi->dev, "EVENT=3D%s\n",
->>  			phy_int_pol & HDMI_PHY_HPD ? "plugin" : "plugout");
->> -		if (hdmi->bridge.dev)
->> -			drm_helper_hpd_irq_event(hdmi->bridge.dev);
->> +		if (hdmi->bridge.encoder)
->> +			drm_helper_hpd_irq_event(hdmi->bridge.encoder->dev);
->>  	}
->> =20
->>  	hdmi_writeb(hdmi, intr_stat, HDMI_IH_PHY_STAT0);
->> diff --git a/drivers/gpu/drm/bridge/tc358764.c b/drivers/gpu/drm/bridg=
-e/tc358764.c
->> index 96207fcfde19..e35e17b1f396 100644
->> --- a/drivers/gpu/drm/bridge/tc358764.c
->> +++ b/drivers/gpu/drm/bridge/tc358764.c
->> @@ -352,7 +352,7 @@ static void tc358764_enable(struct drm_bridge *bri=
-dge)
->>  static int tc358764_attach(struct drm_bridge *bridge)
->>  {
->>  	struct tc358764 *ctx =3D bridge_to_tc358764(bridge);
->> -	struct drm_device *drm =3D bridge->dev;
->> +	struct drm_device *drm =3D bridge->encoder->dev;
->>  	int ret;
->> =20
->>  	ctx->connector.polled =3D DRM_CONNECTOR_POLL_HPD;
->> @@ -378,7 +378,7 @@ static int tc358764_attach(struct drm_bridge *brid=
-ge)
->>  static void tc358764_detach(struct drm_bridge *bridge)
->>  {
->>  	struct tc358764 *ctx =3D bridge_to_tc358764(bridge);
->> -	struct drm_device *drm =3D bridge->dev;
->> +	struct drm_device *drm =3D bridge->encoder->dev;
->> =20
->>  	drm_connector_unregister(&ctx->connector);
->>  	drm_fb_helper_remove_one_connector(drm->fb_helper, &ctx->connector);=
+  mkfs.ext4 /dev/mapper/data
+  mount /dev/mapper/data /mnt
 
->> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridg=
-e/tc358767.c
->> index 3709e5ace724..ab1524c00777 100644
->> --- a/drivers/gpu/drm/bridge/tc358767.c
->> +++ b/drivers/gpu/drm/bridge/tc358767.c
->> @@ -1407,7 +1407,7 @@ static int tc_bridge_attach(struct drm_bridge *b=
-ridge)
->>  {
->>  	u32 bus_format =3D MEDIA_BUS_FMT_RGB888_1X24;
->>  	struct tc_data *tc =3D bridge_to_tc(bridge);
->> -	struct drm_device *drm =3D bridge->dev;
->> +	struct drm_device *drm =3D bridge->encoder->dev;
->>  	int ret;
->> =20
->>  	/* Create DP/eDP connector */
->> @@ -1514,7 +1514,7 @@ static irqreturn_t tc_irq_handler(int irq, void =
-*arg)
->>  		dev_err(tc->dev, "syserr %x\n", stat);
->>  	}
->> =20
->> -	if (tc->hpd_pin >=3D 0 && tc->bridge.dev) {
->> +	if (tc->hpd_pin >=3D 0 && tc->bridge.encoder) {
->>  		/*
->>  		 * H is triggered when the GPIO goes high.
->>  		 *
->> @@ -1528,7 +1528,7 @@ static irqreturn_t tc_irq_handler(int irq, void =
-*arg)
->>  			h ? "H" : "", lc ? "LC" : "");
->> =20
->>  		if (h || lc)
->> -			drm_kms_helper_hotplug_event(tc->bridge.dev);
->> +			drm_kms_helper_hotplug_event(tc->bridge.encoder->dev);
->>  	}
->> =20
->>  	regmap_write(tc->regmap, INTSTS_G, val);
->> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/b=
-ridge/ti-sn65dsi86.c
->> index 9a2dd986afa5..8a4e64cfca1e 100644
->> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->> @@ -275,7 +275,7 @@ static int ti_sn_bridge_attach(struct drm_bridge *=
-bridge)
->>  						   .node =3D NULL,
->>  						 };
->> =20
->> -	ret =3D drm_connector_init(bridge->dev, &pdata->connector,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, &pdata->connector,
->>  				 &ti_sn_bridge_connector_funcs,
->>  				 DRM_MODE_CONNECTOR_eDP);
->>  	if (ret) {
->> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/brid=
-ge/ti-tfp410.c
->> index aa3198dc9903..76229367e2f4 100644
->> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
->> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
->> @@ -135,7 +135,7 @@ static int tfp410_attach(struct drm_bridge *bridge=
-)
->> =20
->>  	drm_connector_helper_add(&dvi->connector,
->>  				 &tfp410_con_helper_funcs);
->> -	ret =3D drm_connector_init_with_ddc(bridge->dev, &dvi->connector,
->> +	ret =3D drm_connector_init_with_ddc(bridge->encoder->dev, &dvi->conn=
-ector,
->>  					  &tfp410_con_funcs,
->>  					  dvi->connector_type,
->>  					  dvi->ddc);
->> @@ -179,8 +179,8 @@ static void tfp410_hpd_work_func(struct work_struc=
-t *work)
->> =20
->>  	dvi =3D container_of(work, struct tfp410, hpd_work.work);
->> =20
->> -	if (dvi->bridge.dev)
->> -		drm_helper_hpd_irq_event(dvi->bridge.dev);
->> +	if (dvi->bridge.encoder)
->> +		drm_helper_hpd_irq_event(dvi->bridge.encoder->dev);
->>  }
->> =20
->>  static irqreturn_t tfp410_hpd_irq_thread(int irq, void *arg)
->> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge=
-=2Ec
->> index c2cf0c90fa26..eaa20804b038 100644
->> --- a/drivers/gpu/drm/drm_bridge.c
->> +++ b/drivers/gpu/drm/drm_bridge.c
->> @@ -119,13 +119,12 @@ int drm_bridge_attach(struct drm_encoder *encode=
-r, struct drm_bridge *bridge,
->>  	if (!encoder || !bridge)
->>  		return -EINVAL;
->> =20
->> -	if (previous && (!previous->dev || previous->encoder !=3D encoder))
->> +	if (previous && (previous->encoder !=3D encoder))
->>  		return -EINVAL;
->> =20
->> -	if (bridge->dev)
->> +	if (bridge->encoder)
->>  		return -EBUSY;
->> =20
->> -	bridge->dev =3D encoder->dev;
->>  	bridge->encoder =3D encoder;
->> =20
->>  	if (previous)
->> @@ -137,7 +136,6 @@ int drm_bridge_attach(struct drm_encoder *encoder,=
- struct drm_bridge *bridge,
->>  		ret =3D bridge->funcs->attach(bridge);
->>  		if (ret < 0) {
->>  			list_del(&bridge->chain_node);
->> -			bridge->dev =3D NULL;
->>  			bridge->encoder =3D NULL;
->>  			return ret;
->>  		}
->> @@ -152,14 +150,14 @@ void drm_bridge_detach(struct drm_bridge *bridge=
-)
->>  	if (WARN_ON(!bridge))
->>  		return;
->> =20
->> -	if (WARN_ON(!bridge->dev))
->> +	if (WARN_ON(!bridge->encoder))
->>  		return;
->> =20
->>  	if (bridge->funcs->detach)
->>  		bridge->funcs->detach(bridge);
->> =20
->>  	list_del(&bridge->chain_node);
->> -	bridge->dev =3D NULL;
->> +	bridge->encoder =3D NULL;
->>  }
->> =20
->>  /**
->> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/t=
-da998x_drv.c
->> index a63790d32d75..17a66ef3dfd4 100644
->> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
->> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
->> @@ -1360,7 +1360,7 @@ static int tda998x_bridge_attach(struct drm_brid=
-ge *bridge)
->>  {
->>  	struct tda998x_priv *priv =3D bridge_to_tda998x_priv(bridge);
->> =20
->> -	return tda998x_connector_init(priv, bridge->dev);
->> +	return tda998x_connector_init(priv, bridge->encoder->dev);
->>  }
->> =20
->>  static void tda998x_bridge_detach(struct drm_bridge *bridge)
->> diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mc=
-de_dsi.c
->> index 42fff811653e..c08d7ede9fb8 100644
->> --- a/drivers/gpu/drm/mcde/mcde_dsi.c
->> +++ b/drivers/gpu/drm/mcde/mcde_dsi.c
->> @@ -846,7 +846,7 @@ static void mcde_dsi_bridge_disable(struct drm_bri=
-dge *bridge)
->>  static int mcde_dsi_bridge_attach(struct drm_bridge *bridge)
->>  {
->>  	struct mcde_dsi *d =3D bridge_to_mcde_dsi(bridge);
->> -	struct drm_device *drm =3D bridge->dev;
->> +	struct drm_device *drm =3D bridge->encoder->dev;
->>  	int ret;
->> =20
->>  	if (!drm_core_check_feature(drm, DRIVER_ATOMIC)) {
->> diff --git a/drivers/gpu/drm/msm/edp/edp_bridge.c b/drivers/gpu/drm/ms=
-m/edp/edp_bridge.c
->> index b65b5cc2dba2..301dd7a80bde 100644
->> --- a/drivers/gpu/drm/msm/edp/edp_bridge.c
->> +++ b/drivers/gpu/drm/msm/edp/edp_bridge.c
->> @@ -47,7 +47,7 @@ static void edp_bridge_mode_set(struct drm_bridge *b=
-ridge,
->>  		const struct drm_display_mode *mode,
->>  		const struct drm_display_mode *adjusted_mode)
->>  {
->> -	struct drm_device *dev =3D bridge->dev;
->> +	struct drm_device *dev =3D bridge->encoder->dev;
->>  	struct drm_connector *connector;
->>  	struct edp_bridge *edp_bridge =3D to_edp_bridge(bridge);
->>  	struct msm_edp *edp =3D edp_bridge->edp;
->> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/=
-msm/hdmi/hdmi_bridge.c
->> index ba81338a9bf8..07c098dce310 100644
->> --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
->> +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
->> @@ -20,7 +20,7 @@ void msm_hdmi_bridge_destroy(struct drm_bridge *brid=
-ge)
->> =20
->>  static void msm_hdmi_power_on(struct drm_bridge *bridge)
->>  {
->> -	struct drm_device *dev =3D bridge->dev;
->> +	struct drm_device *dev =3D bridge->encoder->dev;
->>  	struct hdmi_bridge *hdmi_bridge =3D to_hdmi_bridge(bridge);
->>  	struct hdmi *hdmi =3D hdmi_bridge->hdmi;
->>  	const struct hdmi_platform_config *config =3D hdmi->config;
->> @@ -56,7 +56,7 @@ static void msm_hdmi_power_on(struct drm_bridge *bri=
-dge)
->> =20
->>  static void power_off(struct drm_bridge *bridge)
->>  {
->> -	struct drm_device *dev =3D bridge->dev;
->> +	struct drm_device *dev =3D bridge->encoder->dev;
->>  	struct hdmi_bridge *hdmi_bridge =3D to_hdmi_bridge(bridge);
->>  	struct hdmi *hdmi =3D hdmi_bridge->hdmi;
->>  	const struct hdmi_platform_config *config =3D hdmi->config;
->> diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rca=
-r-du/rcar_lvds.c
->> index 2cf44b91853c..83538125a722 100644
->> --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
->> +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
->> @@ -622,7 +622,8 @@ static int rcar_lvds_attach(struct drm_bridge *bri=
-dge)
->>  	if (!lvds->panel)
->>  		return 0;
->> =20
->> -	ret =3D drm_connector_init(bridge->dev, connector, &rcar_lvds_conn_f=
-uncs,
->> +	ret =3D drm_connector_init(bridge->encoder->dev, connector,
->> +				 &rcar_lvds_conn_funcs,
->>  				 DRM_MODE_CONNECTOR_LVDS);
->>  	if (ret < 0)
->>  		return ret;
->> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
->> index 694e153a7531..695d0898df38 100644
->> --- a/include/drm/drm_bridge.h
->> +++ b/include/drm/drm_bridge.h
->> @@ -380,8 +380,6 @@ struct drm_bridge_timings {
->>   * struct drm_bridge - central DRM bridge control structure
->>   */
->>  struct drm_bridge {
->> -	/** @dev: DRM device this bridge belongs to */
->> -	struct drm_device *dev;
->>  	/** @encoder: encoder to which this bridge is connected */
->>  	struct drm_encoder *encoder;
->>  	/** @chain_node: used to form a bridge chain */
->>
->=20
+  set -x
+  while [ true ]; do
+    dd if=/dev/zero of=/mnt/big_file bs=1M count=1024
+    sync
+  done
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+Any ideas?
+
+Regards,
+Bastian
 
 
---9e7UktxUwPOJzu0QgsVxegY2pN3qh4DvN--
+> +}
+> +
+>  static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
+>  {
+>  	struct skcipher_edesc *edesc;
+>  	struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+>  	struct caam_ctx *ctx = crypto_skcipher_ctx(skcipher);
+>  	struct device *jrdev = ctx->jrdev;
+> -	struct caam_jr_request_entry *jrentry;
+>  	u32 *desc;
+>  	int ret = 0;
+>  
+> @@ -1727,16 +1772,15 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
+>  
+>  	/* Create and submit job descriptor*/
+>  	init_skcipher_job(req, edesc, encrypt);
+> +	desc = edesc->hw_desc;
+>  
+>  	print_hex_dump_debug("skcipher jobdesc@" __stringify(__LINE__)": ",
+> -			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
+> -			     desc_bytes(edesc->hw_desc), 1);
+> -
+> -	desc = edesc->hw_desc;
+> -	jrentry = &edesc->jrentry;
+> +			     DUMP_PREFIX_ADDRESS, 16, 4, desc,
+> +			     desc_bytes(desc), 1);
+>  
+> -	ret = caam_jr_enqueue(jrdev, desc, skcipher_crypt_done, jrentry);
+> -	if (ret != -EINPROGRESS) {
+> +	ret = caam_jr_enqueue(jrdev, desc, skcipher_crypt_done,
+> +			      &edesc->jrentry);
+> +	if ((ret != -EINPROGRESS) && (ret != -EBUSY)) {
+>  		skcipher_unmap(jrdev, edesc, req);
+>  		kfree(edesc);
+>  	}
+> @@ -3272,7 +3316,9 @@ static int caam_init_common(struct caam_ctx *ctx, struct caam_alg_entry *caam,
+>  
+>  	dma_addr = dma_map_single_attrs(ctx->jrdev, ctx->sh_desc_enc,
+>  					offsetof(struct caam_ctx,
+> -						 sh_desc_enc_dma),
+> +						 sh_desc_enc_dma) -
+> +					offsetof(struct caam_ctx,
+> +						 sh_desc_enc),
+>  					ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
+>  	if (dma_mapping_error(ctx->jrdev, dma_addr)) {
+>  		dev_err(ctx->jrdev, "unable to map key, shared descriptors\n");
+> @@ -3282,8 +3328,12 @@ static int caam_init_common(struct caam_ctx *ctx, struct caam_alg_entry *caam,
+>  
+>  	ctx->sh_desc_enc_dma = dma_addr;
+>  	ctx->sh_desc_dec_dma = dma_addr + offsetof(struct caam_ctx,
+> -						   sh_desc_dec);
+> -	ctx->key_dma = dma_addr + offsetof(struct caam_ctx, key);
+> +						   sh_desc_dec) -
+> +					offsetof(struct caam_ctx,
+> +						 sh_desc_enc);
+> +	ctx->key_dma = dma_addr + offsetof(struct caam_ctx, key) -
+> +					offsetof(struct caam_ctx,
+> +						 sh_desc_enc);
+>  
+>  	/* copy descriptor header template value */
+>  	ctx->cdata.algtype = OP_TYPE_CLASS1_ALG | caam->class1_alg_type;
+> @@ -3297,6 +3347,11 @@ static int caam_cra_init(struct crypto_skcipher *tfm)
+>  	struct skcipher_alg *alg = crypto_skcipher_alg(tfm);
+>  	struct caam_skcipher_alg *caam_alg =
+>  		container_of(alg, typeof(*caam_alg), skcipher);
+> +	struct caam_ctx *ctx = crypto_skcipher_ctx(tfm);
+> +
+> +	crypto_skcipher_set_reqsize(tfm, sizeof(struct caam_skcipher_req_ctx));
+> +
+> +	ctx->enginectx.op.do_one_request = skcipher_do_one_req;
+>  
+>  	return caam_init_common(crypto_skcipher_ctx(tfm), &caam_alg->caam,
+>  				false);
+> @@ -3315,7 +3370,8 @@ static int caam_aead_init(struct crypto_aead *tfm)
+>  static void caam_exit_common(struct caam_ctx *ctx)
+>  {
+>  	dma_unmap_single_attrs(ctx->jrdev, ctx->sh_desc_enc_dma,
+> -			       offsetof(struct caam_ctx, sh_desc_enc_dma),
+> +			       offsetof(struct caam_ctx, sh_desc_enc_dma) -
+> +			       offsetof(struct caam_ctx, sh_desc_enc),
+>  			       ctx->dir, DMA_ATTR_SKIP_CPU_SYNC);
+>  	caam_jr_free(ctx->jrdev);
+>  }
+> diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
+> index 58be66c..31abb94 100644
+> --- a/drivers/crypto/caam/intern.h
+> +++ b/drivers/crypto/caam/intern.h
+> @@ -12,6 +12,7 @@
+>  
+>  #include "ctrl.h"
+>  #include "regs.h"
+> +#include <crypto/engine.h>
+>  
+>  /* Currently comes from Kconfig param as a ^2 (driver-required) */
+>  #define JOBR_DEPTH (1 << CONFIG_CRYPTO_DEV_FSL_CAAM_RINGSIZE)
+> @@ -61,6 +62,7 @@ struct caam_drv_private_jr {
+>  	int out_ring_read_index;	/* Output index "tail" */
+>  	int tail;			/* entinfo (s/w ring) tail index */
+>  	void *outring;			/* Base of output ring, DMA-safe */
+> +	struct crypto_engine *engine;
+>  };
+>  
+>  /*
+> diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+> index 544cafa..5c55d3d 100644
+> --- a/drivers/crypto/caam/jr.c
+> +++ b/drivers/crypto/caam/jr.c
+> @@ -62,6 +62,15 @@ static void unregister_algs(void)
+>  	mutex_unlock(&algs_lock);
+>  }
+>  
+> +static void caam_jr_crypto_engine_exit(void *data)
+> +{
+> +	struct device *jrdev = data;
+> +	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
+> +
+> +	/* Free the resources of crypto-engine */
+> +	crypto_engine_exit(jrpriv->engine);
+> +}
+> +
+>  static int caam_reset_hw_jr(struct device *dev)
+>  {
+>  	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
+> @@ -418,10 +427,23 @@ int caam_jr_enqueue_no_bklog(struct device *dev, u32 *desc,
+>  }
+>  EXPORT_SYMBOL(caam_jr_enqueue_no_bklog);
+>  
+> +static int transfer_request_to_engine(struct crypto_engine *engine,
+> +				      struct crypto_async_request *req)
+> +{
+> +	switch (crypto_tfm_alg_type(req->tfm)) {
+> +	case CRYPTO_ALG_TYPE_SKCIPHER:
+> +		return crypto_transfer_skcipher_request_to_engine(engine,
+> +								  skcipher_request_cast(req));
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  /**
+>   * caam_jr_enqueue() - Enqueue a job descriptor head. Returns -EINPROGRESS
+> - * if OK, -ENOSPC if the queue is full, -EIO if it cannot map the caller's
+> - * descriptor.
+> + * if OK, -EBUSY if request is backlogged, -ENOSPC if the queue is full,
+> + * -EIO if it cannot map the caller's descriptor, -EINVAL if crypto_tfm
+> + * not supported by crypto_engine.
+>   * @dev:  device of the job ring to be used. This device should have
+>   *        been assigned prior by caam_jr_register().
+>   * @desc: points to a job descriptor that execute our request. All
+> @@ -451,7 +473,12 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+>  				u32 status, void *areq),
+>  		    void *areq)
+>  {
+> +	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(dev);
+>  	struct caam_jr_request_entry *jrentry = areq;
+> +	struct crypto_async_request *req = jrentry->base;
+> +
+> +	if (req->flags & CRYPTO_TFM_REQ_MAY_BACKLOG)
+> +		return transfer_request_to_engine(jrpriv->engine, req);
+>  
+>  	return caam_jr_enqueue_no_bklog(dev, desc, cbk, jrentry);
+>  }
+> @@ -577,6 +604,26 @@ static int caam_jr_probe(struct platform_device *pdev)
+>  		return error;
+>  	}
+>  
+> +	/* Initialize crypto engine */
+> +	jrpriv->engine = crypto_engine_alloc_init(jrdev, false);
+> +	if (!jrpriv->engine) {
+> +		dev_err(jrdev, "Could not init crypto-engine\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Start crypto engine */
+> +	error = crypto_engine_start(jrpriv->engine);
+> +	if (error) {
+> +		dev_err(jrdev, "Could not start crypto-engine\n");
+> +		crypto_engine_exit(jrpriv->engine);
+> +		return error;
+> +	}
+> +
+> +	error = devm_add_action_or_reset(jrdev, caam_jr_crypto_engine_exit,
+> +					 jrdev);
+> +	if (error)
+> +		return error;
+> +
+>  	/* Identify the interrupt */
+>  	jrpriv->irq = irq_of_parse_and_map(nprop, 0);
+>  	if (!jrpriv->irq) {
+> 
 
---tvJaUMtivJLXKj0faQf5IftUJiZueSbey
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3vuSIACgkQaA3BHVML
-eiN22gf+N4qC56Yr7GCph5bvGBpvfvLkOEwo6vnn7id0H5NKnfuzy6gOdU+ViPEw
-n3gjI9j7ujLEI8KMvMQJCEPvpfeD7QXmNED5yKzKJf0j0DST40Rw4zDklhNO8t3M
-N1iu7p+LtqVR3eAKJ6lb+04FWneRYXI6XKvfNXeEjwtZR5QCM0FaBYUJuzjU09k7
-mf2jhXmksd4N6CutH/lfZFiBKYwswt2J1u+x55k+UuZja+NEYoMxUDDfbD1EBJGP
-7po+GCTm7tUG7JAIM1lY0Wk5RgmSrau7gO1Nh3knhWVAxapuc9u3/H8MxCFPW82E
-5LZHXys1RmWnIp670mRONHWvcZWXWg==
-=EB56
------END PGP SIGNATURE-----
-
---tvJaUMtivJLXKj0faQf5IftUJiZueSbey--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
