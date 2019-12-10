@@ -2,160 +2,250 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C7C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C7C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E62D2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F614206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="neQUnqb8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gEjnOtbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLJCfx (ORCPT
+        id S1726675AbfLJChJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:35:53 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:41322 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbfLJCfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:35:52 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47X3yP62Tzz5Y;
-        Tue, 10 Dec 2019 03:33:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575945198; bh=28ZRq1FI2/sd4GBSEA17lEwHQUUzefEXEY1pCiKIzfA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=neQUnqb8yNbGKLEtkX5q3ZEZQq6YSwQBVg61WDjvqiehVlijufpRomrZTn9LGIo5n
-         0XIDUwy/mP8019WfJT4YL2X7N7zJlGKpBk88KfOiWmyTuA2rlOK55NAZOpN0MxaZex
-         06Y3OLlSEr4JDVTUomCd0LlcmGeUEfEVC+3+Ec8Z2D7yKovFZaPcrU0UFP7ijexRiS
-         1S7SPa8RZ/a7GpRZ4EPehhP2cZHc0DbxfE3KBtuh5cWBGfNhH8+sPlcHSNn13XL2UU
-         JHgcN/wK3LIQVsg/1Uq17zup8DiLwUNFUfqx2MhrBrTNhmbGWSXa/vuKkYUqiU1Eg5
-         TNEciPiEE6t8Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Tue, 10 Dec 2019 03:35:49 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-Message-ID: <20191210023549.GA15246@qmqm.qmqm.pl>
-References: <20191203004116.11771-1-digetx@gmail.com>
- <20191207215216.GA9561@qmqm.qmqm.pl>
- <0b3a861d-e5e8-ddca-ac60-0a3c61a9d9dc@gmail.com>
- <20191209160420.GA24097@qmqm.qmqm.pl>
- <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
+        Mon, 9 Dec 2019 21:37:09 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20771 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726509AbfLJChJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:37:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575945426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wKlOPTsPIdqSrBsnPqvTtgA2zsB5MINy3LoQKcLT7RQ=;
+        b=gEjnOtbwGj0XlzIwueHF3d8GS9ZJoj5EgAaA2hxAngRkkuJSZvYxU1spBjKLtg6f1EwtbQ
+        M+BgJmSSztOaGUN01uvYfAcgLSMEwsC7aeBoFtxrCCgCYiM0FC0OddeMe6iPyFXaEtjsAq
+        qkrjVWTW4XX3OftQe28r5PVqIx7dGTU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-a_EyqVN2MEiIz10jbrwHIw-1; Mon, 09 Dec 2019 21:37:03 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22EB9DB20;
+        Tue, 10 Dec 2019 02:37:02 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-0.rdu2.redhat.com [10.10.123.0])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D1B560555;
+        Tue, 10 Dec 2019 02:37:01 +0000 (UTC)
+Subject: Re: [PATCH] hugetlbfs: Disable IRQ when taking hugetlb_lock in
+ set_max_huge_pages()
+From:   Waiman Long <longman@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20191209160150.18064-1-longman@redhat.com>
+ <20191209164907.GD32169@bombadil.infradead.org>
+ <a7ea9e1a-be9e-e6ee-5b30-602166041509@redhat.com>
+Organization: Red Hat
+Message-ID: <1209d9ba-9d82-4dfc-5cdf-a2641814af75@redhat.com>
+Date:   Mon, 9 Dec 2019 21:37:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <a7ea9e1a-be9e-e6ee-5b30-602166041509@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: a_EyqVN2MEiIz10jbrwHIw-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:22:18AM +0300, Dmitry Osipenko wrote:
-> 09.12.2019 19:04, Michał Mirosław пишет:
-> > On Sun, Dec 08, 2019 at 01:56:14AM +0300, Dmitry Osipenko wrote:
-> >> 08.12.2019 00:52, Michał Mirosław пишет:
-> >>> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
-> >>>> Hello,
-> >>>>
-> >>>> This series does the following:
-> >>>>
-> >>>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
-> >>>>      into common drivers/cpuidle/ directory.
-> >>>>
-> >>>>   2. Enables CPU cluster power-down idling state on Tegra30.
-> >>>>
-> >>>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
-> >>>> and of the Tegra's arch code in general. Please review, thanks!
-> >>>
-> >>> I did a quick smoke test for this series on top of Linus' master:
-> >>>  - rebuilding with the patches applied, CONFIG_ARM_TEGRA_CPUIDLE=n - works
-> >>>  - building with CONFIG_ARM_TEGRA_CPUIDLE=y - doesn't boot
-> >>>
-> >>> The hang is somewhere early in the boot process, before simplefb can
-> >>> take the console and show any logs. If I get BOOTFB to work again I might
-> >>> be able to get some more info.
-> >>
-> >> Thank you very much for trying these patches!
-> >>
-> >> Could you please try to make ARM_TEGRA_CPUIDLE "tristate" in the Kconfig
-> >> and compile it as a loadable module? That way you'll get framebuffer
-> >> shown before the hang happens.
-> >>
-> >> Does LP2 suspend/resume work for you? There should be
-> >> "nvidia,suspend-mode = <2>" in the PMC's node of device-tree.
-> > 
-> > Not at the moment. I also tried suspend-mode = <1> and <0>, but it
-> > made no difference.
-> 
-> If LP2 doesn't work, then it explains why you're getting the hang.
-> 
-> Are you using TF300T for the testing? I'm recalling that LP2 worked for
-> you sometime ago on TF300T, maybe some offending change was introduced
-> since then. Could you please try to do the git bisection or at least
-> find out what is the last good kernel version?
-> 
-> I rebased this series on a recent linux-next and you could find the
-> rebased patches here [1].
-> 
-> [1] https://github.com/grate-driver/linux/commits/master
-> 
-> With [1] you should be able to remove "nvidia,suspend-mode" property
-> from the device-tree to get cpuidle working with the disabled CC6 state
-> (LP2). Could you please check that at least disabled CC6 works for you?
+On 12/9/19 7:46 PM, Waiman Long wrote:
+> On 12/9/19 11:49 AM, Matthew Wilcox wrote:
+>> On Mon, Dec 09, 2019 at 11:01:50AM -0500, Waiman Long wrote:
+>>> [  613.245273] Call Trace:
+>>> [  613.256273]  <IRQ>
+>>> [  613.265273]  dump_stack+0x9a/0xf0
+>>> [  613.281273]  mark_lock+0xd0c/0x12f0
+>>> [  613.341273]  __lock_acquire+0x146b/0x48c0
+>>> [  613.401273]  lock_acquire+0x14f/0x3b0
+>>> [  613.440273]  _raw_spin_lock+0x30/0x70
+>>> [  613.477273]  free_huge_page+0x36f/0xaa0
+>>> [  613.495273]  bio_check_pages_dirty+0x2fc/0x5c0
+>> Oh, this is fun.  So we kicked off IO to a hugepage, then truncated or
+>> otherwise caused the page to come free.  Then the IO finished and did th=
+e
+>> final put on the page ... from interrupt context.  Splat.  Not something
+>> that's going to happen often, but can happen if a process dies during
+>> IO or due to a userspace bug.
+>>
+>> Maybe we should schedule work to do the actual freeing of the page
+>> instead of this rather large patch.  It doesn't seem like a case we need
+>> to optimise for.
+> I think that may be a good idea to try it out.
 
-I tested suspend with your tree merged, but CONFIG_TEGRA_CPUIDLE=n. LP2
-seems to work [1]. The same tree with CONFIG_TEGRA_CPUIDLE=y doesn't
-boot. I'll try comparing DTs, but other than that I'm blocked on BOOTFB now.
+It turns out using workqueue is more complex that I originally thought.
+I currently come up with the following untested changes to do that:
 
-Best Regards,
-Michał Mirosław
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ac65bb5e38ac..629ac000318b 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1136,7 +1136,7 @@ static inline void ClearPageHugeTemporary(struct
+page *pag
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 page[2].mapping =3D NULL;
+=C2=A0}
+=C2=A0
+-void free_huge_page(struct page *page)
++static void __free_huge_page(struct page *page)
+=C2=A0{
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Can't pass hstate in her=
+e because it is called from the
+@@ -1199,6 +1199,82 @@ void free_huge_page(struct page *page)
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&hugetlb_lock);
+=C2=A0}
+=C2=A0
++/*
++ * As free_huge_page() can be called from softIRQ context, we have
++ * to defer the actual freeing in a workqueue to prevent potential
++ * hugetlb_lock deadlock.
++ */
++struct hpage_to_free {
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct page=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *page;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct hpage_to_free=C2=A0=C2=A0=C2=
+=A0 *next;
++};
++static struct hpage_to_free *hpage_freelist;
++#define NEXT_PENDING=C2=A0=C2=A0 ((struct hpage_to_free *)-1)
++
++/*
++ * This work function locklessly retrieves the pages to be freed and
++ * frees them one-by-one.
++ */
++static void free_huge_page_workfn(struct work_struct *work)
++{
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct hpage_to_free *curr, *next;
++
++recheck:
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 curr =3D xchg(&hpage_freelist, NULL);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!curr)
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 return;
++
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while (curr) {
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 __free_huge_page(curr->page);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 next =3D READ_ONCE(curr->next);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 while (next =3D=3D NEXT_PENDING) {
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu_relax();
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 next =3D READ_=
+ONCE(curr->next);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 }
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 kfree(curr);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 curr =3D next;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (work && READ_ONCE(hpage_freelist)=
+)
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 goto recheck;
++}
++static DECLARE_WORK(free_huge_page_work, free_huge_page_workfn);
++
++void free_huge_page(struct page *page)
++{
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Defer freeing in softIRQ cont=
+ext to avoid hugetlb_lock deadlock.
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (in_serving_softirq()) {
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 struct hpage_to_free *item, *next;
++
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 /*
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 * We are in serious trouble if kmalloc fails. In this
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 * case, we hope for the best and do the freeing now.
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 */
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 item =3D kmalloc(sizeof(*item), GFP_KERNEL);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 if (WARN_ON_ONCE(!item))
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto free_page=
+_now;
++
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 item->page =3D page;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 item->next =3D NEXT_PENDING;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 next =3D xchg(&hpage_freelist, item);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 WRITE_ONCE(item->next, next);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 schedule_work(&free_huge_page_work);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 return;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
++
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Racing may prevent some of de=
+ferred huge pages in hpage_freelist
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * from being freed. Check here =
+and call schedule_work() if that
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * is the case.
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (hpage_freelist && !work_pending(&=
+free_huge_page_work))
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 schedule_work(&free_huge_page_work);
++
++free_page_now:
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __free_huge_page(page);
++}
++
+=C2=A0static void prep_new_huge_page(struct hstate *h, struct page *page, i=
+nt
+nid)
+=C2=A0{
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 INIT_LIST_HEAD(&page->lru);
 
-[1] rtcwake -s 3 -d /dev/rtc0 -v -m mem
+---------------------------------------------------------------------------=
+--------------------------
 
-(...)
-[ 2710.157919] PM: suspend entry (deep)
-[ 2710.161205] Filesystems sync: 0.000 seconds
-[ 2710.176677] Freezing user space processes ... (elapsed 0.001 seconds) done.
-[ 2710.178342] OOM killer disabled.
-[ 2710.178527] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-[ 2710.347871] Disabling non-boot CPUs ...
-[ 2710.349160] IRQ 18: no longer affine to CPU1
-[ 2710.352499] IRQ 19: no longer affine to CPU2
-[ 2710.370059] IRQ 20: no longer affine to CPU3
-[ 2710.371284] Entering suspend state LP2
-[ 2710.371556] Enabling non-boot CPUs ...
-[ 2710.373157] CPU1 is up
-[ 2710.374598] CPU2 is up
-[ 2710.375996] CPU3 is up
-[ 2710.462876] OOM killer enabled.
-[ 2710.463018] Restarting tasks ...
-[ 2710.463880] tegra-devfreq 6000c800.actmon: Failed to get emc clock
-[ 2710.464509] done.
-[ 2710.552824] asus-ec 1-0015: model         : ASUS-TF201-PAD
-[ 2710.558345] asus-ec 1-0015: FW version    : PAD-EC20T-0216
-[ 2710.562942] asus-ec 1-0015: Config format : ECFG-0001
-[ 2710.567651] asus-ec 1-0015: HW version    : TF201-PAD-SKU1
-[ 2710.572488] asus-ec 1-0015: EC FW behaviour: susb on when system wakeup
-[ 2710.769796] atkbd serio1: no of_node; not parsing pinctrl DT
-[ 2710.835629] asus-ec 5-0019: model         : ASUS-TF201-DOCK
-[ 2710.838686] asus-ec 5-0019: FW version    : DOCK-EC20N-0207
-[ 2710.841865] asus-ec 5-0019: Config format : ECFG-0001
-[ 2710.844271] asus-ec 5-0019: HW version    : PCBA-SKU-2
-[ 2710.847950] asus-ec 5-0019: EC FW behaviour: susb on when receive ec_req
-[ 2711.040935] PM: suspend exit
+I think it may be simpler and less risky to use spin_lock_bh() as you
+have suggested. Also, the above code will not be good enough if more
+lock taking functions are being called from softIRQ context in the future.
+
+So what do you think?
+
+Cheers,
+Longman
+
+Cheers,
+Longman
 
