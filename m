@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F354C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F33C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5239120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF5F2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015415;
-	bh=7Dc4axMlf7o0Iscg6wxMmGHMCOp0oY38gUotoCDzxbM=;
+	s=default; t=1576015421;
+	bh=3NJK7LSeQsv9ayLSa/zZdTL8LE1cuD1zQV8odFPXkH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CZm5he57Xe5vgZ8P2BEdpKwrX6wgDSqkx4Gr2s1hI/g09uy0VygsmYLNcOUQNaMaM
-	 i3Df5imgQNpHyW4Xi4VRN4scnDcjCNH199qHYYnqmqH7BFQyHga+hcfo7/9oLK4gzI
-	 bbgAfveEyp224WUSRmatMtaLFMLqjSfVQLj6vwzk=
+	b=B0dcCztIxUoQ4SnoWq3vILCJLtVaVj9/ojq2eqfKI8F1QiMnPPBOj30aPW2Mbsnmn
+	 cGHnY1Jq00BEPItTjwJ8s7qOnB7qGxWPl2LwrJNLkvfGdnWoR9fIwO4FRZTx5xxwWM
+	 BESUtgrXeozNfpnMIbH68Q/g6FBhzFBQ4Lbm4Szc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfLJWDe (ORCPT
+        id S1727987AbfLJWDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33508 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727666AbfLJWDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:25 -0500
+        id S1727801AbfLJWDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7DF320637;
-        Tue, 10 Dec 2019 22:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B292077B;
+        Tue, 10 Dec 2019 22:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015404;
-        bh=7Dc4axMlf7o0Iscg6wxMmGHMCOp0oY38gUotoCDzxbM=;
+        s=default; t=1576015409;
+        bh=3NJK7LSeQsv9ayLSa/zZdTL8LE1cuD1zQV8odFPXkH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZs9bmrbARVB1iEmsyXNPGL/SK8/fQAi/1I/pk9W92QCHvoUeK5tgCn8URK2h9HFV
-         OoL7R74Lrrs9L3ot9t8bhs2E/xDySh7HxziZX+3Qn6iDdQCS34vubKk05YYrvKCBgl
-         C1wagIfogQuWKdbhp+78z8tcQ19C9Uz8UtjmnOk4=
+        b=t8CakMp1k8E5yKECXnERogwmRcK6pkiZlQcJlFUjzaCuVSrMiULRThMoXBiqW/PBi
+         G+Sqc3B7emf4BAmTqQoxlzH8l8aNstUfMuP4JSVPeWb55IWFZ1zJVmD+xhmDnmL0jR
+         AGauo2T6N71NlB0KNxHnvcXB+EBrEPm3fA/wCJXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 019/130] media: venus: core: Fix msm8996 frequency table
-Date:   Tue, 10 Dec 2019 17:01:10 -0500
-Message-Id: <20191210220301.13262-19-sashal@kernel.org>
+Cc:     Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 023/130] usb: renesas_usbhs: add suspend event support in gadget mode
+Date:   Tue, 10 Dec 2019 17:01:14 -0500
+Message-Id: <20191210220301.13262-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,60 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
 
-[ Upstream commit c690435ed07901737e5c007a65ec59f53b33eb71 ]
+[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
 
-In downstream driver, there are two frequency tables defined,
-one for the encoder and one for the decoder:
+When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
+will be generated and Suspended state bit is set in interrupt status
+register. Interrupt handler will call driver->suspend(composite_suspend)
+if suspended state bit is set. composite_suspend will call
+ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
+by user space application via /dev/ep0.
 
-/* Encoders /
-<972000 490000000 0x55555555>, / 4k UHD @ 30 /
-<489600 320000000 0x55555555>, / 1080p @ 60 /
-<244800 150000000 0x55555555>, / 1080p @ 30 /
-<108000 75000000 0x55555555>, / 720p @ 30 */
+To be able to detect host detach, extend the DVSQ_MASK to cover the
+Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
+Register 0 (INTSTS0) register and perform appropriate action in the
+DVST interrupt handler (usbhsg_irq_dev_state).
 
-/* Decoders /
-<1944000 490000000 0xffffffff>, / 4k UHD @ 60 /
-< 972000 320000000 0xffffffff>, / 4k UHD @ 30 /
-< 489600 150000000 0xffffffff>, / 1080p @ 60 /
-< 244800 75000000 0xffffffff>; / 1080p @ 30 */
+Without this commit, disconnection of the phone from R-Car-H3 ES2.0
+Salvator-X CN9 port is not recognized and reverse role switch does
+not happen. If phone is connected again it does not enumerate.
 
-It shows that encoder always needs a higher clock than decoder.
+With this commit, disconnection will be recognized and reverse role
+switch will happen by a user space application. If phone is connected
+again it will enumerate properly and will become visible in the output
+of 'lsusb'.
 
-In current venus driver, the unified frequency table is aligned
-with the downstream decoder table which causes performance issues
-in encoding scenarios. Fix that by aligning frequency table on
-worst case (encoding).
-
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/renesas_usbhs/common.h     |  3 ++-
+ drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 769e9e68562df..9360b36b82cd8 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -345,10 +345,11 @@ static const struct venus_resources msm8916_res = {
- };
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index b8620aa6b72e6..8424c165f732a 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -163,11 +163,12 @@ struct usbhs_priv;
+ #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
+ #define VALID	(1 << 3)	/* USB Request Receive */
  
- static const struct freq_tbl msm8996_freq_table[] = {
--	{ 1944000, 490000000 },	/* 4k UHD @ 60 */
--	{  972000, 320000000 },	/* 4k UHD @ 30 */
--	{  489600, 150000000 },	/* 1080p @ 60 */
--	{  244800,  75000000 },	/* 1080p @ 30 */
-+	{ 1944000, 520000000 },	/* 4k UHD @ 60 (decode only) */
-+	{  972000, 520000000 },	/* 4k UHD @ 30 */
-+	{  489600, 346666667 },	/* 1080p @ 60 */
-+	{  244800, 150000000 },	/* 1080p @ 30 */
-+	{  108000,  75000000 },	/* 720p @ 30 */
- };
+-#define DVSQ_MASK		(0x3 << 4)	/* Device State */
++#define DVSQ_MASK		(0x7 << 4)	/* Device State */
+ #define  POWER_STATE		(0 << 4)
+ #define  DEFAULT_STATE		(1 << 4)
+ #define  ADDRESS_STATE		(2 << 4)
+ #define  CONFIGURATION_STATE	(3 << 4)
++#define  SUSPENDED_STATE	(4 << 4)
  
- static const struct reg_val msm8996_reg_preset[] = {
+ #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
+ #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index 0dedb0d91dccb..b27f2135b66d7 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -465,12 +465,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
+ {
+ 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
++	int state = usbhs_status_get_device_state(irq_state);
+ 
+ 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
+ 
+-	dev_dbg(dev, "state = %x : speed : %d\n",
+-		usbhs_status_get_device_state(irq_state),
+-		gpriv->gadget.speed);
++	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
++
++	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
++	    (state & SUSPENDED_STATE)) {
++		if (gpriv->driver && gpriv->driver->suspend)
++			gpriv->driver->suspend(&gpriv->gadget);
++		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
