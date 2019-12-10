@@ -4,65 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318B9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DA4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 072412465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04A420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013989;
-	bh=j1JzUEkNvWLm0dfGDd2FcKBDO+nYUmAafwxR5bAkVss=;
+	s=default; t=1576013996;
+	bh=aE+ClZbzE90WUiStLE8QwkYmIk/h9E9Rg8DcKFayfhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXglh41mAQZ9WYFEv4/BM5ngPPH6FUQT7H/iAy3q5CdFGOeXruasWK1P19KdHYhEM
-	 pgpK8Uh7ma38vECKJFAFB9oWgyz6xM1cP4f/duhGW8igpFm8EPqRHVZsmVWdeEv5pr
-	 05xmCK4mqlvtgtpVj0Kcn+baVxo1Nckygj8r3rQY=
+	b=BF5WZp9Pd47byA7GNjDvAYWf/ZoyIEyZaJ4bM01IIfFTaIixd9MJJp+wcXU5E0/tv
+	 vm3bpv519lnB42K2kQHBuibWTxPNB0mZRFAi0JW7f2E0f1kf9EYOUnaXLOYtewSaUD
+	 yiEnvVswNbyS9RtTp/f9nyoAf+JdcmZ6d6GADGnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfLJVex (ORCPT
+        id S1730088AbfLJVeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbfLJVep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:45 -0500
+        id S1727710AbfLJVeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12E26205C9;
-        Tue, 10 Dec 2019 21:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA589222C4;
+        Tue, 10 Dec 2019 21:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013684;
-        bh=j1JzUEkNvWLm0dfGDd2FcKBDO+nYUmAafwxR5bAkVss=;
+        s=default; t=1576013676;
+        bh=aE+ClZbzE90WUiStLE8QwkYmIk/h9E9Rg8DcKFayfhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTw3sVGAHQrHEkH2QsSOXvXcTpaI9isMcJO90wuzA6F/ygaGkJ+CxPzn5ljJiApTe
-         io4bWdPiEwfxl00JxqcactF2LHPKtZtq8La2wlfs82xa+6Vi2p0W6zrdzfhrji0p61
-         yHy8tjYODmpKU/+f+dTrjwWvXoU2TIr2mMcHw65U=
+        b=W4VhDV8N4lHUGwrhiXjGQBwLWWwfPD1ZFbCCSwhlJFnUIB11xTGrofF/v3+Jeqgrz
+         cTQuamADVmaBYAyRKK9BFTyr9wouD8KEyo20xLxHdGpDxS6NFl3eSV9XBoDAQniT4O
+         NhespXAL+nl/mthibh6cUeJS/hAprm1cGOcQU2HU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 117/177] perf tools: Splice events onto evlist even on error
-Date:   Tue, 10 Dec 2019 16:31:21 -0500
-Message-Id: <20191210213221.11921-117-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 112/177] perf probe: Fix to probe an inline function which has no entry pc
+Date:   Tue, 10 Dec 2019 16:31:16 -0500
+Message-Id: <20191210213221.11921-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -75,74 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8e8714c3d157568b7a769917a5e05573bbaf5af0 ]
+[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
 
-If event parsing fails the event list is leaked, instead splice the list
-onto the out result and let the caller cleanup.
+Fix perf probe to probe an inlne function which has no entry pc
+or low pc but only has ranges attribute.
 
-An example input for parse_events found by libFuzzer that reproduces
-this memory leak is 'm{'.
+This seems very rare case, but I could find a few examples, as
+same as probe_point_search_cb(), use die_entrypc() to get the
+entry address in probe_point_inline_cb() too.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+Without this patch:
+
+  # perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+
+With this patch:
+
+  # perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints _text+33789
+  [root@quaco ~]#
+
+Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
+Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 1a7c76d2baa80..7ea1a230e89d0 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1843,15 +1843,20 @@ int parse_events(struct perf_evlist *evlist, const char *str,
- 
- 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
- 	perf_pmu__parse_cleanup();
-+
-+	if (!ret && list_empty(&parse_state.list)) {
-+		WARN_ONCE(true, "WARNING: event parser found nothing\n");
-+		return -1;
-+	}
-+
-+	/*
-+	 * Add list to the evlist even with errors to allow callers to clean up.
-+	 */
-+	perf_evlist__splice_list_tail(evlist, &parse_state.list);
-+
- 	if (!ret) {
- 		struct perf_evsel *last;
- 
--		if (list_empty(&parse_state.list)) {
--			WARN_ONCE(true, "WARNING: event parser found nothing\n");
--			return -1;
--		}
--
--		perf_evlist__splice_list_tail(evlist, &parse_state.list);
- 		evlist->nr_groups += parse_state.nr_groups;
- 		last = perf_evlist__last(evlist);
- 		last->cmdline_group_boundary = true;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c4fe0678e3228..d0d333c90b35b 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -950,7 +950,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+ 		ret = find_probe_point_lazy(in_die, pf);
+ 	else {
+ 		/* Get probe address */
+-		if (dwarf_entrypc(in_die, &addr) != 0) {
++		if (die_entrypc(in_die, &addr) != 0) {
+ 			pr_warning("Failed to get entry address of %s.\n",
+ 				   dwarf_diename(in_die));
+ 			return -ENOENT;
 -- 
 2.20.1
 
