@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A44C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277B8207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213B420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017703;
-	bh=Ah1sPJFaHwnwSuWPNyhrZOUUCvu2shaZUN7yagnrW98=;
+	s=default; t=1576017707;
+	bh=9GYC482xubuw+Sl8xaw1dMPpBuoo/M3QJrbWA1UOpbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvsFpphwvQsRIeZDGW5kRc1J0S1Vb4DDZS4A84d+qW9CRDpjNu0viaeptX/0Z/xwh
-	 afOJeGdZ6dTrP19Y7sTFnSxKI8ba3U6pnDWMLPg+iKsROOSAXfqUSf6328Un4vY2+o
-	 oaQf97+uN82wLWzhthN91HeMaIcYGrYb4GXcb+G8=
+	b=TIuEJMUP8BNU/by7SjcebtvcZVRN3WcANWZSMan4mKGe9nJecHaYQVjYOA7uAXTcG
+	 eHxt3HUi+1xj8cC+CeNCAlUUMsrAKTMO/5iWBk2qs2QaOJCQDd+NFwzOC3jE/KUA4A
+	 NOmXI0shPQeWMoHt32b6yDdKWMnx7knQLG+MmTNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfLJWll (ORCPT
+        id S1728756AbfLJWbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51818 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728787AbfLJWbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:44 -0500
+        id S1728526AbfLJWba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 702D221D7D;
-        Tue, 10 Dec 2019 22:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E402073D;
+        Tue, 10 Dec 2019 22:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017103;
-        bh=Ah1sPJFaHwnwSuWPNyhrZOUUCvu2shaZUN7yagnrW98=;
+        s=default; t=1576017089;
+        bh=9GYC482xubuw+Sl8xaw1dMPpBuoo/M3QJrbWA1UOpbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nE59gkg8fgPuTQfd97SFNINnK8Ncg6hQ9sUHukId5kgAM9jJlwLXszCDI0Lc/1MZw
-         5+nbVbOph1KZ/iWgJ21r7VoagSSJxjU0ydZojlnF5AH8xYygkLPA6/Dd1OV1F1iM4X
-         DXzqa/FCU5+S74CgKrX7MSQBH6DFilKKcaDrtLjw=
+        b=c6567TuCruuJZTFduqhFFUdtows7GS1595VvypTQobD7MNovI18102di3OsXhoIv9
+         twViFN24x+nQk6FKefyBkgceZYSJbDxSNnqJNFoJ8MuhmcprrnnPEFQq2gVAnSmgVO
+         bqaNGufwvtyeYYLpAtvZO4XYHzQJpXEKO/ZmLX98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 57/91] perf probe: Fix to show inlined function callsite without entry_pc
-Date:   Tue, 10 Dec 2019 17:30:01 -0500
-Message-Id: <20191210223035.14270-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 45/91] ata: sata_mv, avoid trigerrable BUG_ON
+Date:   Tue, 10 Dec 2019 17:29:49 -0500
+Message-Id: <20191210223035.14270-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,110 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
+[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+There are several reports that the BUG_ON on unsupported command in
+mv_qc_prep can be triggered under some circumstances:
+https://bugzilla.suse.com/show_bug.cgi?id=1110252
+https://serverfault.com/questions/888897/raid-problems-after-power-outage
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
+https://bugs.centos.org/view.php?id=14998
 
-Without this:
+Let sata_mv handle the failure gracefully: warn about that incl. the
+failed command number and return an AC_ERR_INVALID error. We can do that
+now thanks to the previous patch.
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+Remove also the long-standing FIXME.
 
-With this patch:
+[v2] use %.2x as commands are defined as hexa.
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
-  Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
-
-  [root@quaco ~]#
-
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
-
-Ok, Intel system here... :-)
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/sata_mv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 574ba3ac4fbad..3aea343c71798 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -683,7 +683,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+index 2f32782cea6d9..2ec37a038eda8 100644
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -2111,12 +2111,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
+ 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
+ 		 * of which are defined/used by Linux.  If we get here, this
+ 		 * driver needs work.
+-		 *
+-		 * FIXME: modify libata to give qc_prep a return value and
+-		 * return error here.
+ 		 */
+-		BUG_ON(tf->command);
+-		break;
++		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
++				tf->command);
++		return AC_ERR_INVALID;
+ 	}
+ 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
+ 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
 -- 
 2.20.1
 
