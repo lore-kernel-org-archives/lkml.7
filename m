@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7D0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA85C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF79920828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9538D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014065;
-	bh=ZwpzM8Y0sqnzkQFfcAOhYlxqY7bdpTFSVMrrVZOOfqc=;
+	s=default; t=1576014082;
+	bh=8dqVDycVu9/yd5rdXpcZd6GnqUCGxWGKe+j9ZIZ9OrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBTnOMnKP13En5c7K/LXpLTm4ouHZNywh21SgqHzxqyR/HI1lfRJExSF6OjdRCoou
-	 pBjet5BPTwt0+3j38/dhdx9n7VHwIeTkdXG3ia9sHp3wROU51o+KZSHyYc3PxPzZrN
-	 Mxg7BtRsEcEmzD1q3hrj1Bemwgp1zQLCaBizomrc=
+	b=tlgbC+ZDDnMD2FCVYdhxjopxxzvj412DBFyXMlKYzXOsmQ0QJVuEml5zNBtnZ/5BZ
+	 zUQtPZp+V9W7jMoWi/aTpUHq5UGLt7KyS0jl8zG4vvN3mNs/i4gHS4dGw47eocHtOX
+	 6H5vqL7obAxhzyd8rUFPgKQQCul/8Z+a+0tyyQ5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbfLJVlD (ORCPT
+        id S1727590AbfLJVlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:41:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730023AbfLJVeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:23 -0500
+        id S1729993AbfLJVeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35AF24654;
-        Tue, 10 Dec 2019 21:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F487222C4;
+        Tue, 10 Dec 2019 21:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013662;
-        bh=ZwpzM8Y0sqnzkQFfcAOhYlxqY7bdpTFSVMrrVZOOfqc=;
+        s=default; t=1576013658;
+        bh=8dqVDycVu9/yd5rdXpcZd6GnqUCGxWGKe+j9ZIZ9OrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uzf72vEfpyg+IvBraPH57fgOh1dwULjIo9/zAGx6VblOG7+IXIfrv6YYZBavY2GEN
-         NvQXfqta1PThL/T2WkJ0nRwbSu8t4RHoHFbjYHAi60Zz+bvTqj7vqXTfmRCne86eKK
-         hs9lNY1pSbkDdHCGf/4udGP9hv7eeeS/7skjlcIw=
+        b=rzi1SfKwSPAGQvTpB4KAasSTW9aP+lAZnn6P6NA1tTrjrx+iwDK5spfr0p7nZOMks
+         O9UuKcEn3Cui6wpMNkp3SfRbeP/2qartEk1lXkb4W5YqISETeXCALO7bRvE193YiKW
+         RH4Qar8Kd4Uo8wd2G6d/jqpffI2pkyyK3k4kcQjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 100/177] media: rcar_drif: fix a memory disclosure
-Date:   Tue, 10 Dec 2019 16:31:04 -0500
-Message-Id: <20191210213221.11921-100-sashal@kernel.org>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 096/177] libbpf: Fix error handling in bpf_map__reuse_fd()
+Date:   Tue, 10 Dec 2019 16:31:00 -0500
+Message-Id: <20191210213221.11921-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,35 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
+[ Upstream commit d1b4574a4b86565325ef2e545eda8dfc9aa07c60 ]
 
-"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
-like msi2500 and airspy do, the fix initializes it to avoid
-memory disclosures.
+bpf_map__reuse_fd() was calling close() in the error path before returning
+an error value based on errno. However, close can change errno, so that can
+lead to potentially misleading error messages. Instead, explicitly store
+errno in the err variable before each goto.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/157269297769.394725.12634985106772698611.stgit@toke.dk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_drif.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/libbpf.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
-index 81413ab52475d..b677d014e7bab 100644
---- a/drivers/media/platform/rcar_drif.c
-+++ b/drivers/media/platform/rcar_drif.c
-@@ -912,6 +912,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
- {
- 	struct rcar_drif_sdr *sdr = video_drvdata(file);
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index a350f97e3a1a4..cd1890b51e021 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1071,16 +1071,22 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
+ 		return -errno;
  
-+	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
- 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
- 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
+ 	new_fd = open("/", O_RDONLY | O_CLOEXEC);
+-	if (new_fd < 0)
++	if (new_fd < 0) {
++		err = -errno;
+ 		goto err_free_new_name;
++	}
  
+ 	new_fd = dup3(fd, new_fd, O_CLOEXEC);
+-	if (new_fd < 0)
++	if (new_fd < 0) {
++		err = -errno;
+ 		goto err_close_new_fd;
++	}
+ 
+ 	err = zclose(map->fd);
+-	if (err)
++	if (err) {
++		err = -errno;
+ 		goto err_close_new_fd;
++	}
+ 	free(map->name);
+ 
+ 	map->fd = new_fd;
+@@ -1099,7 +1105,7 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
+ 	close(new_fd);
+ err_free_new_name:
+ 	free(new_name);
+-	return -errno;
++	return err;
+ }
+ 
+ static int
 -- 
 2.20.1
 
