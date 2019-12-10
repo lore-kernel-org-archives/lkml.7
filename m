@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ECC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8AEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B1D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A79205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013386;
-	bh=bwDrjo4VRhKkKgsT4Y++69KYcmNh0F14L3E37LzRuGI=;
+	s=default; t=1576013392;
+	bh=HS2yMRgLoBvhUBaJzQDEMtttAvYj/xzUw9IBwGl19ME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBgYE5Y3ZyBgNyEIZNXVJ46j2egYx2ZqO9IPt332qxxJe5uAV7ew5C0pnmDyjPGcf
-	 ftPDBCx5JO7+mnAcdPYy0v+mEfp0+HSZc6bxQW/7keExzDuKe1NwAff0p/H8AMn4RE
-	 lYK39trl7ycdjX6/2YVWw3epeBPqeVD0R30JcK74=
+	b=utIbCblFafREd2iLUqujVKlsMe4N1E8XyFCiDUdTDKTSH3ULk7oycNZMT5v+Zy8IB
+	 UUVlSGPExVNEUT9yV54V1twZG+0cQVxYPtEIiUJGEwtrNmROeyXq4DLKok3sKpbESk
+	 tvjGXscJA0+hNX9HJHx4RVdWmS+pn6UEfT3ecZ14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbfLJV3o (ORCPT
+        id S1728389AbfLJV3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:29:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:29:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbfLJVKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:05 -0500
+        id S1728340AbfLJVKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D147524680;
-        Tue, 10 Dec 2019 21:10:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F190246A2;
+        Tue, 10 Dec 2019 21:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012204;
-        bh=bwDrjo4VRhKkKgsT4Y++69KYcmNh0F14L3E37LzRuGI=;
+        s=default; t=1576012201;
+        bh=HS2yMRgLoBvhUBaJzQDEMtttAvYj/xzUw9IBwGl19ME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U2vCdEKzC67ZGv7kIBY6JAacg3zsM80RXytl1ve80DUaf76DxKBQEPlsLtNoLQtxj
-         WPE93vPtLt0ECqt0bAXaF5Z882ai7u5awohN1xxZCs1VM8Yrs5g9ya8kX67eQeoQUX
-         FhQpz6q59zUVwg1zpamQXw2auaFJpyKhFnGj7dGM=
+        b=i4eMBnS6S0P//OoB6ddBy5XERUpmOmfvgh+gavO7IqNIc4MVRACXHqtdZxoXLI9tj
+         1SGx2GkK6Ev+Wa7OKlqOItiqyoXAeBZXGFTew5ODmcjhkqhdz//aXg43Ek/aALkZQm
+         90gaFny5oqxd5Y0ODdRDBQ8A1ClSEhPymB1IzwX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 157/350] drm: Don't free jobs in wait_event_interruptible()
-Date:   Tue, 10 Dec 2019 16:04:22 -0500
-Message-Id: <20191210210735.9077-118-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 154/350] md: no longer compare spare disk superblock events in super_load
+Date:   Tue, 10 Dec 2019 16:04:19 -0500
+Message-Id: <20191210210735.9077-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,116 +58,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 588b9828f0744ca13555c4a35cd0251ac8ad8ad2 ]
+[ Upstream commit 6a5cb53aaa4ef515ddeffa04ce18b771121127b4 ]
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
+We have a test case as follow:
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
+  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] \
+	--assume-clean --bitmap=internal
+  mdadm -S /dev/md1
+  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
 
-Tested-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Fixes: 5918045c4ed4 ("drm/scheduler: rework job destruction")
-Signed-off-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/337652/
+  mdadm --zero /dev/sda
+  mdadm /dev/md1 -a /dev/sda
+
+  echo offline > /sys/block/sdc/device/state
+  echo offline > /sys/block/sdb/device/state
+  sleep 5
+  mdadm -S /dev/md1
+
+  echo running > /sys/block/sdb/device/state
+  echo running > /sys/block/sdc/device/state
+  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
+
+When we readd /dev/sda to the array, it started to do recovery.
+After offline the other two disks in md1, the recovery have
+been interrupted and superblock update info cannot be written
+to the offline disks. While the spare disk (/dev/sda) can continue
+to update superblock info.
+
+After stopping the array and assemble it, we found the array
+run fail, with the follow kernel message:
+
+[  172.986064] md: kicking non-fresh sdb from array!
+[  173.004210] md: kicking non-fresh sdc from array!
+[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
+[  173.022406] md1: failed to create bitmap (-5)
+[  173.023466] md: md1 stopped.
+
+Since both sdb and sdc have the value of 'sb->events' smaller than
+that in sda, they have been kicked from the array. However, the only
+remained disk sda is in 'spare' state before stop and it cannot be
+added to conf->mirrors[] array. In the end, raid array assemble
+and run fail.
+
+In fact, we can use the older disk sdb or sdc to assemble the array.
+That means we should not choose the 'spare' disk as the fresh disk in
+analyze_sbs().
+
+To fix the problem, we do not compare superblock events when it is
+a spare disk, as same as validate_super.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 43 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+ drivers/md/md.c | 57 +++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 51 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index f39b97ed4ade4..2af64459b3d77 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -632,43 +632,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 1be7abeb24fdc..fc6ae8276a92f 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -1149,7 +1149,15 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		rdev->desc_nr = sb->this_disk.number;
+ 
+ 	if (!refdev) {
+-		ret = 1;
++		/*
++		 * Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count)
++		 */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
++			ret = 1;
++		else
++			ret = 0;
+ 	} else {
+ 		__u64 ev1, ev2;
+ 		mdp_super_t *refsb = page_address(refdev->sb_page);
+@@ -1165,7 +1173,14 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
+ 		}
+ 		ev1 = md_event(sb);
+ 		ev2 = md_event(refsb);
+-		if (ev1 > ev2)
++
++		/*
++		 * Insist on good event counter while assembling, except
++		 * for spares (which don't need an event count)
++		 */
++		if (sb->disks[rdev->desc_nr].state & (
++			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)) &&
++			(ev1 > ev2))
+ 			ret = 1;
+ 		else
+ 			ret = 0;
+@@ -1525,6 +1540,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 	sector_t sectors;
+ 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
+ 	int bmask;
++	__u64 role;
+ 
+ 	/*
+ 	 * Calculate the position of the superblock in 512byte sectors.
+@@ -1658,8 +1674,20 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 	    sb->level != 0)
+ 		return -EINVAL;
+ 
++	role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
++
+ 	if (!refdev) {
+-		ret = 1;
++		/*
++		 * Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count)
++		 */
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++			(role < MD_DISK_ROLE_MAX ||
++			 role == MD_DISK_ROLE_JOURNAL))
++			ret = 1;
++		else
++			ret = 0;
+ 	} else {
+ 		__u64 ev1, ev2;
+ 		struct mdp_superblock_1 *refsb = page_address(refdev->sb_page);
+@@ -1676,7 +1704,14 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
+ 		ev1 = le64_to_cpu(sb->events);
+ 		ev2 = le64_to_cpu(refsb->events);
+ 
+-		if (ev1 > ev2)
++		/*
++		 * Insist of good event counter while assembling, except for
++		 * spares (which don't need an event count)
++		 */
++		if (rdev->desc_nr >= 0 &&
++		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
++			(role < MD_DISK_ROLE_MAX ||
++			 role == MD_DISK_ROLE_JOURNAL) && ev1 > ev2)
+ 			ret = 1;
+ 		else
+ 			ret = 0;
+@@ -3597,7 +3632,7 @@ static struct md_rdev *md_import_device(dev_t newdev, int super_format, int supe
+  * Check a full RAID array for plausibility
+  */
+ 
+-static void analyze_sbs(struct mddev *mddev)
++static int analyze_sbs(struct mddev *mddev)
+ {
+ 	int i;
+ 	struct md_rdev *rdev, *freshest, *tmp;
+@@ -3618,6 +3653,12 @@ static void analyze_sbs(struct mddev *mddev)
+ 			md_kick_rdev_from_array(rdev);
+ 		}
+ 
++	/* Cannot find a valid fresh disk */
++	if (!freshest) {
++		pr_warn("md: cannot find a valid disk\n");
++		return -EINVAL;
++	}
++
+ 	super_types[mddev->major_version].
+ 		validate_super(mddev, freshest);
+ 
+@@ -3652,6 +3693,8 @@ static void analyze_sbs(struct mddev *mddev)
+ 			clear_bit(In_sync, &rdev->flags);
+ 		}
+ 	}
++
++	return 0;
  }
  
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
-+		return NULL;
- 
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
+ /* Read a fixed-point number.
+@@ -5570,7 +5613,9 @@ int md_run(struct mddev *mddev)
+ 	if (!mddev->raid_disks) {
+ 		if (!mddev->persistent)
+ 			return -EINVAL;
+-		analyze_sbs(mddev);
++		err = analyze_sbs(mddev);
++		if (err)
++			return -EINVAL;
  	}
  
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -708,12 +706,19 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		if (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			/* queue timeout for next job */
-+			drm_sched_start_timeout(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
+ 	if (mddev->level != LEVEL_NONE)
 -- 
 2.20.1
 
