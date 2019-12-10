@@ -2,122 +2,96 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E237BC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6236C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26E22053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761792053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NeYakiUC";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VuITrJj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfLJKTA (ORCPT
+        id S1727340AbfLJKUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:19:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57218 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727032AbfLJKS7 (ORCPT
+        Tue, 10 Dec 2019 05:20:07 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:50886
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727032AbfLJKUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:18:59 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAAHf33060210
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:18:57 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt59kang-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:18:57 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 10 Dec 2019 10:18:55 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 10:18:51 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAAI8Sh24052094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 10:18:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B8CB42045;
-        Tue, 10 Dec 2019 10:18:50 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 701234204D;
-        Tue, 10 Dec 2019 10:18:47 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 10 Dec 2019 10:18:47 +0000 (GMT)
-Date:   Tue, 10 Dec 2019 15:48:46 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
- kthread
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210092601.GK2844@hirez.programming.kicks-ass.net>
- <20191210093338.GF2871@hirez.programming.kicks-ass.net>
+        Tue, 10 Dec 2019 05:20:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575973206;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=0Kb+E+8ZdD4D68+aCTRlNTqRFi3yA4uuBGG8Rr2pQgY=;
+        b=NeYakiUCjcRoxcFOZnt6eDM0Jw6DgF/tnZftTAXzQSXZCBTLtVUHjodLxZvTXBDH
+        Hq9okvn8vJADB+4lLhu1iExlQjDCa2avyXGPQiQ2N28sL2jhNW2J3eUnPftbCBE0sjS
+        8zvVlxy4TRDsGNGGSfBhTwmNwz1AXdSkjIZLROms=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575973206;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=0Kb+E+8ZdD4D68+aCTRlNTqRFi3yA4uuBGG8Rr2pQgY=;
+        b=VuITrJj+QGHSbjoRYgHcNgD5stmzkqoubp1qS/rPYXMmGRDKHEZ+1XFtF503+RoY
+        vZEjZl3cu1aydYOch0/P/dlSIWprQbnvW3xoRg52LTx6/OAKq52uqvIJOIT+pqxMXjJ
+        +VfRIbeZnjfCG+yBJSf+s9Lz9Vf5FAcJAaECBda8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3419C447AA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Soeren Moch <smoch@web.de>
+Cc:     Wright Feng <wright.feng@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] brcmfmac: reset two D11 cores if chip has two D11 cores
+References: <20191209223822.27236-1-smoch@web.de>
+        <0101016eef117d24-d6de85e6-6356-4c73-bff4-f787e8c982bc-000000@us-west-2.amazonses.com>
+        <d72831ab-902e-0b69-3008-6eb915784c4d@web.de>
+Date:   Tue, 10 Dec 2019 10:20:06 +0000
+In-Reply-To: <d72831ab-902e-0b69-3008-6eb915784c4d@web.de> (Soeren Moch's
+        message of "Tue, 10 Dec 2019 11:14:22 +0100")
+Message-ID: <0101016eef52b82d-f791d0d8-d317-4050-9e8a-07a3fa7dafd8-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20191210093338.GF2871@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19121010-0008-0000-0000-0000033F6A17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121010-0009-0000-0000-00004A5E9A5F
-Message-Id: <20191210101846.GC9139@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- adultscore=0 spamscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100091
+Content-Type: text/plain
+X-SES-Outgoing: 2019.12.10-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Zijlstra <peterz@infradead.org> [2019-12-10 10:33:38]:
+Soeren Moch <smoch@web.de> writes:
 
-> On Tue, Dec 10, 2019 at 10:26:01AM +0100, Peter Zijlstra wrote:
-> 
-> > > @@ -6716,7 +6737,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
-> > >  	find_matching_se(&se, &pse);
-> > >  	update_curr(cfs_rq_of(se));
-> > >  	BUG_ON(!pse);
-> > > -	if (wakeup_preempt_entity(se, pse) == 1) {
-> > > +	if (wakeup_preempt_entity(se, pse) == 1 || kthread_wakeup_preempt(rq, p, wake_flags)) {
-> > >  		/*
-> > >  		 * Bias pick_next to pick the sched entity that is
-> > >  		 * triggering this preemption.
-> > 
-> > How about something like:
-> > 
-> 	if (wakeup_preempt_entity(se, pse) >= !(wake_flags & WF_KTHREAD))
+> On 10.12.19 10:08, Kalle Valo wrote:
+>> Soeren Moch <smoch@web.de> writes:
+>>
+>>> From: Wright Feng <wright.feng@cypress.com>
+>>>
+>>> There are two D11 cores in RSDB chips like 4359. We have to reset two
+>>> D11 cores simutaneously before firmware download, or the firmware may
+>>> not be initialized correctly and cause "fw initialized failed" error.
+>>>
+>>> Signed-off-by: Wright Feng <wright.feng@cypress.com>
+>> Soeren's s-o-b missing at least in patches 1, 6 and 7. Please read:
+>>
+>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#signed-off-by_missing
+>>
 >
-> That's a slightly less convoluted expression for the same value :-)	
+> OK, also for unmodified patches another s-o-b is required.
 
-Yes, this should work, let me try and get back to you.
+Yes, every patch you submit needs to have your s-o-b to mark that you
+agree with Developer's Certificate of Origin.
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
 
 -- 
-Thanks and Regards
-Srikar Dronamraju
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
