@@ -2,86 +2,235 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF12C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED8FC2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1262073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gcPpE+/5"
+	by mail.kernel.org (Postfix) with ESMTP id BFFDB207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfLJBYn (ORCPT
+        id S1727642AbfLJB2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:24:43 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59029 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727221AbfLJBYn (ORCPT
+        Mon, 9 Dec 2019 20:28:01 -0500
+Received: from out28-123.mail.aliyun.com ([115.124.28.123]:43360 "EHLO
+        out28-123.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727221AbfLJB2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:24:43 -0500
-X-UUID: fbdde645f9ff44fdae3a6e96192052c8-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uS+vnIodKcC3nYeOH364CYiGDOfQNtI3mPSCouI1v0o=;
-        b=gcPpE+/50n18No5AZmiEkd3C3cSllzyT7fYi6K8YFsPoZyqwFQ8VQr1H2plHvwffV2EGBag/Cckd/SwXSWTBqGaote7w/Hq4JfhE4QZKBaowDBMJh227YsKXJyFTZK0F1urZXGKKCvxMLNQOL8qPlpg9/UyM1RanJjrOPlNzus4=;
-X-UUID: fbdde645f9ff44fdae3a6e96192052c8-20191210
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1852598995; Tue, 10 Dec 2019 09:24:36 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 09:23:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 09:24:16 +0800
-Message-ID: <1575941074.9782.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 24/28] drm/mediatek: hdmi: Use drm_bridge_init()
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 10 Dec 2019 09:24:34 +0800
-In-Reply-To: <20191204114732.28514-25-mihail.atanassov@arm.com>
-References: <20191204114732.28514-1-mihail.atanassov@arm.com>
-         <20191204114732.28514-25-mihail.atanassov@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 20:28:01 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07446845|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.232041-0.00467079-0.763289;DS=CONTINUE|ham_system_inform|0.15122-0.000763619-0.848017;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=22;RT=22;SR=0;TI=SMTPD_---.GDxG-xB_1575941274;
+Received: from 192.168.88.128(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GDxG-xB_1575941274)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Tue, 10 Dec 2019 09:27:55 +0800
+Subject: Re: [PATCH v7 5/6] MIPS: X1000: Add missing X1000 nodes.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1575896438-9562-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1575896438-9562-6-git-send-email-zhouyanjie@wanyeetech.com>
+ <1575904518.3.3@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mripard@kernel.org, shawnguo@kernel.org, mark.rutland@arm.com,
+        ebiederm@xmission.com, ralf@linux-mips.org, heiko@sntech.de,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+From:   zhouyanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5DEEF49A.50306@wanyeetech.com>
+Date:   Tue, 10 Dec 2019 09:27:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C2053D4113A1F6C2D03FB17F90EEE848F312EC60C58E129E95C51A71E518A3AF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1575904518.3.3@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIE1paGFpbDoNCg0KT24gV2VkLCAyMDE5LTEyLTA0IGF0IDExOjQ4ICswMDAwLCBNaWhhaWwg
-QXRhbmFzc292IHdyb3RlOg0KPiBObyBmdW5jdGlvbmFsIGNoYW5nZS4NCj4gDQoNCkFja2VkLWJ5
-OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IE1paGFpbCBB
-dGFuYXNzb3YgPG1paGFpbC5hdGFuYXNzb3ZAYXJtLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyB8IDQgKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfaGRtaS5jDQo+IGluZGV4IGY2ODQ5NDdjNTI0My4uOTc2MWE4MDY3NGQ5IDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYw0KPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYw0KPiBAQCAtMTcwOCw4ICsxNzA4LDggQEAgc3Rh
-dGljIGludCBtdGtfZHJtX2hkbWlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
-Cj4gIA0KPiAgCW10a19oZG1pX3JlZ2lzdGVyX2F1ZGlvX2RyaXZlcihkZXYpOw0KPiAgDQo+IC0J
-aGRtaS0+YnJpZGdlLmZ1bmNzID0gJm10a19oZG1pX2JyaWRnZV9mdW5jczsNCj4gLQloZG1pLT5i
-cmlkZ2Uub2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiArCWRybV9icmlkZ2VfaW5pdCgm
-aGRtaS0+YnJpZGdlLCAmcGRldi0+ZGV2LCAmbXRrX2hkbWlfYnJpZGdlX2Z1bmNzLA0KPiArCQkJ
-TlVMTCwgTlVMTCk7DQo+ICAJZHJtX2JyaWRnZV9hZGQoJmhkbWktPmJyaWRnZSk7DQo+ICANCj4g
-IAlyZXQgPSBtdGtfaGRtaV9jbGtfZW5hYmxlX2F1ZGlvKGhkbWkpOw0KDQo=
+Hi Paul,
+
+On 2019年12月09日 23:15, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le lun., déc. 9, 2019 at 21:00, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> Add the appropriate DT node to probe pdma/msc/rtc/watchdog/ethernet
+>> driver using the devicetree.
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>
+>> Notes:
+>>     v7:
+>>     New patch, merge[05/12],[07/12],[09/12],[11/12] in v6.
+>>
+>>  arch/mips/boot/dts/ingenic/x1000.dtsi | 96 
+>> +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 96 insertions(+)
+>>
+>> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi 
+>> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> index 13a6c9ff..398a756 100644
+>> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+>> @@ -1,5 +1,6 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  #include <dt-bindings/clock/x1000-cgu.h>
+>> +#include <dt-bindings/dma/x1000-dma.h>
+>>
+>>  / {
+>>      #address-cells = <1>;
+>> @@ -68,6 +69,25 @@
+>>          interrupts = <27 26 25>;
+>>      };
+>>
+>> +    wdt: watchdog@10002000 {
+>> +        compatible = "ingenic,x1000-watchdog", 
+>> "ingenic,jz4780-watchdog";
+>> +        reg = <0x10002000 0x10>;
+>> +
+>> +        clocks = <&cgu X1000_CLK_RTCLK>;
+>> +        clock-names = "rtc";
+>> +    };
+>
+> The watchdog node should be a children of the TCU node, see
+> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>
+
+Sure, I'll check it and change this in v8.
+
+>
+>> +
+>> +    rtc: rtc@10003000 {
+>> +        compatible = "ingenic,x1000-rtc", "ingenic,jz4780-rtc";
+>> +        reg = <0x10003000 0x4c>;
+>> +
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <32>;
+>> +
+>> +        clocks = <&cgu X1000_CLK_RTCLK>;
+>> +        clock-names = "rtc";
+>> +    };
+>> +
+>>      pinctrl: pin-controller@10010000 {
+>>          compatible = "ingenic,x1000-pinctrl";
+>>          reg = <0x10010000 0x800>;
+>> @@ -173,4 +193,80 @@
+>>
+>>          status = "disabled";
+>>      };
+>> +
+>> +    pdma: dma-controller@13420000 {
+>> +        compatible = "ingenic,x1000-dma";
+>> +        reg = <0x13420000 0x400
+>> +               0x13421000 0x40>;
+>> +        #dma-cells = <2>;
+>> +
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <10>;
+>> +
+>> +        clocks = <&cgu X1000_CLK_PDMA>;
+>> +    };
+>> +
+>> +    mac: mac@134b0000 {
+>
+> Please name the nodes according to the devicetree specification; this 
+> should be 'ethernet@134b0000'.
+>
+
+OK, I'll change it in v8.
+
+>
+>> +        compatible = "ingenic,x1000-mac", "snps,dwmac";
+>> +        reg = <0x134b0000 0x2000>;
+>> +
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <55>;
+>> +        interrupt-names = "macirq";
+>> +
+>> +        clocks = <&cgu X1000_CLK_MAC>;
+>> +        clock-names = "stmmaceth";
+>> +
+>> +        status = "disabled";
+>> +
+>> +        mdio: mdio {
+>> +            compatible = "snps,dwmac-mdio";
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +
+>> +            status = "disabled";
+>> +        };
+>> +    };
+>> +
+>> +    msc0: msc@13450000 {
+>
+> This should be 'mmc@13450000'
+>
+
+OK, I'll change it in v8.
+
+>
+>> +        compatible = "ingenic,x1000-mmc";
+>> +        reg = <0x13450000 0x1000>;
+>> +
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <37>;
+>> +
+>> +        clocks = <&cgu X1000_CLK_MSC0>;
+>> +        clock-names = "mmc";
+>> +
+>> +        cap-sd-highspeed;
+>> +        cap-mmc-highspeed;
+>> +        cap-sdio-irq;
+>> +
+>> +        dmas = <&pdma X1000_DMA_MSC0_RX 0xffffffff>,
+>> +               <&pdma X1000_DMA_MSC0_TX 0xffffffff>;
+>> +        dma-names = "rx", "tx";
+>> +
+>> +        status = "disabled";
+>> +    };
+>> +
+>> +    msc1: msc@13460000 {
+>
+> This should be 'mmc@13460000'.
+>
+
+OK, I'll change it in v8.
+
+Thanks and best regards!
+
+> Cheers,
+> -Paul
+>
+>> +        compatible = "ingenic,x1000-mmc";
+>> +        reg = <0x13460000 0x1000>;
+>> +
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <36>;
+>> +
+>> +        clocks = <&cgu X1000_CLK_MSC1>;
+>> +        clock-names = "mmc";
+>> +
+>> +        cap-sd-highspeed;
+>> +        cap-mmc-highspeed;
+>> +        cap-sdio-irq;
+>> +
+>> +        dmas = <&pdma X1000_DMA_MSC1_RX 0xffffffff>,
+>> +               <&pdma X1000_DMA_MSC1_TX 0xffffffff>;
+>> +        dma-names = "rx", "tx";
+>> +
+>> +        status = "disabled";
+>> +    };
+>>  };
+>> -- 
+>> 2.7.4
+>>
+>
 
