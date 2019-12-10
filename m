@@ -2,328 +2,71 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22F5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D2CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733C12077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6CD820409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLJCHg (ORCPT
+        id S1726673AbfLJCJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:07:36 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:24154 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfLJCHg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:07:36 -0500
-Received: from [10.28.39.106] (10.28.39.106) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Dec
- 2019 10:08:05 +0800
-Subject: Re: [PATCH 2/4] irqchip/meson-gpio: rework meson irqchip driver to
- support meson-A1 SoCs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>
-References: <20191206121714.14579-1-qianggui.song@amlogic.com>
- <20191206121714.14579-3-qianggui.song@amlogic.com>
- <542e3e819e584d6e433d2c4276c3b379@www.loen.fr>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <2551e382-d373-dad8-7294-80f2a15c0ad4@amlogic.com>
-Date:   Tue, 10 Dec 2019 10:08:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 9 Dec 2019 21:09:28 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7653 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726538AbfLJCJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:09:28 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3727580365B3C590DBB2;
+        Tue, 10 Dec 2019 10:09:27 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 10 Dec
+ 2019 10:09:23 +0800
+Subject: Re: [f2fs-dev] [PATCH 1/6] f2fs: call f2fs_balance_fs outside of
+ locked page
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191209222345.1078-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <0f842142-4931-dcb8-9843-47510851e93b@huawei.com>
+Date:   Tue, 10 Dec 2019 10:09:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <542e3e819e584d6e433d2c4276c3b379@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191209222345.1078-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.106]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Marc
-     Thank you for your review
+On 2019/12/10 6:23, Jaegeuk Kim wrote:
+> Otherwise, we can hit deadlock by waiting for the locked page in
+> move_data_block in GC.
+> 
+>  Thread A                     Thread B
+>  - do_page_mkwrite
+>   - f2fs_vm_page_mkwrite
+>    - lock_page
+>                               - f2fs_balance_fs
+>                                   - mutex_lock(gc_mutex)
+>                                - f2fs_gc
+>                                 - do_garbage_collect
+>                                  - ra_data_block
+>                                   - grab_cache_page
+>    - f2fs_balance_fs
+>     - mutex_lock(gc_mutex)
+> 
+> Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
-On 2019/12/6 21:13, Marc Zyngier wrote:
-> On 2019-12-06 12:17, Qianggui Song wrote:
->> Since Meson-A1 Socs register layout of gpio interrupt controller have
->> difference with previous chips, registers to decide irq line and 
->> offset
->> of trigger method are all changed, the current driver should be 
->> modified.
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  drivers/irqchip/irq-meson-gpio.c | 79 
->> ++++++++++++++++++++++++--------
->>  1 file changed, 60 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-meson-gpio.c
->> b/drivers/irqchip/irq-meson-gpio.c
->> index 829084b568fa..1824ffc30de2 100644
->> --- a/drivers/irqchip/irq-meson-gpio.c
->> +++ b/drivers/irqchip/irq-meson-gpio.c
->> @@ -30,44 +30,74 @@
->>   * stuck at 0. Bits 8 to 15 are responsive and have the expected
->>   * effect.
->>   */
->> -#define REG_EDGE_POL_EDGE(x)	BIT(x)
->> -#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
->> -#define REG_BOTH_EDGE(x)	BIT(8 + (x))
->> -#define REG_EDGE_POL_MASK(x)    (	\
->> -		REG_EDGE_POL_EDGE(x) |	\
->> -		REG_EDGE_POL_LOW(x)  |	\
->> -		REG_BOTH_EDGE(x))
->> +#define REG_EDGE_POL_EDGE(params, 
->> x)	BIT((params)->edge_single_offset + (x))
->> +#define REG_EDGE_POL_LOW(params, x)	BIT((params)->pol_low_offset + 
->> (x))
->> +#define REG_BOTH_EDGE(params, x)	BIT((params)->edge_both_offset + 
->> (x))
->> +#define REG_EDGE_POL_MASK(params, x)    (	\
->> +		REG_EDGE_POL_EDGE(params, x) |	\
->> +		REG_EDGE_POL_LOW(params, x)  |	\
->> +		REG_BOTH_EDGE(params, x))
->>  #define REG_PIN_SEL_SHIFT(x)	(((x) % 4) * 8)
->>  #define REG_FILTER_SEL_SHIFT(x)	((x) * 4)
->>
->> +#define INIT_MESON8_COMMON_DATA					\
->> +	.edge_single_offset = 0,				\
->> +	.pol_low_offset = 16,					\
->> +	.pin_sel_mask = 0xff,					\
->> +	.ops = {						\
->> +		.gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,	\
->> +	},
-> 
-> Please place the #defines that operate on the various data structures
-> *after* the definition of the structures. It would greatly help
-> reading the changes.
-> 
-OK, will place it below the definition of struct meson_gpio_irq_params
-in the next patch.
->> +
->> +struct meson_gpio_irq_controller;
->> +static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller 
->> *ctl,
->> +				    unsigned int channel, unsigned long hwirq);
->> +struct irq_ctl_ops {
->> +	void (*gpio_irq_sel_pin)(struct meson_gpio_irq_controller *ctl,
->> +					 unsigned int channel,
->> +					 unsigned long hwirq);
->> +	void (*gpio_irq_init)(struct meson_gpio_irq_controller *ctl);
->> +};
->> +
->>  struct meson_gpio_irq_params {
->>  	unsigned int nr_hwirq;
->>  	bool support_edge_both;
->> +	unsigned int edge_both_offset;
->> +	unsigned int edge_single_offset;
->> +	unsigned int pol_low_offset;
->> +	unsigned int pin_sel_mask;
->> +	struct irq_ctl_ops ops;
->>  };
->>
->>  static const struct meson_gpio_irq_params meson8_params = {
->>  	.nr_hwirq = 134,
->> +	INIT_MESON8_COMMON_DATA
->>  };
->>
->>  static const struct meson_gpio_irq_params meson8b_params = {
->>  	.nr_hwirq = 119,
->> +	INIT_MESON8_COMMON_DATA
->>  };
->>
->>  static const struct meson_gpio_irq_params gxbb_params = {
->>  	.nr_hwirq = 133,
->> +	INIT_MESON8_COMMON_DATA
->>  };
->>
->>  static const struct meson_gpio_irq_params gxl_params = {
->>  	.nr_hwirq = 110,
->> +	INIT_MESON8_COMMON_DATA
->>  };
->>
->>  static const struct meson_gpio_irq_params axg_params = {
->>  	.nr_hwirq = 100,
->> +	INIT_MESON8_COMMON_DATA
->>  };
->>
->>  static const struct meson_gpio_irq_params sm1_params = {
->>  	.nr_hwirq = 100,
->>  	.support_edge_both = true,
->> +	.edge_both_offset = 8,
->> +	INIT_MESON8_COMMON_DATA
->>  };
-> 
-> OK, this isn't great. The least you could do is to make
-> your initializer parametric, so that it takes the nr_hwirq as
-> a parameter.
-> 
-> Then, any additional member that overrides common behaviour
-> should come after the main initializer.
-> 
-> Also, do you need 'support_edge_both'? Isn't a non-zero
-> 'edge_both_offset' enough to detect the feature?
-> 
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Sorry, but I am not very clear that "make your initializer parametric,
-so that it takes the nr_hwirq as a parameter". Is that
-initializer(initial function in .ops ? ) as a parameter of struct
-meson_gpio_irq_params ? If nr_hwirq as a parameter of init function of
-.ops then will make lot of init function for each platform.
-
-How about move .ops from  macro like below:
-#define INIT_MESON8_COMMON_DATA					\
-	.edge_single_offset = 0,				\
-	.pol_low_offset = 16,					\
-	.pin_sel_mask = 0xff,
-
-static const struct meson_gpio_irq_params sm1_params = {
- 	.nr_hwirq = 100,//main initializer
-	.ops = {
-              .gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,
-               /*in below to assign support_edge_both
-                * edge_both_offset
-                * call after main initializer to additional
-                * member
-                */
-              .gpio_irq_init = meson_sm1_irq_init,
-	},
-  	INIT_MESON8_COMMON_DATA// m8 to sm1 are the same.
-};
-
-About support_edge_both
-support_edge_both & edge_both_offset are used for sm1 or later chip, but
-the value are different with A1 which this patch set support.For SM1 is
-8, but A1 is 16, so I am not one hundred percent sure that later chip
-design will change to edge_both_offet to zero to set both edge trigger.
-Let' s see edge_single_offset, it is set to 0 in A1 from 16 which is
-previous chip use.I think support_edge_bot should be kept.
-
->>
->>  static const struct of_device_id meson_irq_gpio_matches[] = {
->> @@ -100,9 +130,18 @@ static void meson_gpio_irq_update_bits(struct
->> meson_gpio_irq_controller *ctl,
->>  	writel_relaxed(tmp, ctl->base + reg);
->>  }
->>
->> -static unsigned int meson_gpio_irq_channel_to_reg(unsigned int 
->> channel)
->> +static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller 
->> *ctl,
->> +				    unsigned int channel, unsigned long hwirq)
->>  {
->> -	return (channel < 4) ? REG_PIN_03_SEL : REG_PIN_47_SEL;
->> +	unsigned int reg_offset;
->> +	unsigned int bit_offset;
->> +
->> +	reg_offset = (channel < 4) ? REG_PIN_03_SEL : REG_PIN_47_SEL;
->> +	bit_offset = REG_PIN_SEL_SHIFT(channel);
->> +
->> +	meson_gpio_irq_update_bits(ctl, reg_offset,
->> +				   ctl->params->pin_sel_mask << bit_offset,
->> +				   hwirq << bit_offset);
->>  }
->>
->>  static int
->> @@ -110,7 +149,7 @@ meson_gpio_irq_request_channel(struct
->> meson_gpio_irq_controller *ctl,
->>  			       unsigned long  hwirq,
->>  			       u32 **channel_hwirq)
->>  {
->> -	unsigned int reg, idx;
->> +	unsigned int idx;
->>
->>  	spin_lock(&ctl->lock);
->>
->> @@ -129,10 +168,7 @@ meson_gpio_irq_request_channel(struct
->> meson_gpio_irq_controller *ctl,
->>  	 * Setup the mux of the channel to route the signal of the pad
->>  	 * to the appropriate input of the GIC
->>  	 */
->> -	reg = meson_gpio_irq_channel_to_reg(idx);
->> -	meson_gpio_irq_update_bits(ctl, reg,
->> -				   0xff << REG_PIN_SEL_SHIFT(idx),
->> -				   hwirq << REG_PIN_SEL_SHIFT(idx));
->> +	ctl->params->ops.gpio_irq_sel_pin(ctl, idx, hwirq);
->>
->>  	/*
->>  	 * Get the hwirq number assigned to this channel through
->> @@ -173,7 +209,9 @@ static int meson_gpio_irq_type_setup(struct
->> meson_gpio_irq_controller *ctl,
->>  {
->>  	u32 val = 0;
->>  	unsigned int idx;
->> +	const struct meson_gpio_irq_params *params;
->>
->> +	params = ctl->params;
->>  	idx = meson_gpio_irq_get_channel_idx(ctl, channel_hwirq);
->>
->>  	/*
->> @@ -190,22 +228,22 @@ static int meson_gpio_irq_type_setup(struct
->> meson_gpio_irq_controller *ctl,
->>  	 * precedence over the other edge/polarity settings
->>  	 */
->>  	if (type == IRQ_TYPE_EDGE_BOTH) {
->> -		if (!ctl->params->support_edge_both)
->> +		if (!params->support_edge_both)
->>  			return -EINVAL;
->>
->> -		val |= REG_BOTH_EDGE(idx);
->> +		val |= REG_BOTH_EDGE(params, idx);
->>  	} else {
->>  		if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
->> -			val |= REG_EDGE_POL_EDGE(idx);
->> +			val |= REG_EDGE_POL_EDGE(params, idx);
->>
->>  		if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
->> -			val |= REG_EDGE_POL_LOW(idx);
->> +			val |= REG_EDGE_POL_LOW(params, idx);
->>  	}
->>
->>  	spin_lock(&ctl->lock);
->>
->>  	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
->> -				   REG_EDGE_POL_MASK(idx), val);
->> +				   REG_EDGE_POL_MASK(params, idx), val);
->>
->>  	spin_unlock(&ctl->lock);
->>
->> @@ -371,6 +409,9 @@ static int __init meson_gpio_irq_parse_dt(struct
->> device_node *node,
->>  		return ret;
->>  	}
->>
->> +	if (ctl->params->ops.gpio_irq_init)
->> +		ctl->params->ops.gpio_irq_init(ctl);
-> 
-> It would make sense to provide a dummy init() method, since
-> you have all the infrastructure already.
-> 
-Okay
->> +
->>  	return 0;
->>  }
-> 
-> Thanks,
-> 
->          M.
-> 
+Thanks,
