@@ -2,76 +2,78 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55874C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C07C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2773E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1n+vVP4Z"
+	by mail.kernel.org (Postfix) with ESMTP id 6B5062073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLJNds (ORCPT
+        id S1727516AbfLJNeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:33:48 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:44736 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfLJNdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:33:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=XtjevayN4uCPE9VpLwJtgSoB2OMml81bphwofgYd/Do=; b=1n+vVP4ZobANSv9CF92JSs0Vzp
-        OLZ9QOqeqWVLZult6N1sSsBFnTsRiRwXXTJA24x60RGIIcV1paymZTpqyIgdC2F3NMdgJusE4N8LM
-        p3J7m0Bi+ZjfyPKHo6MCtt61eukGbU5dd43A46peB5p/nJfKQO3BY4/r01xlhPQZJhAs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iefdu-0004I5-Rx; Tue, 10 Dec 2019 14:33:34 +0100
-Date:   Tue, 10 Dec 2019 14:33:34 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Milind Parab <mparab@cadence.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "brad.mouring@ni.com" <brad.mouring@ni.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Subject: Re: [PATCH 3/3] net: macb: add support for high speed interface
-Message-ID: <20191210133334.GA16369@lunn.ch>
-References: <1575890033-23846-1-git-send-email-mparab@cadence.com>
- <1575890176-25630-1-git-send-email-mparab@cadence.com>
- <20191209113606.GF25745@shell.armlinux.org.uk>
- <BY5PR07MB651448607BAF87DC9C60F2AFD35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
+        Tue, 10 Dec 2019 08:34:04 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37603 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfLJNeE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:34:04 -0500
+X-Originating-IP: 90.182.112.136
+Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id B67AC40011;
+        Tue, 10 Dec 2019 13:34:01 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 14:33:52 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] rtc: sun6i: Add support for RTC clocks on R40
+Message-ID: <20191210133352.GM1463890@piout.net>
+References: <20191205085054.6049-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BY5PR07MB651448607BAF87DC9C60F2AFD35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191205085054.6049-1-wens@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >How has this been tested?
-> >
+On 05/12/2019 16:50:54+0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> This patch is tested in 10G fixed mode on SFP+ module. 
+> When support for the R40 in the rtc-sun6i driver was split out for a
+> separate compatible string, only the RTC half was covered, and not the
+> clock half. Unfortunately this results in the whole driver not working,
+> as the RTC half expects the clock half to have been initialized.
 > 
-> In our own lab, we have various hardware test platforms supporting SGMII (through a TI PHY and another build that connects to a Marvell 1G PHY), GMII (through a Marvell PHY), 10GBASE-R (direct connection to SFP+), USXGMII (currently we can emulate this using an SFP+ connection from/to our own hardware)
+> Add support for the clock part as well. The clock part is like the H3,
+> but does not need to export the internal oscillator, nor does it have
+> a gateable LOSC external output.
+> 
+> This fixes issues with WiFi and Bluetooth not working on the BPI M2U.
+> 
+> Fixes: d6624cc75021 ("rtc: sun6i: Add R40 compatible")
+> Cc: <stable@vger.kernel.org> # 5.3.x
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> 
+> Please merge this for fixes.
+> 
+> ---
+>  drivers/rtc/rtc-sun6i.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+Applied, thanks.
 
-Are any of these PHY using C45?
-
-    Thanks
-	Andrew
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
