@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128FEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13689C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5BA20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96D220637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015976;
-	bh=4kXjjOFfrXdAo6YkWOkkrF2W8LEiP/qW5gwyvKK11O8=;
+	s=default; t=1576015982;
+	bh=/5fAVxxUjSZJE4xH7IhLJ3O8MJfUsscc+boLpoxHZKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1i11GtZ6nLCtq6WVgjBEcfxJqjAvYuKcjfOueVBg/4mX8xb6HD6W/I84uOcKaWkSo
-	 x4fdXOJuXrWV5pQ/jaWHK5cJze/U5MsZ9WrWp2GKyhSTFx6WrJXUqFnrQS6Wh1xKjM
-	 XniF+cb749BIgJ6kmE/62kYG29gl98izjOwKVbcA=
+	b=k4MUDCttWbzPiMQ7msd9PQ258P7uijHPTrfO2evFX7UwtTVq/W+cpV4KJWu0eqS5A
+	 sbQWtvmiMZG5+vqYOUAYcX4z+CDVLzvKzVIdPpXraCFfKUJouiEu1LqVpyUOS475/r
+	 vM05WlqI6i8iXpnUyrEudVb2zpRhWAJbW9EhTGL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfLJWMq (ORCPT
+        id S1730367AbfLJWNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:13:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbfLJWDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:32 -0500
+        id S1727778AbfLJWD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68D252053B;
-        Tue, 10 Dec 2019 22:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78725214D8;
+        Tue, 10 Dec 2019 22:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015412;
-        bh=4kXjjOFfrXdAo6YkWOkkrF2W8LEiP/qW5gwyvKK11O8=;
+        s=default; t=1576015408;
+        bh=/5fAVxxUjSZJE4xH7IhLJ3O8MJfUsscc+boLpoxHZKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwDDaz/7bYPFHbSGTAGNBy/+fXS8J/g6mJlSE4sVjLwGwyKx97JMu0S3EljTRO3We
-         Cp4bVRhHJ8D4sHTKCv0bOxOmiGRY/RDGo7zMdhZoMgZA4hnaQ+N5zdnLKUQ/lSRgo4
-         v4USyzW61TZ/ZEmysdjHZvFqgMQbAFH7yKnEB8Tw=
+        b=yC/0tsArmwax6tMLh0MiNGvn2zcihBFd+kRecOUH7RDW1KxQWAzZYOg+sQ5gB34Hn
+         dHNfsahBQYo2iygtn55eHzeVeYKkj25F+YRmRyEmc/z24mmINW2rlBktjI0ZIQveUT
+         htUH4N9AfEdgAqLDvShVBVImsbZ2CTu77TVt7eJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 025/130] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
-Date:   Tue, 10 Dec 2019 17:01:16 -0500
-Message-Id: <20191210220301.13262-25-sashal@kernel.org>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 022/130] selftests/bpf: Correct path to include msg + path
+Date:   Tue, 10 Dec 2019 17:01:13 -0500
+Message-Id: <20191210220301.13262-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,62 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
+[ Upstream commit c588146378962786ddeec817f7736a53298a7b01 ]
 
-Inside function max8907_regulator_probe(), variable val could
-be uninitialized if regmap_read() fails. However, val is used
-later in the if statement to decide the content written to
-"pmic", which is potentially unsafe.
+The "path" buf is supposed to contain path + printf msg up to 24 bytes.
+It will be cut anyway, but compiler generates truncation warns like:
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+"
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c: In
+function ‘setup_cgroup_environment’:
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:34:
+warning: ‘/cgroup.controllers’ directive output may be truncated
+writing 19 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+				  ^~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:2:
+note: ‘snprintf’ output between 20 and 4116 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:34:
+warning: ‘/cgroup.subtree_control’ directive output may be truncated
+writing 23 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+				  ^~~~~~~~~~~~~~~~~~~~~~~
+cgroup_path);
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:2:
+note: ‘snprintf’ output between 24 and 4120 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+cgroup_path);
+"
+
+In order to avoid warns, lets decrease buf size for cgroup workdir on
+24 bytes with assumption to include also "/cgroup.subtree_control" to
+the address. The cut will never happen anyway.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20191002120404.26962-3-ivan.khoronzhuk@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ samples/bpf/cgroup_helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
-index 860400d2cd859..a8f2f07239fb9 100644
---- a/drivers/regulator/max8907-regulator.c
-+++ b/drivers/regulator/max8907-regulator.c
-@@ -299,7 +299,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
+diff --git a/samples/bpf/cgroup_helpers.c b/samples/bpf/cgroup_helpers.c
+index 09afaddfc9ba9..b5c09cd6c7bd7 100644
+--- a/samples/bpf/cgroup_helpers.c
++++ b/samples/bpf/cgroup_helpers.c
+@@ -43,7 +43,7 @@
+  */
+ int setup_cgroup_environment(void)
+ {
+-	char cgroup_workdir[PATH_MAX + 1];
++	char cgroup_workdir[PATH_MAX - 24];
  
- 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
--	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	if (ret)
-+		return ret;
-+
- 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
- 	    MAX8907_II2RR_VERSION_REV_B) {
- 		pmic->desc[MAX8907_SD1].min_uV = 637500;
-@@ -336,14 +339,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 		}
+ 	format_cgroup_path(cgroup_workdir, "");
  
- 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & MAX8907_MASK_LDO_SEQ) !=
- 			    MAX8907_MASK_LDO_SEQ)
- 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
- 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
- 						MAX8907_MASK_OUT5V_ENSRC)) !=
- 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
