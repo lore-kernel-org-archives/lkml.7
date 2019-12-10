@@ -2,62 +2,64 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D559DC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18758C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C772077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32BF207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q8dAHncS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TdsjAbQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfLJJuu (ORCPT
+        id S1727303AbfLJJuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:50:50 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37864 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJuu (ORCPT
+        Tue, 10 Dec 2019 04:50:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33566 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:50:50 -0500
+        Tue, 10 Dec 2019 04:50:52 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9odiL055607;
-        Tue, 10 Dec 2019 03:50:39 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9og2B034864;
+        Tue, 10 Dec 2019 03:50:42 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575971439;
-        bh=3/2/4TqPWi9y2MRMMJxSgZoD8FE5fToV9VA4meBh3OA=;
-        h=From:To:CC:Subject:Date;
-        b=Q8dAHncSrM3uAXx+oqmTTbaP2ZM5fvhRt4JtSZEqGol6IwcOqZPp/qoBlDx7vIOhy
-         6zY1XNZTbZnHKMI6e7YF6hulKH24u7KAUbJo7EKBlzQyObS2KncALKfEFMZfoNqGLr
-         4UBZgD2MzPUBTYyTStApIt+MznIqqof6lUqJoYvg=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9odNO018132
+        s=ti-com-17Q1; t=1575971442;
+        bh=WGcG0Yg+sL2imOHoZX7VObLUIlc0zzVm+p1wxb1YIN0=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TdsjAbQeX3orhQbDgowN8vmZdyOzsPJ623YSeCy4Myk6TDorWkNKJqzguUcRLfoOI
+         aO1ppSJGgmsCKxNysJcohc6SaDGWAwpRIacQTRqkGPXIDJUr2zoaIvukDRDOmhmLOV
+         SCs0vgxLR7eT13lQO2+mYvMcD6HPBLkNClMtCgW8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9og3d018208
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 03:50:39 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 10 Dec 2019 03:50:42 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 03:50:39 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 03:50:42 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 03:50:39 -0600
+ Frontend Transport; Tue, 10 Dec 2019 03:50:42 -0600
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9oZVj048503;
-        Tue, 10 Dec 2019 03:50:36 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9oZVk048503;
+        Tue, 10 Dec 2019 03:50:39 -0600
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-mmc@vger.kernel.org>
 CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
         <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
         <zhang.chunyan@linaro.org>, <tony@atomide.com>
-Subject: [PATCH v3 0/7] Port am335 and am437 devices to sdhci-omap
-Date:   Tue, 10 Dec 2019 15:21:44 +0530
-Message-ID: <20191210095151.15441-1-faiz_abbas@ti.com>
+Subject: [PATCH v3 1/7] dt-bindings: sdhci-omap: Add properties for using external dma
+Date:   Tue, 10 Dec 2019 15:21:45 +0530
+Message-ID: <20191210095151.15441-2-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20191210095151.15441-1-faiz_abbas@ti.com>
+References: <20191210095151.15441-1-faiz_abbas@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -67,63 +69,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following add driver patches for porting TI's am335x and am437x
-devices to the sdhci-omap driver.
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
 
-This involves adding external DMA support to sdhci (first 3 patches from
-Chunyan) plus some miscellaneous patches to take care of deviations of
-the controllers from the sdhci model.
+sdhci-omap can support both external dma controller via dmaengine
+framework as well as ADMA which standard SD host controller
+provides. Add binding documentation for these external dma properties.
 
-DT changes will be posted in a separate series.
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Untested versions of Chunyan's patches were posted before[1].
-
-Tested on: am335x-evm, am335x-boneblack, am335x-sk, am437x-gpevm,
-am43xx-gpevm, am437x-idk, dra7xx-evm, dra72x-evm.
-
-I need some help with testing all the other beaglebone variants and SDIO
-Wifi cards.
-
-v3:
-1. Dropped patch 1 because the tasklet was removed by Adrian in an
-   earlier series.
-2. Added dma bindings in sdhci-omap as optional properties.
-3. Rebased on top of latest mainline.
-
-v2:
-1. sdhci is using two bottom halves. One threaded_rq for card detect and a
-   tasklet for finishing mmc requests. Patch 1 removes the tasklet and
-   moves its function to the threaded_irq. This enables me to
-   terminate_sync() in sdhci_request_done()
-
-2. Factored out common code for between the normal adn external dma case
-
-3. Using existing API sdhci_data_timeout_irq for disabling DTO during
-   erase commands.
-
-4. Fixed subject line for dt-bindings patch.
-
-[1] https://patchwork.kernel.org/project/linux-mmc/list/?series=54897
-
-
-Chunyan Zhang (3):
-  dt-bindings: sdhci-omap: Add properties for using external dma
-  mmc: sdhci: add support for using external DMA devices
-  mmc: sdhci-omap: Add using external dma
-
-Faiz Abbas (4):
-  mmc: sdhci: Add quirk for disabling DTO during erase command
-  mmc: sdhci-omap: Add DISABLE_DTO_FOR_ERASE Quirk
-  dt-bindings: sdhci-omap: Add am335x and am437x specific bindings
-  mmc: sdhci-omap: Add am335x and am437x specific compatibles
-
- .../devicetree/bindings/mmc/sdhci-omap.txt    |  11 +
- drivers/mmc/host/Kconfig                      |   4 +
- drivers/mmc/host/sdhci-omap.c                 |  27 +-
- drivers/mmc/host/sdhci.c                      | 290 ++++++++++++++++--
- drivers/mmc/host/sdhci.h                      |  10 +
- 5 files changed, 313 insertions(+), 29 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+index 72c4dec7e1db..97efb01617dd 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+@@ -15,6 +15,13 @@ Required properties:
+ 		 "hs200_1_8v",
+ - pinctrl-<n> : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
+ 
++Optional properties:
++- dmas:		List of DMA specifiers with the controller specific format as described
++		in the generic DMA client binding. A tx and rx specifier is required.
++- dma-names:	List of DMA request names. These strings correspond 1:1 with the
++		DMA specifiers listed in dmas. The string naming is to be "tx"
++		and "rx" for TX and RX DMA requests, respectively.
++
+ Example:
+ 	mmc1: mmc@4809c000 {
+ 		compatible = "ti,dra7-sdhci";
+@@ -22,4 +29,6 @@ Example:
+ 		ti,hwmods = "mmc1";
+ 		bus-width = <4>;
+ 		vmmc-supply = <&vmmc>; /* phandle to regulator node */
++		dmas = <&sdma 61 &sdma 62>;
++		dma-names = "tx", "rx";
+ 	};
 -- 
 2.19.2
 
