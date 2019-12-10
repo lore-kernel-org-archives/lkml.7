@@ -2,106 +2,151 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7C7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E968C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B898E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:16:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="QLv9j1Kf"
+	by mail.kernel.org (Postfix) with ESMTP id 4A15F2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLJUQs (ORCPT
+        id S1726860AbfLJURD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:16:48 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37871 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfLJUQs (ORCPT
+        Tue, 10 Dec 2019 15:17:03 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:51802 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726500AbfLJURC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:16:48 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k14so16713501otn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fSpRuopSQsqIsBCQrngapk7qNizSkn5vIGLeu0YXzok=;
-        b=QLv9j1Kf1pl339xnRMu5I9Hk1ydy8BS8j+X62qrsluuIpkDenW9aIF02vLfXSINlBb
-         ll/3lIgfsmi0GezqLWed6FxZPbFy7G49/y2CU3OvGU0mcQ0pNRdyMAfObdGqDh+JqzvR
-         mal68g8H0Wx8SSafpanwaf/B9n6O/Uvce4Vi1eEuoOMI1cF0OESPDK2QXK6bZIaJ0mlf
-         BtgohwuOnJpGl8MznffMR/kLiYNGfOVZazfVlVVcMcBY5Cnl6+8fsT+nWiSx2+HwLtfX
-         eMolb4Lkwlm7xSbxW1Oi2wR9nJKYGqXG/41u56UdnN0RLhNL/RVeWT0evf7YQJ9YvJOu
-         QeKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fSpRuopSQsqIsBCQrngapk7qNizSkn5vIGLeu0YXzok=;
-        b=kqpjob4n48lUsBXwzAw/hn1RjTDzB6XiOlfWv90Muv2WOqDKaJBL0T2OJ+zm5K+4Uc
-         UraOLkMkhP5JEn84Kw9Fk9Tvpl8Q8gH87DG4Y0XvHlFVzqoEBLM8Eaq8VlwPOFIEcRhM
-         jtbkwyeeOtS55iexxQyz5KLxX73kNE2Hbh4yR1tPMCwYUJ0ApogxoISHh89yqe5Tu7c6
-         IAfxF48mPRm3T+AhfgUNzti1sHap05WHJnMYsrYRscs59pz905bTlH11S96/hg5tAXju
-         hFNmh6ypzOx5Jnc0mt7z6entqbHJ3YCuhu/25ytPPBv9dzCUU4xHZ+YidRBc/UFC1ScK
-         ZLog==
-X-Gm-Message-State: APjAAAVzPJfhAa+toLyFEiq+rPOXxZJm03SD1nhEd2DNFxwC0iLyRC+S
-        YwtRG/5o3cJZGifFKUsRa+gMobRvSTI=
-X-Google-Smtp-Source: APXvYqyaw0qhPHZY2Ts/ktriJuJUipqH6cUesR/fivT044fCZgT4Kq37YFOmki9dXprxX/iI+Sr5zw==
-X-Received: by 2002:a05:6830:1185:: with SMTP id u5mr25528276otq.147.1576009007225;
-        Tue, 10 Dec 2019 12:16:47 -0800 (PST)
-Received: from ?IPv6:2605:6000:e947:6500:6680:99ff:fe6f:cb54? ([2605:6000:e947:6500:6680:99ff:fe6f:cb54])
-        by smtp.googlemail.com with ESMTPSA id v20sm1813200otf.40.2019.12.10.12.16.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 12:16:46 -0800 (PST)
-Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
-From:   Rob Landley <rob@landley.net>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
- <35e63e37-6ec8-8a47-8e18-639c954732e0@landley.net>
-Message-ID: <b220b69e-575d-0530-0f2d-65584df36ea2@landley.net>
-Date:   Tue, 10 Dec 2019 14:20:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 15:17:02 -0500
+Received: (qmail 6917 invoked by uid 2102); 10 Dec 2019 15:17:01 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 10 Dec 2019 15:17:01 -0500
+Date:   Tue, 10 Dec 2019 15:17:01 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
+        <jrdr.linux@gmail.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, <mchehab@kernel.org>,
+        <rfontana@redhat.com>, <syzkaller-bugs@googlegroups.com>,
+        <tglx@linutronix.de>
+Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+In-Reply-To: <00000000000031a0af05995eca0b@google.com>
+Message-ID: <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <35e63e37-6ec8-8a47-8e18-639c954732e0@landley.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 10 Dec 2019, syzbot wrote:
 
-
-On 12/10/19 2:12 PM, Rob Landley wrote:
-> On 12/10/19 2:38 AM, Kuninori Morimoto wrote:
->>
->> Hi Andrew
->>
->> I'm posting this patch from few month ago,
->> but it seems SH maintainer is not working in these days...
+> > On Mon, 9 Dec 2019, syzbot wrote:
 > 
-> Again, I dunno where you're getting that.
+> >> Hello,
 > 
-> (Me, I removed the -Werror...)
+> >> syzbot found the following crash on:
+> 
+> >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+> >> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
+> >> kernel config:   
+> >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+> >> dashboard link:  
+> >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
+> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> >> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> >> IMPORTANT: if you fix the bug, please add the following tag to the  
+> >> commit:
+> >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
+> 
+> >> ==================================================================
+> >> BUG: KASAN: use-after-free in __mutex_lock_common
+> >> kernel/locking/mutex.c:1043 [inline]
+> >> BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
+> >> kernel/locking/mutex.c:1106
+> >> Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
+> 
+> >> CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
+> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> >> Google 01/01/2011
+> >> Call Trace:
+> >>    __dump_stack lib/dump_stack.c:77 [inline]
+> >>    dump_stack+0xef/0x16e lib/dump_stack.c:118
+> >>    print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+> >>    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+> >>    kasan_report+0xe/0x20 mm/kasan/common.c:638
+> >>    __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
+> >>    __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
+> >>    usbvision_v4l2_open+0x77/0x340
+> >> drivers/media/usb/usbvision/usbvision-video.c:314
+> >>    v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
+> >>    chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> >>    do_dentry_open+0x494/0x1120 fs/open.c:797
+> >>    do_last fs/namei.c:3412 [inline]
+> >>    path_openat+0x142b/0x4030 fs/namei.c:3529
+> >>    do_filp_open+0x1a1/0x280 fs/namei.c:3559
+> >>    do_sys_open+0x3c0/0x580 fs/open.c:1097
+> >>    do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
+> >>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> > This looks like a race in v4l2_open(): The function drops the
+> > videodev_lock mutex before calling the video driver's open routine, and
+> > the device can be unregistered during the short time between.
+> 
+> > This patch tries to make the race much more likely to happen, for
+> > testing and verification.
+> 
+> > Andrey, will syzbot run the same test with this patch, even though it
+> > says it doesn't have a reproducer?
+> 
+> > Alan Stern
+> 
+> > #syz test: https://github.com/google/kasan.git 1f22d15c
+> 
+> This crash does not have a reproducer. I cannot test it.
 
-In fact I looked it up, _I_ didn't remove the -Werror, Rich acked a patch
-removing the -Werror back in August:
+Let's try the same patch with a different bug report -- one that has a
+reproducer.  I assume that syzbot gets the bug identity from the
+email's From: line (which has been updated acoordingly) rather than the 
+Subject: line.
 
-  https://www.spinics.net/lists/linux-sh/msg55405.html
+#syz test: https://github.com/google/kasan.git 1f22d15c
 
-Rob
+Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+===================================================================
+--- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
++++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+@@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
+ 		wake_up_interruptible(&usbvision->wait_frame);
+ 		wake_up_interruptible(&usbvision->wait_stream);
+ 	} else {
++		msleep(100);
+ 		usbvision_release(usbvision);
+ 	}
+ 
+Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+===================================================================
+--- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
++++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+@@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
+ 	video_get(vdev);
+ 	mutex_unlock(&videodev_lock);
+ 	if (vdev->fops->open) {
+-		if (video_is_registered(vdev))
++		if (video_is_registered(vdev)) {
++			msleep(200);
+ 			ret = vdev->fops->open(filp);
+-		else
++		} else
+ 			ret = -ENODEV;
+ 	}
+ 
+
