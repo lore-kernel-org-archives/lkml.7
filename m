@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5BAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10189C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE69E20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DAE20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014389;
-	bh=WbZYgeyetfkE8t/vVji5okhijsFun0tbIkXbduSiIOg=;
+	s=default; t=1576014397;
+	bh=GjyKW6Mhw/GVEuSLoNKK5okQw9ut/zuaQPA7AR84V1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkWG1va45CpQTnZohc4f5Sv7CopALylSgfdFjm/NQ6P/278bYF4qJj8JhQGiTsJhN
-	 fZ7faWy/gU3iYf3Txm9hzIMcmueaUF78VreitLIOKWrqcuzK0X3pMpeNdfPCZW3VWK
-	 RFCF4cnib/uh9AN5U/tPKxLGOA/pLR50j7u8iSSI=
+	b=gRmhyHcqZsMSXQ8OxlphqMiTNwYSGbqY1eJh1gXV5e+sWgzbI4Ke7Gi+HqI1DL1Hh
+	 erl1+nOnAfW7m5fV3obsnvUk7Mq9oKSQdZ2Wy7QwQbSdHO2xHp6NpEa+z1D+fAgh9p
+	 SFdSp4V52OQ1VgW2vM5LgO5h8VrNwuTw8S38UhIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfLJVqZ (ORCPT
+        id S1729885AbfLJVqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:46:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:46:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfLJVcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:43 -0500
+        id S1728401AbfLJVcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B3D214AF;
-        Tue, 10 Dec 2019 21:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C917208C3;
+        Tue, 10 Dec 2019 21:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013562;
-        bh=WbZYgeyetfkE8t/vVji5okhijsFun0tbIkXbduSiIOg=;
+        s=default; t=1576013558;
+        bh=GjyKW6Mhw/GVEuSLoNKK5okQw9ut/zuaQPA7AR84V1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2VN+NBSCkSPUwaUdvzG4tkhRt2uZqyQMaSWniVKCs4Hdx94vcSFs3Oi+So9vNcNQF
-         ewhCVZO0ehfxf81TuLDFHhiEkX3O+TbpvvC+Q4bd5dL/byxs0b9elkAJ8K3EFw6KDN
-         ja9qUXKajWE1jRkRe5Dyd4Y2K36n3XgK9RQm88qE=
+        b=xkBT4B6srQUNAZnmU0xjmqbu2OiVR2Bo51EGV6wcfaT9bXO45kbyoZawXNwXAoi6y
+         CW8QnEUOo7VGw9bgVFOOZur0SURvvCwAZ8KhHSFaK72lXenG/aK1BnGz5/YeLhtPC7
+         7V7h2/nJWvTKT7UpuM1zUf8Dgp7Wn84N5ZqdqVoY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 017/177] media: ov6650: Fix crop rectangle alignment not passed back
-Date:   Tue, 10 Dec 2019 16:29:41 -0500
-Message-Id: <20191210213221.11921-17-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 014/177] IB/iser: bound protection_sg size by data_sg size
+Date:   Tue, 10 Dec 2019 16:29:38 -0500
+Message-Id: <20191210213221.11921-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,91 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 7b188d6ba27a131e7934a51a14ece331c0491f18 ]
+[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
 
-Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
-introduced a writable copy of constified user requested crop rectangle
-in order to be able to perform hardware alignments on it.  Later
-on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
-ops") replaced s_crop() video operation using that const argument with
-set_selection() pad operation which had a corresponding argument not
-constified, however the original behavior of the driver was not
-restored.  Since that time, any hardware alignment applied on a user
-requested crop rectangle is not passed back to the user calling
-.set_selection() as it should be.
+In case we don't set the sg_prot_tablesize, the scsi layer assign the
+default size (65535 entries). We should limit this size since we should
+take into consideration the underlaying device capability. This cap is
+considered when calculating the sg_tablesize. Otherwise, for example,
+we can get that /sys/block/sdb/queue/max_segments is 128 and
+/sys/block/sdb/queue/max_integrity_segments is 65535.
 
-Fix the issue by dropping the copy and replacing all references to it
-with references to the crop rectangle embedded in the user argument.
-
-Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
- 1 file changed, 15 insertions(+), 16 deletions(-)
+ drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index edded869d7920..e3433a4fc4738 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -469,38 +469,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov6650 *priv = to_ov6650(client);
--	struct v4l2_rect rect = sel->r;
- 	int ret;
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
+index 3fecd87c9f2bd..b4e0ae0245754 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.c
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
+@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
+ 		if (ib_conn->pi_support) {
+ 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
  
- 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
- 	    sel->target != V4L2_SEL_TGT_CROP)
- 		return -EINVAL;
- 
--	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
--			      &rect.height, 2, H_CIF, 1, 0);
--	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
--			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
--			      &rect.top, DEF_VSTRT << 1,
--			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
--			      0);
-+	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
-+			      &sel->r.height, 2, H_CIF, 1, 0);
-+	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
-+			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
-+			      &sel->r.top, DEF_VSTRT << 1,
-+			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
-+			      1, 0);
- 
--	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
-+	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
- 	if (!ret) {
--		priv->rect.left = rect.left;
-+		priv->rect.left = sel->r.left;
- 		ret = ov6650_reg_write(client, REG_HSTOP,
--				(rect.left + rect.width) >> 1);
-+				       (sel->r.left + sel->r.width) >> 1);
- 	}
- 	if (!ret) {
--		priv->rect.width = rect.width;
--		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
-+		priv->rect.width = sel->r.width;
-+		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
- 	}
- 	if (!ret) {
--		priv->rect.top = rect.top;
-+		priv->rect.top = sel->r.top;
- 		ret = ov6650_reg_write(client, REG_VSTOP,
--				(rect.top + rect.height) >> 1);
-+				       (sel->r.top + sel->r.height) >> 1);
- 	}
- 	if (!ret)
--		priv->rect.height = rect.height;
-+		priv->rect.height = sel->r.height;
- 
- 	return ret;
- }
++			shost->sg_prot_tablesize = shost->sg_tablesize;
+ 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
+ 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
+ 						   SHOST_DIX_GUARD_CRC);
 -- 
 2.20.1
 
