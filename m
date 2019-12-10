@@ -2,110 +2,86 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A05DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9F3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5218E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77902073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a6cnK+73"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bvvbWxH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLJUlU (ORCPT
+        id S1726973AbfLJUlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:41:20 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35906 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfLJUlT (ORCPT
+        Tue, 10 Dec 2019 15:41:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39854 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfLJUlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:41:19 -0500
-Received: by mail-io1-f67.google.com with SMTP id a22so5303199ios.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:41:19 -0800 (PST)
+        Tue, 10 Dec 2019 15:41:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so16767736oty.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:41:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wFg8ZEWJIN7vey53mkr4mIFmYCyQyvthzeZbaGJwPkw=;
-        b=a6cnK+73982+3Kq5xHFk7AV6S2kIJzbXAeQjdiuU/quDeRHtvjScGn9NdiBzAl+ehr
-         YObqKIw+0lJPMEvJ2S4WKhnhjyPdQmeaAfUXnzZrpkSItd5rvp+KOq19FUd9FR3Xc07s
-         PSqfT0D1aQ/Apqo1M8znUmPBZWMMbjplC9MMQ=
+        bh=M6hdh3Yasu69i9dWWMioWcRGOBc9Yi+2xpwtcGer3X8=;
+        b=bvvbWxH6cM1+GBdK66ZeOEclRZ+hs5dAr5g57Qtv+PidTPCCFpmLBzNDOyubU/tZtU
+         pMp1R/p4kq7XXYVPTyouGb6uKLph86sAvsJhS2blwcY45LMVyF7NXREAUwiYDsa+MLLI
+         fCgSGUolyjBRMO3sT67pWEcsU/LctDd/qNv1rLmIAiR+G3JRDPb8yi1XjOMIrN1V0eFK
+         CQ9zSthXI/LYvo8KxfQR2zq14AbEJ96UR0MdbuEVrWQtxtgvVaPfX4EKMTBfQDvXOAzi
+         1OArGY1aso91OqOqVrquwLr2p3nr+mXp1Hz0J6rOtgBR937RVdzBLhRfq1LGQv+PoRG6
+         tbHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wFg8ZEWJIN7vey53mkr4mIFmYCyQyvthzeZbaGJwPkw=;
-        b=Q04QJSciGjhjmYA2N4h1hwboT9ntE1OINLx2PqcOX8+uTrsEMfmfch/y1kvIGKryFU
-         PTbBfT0rw1JYJxcG3vldVKMKIVwDQnmC9OD4ARiShvxA7qg4Kl668ZSHyAo9ycYV3uqn
-         AmW+Ab1TgVmCj0JN2iTVc8bYGTTiACkghRZT6PuQa5zF3abfOVgLuon5dSuVXalV0i83
-         L40pJ4pzPep4EYRQI405YEAQ31cm49pby5/Tfw8qUt0QYEoV73rd07zhojjO2QHGEddA
-         3hF4kaGmdKeF03IkEoZ5eU3fThHK8n5HwgOW017ro5Rm6W+2QufpCMjEWsCgSGRQy+yh
-         xwVg==
-X-Gm-Message-State: APjAAAX2C1SyZHCGNuPPzUN+YI7LTKop5hN9hOdsN5y9cCxxVgEzjm9J
-        sfrDY0BmyYrpUb80bwdQ2KRW1FAamh4=
-X-Google-Smtp-Source: APXvYqwt20k9VNe12CsjJGP82mmp8e7sS4iFjYRjBRWY2qgoXc1H/tBA4WT6OGPu4mHdNT63vNdYmA==
-X-Received: by 2002:a05:6602:2541:: with SMTP id j1mr26974099ioe.239.1576010478790;
-        Tue, 10 Dec 2019 12:41:18 -0800 (PST)
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com. [209.85.166.54])
-        by smtp.gmail.com with ESMTPSA id b15sm1216241ilo.37.2019.12.10.12.41.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 12:41:17 -0800 (PST)
-Received: by mail-io1-f54.google.com with SMTP id z193so20267370iof.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:41:17 -0800 (PST)
-X-Received: by 2002:a6b:be84:: with SMTP id o126mr25960550iof.269.1576010477101;
- Tue, 10 Dec 2019 12:41:17 -0800 (PST)
+        bh=M6hdh3Yasu69i9dWWMioWcRGOBc9Yi+2xpwtcGer3X8=;
+        b=j2BOj5YVFDBjAd9A2EIoCSKAtXFJimJPm5wp64H+nZpEFt0RncHOBsepQVHxitd/Iy
+         ZHZxztjeaP1t54H8vwCbdMOwW6j/WENSxTLoAaucce2PZ0PtA13tICPh+4q3/vQqh/j/
+         yrrlmnOoKtFDXGxt+Dp0VVpyYo03sMi2OG6pEvPD8y/Fm+4BHFWLbDdap1ewwjh31B17
+         OShRJZFmoksiw/H15zG7NICh5mdhcWXBIybW2JzmkNoHnU1DBvgWuxc7xH/YaPy2yn+z
+         RzY4H7w0Jmp0zR9o7LibYSiAJES2Z8qfwLWcjruBKpaEPYVN+4QcGCDqQaNJcpBPB3yD
+         kKAA==
+X-Gm-Message-State: APjAAAWNWWUYwWMKc/Tz6VkTsZyp0ioCcwPrfvRyYDV/Uv8UkwMQXl3N
+        UaBZxmf5qVCd/keI7Z2TDSFAeIjPobsTLaaLDZg=
+X-Google-Smtp-Source: APXvYqz0tm1N8+ubqYR/OOBcKGeaKmNmUTLZ3Lsf+UNuSurmjY+qD+u50hP0NL/44rNmRakKxqujcYRZann1YBKO4IM=
+X-Received: by 2002:a9d:588d:: with SMTP id x13mr26062357otg.6.1576010494766;
+ Tue, 10 Dec 2019 12:41:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20191108092824.9773-1-rnayak@codeaurora.org> <20191108092824.9773-14-rnayak@codeaurora.org>
- <CAD=FV=VUoj1egZqw9koNHDPBCCEh_XZ5nZAPNKcnya2UACG8hw@mail.gmail.com> <0101016eef5f3e37-2ab48ced-3543-4680-82f8-2c1950b012cd-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016eef5f3e37-2ab48ced-3543-4680-82f8-2c1950b012cd-000000@us-west-2.amazonses.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 10 Dec 2019 12:41:05 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UgqcO0zELnopP9DXSqc-AZpJVwT24CDxrt_P39eWK9Lg@mail.gmail.com>
-Message-ID: <CAD=FV=UgqcO0zELnopP9DXSqc-AZpJVwT24CDxrt_P39eWK9Lg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/13] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>
+References: <20191210203149.7115-1-tiny.windzz@gmail.com> <20191210203149.7115-4-tiny.windzz@gmail.com>
+In-Reply-To: <20191210203149.7115-4-tiny.windzz@gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 10 Dec 2019 21:41:23 +0100
+Message-ID: <CAFBinCDOoe2-mYVf_eD6BAcFyc7GvHH_Sk8te_QKeWON8QUWpg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] nvmem: meson-mx-efuse: convert to devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        srinivas.kandagatla@linaro.org, vz@mleia.com, khilman@baylibre.com,
+        mripard@kernel.org, wens@csie.org,
+        andriy.shevchenko@linux.intel.com, mchehab+samsung@kernel.org,
+        mans@mansr.com, treding@nvidia.com, suzuki.poulose@arm.com,
+        bgolaszewski@baylibre.com, tglx@linutronix.de,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Dec 10, 2019 at 2:33 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+On Tue, Dec 10, 2019 at 9:33 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
 >
-> On 12/6/2019 5:55 PM, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Fri, Nov 8, 2019 at 5:29 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> >>
-> >> From: Roja Rani Yarubandi <rojay@codeaurora.org>
-> >>
-> >> Add QUP SE instances configuration for sc7180.
-> >>
-> >> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
-> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> >> ---
-> >>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 146 +++++
-> >>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 675 ++++++++++++++++++++++++
-> >>   2 files changed, 821 insertions(+)
-> >
-> > Comments below could be done in a follow-up patch if it makes more sense.
+> Use devm_platform_ioremap_resource() to simplify code.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Just to note: looks like your patch is now landed in the Qualcomm
-maintainer tree, so I'll look for the fixes in a follow-up patch.  :-)
+thank you for taking care of this!
 
--Doug
+
+Martin
