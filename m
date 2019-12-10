@@ -2,115 +2,123 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136C3C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E57BC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C5120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZLox4/D"
+	by mail.kernel.org (Postfix) with ESMTP id E677420637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfLJRr3 (ORCPT
+        id S1727621AbfLJRt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:47:29 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42364 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfLJRr2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:47:28 -0500
-Received: by mail-wr1-f65.google.com with SMTP id a15so21080199wrf.9;
-        Tue, 10 Dec 2019 09:47:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pB5aeFO1410E6SGmKnOdXbn7rGZMrphLj2vjpPn/Q54=;
-        b=tZLox4/DcbVLjr0GuKmEUZ40aNSAzAUtXPNsdWDCbuh/YucUzlcc3IO9PvmIXMJrwT
-         KInAl4ad0Xe1fZrHkiU98FAJCxGyMhGD+vv5Cn/3E5cC8BML1uGijPRDCYIA1p8GMu8K
-         mQLsTGnCnRAow9YGWhSDdbXybSYxkyiibX9TOBXC/s4mjNX4JzuBQ1uG65w6jPdGBMIB
-         DGwqFkiCMaZc/iQCqAs8xblVQgkP4h5bt5BSv76IGx8OW0aXyXsiP/B9e/9eKCJMesbH
-         pKx6nSMO4ihtGy7UlpzVcgyOq/OTaESIt/Qp0AROW4eCHHXaEJgoDFefn4e8ybgFfTGf
-         5TFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pB5aeFO1410E6SGmKnOdXbn7rGZMrphLj2vjpPn/Q54=;
-        b=S6jYYqJXezJThjic7STyjNznDPyx/gG1iL0YKhVLcf5sWrw6DD06Sn8WcIhrf3ars5
-         Xp9G3kMz+mv+/452vBYUI1HRGK9A1XxPoe/4Cnw4sV6QIO8dmxKwox2XAYkqJTLeAYl6
-         AkIqyQp+Z2VlQPFFONvEiBJWPaXjpasltINsw5vG9rfeOl2warZZyCr/QveiIOZ87508
-         5Ns5WzsTMC3fRww+4i3umVaCZnrvGVLODqQSYOj1o5PKTa6vDjgNuKILX7ptI+er9NdG
-         DYbKdWb3P/8qPR9zUm8nwTxT+tyFAGFS190yEc13G2cwgoXetkHGJqDtYY3uE59XF0Xf
-         uVRg==
-X-Gm-Message-State: APjAAAWEC0XFhCF/B3XYJwIyc8VLyr/ewO9MO+xqxPihozpsb0WUGOI6
-        2iFBSUeu25mCaThzzMZya8Q=
-X-Google-Smtp-Source: APXvYqz/yJP6QpGzZqSAc9mGuduUlZcsBSpQ40KMnzjM4er7cgiFR/7ZbB/7mnLGr6iMRnmun5xyEA==
-X-Received: by 2002:adf:f990:: with SMTP id f16mr4772626wrr.185.1576000046349;
-        Tue, 10 Dec 2019 09:47:26 -0800 (PST)
-Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id s8sm3966040wrt.57.2019.12.10.09.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 09:47:25 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6 example
-Date:   Tue, 10 Dec 2019 18:47:10 +0100
-Message-Id: <20191210174710.10649-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Dec 2019 12:49:26 -0500
+Received: from mga14.intel.com ([192.55.52.115]:31791 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727520AbfLJRtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:49:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 09:30:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
+   d="scan'208";a="215642261"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by orsmga003.jf.intel.com with ESMTP; 10 Dec 2019 09:30:43 -0800
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [Bisected] altera_edac crash on a system without ECC
+To:     Aaro Koskinen <aaro.koskinen@nokia.com>
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+References: <20191129165739.GA2583@ak-laptop.emea.nsn-net.net>
+ <3bbd2890-ffcc-39df-8ab6-ecf72d92a006@linux.intel.com>
+ <20191204132531.GA22600@ak-laptop.emea.nsn-net.net>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <f9634662-23b0-7ec7-aed5-754bd5dc81b8@linux.intel.com>
+Date:   Tue, 10 Dec 2019 11:32:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191204132531.GA22600@ak-laptop.emea.nsn-net.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Latest linux-next doesn't build due to the following error:
+Hi Aaro,
 
-Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dts:35.37-38
-syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dt.yaml]
-Error 1
+On 12/4/19 7:25 AM, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Tue, Dec 03, 2019 at 05:09:48PM -0600, Thor Thayer wrote:
+>> On 11/29/19 10:57 AM, Aaro Koskinen wrote:
+>>> Hi,
+>>>
+>>> I tried booting v5.4 mainline kernel on a stratix10 board with ECC
+>>> disabled, and the altera-edac driver (with only SDRAM enabled) is
+>>> now crashing the system instead of failing the probe with "No ECC/ECC
+>>> disabled".
+>>>
+>> I apologize for the late reply. I was on vacation.
+>>
+>> ECC disabled means the sof/jic that you're loading has ECC disabled,
+>> correct?
+> 
+> Yes.
+> 
+>>> This seems to have started with commit 08f08bfb7b4c ("EDAC, altera:
+>>> Merge Stratix10 into the Arria10 SDRAM probe routine"). With the change,
+>>> looks like sdram probe no longer uses SMC calls and instead accesses
+>>> the registers directly. The crash looks like this:
+>>
+>> I haven't seen this. I'd expect both ECC enabled and disabled to fail with
+>> the dumps you have below since they'd both need to use the regmap functions.
+> 
+> With ECC enabled it doesn't fail, as the direct register access appears
+> to work then (I also checked by reading 0xf8011101 from userspace -
+> and it works without an abort).
+> 
+>> Yes, this does look like it is using the register accesses instead of the
+>> SMC call. Line 2206 sets the SMC call after determining from the if()
+>> statement if it is a Stratix10 or Arria10 and from below it seems to take
+>> the Arria10 path.
+> 
+> But that's setting the ecc_mgr_map. I think that altr_check_ecc_deps
+> and altr_sdram_probe use a different mapping. Before commit 08f08bfb7b4c
+> there was S10 specific altr_s10_sdram_probe() that took care of the SMC,
+> but I cannot see how the current code doing that unless I'm missing some
+> special magic.
+> 
+>> The altr_check_ecc_deps() call is checking whether ECC is enabled so the
+>> probe should fail.
+>>
+>> I suspect the device tree. Can you verify the following node is in your
+>> device tree?
+>>
+>> 	sdramedac {
+>> 		compatible = "altr,sdram-edac-s10";
+>> 		altr,sdr-syscon = <&sdr>;
+>> 		interrupts = <16 4>;
+>> 	};
+> 
+> Yes, I'm using the in-tree socfpga_stratix10.dtsi.
+> 
+> A.
+> 
+This appears to be a setup problem in U-Boot where U-Boot only allows 
+access to the ECC registers if ECC is enabled. However, the Linux EDAC 
+driver reads the ECC registers to determine if ECC is enabled or not.
 
-This is due to missing header in the device-tree yaml example.
+A patch that always allows access to the ECC registers has been posted 
+to U-Boot.
+https://patchwork.ozlabs.org/patch/1205274/
 
-Fix this by adding the missing headers.
+Thanks,
 
-Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description")
-Reported-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml       | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index a7dc19fc347a..fab89f052450 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -93,6 +93,9 @@ examples:
-     };
- 
-   - |
-+    #include <dt-bindings/clock/sun50i-h6-ccu.h>
-+    #include <dt-bindings/reset/sun50i-h6-ccu.h>
-+
-     pwm@300a000 {
-       compatible = "allwinner,sun50i-h6-pwm";
-       reg = <0x0300a000 0x400>;
--- 
-2.20.1
+Thor
 
