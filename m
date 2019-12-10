@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0526C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E9C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CEC207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3D2B20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017349;
-	bh=A47+vKFAqvpWsAajzfDUfLGO+4fxidIRoS8mEKh+bEw=;
+	s=default; t=1576017352;
+	bh=TnmJRhBb//oTsZBfpdqPqEFtu3itymCKsMYWxOrUxzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0aqn3/KOA9dAOO4n8Fpnc5Axw8vQFAfVzXqq+0WAoCamBeMTGcol7jbnxirjw2D+
-	 22/jliUDM6fWX3n4LwY9cAt/2uJ+6l+l7S5iwLlQW8fDpJg0qjkGfCyOAvLDhwu3UN
-	 0/R+cOYVb17i+Dcmk2+6Bgz0Traue4LjpJUuWIDI=
+	b=vf4k+qqa8y8Hgz97QcfnvR6Xt6gRXDAwnPI5U92o++Wv4Ju0AMDqE7VnEfQZmCq8V
+	 BkRJ7JMrjtXese+oF+GHUNjpFDqJpzRQlJY+jcCNgcH/OiU9JOp4Hd4WYUj4L0/Z6t
+	 Lucr8s6erwuudOnLN9Ox042aOQrYOuVycm9Ai4ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbfLJWfs (ORCPT
+        id S1730339AbfLJWe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:35:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbfLJWea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:30 -0500
+        id S1729599AbfLJWeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B886D20828;
-        Tue, 10 Dec 2019 22:34:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC39120836;
+        Tue, 10 Dec 2019 22:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017269;
-        bh=A47+vKFAqvpWsAajzfDUfLGO+4fxidIRoS8mEKh+bEw=;
+        s=default; t=1576017249;
+        bh=TnmJRhBb//oTsZBfpdqPqEFtu3itymCKsMYWxOrUxzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPMdn8U69z/pjadcYEq7T+DwYN440AZRwRSk21DiCRNidcbjxSNLbmo8kxqTxAvzS
-         4Igj0jlizF3ztVd1ydm4vrfIT9Mn7EVtIUqz4HapVozgJo9aiaIYJXu97CVDdSqkXe
-         H+mgLme3ocgdbN+Jfx6eMRHnfYEbvGlIVhfukHfA=
+        b=yZ3Mm4+Rd2U/VLONBX5uWY1Xb5WIhGWNhO96p0aE/NNVNfnIiLN/GKQX0wZdYsIeZ
+         acLWiVlpkom46A2K6G1/+sNzuxscCpWd/piEPGBQYBrh0jo/cTl21MXCGgmM/RSXKY
+         uuigfG7eASDB2F2nfyPCRj82nJk/hKbb7U7ZraAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 61/71] RDMA/qib: Validate ->show()/store() callbacks before calling them
-Date:   Tue, 10 Dec 2019 17:33:06 -0500
-Message-Id: <20191210223316.14988-61-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 45/71] perf probe: Fix to show inlined function callsite without entry_pc
+Date:   Tue, 10 Dec 2019 17:32:50 -0500
+Message-Id: <20191210223316.14988-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -60,49 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
+[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
 
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
+Fix 'perf probe --line' option to show inlined function callsite lines
+even if the function DIE has only ranges.
 
-Protect against that by always validating the show/store callbacks.
+Without this:
 
-Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                        __amd_put_nb_event_constraints(cpuc, event);
+      5  }
+
+With this patch:
+
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+      4                 __amd_put_nb_event_constraints(cpuc, event);
+      5  }
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                          __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+        4                 __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  Added new event:
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+
+  [root@quaco ~]#
+
+  [root@quaco ~]# perf probe -l
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf trace -e probe:*
+  ^C[root@quaco ~]#
+
+Ok, Intel system here... :-)
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/dwarf-aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index 81f56cdff2bc2..3ae82202cdb55 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->show)
-+		return -EIO;
-+
- 	return pattr->show(ppd, buf);
- }
- 
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
- 
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index ed7777ed4d384..5f32fed5eeb30 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -659,7 +659,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
+ 		fname = die_get_call_file(in_die);
+ 		lineno = die_get_call_lineno(in_die);
+-		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
++		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
+ 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
 -- 
 2.20.1
 
