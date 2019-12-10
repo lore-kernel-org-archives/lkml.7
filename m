@@ -2,233 +2,123 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2729C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E606BC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89BE214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3D0207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575979894;
+	bh=VoTZ+YSXt6jYeDOFmlVbX/TCJXliKP5PCwhjpNG3DIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D4gF5tu4JW7VsSiFE2OQIB2exIr9vMzLVcy3NdUa7k+NzexQPLSz1UECPayMyrVfy
+	 e0yPLnm6n8ZJcZf0kJKnOvGCCmiehX1qL3v7vp7qzGzt4pArybk2cSzkgmg0gnBfhT
+	 y4HpH/y4rLAWd136hEW/JIEe2W65AnAUcNKTj4+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfLJMKi (ORCPT
+        id S1727492AbfLJMLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:10:38 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:58424 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727333AbfLJMKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:10:38 -0500
-Received: from linux.localdomain (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9Yti+9d5i0JAA--.38S2;
-        Tue, 10 Dec 2019 20:10:22 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>
-Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4] fs: introduce is_dot_or_dotdot helper for cleanup
-Date:   Tue, 10 Dec 2019 20:10:01 +0800
-Message-Id: <1575979801-32569-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxn9Yti+9d5i0JAA--.38S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF43uFyxGw1xWw1fWrWrGrg_yoW7Jw4fpF
-        sxJFyxtrs7Gry5ur95tr1rCw1Yv3s7Wr17JrZxGa4vyryaqrn5XrWIyw109wn3JFWDWFn0
-        ga98Gw1rCry5JFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkI
-        wI1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-        xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-        8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-        UI43ZEXa7IU5qfO3UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 10 Dec 2019 07:11:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:41922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727272AbfLJMLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:11:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D3D71FB;
+        Tue, 10 Dec 2019 04:11:31 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C62F3F6CF;
+        Tue, 10 Dec 2019 04:11:31 -0800 (PST)
+Date:   Tue, 10 Dec 2019 12:11:29 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191210121129.GA6110@sirena.org.uk>
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <20191118162502.GJ9761@sirena.org.uk>
+ <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+ <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+ <20191119193636.GH3634@sirena.org.uk>
+ <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+ <20191129120925.GA5747@sirena.org.uk>
+ <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+X-Cookie: We have ears, earther...FOUR OF THEM!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There exists many similar and duplicate codes to check "." and "..",
-so introduce is_dot_or_dotdot helper to make the code more clean.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-v4:
-  - rename is_dot_dotdot() to is_dot_or_dotdot()
+On Tue, Dec 10, 2019 at 11:14:48AM +0000, Vaittinen, Matti wrote:
 
-v3:
-  - use "name" and "len" as arguments instead of qstr
-  - move is_dot_dotdot() to include/linux/namei.h
+> Problem is that if no default voltages are given from DT, the the first
+> voltage changes are likely to be slow (require register access - I
+> guess the HW defaults are not working for many use-cases) - which may
+> be undesirable.
 
-v2:
-  - use the better performance implementation of is_dot_dotdot
-  - make it static inline and move it to include/linux/fs.h
+I don't think that's likely to be a practical problem, and it's not
+likely it'd be worse than always doing writes.  A lot of things are
+slower the first time you do them and you're still going to have to
+do the writes no matter what.
 
- fs/crypto/fname.c     | 16 +++-------------
- fs/ecryptfs/crypto.c  | 10 ----------
- fs/f2fs/f2fs.h        | 11 -----------
- fs/f2fs/hash.c        |  3 ++-
- fs/namei.c            |  6 ++----
- include/linux/namei.h | 10 ++++++++++
- 6 files changed, 17 insertions(+), 39 deletions(-)
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
-index 3da3707..ef7eba8 100644
---- a/fs/crypto/fname.c
-+++ b/fs/crypto/fname.c
-@@ -11,21 +11,11 @@
-  * This has not yet undergone a rigorous security audit.
-  */
- 
-+#include <linux/namei.h>
- #include <linux/scatterlist.h>
- #include <crypto/skcipher.h>
- #include "fscrypt_private.h"
- 
--static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
--{
--	if (str->len == 1 && str->name[0] == '.')
--		return true;
--
--	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
--		return true;
--
--	return false;
--}
--
- /**
-  * fname_encrypt() - encrypt a filename
-  *
-@@ -255,7 +245,7 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
- 	const struct qstr qname = FSTR_TO_QSTR(iname);
- 	struct fscrypt_digested_name digested_name;
- 
--	if (fscrypt_is_dot_dotdot(&qname)) {
-+	if (is_dot_or_dotdot(qname.name, qname.len)) {
- 		oname->name[0] = '.';
- 		oname->name[iname->len - 1] = '.';
- 		oname->len = iname->len;
-@@ -323,7 +313,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
- 	memset(fname, 0, sizeof(struct fscrypt_name));
- 	fname->usr_fname = iname;
- 
--	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
-+	if (!IS_ENCRYPTED(dir) || is_dot_or_dotdot(iname->name, iname->len)) {
- 		fname->disk_name.name = (unsigned char *)iname->name;
- 		fname->disk_name.len = iname->len;
- 		return 0;
-diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
-index f91db24..2014f8f 100644
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
- 	return rc;
- }
- 
--static bool is_dot_dotdot(const char *name, size_t name_size)
--{
--	if (name_size == 1 && name[0] == '.')
--		return true;
--	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
--		return true;
--
--	return false;
--}
--
- /**
-  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
-  * @plaintext_name: The plaintext name
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5a888a0..3d5e684 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
- 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
- }
- 
--static inline bool is_dot_dotdot(const struct qstr *str)
--{
--	if (str->len == 1 && str->name[0] == '.')
--		return true;
--
--	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
--		return true;
--
--	return false;
--}
--
- static inline bool f2fs_may_extent_tree(struct inode *inode)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
-index 5bc4dcd..ef155c2 100644
---- a/fs/f2fs/hash.c
-+++ b/fs/f2fs/hash.c
-@@ -15,6 +15,7 @@
- #include <linux/cryptohash.h>
- #include <linux/pagemap.h>
- #include <linux/unicode.h>
-+#include <linux/namei.h>
- 
- #include "f2fs.h"
- 
-@@ -82,7 +83,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
- 	if (fname && !fname->disk_name.name)
- 		return cpu_to_le32(fname->hash);
- 
--	if (is_dot_dotdot(name_info))
-+	if (is_dot_or_dotdot(name, len))
- 		return 0;
- 
- 	/* Initialize the default seed for the hash checksum functions */
-diff --git a/fs/namei.c b/fs/namei.c
-index d6c91d1..f3a4439 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2451,10 +2451,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
- 	if (!len)
- 		return -EACCES;
- 
--	if (unlikely(name[0] == '.')) {
--		if (len < 2 || (len == 2 && name[1] == '.'))
--			return -EACCES;
--	}
-+	if (is_dot_or_dotdot(name, len))
-+		return -EACCES;
- 
- 	while (len--) {
- 		unsigned int c = *(const unsigned char *)name++;
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 7fe7b87..aba114a 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
- 	return error == -ESTALE && !(flags & LOOKUP_REVAL);
- }
- 
-+static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-+{
-+	if (unlikely(name[0] == '.')) {
-+		if (len < 2 || (len == 2 && name[1] == '.'))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- #endif /* _LINUX_NAMEI_H */
--- 
-2.1.0
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vi24ACgkQJNaLcl1U
+h9D/zwgAgJGg4Rzbjb/3neARAW2iuL6cC3Z2NQEUh8aJUuljcByF/iXTtlKuups0
+bGOmzkA+eYmrW2wPZPoV88r4feU8A4ri9lzgR3G8cO5n3tAT3lvMiA0ENfYm99nk
+h+YwnKi6WIhhQw4BNNdIfmqr+UfNCUIKLwpmdo2hqm8ALwp/2O9Ge1tpdqVMWfk4
+bV+sqZQW/yxKYYl2vBz9YVw2WGQV7me/vK4fPbxcjUe1nIDJ2MSR2ZZL3Io5RRZ5
+f/V3zG3Ao8ak6Hgg8HaAmZKGsJqtSn1AFwm//zV8BNDHkHC745uTnvIs702ytDgl
+o4pdZZNbPIMmyOtLJtueNJUHBCIwsw==
+=S22J
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
