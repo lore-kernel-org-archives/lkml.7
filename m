@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC4EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A46C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D752073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfLJAYn (ORCPT
+        id S1727538AbfLJAYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:24:43 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:38024 "EHLO ale.deltatee.com"
+        Mon, 9 Dec 2019 19:24:48 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:38052 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfLJAYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:24:42 -0500
+        id S1727456AbfLJAYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 19:24:46 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieTKS-0002Cv-6h; Mon, 09 Dec 2019 17:24:41 -0700
+        id 1ieTKS-0002Cy-6g; Mon, 09 Dec 2019 17:24:44 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1ieTKR-0000ll-5S; Mon, 09 Dec 2019 17:24:39 -0700
+        id 1ieTKR-0000lv-H5; Mon, 09 Dec 2019 17:24:39 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Kit Chow <kchow@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon,  9 Dec 2019 17:24:34 -0700
-Message-Id: <20191210002437.2907-3-logang@deltatee.com>
+Date:   Mon,  9 Dec 2019 17:24:37 -0700
+Message-Id: <20191210002437.2907-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210002437.2907-1-logang@deltatee.com>
 References: <20191210002437.2907-1-logang@deltatee.com>
@@ -43,7 +43,7 @@ Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, kchow@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 2/5] dmaengine: Call module_put() after device_free_chan_resources()
+Subject: [PATCH v2 5/5] dmaengine: plx-dma: Implement descriptor submission
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,37 +51,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The module reference is taken to ensure the callbacks still exist
-when they are called. If the channel holds the last reference to the
-module, the module can disappear before device_free_chan_resources() is
-called and would cause a call into free'd memory.
+On prep, a spin lock is taken and the next entry in the circular buffer
+is filled. On submit, the valid bit is set in the hardware descriptor
+and the lock is released.
+
+The DMA engine is started (if it's not already running) when the client
+calls dma_async_issue_pending().
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/dma/dmaengine.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/plx_dma.c | 119 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 119 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 4b604086b1b3..776fdf535a3a 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -250,7 +250,6 @@ static void dma_chan_put(struct dma_chan *chan)
- 		return;
+diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
+index d3c2319e2fad..21e4d7634eeb 100644
+--- a/drivers/dma/plx_dma.c
++++ b/drivers/dma/plx_dma.c
+@@ -7,6 +7,7 @@
  
- 	chan->client_count--;
--	module_put(dma_chan_to_owner(chan));
+ #include "dmaengine.h"
  
- 	/* This channel is not in use anymore, free it */
- 	if (!chan->client_count && chan->device->device_free_chan_resources) {
-@@ -259,6 +258,8 @@ static void dma_chan_put(struct dma_chan *chan)
- 		chan->device->device_free_chan_resources(chan);
++#include <linux/circ_buf.h>
+ #include <linux/dmaengine.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
+@@ -122,6 +123,11 @@ static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
+ 	return container_of(c, struct plx_dma_dev, dma_chan);
+ }
+ 
++static struct plx_dma_desc *to_plx_desc(struct dma_async_tx_descriptor *txd)
++{
++	return container_of(txd, struct plx_dma_desc, txd);
++}
++
+ static struct plx_dma_desc *plx_dma_get_desc(struct plx_dma_dev *plxdev, int i)
+ {
+ 	return plxdev->desc_ring[i & (PLX_DMA_RING_COUNT - 1)];
+@@ -244,6 +250,113 @@ static void plx_dma_desc_task(unsigned long data)
+ 	plx_dma_process_desc(plxdev);
+ }
+ 
++static struct dma_async_tx_descriptor *plx_dma_prep_memcpy(struct dma_chan *c,
++		dma_addr_t dma_dst, dma_addr_t dma_src, size_t len,
++		unsigned long flags)
++	__acquires(plxdev->ring_lock)
++{
++	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(c);
++	struct plx_dma_desc *plxdesc;
++
++	spin_lock_bh(&plxdev->ring_lock);
++	if (!plxdev->ring_active)
++		goto err_unlock;
++
++	if (!CIRC_SPACE(plxdev->head, plxdev->tail, PLX_DMA_RING_COUNT))
++		goto err_unlock;
++
++	if (len > PLX_DESC_SIZE_MASK)
++		goto err_unlock;
++
++	plxdesc = plx_dma_get_desc(plxdev, plxdev->head);
++	plxdev->head++;
++
++	plxdesc->hw->dst_addr_lo = cpu_to_le32(lower_32_bits(dma_dst));
++	plxdesc->hw->dst_addr_hi = cpu_to_le16(upper_32_bits(dma_dst));
++	plxdesc->hw->src_addr_lo = cpu_to_le32(lower_32_bits(dma_src));
++	plxdesc->hw->src_addr_hi = cpu_to_le16(upper_32_bits(dma_src));
++
++	plxdesc->orig_size = len;
++
++	if (flags & DMA_PREP_INTERRUPT)
++		len |= PLX_DESC_FLAG_INT_WHEN_DONE;
++
++	plxdesc->hw->flags_and_size = cpu_to_le32(len);
++	plxdesc->txd.flags = flags;
++
++	/* return with the lock held, it will be released in tx_submit */
++
++	return &plxdesc->txd;
++
++err_unlock:
++	/*
++	 * Keep sparse happy by restoring an even lock count on
++	 * this lock.
++	 */
++	__acquire(plxdev->ring_lock);
++
++	spin_unlock_bh(&plxdev->ring_lock);
++	return NULL;
++}
++
++static dma_cookie_t plx_dma_tx_submit(struct dma_async_tx_descriptor *desc)
++	__releases(plxdev->ring_lock)
++{
++	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(desc->chan);
++	struct plx_dma_desc *plxdesc = to_plx_desc(desc);
++	dma_cookie_t cookie;
++
++	cookie = dma_cookie_assign(desc);
++
++	/*
++	 * Ensure the descriptor updates are visible to the dma device
++	 * before setting the valid bit.
++	 */
++	wmb();
++
++	plxdesc->hw->flags_and_size |= cpu_to_le32(PLX_DESC_FLAG_VALID);
++
++	spin_unlock_bh(&plxdev->ring_lock);
++
++	return cookie;
++}
++
++static enum dma_status plx_dma_tx_status(struct dma_chan *chan,
++		dma_cookie_t cookie, struct dma_tx_state *txstate)
++{
++	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
++	enum dma_status ret;
++
++	ret = dma_cookie_status(chan, cookie, txstate);
++	if (ret == DMA_COMPLETE)
++		return ret;
++
++	plx_dma_process_desc(plxdev);
++
++	return dma_cookie_status(chan, cookie, txstate);
++}
++
++static void plx_dma_issue_pending(struct dma_chan *chan)
++{
++	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
++
++	rcu_read_lock();
++	if (!rcu_dereference(plxdev->pdev)) {
++		rcu_read_unlock();
++		return;
++	}
++
++	/*
++	 * Ensure the valid bits are visible before starting the
++	 * DMA engine.
++	 */
++	wmb();
++
++	writew(PLX_REG_CTRL_START_VAL, plxdev->bar + PLX_REG_CTRL);
++
++	rcu_read_unlock();
++}
++
+ static irqreturn_t plx_dma_isr(int irq, void *devid)
+ {
+ 	struct plx_dma_dev *plxdev = devid;
+@@ -307,7 +420,9 @@ static int plx_dma_alloc_desc(struct plx_dma_dev *plxdev)
+ 			goto free_and_exit;
+ 
+ 		dma_async_tx_descriptor_init(&desc->txd, &plxdev->dma_chan);
++		desc->txd.tx_submit = plx_dma_tx_submit;
+ 		desc->hw = &plxdev->hw_ring[i];
++
+ 		plxdev->desc_ring[i] = desc;
  	}
  
-+	module_put(dma_chan_to_owner(chan));
-+
- 	/* If the channel is used via a DMA request router, free the mapping */
- 	if (chan->router && chan->router->route_free) {
- 		chan->router->route_free(chan->router->dev, chan->route_data);
+@@ -428,11 +543,15 @@ static int plx_dma_create(struct pci_dev *pdev)
+ 	dma = &plxdev->dma_dev;
+ 	dma->chancnt = 1;
+ 	INIT_LIST_HEAD(&dma->channels);
++	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
+ 	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
+ 	dma->dev = get_device(&pdev->dev);
+ 
+ 	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
+ 	dma->device_free_chan_resources = plx_dma_free_chan_resources;
++	dma->device_prep_dma_memcpy = plx_dma_prep_memcpy;
++	dma->device_issue_pending = plx_dma_issue_pending;
++	dma->device_tx_status = plx_dma_tx_status;
+ 
+ 	chan = &plxdev->dma_chan;
+ 	chan->device = dma;
 -- 
 2.20.1
 
