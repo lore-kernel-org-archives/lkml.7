@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4506BC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93521C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDD524684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C7A2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011918;
-	bh=pG19F23Ng3dfKisEuzyv6YuvWsbpkjojpMZZsXuxVgE=;
+	s=default; t=1576011926;
+	bh=Y2JRJHPlGVcW5GHbu2M7B2/vxdr5zJexIYc5v03m0Iw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUnK6wOj3BSEZJqZN+vGhW3jsDv1g+nriyrI/JknNLqsAJgZWJE4whv/CunYlxY3s
-	 Y+SWUJmRnTGHC5QSw77fwByvb5EGyYNDwy6YNCMgWlmjF0qOlv3E15iDVCTEn7pfy0
-	 X3e3JV40Tb/oD6+ZGAxmBEVIUxqInM303pOUplSE=
+	b=jnSrSyLIgnNLSSJulRzAtHApjYssta8WVG4Jq52uenYgePi1WDGe3SzEmcpuv1X+5
+	 sTc45Vavi3IoEo3F7t6PdysaLn0KiPwJXZpVBDybcZNVBf/L2NXq7lMVaUOA8GSyxX
+	 2rKn3YzxNWtrf8rikZaC/Z8OodGM8dxSgQAGPw84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfLJVFR (ORCPT
+        id S1726949AbfLJVFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:05:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50040 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:05:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbfLJVEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:46 -0500
+        id S1727484AbfLJVEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BE42465C;
-        Tue, 10 Dec 2019 21:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F4724681;
+        Tue, 10 Dec 2019 21:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011885;
-        bh=pG19F23Ng3dfKisEuzyv6YuvWsbpkjojpMZZsXuxVgE=;
+        s=default; t=1576011882;
+        bh=Y2JRJHPlGVcW5GHbu2M7B2/vxdr5zJexIYc5v03m0Iw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HIqtHUdlII9Y/GsydmjFZ3jHMBNmyE4VauZTwryC/QOVjcPnkKSXK+c2AEx32AsLQ
-         nv4E9RaeZ+njYZ5q7EZzckEi8osVgS6Z4k5kLaE1YKQStOWfrB1IRk3G9Gp/QR1H5z
-         6NvhjaqDv2+tutv1IpdqOtMCr5WfoueR83lzzQl8=
+        b=MJPkRZAy2qCbrdqE740mWP/9FD2SXSD739cfs3MselFVl2WEBUTrJIRxuZCFrCqGE
+         TVkRQQ9FdnW8X25YFid+EXWbbBaHvNJTpo6SAAWE94MR1Grg532dB82bO/qu9ZpbE7
+         Tj7f2HEMCeibzexHMYXG07ewsSbBxjit4rFVFcXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 036/350] media: seco-cec: Add a missing 'release_region()' in an error handling path
-Date:   Tue, 10 Dec 2019 15:58:48 -0500
-Message-Id: <20191210210402.8367-36-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 033/350] spi: gpio: prevent memory leak in spi_gpio_probe
+Date:   Tue, 10 Dec 2019 15:58:45 -0500
+Message-Id: <20191210210402.8367-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -60,39 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit a9cc4cbcdfd378b65fd4e398800cfa14e3855042 ]
+[ Upstream commit d3b0ffa1d75d5305ebe34735598993afbb8a869d ]
 
-At the beginning of the probe function, we have a call to
-'request_muxed_region(BRA_SMB_BASE_ADDR, 7, "CEC00001")()'
+In spi_gpio_probe an SPI master is allocated via spi_alloc_master, but
+this controller should be released if devm_add_action_or_reset fails,
+otherwise memory leaks. In order to avoid leak spi_contriller_put must
+be called in case of failure for devm_add_action_or_reset.
 
-A corresponding 'release_region()' is performed in the remove function but
-is lacking in the error handling path.
-
-Add it.
-
-Fixes: b03c2fb97adc ("media: add SECO cec driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called in every error path")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20190930205241.5483-1-navid.emamdoost@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/seco-cec/seco-cec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/seco-cec/seco-cec.c b/drivers/media/platform/seco-cec/seco-cec.c
-index 9cd60fe1867c9..a86b6e8f91969 100644
---- a/drivers/media/platform/seco-cec/seco-cec.c
-+++ b/drivers/media/platform/seco-cec/seco-cec.c
-@@ -675,6 +675,7 @@ err_notifier:
- err_delete_adapter:
- 	cec_delete_adapter(secocec->cec_adap);
- err:
-+	release_region(BRA_SMB_BASE_ADDR, 7);
- 	dev_err(dev, "%s device probe failed\n", dev_name(dev));
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 1d3e23ec20a61..f9c5bbb747142 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -371,8 +371,10 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	return ret;
+ 	status = devm_add_action_or_reset(&pdev->dev, spi_gpio_put, master);
+-	if (status)
++	if (status) {
++		spi_master_put(master);
+ 		return status;
++	}
+ 
+ 	if (of_id)
+ 		status = spi_gpio_probe_dt(pdev, master);
 -- 
 2.20.1
 
