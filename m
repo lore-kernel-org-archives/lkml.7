@@ -2,119 +2,108 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DF9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FC7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B4E20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98622077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF+XatHh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="na1axSoz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfLJO5G (ORCPT
+        id S1727565AbfLJO6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:57:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41447 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727426AbfLJO5G (ORCPT
+        Tue, 10 Dec 2019 09:58:18 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:52826 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfLJO6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:57:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575989825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Pizj88R2AL6EW2h5n6WxVnUb6CuY670RUYlkHQGcOE8=;
-        b=dF+XatHhWsaENo5ceC1YMhgjcW3tiVW9p3S1ZOX97i9e9eV4feolIEkOds9W6t/Xm8B10o
-        HRGLBodvdlyTxu8rOwaObeNPh4Jt1EJMX+8IO6sxv0e6dduIZ6WL87fzTarf8d9pwR0Tfy
-        jJ8VisT3VCht1ZgNNEPZPDerLk5Ui4I=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100--axuD1D9PzaF6WCKv3iftA-1; Tue, 10 Dec 2019 09:57:04 -0500
-Received: by mail-wr1-f72.google.com with SMTP id 90so9000029wrq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:57:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KhgmoMXvASqQe9/KIjSmxvUQfCfCVmkr95iRvUliS04=;
-        b=WJvbV0HcP4XOz0LGnUFuSL8Ri22bOSIR6NC+4w5jTdU9wdRuG+bVcCl7yiSFZs5+V/
-         M4sTftiosbaKSk9bWde9nSOq7reFplM+Q2hJ6lWlUBMSWklABn7i6XAIcVEYa34lNw3+
-         afjJ7VfNYWieLI5XX4Jo3FaWwfqqYsYi4AaqP0WrVh5scmx80UI/aWA0csxG0JlaGbR/
-         lTy2mc1whCFbed9A6s6tXy0TKvWrfkfOIAIkjoth45EY06f9jZxnRmbey45e3T198TzP
-         S115iXIlm5/4c08HWqcOfWOJphI1eGGWM8Tl3HUuATtEvP0axQ4lBdudxdegQIgvNWAb
-         dpbg==
-X-Gm-Message-State: APjAAAXQYxNrPxOGXh5wNi/glzNfmSJIq/uZP+Tla4cqLMRKPzlSesS/
-        whBCm4pSYYTuSS05/rgItFjE6yJE1fcMaHFjH2HsLxnYqK6GA26nGv8T2nGhih9PYawTsff2mIY
-        RTkWu1SzMSwlYUgQxccR/UHoy
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr3694881wrs.11.1575989819329;
-        Tue, 10 Dec 2019 06:56:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzqx6hFrH03lwVLmtWW0DWqoOkoHzF32eiPuhRamLitPZ9i/I7oZ3qKTUxtMydFXkTy9B0AOQ==
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr3694865wrs.11.1575989819138;
-        Tue, 10 Dec 2019 06:56:59 -0800 (PST)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id v22sm3347493wml.11.2019.12.10.06.56.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:56:57 -0800 (PST)
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        David Howells <dhowells@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Subject: [PATCH RFC] init/Kconfig: enable -O3 for all arches
-Date:   Tue, 10 Dec 2019 15:56:57 +0100
-Message-Id: <20191210145657.105808-1-oleksandr@redhat.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 10 Dec 2019 09:58:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=isOkNJUMf1B7fKaSQLUZcaf/MKjMhWFz9C5BGsPEgD8=; b=na1axSozcdM+lGT7A5F3mPwpr
+        TbEutl70IYUef1czLJRlfGJndf1ZwqsWBY3m7DNXm4OTK5j1laMtGETGVU1Ujz2pstYnurjLfgT6C
+        L+hLjKsuMkv2vbzPKanIafAR0ct5HyjggBwqZ7Dv6caJyRqLkk5xGSHXP2m8HMcjudguGcIgJPiPm
+        vMJefwytFY1cz3Cg3rjyEnR4hL9lI0dK+oUOSt9qu8a1hJ35NtnuXrBBWMT7dAjgty2d/jByYLRet
+        I4SxKZ0jKf/kmZbrSM482MWqxCcK1T4Cx3GKOf1NXwCuZu04CN3hTSr4C9+XLZwyhF7/mqdeYrH2X
+        03WLBTEEA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39452)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iegxi-00023g-OS; Tue, 10 Dec 2019 14:58:06 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iegxf-0004jM-3O; Tue, 10 Dec 2019 14:58:03 +0000
+Date:   Tue, 10 Dec 2019 14:58:03 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: fix condition for setting up link
+ interrupt
+Message-ID: <20191210145802.GV25745@shell.armlinux.org.uk>
+References: <20190124131803.14038-1-tbogendoerfer@suse.de>
+ <20190124155137.GD482@lunn.ch>
+ <20190124160741.jady3r2e4dme7c4m@e5254000004ec.dyn.armlinux.org.uk>
+ <20190125083720.GK3662@kwain>
+ <20191208164235.GT1344@shell.armlinux.org.uk>
+ <20191210145359.GA90089@kwain>
 MIME-Version: 1.0
-X-MC-Unique: -axuD1D9PzaF6WCKv3iftA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210145359.GA90089@kwain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building a kernel with -O3 may help in hunting bugs like [1] and thus
-using this switch should not be restricted to one specific arch only.
+On Tue, Dec 10, 2019 at 03:53:59PM +0100, Antoine Tenart wrote:
+> Hi Russell,
+> 
+> On Sun, Dec 08, 2019 at 04:42:36PM +0000, Russell King - ARM Linux admin wrote:
+> > 
+> > Today, I received an email from Willy Tarreau about this issue which
+> > persists to this day with mainline kernels.
+> > 
+> > Willy reminded me that I've been carrying a fix for this, but because
+> > of your concerns as stated above, I haven't bothered submitting it
+> > through fear of causing regressions (which you seem to know about):
+> > 
+> >    http://git.armlinux.org.uk/cgit/linux-arm.git/commit/?h=mvpp2&id=67ef3bff255b26cc0d6def8ca99c4e8ae9937727
+> > 
+> > Just like Thomas' case, the current code is broken for phylink when
+> > in-band negotiation is being used - such as with the 1G/2.5G SFP
+> > slot on the Macchiatobin.
+> > 
+> > It seems that resolving the issue has stalled.  Can I merge my patch,
+> > or could you state exactly what the problems are with it so that
+> > someone else can look into the issues please?
+> 
+> Yes, please merge your patch (the one dropping the check on
+> '!port->phylink'), I've been using it for months. I answered that patch
+> submission back then[1] but it seems it was lost somehow :)
+> 
+> Thanks!
+> Antoine
+> 
+> [1] https://www.spinics.net/lists/netdev/msg555697.html
 
-Thus lets expose it. If for some reasone we have to hide it, lets hide
-it under EXPERT.
+Thanks.  Looks like I never read your reply (probably got buried.)
 
-The commit is made against next-20191210 tag.
-
-[1] https://lore.kernel.org/lkml/673b885183fb64f1cbb3ed2387524077@natalenko=
-.name/
-
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
----
- init/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/init/Kconfig b/init/Kconfig
-index a34064a031a5..b41b18edb10e 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1228,7 +1228,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
-=20
- config CC_OPTIMIZE_FOR_PERFORMANCE_O3
- =09bool "Optimize more for performance (-O3)"
--=09depends on ARC
- =09imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- =09help
- =09  Choosing this option will pass "-O3" to your compiler to optimize
---=20
-2.24.0
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
