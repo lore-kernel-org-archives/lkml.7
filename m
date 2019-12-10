@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F787C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D37246A6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BDE246A8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012152;
-	bh=DpWi6ezc5UrqjllVnRmWxaAxXBRUJq+N0u534sJ4NT4=;
+	s=default; t=1576012155;
+	bh=ol+EarreBhyZtxBr+VuPmi+iFX92Onp+b36KDhJ24Tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfweRf20IO8jVJoCr4yBacH3bXvOzSNNxPDxfzAxKauoIfQ4hvvQMl110xG07rjts
-	 BdvAHQ2Nc1Z6+KjEHDTgeGEKfp1B5Hu4ezsmQiAo+UpSbshlG/EGQwUEv1rK/VmFHA
-	 J1Xur2KV80ZASEv6SD82UYt/bwROcK7NXtOq6gRQ=
+	b=qUi/SXfflIArOdFOhafOlUmG8My0C3upUBuE7phmF+OeabdpVhb/xZSZUpw+J2lsd
+	 ZI74bVwGW2UxP4BMjSVo+ga8e5uYBa2P5tVdj4+oaOCjfCv+L/vpVY1VuIgu7WW4Z8
+	 bypwNKAaGIPmz6h688kHPBSnMctZ99iolQmeX3Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfLJVJL (ORCPT
+        id S1726743AbfLJVJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57038 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfLJVJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:03 -0500
+        id S1728055AbfLJVJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91C0A2469E;
-        Tue, 10 Dec 2019 21:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A698C24696;
+        Tue, 10 Dec 2019 21:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012142;
-        bh=DpWi6ezc5UrqjllVnRmWxaAxXBRUJq+N0u534sJ4NT4=;
+        s=default; t=1576012147;
+        bh=ol+EarreBhyZtxBr+VuPmi+iFX92Onp+b36KDhJ24Tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DhKitbBzyZfIWkq4nG3dHl/RYY0iN43FzIlPyBMkIGkX8ytsRJZLd1mi+c7J1DLAI
-         0mJvocEd8AqULRXClo3wA2KgMPugoNTy2rEqDLzdMEuu3x6qmmPU5zqnovBPVF6vqk
-         FBIvWgg0NMA22wibg+D0MxjCQzuOpnRYiagpxYKs=
+        b=dCjrWbufrrj9oNIjmk0g6d0934xDMglm0GzFKTyi0/utpQGFSjCb9pXYZRQ8bb1mz
+         dlA581Ox20UOFTFND9VQCW7yP32CkuiKjoteV/l2EFAMX0+wH0YTvtkH4yK1N/tnSP
+         7NK7sfxnbWG+NAW0lC1lNoDJVpE6iYpmLvSoxgRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 107/350] rtw88: coex: Set 4 slot mode for A2DP
-Date:   Tue, 10 Dec 2019 16:03:32 -0500
-Message-Id: <20191210210735.9077-68-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 111/350] perf test: Avoid infinite loop for task exit case
+Date:   Tue, 10 Dec 2019 16:03:36 -0500
+Message-Id: <20191210210735.9077-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,125 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 12078aae453556a88fb46777b7cc5fc97f867b7c ]
+[ Upstream commit 791ce9c48c79210d2ffcdbe69421e7783b32921f ]
 
-With shallow buffer size, certain BT devices have active
-A2DP flow control to fill buffer frequently. If the slot
-is not at BT side, data can't be sent successfully to BT
-devices, and will cause audio glitch.
+When executing the task exit testing case, perf gets stuck in an endless
+loop this case and doesn't return back on Arm64 Juno board.
 
-To resolve this issue, this commit splits TUs into 4-slots
-instead of 2-slot for all of the A2DP related coexistence
-strategies. That makes BT have higher opportunity to fill
-the A2DP buffer in time, and the audio quality could be
-more stable and smooth.
+After digging into this issue, since Juno board has Arm's big.LITTLE
+CPUs, thus the PMUs are not compatible between the big CPUs and little
+CPUs.  This leads to a PMU event that cannot be enabled properly when
+the traced task is migrated from one variant's CPU to another variant.
+Finally, the test case runs into infinite loop for cannot read out any
+event data after return from polling.
 
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Eventually, we need to work out formal solution to allow PMU events can
+be freely migrated from one CPU variant to another, but this is a
+difficult task and a different topic.  This patch tries to fix the Perf
+test case to avoid infinite loop, when the testing detects 1000 times
+retrying for reading empty events, it will directly bail out and return
+failure.  This allows the Perf tool can continue its other test cases.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011091942.29841-2-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/coex.c | 24 ++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ tools/perf/tests/task-exit.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wireless/realtek/rtw88/coex.c
-index 793b40bdbf7cc..3e95ad1989123 100644
---- a/drivers/net/wireless/realtek/rtw88/coex.c
-+++ b/drivers/net/wireless/realtek/rtw88/coex.c
-@@ -1308,6 +1308,7 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
- 	struct rtw_chip_info *chip = rtwdev->chip;
- 	bool wl_hi_pri = false;
- 	u8 table_case, tdma_case;
-+	u32 slot_type = 0;
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index ca0a6ca43b132..d85c9f608564c 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -53,6 +53,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	struct perf_cpu_map *cpus;
+ 	struct perf_thread_map *threads;
+ 	struct mmap *md;
++	int retry_count = 0;
  
- 	if (coex_stat->wl_linkscan_proc || coex_stat->wl_hi_pri_task1 ||
- 	    coex_stat->wl_hi_pri_task2)
-@@ -1318,14 +1319,16 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
- 		if (wl_hi_pri) {
- 			table_case = 15;
- 			if (coex_stat->bt_a2dp_exist &&
--			    !coex_stat->bt_pan_exist)
-+			    !coex_stat->bt_pan_exist) {
-+				slot_type = TDMA_4SLOT;
- 				tdma_case = 11;
--			else if (coex_stat->wl_hi_pri_task1)
-+			} else if (coex_stat->wl_hi_pri_task1) {
- 				tdma_case = 6;
--			else if (!coex_stat->bt_page)
-+			} else if (!coex_stat->bt_page) {
- 				tdma_case = 8;
--			else
-+			} else {
- 				tdma_case = 9;
-+			}
- 		} else if (coex_stat->wl_connected) {
- 			table_case = 10;
- 			tdma_case = 10;
-@@ -1361,7 +1364,7 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
- 	rtw_coex_set_ant_path(rtwdev, false, COEX_SET_ANT_2G);
- 	rtw_coex_set_rf_para(rtwdev, chip->wl_rf_para_rx[0]);
- 	rtw_coex_table(rtwdev, table_case);
--	rtw_coex_tdma(rtwdev, false, tdma_case);
-+	rtw_coex_tdma(rtwdev, false, tdma_case | slot_type);
- }
+ 	signal(SIGCHLD, sig_handler);
  
- static void rtw_coex_action_bt_hfp(struct rtw_dev *rtwdev)
-@@ -1475,13 +1478,13 @@ static void rtw_coex_action_bt_a2dp(struct rtw_dev *rtwdev)
- 
- 	if (efuse->share_ant) {
- 		/* Shared-Ant */
-+		slot_type = TDMA_4SLOT;
+@@ -132,6 +133,13 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ out_init:
+ 	if (!exited || !nr_exit) {
+ 		evlist__poll(evlist, -1);
 +
- 		if (coex_stat->wl_gl_busy && coex_stat->wl_noisy_level == 0)
- 			table_case = 10;
- 		else
- 			table_case = 9;
- 
--		slot_type = TDMA_4SLOT;
--
- 		if (coex_stat->wl_gl_busy)
- 			tdma_case = 13;
- 		else
-@@ -1585,13 +1588,14 @@ static void rtw_coex_action_bt_a2dp_hid(struct rtw_dev *rtwdev)
- 
- 	if (efuse->share_ant) {
- 		/* Shared-Ant */
-+		slot_type = TDMA_4SLOT;
++		if (retry_count++ > 1000) {
++			pr_debug("Failed after retrying 1000 times\n");
++			err = -1;
++			goto out_free_maps;
++		}
 +
- 		if (coex_stat->bt_ble_exist)
- 			table_case = 26;
- 		else
- 			table_case = 9;
+ 		goto retry;
+ 	}
  
- 		if (coex_stat->wl_gl_busy) {
--			slot_type = TDMA_4SLOT;
- 			tdma_case = 13;
- 		} else {
- 			tdma_case = 14;
-@@ -1794,10 +1798,12 @@ static void rtw_coex_action_wl_linkscan(struct rtw_dev *rtwdev)
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
- 	struct rtw_chip_info *chip = rtwdev->chip;
- 	u8 table_case, tdma_case;
-+	u32 slot_type = 0;
- 
- 	if (efuse->share_ant) {
- 		/* Shared-Ant */
- 		if (coex_stat->bt_a2dp_exist) {
-+			slot_type = TDMA_4SLOT;
- 			table_case = 9;
- 			tdma_case = 11;
- 		} else {
-@@ -1818,7 +1824,7 @@ static void rtw_coex_action_wl_linkscan(struct rtw_dev *rtwdev)
- 	rtw_coex_set_ant_path(rtwdev, true, COEX_SET_ANT_2G);
- 	rtw_coex_set_rf_para(rtwdev, chip->wl_rf_para_rx[0]);
- 	rtw_coex_table(rtwdev, table_case);
--	rtw_coex_tdma(rtwdev, false, tdma_case);
-+	rtw_coex_tdma(rtwdev, false, tdma_case | slot_type);
- }
- 
- static void rtw_coex_action_wl_not_connected(struct rtw_dev *rtwdev)
 -- 
 2.20.1
 
