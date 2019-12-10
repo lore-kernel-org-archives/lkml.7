@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7C1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC6D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AF620836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017831;
-	bh=ScthOt0s1uE08jiRxm2kjHf23aCgwgOqtuQMOljjyd0=;
+	s=default; t=1576017833;
+	bh=segSYNU2H8acp/n/MBBOQclzFKA4g5CaqMyJouyK0MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDBAZ0eCf64296Dp7mTo1vxqqVIW5B7g7lhK+ZYjJqszrPjK2jcsg2H6TQxHBcZw9
-	 pGhO56ry2oqrBDF6XY7BuSAVJ13Y0knUciL6YbYaP4MqBCB4dQtcKf3Vdokx26Dhkk
-	 0DaAUS9yF1ror7FLtvBxbt8tkeFLL8wvI0cJwSCI=
+	b=lJjXytssbIrpW2hHLFMJBsXG1QLvVWs2V3FXlm32hB78HGSmB6UFibFr5QrNMqLJV
+	 TAja3D+dafolCJNRA6a8XTep4SK8flaxkcGX1mf7HdqEE/KNsJiUA2IkAVZdxEgky8
+	 ospkyXQssARzNSd6A4pk+NGE+NweAcQ5xW0Ns/3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfLJWnu (ORCPT
+        id S1730530AbfLJWnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:43:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50760 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:43:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727655AbfLJWa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:57 -0500
+        id S1727684AbfLJWa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95592207FF;
-        Tue, 10 Dec 2019 22:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ECA820838;
+        Tue, 10 Dec 2019 22:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017056;
-        bh=ScthOt0s1uE08jiRxm2kjHf23aCgwgOqtuQMOljjyd0=;
+        s=default; t=1576017058;
+        bh=segSYNU2H8acp/n/MBBOQclzFKA4g5CaqMyJouyK0MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmMUBntLkrTwp98dOBt6nzgg0stBvR1o0cFO1XoUW8j1P0vCZ3nG3Ax5MDBv9uJoe
-         0KxL0N3lT0xS4fdeeDt97X/Dn6JRxKlD1G0iX7eaBIzOLO/l/Pm7fctmDdb+7Euq/b
-         BqgZnk/9o9zoY3QEeWRnzPRazfyHrm9PuYQ07Nlg=
+        b=hbmB0tVe836Et/JCHUM+1awPJ5okcE5HGRcXr65IpRTyEQf5Fk0ksvF/EuN57bzQ0
+         iLuCURmifTP+oL8WkWyP7yaVY7glcBlRfIT582LF+376xYg2WKxzNX6V1nP/+Kx6yW
+         vGTwKBWxAnnokStC/biP/7WWW/cCeTn7K6D85hjY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/91] usb: renesas_usbhs: add suspend event support in gadget mode
-Date:   Tue, 10 Dec 2019 17:29:21 -0500
-Message-Id: <20191210223035.14270-17-sashal@kernel.org>
+Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 19/91] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
+Date:   Tue, 10 Dec 2019 17:29:23 -0500
+Message-Id: <20191210223035.14270-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,87 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
+[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
 
-When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
-will be generated and Suspended state bit is set in interrupt status
-register. Interrupt handler will call driver->suspend(composite_suspend)
-if suspended state bit is set. composite_suspend will call
-ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
-by user space application via /dev/ep0.
+Inside function max8907_regulator_probe(), variable val could
+be uninitialized if regmap_read() fails. However, val is used
+later in the if statement to decide the content written to
+"pmic", which is potentially unsafe.
 
-To be able to detect host detach, extend the DVSQ_MASK to cover the
-Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
-Register 0 (INTSTS0) register and perform appropriate action in the
-DVST interrupt handler (usbhsg_irq_dev_state).
-
-Without this commit, disconnection of the phone from R-Car-H3 ES2.0
-Salvator-X CN9 port is not recognized and reverse role switch does
-not happen. If phone is connected again it does not enumerate.
-
-With this commit, disconnection will be recognized and reverse role
-switch will happen by a user space application. If phone is connected
-again it will enumerate properly and will become visible in the output
-of 'lsusb'.
-
-Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/common.h     |  3 ++-
- drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index b8620aa6b72e6..8424c165f732a 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -163,11 +163,12 @@ struct usbhs_priv;
- #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
- #define VALID	(1 << 3)	/* USB Request Receive */
+diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
+index 5e941db5ccafb..c7e70cfb581fe 100644
+--- a/drivers/regulator/max8907-regulator.c
++++ b/drivers/regulator/max8907-regulator.c
+@@ -299,7 +299,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
  
--#define DVSQ_MASK		(0x3 << 4)	/* Device State */
-+#define DVSQ_MASK		(0x7 << 4)	/* Device State */
- #define  POWER_STATE		(0 << 4)
- #define  DEFAULT_STATE		(1 << 4)
- #define  ADDRESS_STATE		(2 << 4)
- #define  CONFIGURATION_STATE	(3 << 4)
-+#define  SUSPENDED_STATE	(4 << 4)
- 
- #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
- #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
-diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-index 6898ca1ef98c0..b0397bcfe1f61 100644
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -465,12 +465,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
- {
- 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
-+	int state = usbhs_status_get_device_state(irq_state);
- 
- 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
- 
--	dev_dbg(dev, "state = %x : speed : %d\n",
--		usbhs_status_get_device_state(irq_state),
--		gpriv->gadget.speed);
-+	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
+ 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
+-	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	if (ret)
++		return ret;
 +
-+	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
-+	    (state & SUSPENDED_STATE)) {
-+		if (gpriv->driver && gpriv->driver->suspend)
-+			gpriv->driver->suspend(&gpriv->gadget);
-+		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
-+	}
+ 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
+ 	    MAX8907_II2RR_VERSION_REV_B) {
+ 		pmic->desc[MAX8907_SD1].min_uV = 637500;
+@@ -336,14 +339,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 		}
  
- 	return 0;
- }
+ 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & MAX8907_MASK_LDO_SEQ) !=
+ 			    MAX8907_MASK_LDO_SEQ)
+ 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
+ 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
+ 						MAX8907_MASK_OUT5V_ENSRC)) !=
+ 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
