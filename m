@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2094BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9C7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0562246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44213246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012284;
-	bh=6IUHqtOId68VED+dBh6FQNdwiznKbRUy/0McKi+HpdE=;
+	s=default; t=1576012287;
+	bh=SkTpDhtXqufuxeik1UVHi8WJkRl2WkftahDwl0qFXbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMXd4DmhZLFOhO9fXVC+0K78LDMqLSwdrhfuX0C0mNjuCZYgO2/hXs9mqmWUecRk5
-	 NiQ3bcQDTfd+lrUCbu/M5nGBylxwPxBllru/RNHfKMJZOBBaLvrbosAQ1SGNDjTOOh
-	 +DdtUngeZAzdhjo0GmWRDiuHyroi1v01UYl2vFyY=
+	b=Wh7tI/BwYhVJFB7e6VuJObcv7FhVT8KmOvHyW4XO650Sj5OadQBoOj0ggIpT6UgjO
+	 /3f7pDABRVXd12Nx50/4dvHljTMjHlq/F49PkknAPUM0HLdZbn8qXasgA8y3Kshbdj
+	 wNEiUFoQprZxwGIIlt6g4OxEFWaLJSki13ineJCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfLJVLW (ORCPT
+        id S1728122AbfLJVL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728708AbfLJVLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:10 -0500
+        id S1728230AbfLJVLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD2424697;
-        Tue, 10 Dec 2019 21:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5147246A2;
+        Tue, 10 Dec 2019 21:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012270;
-        bh=6IUHqtOId68VED+dBh6FQNdwiznKbRUy/0McKi+HpdE=;
+        s=default; t=1576012272;
+        bh=SkTpDhtXqufuxeik1UVHi8WJkRl2WkftahDwl0qFXbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MuLD4ui110tRoBgynjrLw2A7OHf8/osKuXcQtnQM3ix9n6e/NKPGIjUqqxP8E+cSY
-         VDSalQGC7xI3GLc02FinaOT2l/eUhIjQGolfumNHp82XD9wDPxl20kPaVpnHvuPvs7
-         jpNNTO9TB585VXQG3tEjXHgIfHFZnmd+0f97lZ6U=
+        b=yqHXEZIn69BXwIIW7HCpYDWPyjQVAJzfC4Ya9YKRTttMeiQ9esDg59cVnGNAJzcw5
+         N6BaST6JfO5JScrAndbxC54fPra8QPoL9/yuGbHUhS2RrECdK6pY1aWuDQIfu94OzE
+         Uw3MVReYTGL5Gi2uqNn7vSOv2vascI59p19y3wYE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamal Heib <kamalheib1@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 215/350] RDMA/core: Fix return code when modify_port isn't supported
-Date:   Tue, 10 Dec 2019 16:05:20 -0500
-Message-Id: <20191210210735.9077-176-sashal@kernel.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 217/350] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
+Date:   Tue, 10 Dec 2019 16:05:22 -0500
+Message-Id: <20191210210735.9077-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,45 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 55bfe905fa97633438c13fb029aed85371d85480 ]
+[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
 
-Improve return code from ib_modify_port() by doing the following:
- - Use "-EOPNOTSUPP" instead "-ENOSYS" which is the proper return code
+This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
+Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
+single memory leak during probe:
 
- - Allow only fake IB_PORT_CM_SUP manipulation for RoCE providers that
-   didn't implement the modify_port callback, otherwise return
-   "-EOPNOTSUPP"
+unreferenced object 0xec13ee40 (size 176):
+  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
+    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
+    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
+    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
+    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
+    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
+    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
+    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
+    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
+    [<ac5fcae4>] process_one_work+0x22c/0x564
+    [<f5e6d3b6>] worker_thread+0x44/0x5d8
+    [<82c7b073>] kthread+0x150/0x154
+    [<b43e1b7d>] ret_from_fork+0x14/0x2c
+    [<794dff30>] 0x0
 
-Fixes: 61e0962d5221 ("IB: Avoid ib_modify_port() failure for RoCE devices")
-Link: https://lore.kernel.org/r/20191028155931.1114-2-kamalheib1@gmail.com
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
+patch just frees the skb within the function to resolve memleak problem
+by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
+command packet for firmware via the function, applying this patch doesn't
+affect driver behavior.
+
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/device.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index e6327d8f5b79a..2b5bd7206fc6e 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -2409,8 +2409,12 @@ int ib_modify_port(struct ib_device *device,
- 		rc = device->ops.modify_port(device, port_num,
- 					     port_modify_mask,
- 					     port_modify);
-+	else if (rdma_protocol_roce(device, port_num) &&
-+		 ((port_modify->set_port_cap_mask & ~IB_PORT_CM_SUP) == 0 ||
-+		  (port_modify->clr_port_cap_mask & ~IB_PORT_CM_SUP) == 0))
-+		rc = 0;
- 	else
--		rc = rdma_protocol_roce(device, port_num) ? 0 : -ENOSYS;
-+		rc = -EOPNOTSUPP;
- 	return rc;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+index 56cc3bc308608..f070f25bb735a 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+@@ -1540,6 +1540,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
+    * This is maybe necessary:
+    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
+    */
++	dev_kfree_skb(skb);
++
+ 	return true;
  }
- EXPORT_SYMBOL(ib_modify_port);
+ 
 -- 
 2.20.1
 
