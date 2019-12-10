@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFEBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E7FC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5208220836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265A4205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013676;
-	bh=dhx6LdjfdiE+MaE/uhrh4S/IZa0MmzQZSbguR3zH3yo=;
+	s=default; t=1576013680;
+	bh=7qQErm/WS5u9h7eoRBUCjzqu/qI6ZlHFCNjjr0JoKhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b64pU0XLEraPT5bEiEIBA6icLyijsQwDHahMeitfJmLn5/UoyAJVj9QlH0fzo4VjJ
-	 rrImFj978UxJx+/iHihfmpqoZRnq6XSinyrA1a2KJwGT4r/yBe5Zz0AevfMEaymN+c
-	 xxLiTAg3rGE8WUP8Iq6vFwdW+buK0CxxyAMvWFVY=
+	b=NNO9bTaNYW8ryY2c4EL63BL1wkxRXLcqO+TSJpprdDoZuQ673bnaDtpep/PYgiqan
+	 Wh9IZIPG4htifzhHIvXLBJCD07W1in7XE99ks/moSiOpgPVjpCTCXb0D+SMRc2szfd
+	 Ik/DLFy/kXsQ9ZW3ukhWR0zPsj92/3UkK+KDoRCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbfLJVef (ORCPT
+        id S1730069AbfLJVej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbfLJVeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:21 -0500
+        id S1729236AbfLJVe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE10205C9;
-        Tue, 10 Dec 2019 21:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82CBB205C9;
+        Tue, 10 Dec 2019 21:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013661;
-        bh=dhx6LdjfdiE+MaE/uhrh4S/IZa0MmzQZSbguR3zH3yo=;
+        s=default; t=1576013669;
+        bh=7qQErm/WS5u9h7eoRBUCjzqu/qI6ZlHFCNjjr0JoKhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tK0qznXdPQo/WdoYR49LBhr2LNYPVQNxQ2zbWdCmDevmEPEkiQ3X1i1bHDHi7fZQT
-         uBq3URmbxbiSC0toEU8cKHuX2rhgxe+8xtCyV1+c1ZWf9egPUyuGTXfynVo4oXfmBG
-         2C66tywHSzMFNbkF5Hu9oexFRSUrL1dxRcVRfH58=
+        b=RAcNrd63bo3r4nrxFKIksgCV+/4pSlGwsJAlZv4Aqd+H+8S+GsPRhhVQhTnmQa2bs
+         jmfgxZ4+tQxlmqKmQbUeAk0CbhAMMVbhM75hmgInGM1QPZxn6KS8+XmZiBe03bCZf7
+         AKxzkXdbpt2x2zn+fmRPh59/LEwcsLFw1ZVbBOeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 099/177] ixgbe: protect TX timestamping from API misuse
-Date:   Tue, 10 Dec 2019 16:31:03 -0500
-Message-Id: <20191210213221.11921-99-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 106/177] ALSA: timer: Limit max amount of slave instances
+Date:   Tue, 10 Dec 2019 16:31:10 -0500
+Message-Id: <20191210213221.11921-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,44 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
+[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
 
-HW timestamping can only be requested for a packet if the NIC is first
-setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
-driver still allowed TX packets to request HW timestamping. In this
-situation, we see 'clearing Tx Timestamp hang' noise in the log.
+The fuzzer tries to open the timer instances as much as possible, and
+this may cause a system hiccup easily.  We've already introduced the
+cap for the max number of available instances for the h/w timers, and
+we should put such a limit also to the slave timers, too.
 
-Fix this by checking that the NIC is configured for HW TX timestamping
-before accepting a HW TX timestamping request.
+This patch introduces the limit to the multiple opened slave timers.
+The upper limit is hard-coded to 1000 for now, which should suffice
+for any practical usages up to now.
 
-Similar-to:
-   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
-   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
-
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/core/timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index b45a6e2ed8d15..de65ca1e65580 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -8551,7 +8551,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 86a31e69fc7d9..b5dc51030316a 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -88,6 +88,9 @@ static LIST_HEAD(snd_timer_slave_list);
+ /* lock for slave active lists */
+ static DEFINE_SPINLOCK(slave_active_lock);
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	    adapter->ptp_clock) {
--		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
-+		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
-+		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
- 					   &adapter->state)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
++#define MAX_SLAVE_INSTANCES	1000
++static int num_slaves;
++
+ static DEFINE_MUTEX(register_mutex);
+ 
+ static int snd_timer_free(struct snd_timer *timer);
+@@ -266,6 +269,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			err = -EINVAL;
+ 			goto unlock;
+ 		}
++		if (num_slaves >= MAX_SLAVE_INSTANCES) {
++			err = -EBUSY;
++			goto unlock;
++		}
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+ 			err = -ENOMEM;
+@@ -275,6 +282,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
++		num_slaves++;
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+ 			snd_timer_close_locked(timeri, &card_dev_to_put);
+@@ -364,6 +372,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
+ 	struct snd_timer_instance *slave, *tmp;
+ 
+ 	list_del(&timeri->open_list);
++	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
++		num_slaves--;
+ 
+ 	/* force to stop the timer */
+ 	snd_timer_stop(timeri);
 -- 
 2.20.1
 
