@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07985C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E16C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0532073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACD3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013538;
-	bh=6qxVuvGp1IqwShizSavmY8GXUi0ZLBs7ZhpmsN4Op/E=;
+	s=default; t=1576013545;
+	bh=pghwgZMd4SWZs3qtgTbo4IgWuTXCjN4jCn4pl/oZLUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ryA6SsEDqDzrDbZt8is1OZTf+ApRy73EG50KSeVK2nUqPNVM1KJXU+09wax52r04V
-	 ebWiYibBQ/wiyVP8MIpbyjSdx0SA0qB2jgy8u2NQyZIL5cqtu35MBufg2L6mm6Y6g9
-	 0lEzi0nHwDGzQRQuKYyCOVJNuNB1tK21qPuxhods=
+	b=fJzSJlnzB1UHjwfc2p0EXKqvA7yNQGJvCMFxkT0z/ouNrNeLdcp163hKveTAB2nyN
+	 YG9X7CcdEwMigV7zJmzCzP2mEL70h8O/qwR2hJZPuZsLW/rTL/O2jHUY7IQtleaAzi
+	 o2GplwvaclqCHGVtfMcY/fTbFJtUOikzVDzHBLf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfLJVcR (ORCPT
+        id S1728366AbfLJVcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57562 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbfLJVJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:16 -0500
+        id S1728087AbfLJVJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A0D2469E;
-        Tue, 10 Dec 2019 21:09:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DDA224687;
+        Tue, 10 Dec 2019 21:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012155;
-        bh=6qxVuvGp1IqwShizSavmY8GXUi0ZLBs7ZhpmsN4Op/E=;
+        s=default; t=1576012154;
+        bh=pghwgZMd4SWZs3qtgTbo4IgWuTXCjN4jCn4pl/oZLUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjmrdYNHHzKh4KoKqki04HHqO5X2fqoaC+nJh8CKMtfalfq+y3jWHP7i+tQKTmYug
-         BnCSr5eyJOugbgR/DqMHw6Qtt9/UgA0BJegkjYBwRHgOhCB59b14JVAJDvsOhx5ewy
-         3sdvRGGWQbQIhHurNx5cg8jb4WuiUy6lajSU2G1g=
+        b=mijmnRVQfcWQ5wRhAg8l2lIhLGdDo1g6HBQNWPlNfEy+NqXOaE45n6rpYKGjVARR+
+         IHNTJnrLEEMNOvwbAmT6Qx0VJ9OHb1xOedPEPxuHAbhAgQnQOsjbw4TZ6YxAScUbhf
+         JPWYCQqV+16L/Rwxab3B8ffa8MEmg9YmZ5+F+OOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 118/350] Bluetooth: btusb: avoid unused function warning
-Date:   Tue, 10 Dec 2019 16:03:43 -0500
-Message-Id: <20191210210735.9077-79-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 117/350] iio: dac: ad7303: replace mlock with own lock
+Date:   Tue, 10 Dec 2019 16:03:42 -0500
+Message-Id: <20191210210735.9077-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,50 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 42d22098127d6384f789107f59caae87d7520fc4 ]
+[ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
 
-The btusb_rtl_cmd_timeout() function is used inside of an
-ifdef, leading to a warning when this part is hidden
-from the compiler:
+This change replaces indio_dev's mlock with the driver's own lock. The lock
+is mostly needed to protect state when changing the `dac_cache` info.
+The lock has been extended to `ad7303_read_raw()`, to make sure that the
+cache is updated if an SPI-write is already in progress.
 
-drivers/bluetooth/btusb.c:530:13: error: unused function 'btusb_rtl_cmd_timeout' [-Werror,-Wunused-function]
-
-Use an IS_ENABLED() check instead so the compiler can see
-the code and then discard it silently.
-
-Fixes: d7ef0d1e3968 ("Bluetooth: btusb: Use cmd_timeout to reset Realtek device")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/iio/dac/ad7303.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index a9c35ebb30f86..23e606aaaea49 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3807,8 +3807,8 @@ static int btusb_probe(struct usb_interface *intf,
- 		btusb_check_needs_reset_resume(intf);
- 	}
+diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
+index 8de9f40226e62..14bbac6bee982 100644
+--- a/drivers/iio/dac/ad7303.c
++++ b/drivers/iio/dac/ad7303.c
+@@ -41,6 +41,7 @@ struct ad7303_state {
+ 	struct regulator *vdd_reg;
+ 	struct regulator *vref_reg;
  
--#ifdef CONFIG_BT_HCIBTUSB_RTL
--	if (id->driver_info & BTUSB_REALTEK) {
-+	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
-+	    (id->driver_info & BTUSB_REALTEK)) {
- 		hdev->setup = btrtl_setup_realtek;
- 		hdev->shutdown = btrtl_shutdown_realtek;
- 		hdev->cmd_timeout = btusb_rtl_cmd_timeout;
-@@ -3819,7 +3819,6 @@ static int btusb_probe(struct usb_interface *intf,
- 		 */
- 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
- 	}
--#endif
++	struct mutex lock;
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+ 	 * transfer buffers to live in their own cache lines.
+@@ -79,7 +80,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	if (ret)
+ 		return ret;
  
- 	if (id->driver_info & BTUSB_AMP) {
- 		/* AMP controllers do not support SCO packets */
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	if (pwr_down)
+ 		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
+@@ -90,7 +91,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	 * mode, so just write one of the DAC channels again */
+ 	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 	return len;
+ }
+ 
+@@ -116,7 +117,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
+ 
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&st->lock);
+ 		*val = st->dac_cache[chan->channel];
++		mutex_unlock(&st->lock);
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		vref_uv = ad7303_get_vref(st, chan);
+@@ -144,11 +147,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
+ 		if (val >= (1 << chan->scan_type.realbits) || val < 0)
+ 			return -EINVAL;
+ 
+-		mutex_lock(&indio_dev->mlock);
++		mutex_lock(&st->lock);
+ 		ret = ad7303_write(st, chan->address, val);
+ 		if (ret == 0)
+ 			st->dac_cache[chan->channel] = val;
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&st->lock);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -211,6 +214,8 @@ static int ad7303_probe(struct spi_device *spi)
+ 
+ 	st->spi = spi;
+ 
++	mutex_init(&st->lock);
++
+ 	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
+ 	if (IS_ERR(st->vdd_reg))
+ 		return PTR_ERR(st->vdd_reg);
 -- 
 2.20.1
 
