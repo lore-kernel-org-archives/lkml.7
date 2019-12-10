@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93708C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D975C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D15205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0651C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014367;
-	bh=RbX6+Z4jCo6nzQ+Vy1qb12MbVoi1m5ZYQ4/pNJpUm9o=;
+	s=default; t=1576014371;
+	bh=aqwj88xl6FPJ4U9MmiU7+N9Oby5fcrFg6woKbKAen2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIxCbemB7zFy2nlwyMajH7S+AFkpq79Tb6yQmw9TsKFhMfw9NEPWgJDZQnJKRWFzr
-	 i0cr68u1F8D1ZN2cr67+yr2SejjbMmdmjy49JCuJtARI2HIOOrVxWgHyZeoknMadDv
-	 ER2ifk4X8TXS7ans57iV3jMOrJGl8sDxJJCsPfk4=
+	b=oyX3rUkpVR8f6ouFawuxSvK2bqM45IqaYh8hyVH+U/7XmHCPVbvaenV4hBsnf8idX
+	 bkK7DC4iLDVuMWGj8ZxGkCZS1TL9XtjGdqLIlSWU1dvrL0simBVHLOgrf1DpqqYgcH
+	 ZKbNfuW6lgtNImyIBdU4eiNDLyZPlekMK0yXJqKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfLJVqG (ORCPT
+        id S1729441AbfLJVcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbfLJVcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:51 -0500
+        id S1729231AbfLJVck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDFC7207FF;
-        Tue, 10 Dec 2019 21:32:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 240B2207FF;
+        Tue, 10 Dec 2019 21:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013570;
-        bh=RbX6+Z4jCo6nzQ+Vy1qb12MbVoi1m5ZYQ4/pNJpUm9o=;
+        s=default; t=1576013560;
+        bh=aqwj88xl6FPJ4U9MmiU7+N9Oby5fcrFg6woKbKAen2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8h4SHkzpaB0jqrCSnFLfA5cBZWHc3Lc/Ysr0CFcRNPPaz4UrgY/fJxtO2qwii5yb
-         wQBqxPdtzRadXX5RcYOjpwmWQxD4+rNeCHTXrgOCdbPGL2NyQTqM8IQ946fyXQausl
-         yHZjuIfhs0yO1S6zIIBHxmvAXtWDhcZxHpg2WfTE=
+        b=AKyfeaoAhB/gW9RjDdiYoNvQb8cQIwepV0JmpTndUp6kDVR5T5ry/mzXYrUOM7L+K
+         +fgW07YF7gm+94JFOKN0LLniulrun9/qb+thUCS/lf8VK+Nuee/mtZtXsADtEgAxQN
+         OsIBWVyFtcJl+qmdqvAhIKj5qUWJQUOz2EsUgSk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Elena Petrova <lenaptr@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/177] pinctrl: devicetree: Avoid taking direct reference to device name string
-Date:   Tue, 10 Dec 2019 16:29:48 -0500
-Message-Id: <20191210213221.11921-24-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 015/177] media: am437x-vpfe: Setting STD to current value is not an error
+Date:   Tue, 10 Dec 2019 16:29:39 -0500
+Message-Id: <20191210213221.11921-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,109 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit be4c60b563edee3712d392aaeb0943a768df7023 ]
+[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
 
-When populating the pinctrl mapping table entries for a device, the
-'dev_name' field for each entry is initialised to point directly at the
-string returned by 'dev_name()' for the device and subsequently used by
-'create_pinctrl()' when looking up the mappings for the device being
-probed.
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
-This is unreliable in the presence of calls to 'dev_set_name()', which may
-reallocate the device name string leaving the pinctrl mappings with a
-dangling reference. This then leads to a use-after-free every time the
-name is dereferenced by a device probe:
-
-  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
-  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
-  | Pointer tag: [13], memory tag: [fe]
-  |
-  | Call trace:
-  |  __kasan_report+0x16c/0x1dc
-  |  kasan_report+0x10/0x18
-  |  check_memory_region
-  |  __hwasan_load1_noabort+0x4c/0x54
-  |  strcmp+0x20/0x64
-  |  create_pinctrl+0x18c/0x7f4
-  |  pinctrl_get+0x90/0x114
-  |  devm_pinctrl_get+0x44/0x98
-  |  pinctrl_bind_pins+0x5c/0x450
-  |  really_probe+0x1c8/0x9a4
-  |  driver_probe_device+0x120/0x1d8
-
-Follow the example of sysfs, and duplicate the device name string before
-stashing it away in the pinctrl mapping entries.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Reported-by: Elena Petrova <lenaptr@google.com>
-Tested-by: Elena Petrova <lenaptr@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191002124206.22928-1-will@kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 2969ff3162c35..177ee1136e349 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
- static void dt_free_map(struct pinctrl_dev *pctldev,
- 		     struct pinctrl_map *map, unsigned num_maps)
- {
-+	int i;
-+
-+	for (i = 0; i < num_maps; ++i) {
-+		kfree_const(map[i].dev_name);
-+		map[i].dev_name = NULL;
-+	}
-+
- 	if (pctldev) {
- 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 		if (ops->dt_free_map)
-@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index b05738a95e55e..809320decdeb2 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -1848,6 +1848,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
- 	/* Initialize common mapping table entry fields */
- 	for (i = 0; i < num_maps; i++) {
--		map[i].dev_name = dev_name(p->dev);
-+		const char *devname;
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
 +
-+		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
-+		if (!devname)
-+			goto err_free_map;
-+
-+		map[i].dev_name = devname;
- 		map[i].name = statename;
- 		if (pctldev)
- 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
-@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 
- 	/* Remember the converted mapping table entries */
- 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
--	if (!dt_map) {
--		dt_free_map(pctldev, map, num_maps);
--		return -ENOMEM;
--	}
-+	if (!dt_map)
-+		goto err_free_map;
- 
- 	dt_map->pctldev = pctldev;
- 	dt_map->map = map;
-@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 	list_add_tail(&dt_map->node, &p->dt_maps);
- 
- 	return pinctrl_register_map(map, num_maps, false);
-+
-+err_free_map:
-+	dt_free_map(pctldev, map, num_maps);
-+	return -ENOMEM;
- }
- 
- struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.20.1
 
