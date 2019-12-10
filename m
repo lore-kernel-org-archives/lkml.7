@@ -2,112 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B67CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F133C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DD22073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575999426;
-	bh=68fJHwa23ik7w9aZXtoNpMuzICW4PQUubwWMvhuwEvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MhMJaqSm8AiOnTsiMNY0WVY6TNDQ8griTpKe7snfvcTcJkuDwdSn/SUbrSUZFUJiZ
-	 6b3jnn/ZSZOUIzs7248VOQtFPs6IG+i66tlwR7M+hA4Klraevp6wYXbSONKvJ90kIR
-	 rW9I65PTfS7XiTHkenYpseTRatWoDwMHj71ktBQI=
+	by mail.kernel.org (Postfix) with ESMTP id 431D32073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfLJRhF (ORCPT
+        id S1727610AbfLJRjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:37:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:51980 "EHLO foss.arm.com"
+        Tue, 10 Dec 2019 12:39:10 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:37918 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfLJRhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:37:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F15F1FB;
-        Tue, 10 Dec 2019 09:37:03 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E9123F6CF;
-        Tue, 10 Dec 2019 09:37:02 -0800 (PST)
-Date:   Tue, 10 Dec 2019 17:37:01 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] regulator: max77650: add of_match table
-Message-ID: <20191210173701.GH6110@sirena.org.uk>
-References: <20191210100725.11005-1-brgl@bgdev.pl>
- <20191210121227.GB6110@sirena.org.uk>
- <CAMRc=MftOnQVAUjOz=UGV-S2HKPpiucQp98xYTdxgt7d8obCMg@mail.gmail.com>
- <20191210130244.GE6110@sirena.org.uk>
- <CAMRc=MenTgffszv4NsbCKRhH0TcRPSTLbeP3BttW9fmFBjLdCA@mail.gmail.com>
- <20191210132136.GG6110@sirena.org.uk>
- <CAMRc=MfUSJeNur3VpA7_=kSDpk1L83cK1+Tke3MPBZwfG9NubA@mail.gmail.com>
+        id S1727495AbfLJRjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:39:10 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iejTY-0006ZR-AV; Tue, 10 Dec 2019 10:39:09 -0700
+To:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+References: <20191112055540.GY952516@vkoul-mobl>
+ <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
+ <20191114045555.GJ952516@vkoul-mobl>
+ <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
+ <20191122052010.GO82508@vkoul-mobl>
+ <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
+ <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com>
+ <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
+ <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
+ <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
+ <20191210095327.GA2536@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <27c40d72-ab83-f2a4-7b98-55d16e602a1e@deltatee.com>
+Date:   Tue, 10 Dec 2019 10:39:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SUk9VBj82R8Xhb8H"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfUSJeNur3VpA7_=kSDpk1L83cK1+Tke3MPBZwfG9NubA@mail.gmail.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191210095327.GA2536@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dave.jiang@intel.com, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---SUk9VBj82R8Xhb8H
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 10, 2019 at 05:53:11PM +0100, Bartosz Golaszewski wrote:
-> wt., 10 gru 2019 o 14:21 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
-> > On Tue, Dec 10, 2019 at 02:10:15PM +0100, Bartosz Golaszewski wrote:
-> > > wt., 10 gru 2019 o 14:02 Mark Brown <broonie@kernel.org> napisa=C5=82=
-(a):
+On 2019-12-10 2:53 a.m., Vinod Koul wrote:
+> On 22-11-19, 14:42, Dave Jiang wrote:
+>>
+>>
+>> On 11/22/19 2:01 PM, Dan Williams wrote:
+>>> On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2019-11-22 1:50 p.m., Dan Williams wrote:
+>>>>> On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 11/21/19 10:20 PM, Vinod Koul wrote:
+>>>>>>> On 14-11-19, 10:03, Logan Gunthorpe wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
+>>>>>>>>>> But that's the problem. We can't expect our users to be "nice" and not
+>>>>>>>>>> unbind when the driver is in use. Killing the kernel if the user
+>>>>>>>>>> unexpectedly unbinds is not acceptable.
+>>>>>>>>>
+>>>>>>>>> And that is why we review the code and ensure this does not happen and
+>>>>>>>>> behaviour is as expected
+>>>>>>>>
+>>>>>>>> Yes, but the current code can kill the kernel when the driver is unbound.
+>>>>>>>>
+>>>>>>>>>>>> I suspect this is less of an issue for most devices as they wouldn't
+>>>>>>>>>>>> normally be unbound while in use (for example there's really no reason
+>>>>>>>>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
+>>>>>>>>>>>> is, the user could unbind these devices at anytime and we don't want to
+>>>>>>>>>>>> panic if they do.
+>>>>>>>>>>>
+>>>>>>>>>>> There are many drivers which do modules so yes I am expecting unbind and
+>>>>>>>>>>> even a bind following that to work
+>>>>>>>>>>
+>>>>>>>>>> Except they will panic if they unbind while in use, so that's a
+>>>>>>>>>> questionable definition of "work".
+>>>>>>>>>
+>>>>>>>>> dmaengine core has module reference so while they are being used they
+>>>>>>>>> won't be removed (unless I complete misread the driver core behaviour)
+>>>>>>>>
+>>>>>>>> Yes, as I mentioned in my other email, holding a module reference does
+>>>>>>>> not prevent the driver from being unbound. Any driver can be unbound by
+>>>>>>>> the user at any time without the module being removed.
+>>>>>>>
+>>>>>>> That sounds okay then.
+>>>>>>
+>>>>>> I'm actually glad Logan is putting some work in addressing this. I also
+>>>>>> ran into the same issue as well dealing with unbinds on my new driver.
+>>>>>
+>>>>> This was an original mistake of the dmaengine implementation that
+>>>>> Vinod inherited. Module pinning is distinct from preventing device
+>>>>> unbind which ultimately can't be prevented. Longer term I think we
+>>>>> need to audit dmaengine consumers to make sure they are prepared for
+>>>>> the driver to be removed similar to how other request based drivers
+>>>>> can gracefully return an error status when the device goes away rather
+>>>>> than crashing.
+> 
+> Right finally wrapping my head of static dmaengine devices! we can
+> indeed have devices going away, but me wondering why this should be
+> handled in subsystems! Should the driver core not be doing this instead?
+> Would it be not a safe behaviour for unplug to unload the driver and
+> thus give a chance to unbind from subsystems too...
 
-> > > MODULE_ALIAS("platform:max77650-regulator");
+Yes, I think it should be in the core. I was just worried about breaking
+older drivers. But I'll see if I can move a bit more of the logic for a
+v3 series.
 
-> > Huh, that should work...  I wonder if adding a compatible to the DT has
-> > messed it up, does it work without the compatible in the .dts (and with
-> > the of_compatible removed from the MFD driver I guess)?
+Thanks,
 
-> It does work when removing the compatible strings.
-
-Ah, that explains it.
-
-> > Yeah.  Though it may be too late, shame I didn't catch this when it was
-> > merged :(
-
-> Yeah, I didn't know any better too.
-
-> Rob: the bindings for this were released some time ago and they define
-> compatible strings for MFD sub-nodes, but using compatible strings for
-> sub-nodes is apparently incorrect and the drivers don't support it
-> either. Can we remove them from the bindings?
-
-I think at this point it's better to just keep compatibility rather than
-disrupt anything, I'll go ahead and apply your patch.
-
---SUk9VBj82R8Xhb8H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3v17wACgkQJNaLcl1U
-h9DbiggAhAq08wPQeNItD926Re1YRbHI9TGDDUAQ2i8GCliAn3AR1uJc2Vzjme3r
-Lx3LmdVCye9k4rZazMgTSkOcPi1eg7zmDP98tdLdyqxbwPMTK56yPiIS6rYiDeDo
-NBPW8dt7XU71RKFA6QwhVfgDoxVK63ZeXR31KkEmWf1Ybbcb2k7PDMisgjhKEyk1
-/I7KSaQ+ga/bBJQNNPd3ratyB6ut/SJMNE5bYDUOs2jJNrvUdmp0WrLAoQxRfRvl
-ZAuwZORYbMmE6W6sgymxBS0uxgHU9kBRqsXR4ypoS8qgA+wdRXmJMI3njdWIZ+87
-FOMmh0IEJ5e9PQ6QqHZQd9fwhuE9hA==
-=ItqK
------END PGP SIGNATURE-----
-
---SUk9VBj82R8Xhb8H--
+Logan
