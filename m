@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C78C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F57BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9923B20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A72820828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017101;
-	bh=/wr7f69ycqZFhinrnrv4t11zWCsbzEx6MAndDAn+BlU=;
+	s=default; t=1576017105;
+	bh=8YhErTKMnJqEhpGGs61SCekY1JkwzBvm7JgJo6zLk4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfMmiJvROWxhHIb+Ig3zf/3brLFX6pJ/yMMpuyndyTtNAoW2gocglOSkkKQWeFe1N
-	 ajNSN2EiOoDgSe/5CVQqwTiQ13TFWVjQM4OagTZ8iN9ox3WdtKC921oaCPfnYTC3IL
-	 efLUl8VhgaD1Xfe6WGm/aplaOIpDb3rkanAFgSeA=
+	b=lhX3+7XRNEqt541Fdu8AJesGMuxLLcATxTcTsI3E+IPNyUa0EAm9glWKHKvjaEAUg
+	 ooUp9WmNeX6vHAsht3q8+IoJBNl/85+iOCBvhfJMt//j7fnzOPgf2uQDiw1xpdJaIA
+	 NDF76uLA/UhJHTydJEmlDNuG/gcrEKdRkWpupBRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfLJWbk (ORCPT
+        id S1728813AbfLJWbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51538 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbfLJWb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:29 -0500
+        id S1728573AbfLJWbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06B45214D8;
-        Tue, 10 Dec 2019 22:31:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4C52073D;
+        Tue, 10 Dec 2019 22:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017088;
-        bh=/wr7f69ycqZFhinrnrv4t11zWCsbzEx6MAndDAn+BlU=;
+        s=default; t=1576017092;
+        bh=8YhErTKMnJqEhpGGs61SCekY1JkwzBvm7JgJo6zLk4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtAS5RgnUW2aVG6VF98PBNutMj/81dnvzdVT+u9d96ucH6sGEo8Ml6/6FXH1+AJ6O
-         BdWpGh6dj6oluxu3J5czlSAN607naGLG5fliz3EsXb+zLs3PlnkrER40/9iqte7K+c
-         cyYQ1R/4GIm68NNSO0NomTVQKGLNHmtsGYrzmb3I=
+        b=XWa4Nnaikrmo8JYeNHviEHV98XBMH+n88GpWkL22XWFvOZIl40QS6vM8d/EDZ+7aj
+         T8oNIwtIv9qCrvI/wVbgjOTVkGAXaraf4AxftZ+IJef7k93i5VKGukRk7BLCf+F36Q
+         xV0l6DgKaVdjC9L8U8pDVJcYvIP/kKBbFG4Bwor0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 44/91] libata: Ensure ata_port probe has completed before detach
-Date:   Tue, 10 Dec 2019 17:29:48 -0500
-Message-Id: <20191210223035.14270-44-sashal@kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 47/91] Bluetooth: Fix advertising duplicated flags
+Date:   Tue, 10 Dec 2019 17:29:51 -0500
+Message-Id: <20191210223035.14270-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -58,93 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
+[ Upstream commit 6012b9346d8959194c239fd60a62dfec98d43048 ]
 
-With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
+Instances may have flags set as part of its data in which case the code
+should not attempt to add it again otherwise it can cause duplication:
 
-[   23.452574] ------------[ cut here ]------------
-[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
-[   23.466047] Modules linked in:
-[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
-[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
-[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
-[   23.491065] pc : ata_host_detach+0x15c/0x168
-[   23.495322] lr : ata_host_detach+0x88/0x168
-[   23.499491] sp : ffff800011cabb50
-[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
-[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
-[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
-[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
-[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
-[   23.529286] x19: 0000000000000000 x18: 0000000000000004
-[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
-[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
-[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
-[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
-[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
-[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
-[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
-[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
-[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
-[   23.582272] Call trace:
-[   23.584706]  ata_host_detach+0x15c/0x168
-[   23.588616]  ata_pci_remove_one+0x10/0x18
-[   23.592615]  ahci_remove_one+0x20/0x40
-[   23.596356]  pci_device_remove+0x3c/0xe0
-[   23.600267]  really_probe+0xdc/0x3e0
-[   23.603830]  driver_probe_device+0x58/0x100
-[   23.608000]  device_driver_attach+0x6c/0x90
-[   23.612169]  __driver_attach+0x84/0xc8
-[   23.615908]  bus_for_each_dev+0x74/0xc8
-[   23.619730]  driver_attach+0x20/0x28
-[   23.623292]  bus_add_driver+0x148/0x1f0
-[   23.627115]  driver_register+0x60/0x110
-[   23.630938]  __pci_register_driver+0x40/0x48
-[   23.635199]  ahci_pci_driver_init+0x20/0x28
-[   23.639372]  do_one_initcall+0x5c/0x1b0
-[   23.643199]  kernel_init_freeable+0x1a4/0x24c
-[   23.647546]  kernel_init+0x10/0x108
-[   23.651023]  ret_from_fork+0x10/0x18
-[   23.654590] ---[ end trace 634a14b675b71c13 ]---
+< HCI Command: LE Set Extended Advertising Data (0x08|0x0037) plen 35
+        Handle: 0x00
+        Operation: Complete extended advertising data (0x03)
+        Fragment preference: Minimize fragmentation (0x01)
+        Data length: 0x06
+        Flags: 0x04
+          BR/EDR Not Supported
+        Flags: 0x06
+          LE General Discoverable Mode
+          BR/EDR Not Supported
 
-With KASAN also enabled, we may also get many use-after-free reports.
-
-The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
-attempt to detach the ata_port before it has been probed.
-
-This is because the ata_ports are async probed, meaning that there is no
-guarantee that the ata_port has probed prior to detach. When the ata_port
-does probe in this scenario, we get all sorts of issues as the detach may
-have already happened.
-
-Fix by ensuring synchronisation with async_synchronize_full(). We could
-alternatively use the cookie returned from the ata_port probe
-async_schedule() call, but that means managing the cookie, so more
-complicated.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/bluetooth/hci_request.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index da1a987c622a4..b1582f1611717 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6550,6 +6550,9 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 1015d9c8d97dd..4a89e121d6627 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -1093,6 +1093,14 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
  
-+	/* Ensure ata_port probe has completed */
-+	async_synchronize_full();
+ 	instance_flags = get_adv_instance_flags(hdev, instance);
+ 
++	/* If instance already has the flags set skip adding it once
++	 * again.
++	 */
++	if (adv_instance && eir_get_data(adv_instance->adv_data,
++					 adv_instance->adv_data_len, EIR_FLAGS,
++					 NULL))
++		goto skip_flags;
 +
- 	for (i = 0; i < host->n_ports; i++)
- 		ata_port_detach(host->ports[i]);
+ 	/* The Add Advertising command allows userspace to set both the general
+ 	 * and limited discoverable flags.
+ 	 */
+@@ -1125,6 +1133,7 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+ 		}
+ 	}
  
++skip_flags:
+ 	if (adv_instance) {
+ 		memcpy(ptr, adv_instance->adv_data,
+ 		       adv_instance->adv_data_len);
 -- 
 2.20.1
 
