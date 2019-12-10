@@ -2,235 +2,128 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70682C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22394C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473072073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB0920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575972278;
+	bh=hnqr6Ol323TzoUsNnMfOv/ryEk5EaeQj19pkPd5hYvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IVtspTq0f72ge1yrvPuhOkW3RCGuaGVRWKTyB1WEJ3BHH2sVeNu720DI0C1IJ3xEO
+	 TGDUWwgeGubOQYfBHg/ZtZst9kViqokezpokN2ffRtjHvWlQYgtlmEbAoKG1UJUZfj
+	 isj2fB1dQ08WmrCHsDhY9DrKZNoPJq6Zm4O8301U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfLJJ6r (ORCPT
+        id S1727143AbfLJKEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:58:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40559 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfLJJ6n (ORCPT
+        Tue, 10 Dec 2019 05:04:37 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44929 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJKEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:58:43 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iecHt-0006C3-BO; Tue, 10 Dec 2019 10:58:37 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DF9181C2904;
-        Tue, 10 Dec 2019 10:58:36 +0100 (CET)
-Date:   Tue, 10 Dec 2019 09:58:36 -0000
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/setup: Clean up the header portion of setup.c
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 10 Dec 2019 05:04:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so19289976wrm.11;
+        Tue, 10 Dec 2019 02:04:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QLZYchecYCyTfZUwcFTr9CQsRoFwfMan4kBgqsrapHM=;
+        b=P7XAJT31rJ/rpd72WuTsVpBVnknQjn4mrzNKCrFzLg/+rxV2lSFhBDesgWPOW0Lq+e
+         DCjfhklku1fZNpQGoAijZm28XM6IWcWExU2ub5SP4fyD5Hyu3ckin56DBVmIUkat5cS4
+         5vz6RazQdEgvpJk5h5CRLjuNKlYrmDuURzggzOzxd4WW3o9M4LD41+hqFssVFX0AFlmE
+         z+0XuS/TTm2MFj8pvj0CwFhXns4o2EuUrROldyIgw5Ce5Qg0DGGcyaElpw4MkCMEjqW/
+         znICBi7gR76N6cvB5AXensky0i+Dly8MEc6Y67Qoxkg1m6lk7LwzZyetGj3PgaTj6UCW
+         svWw==
+X-Gm-Message-State: APjAAAUUVhqzwNLUmQDsoF4IrGww/GALDAiJJT4rLAMEMNUz9S83jSky
+        d/SOQcGq2T5Fok3FPbrq45I=
+X-Google-Smtp-Source: APXvYqybjX0x512h+KKDACNn2hrSkGBTVAo55jrbH0HajQVo5vL0a3cRSttPAE8CmJ6vkzdkbqPAlQ==
+X-Received: by 2002:adf:ef49:: with SMTP id c9mr2191510wrp.292.1575972274043;
+        Tue, 10 Dec 2019 02:04:34 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f5sm2430165wmh.12.2019.12.10.02.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 02:04:33 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:04:32 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        David Hildenbrand <david@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
+ pgprot_t in arch_add_memory()
+Message-ID: <20191210100432.GC10404@dhcp22.suse.cz>
+References: <20191209191346.5197-1-logang@deltatee.com>
+ <20191209191346.5197-6-logang@deltatee.com>
+ <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
+ <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
+ <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <157597191679.30187.5908539551186413854.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Mon 09-12-19 12:43:40, Dan Williams wrote:
+> On Mon, Dec 9, 2019 at 12:24 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >
+> >
+> >
+> > On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
+> > > On 09.12.19 20:13, Logan Gunthorpe wrote:
+[...]
+> > >>  #ifdef CONFIG_MEMORY_HOTPLUG
+> > >> -int arch_add_memory(int nid, u64 start, u64 size,
+> > >> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
+> > >>                      struct mhp_restrictions *restrictions)
+> > >
+> > > Can we fiddle that into "struct mhp_restrictions" instead?
+> >
+> > Yes, if that's what people want, it's pretty trivial to do. I chose not
+> > to do it that way because it doesn't get passed down to add_pages() and
+> > it's not really a "restriction". If I don't hear any objections, I will
+> > do that for v2.
+> 
+> +1 to storing this information alongside the altmap in that structure.
+> However, I agree struct mhp_restrictions, with the MHP_MEMBLOCK_API
+> flag now gone, has lost all of its "restrictions". How about dropping
+> the 'flags' property and renaming the struct to 'struct
+> mhp_modifiers'?
 
-Commit-ID:     12609013c43acaa5e547062ffc2fcfc4dcddde2e
-Gitweb:        https://git.kernel.org/tip/12609013c43acaa5e547062ffc2fcfc4dcddde2e
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 18 Nov 2019 15:49:22 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 10 Dec 2019 09:59:37 +01:00
+Hmm, this email somehow didn't end up in my inbox so I have missed it
+before replying.
 
-x86/setup: Clean up the header portion of setup.c
-
-In 20 years we accumulated 89 #include lines in setup.c,
-but we only need 30 of them (!) ...
-
-Get rid of the excessive ones, and while at it, sort the
-remaining ones alphabetically.
-
-Also get rid of the incomplete changelogs at the header of the file,
-and explain better what this file does.
-
-Cc: linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/setup.c | 122 +++++++--------------------------------
- 1 file changed, 22 insertions(+), 100 deletions(-)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index cedfe20..7778ee0 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -2,123 +2,45 @@
- /*
-  *  Copyright (C) 1995  Linus Torvalds
-  *
-- *  Support of BIGMEM added by Gerhard Wichert, Siemens AG, July 1999
-- *
-- *  Memory region support
-- *	David Parsons <orc@pell.chi.il.us>, July-August 1999
-- *
-- *  Added E820 sanitization routine (removes overlapping memory regions);
-- *  Brian Moyle <bmoyle@mvista.com>, February 2001
-- *
-- * Moved CPU detection code to cpu/${cpu}.c
-- *    Patrick Mochel <mochel@osdl.org>, March 2002
-- *
-- *  Provisions for empty E820 memory regions (reported by certain BIOSes).
-- *  Alex Achenbach <xela@slit.de>, December 2002.
-- *
-+ * This file contains the setup_arch() code, which handles the architecture-dependent
-+ * parts of early kernel initialization.
-  */
--
--/*
-- * This file handles the architecture-dependent parts of initialization
-- */
--
--#include <linux/sched.h>
--#include <linux/mm.h>
--#include <linux/mmzone.h>
--#include <linux/screen_info.h>
--#include <linux/ioport.h>
--#include <linux/acpi.h>
--#include <linux/sfi.h>
--#include <linux/apm_bios.h>
--#include <linux/initrd.h>
--#include <linux/memblock.h>
--#include <linux/seq_file.h>
- #include <linux/console.h>
--#include <linux/root_dev.h>
--#include <linux/highmem.h>
--#include <linux/export.h>
-+#include <linux/crash_dump.h>
-+#include <linux/dmi.h>
- #include <linux/efi.h>
--#include <linux/init.h>
--#include <linux/edd.h>
-+#include <linux/init_ohci1394_dma.h>
-+#include <linux/initrd.h>
- #include <linux/iscsi_ibft.h>
--#include <linux/nodemask.h>
--#include <linux/kexec.h>
--#include <linux/dmi.h>
--#include <linux/pfn.h>
-+#include <linux/memblock.h>
- #include <linux/pci.h>
--#include <asm/pci-direct.h>
--#include <linux/init_ohci1394_dma.h>
--#include <linux/kvm_para.h>
--#include <linux/dma-contiguous.h>
--#include <xen/xen.h>
--#include <uapi/linux/mount.h>
--
--#include <linux/errno.h>
--#include <linux/kernel.h>
--#include <linux/stddef.h>
--#include <linux/unistd.h>
--#include <linux/ptrace.h>
--#include <linux/user.h>
--#include <linux/delay.h>
--
--#include <linux/kallsyms.h>
--#include <linux/cpufreq.h>
--#include <linux/dma-mapping.h>
--#include <linux/ctype.h>
--#include <linux/uaccess.h>
--
--#include <linux/percpu.h>
--#include <linux/crash_dump.h>
-+#include <linux/root_dev.h>
-+#include <linux/sfi.h>
- #include <linux/tboot.h>
--#include <linux/jiffies.h>
--#include <linux/mem_encrypt.h>
--#include <linux/sizes.h>
--
- #include <linux/usb/xhci-dbgp.h>
--#include <video/edid.h>
- 
--#include <asm/mtrr.h>
-+#include <uapi/linux/mount.h>
-+
-+#include <xen/xen.h>
-+
- #include <asm/apic.h>
--#include <asm/realmode.h>
--#include <asm/e820/api.h>
--#include <asm/mpspec.h>
--#include <asm/setup.h>
--#include <asm/efi.h>
--#include <asm/timer.h>
--#include <asm/i8259.h>
--#include <asm/sections.h>
--#include <asm/io_apic.h>
--#include <asm/ist.h>
--#include <asm/setup_arch.h>
- #include <asm/bios_ebda.h>
--#include <asm/cacheflush.h>
--#include <asm/processor.h>
- #include <asm/bugs.h>
--#include <asm/kasan.h>
--
--#include <asm/vsyscall.h>
- #include <asm/cpu.h>
--#include <asm/desc.h>
--#include <asm/dma.h>
--#include <asm/iommu.h>
-+#include <asm/efi.h>
- #include <asm/gart.h>
--#include <asm/mmu_context.h>
--#include <asm/proto.h>
--
--#include <asm/paravirt.h>
- #include <asm/hypervisor.h>
--#include <asm/olpc_ofw.h>
--
--#include <asm/percpu.h>
--#include <asm/topology.h>
--#include <asm/apicdef.h>
--#include <asm/amd_nb.h>
-+#include <asm/io_apic.h>
-+#include <asm/kasan.h>
-+#include <asm/kaslr.h>
- #include <asm/mce.h>
--#include <asm/alternative.h>
-+#include <asm/mtrr.h>
-+#include <asm/olpc_ofw.h>
-+#include <asm/pci-direct.h>
- #include <asm/prom.h>
--#include <asm/microcode.h>
--#include <asm/kaslr.h>
-+#include <asm/proto.h>
- #include <asm/unwind.h>
-+#include <asm/vsyscall.h>
- 
- /*
-  * max_low_pfn_mapped: highest direct mapped pfn under 4GB
+Well, mhp_modifiers makes some sense and it would reduce the API
+proliferation but how do you expect the prot part to be handled?
+I really do not want people to think about PAGE_KERNEL or which
+protection to use because my experience tells that this will get copied
+without much thinking or simply will break with some odd usecases.
+So how exactly this would be used?
+-- 
+Michal Hocko
+SUSE Labs
