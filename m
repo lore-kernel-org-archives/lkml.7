@@ -2,90 +2,94 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C0AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307DDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116062073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8E620652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfLJU3B (ORCPT
+        id S1727045AbfLJU3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:29:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:46139 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJU3A (ORCPT
+        Tue, 10 Dec 2019 15:29:23 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:53582 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJU3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:29:00 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N8GdE-1hjJuA0Kdk-014Ebs; Tue, 10 Dec 2019 21:28:46 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hongwei Zhang <hongweiz@ami.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: aspeed: avoid return type warning
-Date:   Tue, 10 Dec 2019 21:28:31 +0100
-Message-Id: <20191210202842.2546758-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 10 Dec 2019 15:29:23 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.3)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iem89-0020Fc-TP; Tue, 10 Dec 2019 21:29:14 +0100
+Message-ID: <1172ea9c3f70ec0ea527926b2daa6e94c80ee807.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next v2 1/5] rtnetlink: provide permanent hardware
+ address in RTM_NEWLINK
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     David Ahern <dsahern@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 10 Dec 2019 21:29:11 +0100
+In-Reply-To: <513ce8a1-f3ee-bd5f-a27c-86729e0536fd@gmail.com> (sfid-20191210_212718_256450_DC91B1DA)
+References: <cover.1575982069.git.mkubecek@suse.cz>
+         <7c28b1aa87436515de39e04206db36f6f374dc2f.1575982069.git.mkubecek@suse.cz>
+         <20191210095105.1f0008f5@cakuba.netronome.com>
+         <acd3947857e5be5340239cd49c8e2a51c283b884.camel@sipsolutions.net>
+         <0c9148be76615b3b77a3e730df75f311b1001b9f.camel@sipsolutions.net>
+         <513ce8a1-f3ee-bd5f-a27c-86729e0536fd@gmail.com>
+         (sfid-20191210_212718_256450_DC91B1DA)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wVxlXYdoiPhUAJZhlt2X1D7PcABmLjxtergfMBgekFChQe6tWpZ
- I8w8dAsL3MhlxAzx3aJut0o8lNQ+huDa+/03lMKZtybCPmqB0AJTOBwNTfynmFBoPF8q11X
- 0fl7rzVQ5Q2JVM39J6A/ntiE4ZYpUnCxy8/sdi3n7INo3/32jvI6513Rf/7/e+EF6ypwqMw
- 7jpgkIgG3VV33LgyN3ZHw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y4ivtR1MltI=:StSJ9oDv/HYfCyShHA3Kln
- HJlWZ7FKH4rMnxsdZ2nBl/UW6bh5gdRtvDC7vF0RXZcURVmMYONqK3dKQBoPqnUs6OhRdRvaV
- fGRHQlH3Z4dy1+lh4Usamimlb50nX1pL7c9XXCvkaICeUSQb8GGTdQvjgtx7F0KKDME5TkrrG
- vcp+5d7zxDK4UzkAyOGGEsZkm8a7Lb7eAXSdnHsCYArnYzOVliIUeGcAHVK0/Lu0TCj5hXX7X
- fVbLVxTGXu+UAWIRrGCHtKxuOwtL/a7TQA1fFTMG2QD/PtZ/3n/g9rWSL6dwcbLFmZmqxJnIQ
- chErrX1bOl0U93KPojuBe+zu9gXC02JfzeqL5MrH61EibZylCVWR3xu+FHuLkjaZmXNiDycMn
- 6y3zUNhipDojd9jN3Um/lKDi7Cq7OaHbPTDsQGqV8HeUeOcz0OBgMOaASpgoXrWskpkHBWmyW
- TzqkRJsMdb9nxCuAeOdozIL6fP3g8bdnCo3mnXrwKSU03CIdxjC6swqjGA71WzxIz1NzjJoC9
- bCf2p/keV+p7B2b37XKapDRGpDbzrdWy0dSwsYqsF4VuPQWtjRLV3YGHbMocgckkIOG3yWaHn
- 54sLNcUWiHO80jq9qRFMPmG8nldxRxceGtieFYJ4M4LfP+q+X+oQSgrnq2xZgRNd4/QvaKGji
- ApkJsGJbhOaXlkdON4aoL2l6aixNE6Gdh14opggsVlJaKt5rkxyIDWFhyuFzXyuSMnFMBnACj
- SARPLDbBB6oLHVI2K3Xe4enmJcz10DTzP2urQVQvpLd+8OHImMx1O7a3tHAPP9GV1e9RE4ZY/
- PeTepEbRI5+/RQ+0bq+NqBLvowYmvTpaLLeP5M1fc3LBgWW32wURRueAs/HhIgpuXzvt6f/OG
- eMl+mUJZ38GzOcZdS6EQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc has a hard time tracking whether BUG_ON(1) ends
-execution or not:
+On Tue, 2019-12-10 at 13:27 -0700, David Ahern wrote:
+> On 12/10/19 1:23 PM, Johannes Berg wrote:
+> > On Tue, 2019-12-10 at 21:22 +0100, Johannes Berg wrote:
+> > > On Tue, 2019-12-10 at 09:51 -0800, Jakub Kicinski wrote:
+> > > > On Tue, 10 Dec 2019 14:07:53 +0100 (CET), Michal Kubecek wrote:
+> > > > > @@ -1822,6 +1826,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+> > > > >  	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
+> > > > >  	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
+> > > > >  				    .len = ALTIFNAMSIZ - 1 },
+> > > > > +	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+> > > > >  };
+> > > > >  
+> > > > >  static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
+> > > > 
+> > > > Jiri, I just noticed ifla_policy didn't get strict_start_type set when
+> > > > ALT_IFNAME was added, should we add it in net? 🤔
+> > > 
+> > > Does it need one? It shouldn't be used with
+> > > nla_parse_nested_deprecated(), and if it's used with nla_parse_nested()
+> > > then it doesn't matter?
+> > 
+> > No, wait. I misread, you said "when ALT_IFNAME was added" but somehow I
+> > managed to read "when it was added"...
+> > 
+> > So yeah, it should have one. Dunno about net, your call. I'd probably
+> > not bother for an NLA_REJECT attribute, there's little use including it
+> > anyway.
+> > 
+> 
+> It's new in net, so it has to be there not net-next.
 
-drivers/gpio/gpio-aspeed-sgpio.c: In function 'bank_reg':
-drivers/gpio/gpio-aspeed-sgpio.c:112:1: error: control reaches end of non-void function [-Werror=return-type]
+Oh, ok. Well, I was actually thinking to just add it on the next
+attribute or so, but I guess now that we're discussing it there's a
+higher chance of it actually happening :)
 
-Use the simpler BUG() that gcc knows cannot continue.
-
-Fixes: f8b410e3695a ("gpio: aspeed-sgpio: Rename and add Kconfig/Makefile")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/gpio-aspeed-sgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-index 7e99860ca447..8319812593e3 100644
---- a/drivers/gpio/gpio-aspeed-sgpio.c
-+++ b/drivers/gpio/gpio-aspeed-sgpio.c
-@@ -107,7 +107,7 @@ static void __iomem *bank_reg(struct aspeed_sgpio *gpio,
- 		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
- 	default:
- 		/* acturally if code runs to here, it's an error case */
--		BUG_ON(1);
-+		BUG();
- 	}
- }
- 
--- 
-2.20.0
+johannes
 
