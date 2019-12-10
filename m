@@ -2,105 +2,123 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF53C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E638BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0F520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FE120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfLJI7W (ORCPT
+        id S1727174AbfLJI7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:59:22 -0500
-Received: from spam.zju.edu.cn ([61.164.42.155]:7180 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfLJI7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:59:21 -0500
-Received: from localhost.localdomain (unknown [222.205.61.84])
-        by mail-app3 (Coremail) with SMTP id cC_KCgB3GbxbXu9dno13Aw--.7592S3;
-        Tue, 10 Dec 2019 16:59:07 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] btrfs: add missing check after link_free_space
-Date:   Tue, 10 Dec 2019 16:56:22 +0800
-Message-Id: <20191210085623.17737-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Tue, 10 Dec 2019 03:59:37 -0500
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:8332
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbfLJI7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 03:59:36 -0500
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 487A8203AF;
+        Tue, 10 Dec 2019 08:59:29 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cC_KCgB3GbxbXu9dno13Aw--.7592S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ur15XFWUWF43Kr4xJF43ZFb_yoW8XF4xpF
-        9akF1DJw1kZw4rCFWDKw4DWFyFgayvga15uasrAa17Ar43uryqqry0yF15C3W2yr97Jr4I
-        yan8KFyUAr43AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvY1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l
-        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWU
-        twCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0J
-        U4a0PUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 10 Dec 2019 09:59:29 +0100
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Miller <davem@davemloft.net>, khc@pm.waw.pl,
+        gregkh <gregkh@linuxfoundation.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
+        "R.J.Dunlop" <bob.dunlop@farsite.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>
+Subject: Re: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
+Organization: TDT AG
+In-Reply-To: <CAK8P3a25UGV1KS1ufZsyQJk1+9Rp9is0x6eOU7pr5Xf6Z3N2gA@mail.gmail.com>
+References: <20191209151256.2497534-1-arnd@arndb.de>
+ <20191209151256.2497534-4-arnd@arndb.de>
+ <20191209.102950.2248756181772063368.davem@davemloft.net>
+ <CAK8P3a25UGV1KS1ufZsyQJk1+9Rp9is0x6eOU7pr5Xf6Z3N2gA@mail.gmail.com>
+Message-ID: <407acd92c92c3ba04578da89b1a0f191@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value of link_free_space is checked out-sync.
-One branch of an if statement uses an extra check after
-WARN_ON() but its peer branch does not. WARN_ON() does
-not change the control flow, thus only using this check
-might be insufficient.
+On 2019-12-09 20:26, Arnd Bergmann wrote:
+> On Mon, Dec 9, 2019 at 7:29 PM David Miller <davem@davemloft.net> 
+> wrote:
+>> 
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> Date: Mon,  9 Dec 2019 16:12:56 +0100
+>> 
+>> > syzbot keeps finding issues in the X.25 implementation that nobody is
+>> > interested in fixing.  Given that all the x25 patches of the past years
+>> > that are not global cleanups tend to fix user-triggered oopses, is it
+>> > time to just retire the subsystem?
+>> 
+>> I have a bug fix that I'm currently applying to 'net' right now 
+>> actually:
+>> 
+>>         https://patchwork.ozlabs.org/patch/1205973/
+>> 
+>> So your proposal might be a bit premature.
+> 
+> Ok, makes sense. Looking back in the history, I also see other bugfixes
+> from the same author.
+> 
+> Adding Martin Schiller to Cc: for a few questions:
+> 
+> - What hardware are you using for X.25?
 
-Fix this by simply adding a check on ret.
+I would say that X.25 is (at least in Germany) not dead yet. For 
+example, it is
+still used in the railway network of the Deutsche Bahn AG in many 
+different
+areas. [1]
 
-The repeated kmem_cache_free branches have not been merged 
-because this will influence the original control flow. If 
-the control flow does not step into the if (ret) branch, 
-then we actually need not to free memory again.
+We deliver products for this and use the Linux X.25 stack with some 
+bugfixes
+and extensions that I would like to get upstream.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
---
-Changes in v3:
-  - Remove WARN_ON after link_free_space
----
- fs/btrfs/free-space-cache.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+As hardware/interfaces we use X.21bis/G.703 adapters, which are 
+connected via
+HDLC_X25 and LAPB. Also for this there are extensions and bugfixes, 
+which I
+would like to include in the kernel.
 
-diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
-index 3283da419200..ae4eea12fc9a 100644
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2436,7 +2436,10 @@ int btrfs_remove_free_space(struct btrfs_block_group *block_group,
- 			info->offset += to_free;
- 			if (info->bytes) {
- 				ret = link_free_space(ctl, info);
--				WARN_ON(ret);
-+				if (ret) {
-+					kmem_cache_free(btrfs_free_space_cachep, info);
-+					goto out_lock;
-+				}
- 			} else {
- 				kmem_cache_free(btrfs_free_space_cachep, info);
- 			}
-@@ -2449,7 +2452,6 @@ int btrfs_remove_free_space(struct btrfs_block_group *block_group,
- 
- 			info->bytes = offset - info->offset;
- 			ret = link_free_space(ctl, info);
--			WARN_ON(ret);
- 			if (ret)
- 				goto out_lock;
- 
--- 
-2.21.0 (Apple Git-122)
+> - Would you be available to be listed in the MAINTAINERS file
+>   as a contact for net/x25?
+
+Yes, you can add me to the MAINTAINERS file.
+I have only limited time, but I will try to follow all requests 
+concerning this
+subsystem.
+
+> - Does your bug fix address the latest issue found by syzbot[1],
+>   or do you have an idea to fix it if not?
+
+I don't have a direct solution for the concrete problem mentioned above, 
+but at
+first sight I would say that the commit 95d6ebd53c79 ("net/x25: fix
+use-after-free in x25_device_event()") holds the wrong lock 
+(&x25_list_lock).
+Shouldn't this be the lock &x25_neigh_list_lock as in x25_get_neigh(), 
+where
+x25_neigh_hold() is called?
+
+> 
+>         Arnd
+> 
+> [1]
+> https://lore.kernel.org/netdev/CAK8P3a0LdF+aQ1hnZrVKkNBQaum0WqW1jyR7_Eb+JRiwyHWr6Q@mail.gmail.com/
 
