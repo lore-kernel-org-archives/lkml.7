@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E331DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7D9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AAD214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7820E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017050;
-	bh=pz8qCOqytb0/GpCOYMJQkxDXGGo9yHuri3OCKQSAoSc=;
+	s=default; t=1576017054;
+	bh=kEw65JPUeeeLdPYT7MjEL5X1pmo845/HjvaBh46ctSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MTSkVfFa0id4QxX/YCNwQQo+gaevK68TZ0/G5pxIyguojLeWksKLcJUJ2rCAE5kM6
-	 h+iPNbHsx5TYZ3L2oxi4PJEygXXm9hqrU3hDhuHDEJkq3zHUqt7qQ/FhBfTm2w4ljx
-	 z4YTUuevaP0KBkwvsAAk5ZIZlCDnKoCIaZZOTS6Y=
+	b=W3YKQ/v+tXJZZnhzaGkXzksX30DdTQCFqrCmiw001PATH5kOvDvS9C7uaIXOWuo6r
+	 ZHogKrEpAJWPc03EomOx0FDJyf29OUkIDfhnQlhI45kbBx0ZsM/EgNe2QcJP+B8u1o
+	 owJKq0TfFW2jSC5WWCamUc9O7CZnZfX0ZvHEWxdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfLJWau (ORCPT
+        id S1726685AbfLJWax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:30:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50486 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:30:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfLJWap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:45 -0500
+        id S1727489AbfLJWau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F81214AF;
-        Tue, 10 Dec 2019 22:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925CB2077B;
+        Tue, 10 Dec 2019 22:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017044;
-        bh=pz8qCOqytb0/GpCOYMJQkxDXGGo9yHuri3OCKQSAoSc=;
+        s=default; t=1576017049;
+        bh=kEw65JPUeeeLdPYT7MjEL5X1pmo845/HjvaBh46ctSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1KmL3i8C6bjw5YRq9vYLpaJ2R7XTAMhKu4sGQxxF+ufxEeWVLtSkabDaKLRdkcVxn
-         TdBSKz5FpxvYb6TXAlWQCBdmul8p2xTnmL+bvlwKO5PH+O9PuZmhto4gvlmsD15cEE
-         21MT2CGuFPMgbhQ/xPOI6FaASGx3+eFNHBeAbJbM=
+        b=IHvTleinE6/YSzB2MPBSle2EZhjy9SPoA/3qJPeAHTLnHBRDKL8/h81bJu5jSzqGG
+         o0dRF3XufgrxFalYCZjo9DpH0ajr1KwCt6RV4TOxU9AQRfUl2m8dMP3aHm0HBnFAJ5
+         108PYDZgiW2vMLBE3EXOCAF0osyEfIT48srlGDBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.9 07/91] staging: rtl8188eu: fix possible null dereference
-Date:   Tue, 10 Dec 2019 17:29:11 -0500
-Message-Id: <20191210223035.14270-7-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/91] IB/iser: bound protection_sg size by data_sg size
+Date:   Tue, 10 Dec 2019 17:29:15 -0500
+Message-Id: <20191210223035.14270-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,52 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor Kuehl <connor.kuehl@canonical.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 228241944a48113470d3c3b46c88ba7fbe0a274b ]
+[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
 
-Inside a nested 'else' block at the beginning of this function is a
-call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
-If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
-the 'else if' where 'psta' is dereferenced, then we will dereference
-a NULL pointer.
+In case we don't set the sg_prot_tablesize, the scsi layer assign the
+default size (65535 entries). We should limit this size since we should
+take into consideration the underlaying device capability. This cap is
+considered when calculating the sg_tablesize. Otherwise, for example,
+we can get that /sys/block/sdb/queue/max_segments is 128 and
+/sys/block/sdb/queue/max_integrity_segments is 65535.
 
-Fix this by checking if 'psta' is not NULL before reading its
-'psta->qos_option' data member.
-
-Addresses-Coverity: ("Dereference null return value")
-
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20190926150317.5894-1-connor.kuehl@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-index 0f8b8e0bffdf9..dedc313e9dea7 100644
---- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-@@ -805,7 +805,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
+index e46e2b095c184..fdf5179a81c10 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.c
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
+@@ -649,6 +649,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
+ 		if (ib_conn->pi_support) {
+ 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
  
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
- 			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-@@ -813,7 +813,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
- 
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else {
- 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
++			shost->sg_prot_tablesize = shost->sg_tablesize;
+ 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
+ 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
+ 						   SHOST_DIX_GUARD_CRC);
 -- 
 2.20.1
 
