@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F55AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92108C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C52207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DF22080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575950543;
-	bh=cHLTLZeys6gPXi7kdLlViUglgETxAyHwd8fFYGAZ/Iw=;
+	s=default; t=1575950548;
+	bh=AlnyTVcydKXYEZM+zPouM3bg0nqjjhcVZIJoo3JA3YE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+4F3VkeTnIPYV8kLZwZBnOnnyr1fH8AC0O8wQBo/FCHxjILiM01kkYfUA576wmQl
-	 bAhSRXm6gGzzAJ5du1+1ZxS8fXdRasXY4I2MHRinq0oxTH8EOqTBRvXk5AxPUrkwJg
-	 9wRyu5Awc1akWmAUMzIoBDSWZoDScNR2UBBrAnnA=
+	b=yDt1x7cwDNOrQjdedbtDXlIfm5ROjyL3AY0qk+nWilna1E04TNVsrFZpGAyqmT9eZ
+	 N5Cywa5t0gJdi4BdjUBtMYjZJKKJpWcVIf+ddAbndl3Q3w+JS2zceTu9Ph7Z2ZK8M2
+	 HrtnspdCB4Aqc1fAWH6q+spFoTGvq2EqN1b3k+Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLJECS (ORCPT
+        id S1727217AbfLJEC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:02:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:02:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfLJECB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:02:01 -0500
+        id S1726955AbfLJECA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 23:02:00 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B42C2465B;
-        Tue, 10 Dec 2019 04:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6AA620828;
+        Tue, 10 Dec 2019 04:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1575950519;
-        bh=cHLTLZeys6gPXi7kdLlViUglgETxAyHwd8fFYGAZ/Iw=;
+        bh=AlnyTVcydKXYEZM+zPouM3bg0nqjjhcVZIJoo3JA3YE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IzJeNo/9m0pOYg1n5q24g4Hor/GFr9eZ+ERGWoDN5419b7lolK8RxTmyACAB3N4zu
-         z893QFTjqDxDTn3A4idz3eT5wESuoT/0jiB8uhMrEFg1Cu/NCeqBZnbRO26mnGZFqC
-         tu4JxAIhlXkjaNczaqHPuikDwzcxvfEmvk2vHCs4=
+        b=ZATsqWZIxzTlb2lhrwEtbyBK30bpd261l/H6xl/qO8RE5XHKeQUSjuBpHjpQgsRWl
+         8t8Qnh5iGmN9m10gzZAwF5dJj9JZcot7Ak4b7qMJ8ZfQxpt6yRrpZVSawmaMAdC0N3
+         Y/nWvGcS4WUGRVzwCfMH6iR2AQ9fHB16kBJGf3lI=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         Neeraj Upadhyay <neeraju@codeaurora.org>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 06/10] rcu: Allow only one expedited GP to run concurrently with wakeups
-Date:   Mon,  9 Dec 2019 20:01:50 -0800
-Message-Id: <20191210040154.2498-6-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/10] rcu: Fix missed wakeup of exp_wq waiters
+Date:   Mon,  9 Dec 2019 20:01:49 -0800
+Message-Id: <20191210040154.2498-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210040122.GA2419@paulmck-ThinkPad-P72>
 References: <20191210040122.GA2419@paulmck-ThinkPad-P72>
@@ -62,83 +62,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-The current expedited RCU grace-period code expects that a task
-requesting an expedited grace period cannot awaken until that grace
-period has reached the wakeup phase.  However, it is possible for a long
-preemption to result in the waiting task never sleeping.  For example,
-consider the following sequence of events:
+Tasks waiting within exp_funnel_lock() for an expedited grace period to
+elapse can be starved due to the following sequence of events:
 
-1.	Task A starts an expedited grace period by invoking
-	synchronize_rcu_expedited().  It proceeds normally up to the
-	wait_event() near the end of that function, and is then preempted
-	(or interrupted or whatever).
+1.	Tasks A and B both attempt to start an expedited grace
+	period at about the same time.	This grace period will have
+	completed when the lower four bits of the rcu_state structure's
+	->expedited_sequence field are 0b'0100', for example, when the
+	initial value of this counter is zero.	Task A wins, and thus
+	does the actual work of starting the grace period, including
+	acquiring the rcu_state structure's .exp_mutex and sets the
+	counter to 0b'0001'.
 
-2.	The expedited grace period completes, and a kworker task starts
-	the awaken phase, having incremented the counter and acquired
-	the rcu_state structure's .exp_wake_mutex.  This kworker task
-	is then preempted or interrupted or whatever.
+2.	Because task B lost the race to start the grace period, it
+	waits on ->expedited_sequence to reach 0b'0100' inside of
+	exp_funnel_lock(). This task therefore blocks on the rcu_node
+	structure's ->exp_wq[1] field, keeping in mind that the
+	end-of-grace-period value of ->expedited_sequence (0b'0100')
+	is shifted down two bits before indexing the ->exp_wq[] field.
 
-3.	Task A resumes and enters wait_event(), which notes that the
-	expedited grace period has completed, and thus doesn't sleep.
+3.	Task C attempts to start another expedited grace period,
+	but blocks on ->exp_mutex, which is still held by Task A.
 
-4.	Task B starts an expedited grace period exactly as did Task A,
-	complete with the preemption (or whatever delay) just before
-	the call to wait_event().
+4.	The aforementioned expedited grace period completes, so that
+	->expedited_sequence now has the value 0b'0100'.  A kworker task
+	therefore acquires the rcu_state structure's ->exp_wake_mutex
+	and starts awakening any tasks waiting for this grace period.
 
-5.	The expedited grace period completes, and another kworker
-	task starts the awaken phase, having incremented the counter.
-	However, it blocks when attempting to acquire the rcu_state
-	structure's .exp_wake_mutex because step 2's kworker task has
-	not yet released it.
+5.	One of the first tasks awakened happens to be Task A.  Task A
+	therefore releases the rcu_state structure's ->exp_mutex,
+	which allows Task C to start the next expedited grace period,
+	which causes the lower four bits of the rcu_state structure's
+	->expedited_sequence field to become 0b'0101'.
 
-6.	Steps 4 and 5 repeat, resulting in overflow of the rcu_node
-	structure's ->exp_wq[] array.
+6.	Task C's expedited grace period completes, so that the lower four
+	bits of the rcu_state structure's ->expedited_sequence field now
+	become 0b'1000'.
 
-In theory, this is harmless.  Tasks waiting on the various ->exp_wq[]
-array will just be spuriously awakened, but they will just sleep again
-on noting that the rcu_state structure's ->expedited_sequence value has
-not advanced far enough.
+7.	The kworker task from step 4 above continues its wakeups.
+	Unfortunately, the wake_up_all() refetches the rcu_state
+	structure's .expedited_sequence field:
 
-In practice, this wastes CPU time and is an accident waiting to happen.
-This commit therefore moves the rcu_exp_gp_seq_end() call that officially
-ends the expedited grace period (along with associate tracing) until
-after the ->exp_wake_mutex has been acquired.  This prevents Task A from
-awakening prematurely, thus preventing more than one expedited grace
-period from being in flight during a previous expedited grace period's
-wakeup phase.
+	wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+
+	This results in the wakeup being applied to the rcu_node
+	structure's ->exp_wq[2] field, which is unfortunate given that
+	Task B is instead waiting on ->exp_wq[1].
+
+On a busy system, no harm is done (or at least no permanent harm is done).
+Some later expedited grace period will redo the wakeup.  But on a quiet
+system, such as many embedded systems, it might be a good long time before
+there was another expedited grace period.  On such embedded systems,
+this situation could therefore result in a system hang.
+
+This issue manifested as DPM device timeout during suspend (which
+usually qualifies as a quiet time) due to a SCSI device being stuck in
+_synchronize_rcu_expedited(), with the following stack trace:
+
+	schedule()
+	synchronize_rcu_expedited()
+	synchronize_rcu()
+	scsi_device_quiesce()
+	scsi_bus_suspend()
+	dpm_run_callback()
+	__device_suspend()
+
+This commit therefore prevents such delays, timeouts, and hangs by
+making rcu_exp_wait_wake() use its "s" argument consistently instead of
+refetching from rcu_state.expedited_sequence.
 
 Fixes: 3b5f668e715b ("rcu: Overlap wakeups with next expedited grace period")
 Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-[ paulmck: Added updated comment. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_exp.h | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ kernel/rcu/tree_exp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index fa143e4..7a1f093 100644
+index 3b59c3e..fa143e4 100644
 --- a/kernel/rcu/tree_exp.h
 +++ b/kernel/rcu/tree_exp.h
-@@ -539,14 +539,13 @@ static void rcu_exp_wait_wake(unsigned long s)
- 	struct rcu_node *rnp;
- 
- 	synchronize_sched_expedited_wait();
--	rcu_exp_gp_seq_end();
--	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
- 
--	/*
--	 * Switch over to wakeup mode, allowing the next GP, but -only- the
--	 * next GP, to proceed.
--	 */
-+	// Switch over to wakeup mode, allowing the next GP to proceed.
-+	// End the previous grace period only after acquiring the mutex
-+	// to ensure that only one GP runs concurrently with wakeups.
- 	mutex_lock(&rcu_state.exp_wake_mutex);
-+	rcu_exp_gp_seq_end();
-+	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("end"));
- 
- 	rcu_for_each_node_breadth_first(rnp) {
- 		if (ULONG_CMP_LT(READ_ONCE(rnp->exp_seq_rq), s)) {
+@@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
+ 			spin_unlock(&rnp->exp_lock);
+ 		}
+ 		smp_mb(); /* All above changes before wakeup. */
+-		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
++		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+ 	}
+ 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+ 	mutex_unlock(&rcu_state.exp_wake_mutex);
 -- 
 2.9.5
 
