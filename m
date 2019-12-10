@@ -2,97 +2,116 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748A9C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E33C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497A92077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22840206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576012684;
+	bh=t4qaAVhrByK3X7sketG15UMMUfKrub3CkV0rdYVJWzE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JFUVj4v+q7ioRNK5mqry3BtrYdWpHARyJJKE6iu5GSlrwgkNqqzUzqzsTkJChLkpX
+	 dVJzvqc3VwCpVj+e2hMSDYoqNEko45sjqEdaujXJIbMT6uKzlHKv6bVnUzaJcJoXOM
+	 Qf8KNXIhddZsHn5vFn9EVQNwMFFCXmEU6YBuOets=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfLJVRy (ORCPT
+        id S1729088AbfLJVMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:17:54 -0500
-Received: from mga01.intel.com ([192.55.52.88]:58566 "EHLO mga01.intel.com"
+        Tue, 10 Dec 2019 16:12:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727528AbfLJVRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:17:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 13:17:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
-   d="scan'208";a="210505395"
-Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Dec 2019 13:17:50 -0800
-Subject: [PATCH] tpm: fix WARNING: lock held when returning to user space
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     tadeusz.struk@intel.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org, jgg@ziepe.ca,
-        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
-        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
-Date:   Tue, 10 Dec 2019 13:17:51 -0800
-Message-ID: <157601267151.12904.7408818232910113434.stgit@tstruk-mobl1>
-In-Reply-To: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
-References: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
-User-Agent: StGit/0.17.1-dirty
+        id S1727145AbfLJVMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 601682073D;
+        Tue, 10 Dec 2019 21:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012356;
+        bh=t4qaAVhrByK3X7sketG15UMMUfKrub3CkV0rdYVJWzE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dsgXqwolKRFzZ1P9HoAsD+gzzqFmcupfgABvGx2SH8BExsMpva8aes38UpRtJKGhw
+         iuixVJgZVV5PgaXRnZwAcaqjroEtsl0eAIeoYYpLUUpHdlC2h2U5JL0Kiy8jhmlZQi
+         5w1EWaXL0rVHE+sXQiC2JpaKCdM0Gkm4Z1yhT8fM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 284/350] qtnfmac: fix using skb after free
+Date:   Tue, 10 Dec 2019 16:06:29 -0500
+Message-Id: <20191210210735.9077-245-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an application sends TPM commands in NONBLOCKING mode
-the driver holds chip->tpm_mutex returning from write(),
-which triggers WARNING: lock held when returning to user space!
-To silence this warning the driver needs to release the mutex
-and acquire it again in tpm_dev_async_work() before sending
-the command.
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-Cc: stable@vger.kernel.org
-Fixes: 9e1b74a63f776 (tpm: add support for nonblocking operation)
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+[ Upstream commit 4a33f21cef84b1b933958c99ed5dac1726214b35 ]
+
+KASAN reported use-after-free error:
+
+[  995.220767] BUG: KASAN: use-after-free in qtnf_cmd_send_with_reply+0x169/0x3e0 [qtnfmac]
+[  995.221098] Read of size 2 at addr ffff888213d1ded0 by task kworker/1:1/71
+
+The issue in qtnf_cmd_send_with_reply impacts all the commands that do
+not need response other then return code. For such commands, consume_skb
+is used for response skb and right after that return code in response
+skb is accessed.
+
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-dev-common.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/wireless/quantenna/qtnfmac/commands.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
-index 2ec47a69a2a6..b23b0b999232 100644
---- a/drivers/char/tpm/tpm-dev-common.c
-+++ b/drivers/char/tpm/tpm-dev-common.c
-@@ -61,6 +61,12 @@ static void tpm_dev_async_work(struct work_struct *work)
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+index dc0c7244b60e3..c0c32805fb8de 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+@@ -83,6 +83,7 @@ static int qtnf_cmd_send_with_reply(struct qtnf_bus *bus,
+ 	struct qlink_cmd *cmd;
+ 	struct qlink_resp *resp = NULL;
+ 	struct sk_buff *resp_skb = NULL;
++	int resp_res = 0;
+ 	u16 cmd_id;
+ 	u8 mac_id;
+ 	u8 vif_id;
+@@ -113,6 +114,7 @@ static int qtnf_cmd_send_with_reply(struct qtnf_bus *bus,
+ 	}
  
- 	mutex_lock(&priv->buffer_mutex);
- 	priv->command_enqueued = false;
-+	ret = tpm_try_get_ops(priv->chip);
-+	if (ret) {
-+		priv->response_length = ret;
-+		goto out;
-+	}
-+
- 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
- 			       sizeof(priv->data_buffer));
- 	tpm_put_ops(priv->chip);
-@@ -68,6 +74,7 @@ static void tpm_dev_async_work(struct work_struct *work)
- 		priv->response_length = ret;
- 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
- 	}
-+out:
- 	mutex_unlock(&priv->buffer_mutex);
- 	wake_up_interruptible(&priv->async_wait);
- }
-@@ -204,6 +211,7 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
- 	if (file->f_flags & O_NONBLOCK) {
- 		priv->command_enqueued = true;
- 		queue_work(tpm_dev_wq, &priv->async_work);
-+		tpm_put_ops(priv->chip);
- 		mutex_unlock(&priv->buffer_mutex);
- 		return size;
- 	}
+ 	resp = (struct qlink_resp *)resp_skb->data;
++	resp_res = le16_to_cpu(resp->result);
+ 	ret = qtnf_cmd_check_reply_header(resp, cmd_id, mac_id, vif_id,
+ 					  const_resp_size);
+ 	if (ret)
+@@ -128,8 +130,8 @@ static int qtnf_cmd_send_with_reply(struct qtnf_bus *bus,
+ 	else
+ 		consume_skb(resp_skb);
+ 
+-	if (!ret && resp)
+-		return qtnf_cmd_resp_result_decode(le16_to_cpu(resp->result));
++	if (!ret)
++		return qtnf_cmd_resp_result_decode(resp_res);
+ 
+ 	pr_warn("VIF%u.%u: cmd 0x%.4X failed: %d\n",
+ 		mac_id, vif_id, cmd_id, ret);
+-- 
+2.20.1
 
