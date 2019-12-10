@@ -4,51 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE177C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE9EC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D1F20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1143C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015651;
-	bh=16FYzRNi2DXgouO8ewO/GG8teFaO/XQJ1D395ooRIVs=;
+	s=default; t=1576015655;
+	bh=xaXdTT0WC7zzL+pYCxgzGvN3CFviciHZJBOc7SedoPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWLAcLaiVhZaMyOEyTMxCZJPevqW71dH0xKolSQFMelaWbbSeUoZ/XpfugQKmBBU9
-	 PmEDo8ru4+6SEGXAmfPENGNbKOCn9oxWco8TIsm0IIICGXZfiAYaWdeyS2sOMwRD8x
-	 1hLRA26J7sBktkcDeaOqHQUydeG2lUNkbYdrSqAU=
+	b=ixsNgEFil1TviRfmfSJThihd8C17AEzJ9lOXfb3yIvOJhU6zchKYwDsGUTaJSFRHe
+	 hc/qOpN0BY4efSD0UfoyyCI+K6T9Ebd/nRkLpaJlp3jyXsxJ73WrNuFAAk0c2ED83Z
+	 xa3u7emlSunb0FMomCDRKQZ/BKy3s45cS6qTWNLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfLJWHa (ORCPT
+        id S1729361AbfLJWFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36324 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbfLJWFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:07 -0500
+        id S1729163AbfLJWEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BFBE2073B;
-        Tue, 10 Dec 2019 22:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73472073B;
+        Tue, 10 Dec 2019 22:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015507;
-        bh=16FYzRNi2DXgouO8ewO/GG8teFaO/XQJ1D395ooRIVs=;
+        s=default; t=1576015490;
+        bh=xaXdTT0WC7zzL+pYCxgzGvN3CFviciHZJBOc7SedoPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xduOiWNs/QkMWThi5c7DeKxxlqA3Q7iLxG7EiA+qBsQKfYB/lE8GI/+xzRV5edEwn
-         h2leUCzBPYuG2JeXOMjwtq48FqSdC1XX0KQdXZBDU8GpUoYHrLzfKBQU8IAihVM+/d
-         JkBcLibjeXv7/CDW0jvtRVC7Wy3zcTzytov9btjk=
+        b=okf9ZbQgi8r6a3/YNJ/V9cbP874fInhv7tWvPSPGM9Gv2XUW0D8JLKAKxxqrWtyQq
+         mbqS+lansU+AmkE0MNBB4/2Tf5bOElGbyu/GyNiWl67qdGQgIp0qGTjo+HpRhbw5it
+         DLOYc7Byxp+JuIW1jrZSb9Yqg+vvkH8GufdrWR6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 106/130] net: bcmgenet: Add RGMII_RXID support
-Date:   Tue, 10 Dec 2019 17:02:37 -0500
-Message-Id: <20191210220301.13262-106-sashal@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 091/130] perf parse: If pmu configuration fails free terms
+Date:   Tue, 10 Dec 2019 17:02:22 -0500
+Message-Id: <20191210220301.13262-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,37 +75,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit da38802211cc3fd294211a642932edb09e3af632 ]
+[ Upstream commit 38f2c4226e6bc3e8c41c318242821ba5dc825aba ]
 
-This adds the missing support for the PHY mode RGMII_RXID.
-It's necessary for the Raspberry Pi 4.
+Avoid a memory leak when the configuration fails.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191030223448.12930-9-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmmii.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/parse-events.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index fca9da1b13635..201cc533d0344 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -267,6 +267,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 		bcmgenet_sys_writel(priv,
- 				    PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
- 		break;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 29e2bb304168c..096c52f296d77 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1253,8 +1253,15 @@ static int __parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (get_config_terms(head_config, &config_terms))
+ 		return -ENOMEM;
+ 
+-	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error))
++	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
++		struct perf_evsel_config_term *pos, *tmp;
 +
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		phy_name = "external RGMII (RX delay)";
-+		port_ctrl = PORT_MODE_EXT_GPHY;
-+		break;
- 	default:
- 		dev_err(kdev, "unknown phy mode: %d\n", priv->phy_interface);
++		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
++			list_del_init(&pos->list);
++			free(pos);
++		}
  		return -EINVAL;
++	}
+ 
+ 	evsel = __add_event(list, &parse_state->idx, &attr,
+ 			    get_config_name(head_config), pmu,
 -- 
 2.20.1
 
