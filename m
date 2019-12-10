@@ -6,116 +6,86 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32DDC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FEF20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF592073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLJUnT (ORCPT
+        id S1726801AbfLJUom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:43:19 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:47761 "EHLO
+        Tue, 10 Dec 2019 15:44:42 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:35431 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfLJUnQ (ORCPT
+        with ESMTP id S1725999AbfLJUom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:43:16 -0500
+        Tue, 10 Dec 2019 15:44:42 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MN5W9-1iOcuK2SST-00J1lI; Tue, 10 Dec 2019 21:43:05 +0100
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M5fQq-1id9Xg41sY-007E8Y; Tue, 10 Dec 2019 21:44:31 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: tegra: mark PM functions as __maybe_unused
-Date:   Tue, 10 Dec 2019 21:42:58 +0100
-Message-Id: <20191210204304.3313845-1-arnd@arndb.de>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: fix format string warning
+Date:   Tue, 10 Dec 2019 21:44:16 +0100
+Message-Id: <20191210204429.3383471-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LvIe3xUHuuPDkbK+6q+8yJiA9Fy+DJa+D4MMErBdioZQrBVJcRJ
- /rAyfxdAFGSUIfY2w+bfOOmxTJ7cn/ZVyDxsk34zfivVZ6VWKHgBZMtEnQfy2OTIyyMEwt7
- pm+yq9MSGrCMELZwoY1TsYYCLBGdoOQ5Erufm0z/Wf4eJjcJ3n+6CsaOtG2V4FYZgHDKRnJ
- 8bN9DfRMprmBQHpb1GB6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:B3T4ErrlCQQ=:fAyd3pJFXjEWurdJz4jTJw
- i7zZc9uIsQCe132lVtnZYbmUiBShLxoRn5JL9YRvY/kuU3lINEphRy1njgLNOLPbEcKblK7tp
- wLOIf4PcwpEPKhAnrFtdys2kOsmZmUA3A48EJ2URYCsMzkht7G+0G6tH78avnowXfnZXB1vcQ
- 1jlw3Utl8kowESwtErS1J7O1+jWSGILXsbmXKfqtr0ReSBEy84DS2JYd4OUFUMLY0ACCB598s
- M4PS9Mk26Oy4j3CmQiPlz3HckwQQ4cH0NUfbN/MN/EaDC6Ye5A/UJfk/DidNPVMo77PDI9+ZJ
- bvaC0BSGXhVpLcs5HqgZsH3DQ37WEdrF7UWd9ySPA8TkFKXZ4yLQ2jPo8hCSlv4qZvDSeSnF8
- bTMz9c9Ri4rcNwIu8kqSHEIhv6ZqHaWhiM7b0s74PpccfJbSBJz7YKIgZtJIGNkKFQkAAz4Kq
- Z5ChDMLQEZE59B1/k8eHBJS+C5kGbbNtOckpABk0VXKUHNidUOnFZ37ZMYXjNZKMDWm2bfw08
- zgja4ZUoV4sgIcK14fjGozvu/8KdNSY9fqG8PAlkdor9/m0SPNrWMUP+HKlfYA+caeXBC8BzE
- SKuwvwB0UzES7RHoT6508f+z0BxdLf2jPtW1zoLlOdUMLf8ip6OxDtqV+RUfbh8PhOddzKPmN
- kX+BdwlnNGJOZVMuF9I/zD7ln/rOTfS4Mq23KVM/Y+KioLcoG/Ugp1ggjO3ILrrZLWXKW89hX
- dXwxaxlrSfjsDmStlTr4pkfifZPIa/E/dwsYXA0NJ7eDDW81dNqqFa7ra5swQMaHeLT8Z30vu
- jBr9JBHwh14CNW7zRfofiA9JzSWBCnJQZXayd6hAMzHsoE/2uOPTsX8DkkicnWid9a4UcWWX7
- 2CZcNXlHLOw4+x1VsI0Q==
+X-Provags-ID: V03:K1:fkWU2dqOu7RW9WJgIGMm6dYvGG94Cinc06kMtHqOqNk38iTxfmg
+ k5h9IqQvu5n3E5gEjn2ilcUrVt93b5dMbPlbqjic9mt5UivT5iS6LlhARBRv3M6mUh2SEHx
+ FDEdnLS2YOpxM94nghEDd7AAJ1sTg+mMGmLxA5WvewuxEiCVD7Wz3o2sM4zIId29q2llC50
+ XGfZi2mAR9gfvAPYv/isg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tSW74QnZ+WA=:86kHDUdr9lu5Hyau6Eigur
+ /LIAAzY68Nt59XSEtNSVGAqm3w/ECsvQtcWhoOkf/sJ/ek8X4OyXrn5nhr5EUWM5DgfO7wMVm
+ NDkI3eiWSH5QT0ywy00s2v80DVGePzi3vSw2OPPDD9Iw8NADylRjSSM6h9cLAfK7/two115RX
+ jIeTHC9ZZiJWcvPjfxBydYy3IrZU8TkL3nPKYLgmnRQKXYU5w6GTWp2dnazGDNbhW2Dwb+O0l
+ UuwMnZgWRZqSlGDcic5clXiSwXX6c838y0p+mKoGM4ixNn2cqUyshLZlWoTDXErF565aIvSBB
+ jPxPL38OwkF08Zjsyjj2FnkuuEh6E0wsuegp2c4gXdl3Gd+Srp8TDK/3XrnT9K+cgJbZyjy8f
+ RqPWfx4yc/s3jb/CbS9VMxR5tqP4PRrDNGBnuobvIOQZ1ELY8PLQ1SzRZwQq/E1w5CeUy6IPB
+ f5gLL+7tOTSK8OIsCdLvGC0nqh1+TYv/5ciEXRFAlocGqKjhqgdBBEvwrnElXpM8SzJi9bye4
+ 3nvxe4xm5fER5DTJcbp9D7FGDX03unqJaSfp3Jl0vc2H0kjXvoAjODIrNlASGa/COIq2/8/m1
+ rB4ZjpxqqqVJnZ3EpBl5puakwOcqizaSXuOd94gow99knEkj5Aqtw2A4U6mA3mO2t4eu8CwwR
+ DfQFZsvjX2doTGMdwEinT8qylA3wYS4nqsCqGWfkyEpQLFZfytIV+Wed4LGzJisJw+0shcMX5
+ 477gpw+FG4Wgn33+LT9nxmAjFwsc7m9RsLsztI4t2tvJscwyKyyNFi9v0PKVGi8yeQWW6YUtY
+ i8v85XPmt3G8LHEua30p9ohkpIya5EPAh4adkFGsoNatLbdhLurfliilBnWhJYK/YQNToL1M9
+ oDSgwx3aaR/Qk9eznaoQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without CONFIG_PM, some functions cause harmless warnings:
+To print a size_t, the format string modifier %z should be used instead
+of %l:
 
-drivers/gpu/drm/tegra/sor.c:3984:12: error: 'tegra_sor_resume' defined but not used [-Werror=unused-function]
- static int tegra_sor_resume(struct device *dev)
-            ^~~~~~~~~~~~~~~~
-drivers/gpu/drm/tegra/sor.c:3970:12: error: 'tegra_sor_suspend' defined but not used [-Werror=unused-function]
- static int tegra_sor_suspend(struct device *dev)
-            ^~~~~~~~~~~~~~~~~
+fs/btrfs/tree-checker.c: In function 'check_extent_data_item':
+fs/btrfs/tree-checker.c:230:43: error: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'unsigned int' [-Werror=format=]
+     "invalid item size, have %u expect [%lu, %u)",
+                                         ~~^
+                                         %u
 
-Mark these as __maybe_unused so the compiler can drop them
-silently.
-
+Fixes: 153a6d299956 ("btrfs: tree-checker: Check item size before reading file extent type")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/tegra/sor.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/btrfs/tree-checker.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
-index a68d3b36b972..69b9ebee7486 100644
---- a/drivers/gpu/drm/tegra/sor.c
-+++ b/drivers/gpu/drm/tegra/sor.c
-@@ -3912,7 +3912,7 @@ static int tegra_sor_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int tegra_sor_runtime_suspend(struct device *dev)
-+static int __maybe_unused tegra_sor_runtime_suspend(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3934,7 +3934,7 @@ static int tegra_sor_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_runtime_resume(struct device *dev)
-+static int __maybe_unused tegra_sor_runtime_resume(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3967,7 +3967,7 @@ static int tegra_sor_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_suspend(struct device *dev)
-+static int __maybe_unused tegra_sor_suspend(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
-@@ -3981,7 +3981,7 @@ static int tegra_sor_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int tegra_sor_resume(struct device *dev)
-+static int __maybe_unused tegra_sor_resume(struct device *dev)
- {
- 	struct tegra_sor *sor = dev_get_drvdata(dev);
- 	int err;
+diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
+index 493d4d9e0f79..092b8ece36d7 100644
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -227,7 +227,7 @@ static int check_extent_data_item(struct extent_buffer *leaf,
+ 	 */
+ 	if (item_size < BTRFS_FILE_EXTENT_INLINE_DATA_START) {
+ 		file_extent_err(leaf, slot,
+-				"invalid item size, have %u expect [%lu, %u)",
++				"invalid item size, have %u expect [%zu, %u)",
+ 				item_size, BTRFS_FILE_EXTENT_INLINE_DATA_START,
+ 				SZ_4K);
+ 		return -EUCLEAN;
 -- 
 2.20.0
 
