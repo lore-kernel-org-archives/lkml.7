@@ -2,123 +2,75 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BF5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA770C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFBB205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013268;
-	bh=aC3eF3AXy1D1tdrKUgWEMgfafwOFEfwvJ0RSRxPOri8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeRRuu/HlvQLQzNkXaMs6zTXx7UxlNUpDbNJ6SNJ5lN82CebKwTlCCIERfCsAELC+
-	 I0hDvqu1P7geWSmHBDsTpgpjSdQU+nHWM+LCxbcepmckp2XyRfPCyq6wQN5joqRsOh
-	 Xj1ZvG/M32zNqHF+y9w4v/pgN8fWs9jgNT9NVFm4=
+	by mail.kernel.org (Postfix) with ESMTP id 89F4F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfLJVKc (ORCPT
+        id S1728985AbfLJV1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbfLJVKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:31 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C78246AF;
-        Tue, 10 Dec 2019 21:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012231;
-        bh=aC3eF3AXy1D1tdrKUgWEMgfafwOFEfwvJ0RSRxPOri8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgNDheJT2t4UbySnwFMde2nXRrLOBenU7Z2BwQc8t+r4qRej4u9zidKW8a5UB7hiz
-         6U5tJ9thYK9EmlR8yqSPHgy6Xljua2SxJK+ozKhSG3+YiZNsKr+DukdsILU117pfAA
-         lduHAMHY3z/Am++6E6kXmMinmDxAlw+iEM4LjnrU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 180/350] phy: renesas: phy-rcar-gen2: Fix the array off by one warning
-Date:   Tue, 10 Dec 2019 16:04:45 -0500
-Message-Id: <20191210210735.9077-141-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:27:51 -0500
+Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:59486 "EHLO
+        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfLJV1s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:27:48 -0500
+Received: from darkstar.musicnaut.iki.fi (85-76-143-83-nat.elisa-mobile.fi [85.76.143.83])
+        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id E27983000B;
+        Tue, 10 Dec 2019 23:27:44 +0200 (EET)
+Date:   Tue, 10 Dec 2019 23:27:44 +0200
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Sumit Pundir <pundirsumit11@gmail.com>,
+        linux-kernel@vger.kernel.org, David Daney <ddaney.cavm@gmail.com>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Laura Lazzati <laura.lazzati.15@gmail.com>
+Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
+ controller driver
+Message-ID: <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <20191210091509.3546251-2-gregkh@linuxfoundation.org>
+ <20191210193153.GB18225@darkstar.musicnaut.iki.fi>
+ <20191210201957.GB4070187@kroah.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210201957.GB4070187@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
+On Tue, Dec 10, 2019 at 09:19:57PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Dec 10, 2019 at 09:31:54PM +0200, Aaro Koskinen wrote:
+> > Hi,
+> > 
+> > On Tue, Dec 10, 2019 at 10:15:09AM +0100, Greg Kroah-Hartman wrote:
+> > > This driver was merged back in 2013 and shows no progress toward every
+> > > being merged into the "correct" part of the kernel.
+> > 
+> > Do you mean all the patches since 2013 were "no progress"? Thanks.
+> 
+> I have not seen any proposals to get it out of staging at all.  If the
+> only thing left really is just those two simple TODO lines, then why has
+> it taken 6 years to do that?
 
-[ Upstream commit c9baab38fe0e28762d0d67611cbe2aef0fb3fc72 ]
+Do you mean you did not see the below thread when I asked for help;
+it was a kind of propsal, no? Also things take time when you are just a
+hobbyist reverse engineering undocumented hardware that you also run in
+production. Yes, I'm slow, but the starting point wasn't also a very good.
 
-Fix the below smatch warning by adding variable check rather than the
-hardcoded value.
-warn: array off by one? 'data->select_value[channel_num]'
+https://marc.info/?t=155839354700002&r=1&w=2
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/phy/renesas/phy-rcar-gen2.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I don't mind you deleting the driver, and if you think that "no progress"
+is true then I'm very sorry for all those commits/noise.
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 2926e49373017..2e279ac0fa4d6 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -71,6 +71,7 @@ struct rcar_gen2_phy_driver {
- struct rcar_gen2_phy_data {
- 	const struct phy_ops *gen2_phy_ops;
- 	const u32 (*select_value)[PHYS_PER_CHANNEL];
-+	const u32 num_channels;
- };
- 
- static int rcar_gen2_phy_init(struct phy *p)
-@@ -271,11 +272,13 @@ static const u32 usb20_select_value[][PHYS_PER_CHANNEL] = {
- static const struct rcar_gen2_phy_data rcar_gen2_usb_phy_data = {
- 	.gen2_phy_ops = &rcar_gen2_phy_ops,
- 	.select_value = pci_select_value,
-+	.num_channels = ARRAY_SIZE(pci_select_value),
- };
- 
- static const struct rcar_gen2_phy_data rz_g1c_usb_phy_data = {
- 	.gen2_phy_ops = &rz_g1c_phy_ops,
- 	.select_value = usb20_select_value,
-+	.num_channels = ARRAY_SIZE(usb20_select_value),
- };
- 
- static const struct of_device_id rcar_gen2_phy_match_table[] = {
-@@ -389,7 +392,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
- 		channel->selected_phy = -1;
- 
- 		error = of_property_read_u32(np, "reg", &channel_num);
--		if (error || channel_num > 2) {
-+		if (error || channel_num >= data->num_channels) {
- 			dev_err(dev, "Invalid \"reg\" property\n");
- 			of_node_put(np);
- 			return error;
--- 
-2.20.1
-
+A.
