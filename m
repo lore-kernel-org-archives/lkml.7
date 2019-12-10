@@ -2,123 +2,183 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D014FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF5AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A685920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D662071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UOQeG+i7";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QfT56czh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cg9uNY29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfLJBFa (ORCPT
+        id S1727524AbfLJBHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:05:30 -0500
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:59836
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727383AbfLJBF3 (ORCPT
+        Mon, 9 Dec 2019 20:07:44 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35059 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfLJBHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:05:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575939928;
-        h=Reply-To:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=cDQOURu+lrltZUCUGf2b9a0iY5u9Z6E+9rCTbvJ0CNg=;
-        b=UOQeG+i7C+ux64CjENBpigVzaz7FbZy9DWOSqIFTp4EZumdjODz+H3+yaZaZikIg
-        YArdG3ZQ/1dk6ItvHUOubAlHRTJ+tkbd4mmNS4tPunbGqgvrnU6zFiSi56oSVftFefX
-        cgMqIU8fQqwkJ6Ox7C5w3LAt5JZeW6FD82vMNsgY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575939928;
-        h=Reply-To:From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=cDQOURu+lrltZUCUGf2b9a0iY5u9Z6E+9rCTbvJ0CNg=;
-        b=QfT56czhnKMNQ1F7j0vd7uqTIRvreK9vKR2gSwHNBNxpXDXEQHIt04KEsLtMsx+t
-        mTMCMhl+WwBroUvgYqwaRddfEN57bpjWE0Ewfo+dIgnrqccTZ6ZiMsXFcEvpMT020xE
-        utsI2UVXKItxFIhZSsy2hiaHiSuWzCq2Gi5bPr8E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FD11C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
-Reply-To: <bcain@codeaurora.org>
-From:   "Brian Cain" <bcain@codeaurora.org>
-To:     "'Nick Desaulniers'" <ndesaulniers@google.com>
-Cc:     <lee.jones@linaro.org>, <andriy.shevchenko@linux.intel.com>,
-        <ztuowen@gmail.com>, <mika.westerberg@linux.intel.com>,
-        <mcgrof@kernel.org>, <gregkh@linuxfoundation.org>,
-        <alexios.zavras@intel.com>, <allison@lohutok.net>,
-        <will@kernel.org>, <rfontana@redhat.com>, <tglx@linutronix.de>,
-        <peterz@infradead.org>, <boqun.feng@gmail.com>, <mingo@redhat.com>,
-        <akpm@linux-foundation.org>, <geert@linux-m68k.org>,
-        <linux-hexagon@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>,
-        "'Nathan Chancellor'" <natechancellor@gmail.com>
-References: <20191209222956.239798-1-ndesaulniers@google.com> <20191209222956.239798-2-ndesaulniers@google.com>
-In-Reply-To: <20191209222956.239798-2-ndesaulniers@google.com>
-Subject: RE: [PATCH 1/2] hexagon: define ioremap_uc
-Date:   Tue, 10 Dec 2019 01:05:28 +0000
-Message-ID: <0101016eed56f28a-58c118b8-face-49c8-af09-0a55a0500d99-000000@us-west-2.amazonses.com>
+        Mon, 9 Dec 2019 20:07:43 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 15so12294843lfr.2;
+        Mon, 09 Dec 2019 17:07:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CsKsxE9V1/fyWLOppIqtil5CBbw0lCC6v9XLnAGn8bY=;
+        b=cg9uNY29bc8MX413KwHac7ijtMAAcnVOeNpYDp9pqfZU6MDLL44KfV/f3b92s0frGq
+         FbhzlwIbKGxKvoZFBvfCgR9JbimWovTG2KCnNIPT6IEprHgJ53Q9YAHzQo8XzYBwToHE
+         4XlL8cK631C1zrFMFcqffjOwaO4kUNeg0VwD+EP9CrAxMT1h/7tdsAeS7k1Rc3BtY0ow
+         fylH40onRlYGDHgEsbWDkaHh8LkHXJlMbrKXec7DXb9ZmRIcnC+nNwUp6gJopLQ1Q51y
+         MqqD21qEgpVaQ/cY9PkLRfpm/NdNwEL7bdIKt8+nXXJzX3230sSQ9GrLswehcL8H9tQV
+         ResQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CsKsxE9V1/fyWLOppIqtil5CBbw0lCC6v9XLnAGn8bY=;
+        b=jm+az/YSNez1YvHnB4H7NTNgFZh2bL+bFk9BOl0K+clH7SqlFoGgJX48fg0WFcmW1n
+         uKgpngK8kSbXSNVBQVuPFQwTySThun/poOZqYTpjPjG+9o0aniCQOzLIL13x5Oi17SS7
+         aZTY0lxTnf9Y/3SG68DsJzkq4/NRXNwvtOn7OaD9UzWV6TwLfaDPPUf4VBBpwqVCFhYV
+         iDwK+gn2HXQTZPtS5rnMb6doxfRRnnrEcs3Fhr4Ex0fKVyDWKmYsRUc68btLUxq9YHu2
+         fMEGD8ht1Ul1lFOjlq4N/GfMbQa5uU+eLGLBlzKsLmg+rYH0Lb9t7ryY0c8kprRyTzOZ
+         yDaw==
+X-Gm-Message-State: APjAAAVgcQWnZpLPCTmwmFtjWwYdJT6TXGFgCr5wlIzv+o4oByLU6TXc
+        QvopDXVuGOq6ssPYa/9WZ49DaTZt
+X-Google-Smtp-Source: APXvYqxMR1g4cQnAagqewEIWiQA7jUZHC2LLJhhTouZB9uDc8y61B4hLn53zqmFjRmNRCYv4y+EeZQ==
+X-Received: by 2002:a19:4849:: with SMTP id v70mr16957860lfa.30.1575940060615;
+        Mon, 09 Dec 2019 17:07:40 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id u13sm509049lfq.19.2019.12.09.17.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 17:07:40 -0800 (PST)
+Subject: Re: [PATCH 3/6] input: elants: support common touchscreen DT
+ properties
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
+Message-ID: <944c8df1-5729-671e-86f8-c43300bc50bb@gmail.com>
+Date:   Tue, 10 Dec 2019 04:07:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIttLPFE8ad6Ohy6/JIQvGwI+sJfQFJU664pvg3sOA=
-Content-Language: en-us
-X-SES-Outgoing: 2019.12.10-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+In-Reply-To: <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
-> owner@vger.kernel.org> On Behalf Of Nick Desaulniers
-> Sent: Monday, December 9, 2019 4:30 PM
-> To: bcain@codeaurora.org
-> Cc: Nick Desaulniers <ndesaulniers@google.com>; lee.jones@linaro.org;
-> andriy.shevchenko@linux.intel.com; ztuowen@gmail.com;
-> mika.westerberg@linux.intel.com; mcgrof@kernel.org;
-> gregkh@linuxfoundation.org; alexios.zavras@intel.com;
-> allison@lohutok.net; will@kernel.org; rfontana@redhat.com;
-> tglx@linutronix.de; peterz@infradead.org; boqun.feng@gmail.com;
-> mingo@redhat.com; akpm@linux-foundation.org; geert@linux-m68k.org;
-> linux-hexagon@vger.kernel.org; clang-built-linux@googlegroups.com; linux-
-> kernel@vger.kernel.org; Nathan Chancellor <natechancellor@gmail.com>
-> Subject: [PATCH 1/2] hexagon: define ioremap_uc
+10.12.2019 04:03, Dmitry Osipenko пишет:
+> 10.12.2019 03:19, Michał Mirosław пишет:
+>> Support common DT properties like axis inversions to complement
+>> information obtained from device's firmware.
+>>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> ---
+>>  drivers/input/touchscreen/elants_i2c.c | 27 ++++++++++++++------------
+>>  1 file changed, 15 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+>> index eadd26d5a06f..02bd5e3e2171 100644
+>> --- a/drivers/input/touchscreen/elants_i2c.c
+>> +++ b/drivers/input/touchscreen/elants_i2c.c
+>> @@ -31,6 +31,7 @@
+>>  #include <linux/buffer_head.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/firmware.h>
+>> +#include <linux/input/touchscreen.h>
+>>  #include <linux/input/mt.h>
+>>  #include <linux/acpi.h>
+>>  #include <linux/of.h>
+>> @@ -146,8 +147,7 @@ struct elants_data {
+>>  	u16 hw_version;
+>>  	unsigned int x_res;	/* resolution in units/mm */
+>>  	unsigned int y_res;
+>> -	unsigned int x_max;
+>> -	unsigned int y_max;
+>> +	struct touchscreen_properties prop;
+>>  
+>>  	enum elants_state state;
+>>  	enum elants_iap_mode iap_mode;
+>> @@ -498,10 +498,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+>>  			 rows, cols, osr);
+>>  	} else {
+>>  		/* translate trace number to TS resolution */
+>> -		ts->x_max = ELAN_TS_RESOLUTION(rows, osr);
+>> -		ts->x_res = DIV_ROUND_CLOSEST(ts->x_max, phy_x);
+>> -		ts->y_max = ELAN_TS_RESOLUTION(cols, osr);
+>> -		ts->y_res = DIV_ROUND_CLOSEST(ts->y_max, phy_y);
+>> +		ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
+>> +		ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
+>> +		ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
+>> +		ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
+>>  	}
+>>  
+>>  	return 0;
+>> @@ -833,8 +833,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
+>>  
+>>  			input_mt_slot(input, i);
+>>  			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
+>> -			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+>> -			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
+>> +			touchscreen_report_pos(input, &ts->prop, x, y, true);
+>>  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+>>  			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
+>>  
+>> @@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
+>>  	ts->input->name = "Elan Touchscreen";
+>>  	ts->input->id.bustype = BUS_I2C;
+>>  
+>> +	touchscreen_parse_properties(ts->input, true, &ts->prop);
 > 
-> Similar to
-> commit 38e45d81d14e ("sparc64: implement ioremap_uc") define
-> ioremap_uc for hexagon to avoid errors from -Wimplicit-function-definition.
-> 
-> Fixes: e537654b7039 ("lib: devres: add a helper function for ioremap_uc")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/797
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/hexagon/include/asm/io.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/hexagon/include/asm/io.h
-> b/arch/hexagon/include/asm/io.h index 539e3efcf39c..b0dbc3473172
-> 100644
-> --- a/arch/hexagon/include/asm/io.h
-> +++ b/arch/hexagon/include/asm/io.h
-> @@ -173,6 +173,7 @@ static inline void writel(u32 data, volatile void
-> __iomem *addr)
-> 
->  void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
-> #define ioremap_nocache ioremap
-> +#define ioremap_uc(X, Y) ioremap((X), (Y))
-> 
-> 
->  #define __raw_writel writel
-> --
-> 2.24.0.393.g34dc348eaf-goog
+> Shouldn't this function be invoked after setting the max x/y sizes with
+> the hardware values? That's what all other drivers do and then you won't
+> need to set the ts->prop.max_x/y above in the code.
 
-Acked-by: Brian Cain <bcain@codeaurora.org>
 
+>>  	__set_bit(BTN_TOUCH, ts->input->keybit);
+>>  	__set_bit(EV_ABS, ts->input->evbit);
+>>  	__set_bit(EV_KEY, ts->input->evbit);
+>>  
+>>  	/* Single touch input params setup */
+>> -	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
+>> -	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
+>> +	input_set_abs_params(ts->input, ABS_X, 0, ts->prop.max_x, 0, 0);
+>> +	input_set_abs_params(ts->input, ABS_Y, 0, ts->prop.max_y, 0, 0);
+>>  	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
+>>  	input_abs_set_res(ts->input, ABS_X, ts->x_res);
+>>  	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
+
+I'm actually wondering why this part is needed at all, the driver
+doesn't report single-touch events.
+
+>> @@ -1271,8 +1272,10 @@ static int elants_i2c_probe(struct i2c_client *client,
+>>  		return error;
+>>  	}
+>>  
+>> -	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, ts->x_max, 0, 0);
+>> -	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
+>> +	input_set_abs_params(ts->input, ABS_MT_POSITION_X,
+>> +			     0, ts->prop.max_x, 0, 0);
+>> +	input_set_abs_params(ts->input, ABS_MT_POSITION_Y,
+>> +			     0, ts->prop.max_y, 0, 0);
+>>  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+>>  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
+>>  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+>>
+> 
 
