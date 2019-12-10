@@ -2,131 +2,73 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3931CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD87C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C65220652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cG5STPDb"
+	by mail.kernel.org (Postfix) with ESMTP id 7078E20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLJTlR (ORCPT
+        id S1726777AbfLJTlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:41:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33037 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfLJTlQ (ORCPT
+        Tue, 10 Dec 2019 14:41:25 -0500
+Received: from emh06.mail.saunalahti.fi ([62.142.5.116]:38726 "EHLO
+        emh06.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfLJTlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:41:16 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d17so16658064otc.0;
-        Tue, 10 Dec 2019 11:41:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R83QtXeO25iJn8IIxnah9iFn17pE1UtDQO4xFZfF6uY=;
-        b=cG5STPDbLQSxbyR1qFBtw0bm8F8a+PZv4SlrIwwgoIhOh87cC39hofilNVzE6l87gR
-         pvJe8RsQB5yKofwnt0nmWhQ1r8XDDHK/S74AbpArymg5/6++VKraI6CNa/VB4SXqWGNP
-         J7+gjQZpbV7CnqnfIWxsqOyT3891pAf2SjkTTlohHLSn8MnJhx3C1xFosPGTBcEXkAHm
-         Mdve8NsOcbpVJc36EdqCRzPVUpLA4O4gFEJmTulj+KHRXXxqYTkZM3fCRs6f2SL+BAvw
-         YDv5ibI77J2z3lXSkPfem+cQrGZg6pu1XUXyrMUfpEPXsW2cLqYLNh5H2r0z2fQF+VEH
-         yIKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R83QtXeO25iJn8IIxnah9iFn17pE1UtDQO4xFZfF6uY=;
-        b=e9lYDabNL2j+4jCE/xG9M9kgVjwrxrNq3qRBwl/22EUHdiA7RqyKBoTpnMukL93RD7
-         ldlo3W4WvC4D8SDjFoj20LykgUC7yh6xfGhjD5FHueFyzVEbVHwdfSWSwm+2ogUCSqyO
-         6v8kFWx6U16EI6NjvxzjECE2JoIPyJIw/s8IE++/qQEiyGQhRpNBEvUXxffali3UMkyj
-         aUsIm+t/S0rkitsN7lW6JHPW1VwlFLXYSSXJtVPBPbgibpU3FhTpVV23wAvEQqJEljgr
-         Wuon5dV0/Xugc6M5/tulc/gRiyxxoyzEq54TBry0RLx9fgZHnDtTYsURr0ln1pCGlhZ/
-         ZefQ==
-X-Gm-Message-State: APjAAAXSCEufAGcVWN78qtpN+wF3l9Y5SyvtmHcJvsjNrX12LyRlmwfL
-        RaB/9QmkPLrqAo30Fqu2mhxO64lfeqI=
-X-Google-Smtp-Source: APXvYqwj7IlFzd7fTg//b46vTz/Bnh16nomGJYdN53u03HEpszXsPKwNobIL27/F2dZstEw06Uwqgg==
-X-Received: by 2002:a05:6830:1492:: with SMTP id s18mr27774328otq.285.1576006875389;
-        Tue, 10 Dec 2019 11:41:15 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id f85sm1758884oib.38.2019.12.10.11.41.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 11:41:14 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:41:13 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net: tulip: Adjust indentation in
- {dmfe,uli526x}_init_module
-Message-ID: <20191210194113.GA10106@ubuntu-m2-xlarge-x86>
-References: <20191209211623.44166-1-natechancellor@gmail.com>
- <20191209.202920.1031568566965416683.davem@davemloft.net>
+        Tue, 10 Dec 2019 14:41:25 -0500
+X-Greylist: delayed 568 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 14:41:24 EST
+Received: from darkstar.musicnaut.iki.fi (85-76-143-83-nat.elisa-mobile.fi [85.76.143.83])
+        by emh06.mail.saunalahti.fi (Postfix) with ESMTP id 7D47230056;
+        Tue, 10 Dec 2019 21:31:54 +0200 (EET)
+Date:   Tue, 10 Dec 2019 21:31:54 +0200
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        David Daney <ddaney.cavm@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Sumit Pundir <pundirsumit11@gmail.com>,
+        Laura Lazzati <laura.lazzati.15@gmail.com>
+Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
+ controller driver
+Message-ID: <20191210193153.GB18225@darkstar.musicnaut.iki.fi>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <20191210091509.3546251-2-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209.202920.1031568566965416683.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191210091509.3546251-2-gregkh@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 08:29:20PM -0800, David Miller wrote:
-> From: Nathan Chancellor <natechancellor@gmail.com>
-> Date: Mon,  9 Dec 2019 14:16:23 -0700
-> 
-> > Clang warns:
-> > 
-> > ../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
-> > indentation; statement is not part of the previous 'if'
-> > [-Wmisleading-indentation]
-> >         switch (mode) {
-> >         ^
-> > ../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
-> > statement is here
-> >         if (cr6set)
-> >         ^
-> > 1 warning generated.
-> > 
-> > ../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
-> > indentation; statement is not part of the previous 'if'
-> > [-Wmisleading-indentation]
-> >         switch(mode) {
-> >         ^
-> > ../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
-> > statement is here
-> >         if (cr6set)
-> >         ^
-> > 1 warning generated.
-> > 
-> > This warning occurs because there is a space before the tab on these
-> > lines. Remove them so that the indentation is consistent with the Linux
-> > kernel coding style and clang no longer warns.
-> > 
-> > While we are here, adjust the default block in dmfe_init_module to have
-> > a proper break between the label and assignment and add a space between
-> > the switch and opening parentheses to avoid a checkpatch warning.
-> > 
-> > Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/795
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Applied, but it's really crummy that the tool gets tripped up by the
-> fact that a space preceeds the TAB.  It's what the code visually looks
-> like, not what exact kinds of SPACE characters were used to get there.
+Hi,
 
-I agree. There is a follow up patch from the author of the warning that
-claims to alieviate some of these but that is still in discussion and as
-far as I understand it, it won't fix all of them so I'm just dealing
-with all of them on the Linux side.
+On Tue, Dec 10, 2019 at 10:15:09AM +0100, Greg Kroah-Hartman wrote:
+> This driver was merged back in 2013 and shows no progress toward every
+> being merged into the "correct" part of the kernel.
 
-https://reviews.llvm.org/D71037
+Do you mean all the patches since 2013 were "no progress"? Thanks.
 
-Thanks for picking them up!
-Nathan
+> The code doesn't even build for anyone unless you have the specific
+> hardware platform selected, so odds are it doesn't even work anymore.
+
+I used it in production almost a decade with no issues with unpatched
+mainline kernel. All reported issues were fixed. Last kernel I ran
+was v5.3.
+
+> Remove it for now and is someone comes along that has the hardware and
+> is willing to fix it up, it can be reverted.
+
+Probably the next one who tries it, should try add support in
+dwc2. Originally the maintainer of that driver did not prefer this,
+maybe the current one does not mind...
+
+A.
