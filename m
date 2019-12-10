@@ -2,206 +2,175 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F67C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B8CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48E9207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082A8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FwUBWi9X"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="BVmQCAHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfLJSPs (ORCPT
+        id S1727770AbfLJSQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:15:48 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36451 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfLJSPs (ORCPT
+        Tue, 10 Dec 2019 13:16:36 -0500
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:52412 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727568AbfLJSQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:15:48 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so8626368pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:15:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
-        b=FwUBWi9X6lnjaJWijeU8P6xQR2Yp703scW9SLcH8NgPLyKR/nUa8y4eOqMcVaRTSk4
-         tcvmrhzkqYkS8gpG+GVfApk07EkDCKXveshyGFCdzPWWOsUOOu5tV3DS3LXnxD3QRB+m
-         bZrv45p67LNVj/kJTeKbtMT3wdS3ewyDaRbSiw+weCRaMrSD2ttdqr1VKNOnHk0ewkTL
-         NsDbcRNLkRIk8bPKhl3CylU/tCFIocywzPTKj/ZlQBT0Tl6XHmo6DECLYUYfUHKvAkai
-         u1igvJdm9ZujDZNoRpz0k6oiOYkjyr/mxpOEQr/iw0EFosNHKmcKqsLwNrwSMw0hWN6M
-         hIgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=kfLit8LCSQ20powxSKYWCP8N8M+8XWObHNOV3Cp5ZFE=;
-        b=PG/xAGtMYWqw1BmakXEru53j6SbKvGo5iEPNdu9eUMYOeL++Dov02+m2vIQAbC0ktz
-         fo2vM0ZGuoD9EsvItrJ7aymZaJTeOjIJfAJjy4Go121J6lUmzQECxWZdgw3AUT2pN2gp
-         lkh03L1YuhfPqj30v+/y8KiMGZQjBfESUta3eJR2kOSwTXhrw26iVlgJnnsklSbHmDye
-         iSTMBYt+DvTlv6E3U4PRxBttbGoU5/9vGMYL5jC+DATRVTSNngpLq/adk6om4RDKtDPY
-         WnL3qS+NPH6BugOZy3ptr0hNQkm4v1wzhXeqaGh4WtvOfWNXlPg/SYBM4ScDgbgOjrTu
-         qAyA==
-X-Gm-Message-State: APjAAAUOtBFZSxpwVn9dHl45jZDVfDFJZTauU1yqPb7f0LHqnCzEfQQd
-        cemOhoexILWeX99CFD3ZXObgJg==
-X-Google-Smtp-Source: APXvYqwpRGFP81NCx9NWPduL64oaXvGdMHqxm0bX+hBAxyEfO2ttMxw7y0Q9JTow9L1V6Lb4JcuPPw==
-X-Received: by 2002:aa7:9197:: with SMTP id x23mr37703857pfa.163.1576001747315;
-        Tue, 10 Dec 2019 10:15:47 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 17sm4363066pfv.142.2019.12.10.10.15.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 10:15:46 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-In-Reply-To: <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
-References: <20191202111253.94872-1-jian.hu@amlogic.com> <7hsgltqfdx.fsf@baylibre.com> <e90e00e1-c868-ce09-6f79-deb62da72b43@amlogic.com>
-Date:   Tue, 10 Dec 2019 10:15:45 -0800
-Message-ID: <7hblsgqc6m.fsf@baylibre.com>
+        Tue, 10 Dec 2019 13:16:36 -0500
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAI2KIG021858;
+        Tue, 10 Dec 2019 18:16:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=FKAvwdwjv66zqDhbKJSk2LilFV0FID8rhNGOrCZmeT0=;
+ b=BVmQCAHECJrEs4o8hd31xK2vIX2vm1Kn2Nq7zW3XA2CeIaUE37ayJEntf1OkjvBO2Trs
+ 5T4SFKFRXdrHxbh+n0Rd9iJIYVXiNbZW2ZlPHEp0rhhZbfabnR5FxQ0iqtTZ83N1xJro
+ mSbxs/GM5mNfSuAqsxpJTAKK05/h0y6Cf3rhAIQTMVRS2/y4USrCa3rGF6f3JLWpxF20
+ DvNFM4fLYkpZhectdXyjAYwekqsn4zBalMGuUvp353bXdjdBc+JtM6cScm4Ip1eTUsuS
+ oRqEHZ8+PXTLZDLzuZFu/hBVbSWvSTYRdZBTJc5Y6WWw1DneYxNp+ztaWiRHcXjZ/AFO rQ== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 2wr47cx1e0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Dec 2019 18:16:25 +0000
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id xBAI2UQH023603;
+        Tue, 10 Dec 2019 13:16:24 -0500
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2wr89yf73r-1;
+        Tue, 10 Dec 2019 13:16:24 -0500
+Received: from [172.28.3.71] (bos-lpjec.145bw.corp.akamai.com [172.28.3.71])
+        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 1EB731FC69;
+        Tue, 10 Dec 2019 18:16:24 +0000 (GMT)
+Subject: Re: [PATCH V2] lib/dynamic_debug: make better dynamic log output
+To:     Huang Shijie <sjhuang@iluvatar.ai>
+Cc:     linux-kernel@vger.kernel.org, 1537577747@qq.com,
+        Jim Cromie <jim.cromie@gmail.com>
+References: <20191209094437.14866-1-sjhuang@iluvatar.ai>
+ <20191210063820.26766-1-sjhuang@iluvatar.ai>
+From:   Jason Baron <jbaron@akamai.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jbaron@akamai.com; prefer-encrypt=mutual; keydata=
+ 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
+ JeQ7iQ==
+Message-ID: <f6ec7ce2-278c-4795-6f19-c31592b8868f@akamai.com>
+Date:   Tue, 10 Dec 2019 13:16:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191210063820.26766-1-sjhuang@iluvatar.ai>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-10_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=847
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912100152
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_05:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=859 priorityscore=1501
+ suspectscore=0 phishscore=0 malwarescore=0 clxscore=1011 mlxscore=0
+ adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912100152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jian Hu <jian.hu@amlogic.com> writes:
 
-> Hi Kevin
->
-> Thanks for your review
->
-> On 2019/12/10 6:54, Kevin Hilman wrote:
->> Hi Jian,
->> 
->> Jian Hu <jian.hu@amlogic.com> writes:
->> 
->>> There are four I2C controllers in A1 series,
->>> Share the same comptible with AXG.The I2C nodes
->>> depend on pinmux and clock controller.
->>>
->>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>> ---
->>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>>   1 file changed, 149 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> index eab2ecd36aa8..d0a73d953f5e 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->>> @@ -16,6 +16,13 @@
->>>   	#address-cells = <2>;
->>>   	#size-cells = <2>;
->>>   
->>> +	aliases {
->>> +		i2c0 = &i2c0;
->>> +		i2c1 = &i2c1;
->>> +		i2c2 = &i2c2;
->>> +		i2c3 = &i2c3;
->>> +	};
->>> +
->>>   	cpus {
->>>   		#address-cells = <2>;
->>>   		#size-cells = <0>;
->>> @@ -117,6 +124,46 @@
->>>   				};
->>>   			};
->>>   
->>> +			i2c0: i2c@1400 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x1400 0x0 0x24>;
->> 
->> The AXG DT files use 0x20 for the length.  You are using 0x24.  I don't
->> see any additional registers added to the driver, so this doesn't look right.
-> In fact, For G12 series and A1, the length should be 0x24. A new 
-> register is added, And it is for IRQ handler timeout. If the 
-> transmission is exceeding a limited time, it will abort the 
-> transmission.Now the function is not used, There is completion to deal 
-> the timeout in the driver. I will set the length 0x20 becouse of the new 
-> register is not used.
 
-Yes, we can extend it to 0x24 when support for the new register is
-added, because that will mean adding a new compatible string also.
+On 12/10/19 1:38 AM, Huang Shijie wrote:
+> The driver strings and device name is not changed for the driver's dynamic
+> log output. But the dynamic_emit_prefix() which contains the function names
+> may change when the function names change.
+> 
+> So the patch makes the better dynamic log output.
+> 
+> Signed-off-by: Huang Shijie <sjhuang@iluvatar.ai>
+> ---
+> v1 -- >v2
+>    Add a whitespace between driver strings and dev name.
+> ---
+>  lib/dynamic_debug.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index c60409138e13..f6665af6abd4 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -589,9 +589,9 @@ void __dynamic_dev_dbg(struct _ddebug *descriptor,
+>  	} else {
+>  		char buf[PREFIX_SIZE];
+>  
+> -		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s%s %s: %pV",
+> -				dynamic_emit_prefix(descriptor, buf),
+> +		dev_printk_emit(LOGLEVEL_DEBUG, dev, "%s %s %s: %pV",
+>  				dev_driver_string(dev), dev_name(dev),
+> +				dynamic_emit_prefix(descriptor, buf),
+>  				&vaf);
+>  	}
+>  
+> 
 
->> 
->>> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c1: i2c@5c00 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x5c00 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c2: i2c@6800 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x6800 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>> +			i2c3: i2c@6c00 {
->>> +				compatible = "amlogic,meson-axg-i2c";
->>> +				reg = <0x0 0x6c00 0x0 0x24>;
->>> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
->>> +				status = "disabled";
->>> +			};
->>> +
->>>   			uart_AO: serial@1c00 {
->>>   				compatible = "amlogic,meson-gx-uart",
->>>   					     "amlogic,meson-ao-uart";
->>> @@ -171,3 +218,105 @@
->>>   		#clock-cells = <0>;
->>>   	};
->>>   };
->>> +
->>> +&periphs_pinctrl {
->>> +	i2c0_f11_pins:i2c0-f11 {
->>> +		mux {
->>> +			groups = "i2c0_sck_f11",
->>> +				"i2c0_sda_f12";
->>> +			function = "i2c0";
->>> +			bias-pull-up;
->>> +			drive-strength-microamp = <3000>;
->> 
->> Can you also add some comment to the changelog about the need for
->> drive-strength compared to AXG.
->
-> OK, Drive strength function is added for GPIO pins from G12 series.
-> So does A1 series.
 
-Yes, that's what I assumed.  Please add that to the changelog as one of
-the new features in A1 compared to AXG.
+Hi Huang,
+
+So this is just reversing the order of output. All the other dynamic
+debug calls emit the 'prefix' first, so if we were to change this it
+seems like we'd also want to change the other ones to be consistent.
+
+That said, I'm not sure why reversing things here is better?
 
 Thanks,
 
-Kevin
+-Jason
+
