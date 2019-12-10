@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40461C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9E4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11BB224680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48A8246AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012207;
-	bh=nJjxZ3v9wmrwDnBeiXGpCiRnrVNSOeGRf7PFqaBXu44=;
+	s=default; t=1576012217;
+	bh=c74UdZb99u9Y/Wf02n29njus4/faLy6Lp6Z1/C21cDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DscvAnnFrc+GcAiclRtnVs8j75QbUywP21wiNOHMHeh6WRYJ8lhybfDage2GDV6BZ
-	 Rak3v3uqLfiQJI/kNVKMgE/k92Rc5SkQHmqYjkI+nXfMmXdQhFcU6xxifMNqyHRfkW
-	 X+RLz0YHYzkUA3zUaJ2f3/SipGk64bi/jtGmfp5E=
+	b=djqOaMm10YiKY8/mKaY5A8aXazkqsTmyC0VvEDuoRFfeXlUl12+KBzGIQekBqni4C
+	 WzVl6cI0bNLYfeLLZqFAlGG6MzruNaTGOJKmebZZiHC6RjGMzwbyYvLmY4rAXpnEKy
+	 +PjWRV2GiH5sw71FePIe9Y0P4+BryXgWszVwymTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfLJVKG (ORCPT
+        id S1728083AbfLJVKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbfLJVKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:00 -0500
+        id S1728371AbfLJVKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECAAF24697;
-        Tue, 10 Dec 2019 21:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B93D246A3;
+        Tue, 10 Dec 2019 21:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012199;
-        bh=nJjxZ3v9wmrwDnBeiXGpCiRnrVNSOeGRf7PFqaBXu44=;
+        s=default; t=1576012207;
+        bh=c74UdZb99u9Y/Wf02n29njus4/faLy6Lp6Z1/C21cDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkHh9fneaIvWIabO8pqnvxjOOn6v7iWNPXIagxMu5Qjl+rEODwD360gIgCQ2KACoS
-         5bmuanpX3Zpgnd2BoLolEF/uGHCL2KbwaTHHlgsIh1BB6+7rvYwmb1EGQYEnz1LkB3
-         sw6kJ5UnxZ9uTWAtUVAfN1jHEB5AEOf7OyJCYp8I=
+        b=bACOWw5mlh7aVsHPPvZJGwkFHHeCp7AR5HRZ/wUjBDOV/Wj69Eigxt+aAZiEzKwm3
+         eWxxKPDYfa4fJWkmmguqxowav74J65QA5jmRX0kSjCpRi7i7HcE2rzis4fI+h676bV
+         kMS0mN4piAc6jr5ww1fvdxRmJofOeYX45PmHO0nY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jae Hyun Yoo <jae.hyun.yoo@intel.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 152/350] media: aspeed: clear garbage interrupts
-Date:   Tue, 10 Dec 2019 16:04:17 -0500
-Message-Id: <20191210210735.9077-113-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 159/350] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Tue, 10 Dec 2019 16:04:24 -0500
+Message-Id: <20191210210735.9077-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -63,80 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jae Hyun Yoo <jae.hyun.yoo@intel.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 65d270acb2d662c3346793663ac3a759eb4491b8 ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-CAPTURE_COMPLETE and FRAME_COMPLETE interrupts come even when these
-are disabled in the VE_INTERRUPT_CTRL register and eventually this
-behavior causes disabling irq itself like below:
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-[10055.108784] irq 23: nobody cared (try booting with the "irqpoll" option)
-[10055.115525] CPU: 0 PID: 331 Comm: swampd Tainted: G        W         5.3.0-4fde000-dirty-d683e2e #1
-[10055.124565] Hardware name: Generic DT based system
-[10055.129355] Backtrace:
-[10055.131854] [<80107d7c>] (dump_backtrace) from [<80107fb0>] (show_stack+0x20/0x24)
-[10055.139431]  r7:00000017 r6:00000001 r5:00000000 r4:9d51dc00
-[10055.145120] [<80107f90>] (show_stack) from [<8074bf50>] (dump_stack+0x20/0x28)
-[10055.152361] [<8074bf30>] (dump_stack) from [<80150ffc>] (__report_bad_irq+0x40/0xc0)
-[10055.160109] [<80150fbc>] (__report_bad_irq) from [<80150f2c>] (note_interrupt+0x23c/0x294)
-[10055.168374]  r9:015b6e60 r8:00000000 r7:00000017 r6:00000001 r5:00000000 r4:9d51dc00
-[10055.176136] [<80150cf0>] (note_interrupt) from [<8014df1c>] (handle_irq_event_percpu+0x88/0x98)
-[10055.184835]  r10:7eff7910 r9:015b6e60 r8:00000000 r7:9d417600 r6:00000001 r5:00000002
-[10055.192657]  r4:9d51dc00 r3:00000000
-[10055.196248] [<8014de94>] (handle_irq_event_percpu) from [<8014df64>] (handle_irq_event+0x38/0x4c)
-[10055.205113]  r5:80b56d50 r4:9d51dc00
-[10055.208697] [<8014df2c>] (handle_irq_event) from [<80151f1c>] (handle_level_irq+0xbc/0x12c)
-[10055.217037]  r5:80b56d50 r4:9d51dc00
-[10055.220623] [<80151e60>] (handle_level_irq) from [<8014d4b8>] (generic_handle_irq+0x30/0x44)
-[10055.229052]  r5:80b56d50 r4:00000017
-[10055.232648] [<8014d488>] (generic_handle_irq) from [<8014d524>] (__handle_domain_irq+0x58/0xb4)
-[10055.241356] [<8014d4cc>] (__handle_domain_irq) from [<801021e4>] (avic_handle_irq+0x68/0x70)
-[10055.249797]  r9:015b6e60 r8:00c5387d r7:00c5387d r6:ffffffff r5:9dd33fb0 r4:9d402380
-[10055.257539] [<8010217c>] (avic_handle_irq) from [<80101e34>] (__irq_usr+0x54/0x80)
-[10055.265105] Exception stack(0x9dd33fb0 to 0x9dd33ff8)
-[10055.270152] 3fa0:                                     015d0530 00000000 00000000 015d0538
-[10055.278328] 3fc0: 015d0530 015b6e60 00000000 00000000 0052c5d0 015b6e60 7eff7910 7eff7918
-[10055.286496] 3fe0: 76ce5614 7eff7908 0050e2f4 76a3a08c 20000010 ffffffff
-[10055.293104]  r5:20000010 r4:76a3a08c
-[10055.296673] handlers:
-[10055.298967] [<79f218a5>] irq_default_primary_handler threaded [<1de88514>] aspeed_video_irq
-[10055.307344] Disabling IRQ #23
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
 
-To fix this issue, this commit makes the interrupt handler clear
-these garbage interrupts. This driver enables and uses only
-COMP_COMPLETE interrupt instead for frame handling.
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@intel.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 84e0650106f51..096a7c9a8963b 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -606,6 +606,16 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
- 			aspeed_video_start_frame(video);
- 	}
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index c9f72b2665f1c..43ae4e0c968f6 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -81,7 +81,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
-+	/*
-+	 * CAPTURE_COMPLETE and FRAME_COMPLETE interrupts come even when these
-+	 * are disabled in the VE_INTERRUPT_CTRL register so clear them to
-+	 * prevent unnecessary interrupt calls.
-+	 */
-+	if (sts & VE_INTERRUPT_CAPTURE_COMPLETE)
-+		sts &= ~VE_INTERRUPT_CAPTURE_COMPLETE;
-+	if (sts & VE_INTERRUPT_FRAME_COMPLETE)
-+		sts &= ~VE_INTERRUPT_FRAME_COMPLETE;
-+
- 	return sts ? IRQ_NONE : IRQ_HANDLED;
- }
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
  
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -91,16 +92,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+ 
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
+ 
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
