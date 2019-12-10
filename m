@@ -2,150 +2,170 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEDFC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B844C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4D92465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DED207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBiVzNjP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iC3Ab0BS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLJJgf (ORCPT
+        id S1727225AbfLJJhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:36:35 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45078 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfLJJge (ORCPT
+        Tue, 10 Dec 2019 04:37:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56418 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726957AbfLJJhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:36:34 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d20so19029130ljc.12;
-        Tue, 10 Dec 2019 01:36:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=gXjxkm88DEjZBFBOVgYS/nXq7WpsnAwIahBe1LGrB6M=;
-        b=UBiVzNjP9aLMEiA7IC7YrACjXTaPDc9hQMibmR6mvQ2w5h2mcCTC9EkN995AN07C3h
-         dbarlfB4UYV1kmfgjxkEetgiW/0lmCFZPD1RV2yf7SMmHbmt5kWl3v8fKQ2C/Tom/sZc
-         1A5J74odxics4FORavwIVtIBailZYZvoG6ESd6ppFoWRQ/b6ORBJ5uCeCcEYX6Qdmc5x
-         x/g7FCVHEhjHGf7+XfjwozXLtrf0kaajg/vIYnqw9H71l4SuFOrtDO/lztKSviCuXmNj
-         2OR9+EoTAXh63GHszKYj1+zJxtYsT8ForpsjXGRBO4gxper4nFuzQ3A5G53npQ/hCq+g
-         H1zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gXjxkm88DEjZBFBOVgYS/nXq7WpsnAwIahBe1LGrB6M=;
-        b=GxDVNASQ8o/xhHSDc0B/OyXRa96/XUbCEuac2Z69R2UjfVqhoVL9cF5QDcQhYRiLjZ
-         arPfRIJUFwDonMQyOsqeSrrcxju8UlI11goC2PqjzfdyHCKwXuvTBMpTSlTMNmmgHjW1
-         3vPhpl+aTVpnvZAa7J/X7gjRPZrevCNxIHpg1oVhj7uoci+F0dEPSuARH8qo6ArhpLCP
-         7+/whB0sUGTbUPoLfBlMEuTPRGrXgX6cEsuG57kQTHoD9DXzTw29/g5TKSJCgtqoJ00n
-         Ik1pRSyMSA30jjEwEOEcyHpNKamROmva4wqMZ0jU6h4MPZth0QFAsV2Fd46R7K7rt5EE
-         8Law==
-X-Gm-Message-State: APjAAAUmTJMdG2SoBzvjN1GvtaB7s/Vb6b6tRb+ZWE9txjQ57gfuEhjK
-        s8LVTd+heZ0jx+hVCDrd1y8=
-X-Google-Smtp-Source: APXvYqzgHWnb8WU25vCn8dceHQNUvqh7F9YCfgdEcTPnY24QYOgLeeWBuTndcT1N2jJAkfd3EaJ+zA==
-X-Received: by 2002:a2e:9015:: with SMTP id h21mr3537646ljg.69.1575970592330;
-        Tue, 10 Dec 2019 01:36:32 -0800 (PST)
-Received: from [192.168.68.106] ([193.119.54.228])
-        by smtp.gmail.com with ESMTPSA id m21sm1186222lfh.53.2019.12.10.01.36.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:36:31 -0800 (PST)
-Subject: Re: [PATCH v2 2/4] kasan: use MAX_PTRS_PER_* for early shadow
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
-        aneesh.kumar@linux.ibm.com
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-3-dja@axtens.net>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
-Date:   Tue, 10 Dec 2019 20:36:24 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 04:37:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575970633;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=at1Mw7R9M1dZYnbz/3B0yKBKEjOaE9EiyAqt9wXcdUk=;
+        b=iC3Ab0BSzDhSXPBXXJcKG5j8pY3Wqu1y9hpnvoJg1MZevldZ1zr/wa6wE3TvkVHeWs146I
+        RbRnq2C2Di2d31h9dS+3JpoOXBWgTpYzewAn8TReO7uuUEXsTqxFVf4xHkIxWBskyciCBs
+        emxN5os0EdnoOhPBShjJqfYLqPXnQyw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-ivEAjhKmPIiW53SKbTPoJA-1; Tue, 10 Dec 2019 04:37:09 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F851800D4C;
+        Tue, 10 Dec 2019 09:37:08 +0000 (UTC)
+Received: from [10.36.117.222] (ovpn-117-222.ams2.redhat.com [10.36.117.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97D5D60BE1;
+        Tue, 10 Dec 2019 09:37:06 +0000 (UTC)
+Subject: Re: [Patch v2] mm/hotplug: Only respect mem= parameter during boot
+ stage
+From:   David Hildenbrand <david@redhat.com>
+To:     Balbir Singh <bsingharora@gmail.com>, Baoquan He <bhe@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mhocko@kernel.org, jgross@suse.com,
+        akpm@linux-foundation.org
+References: <20191210084413.21957-1-bhe@redhat.com>
+ <75188d0f-c609-5417-aa2e-354e76b7ba6e@gmail.com>
+ <429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <c100d74b-1424-9852-b6ee-553a2ae48771@redhat.com>
+Date:   Tue, 10 Dec 2019 10:37:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191210044714.27265-3-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com>
 Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: ivEAjhKmPIiW53SKbTPoJA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/12/19 3:47 pm, Daniel Axtens wrote:
-> This helps with powerpc support, and should have no effect on
-> anything else.
+On 10.12.19 10:36, David Hildenbrand wrote:
+> On 10.12.19 10:24, Balbir Singh wrote:
+>>
+>>
+>> On 10/12/19 7:44 pm, Baoquan He wrote:
+>>> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+>>> parameter") a global varialbe global max_mem_size is added to store
+>>                   typo ^^^
+>>> the value parsed from 'mem= ', then checked when memory region is
+>>> added. This truly stops those DIMM from being added into system memory
+>>> during boot-time.
+>>>
+>>> However, it also limits the later memory hotplug functionality. Any
+>>> memory board can't be hot added any more if its region is beyond the
+>>> max_mem_size. System will print error like below:
+>>>
+>>> [  216.387164] acpi PNP0C80:02: add_memory failed
+>>> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+>>> [  216.392187] acpi PNP0C80:02: Enumeration failure
+>>>
+>>> From document of 'mem= ' parameter, it should be a restriction during
+>>> boot, but not impact the system memory adding/removing after booting.
+>>>
+>>>   mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
+>>> 	          ...
+>>>
+>>> So fix it by also checking if it's during boot-time when restrict memory
+>>> adding. Otherwise, skip the restriction.
+>>>
+>>
+>> The fix looks reasonable, but I don't get the use case. Booting with mem= is
+>> generally a debug option, is this for debugging memory hotplug + limited memory?
 > 
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
+> Some people/companies use "mem=" along with KVM e.g., to avoid
+> allocating memmaps for guest backing memory and to not expose it to the
+> buddy across kexec's. The excluded physical memory is then memmap into
 
-If you follow the recommendations by Christophe and I, you don't need this patch
+s/memmap/mmaped/
 
-Balbir Singh.
-
-> ---
->  include/linux/kasan.h | 6 +++---
->  mm/kasan/init.c       | 6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
+> the hypervisor process and KVM can deal with that. I can imagine that
+> hotplug might be desirable as well for such use cases.
 > 
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index e18fe54969e9..d2f2a4ffcb12 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -15,9 +15,9 @@ struct task_struct;
->  #include <asm/pgtable.h>
->  
->  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
-> -extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
-> -extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
-> -extern pud_t kasan_early_shadow_pud[PTRS_PER_PUD];
-> +extern pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE];
-> +extern pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD];
-> +extern pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD];
->  extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
->  
->  int kasan_populate_early_shadow(const void *shadow_start,
-> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-> index ce45c491ebcd..8b54a96d3b3e 100644
-> --- a/mm/kasan/init.c
-> +++ b/mm/kasan/init.c
-> @@ -46,7 +46,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
->  }
->  #endif
->  #if CONFIG_PGTABLE_LEVELS > 3
-> -pud_t kasan_early_shadow_pud[PTRS_PER_PUD] __page_aligned_bss;
-> +pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD] __page_aligned_bss;
->  static inline bool kasan_pud_table(p4d_t p4d)
->  {
->  	return p4d_page(p4d) == virt_to_page(lm_alias(kasan_early_shadow_pud));
-> @@ -58,7 +58,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
->  }
->  #endif
->  #if CONFIG_PGTABLE_LEVELS > 2
-> -pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD] __page_aligned_bss;
-> +pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD] __page_aligned_bss;
->  static inline bool kasan_pmd_table(pud_t pud)
->  {
->  	return pud_page(pud) == virt_to_page(lm_alias(kasan_early_shadow_pmd));
-> @@ -69,7 +69,7 @@ static inline bool kasan_pmd_table(pud_t pud)
->  	return false;
->  }
->  #endif
-> -pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
-> +pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE] __page_aligned_bss;
->  
->  static inline bool kasan_pte_table(pmd_t pmd)
->  {
+>>
+>> Balbir
+>>
 > 
+> 
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
