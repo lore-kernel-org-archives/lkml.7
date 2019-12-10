@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F030C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812EFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A63C24654
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5744822464
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012405;
-	bh=vGhZFSEsZqCy533g7WLZ+OnLZ3qZFRbE9KzvE/bFCEw=;
+	s=default; t=1576012410;
+	bh=3yIRxbD7xE9D403SQkid8uZMATyDWz3ZczN4YUKfBDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ipUuITtowlnrKIErgYxkyg7qiU4vl8FxJtspzwRfKFe48RRnxDlSju2OO/oEkPRBl
-	 YdEY5Kg9085EHBkaMSW0tJ6FZ9gQbSLp6pT7ftr218GjIWU8/j9j2RQ06gU96dG2oZ
-	 i79b+jgMTMnii9BUNppdpok8MKmXM6jZC6/2e3TU=
+	b=RSFl0j3bBOuE8b1gkk3lpENY9jkSJ/SvhCkl++6lhVc61/1/TVPM7uxOg2plxyy3y
+	 nNd0Pcl/YV9OVKgttjelkTJML/x+zBxx93cbxwKPQnWkAUmWOPLq54EyDOiuWBxkit
+	 IQzRYYklItkSStqm8cwc7t60Gsh0Jd0zaMM4g5uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfLJVNX (ORCPT
+        id S1729336AbfLJVN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728733AbfLJVNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:18 -0500
+        id S1729279AbfLJVNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50B6205C9;
-        Tue, 10 Dec 2019 21:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC582077B;
+        Tue, 10 Dec 2019 21:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012397;
-        bh=vGhZFSEsZqCy533g7WLZ+OnLZ3qZFRbE9KzvE/bFCEw=;
+        s=default; t=1576012400;
+        bh=3yIRxbD7xE9D403SQkid8uZMATyDWz3ZczN4YUKfBDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+w9wvtpHcl65h2iIDupZ0ngXqmN38V2BgXrrR0B9azZFYDCbLxkla+KDkxIUEZBX
-         PjIKAFMXZQkEdo+zkVOUHM9DkXBa+/q3k29/fVLT1r7MV5a2e1gzF3dKX1MukAkkhu
-         RnXiEHZ9bFxtZhx5sQqnWom8HcMtscz7ZmI7s9LQ=
+        b=DlvmxzIqKt0XXI90wmOCIqrMNt+gI5Zb/tVSVvOjNzGCgp97Kbvkd6lcL8lKJPoHp
+         vjkUpTr1SXnPQBE311g6Nefcs+5jRXCkUrIqp2IlQ5iN5pVmFxB2RTOJRqpiAiQf5x
+         Os2Rjx3Hx94jO4xz1LatNknmdp2BcZ2m42fdLSP8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 317/350] s390/crypto: Fix unsigned variable compared with zero
-Date:   Tue, 10 Dec 2019 16:07:02 -0500
-Message-Id: <20191210210735.9077-278-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 319/350] bnxt_en: Improve RX buffer error handling.
+Date:   Tue, 10 Dec 2019 16:07:04 -0500
+Message-Id: <20191210210735.9077-280-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,48 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 0398d4ab1677f7d8cd43aac2aa29a93dfcf9e2e3 ]
+[ Upstream commit 19b3751ffa713d04290effb26fe01009010f2206 ]
 
-s390_crypto_shash_parmsize() return type is int, it
-should not be stored in a unsigned variable, which
-compared with zero.
+When hardware reports RX buffer errors, the latest 57500 chips do not
+require reset.  The packet is discarded by the hardware and the
+ring will continue to operate.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 3c2eb6b76cab ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Also, add an rx_buf_errors counter for this type of error.  It can help
+the user to identify if the aggregation ring is too small.
+
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/sha_common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         | 8 ++++++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h         | 1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 ++
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/crypto/sha_common.c b/arch/s390/crypto/sha_common.c
-index d39e0f0792170..686fe7aa192f4 100644
---- a/arch/s390/crypto/sha_common.c
-+++ b/arch/s390/crypto/sha_common.c
-@@ -74,14 +74,17 @@ int s390_sha_final(struct shash_desc *desc, u8 *out)
- 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
- 	unsigned int bsize = crypto_shash_blocksize(desc->tfm);
- 	u64 bits;
--	unsigned int n, mbl_offset;
-+	unsigned int n;
-+	int mbl_offset;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 04ec909e06dfd..527e1bf931160 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1767,8 +1767,12 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  
- 	n = ctx->count % bsize;
- 	bits = ctx->count * 8;
--	mbl_offset = s390_crypto_shash_parmsize(ctx->func) / sizeof(u32);
-+	mbl_offset = s390_crypto_shash_parmsize(ctx->func);
- 	if (mbl_offset < 0)
- 		return -EINVAL;
+ 		rc = -EIO;
+ 		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
+-			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
+-			bnxt_sched_reset(bp, rxr);
++			bnapi->cp_ring.rx_buf_errors++;
++			if (!(bp->flags & BNXT_FLAG_CHIP_P5)) {
++				netdev_warn(bp->dev, "RX buffer error %x\n",
++					    rx_err);
++				bnxt_sched_reset(bp, rxr);
++			}
+ 		}
+ 		goto next_rx_no_len;
+ 	}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index d333589811a53..5163bb848618f 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -927,6 +927,7 @@ struct bnxt_cp_ring_info {
+ 	dma_addr_t		hw_stats_map;
+ 	u32			hw_stats_ctx_id;
+ 	u64			rx_l4_csum_errors;
++	u64			rx_buf_errors;
+ 	u64			missed_irqs;
  
-+	mbl_offset = mbl_offset / sizeof(u32);
-+
- 	/* set total msg bit length (mbl) in CPACF parmblock */
- 	switch (ctx->func) {
- 	case CPACF_KLMD_SHA_1:
+ 	struct bnxt_ring_struct	cp_ring_struct;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 51c1404767178..89f95428556eb 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -173,6 +173,7 @@ static const char * const bnxt_ring_tpa2_stats_str[] = {
+ 
+ static const char * const bnxt_ring_sw_stats_str[] = {
+ 	"rx_l4_csum_errors",
++	"rx_buf_errors",
+ 	"missed_irqs",
+ };
+ 
+@@ -552,6 +553,7 @@ static void bnxt_get_ethtool_stats(struct net_device *dev,
+ 		for (k = 0; k < stat_fields; j++, k++)
+ 			buf[j] = le64_to_cpu(hw_stats[k]);
+ 		buf[j++] = cpr->rx_l4_csum_errors;
++		buf[j++] = cpr->rx_buf_errors;
+ 		buf[j++] = cpr->missed_irqs;
+ 
+ 		bnxt_sw_func_stats[RX_TOTAL_DISCARDS].counter +=
 -- 
 2.20.1
 
