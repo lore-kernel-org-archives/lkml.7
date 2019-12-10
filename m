@@ -2,140 +2,144 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DED8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED24CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436A4207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AA82053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pQG2hmmL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cSSUpZLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfLJPRX (ORCPT
+        id S1727595AbfLJPSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:17:23 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:48955 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727448AbfLJPRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:17:20 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47XNvw6cFPz9txNy;
-        Tue, 10 Dec 2019 16:17:16 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pQG2hmmL; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id evbLJu89xxoe; Tue, 10 Dec 2019 16:17:16 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47XNvw5b4hz9txNq;
-        Tue, 10 Dec 2019 16:17:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575991036; bh=p/RN9wGhuytc2JKpwnOpBoY/ljEFeRGohPJvKHyg07M=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=pQG2hmmLGeKr7afIsn4MGxkLUDeBbXB1/yLQk52nFJ10g1ixc+1FJjhWLuFU1AacW
-         GJvPXJ0hzT1xkLqhsG5mo4n8iuNqzozvY0L2DG8qQ381DuFZf1dzwWhLXEQtjS69jq
-         I66FNHT+JNDI99vBfZYE3lar3AR/FJKd1HIOHmSM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F5BA8B754;
-        Tue, 10 Dec 2019 16:17:18 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MuGuyZPvd_AU; Tue, 10 Dec 2019 16:17:18 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 819338B819;
-        Tue, 10 Dec 2019 16:17:17 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id F13FF6373D; Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
-Message-Id: <539a3b82463f64e8055f166c915f0e90f752c7b0.1575990944.git.christophe.leroy@c-s.fr>
-In-Reply-To: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
-References: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 2/2] spi: fsl: simplify error path in of_fsl_spi_probe()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
+        Tue, 10 Dec 2019 10:18:06 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43205 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbfLJPSG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:18:06 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x4so13282701vsx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:18:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jcUnC0/SEm4HDTIw1YLkWhbNF7DV2HNNDkdfVlTygbE=;
+        b=cSSUpZLtf+hCVZvTD7HbKKL/zq4Rkmgcb2lIlIkDlhoxjyGVl0vVSnKlyJSar8oMju
+         kJKrdwjxQ132req2y4+nrrVfisVcDFp//Vza1JYfv88Pn0pawYqigZnVIjKe8hsBLtwo
+         MCeVhuUG+FD6AVkT5efECIF5yoeCURQPE8pK5mLLWFQv5VUdlsUYexM/XG4pBnG0lMlj
+         homajns2YyoPkCVbVSABDLsSQp/B9WvdKRwStVCpME0KK4gfjaFWk6c6Sp+tT9WhGfwd
+         Wm0n+fvhFn2WYXhdCvCyA4aduw0ySOsjxw4ZHQ5FAt3egnPm7ELrA47hNqGA3SWWB7Yy
+         x0ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jcUnC0/SEm4HDTIw1YLkWhbNF7DV2HNNDkdfVlTygbE=;
+        b=MGi5lCJR+xlNJ5qbuusPx+I5vH3nrGX8Jduddj68TAlz7MwugsQXP8NODVRPIqKd43
+         XtSfiRCcUNvRAt1uW9SwPlvLKzvcJVsIILk83o15XivQ0EWPqAMDfVQW6HGgyiKW3tov
+         YHFyfW3aMMfaMickzzGi1Ry/OUYva9sCl7boUhfSYeqs7br61d4rwRV10b9sSfAznyqv
+         BHLv3N0nXF0cpMr6QN8ubsqOtC+jBb5dV5TubqVXcXg2za/EYRJkvZGlX19kiwIAvjLy
+         dbU+4AqvW8zDkmBBVSDhuuuiDXLQ9odQboQeUyYWZbaTD9yQHDdl/VCCR7zrTxqaMI87
+         K90w==
+X-Gm-Message-State: APjAAAXAKHCP4WJvfPBkck6ePsGHCoCSZfrdi4G7qijM6rXn5owVt5DS
+        e9nmUcOa/LTRC8Ws3kOK+ZU/Dh2IzNhGDYTnjGkgQQ==
+X-Google-Smtp-Source: APXvYqxHTWP37WCrbgkX6nxMLdBw/0tPKoRg5nRin2f5LJXHzhcKcpphZKWgMGaQKXGnCPL9VoXyCSqg/WxqTmWfZqM=
+X-Received: by 2002:a05:6102:5d1:: with SMTP id v17mr25314853vsf.200.1575991085086;
+ Tue, 10 Dec 2019 07:18:05 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
+ <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
+ <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
+ <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
+ <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
+ <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com>
+ <f88856aa-9175-2a93-3747-c98215cb79c3@suse.de> <20191127090023.GA23040@infradead.org>
+ <CAK8P3a0gUWf_+ZmscuFanvPG=wN09ELL-JpByjJJM4Lo1FYmrQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a0gUWf_+ZmscuFanvPG=wN09ELL-JpByjJJM4Lo1FYmrQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 16:17:28 +0100
+Message-ID: <CAPDyKFoNAF1UUvzvEGxTS=yKJshVgHsXqXiCxno75=aasME4kw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Add MMC software queue support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Hannes Reinecke <hare@suse.de>,
+        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need to 'goto err;' for just doing a return.
-return directly from where the error happens.
+On Wed, 27 Nov 2019 at 13:01, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Nov 27, 2019 at 10:00 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Tue, Nov 26, 2019 at 12:17:15PM +0100, Hannes Reinecke wrote:
+> >  If requests are batched enough we could just drain
+> > and switch every time an other partition access comes in.  Especially
+> > so if people only use partitions for boot partitions and other rarely
+> > used areas.
+>
+> We only support a single user partition plus up to two boot partitions that
+> are accessed rarely, I don't think there is any reason to optimize switching
+> between them.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- drivers/spi/spi-fsl-spi.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+I agree. However, let me just add some more information to this.
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 2d85c81983b1..e991c6ff4e7a 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -725,8 +725,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 	struct device_node *np = ofdev->dev.of_node;
- 	struct spi_master *master;
- 	struct resource mem;
--	int irq = 0, type;
--	int ret = -ENOMEM;
-+	int irq, type;
-+	int ret;
- 
- 	ret = of_mpc8xxx_spi_probe(ofdev);
- 	if (ret)
-@@ -741,10 +741,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 		if (spisel_boot) {
- 			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
--			if (!pinfo->immr_spi_cs) {
--				ret = -ENOMEM;
--				goto err;
--			}
-+			if (!pinfo->immr_spi_cs)
-+				return -ENOMEM;
- 		}
- #endif
- 		/*
-@@ -763,24 +761,17 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 	ret = of_address_to_resource(np, 0, &mem);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	irq = of_irq_to_resource(np, 0, NULL);
--	if (irq <= 0) {
--		ret = -EINVAL;
--		goto err;
--	}
-+	if (irq <= 0)
-+		return -EINVAL;
- 
- 	master = fsl_spi_probe(dev, &mem, irq);
--	if (IS_ERR(master)) {
--		ret = PTR_ERR(master);
--		goto err;
--	}
-+	if (IS_ERR(master))
-+		return PTR_ERR(master);
- 
- 	return 0;
--
--err:
--	return ret;
- }
- 
- static int of_fsl_spi_remove(struct platform_device *ofdev)
--- 
-2.13.3
+There are more partitions, like the RPMB for example. In regards to
+partition switching, after serving a request to the RPMB partition, we
+always switch back to the main user area. I think that is sufficient.
 
+Also note that requests for the RPMB partitions are managed via
+REQ_OP_DRV_IN|OUT.
+
+>
+> The only change that I think we need here is to change the partition switch
+> from something that is done synchronously during ->queue_rq() to
+> something that fits better into normal scheme of sending a cmd to
+> the device, returning BLK_STS_RESOURCE from ->queue_rq.
+
+You want to translate them to be managed similar to REQ_OP_DRV_IN|OUT, no?
+
+I am just trying to understand what this would help us with, but I
+don't get it, sorry.
+
+I realize that I am joining the show a bit late, apologize for that.
+But it seems like you are forgetting about re-tuning, urgent bkops,
+card detect, SDIO combo cards, etc.
+
+For example, re-tuning may be required because of a CRC error on the
+previously sent transfer. Thus re-tuning must be done before serving
+the next request.
+
+Likewise, when the device signals urgent bkops status, we must not
+serve any new request until the card has notified us that it is ready
+with it's internal housekeeping operations.
+
+> Possibly this could even be turned into a standard struct request that is
+> added between two normal requests for different partitions at some
+> point, if this simplifies the logic (I suspect it won't, but it may be worth
+> a try).
+
+Doing so, means re-tuning, bkops, etc, also needs to be managed in the
+same way. Is this really the way to go?
+
+Kind regards
+Uffe
