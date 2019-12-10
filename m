@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F45FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B18C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9978205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C352073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014654;
-	bh=a4ZjSUbhdkUB9ysnpymNNPpDNmR+PGfGrZG2TExZ1qk=;
+	s=default; t=1576014655;
+	bh=rZN8rTHY3jDi7TIYmmIep/ISAGfSy9H42HEB/jDa8NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HvFNaP9c3XYCrM123tH7LlL7torYGRiKP9PI6piyJuueEhOFZO0Ot+YZ3vq2qJFDh
-	 hinXozImz32LLyVGljYbxYeYXqolgDCZQSISwIk+70cwRXeNgk9i6ZchqZMe47oZzq
-	 G7+f8bF4aIEXjpxiEcci+ynotBoaFxVJNDeDWdSs=
+	b=RNDcxNt/oDODar7HrILJhpXGQOmlz4RJD9UUxSigpbwYFBByGuooiAAFDncaF6kQ3
+	 bm+9SnqeXOpVabtoXNJRQ/kHqAmDSaTtOH8kCDAiQw+soLtgCeEFuVoXiRR5yL3Jox
+	 jbHANWxgNAc90g00VghcXzm/qX1SXrxwUvjyLqxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfLJVuv (ORCPT
+        id S1728049AbfLJVuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:50:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbfLJVIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:16 -0500
+        id S1727816AbfLJVIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 556F72469A;
-        Tue, 10 Dec 2019 21:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 024542469E;
+        Tue, 10 Dec 2019 21:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012096;
-        bh=a4ZjSUbhdkUB9ysnpymNNPpDNmR+PGfGrZG2TExZ1qk=;
+        s=default; t=1576012093;
+        bh=rZN8rTHY3jDi7TIYmmIep/ISAGfSy9H42HEB/jDa8NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VAhLs+IGevoH2pHKCa1vH29t/zzvUySlh2gaKad49eQVpE1LfQ+nsR0qrJI1NAknR
-         v1ES/HZv2GRsOLQ5ypP/xvAYQvf5r+agfBK5KP3WmVsoCcZC1N0MpZRN6zyZztvpf5
-         UIY0qHekoGJrGGxV2It2oWxCaWy+/s7mDBJVVqME=
+        b=flqgm4LmXd/Ot9v0RGzNJVF9n4/jRiuyV6eRSycKqTjHM9As2Mw+MD4W/eoq6kLj4
+         Cm3ZgnkWESvpN8MD53heuiwHlDHNBOyprxYEhq35b/qDwbsFoMAv0rosS388L2XeZR
+         sUEDgALlcSZEkQMWSL6pkfm/HU7+Sw9JvRhEBQt8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 072/350] MIPS: syscall: Emit Loongson3 sync workarounds within asm
-Date:   Tue, 10 Dec 2019 16:02:57 -0500
-Message-Id: <20191210210735.9077-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 070/350] samples: pktgen: fix proc_cmd command result check logic
+Date:   Tue, 10 Dec 2019 16:02:55 -0500
+Message-Id: <20191210210735.9077-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,52 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit e84957e6ae043bb83ad6ae7e949a1ce97b6bbfef ]
+[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
 
-Generate the sync instructions required to workaround Loongson3 LL/SC
-errata within inline asm blocks, which feels a little safer than doing
-it from C where strictly speaking the compiler would be well within its
-rights to insert a memory access between the separate asm statements we
-previously had, containing sync & ll instructions respectively.
+Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
+'pg_set'. proc_cmd is designed to check command result with grep the
+"Result:", but this might fail since this string is only shown in
+'pg_thread' and 'pg_set'.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-kernel@vger.kernel.org
+This commit fixes this logic by grep-ing the "Result:" string only when
+the command is not for 'pg_ctrl'.
+
+For clarity of an execution flow, 'errexit' flag has been set.
+
+To cleanup pktgen on exit, trap has been added for EXIT signal.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/syscall.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ samples/pktgen/functions.sh | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/kernel/syscall.c b/arch/mips/kernel/syscall.c
-index 3f16f38230310..c333e57886642 100644
---- a/arch/mips/kernel/syscall.c
-+++ b/arch/mips/kernel/syscall.c
-@@ -37,6 +37,7 @@
- #include <asm/signal.h>
- #include <asm/sim.h>
- #include <asm/shmparam.h>
-+#include <asm/sync.h>
- #include <asm/sysmips.h>
- #include <asm/switch_to.h>
+diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
+index 4af4046d71be4..40873a5d1461d 100644
+--- a/samples/pktgen/functions.sh
++++ b/samples/pktgen/functions.sh
+@@ -5,6 +5,8 @@
+ # Author: Jesper Dangaaard Brouer
+ # License: GPL
  
-@@ -133,12 +134,12 @@ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
- 		  [efault] "i" (-EFAULT)
- 		: "memory");
- 	} else if (cpu_has_llsc) {
--		loongson_llsc_mb();
- 		__asm__ __volatile__ (
- 		"	.set	push					\n"
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
- 		"	li	%[err], 0				\n"
- 		"1:							\n"
-+		"	" __SYNC(full, loongson3_war) "			\n"
- 		user_ll("%[old]", "(%[addr])")
- 		"	move	%[tmp], %[new]				\n"
- 		"2:							\n"
++set -o errexit
++
+ ## -- General shell logging cmds --
+ function err() {
+     local exitcode=$1
+@@ -58,6 +60,7 @@ function pg_set() {
+ function proc_cmd() {
+     local result
+     local proc_file=$1
++    local status=0
+     # after shift, the remaining args are contained in $@
+     shift
+     local proc_ctrl=${PROC_DIR}/$proc_file
+@@ -73,13 +76,13 @@ function proc_cmd() {
+ 	echo "cmd: $@ > $proc_ctrl"
+     fi
+     # Quoting of "$@" is important for space expansion
+-    echo "$@" > "$proc_ctrl"
+-    local status=$?
++    echo "$@" > "$proc_ctrl" || status=$?
+ 
+-    result=$(grep "Result: OK:" $proc_ctrl)
+-    # Due to pgctrl, cannot use exit code $? from grep
+-    if [[ "$result" == "" ]]; then
+-	grep "Result:" $proc_ctrl >&2
++    if [[ "$proc_file" != "pgctrl" ]]; then
++        result=$(grep "Result: OK:" $proc_ctrl) || true
++        if [[ "$result" == "" ]]; then
++            grep "Result:" $proc_ctrl >&2
++        fi
+     fi
+     if (( $status != 0 )); then
+ 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
+@@ -105,6 +108,8 @@ function pgset() {
+     fi
+ }
+ 
++[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
++
+ ## -- General shell tricks --
+ 
+ function root_check_run_with_sudo() {
 -- 
 2.20.1
 
