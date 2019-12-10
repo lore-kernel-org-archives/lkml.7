@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6711C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF8CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA24207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAA920838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017581;
-	bh=c96UM0jcU18or907lSHue/ak1btM61d24pnrAmvpJf0=;
+	s=default; t=1576017582;
+	bh=JX7UUZWlO9ayH87pzAF1pvZZEwJqhaUyVWYYCxPecZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0QBDF5y0FinKWrjPpLZsJK+uR/DuqEKR6+TsK9mZwkBZe0VjaTTOBEJjDMktklpo
-	 NdsRHbY4rbtxb6c86tkwoRVpMjuX42A7qwN3J66O6suMsEAzcqUkYXQUDQtS+357Un
-	 QygSvdwie/ihW3TVNfMHC3tbBgSVsuMGdqS2UvVk=
+	b=KwU6YS6RBF47AemPTpXLAQwgovP4GcyaaFiP3bv3GbV6XKMnx2dmZMj9Dln+8oEbD
+	 C0jMtF+I110wyLN76SlgcUwnDj+MAMikcq3YHe3sl//O1xIwf8ychl/B09F08PBVBb
+	 IK5l4YUJp8lgoBUQcLMCRLdB4mTBjGCmXyu0TTV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfLJWcR (ORCPT
+        id S1730521AbfLJWjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:39:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729019AbfLJWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:56 -0500
+        id S1729349AbfLJWcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B82624654;
-        Tue, 10 Dec 2019 22:31:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA999206EC;
+        Tue, 10 Dec 2019 22:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017116;
-        bh=c96UM0jcU18or907lSHue/ak1btM61d24pnrAmvpJf0=;
+        s=default; t=1576017137;
+        bh=JX7UUZWlO9ayH87pzAF1pvZZEwJqhaUyVWYYCxPecZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ALo06PvFGTBKHQ1iSShcrI0sbGYVAkErCzV7r7E0ZzI1ViU6H6xbWTj1QunzOKGI9
-         j793ePvCxonIDHsT5hfLjNtNtTqMUObAo2ZN3+g9cl9F9WTEkW/R+jDCUS2cXV7q7j
-         IPgiJqswQ8gDdsqSDms1HcdKNTpuxKEktsPe3JRs=
+        b=sj1loNcKStQfUjkGjeS4nNmcujOKe4xco0MjfDLRoH8nASzeQYOEZcRLf0NeY4gKl
+         xMpYqM59zq/N7hBb1EYbBya78Acyt6WbhvtsOwEwgSxqsvKib/iVGOLmtVgv2AoJdw
+         6NDSIk2AYqbFqEDqcfa4lIzLemqGytapG5/xb048=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 68/91] spi: pxa2xx: Add missed security checks
-Date:   Tue, 10 Dec 2019 17:30:12 -0500
-Message-Id: <20191210223035.14270-68-sashal@kernel.org>
+Cc:     Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 85/91] debugfs: Fix !DEBUG_FS debugfs_create_automount
+Date:   Tue, 10 Dec 2019 17:30:29 -0500
+Message-Id: <20191210223035.14270-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,43 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Kusanagi Kouichi <slash@ac.auone-net.jp>
 
-[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
+[ Upstream commit 4250b047039d324e0ff65267c8beb5bad5052a86 ]
 
-pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-platform_get_irq.
-Add checks for them to fix the bugs.
+If DEBUG_FS=n, compile fails with the following error:
 
-Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
-So we cannot use _optional() for devm_clk_get and platform_get_irq.
+kernel/trace/trace.c: In function 'tracing_init_dentry':
+kernel/trace/trace.c:8658:9: error: passing argument 3 of 'debugfs_create_automount' from incompatible pointer type [-Werror=incompatible-pointer-types]
+ 8658 |         trace_automount, NULL);
+      |         ^~~~~~~~~~~~~~~
+      |         |
+      |         struct vfsmount * (*)(struct dentry *, void *)
+In file included from kernel/trace/trace.c:24:
+./include/linux/debugfs.h:206:25: note: expected 'struct vfsmount * (*)(void *)' but argument is of type 'struct vfsmount * (*)(struct dentry *, void *)'
+  206 |      struct vfsmount *(*f)(void *),
+      |      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
+Link: https://lore.kernel.org/r/20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/debugfs.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 6dd195b94c578..2f84d7653afd4 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1529,7 +1529,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
- 	}
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index b20a0945b5500..7aea750538840 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -77,6 +77,8 @@ static const struct file_operations __fops = {				\
+ 	.llseek  = generic_file_llseek,					\
+ }
  
- 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return NULL;
++typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
 +
- 	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return NULL;
-+
- 	ssp->type = type;
- 	ssp->pdev = pdev;
- 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+ #if defined(CONFIG_DEBUG_FS)
+ 
+ struct dentry *debugfs_create_file(const char *name, umode_t mode,
+@@ -96,7 +98,6 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
+ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+ 				      const char *dest);
+ 
+-typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
+ struct dentry *debugfs_create_automount(const char *name,
+ 					struct dentry *parent,
+ 					debugfs_automount_t f,
+@@ -211,7 +212,7 @@ static inline struct dentry *debugfs_create_symlink(const char *name,
+ 
+ static inline struct dentry *debugfs_create_automount(const char *name,
+ 					struct dentry *parent,
+-					struct vfsmount *(*f)(void *),
++					debugfs_automount_t f,
+ 					void *data)
+ {
+ 	return ERR_PTR(-ENODEV);
 -- 
 2.20.1
 
