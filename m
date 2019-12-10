@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CA2C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A8BC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05355206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A3820652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012657;
-	bh=ULvkDPCisHoy7HGUGzfkwm3NCT0ZM1p4B1C00hG5DVc=;
+	s=default; t=1576012664;
+	bh=RN7ybzdrDD1oADSRPOyNshLaTeRNJcRNmclj/bSGKyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYeoACpScPqC6uzvLs/JSLXHI29weFl9Y1RQQCDkIE0IdM7cbJJ9hvwLBae9eN/47
-	 wDHafc4LLvTc//Ul4jVqFMI9L77esleIx7CaMYtCaMaLHgXyHiACY6Vpwx2VHdUeJJ
-	 4kKNrk1OYYTljZ4kKC0pwqPZpUxmwkaMMzUE7iJc=
+	b=JstQ4fBIKp2X53KK2TKPaeSNtFAczdQkU/Eq2/DWIiy0YS7XPGxbLBVpjHin14Usv
+	 XKSKewsj5ckU9Rm74d+nyiGmWdxt+BCkWKP4S2XEy86z/5hRH1mvQnCc0nFYrRK8EU
+	 94n/zeCTTj4i5ytRURUeTkRFRoUKFKvsvceYL0qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfLJVRf (ORCPT
+        id S1729306AbfLJVRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:17:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfLJVMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:53 -0500
+        id S1729112AbfLJVMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3268214AF;
-        Tue, 10 Dec 2019 21:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49B2D208C3;
+        Tue, 10 Dec 2019 21:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012372;
-        bh=ULvkDPCisHoy7HGUGzfkwm3NCT0ZM1p4B1C00hG5DVc=;
+        s=default; t=1576012370;
+        bh=RN7ybzdrDD1oADSRPOyNshLaTeRNJcRNmclj/bSGKyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEKLkDWlS82dsu5DYmgSGamViZ51fxIUIyHLz88ijN7i8iyRx4WW2/v2rvziOntD5
-         7gB64VDuDyP9vOruF8t+JpUk7EiLP1v8aNtZp56w/qYq08Qt6x1/ldto/jxLVp77JQ
-         DMUPpdSCLbd1Xb8V2kDw16fzD0NeYNG1jvAYIq9g=
+        b=y2zA06opgfaC5Zgw4ozyE6RIiKB7LaglzhsmPC6JzIwEO+C4FHvHCqOPQh6elvktB
+         kqfDzDzVJfy7T8xi+7s9/tT9lhngm1TpTMX4Imd13DQ/AG09Nr5EBXCGClmTVGVTCy
+         0xu3EzF9duainQOvEAgxfPlUWjZS5meku7WSoBJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 298/350] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
-Date:   Tue, 10 Dec 2019 16:06:43 -0500
-Message-Id: <20191210210735.9077-259-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 296/350] xhci-pci: Allow host runtime PM as default also for Intel Ice Lake xHCI
+Date:   Tue, 10 Dec 2019 16:06:41 -0500
+Message-Id: <20191210210735.9077-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -63,71 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
+[ Upstream commit 07a594f353655b1628f598add352e7e754f44869 ]
 
-Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
-adding MMC_CAP_ERASE to the TMIO mmc core:
+Intel Ice Lake has two xHCI controllers one on PCH and the other as part
+of the CPU itself. The latter is also part of the so called Type C
+Subsystem (TCSS) sharing ACPI power resources with the PCIe root ports
+and the Thunderbolt controllers. In order to put the whole TCSS block
+into D3cold the xHCI needs to be runtime suspended as well when idle.
 
-On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
- -- snip --
- This test and due to the discussions with Wolfram and you in this
- thread, I would actually suggest that you enable MMC_CAP_ERASE for all
- tmio variants, rather than just for this particular one.
+For this reason allow runtime PM as default for Ice Lake TCSS xHCI
+controller.
 
- In other words, set the cap in tmio_mmc_host_probe() should be fine,
- as it seems none of the tmio variants supports HW busy detection at
- this point.
- -- snip --
-
-Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
-
-root@rcar-gen3:~# lsblk
-NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
-mmcblk0boot0 179:8    0    4M  1 disk
-mmcblk0boot1 179:16   0    4M  1 disk
-mmcblk1      179:24   0   30G  0 disk  <--- SD card
-
-root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
-real    0m8.659s
-user    0m0.001s
-sys     0m1.920s
-
-root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
-real    0m1.176s
-user    0m0.001s
-sys     0m0.124s
-
-[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
-
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
-Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1573836603-10871-5-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-index 9b6e1001e77c3..dec5a99f52cf8 100644
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -1184,7 +1184,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host)
- 	if (ret == -EPROBE_DEFER)
- 		return ret;
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 1e0236e906879..a0025d23b2573 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -48,6 +48,7 @@
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI		0x15e9
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI		0x15ec
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI		0x15f0
++#define PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI		0x8a13
  
--	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
- 	mmc->caps2 |= pdata->capabilities2;
- 	mmc->max_segs = pdata->max_segs ? : 32;
- 	mmc->max_blk_size = TMIO_MAX_BLK_SIZE;
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+@@ -212,7 +213,8 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI ||
+-	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI))
++	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI))
+ 		xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
 -- 
 2.20.1
 
