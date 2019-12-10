@@ -2,187 +2,207 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D1AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA2FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A21207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A06B207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYkUb0K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfLJQgJ (ORCPT
+        id S1727625AbfLJQhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:36:09 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36021 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfLJQgH (ORCPT
+        Tue, 10 Dec 2019 11:37:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57566 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727178AbfLJQhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:36:07 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1ieiUO-0004f3-R3; Tue, 10 Dec 2019 17:35:56 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 5AF5E48CE81;
-        Tue, 10 Dec 2019 16:35:54 +0000 (UTC)
-Subject: Re: [PATCH][next] can: tcan45x: Fix inconsistent IS_ERR and PTR_ERR
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sean Nyekjaer <sean@geanix.com>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191210150532.GA12732@embeddedor>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <095ab519-8dd9-4971-83ae-85e96c796d11@pengutronix.de>
-Date:   Tue, 10 Dec 2019 17:35:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 11:37:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575995823;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6db9343SFTPQev9ZuOYUBJv5oalrvJlNCQGZKQHORtI=;
+        b=UYkUb0K/RwclKWBKAAY54gVGMVbaiWH8s7gKGsWFN7dE7d7KnzE4fWRP+K4zPwAf4NW3IC
+        3aQ8xLNceejI31lWHYSG620jsKk1q/eBxLE3d9OgrWiGOqCHaywCyIqV0wekg8t2yT1eXy
+        C/RdWGDgFB2thpKLcWUlCc195mn8cqU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-3I51-E7bM8KjPNGQslJ8hQ-1; Tue, 10 Dec 2019 11:37:02 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41569107ACC4;
+        Tue, 10 Dec 2019 16:37:00 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA314600F0;
+        Tue, 10 Dec 2019 16:36:57 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 17:36:55 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        mark.rutland@arm.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: perf top for arm64?
+Message-ID: <20191210163655.GG14123@krava>
+References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+ <20191106140036.GA6259@kernel.org>
+ <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210150532.GA12732@embeddedor>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="R9XkPeRyhuEFt6TFKubqSxxwhq61N3wMA"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 3I51-E7bM8KjPNGQslJ8hQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---R9XkPeRyhuEFt6TFKubqSxxwhq61N3wMA
-Content-Type: multipart/mixed; boundary="CejTD8dxQvWUIgUTNgihNi1N7v5kDiLMf";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- Dan Murphy <dmurphy@ti.com>, Wolfgang Grandegger <wg@grandegger.com>,
- "David S. Miller" <davem@davemloft.net>, Sean Nyekjaer <sean@geanix.com>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <095ab519-8dd9-4971-83ae-85e96c796d11@pengutronix.de>
-Subject: Re: [PATCH][next] can: tcan45x: Fix inconsistent IS_ERR and PTR_ERR
-References: <20191210150532.GA12732@embeddedor>
-In-Reply-To: <20191210150532.GA12732@embeddedor>
-
---CejTD8dxQvWUIgUTNgihNi1N7v5kDiLMf
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-
-On 12/10/19 4:05 PM, Gustavo A. R. Silva wrote:
-> Fix inconsistent IS_ERR and PTR_ERR in tcan4x5x_parse_config.
+On Tue, Dec 10, 2019 at 04:13:49PM +0000, John Garry wrote:
+> Hi all,
 >=20
-> The proper pointer to be passed as argument is tcan4x5x->device_wake_gp=
-io.
+> I find to my surprise that "perf top" does not work for arm64:
 >=20
-> This bug was detected with the help of Coccinelle.
+> root@ubuntu:/home/john/linux# tools/perf/perf top
+> Couldn't read the cpuid for this machine: No such file or directory
+
+there was recent change that check on cpuid and quits:
+  608127f73779 perf top: Initialize perf_env->cpuid, needed by the per arch=
+ annotation init routine
+
+Arnaldo,
+maybe this should be just a warning/info, because it seems to be related
+to annotations only..?
+
+get_cpuid is defined only for s390/x86/powerpc, so I guess it won't work
+on the rest as well
+
+jirka
+
 >=20
-> Fixes: 2de497356955 ("can: tcan45x: Make wake-up GPIO an optional GPIO"=
-)
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> That's v5.5-rc1 release.
+>=20
+> It seems that we are just missing an arm64 version of get_cpuid() - with =
+the
+> patch below, I now get as hoped:
+>=20
+>    PerfTop:   32857 irqs/sec  kernel:85.0%  exact:  0.0% lost: 0/0 drop: =
+0/0
+> [4000Hz cycles],  (all, 64 CPUs)
+> -------------------------------------------------------------------------=
+------
+>=20
+>      8.99%  [kernel]          [k] arm_smmu_cmdq_issue_cmdlist
+>      5.80%  [kernel]          [k] __softirqentry_text_start
+>      4.49%  [kernel]          [k] _raw_spin_unlock_irqrestore
+>      3.48%  [kernel]          [k] el0_svc_common.constprop.2
+>      3.37%  [kernel]          [k] _raw_write_lock_irqsave
+>      3.28%  [kernel]          [k] __local_bh_enable_ip
+>      3.05%  [kernel]          [k] __blk_complete_request
+>      2.07%  [kernel]          [k] queued_spin_lock_slowpath
+>      1.93%  [vdso]            [.] 0x0000000000000484
+>=20
+>=20
+> Was this just missed? Or is there a good reason to omit?
+>=20
+> Thanks,
+> John
+>=20
+> --->8---
+>=20
+> Subject: [PATCH] perf: Add perf top support for arm64
+>=20
+> Copied from get_cpuid_str() essentially...
+>=20
+> Signed-off-by: John Garry <john.garry@huawei.com>
+>=20
+> diff --git a/tools/perf/arch/arm64/util/header.c
+> b/tools/perf/arch/arm64/util/header.c
+> index a32e4b72a98f..ecd1f86e29cc 100644
+> --- a/tools/perf/arch/arm64/util/header.c
+> +++ b/tools/perf/arch/arm64/util/header.c
+> @@ -1,10 +1,12 @@
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <perf/cpumap.h>
+> +#include <util/cpumap.h>
+>  #include <internal/cpumap.h>
+>  #include <api/fs/fs.h>
+>  #include "debug.h"
+>  #include "header.h"
+> +#include <errno.h>
+>=20
+>  #define MIDR "/regs/identification/midr_el1"
+>  #define MIDR_SIZE 19
+> @@ -12,6 +14,59 @@
+>  #define MIDR_VARIANT_SHIFT      20
+>  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+>=20
+> +int
+> +get_cpuid(char *buffer, size_t sz)
+> +{
+> +=09char *buf =3D NULL;
+> +=09char path[PATH_MAX];
+> +=09const char *sysfs =3D sysfs__mountpoint();
+> +=09int cpu;
+> +=09u64 midr =3D 0;
+> +=09FILE *file;
+> +
+> +=09if (!sysfs)
+> +=09=09return EINVAL;
+> +
+> +=09buf =3D malloc(MIDR_SIZE);
+> +=09if (!buf)
+> +=09=09return EINVAL;
+> +
+> +=09/* read midr from list of cpus mapped to this pmu */
+> +=09for (cpu =3D 0; cpu < cpu__max_present_cpu(); cpu++) {
+> +=09=09scnprintf(path, sz, "%s/devices/system/cpu/cpu%d"MIDR,
+> +=09=09=09=09sysfs, cpu);
+> +
+> +=09=09file =3D fopen(path, "r");
+> +=09=09if (!file) {
+> +=09=09=09pr_debug("fopen failed for file %s\n", path);
+> +=09=09=09continue;
+> +=09=09}
+> +
+> +=09=09if (!fgets(buf, MIDR_SIZE, file)) {
+> +=09=09=09fclose(file);
+> +=09=09=09continue;
+> +=09=09}
+> +=09=09fclose(file);
+> +
+> +=09=09/* Ignore/clear Variant[23:20] and
+> +=09=09 * Revision[3:0] of MIDR
+> +=09=09 */
+> +=09=09midr =3D strtoul(buf, NULL, 16);
+> +=09=09midr &=3D (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
+> +=09=09scnprintf(buffer, MIDR_SIZE, "0x%016lx", midr);
+> +=09=09/* got midr break loop */
+> +=09=09break;
+> +=09}
+> +
+> +=09if (!midr) {
+> +=09=09pr_err("failed to get cpuid string\n");
+> +=09=09free(buf);
+> +=09=09return EINVAL;
+> +=09}
+> +=09return 0;
+> +}
+> +
+>=20
 
-Applied to linux-can.
-
-Tnx,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---CejTD8dxQvWUIgUTNgihNi1N7v5kDiLMf--
-
---R9XkPeRyhuEFt6TFKubqSxxwhq61N3wMA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3vyWAACgkQWsYho5Hk
-nSDQoAf4gHv21bwcm2rpLFf7ZB0YPYaPWz7fcDxQ7KpM7BOeuh9AVn/6EpV3mVEz
-W/QEKztlw91dD9V4FXb5POetjW34wZ2xpBV6tn225avbl5DBQvhFw9G9BUVcQSua
-pJDaYM8j3Rbgloh13uqiROCosKtFf0ObL7VoSjEa3zAFSP9V3cA/12TLMHu0yO6i
-WV3uLLL4HbBPgB43oVXJ/BMoF5ebzk61Zqtwd3ztht5W5xFyflrtyZ/f93I9eLSW
-HvufQOVGs573rIndn6yobXrFX8D/7TwJIyZDNv+KcK4GPKZcIMx64vhMNBpLVkVR
-NRyixv0vtF/2GO3oS28D6wjn7ZhQ
-=MmTk
------END PGP SIGNATURE-----
-
---R9XkPeRyhuEFt6TFKubqSxxwhq61N3wMA--
