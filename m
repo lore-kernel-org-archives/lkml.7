@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD098C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0605620828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D01205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012793;
-	bh=ForF08Nmv+/fRCvlgZGiU/ze2U4OXlse6twfxuvrWBA=;
+	s=default; t=1576012801;
+	bh=M7edHdUXeEqsFb3sSdr70nwnlRnnGnrxPsKmnYo39Uo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FPMXL7SYa6CdJiSLzHDmqiJURrP67BKvhuKROkeyUYR/8LtQf/68mvwPKFIGWEk+
-	 5uGMPM3MxbUaZlnV/A785sFegIlon0w9QnFPIKZuU+d9WPvN+D+XEDbn3eayGkfwsB
-	 JV+oHB4LAQ1wMyMuMLkh68izyCvszuyh2EHZLoGw=
+	b=h49CNuDGBzjRy95gANFLhZpf3V7jSUUXDfXTvoUdaKeqGsQGveCARzo4gGebT73xK
+	 Tbqsr40TV0z0yZ29y9RSdjEbRs9r5xEGjCtlG2ZkxIwdSR2sdAuS/GeyrSl38SISc7
+	 q0+8YRy4ACCsL7ewBntbyBtSti+3BTIiMGZnB68A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbfLJVTv (ORCPT
+        id S1729153AbfLJVUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:19:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36030 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:20:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfLJVMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:19 -0500
+        id S1727716AbfLJVMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B09246A2;
-        Tue, 10 Dec 2019 21:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA252077B;
+        Tue, 10 Dec 2019 21:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012339;
-        bh=ForF08Nmv+/fRCvlgZGiU/ze2U4OXlse6twfxuvrWBA=;
+        s=default; t=1576012337;
+        bh=M7edHdUXeEqsFb3sSdr70nwnlRnnGnrxPsKmnYo39Uo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxIT0OItVw7BWj+wBJkNIJbD+VyB6BQJatRuL8HBL0gNx8CBWzISA0PRTgzwWyP5q
-         gh2mn6EhH8LlnWPTkuimw0AE9Z9ZE5fKndSz6EQCr3jgWVBjVLqwT/5QAkNQyTjI/1
-         ukTAg7szvCrXtzWYmBe7VGJGLst9KoGLI7ENtkOI=
+        b=d+rKjqggQT7J4/u/a4o+QYE80iVbXC1waG6SPvRqAjQkHODV2YWnRr/A415OQSMo/
+         Rgzz6JrsPCJkAfa5KU92mEA7SwnDZrlqBsawW6huGFuI+4OzhTBfEpUrVE7StVG35A
+         NzWtt/ySYdIybbacLgePHaAu4cIGyI70QfvbsIkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 270/350] net: dsa: sja1105: Disallow management xmit during switch reset
-Date:   Tue, 10 Dec 2019 16:06:15 -0500
-Message-Id: <20191210210735.9077-231-sashal@kernel.org>
+Cc:     =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 268/350] iio: adis16480: Fix scales factors
+Date:   Tue, 10 Dec 2019 16:06:13 -0500
+Message-Id: <20191210210735.9077-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,60 +61,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Nuno Sá <nuno.sa@analog.com>
 
-[ Upstream commit af580ae2dcb250719857b4b7024bd4bb0c2e05fb ]
+[ Upstream commit 49549cb23a2926eba70bb634e361daea0f319794 ]
 
-The purpose here is to avoid ptp4l fail due to this condition:
+This patch fixes the scales for the gyroscope, accelerometer and
+barometer. The pressure scale was just wrong. For the others, the scale
+factors were not taking into account that a 32bit word is being read
+from the device.
 
-  timed out while polling for tx timestamp
-  increasing tx_timestamp_timeout may correct this issue, but it is likely caused by a driver bug
-  port 1: send peer delay request failed
-
-So either reset the switch before the management frame was sent, or
-after it was timestamped as well, but not in the middle.
-
-The condition may arise either due to a true timeout (i.e. because
-re-uploading the static config takes time), or due to the TX timestamp
-actually getting lost due to reset. For the former we can increase
-tx_timestamp_timeout in userspace, for the latter we need this patch.
-
-Locking all traffic during switch reset does not make sense at all,
-though. Forcing all CPU-originated traffic to potentially block waiting
-for a sleepable context to send > 800 bytes over SPI is not a good idea.
-Flows that are autonomously forwarded by the switch will get dropped
-anyway during switch reset no matter what. So just let all other
-CPU-originated traffic be dropped as well.
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7abad1063deb ("iio: adis16480: Fix scale factors")
+Fixes: 82e7a1b25017 ("iio: imu: adis16480: Add support for ADIS1649x family of devices")
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iio/imu/adis16480.c | 77 ++++++++++++++++++++-----------------
+ 1 file changed, 41 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index aa140662c7c20..4e5a428ab1a4c 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1389,6 +1389,8 @@ int sja1105_static_config_reload(struct sja1105_private *priv)
- 	int speed_mbps[SJA1105_NUM_PORTS];
- 	int rc, i;
- 
-+	mutex_lock(&priv->mgmt_lock);
-+
- 	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
- 
- 	/* Back up the dynamic link speed changed by sja1105_adjust_port_config
-@@ -1420,6 +1422,8 @@ int sja1105_static_config_reload(struct sja1105_private *priv)
- 			goto out;
- 	}
- out:
-+	mutex_unlock(&priv->mgmt_lock);
-+
- 	return rc;
- }
- 
+diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+index 8743b2f376e27..050652b8fee7b 100644
+--- a/drivers/iio/imu/adis16480.c
++++ b/drivers/iio/imu/adis16480.c
+@@ -623,9 +623,13 @@ static int adis16480_read_raw(struct iio_dev *indio_dev,
+ 			*val2 = (st->chip_info->temp_scale % 1000) * 1000;
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		case IIO_PRESSURE:
+-			*val = 0;
+-			*val2 = 4000; /* 40ubar = 0.004 kPa */
+-			return IIO_VAL_INT_PLUS_MICRO;
++			/*
++			 * max scale is 1310 mbar
++			 * max raw value is 32767 shifted for 32bits
++			 */
++			*val = 131; /* 1310mbar = 131 kPa */
++			*val2 = 32767 << 16;
++			return IIO_VAL_FRACTIONAL;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -786,13 +790,14 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+ 		/*
+-		 * storing the value in rad/degree and the scale in degree
+-		 * gives us the result in rad and better precession than
+-		 * storing the scale directly in rad.
++		 * Typically we do IIO_RAD_TO_DEGREE in the denominator, which
++		 * is exactly the same as IIO_DEGREE_TO_RAD in numerator, since
++		 * it gives better approximation. However, in this case we
++		 * cannot do it since it would not fit in a 32bit variable.
+ 		 */
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(22887),
+-		.gyro_max_scale = 300,
+-		.accel_max_val = IIO_M_S_2_TO_G(21973),
++		.gyro_max_val = 22887 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(300),
++		.accel_max_val = IIO_M_S_2_TO_G(21973 << 16),
+ 		.accel_max_scale = 18,
+ 		.temp_scale = 5650, /* 5.65 milli degree Celsius */
+ 		.int_clk = 2460000,
+@@ -802,9 +807,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16480] = {
+ 		.channels = adis16480_channels,
+ 		.num_channels = ARRAY_SIZE(adis16480_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(22500),
+-		.gyro_max_scale = 450,
+-		.accel_max_val = IIO_M_S_2_TO_G(12500),
++		.gyro_max_val = 22500 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
++		.accel_max_val = IIO_M_S_2_TO_G(12500 << 16),
+ 		.accel_max_scale = 10,
+ 		.temp_scale = 5650, /* 5.65 milli degree Celsius */
+ 		.int_clk = 2460000,
+@@ -814,9 +819,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16485] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(22500),
+-		.gyro_max_scale = 450,
+-		.accel_max_val = IIO_M_S_2_TO_G(20000),
++		.gyro_max_val = 22500 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
++		.accel_max_val = IIO_M_S_2_TO_G(20000 << 16),
+ 		.accel_max_scale = 5,
+ 		.temp_scale = 5650, /* 5.65 milli degree Celsius */
+ 		.int_clk = 2460000,
+@@ -826,9 +831,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16488] = {
+ 		.channels = adis16480_channels,
+ 		.num_channels = ARRAY_SIZE(adis16480_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(22500),
+-		.gyro_max_scale = 450,
+-		.accel_max_val = IIO_M_S_2_TO_G(22500),
++		.gyro_max_val = 22500 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
++		.accel_max_val = IIO_M_S_2_TO_G(22500 << 16),
+ 		.accel_max_scale = 18,
+ 		.temp_scale = 5650, /* 5.65 milli degree Celsius */
+ 		.int_clk = 2460000,
+@@ -838,9 +843,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16495_1] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
+-		.gyro_max_scale = 125,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 20000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(125),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 8,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
+@@ -851,9 +856,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16495_2] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
+-		.gyro_max_scale = 450,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 18000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 8,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
+@@ -864,9 +869,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16495_3] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
+-		.gyro_max_scale = 2000,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 20000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(2000),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 8,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
+@@ -877,9 +882,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16497_1] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
+-		.gyro_max_scale = 125,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 20000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(125),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 40,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
+@@ -890,9 +895,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16497_2] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(18000),
+-		.gyro_max_scale = 450,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 18000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(450),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 40,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
+@@ -903,9 +908,9 @@ static const struct adis16480_chip_info adis16480_chip_info[] = {
+ 	[ADIS16497_3] = {
+ 		.channels = adis16485_channels,
+ 		.num_channels = ARRAY_SIZE(adis16485_channels),
+-		.gyro_max_val = IIO_RAD_TO_DEGREE(20000),
+-		.gyro_max_scale = 2000,
+-		.accel_max_val = IIO_M_S_2_TO_G(32000),
++		.gyro_max_val = 20000 << 16,
++		.gyro_max_scale = IIO_DEGREE_TO_RAD(2000),
++		.accel_max_val = IIO_M_S_2_TO_G(32000 << 16),
+ 		.accel_max_scale = 40,
+ 		.temp_scale = 12500, /* 12.5 milli degree Celsius */
+ 		.int_clk = 4250000,
 -- 
 2.20.1
 
