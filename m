@@ -2,168 +2,132 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53403C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7E120836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B6420836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEpvcY3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfLJSOu (ORCPT
+        id S1727751AbfLJSP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:14:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:52834 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfLJSOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:14:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E79181FB;
-        Tue, 10 Dec 2019 10:14:48 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 795A93F6CF;
-        Tue, 10 Dec 2019 10:14:48 -0800 (PST)
-Subject: Re: [PATCH 03/15] firmware: arm_scmi: Skip protocol initialisation
- for additional devices
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
- <20191210145345.11616-4-sudeep.holla@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <944a2d76-a3d3-9238-1960-63c3f29bea05@arm.com>
-Date:   Tue, 10 Dec 2019 18:14:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 13:15:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34364 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726771AbfLJSP3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 13:15:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576001728;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6ftqvNo8ypX13fdqkDhRy1P9Zlg2BDYcnsvRebm2MCU=;
+        b=NEpvcY3ScU/ZGOvfeNBYgFvYwQ+JoyG5Cg7wsrlGkEWTazeYOYijL24pFu1lHpRcRIg5kA
+        GRDVJoUBa3vqOqTSrgxbvtWsK7tacppzYT+6hPjJyDdds5yq9xjDAKfCMmRPXfyPQ3Q7Lu
+        kRD2xjlMnUVQ8ounsGx0TUdHqIVGphg=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-aUYJOLWRP3aZ1w0GTIi_YQ-1; Tue, 10 Dec 2019 13:15:27 -0500
+Received: by mail-lf1-f70.google.com with SMTP id t8so1255519lfc.21
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:15:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9qaJ0iPUZiPGrRKD6KWzbbPQ9tBJQ6ZNwk2N/6zRMJM=;
+        b=av6RQvmg6EQ3ws30j5ourRyvctMKLmw9oca4/4JOCoC9IWle4agXWms25XixPTpygQ
+         +m9/6nZFBlaZMME5NUUljn9ApWzhdrp+ARMqhDzQriukrq8/4jpeYGOE74TDbrAirzyj
+         OSx72DGyt4sZ9tYbMDG4wsljA/U0SLpg2vZxgC+FHMIEnH08Gv2oi+Spp2DHivYATY1V
+         wnRbfibGT1ESLKryuquvJq2Ugluui/VAT2JcaQmVLuGIUf6YMKKZtXL+8N9L8dJpRD4x
+         qAKPHhuxtmV0drSx5Z9DrgJY1TcXvbw3Nzsz9NRIQkZQ7MQVlHj209NNEBL1n/5qiOre
+         z6fA==
+X-Gm-Message-State: APjAAAWwj8UbcauewuxjCu57iKu4qvB3iwkaHSB43uWVJbwEX8k3S0wc
+        IzkjysDA8FFij51FIbVHTZsaajL3R8x96MKEilGfLz154PILONGX/Kvd0snFNcrdCOOlqtsIkeD
+        2+QIoY75G1Ims44/YQ52zRpJQ
+X-Received: by 2002:ac2:4436:: with SMTP id w22mr19862846lfl.185.1576001725607;
+        Tue, 10 Dec 2019 10:15:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxrZAMkKrVX2Pa/3z0mzalv4YSJ1qSkcLpsPezdGIOVxK4wQI2LAemEsfEq3IDhQEOyoph9fw==
+X-Received: by 2002:ac2:4436:: with SMTP id w22mr19862840lfl.185.1576001725439;
+        Tue, 10 Dec 2019 10:15:25 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id b63sm1618343lfg.79.2019.12.10.10.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 10:15:24 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id DE1FA181AC8; Tue, 10 Dec 2019 19:15:23 +0100 (CET)
+From:   =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or ksyms
+Date:   Tue, 10 Dec 2019 19:14:12 +0100
+Message-Id: <20191210181412.151226-1-toke@redhat.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191210145345.11616-4-sudeep.holla@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: aUYJOLWRP3aZ1w0GTIi_YQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 14:53, Sudeep Holla wrote:
-> The scmi bus now supports adding multiple devices per protocol,
-> and since scmi_protocol_init is called for each scmi device created,
-> we must avoid allocating protocol private data and initialising the
-> protocol itself if it is already initialised.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
+When the kptr_restrict sysctl is set, the kernel can fail to return
+jited_ksyms or jited_prog_insns, but still have positive values in
+nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when trying
+to dump the program because it only checks the len fields not the actual
+pointers to the instructions and ksyms.
 
-Wouldn't be better to add some kind of per-protocol 'initialized' flag somewhere
-in the bus abstraction so that the protocol_id itself could be marked as initialized
-once bus::scmi_protocol_init() completes successfully so that we could just skip the
-invocation itself of bus::scmi_protocol_init() for all the protocols already detected
-as initialized ?
+Fix this by adding the missing checks.
 
-Or, if not a flag, maybe deactivating the registered protocol init function itself
-once it has been successfully called once .....something along the lines of:
+Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+---
+v2:
+  - The sysctl causing this is kptr_restrict, not bpf_jit_harden; update co=
+mmit
+    msg to get this right (Martin).
 
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-index 7a30952b463d..a551a00586c6 100644
---- a/drivers/firmware/arm_scmi/bus.c
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -73,6 +73,8 @@ static int scmi_dev_probe(struct device *dev)
-        ret = scmi_protocol_init(scmi_dev->protocol_id, scmi_dev->handle);
-        if (ret)
-                return ret;
-+       idr_replace(&scmi_protocols, dummy_return_0_callback,
-+                       scmi_dev->protocol_id);
- 
-        return scmi_drv->probe(scmi_dev);
+ tools/bpf/bpftool/prog.c          | 2 +-
+ tools/bpf/bpftool/xlated_dumper.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-[not really tested eh ... :D]
-
-This way we can drop this patch as a whole and avoid any future needs to remember
-to add this same sort of logic in the next XYZ protocol implementation.
-
-Cheers
-
-Cristian
-
->  drivers/firmware/arm_scmi/clock.c   | 3 +++
->  drivers/firmware/arm_scmi/perf.c    | 3 +++
->  drivers/firmware/arm_scmi/power.c   | 3 +++
->  drivers/firmware/arm_scmi/reset.c   | 3 +++
->  drivers/firmware/arm_scmi/sensors.c | 3 +++
->  5 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-> index 32526a793f3a..922b22aaaf84 100644
-> --- a/drivers/firmware/arm_scmi/clock.c
-> +++ b/drivers/firmware/arm_scmi/clock.c
-> @@ -316,6 +316,9 @@ static int scmi_clock_protocol_init(struct scmi_handle *handle)
->  	int clkid, ret;
->  	struct clock_info *cinfo;
-> 
-> +	if (handle->clk_ops && handle->clk_priv)
-> +		return 0; /* initialised already for the first device */
-> +
->  	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
-> 
->  	dev_dbg(handle->dev, "Clock Version %d.%d\n",
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> index 601af4edad5e..55c2a4c21ccb 100644
-> --- a/drivers/firmware/arm_scmi/perf.c
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -710,6 +710,9 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
->  	u32 version;
->  	struct scmi_perf_info *pinfo;
-> 
-> +	if (handle->perf_ops && handle->perf_priv)
-> +		return 0; /* initialised already for the first device */
-> +
->  	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
-> 
->  	dev_dbg(handle->dev, "Performance Version %d.%d\n",
-> diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-> index 5abef7079c0a..9a7593238b8f 100644
-> --- a/drivers/firmware/arm_scmi/power.c
-> +++ b/drivers/firmware/arm_scmi/power.c
-> @@ -185,6 +185,9 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
->  	u32 version;
->  	struct scmi_power_info *pinfo;
-> 
-> +	if (handle->power_ops && handle->power_priv)
-> +		return 0; /* initialised already for the first device */
-> +
->  	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
-> 
->  	dev_dbg(handle->dev, "Power Version %d.%d\n",
-> diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-> index ab42c21c5517..809dc8faee1e 100644
-> --- a/drivers/firmware/arm_scmi/reset.c
-> +++ b/drivers/firmware/arm_scmi/reset.c
-> @@ -195,6 +195,9 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
->  	u32 version;
->  	struct scmi_reset_info *pinfo;
-> 
-> +	if (handle->reset_ops && handle->reset_priv)
-> +		return 0; /* initialised already for the first device */
-> +
->  	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
-> 
->  	dev_dbg(handle->dev, "Reset Version %d.%d\n",
-> diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-> index a400ea805fc2..b7f92c37c8a4 100644
-> --- a/drivers/firmware/arm_scmi/sensors.c
-> +++ b/drivers/firmware/arm_scmi/sensors.c
-> @@ -276,6 +276,9 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
->  	u32 version;
->  	struct sensors_info *sinfo;
-> 
-> +	if (handle->sensor_ops && handle->sensor_priv)
-> +		return 0; /* initialised already for the first device */
-> +
->  	scmi_version_get(handle, SCMI_PROTOCOL_SENSOR, &version);
-> 
->  	dev_dbg(handle->dev, "Sensor Version %d.%d\n",
-> --
-> 2.17.1
-> 
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 4535c863d2cd..2ce9c5ba1934 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -493,7 +493,7 @@ static int do_dump(int argc, char **argv)
+=20
+ =09info =3D &info_linear->info;
+ =09if (mode =3D=3D DUMP_JITED) {
+-=09=09if (info->jited_prog_len =3D=3D 0) {
++=09=09if (info->jited_prog_len =3D=3D 0 || !info->jited_prog_insns) {
+ =09=09=09p_info("no instructions returned");
+ =09=09=09goto err_free;
+ =09=09}
+diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_d=
+umper.c
+index 494d7ae3614d..5b91ee65a080 100644
+--- a/tools/bpf/bpftool/xlated_dumper.c
++++ b/tools/bpf/bpftool/xlated_dumper.c
+@@ -174,7 +174,7 @@ static const char *print_call(void *private_data,
+ =09struct kernel_sym *sym;
+=20
+ =09if (insn->src_reg =3D=3D BPF_PSEUDO_CALL &&
+-=09    (__u32) insn->imm < dd->nr_jited_ksyms)
++=09    (__u32) insn->imm < dd->nr_jited_ksyms && dd->jited_ksyms)
+ =09=09address =3D dd->jited_ksyms[insn->imm];
+=20
+ =09sym =3D kernel_syms_search(dd, address);
+--=20
+2.24.0
 
