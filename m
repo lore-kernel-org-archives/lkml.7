@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED91C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCE8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5158246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4158824697
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012235;
-	bh=cXHoFaCPOcdNxCGH5Nh0rBLLYZyaMEeDTY7yKhcYT/8=;
+	s=default; t=1576012237;
+	bh=qoWIB+0WSAHa/3SwzS6I1z52KR/Wh/ZPFYeXYzN9PqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Omv4IMWc70dZa8dfpSCsYbw8TJ9nF/r33xNxLdc9mXG5bqw4J52kStX8uNS9+Lh4j
-	 WLPgJYVsfuc6SSqQ9rHYRF8KaRynYLX4OkLKUxU4dFKzQfJT6oiRTnTz0oEOaNp3qW
-	 NMRkeDbIKfFhpTypDxVDfxTh5571V/pGn5HyYXvU=
+	b=mMYokBAhaixzMhFcZxQM6Oef3cX0UixuMKYq2VxsegGaD9GKDUElhdE/c75+L+d0A
+	 aY22ks+Z0oyI+JjX3gKRONBD7ogg51/bypvcgk2wnRHxJQ4ZYNYVMWaWYJfFHDFbU+
+	 sDWQaqjhvXjjL83UmaXFXLuuost9aSuTgYTxrO3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfLJVKe (ORCPT
+        id S1728549AbfLJVKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60486 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbfLJVKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:30 -0500
+        id S1728531AbfLJVKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBFF02077B;
-        Tue, 10 Dec 2019 21:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F228246C4;
+        Tue, 10 Dec 2019 21:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012229;
-        bh=cXHoFaCPOcdNxCGH5Nh0rBLLYZyaMEeDTY7yKhcYT/8=;
+        s=default; t=1576012233;
+        bh=qoWIB+0WSAHa/3SwzS6I1z52KR/Wh/ZPFYeXYzN9PqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwYUKEwKYIk8arMW1TyelSgMlRX8JeLwMhD6cUFnkNRb7w9Fpv6BVxhw5Xe47Bcnw
-         amkAETaNDxE52qqDJ3tN66UNaXDjLA4VH0MjnL445ChlRBPzq9gbi77Hjr/QdnOHPa
-         JwdimdJx9G2VQgbWHJcRPfyTnNaKWfM3fPBmxp6E=
+        b=ftwrQ6ccbopfaYCsCYq4OVICDtXHKYkm3focToIOSF0BVMjaoC75D4cQJqGUsLy3X
+         1qe0lERg5TU1PDWMoxku12/SPpk5i6m0P/GBjBs4+sE6trBALv9OVotW73LjtKW1px
+         SckpQsmkthGyKOWFHsUkJz5uyi+OrZYPmuBkvdgg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 179/350] ALSA: hda/hdmi - implement mst_no_extra_pcms flag
-Date:   Tue, 10 Dec 2019 16:04:44 -0500
-Message-Id: <20191210210735.9077-140-sashal@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 182/350] s390/time: ensure get_clock_monotonic() returns monotonic values
+Date:   Tue, 10 Dec 2019 16:04:47 -0500
+Message-Id: <20191210210735.9077-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,90 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-[ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
+[ Upstream commit 011620688a71f2f1fe9901dbc2479a7c01053196 ]
 
-To support the DP-MST multiple streams via single connector feature,
-the HDMI driver was extended with the concept of backup PCMs. See
-commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
+The current implementation of get_clock_monotonic() leaves it up to
+the caller to call the function with preemption disabled. The only
+core kernel caller (sched_clock) however does not disable preemption.
 
-This implementation works fine with snd_hda_intel.c as PCM topology
-is fully managed within the single driver.
+In order to make sure that all callers of this function see monotonic
+values handle disabling preemption within the function itself.
 
-When the HDA codec driver is used from ASoC components, the concept
-of backup PCMs no longer fits. For ASoC topologies, the physical
-HDMI converters are presented as backend DAIs and these should match
-with hardware capabilities. The ASoC topology may define arbitrary
-PCMs (i.e. frontend DAIs) and have processing elements before eventual
-routing to the HDMI BE DAIs. With backup PCMs, the link between
-FE and BE DAIs would become dynamic and change when monitors are
-(un)plugged. This would lead to modifying the topology every time
-hotplug events happen, which is not currently possible in ASoC and
-there does not seem to be any obvious benefits from this design.
-
-To overcome above problems and enable the HDMI driver to be used
-from ASoC, this patch adds a new mode (mst_no_extra_pcms flags) to
-patch_hdmi.c. In this mode, the codec driver does not assume
-the backup PCMs to be created.
-
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191029134017.18901-2-kai.vehmanen@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hda_codec.h  |  1 +
- sound/pci/hda/patch_hdmi.c | 19 ++++++++++++++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
+ arch/s390/include/asm/timex.h | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
-index 9a0393cf024c2..ac18f428eda6c 100644
---- a/include/sound/hda_codec.h
-+++ b/include/sound/hda_codec.h
-@@ -254,6 +254,7 @@ struct hda_codec {
- 	unsigned int force_pin_prefix:1; /* Add location prefix */
- 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
- 	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
-+	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
+diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+index 64539c221672b..0f12a3f912820 100644
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -10,8 +10,9 @@
+ #ifndef _ASM_S390_TIMEX_H
+ #define _ASM_S390_TIMEX_H
  
- #ifdef CONFIG_PM
- 	unsigned long power_on_acct;
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index d14f6684737d0..b8579cd218098 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2075,15 +2075,24 @@ static bool is_hdmi_pcm_attached(struct hdac_device *hdac, int pcm_idx)
- static int generic_hdmi_build_pcms(struct hda_codec *codec)
+-#include <asm/lowcore.h>
++#include <linux/preempt.h>
+ #include <linux/time64.h>
++#include <asm/lowcore.h>
+ 
+ /* The value of the TOD clock for 1.1.1970. */
+ #define TOD_UNIX_EPOCH 0x7d91048bca000000ULL
+@@ -186,15 +187,18 @@ extern unsigned char tod_clock_base[16] __aligned(8);
+ /**
+  * get_clock_monotonic - returns current time in clock rate units
+  *
+- * The caller must ensure that preemption is disabled.
+  * The clock and tod_clock_base get changed via stop_machine.
+- * Therefore preemption must be disabled when calling this
+- * function, otherwise the returned value is not guaranteed to
+- * be monotonic.
++ * Therefore preemption must be disabled, otherwise the returned
++ * value is not guaranteed to be monotonic.
+  */
+ static inline unsigned long long get_tod_clock_monotonic(void)
  {
- 	struct hdmi_spec *spec = codec->spec;
--	int idx;
-+	int idx, pcm_num;
+-	return get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
++	unsigned long long tod;
++
++	preempt_disable();
++	tod = get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
++	preempt_enable();
++	return tod;
+ }
  
- 	/*
- 	 * for non-mst mode, pcm number is the same as before
--	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
--	 *  dev_num is the device entry number in a pin
--	 *
-+	 * for DP MST mode without extra PCM, pcm number is same
-+	 * for DP MST mode with extra PCMs, pcm number is
-+	 *  (nid number + dev_num - 1)
-+	 * dev_num is the device entry number in a pin
- 	 */
--	for (idx = 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
-+
-+	if (codec->mst_no_extra_pcms)
-+		pcm_num = spec->num_nids;
-+	else
-+		pcm_num = spec->num_nids + spec->dev_num - 1;
-+
-+	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
-+
-+	for (idx = 0; idx < pcm_num; idx++) {
- 		struct hda_pcm *info;
- 		struct hda_pcm_stream *pstr;
- 
+ /**
 -- 
 2.20.1
 
