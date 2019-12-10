@@ -2,86 +2,134 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86087C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F6E20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAE22073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575987339;
+	bh=zoKHBYFK7ibeRR/odpe1m4xweRuBfc5NFuh1Z7lmORU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Off9vBJr+RsDVjoHW5p3ZseR0HoIM7k1TZ2OKkOQYa4sQxano6kT0t6jPg5cQ2PWS
+	 HaPPVpaOKM0WF4gUPo0wJ3e7UD8xXrp/QJTwd4aFxT64WtYWSxhvi4oaA7OPnCQvGY
+	 Szdl7plkFXmihwBt5s1kSLi52sEAkeIlO+kU7ol0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLJOPd (ORCPT
+        id S1727574AbfLJOPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:15:33 -0500
-Received: from mga09.intel.com ([134.134.136.24]:15820 "EHLO mga09.intel.com"
+        Tue, 10 Dec 2019 09:15:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbfLJOPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:15:32 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 06:15:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
-   d="scan'208";a="215453366"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.6])
-  by orsmga006.jf.intel.com with ESMTP; 10 Dec 2019 06:15:31 -0800
-Date:   Tue, 10 Dec 2019 22:15:02 +0800
-From:   kernel test robot <rong.a.chen@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [pipe] 3c0edea9b2: lmbench3.PIPE.bandwidth.MB/sec -17.0%
- regression
-Message-ID: <20191210141502.GQ32275@shao2-debian>
-References: <20191208153949.GJ32275@shao2-debian>
- <20191209085559.GA5868@dhcp22.suse.cz>
- <CAHk-=whF0mbvWC=sYKWTrpymmjWkGZcX9hnHgnm1t1M++W66zA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whF0mbvWC=sYKWTrpymmjWkGZcX9hnHgnm1t1M++W66zA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727061AbfLJOPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:15:38 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12884207FF;
+        Tue, 10 Dec 2019 14:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575987337;
+        bh=zoKHBYFK7ibeRR/odpe1m4xweRuBfc5NFuh1Z7lmORU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zh7mvxVg1ozMiDGwvPAJorU8QV2ffv9xlj8iZaEZsiLracEhwJt5OGyGIIEhIk2c3
+         d61ELYXUXkQOU0hWo9Z1JG4/cenfPNhG5hKsS0sWso0CXPWbYe8wNGgQJ8CiXezD9w
+         hzaWrcudL13UcQwWEdgEj9m2xo7rhVLPJfbX6/Zs=
+Date:   Tue, 10 Dec 2019 23:15:28 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4 01/22] bootconfig: Add Extra Boot Config support
+Message-Id: <20191210231528.853ac9e7f84f2166fd4c4047@kernel.org>
+In-Reply-To: <20191209105403.788f492a@gandalf.local.home>
+References: <157528159833.22451.14878731055438721716.stgit@devnote2>
+        <157528160980.22451.2034344493364709160.stgit@devnote2>
+        <02b132dd-6f50-cf1d-6cc1-ff6bbbcf79cd@infradead.org>
+        <20191209145009.502ece2e58ffab5e31430a0e@kernel.org>
+        <20191209105403.788f492a@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 10:35:35AM -0800, Linus Torvalds wrote:
-> On Mon, Dec 9, 2019 at 12:56 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > Huh. How can something like that can even can get merged? No changelog,
-> > no s-o-b?
+On Mon, 9 Dec 2019 10:54:03 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> > > > +config BOOT_CONFIG
+> > > > +	bool "Boot config support"
+> > > > +	select LIBXBC
+> > > > +	default y  
+> > > 
+> > > questionable "default y".
+> > > That needs lots of justification.  
+> > 
+> > OK, I can make it 'n' by default.
+> > 
+> > I thought that was OK because most of the memories for the
+> > bootconfig support were released after initialization.
+> > If user doesn't pass the bootconfig, only the code for
+> > /proc/bootconfig remains on runtime memory.
 > 
-> Yeah, I missed that when pulling.
+> As 'n' is usually the default, I will argue this should be 'y'!
 > 
-> I wish that had been the only problem we had with that code, but it wasn't.
+> This is not some new fancy feature, or device that Linus
+> complains about "my X is important!". I will say this X *is* important!
+> This will (I hope) become standard in all kernel configs. One could even
+> argue that there shouldn't even be a config for this at all (forced
+> 'y'). This would hurt more not to have than to have. I would hate to
+> try to load special options only to find out that the kernel was
+> compiled with default configs and this wasn't enabled.
 > 
-> Anyway, I'm fairly certain the current git head should fix this
-> lmbench3 performance regression too.
-> 
->                    Linus
+> This is extended boot config support that can be useful for most
+> developers. The only ones that should say 'n' are those that are
+> working to get a "tiny" kernel at boot up. As Masami said, the memory
+> is freed after init, thus this should not be an issue for 99.9% of
+> kernel users.
 
-Hi Linus,
+Thanks Steve!
 
-Sorry for the inconvenience, indeed, the regression has been fixed.
+Yes, for the users point of view, it is hard to notice that their kernel
+can accept the boot config or not before boot.
+To provide consistent system usability, I think it is better to be enabled
+by default. Anyway, if there is no boot config, almost all buffers and
+code are released after init (except for /proc/bootconfig entry point,
+which will return an empty buffer).
 
-commit:
-  cefa80ced5 ("pipe: Increase the writer-wakeup threshold to reduce context-switch count")
-  3c0edea9b2 ("pipe: Remove sync on wake_ups")
-  6794862a16 ("Merge tag 'for-5.5-rc1-kconfig-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux")
+It will increase the binary image size, but it must be small.
+FYI, here is an example of vmlinux (non compressed image)
 
-cefa80ced57a2917  3c0edea9b29f9be6c093f236f7  6794862a16ef41f753abd75c03  testcase/testparams/testbox
-----------------  --------------------------  --------------------------  ---------------------------
-         %stddev      change         %stddev      change         %stddev
-             \          |                \          |                \  
-     21204             -17%      17604              23%      26123 ±  3%  lmbench3/performance-development-100%-PIPE-50%-ucode=0x7000019/lkp-bdw-de1
-     21204             -17%      17604              23%      26123        GEO-MEAN lmbench3.PIPE.bandwidth.MB/sec
+   text	   data	    bss	    dec	    hex	filename
+16178353	5843418	13324364	35346135	21b56d7	vmlinux
+16183993	5855858	13316172	35356023	21b7d77	vmlinux.xbc
+16187248	5855870	13307980	35351098	21b6a3a	vmlinux.xbc.btt
 
-Best Regards,
-Rong Chen
+So, for the extra boot config support, it will increase ~6KB code and
+12KB data, the boot time tracing increase ~3KB code and 12bytes data
+in binary file. 
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
