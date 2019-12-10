@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DBBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEF0C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8CE2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B382073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013033;
-	bh=pWi9qhhj81ENv7TajptmcAzqW4lHgpIn41k71w0kQ/0=;
+	s=default; t=1576013036;
+	bh=njjDUTgh+3uYkyHWL/u2VaDdv36+V/DkVM3Km0gjKtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Li/0a0ZswHtRXWq+n2WUTboyIrl4AyPWcWyO2Bt60frRUvmNKDUCkL+7OPscSuC7Y
-	 XD/A0I0qT7N/3VZPC+GgVn+DLXeQW/2kpoaPQb1BBjXlBmms3FT7j6CNP3ExcOAQcY
-	 Y1NiQsSRTkHjILqgx8ygSi50gdHSM97oPC9I4ADE=
+	b=zQ6nBqtrmIxxrUA3TcppbuCuRTN3Ynq/TRB6qWVg+hL00ACSV0wttQ4dsaJT/eoQP
+	 DbEByjBF8V4HhEX/0pOchqUOTxSAZEq69wxNe4sPCvJTGX5R3fh162OvfGDVTpwKd+
+	 ef27+/o9QFsl+l6ILKfOQDu4Cd7kWxddfk5Qrqtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfLJVXw (ORCPT
+        id S1728659AbfLJVLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:23:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728671AbfLJVLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:05 -0500
+        id S1728190AbfLJVKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7CA2077B;
-        Tue, 10 Dec 2019 21:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9ECC246C0;
+        Tue, 10 Dec 2019 21:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012264;
-        bh=pWi9qhhj81ENv7TajptmcAzqW4lHgpIn41k71w0kQ/0=;
+        s=default; t=1576012246;
+        bh=njjDUTgh+3uYkyHWL/u2VaDdv36+V/DkVM3Km0gjKtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxGyVDZIWWwD/ZrAA/2bDUsA2aGFbh2JGPpQIxdmOKRJ6OXWiVKApIdTzqVm5wDKE
-         3dt7WqmqTt93YNcFAHXGAyMwgUaBpgTmzfkhDfnEPbFJYltzeSioRpBT8Rrq09XYB3
-         0vRxib7u4KQg1D7hPyZVIZa1R2jiTyOuKunY13rw=
+        b=BtU5ozbZJmkaTzYJLVzRFNqogG0e2/Pelwh74w7DMpwQNxWjmkRnlP2UnUJfR6RcM
+         l53YaatE1A0dOxOJqSybfH+Nrtv0vo1ymSshuJAiolP7/IMU9jjlu7fRmTZf3MU8O5
+         nDbqfeEy2CInAk/BQ1RQD6UaS49f+YiRN/WlUG68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 210/350] spi: dw: Fix Designware SPI loopback
-Date:   Tue, 10 Dec 2019 16:05:15 -0500
-Message-Id: <20191210210735.9077-171-sashal@kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 194/350] Bluetooth: Fix advertising duplicated flags
+Date:   Tue, 10 Dec 2019 16:04:59 -0500
+Message-Id: <20191210210735.9077-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,36 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit 1403cfa69d310781f9548951c97725c67ffcf613 ]
+[ Upstream commit 6012b9346d8959194c239fd60a62dfec98d43048 ]
 
-The SPI_LOOP is set in spi->mode but not propagated to the register.
-A previous patch removed the bit during a cleanup.
+Instances may have flags set as part of its data in which case the code
+should not attempt to add it again otherwise it can cause duplication:
 
-Fixes: e1bc204894ea ("spi: dw: fix potential variable assignment error")
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Link: https://lore.kernel.org/r/1572985330-5525-1-git-send-email-thor.thayer@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+< HCI Command: LE Set Extended Advertising Data (0x08|0x0037) plen 35
+        Handle: 0x00
+        Operation: Complete extended advertising data (0x03)
+        Fragment preference: Minimize fragmentation (0x01)
+        Data length: 0x06
+        Flags: 0x04
+          BR/EDR Not Supported
+        Flags: 0x06
+          LE General Discoverable Mode
+          BR/EDR Not Supported
+
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_request.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 9a49e073e8b73..076652d3d051e 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -308,7 +308,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- 	cr0 = (transfer->bits_per_word - 1)
- 		| (chip->type << SPI_FRF_OFFSET)
- 		| ((((spi->mode & SPI_CPOL) ? 1 : 0) << SPI_SCOL_OFFSET) |
--			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET))
-+			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET) |
-+			(((spi->mode & SPI_LOOP) ? 1 : 0) << SPI_SRL_OFFSET))
- 		| (chip->tmode << SPI_TMOD_OFFSET);
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 7f6a581b5b7e1..3d25dbf10b26f 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -1273,6 +1273,14 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
  
- 	/*
+ 	instance_flags = get_adv_instance_flags(hdev, instance);
+ 
++	/* If instance already has the flags set skip adding it once
++	 * again.
++	 */
++	if (adv_instance && eir_get_data(adv_instance->adv_data,
++					 adv_instance->adv_data_len, EIR_FLAGS,
++					 NULL))
++		goto skip_flags;
++
+ 	/* The Add Advertising command allows userspace to set both the general
+ 	 * and limited discoverable flags.
+ 	 */
+@@ -1305,6 +1313,7 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+ 		}
+ 	}
+ 
++skip_flags:
+ 	if (adv_instance) {
+ 		memcpy(ptr, adv_instance->adv_data,
+ 		       adv_instance->adv_data_len);
 -- 
 2.20.1
 
