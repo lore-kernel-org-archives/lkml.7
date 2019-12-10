@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB587C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020DBC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC3B20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F01207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017249;
-	bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
+	s=default; t=1576017252;
+	bh=56vqzIiw9gnw4/jZSv4Jg8hafDat+7TSpFTgWOQNGh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CuiBfjs3VJ59IInk0STEgCP8Ss5+RQdeKXPrOO9CZ4DmFt6hV3zp/Jm8ql6WWWkvK
-	 1C+xyP7rkQW5mtxKwMcJNjWYHJAbs19U5DOfqjz8mp8em3bjBN/g+QXzJiXO+GI7ik
-	 G0zsPyyD9oopkuXZ4Y6+GCXz6YFgwNfAfIO7ElQM=
+	b=bavt4Oh10iJLWKpoorFzczCPfKLmoaaf32bh9nfTIPV+kAPrrTtIjGjeO/ClRZO88
+	 yn0eIzPQNg4vMXyO6p/2sst8t72R5OXNZIpprOf8e2RpNMxyflGS36R388yPCO28A2
+	 tgqmfeC1VscXVhPOdBnelXhoCCtBiv5nVHsefgSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfLJWeI (ORCPT
+        id S1730165AbfLJWeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbfLJWdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:51 -0500
+        id S1730036AbfLJWdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB551207FF;
-        Tue, 10 Dec 2019 22:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D288221556;
+        Tue, 10 Dec 2019 22:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017230;
-        bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
+        s=default; t=1576017232;
+        bh=56vqzIiw9gnw4/jZSv4Jg8hafDat+7TSpFTgWOQNGh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XKQ5NrOQ2IqRObfdRSLkGttOt0WWeXhqhwkw80MN+cmrxriq/OUFM3zQdj+Lu8oek
-         q6vbLIYu9cFY5+ezfAwL6AUDVMOvjEwL7pElu20KrRmXHrX8jCgUlXNZUU2H4FvA45
-         1Wu+Aykl0LT6lE3v3y29zB6js6n033VkBh4wun3M=
+        b=IoKz/GvMIVCcVRcnUFJMFttJ50TTT5qqsSFP3maw0cGk9fnxLD6ssb8aGKvjim39l
+         +D0I4+SGjhVK0NCv/xsW6AF1StrIlv1033MPd7gZudKLlKLTASmq7lKNJMStoILztV
+         5xOJ9YS6CnmVvq/1mUaUOnKStcdvWSh4VnkZHq6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 28/71] iio: dac: ad7303: replace mlock with own lock
-Date:   Tue, 10 Dec 2019 17:32:33 -0500
-Message-Id: <20191210223316.14988-28-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 30/71] drm/gma500: fix memory disclosures due to uninitialized bytes
+Date:   Tue, 10 Dec 2019 17:32:35 -0500
+Message-Id: <20191210223316.14988-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,85 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
+[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
 
-This change replaces indio_dev's mlock with the driver's own lock. The lock
-is mostly needed to protect state when changing the `dac_cache` info.
-The lock has been extended to `ad7303_read_raw()`, to make sure that the
-cache is updated if an SPI-write is already in progress.
+"clock" may be copied to "best_clock". Initializing best_clock
+is not sufficient. The fix initializes clock as well to avoid
+memory disclosures and informaiton leaks.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/ad7303.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-index 4b0f942b89145..2e5e753ab7066 100644
---- a/drivers/iio/dac/ad7303.c
-+++ b/drivers/iio/dac/ad7303.c
-@@ -42,6 +42,7 @@ struct ad7303_state {
- 	struct regulator *vdd_reg;
- 	struct regulator *vref_reg;
+diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+index 1048f0c7c6ce7..31e0899035f98 100644
+--- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
++++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
+ 	s32 freq_error, min_error = 100000;
  
-+	struct mutex lock;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -80,7 +81,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
  
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
+@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
+ 	int err = target;
  
- 	if (pwr_down)
- 		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
-@@ -91,7 +92,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	 * mode, so just write one of the DAC channels again */
- 	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
  
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return len;
- }
- 
-@@ -117,7 +118,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&st->lock);
- 		*val = st->dac_cache[chan->channel];
-+		mutex_unlock(&st->lock);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		vref_uv = ad7303_get_vref(st, chan);
-@@ -145,11 +148,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
- 		if (val >= (1 << chan->scan_type.realbits) || val < 0)
- 			return -EINVAL;
- 
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(&st->lock);
- 		ret = ad7303_write(st, chan->address, val);
- 		if (ret == 0)
- 			st->dac_cache[chan->channel] = val;
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(&st->lock);
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -213,6 +216,8 @@ static int ad7303_probe(struct spi_device *spi)
- 
- 	st->spi = spi;
- 
-+	mutex_init(&st->lock);
-+
- 	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
- 	if (IS_ERR(st->vdd_reg))
- 		return PTR_ERR(st->vdd_reg);
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
 -- 
 2.20.1
 
