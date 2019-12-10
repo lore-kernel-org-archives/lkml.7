@@ -4,62 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90501C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08814C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6019424683
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC56024683
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012020;
-	bh=ceteDlM2gzudgpK7lNIbnJYzwn+zR/DJXRfsggSRc00=;
+	s=default; t=1576012024;
+	bh=ceSWH49Z1fn5M+WPTJEUWplL1sTDSb98CQd+itGpjPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQEAI/oth5lY3GUMYoxoLc+4+fVj1/y4L9SBDkjndopQXeEd8tGoJwFKeURSNvvG5
-	 AeGGf0hgaNwoKBGsCJU5jo9RJUNWAt2G5W8g3oyXFxz7Eh2BSoZ5aKwq6mq6ZwWG8W
-	 E9Hd34LbvbdCcBVhbIocjqDgIYGxYlEyEJoMN61c=
+	b=C2bnjyurSBb6hQBYkgrPWBBXI2RJ8LJmleAck2tLP9/ZOTI6+8g5OBNC3XrhZ3jQU
+	 /0l+RHyDQ9cAl9Zg5LU06tSE3xOSy4IU9BeIJiSQNQw25Qs2wI3fNMj+6E2bVFOe60
+	 DwHH+fdPypuw9ugKpscTvAUupm4Wk+6cZvlbqN8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfLJVG7 (ORCPT
+        id S1727525AbfLJVHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49002 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfLJVEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:13 -0500
+        id S1727010AbfLJVEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6801221D7D;
-        Tue, 10 Dec 2019 21:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCAB24653;
+        Tue, 10 Dec 2019 21:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011852;
-        bh=ceteDlM2gzudgpK7lNIbnJYzwn+zR/DJXRfsggSRc00=;
+        s=default; t=1576011850;
+        bh=ceSWH49Z1fn5M+WPTJEUWplL1sTDSb98CQd+itGpjPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nWZLDrdgdmxqvSiASswsIDBFiLH6jJIT7+masRpXwKfUip0Bpe44enKWZwftOMnH6
-         Xgi/nAiSZa4oG5/NNZYE8QftEGp0OugucXwWPc7v4niwQ6E+JveTvD5zfKRU5nehJK
-         lDxex0ew0pRBUmI64CMLZdUB8tZmzH6kzNu8CuJc=
+        b=agBOGRizH/AKsUvFqUmZ7sqt8iwDVhKFq+iBBRfRC5mqImcD8YjYl44yjrSRKF+08
+         SKeu7mAu+GiAgA6zMbPIZnD1df1bKKDAoXZ8LPFjT3Lmsk7n1mmAjWqzXnn543ledc
+         r06OXxwzVAIg/gCn0CbdXqwO6nX/PqBeeK6yjySI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andres Rodriguez <andresx7@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
+Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 007/350] drm: Use EOPNOTSUPP, not ENOTSUPP
-Date:   Tue, 10 Dec 2019 15:58:19 -0500
-Message-Id: <20191210210402.8367-7-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 006/350] drm: exynos: exynos_hdmi: use cec_notifier_conn_(un)register
+Date:   Tue, 10 Dec 2019 15:58:18 -0500
+Message-Id: <20191210210402.8367-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -68,118 +62,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Dariusz Marcinkiewicz <darekm@google.com>
 
-[ Upstream commit c7581a414d28413c1dd6d116d44859b5a52e0950 ]
+[ Upstream commit 71137bfd98973efb7b762ba168df077b87b34311 ]
 
-- it's what we recommend in our docs:
+Use the new cec_notifier_conn_(un)register() functions to
+(un)register the notifier for the HDMI connector, and fill in
+the cec_connector_info.
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#recommended-ioctl-return-values
+Changes since v7:
+	- err_runtime_disable -> err_rpm_disable
+Changes since v2:
+	- removed unnecessary call to invalidate phys address before
+	deregistering the notifier,
+	- use cec_notifier_phys_addr_invalidate instead of setting
+	invalid address on a notifier.
 
-- it's the overwhelmingly used error code for "operation not
-  supported", at least in drm core (slightly less so in drivers):
-
-$ git grep EOPNOTSUPP -- drivers/gpu/drm/*c | wc -l
-83
-$ git grep ENOTSUPP -- drivers/gpu/drm/*c | wc -l
-5
-
-- include/linux/errno.h makes it fairly clear that these are for nfsv3
-  (plus they also have error codes above 512, which is the block with
-  some special behaviour ...)
-
-/* Defined for the NFSv3 protocol */
-
-If the above isn't reflecting current practice, then I guess we should
-at least update the docs.
-
-Noralf commented:
-
-Ben Hutchings made this comment[1] in a thread about use of ENOTSUPP in
-drivers:
-
-  glibc's strerror() returns these strings for ENOTSUPP and EOPNOTSUPP
-  respectively:
-
-  "Unknown error 524"
-  "Operation not supported"
-
-So at least for errors returned to userspace EOPNOTSUPP makes sense.
-
-José asked:
-
-> Hopefully this will not break any userspace
-
-None of the functions in drm_edid.c affected by this reach userspace,
-it's all driver internal.
-
-Same for the mipi function, that error code should be handled by
-drivers. Drivers are supposed to remap "the hw is on fire" to EIO when
-reporting up to userspace, but I think if a driver sees this it would
-be a driver bug.
-v2: Augment commit message with comments from Noralf and José
-
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Acked-by: Noralf Trønnes <noralf@tronnes.org>
-Cc: José Roberto de Souza <jose.souza@intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Andres Rodriguez <andresx7@gmail.com>
-Cc: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190904143942.31756-1-daniel.vetter@ffwll.ch
+Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[hverkuil-cisco@xs4all.nl: use 'if (!hdata->notifier)' instead of '== NULL']
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190828123415.139441-1-darekm@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c     | 6 +++---
- drivers/gpu/drm/drm_mipi_dbi.c | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/exynos/exynos_hdmi.c | 31 ++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 6b0177112e18d..3f50b8865db4c 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -3722,7 +3722,7 @@ cea_db_offsets(const u8 *cea, int *start, int *end)
- 		if (*end < 4 || *end > 127)
- 			return -ERANGE;
- 	} else {
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
+index bc1565f1822ab..09aa73c0f2add 100644
+--- a/drivers/gpu/drm/exynos/exynos_hdmi.c
++++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+@@ -852,6 +852,10 @@ static enum drm_connector_status hdmi_detect(struct drm_connector *connector,
  
- 	return 0;
-@@ -4191,7 +4191,7 @@ int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads)
- 
- 	if (cea_revision(cea) < 3) {
- 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	if (cea_db_offsets(cea, &start, &end)) {
-@@ -4252,7 +4252,7 @@ int drm_edid_to_speaker_allocation(struct edid *edid, u8 **sadb)
- 
- 	if (cea_revision(cea) < 3) {
- 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
- 	}
- 
- 	if (cea_db_offsets(cea, &start, &end)) {
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index c4ee2709a6f32..f8154316a3b0d 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -955,7 +955,7 @@ static int mipi_dbi_typec1_command(struct mipi_dbi *dbi, u8 *cmd,
+ static void hdmi_connector_destroy(struct drm_connector *connector)
+ {
++	struct hdmi_context *hdata = connector_to_hdmi(connector);
++
++	cec_notifier_conn_unregister(hdata->notifier);
++
+ 	drm_connector_unregister(connector);
+ 	drm_connector_cleanup(connector);
+ }
+@@ -935,6 +939,7 @@ static int hdmi_create_connector(struct drm_encoder *encoder)
+ {
+ 	struct hdmi_context *hdata = encoder_to_hdmi(encoder);
+ 	struct drm_connector *connector = &hdata->connector;
++	struct cec_connector_info conn_info;
  	int ret;
  
- 	if (mipi_dbi_command_is_read(dbi, *cmd))
--		return -ENOTSUPP;
-+		return -EOPNOTSUPP;
+ 	connector->interlace_allowed = true;
+@@ -957,6 +962,15 @@ static int hdmi_create_connector(struct drm_encoder *encoder)
+ 			DRM_DEV_ERROR(hdata->dev, "Failed to attach bridge\n");
+ 	}
  
- 	MIPI_DBI_DEBUG_COMMAND(*cmd, parameters, num);
++	cec_fill_conn_info_from_drm(&conn_info, connector);
++
++	hdata->notifier = cec_notifier_conn_register(hdata->dev, NULL,
++						     &conn_info);
++	if (!hdata->notifier) {
++		ret = -ENOMEM;
++		DRM_DEV_ERROR(hdata->dev, "Failed to allocate CEC notifier\n");
++	}
++
+ 	return ret;
+ }
  
+@@ -1528,8 +1542,8 @@ static void hdmi_disable(struct drm_encoder *encoder)
+ 		 */
+ 		mutex_unlock(&hdata->mutex);
+ 		cancel_delayed_work(&hdata->hotplug_work);
+-		cec_notifier_set_phys_addr(hdata->notifier,
+-					   CEC_PHYS_ADDR_INVALID);
++		if (hdata->notifier)
++			cec_notifier_phys_addr_invalidate(hdata->notifier);
+ 		return;
+ 	}
+ 
+@@ -2006,12 +2020,6 @@ static int hdmi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	hdata->notifier = cec_notifier_get(&pdev->dev);
+-	if (hdata->notifier == NULL) {
+-		ret = -ENOMEM;
+-		goto err_hdmiphy;
+-	}
+-
+ 	pm_runtime_enable(dev);
+ 
+ 	audio_infoframe = &hdata->audio.infoframe;
+@@ -2023,7 +2031,7 @@ static int hdmi_probe(struct platform_device *pdev)
+ 
+ 	ret = hdmi_register_audio_device(hdata);
+ 	if (ret)
+-		goto err_notifier_put;
++		goto err_rpm_disable;
+ 
+ 	ret = component_add(&pdev->dev, &hdmi_component_ops);
+ 	if (ret)
+@@ -2034,8 +2042,7 @@ static int hdmi_probe(struct platform_device *pdev)
+ err_unregister_audio:
+ 	platform_device_unregister(hdata->audio.pdev);
+ 
+-err_notifier_put:
+-	cec_notifier_put(hdata->notifier);
++err_rpm_disable:
+ 	pm_runtime_disable(dev);
+ 
+ err_hdmiphy:
+@@ -2054,12 +2061,10 @@ static int hdmi_remove(struct platform_device *pdev)
+ 	struct hdmi_context *hdata = platform_get_drvdata(pdev);
+ 
+ 	cancel_delayed_work_sync(&hdata->hotplug_work);
+-	cec_notifier_set_phys_addr(hdata->notifier, CEC_PHYS_ADDR_INVALID);
+ 
+ 	component_del(&pdev->dev, &hdmi_component_ops);
+ 	platform_device_unregister(hdata->audio.pdev);
+ 
+-	cec_notifier_put(hdata->notifier);
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	if (!IS_ERR(hdata->reg_hdmi_en))
 -- 
 2.20.1
 
