@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A012CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5DFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4582073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8A420838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015394;
-	bh=1P4i5ydWkp/xHksmLQ0jmkGuM1FqCa6Izqh10KYIpUk=;
+	s=default; t=1576015396;
+	bh=KyTVx21sbG85p0XwRDesop70533ODNvOXCR6/Zzl7Zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKQs4fimfBs8bCegdCq6nCVTxALGEeIEnCZPcFxuoMlyOnQf4qIN9dxMbBdRXGF1j
-	 smEAmYbcNIz8xUZacBw8uNw6S836tOIK5/3436ub11ac6Uhfh0twl2uk7nwgoJPxo+
-	 YYfy3N4Vp0dYCZtZPW6x7u8EkIL97/FnPMsCkrH4=
+	b=rK2qAgAWoyhi8IBqp7vFv3Wo/cK00xz76qcc7wEdmfXbMu0sldzq6pNTqX9t0IPMQ
+	 1zLjJ2jb+bnjGIHBoW7PQYYBbKxy4Hi5mC8dNT5FfpH9bZfNm63UgWaPJLTuikZgbm
+	 Y6sRuYKnupqPb7rpShJtLmSYvFsHg3cEqLQqJJZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfLJWDN (ORCPT
+        id S1727437AbfLJWDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33038 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfLJWDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:09 -0500
+        id S1727325AbfLJWDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C4820637;
-        Tue, 10 Dec 2019 22:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46ADC2077B;
+        Tue, 10 Dec 2019 22:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015388;
-        bh=1P4i5ydWkp/xHksmLQ0jmkGuM1FqCa6Izqh10KYIpUk=;
+        s=default; t=1576015392;
+        bh=KyTVx21sbG85p0XwRDesop70533ODNvOXCR6/Zzl7Zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ESOjVCL6RcZAIAp0UW1aDWcXEch7KntrpxSZzYCT/y/OM342CjbdmqKihfzmTSuRJ
-         rOPdcz6KV+k+6jLcsNr21jhskkhpfjjO1LXN/cX2jtoQjC3NxpkJ7gPPHLAC4TYAkm
-         vCf3Yu6dNId8gE1n8WM3RNJ2/CFTi5H/iu+i9bT8=
+        b=FVIeMempV1ifeAq9JdWMwGXagRcla40BJiei64PpGSUu8ujFV28evwzn71/DGE7Lw
+         tYybOBh+tFWHoogZ6yp1vp4pZjmVtgkpZP+bRFiEpwiG8lXQ9Pt78peNa3XN6ab+pH
+         EItZjJl4nxGVzLWxk62d84QOaTcQnfpkZJeeCp6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukasz Majewski <lukma@denx.de>, Mark Brown <broonie@kernel.org>,
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
         kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 005/130] spi: Add call to spi_slave_abort() function when spidev driver is released
-Date:   Tue, 10 Dec 2019 17:00:56 -0500
-Message-Id: <20191210220301.13262-5-sashal@kernel.org>
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 008/130] objtool: add kunit_try_catch_throw to the noreturn list
+Date:   Tue, 10 Dec 2019 17:00:59 -0500
+Message-Id: <20191210220301.13262-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,47 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Majewski <lukma@denx.de>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit 9f918a728cf86b2757b6a7025e1f46824bfe3155 ]
+[ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+Fix the following warning seen on GCC 7.3:
+  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+kunit_try_catch_throw is a function added in the following patch in this
+series; it allows KUnit, a unit testing framework for the kernel, to
+bail out of a broken test. As a consequence, it is a new __noreturn
+function that objtool thinks is broken (as seen above). So fix this
+warning by adding kunit_try_catch_throw to objtool's noreturn list.
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
 Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/objtool/check.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index c5fe08bc34a0a..028725573e632 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -634,6 +634,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+#ifdef CONFIG_SPI_SLAVE
-+	spi_slave_abort(spidev->spi);
-+#endif
- 	mutex_unlock(&device_list_lock);
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 5422543faff85..daf178bc46446 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -167,6 +167,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"fortify_panic",
+ 		"machine_real_restart",
+ 		"rewind_stack_do_exit",
++		"kunit_try_catch_throw",
+ 	};
  
- 	return 0;
+ 	if (func->bind == STB_WEAK)
 -- 
 2.20.1
 
