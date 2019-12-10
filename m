@@ -6,58 +6,53 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28297207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EEA207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfLJTbj (ORCPT
+        id S1726769AbfLJTcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:31:39 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47510 "EHLO
+        Tue, 10 Dec 2019 14:32:17 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47522 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfLJTbi (ORCPT
+        with ESMTP id S1726018AbfLJTcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:31:38 -0500
+        Tue, 10 Dec 2019 14:32:17 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 988E7146E9458;
-        Tue, 10 Dec 2019 11:31:37 -0800 (PST)
-Date:   Tue, 10 Dec 2019 11:31:37 -0800 (PST)
-Message-Id: <20191210.113137.707618060141184181.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D271A146E9458;
+        Tue, 10 Dec 2019 11:32:16 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:32:16 -0800 (PST)
+Message-Id: <20191210.113216.1897128321839303084.davem@davemloft.net>
 To:     mst@redhat.com
 Cc:     linux-kernel@vger.kernel.org, jcfaracco@gmail.com,
         netdev@vger.kernel.org, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
-        hkallweit1@gmail.com, jakub.kicinski@netronome.com,
-        snelson@pensando.io, mhabets@solarflare.com
-Subject: Re: [PATCH net-next v10 1/3] netdev: pass the stuck queue to the
- timeout handler
+        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com
+Subject: Re: [PATCH net-next v11 0/3] netdev: ndo_tx_timeout cleanup
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191210130014.47179-2-mst@redhat.com>
-References: <20191210130014.47179-1-mst@redhat.com>
-        <20191210130014.47179-2-mst@redhat.com>
+In-Reply-To: <20191210130837.47913-1-mst@redhat.com>
+References: <20191210130837.47913-1-mst@redhat.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 11:31:38 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 11:32:17 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Date: Tue, 10 Dec 2019 08:08:58 -0500
 
-Michael, please provide a proper introductory posting for your patch series
-just like everyone else does.
+> Sorry about the churn, v10 was based on net - not on net-next
+> by mistake.
 
-Not only does it help people understand at a high level what the patch
-series is doing, how it is doing it, and why it is doing it that way.  It
-also gives me a single email to reply to when I apply your patch series.
+Ugh sorry, I just saw this.  vger is sending postings massively out of
+order today.
 
-Therefore, please respin this properly.
-
-Thank you.
+Ignore my previous reply to #1 :-)
