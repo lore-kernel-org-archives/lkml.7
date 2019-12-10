@@ -2,236 +2,106 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7465C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC771C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7BC2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7262077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sRuRnggV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfLJJ2B (ORCPT
+        id S1727318AbfLJJ2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:28:01 -0500
-Received: from emcscan.emc.com.tw ([192.72.220.5]:40061 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJ2B (ORCPT
+        Tue, 10 Dec 2019 04:28:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36978 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbfLJJ2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:28:01 -0500
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="33219843"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 10 Dec 2019 17:27:58 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71507:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:27:58 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101178:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:27:55 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>
-Cc:     =?big5?B?U1RSRDItvbK0Zrxg?= <jennifer.tsai@emc.com.tw>,
-        <james.chen@emc.com.tw>,
-        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
-        "'jeff'" <jeff.chuang@emc.com.tw>,
-        =?big5?B?U1RSRDItsviozsBN?= <johnny.chuang@emc.com.tw>
-References: <1575969632-18703-1-git-send-email-johnny.chuang@elan.corp-partner.google.com>
-In-Reply-To: <1575969632-18703-1-git-send-email-johnny.chuang@elan.corp-partner.google.com>
-Subject: [PATCH] Input: elants_i2c - Add Remark ID check flow in firmware update function
-Date:   Tue, 10 Dec 2019 17:27:53 +0800
-Message-ID: <00a901d5af3c$193e9cd0$4bbbd670$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQKU6CCR3y2ZDKNDJHcdSmqZJZrY96Y0pz/A
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy01NjY3N2YyZi0xYjJmLTExZWEtOGFiMy03YzVjZjg3NDk0NzhcYW1lLXRlc3RcNTY2NzdmMzEtMWIyZi0xMWVhLThhYjMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI0OTYyIiB0PSIxMzIyMDQ0MzY3MjY2Mjc3ODQiIGg9Imkxc3FFcndSS1dBSGZBbTlZcFdnenpCZzBWUT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Tue, 10 Dec 2019 04:28:24 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so19248284wru.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=oAs8ibnr4mvDvPDKIG5QSiRq0APvvSSUYr3TLtcey1c=;
+        b=sRuRnggVkOKW6gbGS0j4n40P5A5fQbUOobxwjiMP8vC9THrPFc2kSF5OBow4+CPsFO
+         42q7uSXgtaaQwSCHuv4e3jT8OtwPJNtT/3LeczYeqEbuQPOG1SLv4L/+dg/I5x4vIOyG
+         olG8nEl8m68kZcMAfr0B+sM20uCCB6f3SEdFOpbbo31lDCpklzMvYZLdRgq+KPDcx6M0
+         FgqTTsyPZLDLuCs6Z70pc4wMgI4tw+dGiTI5NRTL6woVqUASQfmBlKAZaqHxagugWO1r
+         UF9+nPUkHjVKdFVxa9fg+lsHoEehhLL1RS7gX9z+2ChPy0UzCJmdhiYovWXijyowGyqx
+         AIwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oAs8ibnr4mvDvPDKIG5QSiRq0APvvSSUYr3TLtcey1c=;
+        b=VEHiTyHOo1j4oo3k/fEgrxc1wOaIlkR28sIBnKZhd4k+RIYs0C8pBNsINqDlw4faVN
+         9Fc45UreGI+Sq631tlDcRBW0uAahVM98J39Mk6bCGSMNWDEWno4NbopZslsF8Cc6HtU2
+         UYcS6j4kPpHkXHoBGMkIdARhBIsru9bE0taC1MZGgFzlQLA4ZyOQjN6p2qvozSy90SYo
+         FQHIKwAX1VqxUd0wHtSoAqVBVISkdTpdZMkMEbYR26PfHZgT6S4xRp2qUC1Z9lZXzkTV
+         nZ0YfEgvCtbChKqoRCgqKryJGO86tsnQwUcYfqrAJlKv1zArR/vD84NgtilAN4YlOf+2
+         pyTA==
+X-Gm-Message-State: APjAAAWNwgLgHKzfwO0vEQwUP2TJAil496bttMFpwStux6Qlb/L+QVbk
+        JQvm58V7iXrfxPILc6skYY2OTQ==
+X-Google-Smtp-Source: APXvYqxItV/IdHWtVOSgaK4JqtnqK9fn7jjy/+Xj1c+6KcVGaRa6Cjx+549x4dxDF3wFheCoAD/vXw==
+X-Received: by 2002:adf:f311:: with SMTP id i17mr2001059wro.81.1575970102448;
+        Tue, 10 Dec 2019 01:28:22 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id o15sm2602560wra.83.2019.12.10.01.28.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 10 Dec 2019 01:28:21 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org, georgii.staroselskii@emlid.com,
+        aleksandr.aleksandrov@emlid.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] ARM: dts: allwinner: restore hdmi_con_in node
+Date:   Tue, 10 Dec 2019 09:28:07 +0000
+Message-Id: <1575970087-11667-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add Remark ID check flow to firmware update function of
-elan touchscreen driver.
+Compiling today next (20191210) fail to build with
+arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts:53.25-55.4: ERROR (phandle_references): /soc/hdmi@1ee0000/ports/port@1/endpoint: Reference to non-existent node or label "hdmi_con_in"
 
-It avoids firmware update with mismatched Remark ID.
+This patch fixes the build by restoring this node.
 
-This function is supported by our latest version of boot code,
-but it cooperates well with earlier versions.
-
-Our driver will decide if enable Remark ID check with boot code version.
-
-Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+Fixes: b120a822ef10 ("ARM: dts: allwinner: Split out non-SoC specific parts of Neutis N5")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- drivers/input/touchscreen/elants_i2c.c | 77
-++++++++++++++++++++++++++++++----
- 1 file changed, 69 insertions(+), 8 deletions(-)
+ .../allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts  | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c
-b/drivers/input/touchscreen/elants_i2c.c
-index d4ad24e..4911799 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -59,8 +59,10 @@
- #define CMD_HEADER_WRITE	0x54
- #define CMD_HEADER_READ		0x53
- #define CMD_HEADER_6B_READ	0x5B
-+#define CMD_HEADER_ROM_READ	0x96
- #define CMD_HEADER_RESP		0x52
- #define CMD_HEADER_6B_RESP	0x9B
-+#define CMD_HEADER_ROM_RESP	0x95
- #define CMD_HEADER_HELLO	0x55
- #define CMD_HEADER_REK		0x66
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+index fb96d356055e..d6cc6592cfa3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
+@@ -15,6 +15,17 @@
+ 		     "emlid,neutis-n5",
+ 		     "allwinner,sun50i-h5";
  
-@@ -200,6 +202,10 @@ static int elants_i2c_execute_command(struct i2c_client
-*client,
- 		expected_response = CMD_HEADER_6B_RESP;
- 		break;
- 
-+	case CMD_HEADER_ROM_READ:
-+		expected_response = CMD_HEADER_ROM_RESP;
-+		break;
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
 +
- 	default:
- 		dev_err(&client->dev, "%s: invalid command %*ph\n",
- 			__func__, (int)cmd_size, cmd);
-@@ -556,6 +562,8 @@ static int elants_i2c_initialize(struct elants_data *ts)
- 
- 	/* hw version is available even if device in recovery state */
- 	error2 = elants_i2c_query_hw_version(ts);
-+	if (!error2)
-+		error2 = elants_i2c_query_bc_version(ts);
- 	if (!error)
- 		error = error2;
- 
-@@ -564,8 +572,6 @@ static int elants_i2c_initialize(struct elants_data *ts)
- 	if (!error)
- 		error = elants_i2c_query_test_version(ts);
- 	if (!error)
--		error = elants_i2c_query_bc_version(ts);
--	if (!error)
- 		error = elants_i2c_query_ts_info(ts);
- 
- 	if (error)
-@@ -613,39 +619,94 @@ static int elants_i2c_fw_write_page(struct i2c_client
-*client,
- 	return error;
- }
- 
-+static int elants_i2c_validate_remark_id(struct elants_data *ts,
-+					 const struct firmware *fw)
-+{
-+	struct i2c_client *client = ts->client;
-+	int error;
-+	const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
-};
-+	u8 resp[6] = { 0 };
-+	u16 ts_remark_id = 0;
-+	u16 fw_remark_id = 0;
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
 +
-+	/* Compare TS Remark ID and FW Remark ID */
-+	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-+					resp, sizeof(resp));
-+	if (error) {
-+		dev_err(&client->dev, "failed to query Remark ID: %d\n",
-error);
-+		return error;
-+	}
-+
-+	ts_remark_id = get_unaligned_be16(&resp[3]);
-+
-+	fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
-+
-+	if (fw_remark_id != ts_remark_id) {
-+		dev_err(&client->dev,
-+			"Remark ID Mismatched: ts_remark_id=0x%04x,
-fw_remark_id=0x%04x.\n",
-+			ts_remark_id, fw_remark_id);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int elants_i2c_do_update_firmware(struct i2c_client *client,
- 					 const struct firmware *fw,
- 					 bool force)
- {
-+	struct elants_data *ts = i2c_get_clientdata(client);
- 	const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
- 	const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
- 	const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
--	const u8 close_idle[] = {0x54, 0x2c, 0x01, 0x01};
-+	const u8 close_idle[] = { 0x54, 0x2c, 0x01, 0x01 };
- 	u8 buf[HEADER_SIZE];
- 	u16 send_id;
- 	int page, n_fw_pages;
- 	int error;
-+	bool check_remark_id = ts->iap_version >= 0x60;
- 
- 	/* Recovery mode detection! */
- 	if (force) {
- 		dev_dbg(&client->dev, "Recovery mode procedure\n");
-+
-+		if (check_remark_id) {
-+			error = elants_i2c_validate_remark_id(ts, fw);
-+			if (error)
-+				return error;
-+		}
-+
- 		error = elants_i2c_send(client, enter_iap2,
-sizeof(enter_iap2));
-+		if (error) {
-+			dev_err(&client->dev, "failed to enter IAP mode:
-%d\n",
-+				error);
-+			return error;
-+		}
- 	} else {
- 		/* Start IAP Procedure */
- 		dev_dbg(&client->dev, "Normal IAP procedure\n");
-+
- 		/* Close idle mode */
- 		error = elants_i2c_send(client, close_idle,
-sizeof(close_idle));
- 		if (error)
- 			dev_err(&client->dev, "Failed close idle: %d\n",
-error);
- 		msleep(60);
-+
- 		elants_i2c_sw_reset(client);
- 		msleep(20);
--		error = elants_i2c_send(client, enter_iap,
-sizeof(enter_iap));
--	}
- 
--	if (error) {
--		dev_err(&client->dev, "failed to enter IAP mode: %d\n",
-error);
--		return error;
-+		if (check_remark_id) {
-+			error = elants_i2c_validate_remark_id(ts, fw);
-+			if (error)
-+				return error;
-+		}
-+
-+		error = elants_i2c_send(client, enter_iap,
-sizeof(enter_iap));
-+		if (error) {
-+			dev_err(&client->dev, "failed to enter IAP mode:
-%d\n",
-+				error);
-+			return error;
-+		}
- 	}
- 
- 	msleep(20);
+ 	vdd_cpux: gpio-regulator {
+ 		compatible = "regulator-gpio";
+ 		regulator-name = "vdd-cpux";
 -- 
-2.7.4
+2.23.0
 
