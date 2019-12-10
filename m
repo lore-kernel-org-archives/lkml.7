@@ -2,79 +2,94 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D38EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C09C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD6D2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4372073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:21:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQhie18D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfLJXKZ (ORCPT
+        id S1727059AbfLJXVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:10:25 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:48608 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfLJXKY (ORCPT
+        Tue, 10 Dec 2019 18:21:03 -0500
+Received: from mail-io1-f44.google.com ([209.85.166.44]:46947 "EHLO
+        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJXVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:10:24 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ieodt-00083G-9G; Tue, 10 Dec 2019 23:10:09 +0000
-Date:   Tue, 10 Dec 2019 23:10:09 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] fs: introduce is_dot_or_dotdot helper for cleanup
-Message-ID: <20191210231009.GB4203@ZenIV.linux.org.uk>
-References: <1575979801-32569-1-git-send-email-yangtiezhu@loongson.cn>
- <20191210191912.GA99557@gmail.com>
+        Tue, 10 Dec 2019 18:21:02 -0500
+Received: by mail-io1-f44.google.com with SMTP id t26so9255386ioi.13;
+        Tue, 10 Dec 2019 15:21:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=foqkgB/JB6+t9GtkeI0/v69A3WTYRuMmhheGXZPoVyU=;
+        b=tQhie18DXLsqr3QaYFZA6shYyGcJ+iRyabhedxNyvH6IjbObZUxUQjzhi2jyk9mYb+
+         EL7ajBglWroU3sH0mh6mJittsTSrmOKQqZh7v9h5SWWdgWl8VUy3CIskfnpAgZuswAus
+         vLXEB4rvGNKXujmxKUHD4KeCCcZd3n8KlZi4xu4/vcHLIsnEV4e3wu3C1/YZlCLR5U0Q
+         +Wc9hGrCgO7KOzUpcy1DlenGfzGC1IJzbgt+vd0w7WT6Y5a10muqF2EogoumfRPzeVEs
+         B4qD/LGOw0nIKXKAIcoIF1m87qhvDH8eW5+RWNwob1EaThMCHw/uQcfhOszg+8KXbWyb
+         bxTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=foqkgB/JB6+t9GtkeI0/v69A3WTYRuMmhheGXZPoVyU=;
+        b=nHWbozfmAYippHIGhKyUS9FM3/lqG6zHUAR5l8fQaKuF2tJRN2wTDLU0ssFD2OO3HA
+         /WyK9Aj4WcfB3bxZj5MIU3XJm69+FfJ+vufzOREbnr4PVAmaKNI6V5+0zXwYV6ckiXyB
+         GHBHHiSapP6ssLznMvXukU52fSJGTTOnjO1icU4qemrS6IMq4M9h/N/9IwVIEREHrKKW
+         JxPj6G+SODxLDkO8fdIheEETiE5r4C3d9AJmJ1rGhI/EiXyJJW/UyLhKsonC8Z30B0AU
+         8IloFG5CmYNS4QJ+L4IOw1ckATD5LbKSoDpP9vMAjycSuphmLc+So3CCQ38RYt6J0NIj
+         54YA==
+X-Gm-Message-State: APjAAAVXpEIFQDGY+01Tcpyo6TReBp+lTNjFMvGTR7sBdl6ZIRrqNY72
+        tNcOz67Vjt3FX3YCAlLLH+oJ/VOqMp3whEep8ek=
+X-Google-Smtp-Source: APXvYqzYVyLjo70klJZxUmJnME71xKiN5+hJQHOQGSR2h3s+/POcE8veBRuwcVPYyp+N0Wog9Ozwzu4Z6ANoKYeVwYY=
+X-Received: by 2002:a05:6602:2346:: with SMTP id r6mr508394iot.133.1576020061746;
+ Tue, 10 Dec 2019 15:21:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210191912.GA99557@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191211101004.35db8a07@canb.auug.org.au>
+In-Reply-To: <20191211101004.35db8a07@canb.auug.org.au>
+From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date:   Wed, 11 Dec 2019 00:20:49 +0100
+Message-ID: <CAHpGcMKKwtxcaHRuhVWzRNLK=Cpw1sBd9zOKP-zTbgOstM7tzg@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the gfs2 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:19:13AM -0800, Eric Biggers wrote:
+Hi Stephen,
 
-> > +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-> > +{
-> > +	if (unlikely(name[0] == '.')) {
-> > +		if (len < 2 || (len == 2 && name[1] == '.'))
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> 
-> This doesn't handle the len=0 case.  Did you check that none of the users pass
-> in zero-length names?  It looks like fscrypt_fname_disk_to_usr() can, if the
-> directory entry on-disk has a zero-length name.  Currently it will return
-> -EUCLEAN in that case, but with this patch it may think it's the name ".".
-> 
-> So I think there needs to either be a len >= 1 check added, *or* you need to
-> make an argument for why it's okay to not care about the empty name case.
+Am Mi., 11. Dez. 2019 um 00:10 Uhr schrieb Stephen Rothwell
+<sfr@canb.auug.org.au>:
+> Hi all,
+>
+> After merging the gfs2 tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>
+> fs/gfs2/lops.c: In function 'gfs2_find_jhead':
+> fs/gfs2/lops.c:536:13: warning: 'bio_chained' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   536 |    if (!bio || (bio_chained && !off)) {
+>       |        ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Introduced by commit
+>
+>   1ee366c67176 ("gfs2: Another gfs2_find_jhead fix")
 
-Frankly, the only caller that matters in practice is link_path_walk(); _that_
-is by far the hottest path that might make use of that thing.
+thanks. It's actually a false positive and I'm not getting this
+warning, but I'll make the code more explicit.
 
-BTW, the callers that might end up passing 0 for len really ought to take
-a good look at another thing - that name[0] is, in fact, mapped.  Something
-along the lines of
-	if (name + len > end_of_buffer)
-		sod off
-	if (<that function>(name, len))
-		....
-is not enough, for obvious reasons.
+Andreas
