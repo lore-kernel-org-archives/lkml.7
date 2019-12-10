@@ -2,251 +2,129 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FEAC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171EEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D89120726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="B6QAkM6F"
+	by mail.kernel.org (Postfix) with ESMTP id DDB272073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575977822;
+	bh=16RcxnjGRu8LlXaJIegmZltRI06Ot9kt45SGFDCR1+g=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=xggjLKUp6rbvYtskodGVsTHdgNL6/E4V4GpR9tOjaftz68n+QisU71BTx8o3s9+q9
+	 xkWeZ2nTr6cSCE9BoEFPq47m89X991dBqQNQ/kUiQh1fI9jcbRqa2apQQJG1qM8LWt
+	 +IiUDc9JCm79ZKvofoOscwOZKr+9GcJwxy8L5CPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfLJLen (ORCPT
+        id S1727314AbfLJLhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:34:43 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:62301 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfLJLen (ORCPT
+        Tue, 10 Dec 2019 06:37:01 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:57132 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727131AbfLJLhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:34:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575977682; x=1607513682;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IKPqIf9U+emKxRr0L9uELmQeeXO75kuyRnRZTLa/FT0=;
-  b=B6QAkM6FGHQK+n6JqFEeRTZju5qA/KxiwVuWojs9ZS6EgCdlj8os6X3q
-   3oWZe06vFo5KVf3KW9blCVq08eNXxpm6N5l5iF4xpgNVDFOmk5lRz6xgf
-   OsNpom3Oydt9AAgyYyI/sOiHZ8DnCGMs1hxTlTbOpPYWg8bhFYeCClb8O
-   k=;
-IronPort-SDR: pAKF5MoAr76J9iO89BZo3uc8b1Jq1EE0fQSdRsliBQFEAmOwujQiv6pHuhrAy/NjYWjuvaYCSe
- xQd6Q8GGdWnQ==
-X-IronPort-AV: E=Sophos;i="5.69,299,1571702400"; 
-   d="scan'208";a="12635074"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Dec 2019 11:34:42 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 26633A192C;
-        Tue, 10 Dec 2019 11:34:41 +0000 (UTC)
-Received: from EX13D32EUC001.ant.amazon.com (10.43.164.159) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Dec 2019 11:34:13 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
- EX13D32EUC001.ant.amazon.com (10.43.164.159) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Dec 2019 11:34:12 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 10 Dec 2019 11:34:11 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH v2 4/4] xen-blkback: support dynamic unbind/bind
-Date:   Tue, 10 Dec 2019 11:33:47 +0000
-Message-ID: <20191210113347.3404-5-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210113347.3404-1-pdurrant@amazon.com>
-References: <20191210113347.3404-1-pdurrant@amazon.com>
+        Tue, 10 Dec 2019 06:37:01 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iedow-0005Ab-5d; Tue, 10 Dec 2019 12:36:50 +0100
+To:     John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 10 Dec 2019 11:36:50 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        <chenxiang66@hisilicon.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <hare@suse.com>, <hch@lst.de>,
+        <axboe@kernel.dk>, <bvanassche@acm.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>
+In-Reply-To: <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <20191210014335.GA25022@ming.t460p>
+ <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
+ <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
+ <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
+Message-ID: <6e513d25d8b0c6b95d37a64df0c27b78@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: john.garry@huawei.com, ming.lei@redhat.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By simply re-attaching to shared rings during connect_ring() rather than
-assuming they are freshly allocated (i.e assuming the counters are zero)
-it is possible for vbd instances to be unbound and re-bound from and to
-(respectively) a running guest.
+On 2019-12-10 10:59, John Garry wrote:
+>>>
+>>> There is no lockup, just a potential performance boost in this 
+>>> change.
+>>>
+>>> My colleague Xiang Chen can provide specifics of the test, as he is
+>>> the one running it.
+>>>
+>>> But one key bit of info - which I did not think most relevant 
+>>> before
+>>> - that is we have 2x SAS controllers running the throughput test on
+>>> the same host.
+>>>
+>>> As such, the completion queue interrupts would be spread 
+>>> identically
+>>> over the CPUs for each controller. I notice that ARM GICv3 ITS
+>>> interrupt controller (which we use) does not use the generic irq
+>>> matrix allocator, which I think would really help with this.
+>>>
+>>> Hi Marc,
+>>>
+>>> Is there any reason for which we couldn't utilise of the generic 
+>>> irq
+>>> matrix allocator for GICv3?
+>>
+>
+> Hi Marc,
+>
+>> For a start, the ITS code predates the matrix allocator by about 
+>> three
+>> years. Also, my understanding of this allocator is that it allows
+>> x86 to cope with a very small number of possible interrupt vectors
+>> per CPU. The ITS doesn't have such issue, as:
+>> 1) the namespace is global, and not per CPU
+>> 2) the namespace is *huge*
+>> Now, what property of the matrix allocator is the ITS code missing?
+>> I'd be more than happy to improve it.
+>
+> I think specifically the property that the matrix allocator will try
+> to find a CPU for irq affinity which "has the lowest number of 
+> managed
+> IRQs allocated" - I'm quoting the comment on 
+> matrix_find_best_cpu_managed().
 
-This has been tested by running:
+But that decision is due to allocation constraints. You can have at 
+most
+256 interrupts per CPU, so the allocator tries to balance it.
 
-while true;
-  do fio --name=randwrite --ioengine=libaio --iodepth=16 \
-  --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
-  done
+On the contrary, the ITS does care about how many interrupt target any
+given CPU. The whole 2^24 interrupt namespace can be thrown at a single
+CPU.
 
-in a PV guest whilst running:
+> The ITS code will make the lowest online CPU in the affinity mask the
+> target CPU for the interrupt, which may result in some CPUs handling
+> so many interrupts.
 
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  echo vbd-$DOMID-$VBD >bind;
-  echo bound;
-  sleep 3;
-  done
+If what you want is for the *default* affinity to be spread around,
+that should be achieved pretty easily. Let me have a think about how
+to do that.
 
-in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
-re-bind its system disk image.
-
-This is a highly useful feature for a backend module as it allows it to be
-unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
-This was also tested by running:
-
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  rmmod xen-blkback;
-  echo unloaded;
-  sleep 1;
-  modprobe xen-blkback;
-  echo bound;
-  cd $(pwd);
-  sleep 3;
-  done
-
-in dom0 whilst running the same loop as above in the (single) PV guest.
-
-Some (less stressful) testing has also been done using a Windows HVM guest
-with the latest 9.0 PV drivers installed.
-
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-
-v2:
- - Apply a sanity check to the value of rsp_prod and fail the re-attach
-   if it is implausible
- - Set allow_rebind to prevent ring from being closed on unbind
- - Update test workload from dd to fio (with verification)
----
- drivers/block/xen-blkback/xenbus.c | 59 +++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index e8c5c54e1d26..13d09630b237 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -181,6 +181,8 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
- {
- 	int err;
- 	struct xen_blkif *blkif = ring->blkif;
-+	struct blkif_common_sring *sring_common;
-+	RING_IDX rsp_prod, req_prod;
- 
- 	/* Already connected through? */
- 	if (ring->irq)
-@@ -191,46 +193,66 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
- 	if (err < 0)
- 		return err;
- 
-+	sring_common = (struct blkif_common_sring *)ring->blk_ring;
-+	rsp_prod = READ_ONCE(sring_common->rsp_prod);
-+	req_prod = READ_ONCE(sring_common->req_prod);
-+
- 	switch (blkif->blk_protocol) {
- 	case BLKIF_PROTOCOL_NATIVE:
- 	{
--		struct blkif_sring *sring;
--		sring = (struct blkif_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.native, sring,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_sring *sring_native =
-+			(struct blkif_sring *)ring->blk_ring;
-+		unsigned int size = __RING_SIZE(sring_native,
-+						XEN_PAGE_SIZE * nr_grefs);
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.native, sring_native,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		err = (req_prod - rsp_prod > size) ? -EIO : 0;
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_32:
- 	{
--		struct blkif_x86_32_sring *sring_x86_32;
--		sring_x86_32 = (struct blkif_x86_32_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_32, sring_x86_32,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_x86_32_sring *sring_x86_32 =
-+			(struct blkif_x86_32_sring *)ring->blk_ring;
-+		unsigned int size = __RING_SIZE(sring_x86_32,
-+						XEN_PAGE_SIZE * nr_grefs);
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_32, sring_x86_32,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		err = (req_prod - rsp_prod > size) ? -EIO : 0;
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_64:
- 	{
--		struct blkif_x86_64_sring *sring_x86_64;
--		sring_x86_64 = (struct blkif_x86_64_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_64, sring_x86_64,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_x86_64_sring *sring_x86_64 =
-+			(struct blkif_x86_64_sring *)ring->blk_ring;
-+		unsigned int size = __RING_SIZE(sring_x86_64,
-+						XEN_PAGE_SIZE * nr_grefs);
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_64, sring_x86_64,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		err = (req_prod - rsp_prod > size) ? -EIO : 0;
- 		break;
- 	}
- 	default:
- 		BUG();
- 	}
-+	if (err < 0)
-+		goto fail;
- 
- 	err = bind_interdomain_evtchn_to_irqhandler(blkif->domid, evtchn,
- 						    xen_blkif_be_int, 0,
- 						    "blkif-backend", ring);
--	if (err < 0) {
--		xenbus_unmap_ring_vfree(blkif->be->dev, ring->blk_ring);
--		ring->blk_rings.common.sring = NULL;
--		return err;
--	}
-+	if (err < 0)
-+		goto fail;
- 	ring->irq = err;
- 
- 	return 0;
-+
-+fail:
-+	xenbus_unmap_ring_vfree(blkif->be->dev, ring->blk_ring);
-+	ring->blk_rings.common.sring = NULL;
-+	return err;
- }
- 
- static int xen_blkif_disconnect(struct xen_blkif *blkif)
-@@ -1121,7 +1143,8 @@ static struct xenbus_driver xen_blkbk_driver = {
- 	.ids  = xen_blkbk_ids,
- 	.probe = xen_blkbk_probe,
- 	.remove = xen_blkbk_remove,
--	.otherend_changed = frontend_changed
-+	.otherend_changed = frontend_changed,
-+	.allow_rebind = true,
- };
- 
- int xen_blkif_xenbus_init(void)
+         M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
