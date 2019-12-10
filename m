@@ -2,115 +2,198 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E4C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799CFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EEB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF302073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABNDcXBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfLJJfG (ORCPT
+        id S1727224AbfLJJfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:35:06 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45123 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJfF (ORCPT
+        Tue, 10 Dec 2019 04:35:36 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46231 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:35:05 -0500
-Received: by mail-ed1-f66.google.com with SMTP id v28so15312850edw.12;
-        Tue, 10 Dec 2019 01:35:04 -0800 (PST)
+        Tue, 10 Dec 2019 04:35:36 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so12312867lfl.13;
+        Tue, 10 Dec 2019 01:35:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=sPqiW8fjJ6bClKJe5WkINQ65vkoeIkKhHU7yZhPYmGg=;
+        b=ABNDcXBaBSFTY1MBOuehy4WQ2SFh6x6aVPCz/0w0olzbOzjmzqV5odtrNM5JpBQtjJ
+         9yVNHZYJ+hXqU9+/ETxhdBza83LPN/PRKXds16dNfcf9TTYEf9CyjvF5L98Jae+Wc19O
+         IIiOY/fNFDogBF/Qk0JhyV3/RVe0p0oRK8TFL2jmzqXdbMog4rxb7aAQFIA4b/UxfOvo
+         cjXEKKsu2cnN2A4AescnBek882x0vlYO15PHe5wRgyTWW41pATbeTF+ttmU2UFRbaCok
+         KRa6NF+JMCG9iUjkwZDsbU0r5+0k5eVzKKwIzLflfdCV2LgN2kV0nBUgi+Hmv5uIBHn8
+         2ajA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RH04wiz8V0hoWb27QqHxPfCqkEIpOrBir1lGd6+fDNE=;
-        b=gVY6hL3XypPkha7PPySWJgkzw9sAdFnc9SW1MVnW/6Xwxuw05OdlIB99KPhXOdVuqZ
-         oKc06kLKgK8sY6J6+duaMncGw9Oaa5hFSawfAzLEzLxhcr2XfFgtRsOihBpAbr0XiWTL
-         4Ipbs34yuXtLEp4oSGmyGBXWxa4upDTldFT+DuCUuDw0OT4B6CdzsEukM/8xk/5v52hO
-         95nth3bEgpgrup1/zcD87cB9hcI63wgkGHXTFw4/LIqyPE83AVrBErq05r0okPg6V0VJ
-         NLAQ3IJnVcv9nLHos+gyuPNmm6IJU14VWgzXsYQoVlYifCTFPUnCPF1obCvfHjRAQMN9
-         rcww==
-X-Gm-Message-State: APjAAAXZQpOyBIEFcbGYQM9m5rGFfMpBOlMUT5JRpuVM88OxEjpGJlWC
-        2Vp/vcYHv+wbjEaeQQ7nt8u6IFPqyIU=
-X-Google-Smtp-Source: APXvYqxMRJVqjS4o3qMfvwDZbXmQF76c+1zMxROF9jGogr0svmYRcUYb8epZMA4dAtOdTLpzEas6ww==
-X-Received: by 2002:a05:6402:3187:: with SMTP id di7mr36723656edb.207.1575970503028;
-        Tue, 10 Dec 2019 01:35:03 -0800 (PST)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
-        by smtp.gmail.com with ESMTPSA id w12sm56612eds.85.2019.12.10.01.35.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:35:02 -0800 (PST)
-Received: by mail-wr1-f50.google.com with SMTP id g17so19215873wro.2;
-        Tue, 10 Dec 2019 01:35:02 -0800 (PST)
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr2041259wra.23.1575970502213;
- Tue, 10 Dec 2019 01:35:02 -0800 (PST)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sPqiW8fjJ6bClKJe5WkINQ65vkoeIkKhHU7yZhPYmGg=;
+        b=e/vzkSRB3JDqtKusxLoJXCrgcUvb+zWbtNWj7CfpNzXL4icX3XBCA5gb1hM8jd5Q7I
+         mDlyp+taqmqb9McfSOmU8wMLN/OIo/pKEnbW4y2sv8Qj4YWIsblcn/y1kG7IGvBDcOLA
+         p71x9uAa5CQzLTgeAP0UjwgIdPbnj6wgaO8DMl0GlsN+68iBEkAT6Z9LbpnF68Uv2EMt
+         ph4swfIqvAg9y/o9K0NUgXd/xVXBUTIVf7XkUpjv/Hc9uXLRgNd4UZjsghuqkJRsxL1/
+         f34VsE/7ugncdSmgxAp/xca/ZDtfYPUmLPVxqVernhHM8R/WuAxDVUpsxSMTIk3E04ck
+         GwGg==
+X-Gm-Message-State: APjAAAVUvI2V+sy7gEsJtWr1jvw+oobfKQZAjt56inYtIVm1jov7GL68
+        4vLUnuLGa4pCVidAShWw6FY=
+X-Google-Smtp-Source: APXvYqwioSlPYO6hoFk7LGARsxqMyzh3CVbgGfmrhGJmH3QfKEy1cMr4MWEHUZicpl9ULfHvpu8eWw==
+X-Received: by 2002:ac2:4316:: with SMTP id l22mr2852226lfh.115.1575970533025;
+        Tue, 10 Dec 2019 01:35:33 -0800 (PST)
+Received: from [192.168.68.106] ([193.119.54.228])
+        by smtp.gmail.com with ESMTPSA id 140sm1193677lfk.78.2019.12.10.01.35.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 01:35:32 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] mm: define MAX_PTRS_PER_{PTE,PMD,PUD}
+To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
+        aneesh.kumar@linux.ibm.com
+References: <20191210044714.27265-1-dja@axtens.net>
+ <20191210044714.27265-2-dja@axtens.net>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <50ac061a-caa9-ed4e-c9a4-1f86bb0552bd@gmail.com>
+Date:   Tue, 10 Dec 2019 20:35:22 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1575970087-11667-1-git-send-email-clabbe@baylibre.com>
-In-Reply-To: <1575970087-11667-1-git-send-email-clabbe@baylibre.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 10 Dec 2019 17:34:50 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66x0CLPBj_BJv0QzKXi-p61dqcKSjCrT=XO-vkEXR1YFw@mail.gmail.com>
-Message-ID: <CAGb2v66x0CLPBj_BJv0QzKXi-p61dqcKSjCrT=XO-vkEXR1YFw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: allwinner: restore hdmi_con_in node
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        aleksandr.aleksandrov@emlid.com,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191210044714.27265-2-dja@axtens.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 5:28 PM Corentin Labbe <clabbe@baylibre.com> wrote:
->
-> Compiling today next (20191210) fail to build with
-> arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts:53.25-55.4: ERROR (phandle_references): /soc/hdmi@1ee0000/ports/port@1/endpoint: Reference to non-existent node or label "hdmi_con_in"
 
 
-Patch subject should read:
+On 10/12/19 3:47 pm, Daniel Axtens wrote:
+> powerpc has boot-time configurable PTRS_PER_PTE, PMD and PUD. The
+> values are selected based on the MMU under which the kernel is
+> booted. This is much like how 4 vs 5-level paging on x86_64 leads to
+> boot-time configurable PTRS_PER_P4D.
+> 
+> So far, this hasn't leaked out of arch/powerpc. But with KASAN, we
+> have static arrays based on PTRS_PER_*, so for powerpc support must
+> provide constant upper bounds for generic code.
+> 
+> Define MAX_PTRS_PER_{PTE,PMD,PUD} for this purpose.
+> 
+> I have configured these constants:
+>  - in asm-generic headers
+>  - on arches that implement KASAN: x86, s390, arm64, xtensa and powerpc
+> 
+> I haven't wired up any other arches just yet - there is no user of
+> the constants outside of the KASAN code I add in the next patch, so
+> missing the constants on arches that don't support KASAN shouldn't
+> break anything.
 
-arm64: dts: allwinner: h5: emlid-neutis-n5-devboard: Restore hdmi_in_con node
+I would suggest limiting this to powerpc for now and use
 
-ChenYu
+#ifndef MAX_PTRS_PER_PUD
+#define MAX_PTRS_PER_PUD	PTRS_PER_PUD
+#endif
 
-> This patch fixes the build by restoring this node.
->
-> Fixes: b120a822ef10 ("ARM: dts: allwinner: Split out non-SoC specific parts of Neutis N5")
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+style code in KASAN. It just keeps the change surface to a limited
+value, till other arch's see value in migrating to support it.
+
+> 
+> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
 > ---
->  .../allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts  | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-> index fb96d356055e..d6cc6592cfa3 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-emlid-neutis-n5-devboard.dts
-> @@ -15,6 +15,17 @@
->                      "emlid,neutis-n5",
->                      "allwinner,sun50i-h5";
->
-> +       connector {
-> +               compatible = "hdmi-connector";
-> +               type = "a";
+>  arch/arm64/include/asm/pgtable-hwdef.h       | 3 +++
+>  arch/powerpc/include/asm/book3s/64/hash.h    | 4 ++++
+>  arch/powerpc/include/asm/book3s/64/pgtable.h | 7 +++++++
+>  arch/powerpc/include/asm/book3s/64/radix.h   | 5 +++++
+>  arch/s390/include/asm/pgtable.h              | 3 +++
+>  arch/x86/include/asm/pgtable_types.h         | 5 +++++
+>  arch/xtensa/include/asm/pgtable.h            | 1 +
+>  include/asm-generic/pgtable-nop4d-hack.h     | 9 +++++----
+>  include/asm-generic/pgtable-nopmd.h          | 9 +++++----
+>  include/asm-generic/pgtable-nopud.h          | 9 +++++----
+>  10 files changed, 43 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+> index d9fbd433cc17..485e1f3c5c6f 100644
+> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+> @@ -41,6 +41,7 @@
+>  #define ARM64_HW_PGTABLE_LEVEL_SHIFT(n)	((PAGE_SHIFT - 3) * (4 - (n)) + 3)
+>  
+>  #define PTRS_PER_PTE		(1 << (PAGE_SHIFT - 3))
+> +#define MAX_PTRS_PER_PTE	PTRS_PER_PTE
+>  
+>  /*
+>   * PMD_SHIFT determines the size a level 2 page table entry can map.
+> @@ -50,6 +51,7 @@
+>  #define PMD_SIZE		(_AC(1, UL) << PMD_SHIFT)
+>  #define PMD_MASK		(~(PMD_SIZE-1))
+>  #define PTRS_PER_PMD		PTRS_PER_PTE
+> +#define MAX_PTRS_PER_PMD	PTRS_PER_PMD
+>  #endif
+>  
+>  /*
+> @@ -60,6 +62,7 @@
+>  #define PUD_SIZE		(_AC(1, UL) << PUD_SHIFT)
+>  #define PUD_MASK		(~(PUD_SIZE-1))
+>  #define PTRS_PER_PUD		PTRS_PER_PTE
+> +#define MAX_PTRS_PER_PUD	PTRS_PER_PUD
+>  #endif
+>  
+>  /*
+> diff --git a/arch/powerpc/include/asm/book3s/64/hash.h b/arch/powerpc/include/asm/book3s/64/hash.h
+> index 2781ebf6add4..fce329b8452e 100644
+> --- a/arch/powerpc/include/asm/book3s/64/hash.h
+> +++ b/arch/powerpc/include/asm/book3s/64/hash.h
+> @@ -18,6 +18,10 @@
+>  #include <asm/book3s/64/hash-4k.h>
+>  #endif
+>  
+> +#define H_PTRS_PER_PTE		(1 << H_PTE_INDEX_SIZE)
+> +#define H_PTRS_PER_PMD		(1 << H_PMD_INDEX_SIZE)
+> +#define H_PTRS_PER_PUD		(1 << H_PUD_INDEX_SIZE)
 > +
-> +               port {
-> +                       hdmi_con_in: endpoint {
-> +                               remote-endpoint = <&hdmi_out_con>;
-> +                       };
-> +               };
-> +       };
+>  /* Bits to set in a PMD/PUD/PGD entry valid bit*/
+>  #define HASH_PMD_VAL_BITS		(0x8000000000000000UL)
+>  #define HASH_PUD_VAL_BITS		(0x8000000000000000UL)
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> index b01624e5c467..209817235a44 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -231,6 +231,13 @@ extern unsigned long __pmd_frag_size_shift;
+>  #define PTRS_PER_PUD	(1 << PUD_INDEX_SIZE)
+>  #define PTRS_PER_PGD	(1 << PGD_INDEX_SIZE)
+>  
+> +#define MAX_PTRS_PER_PTE	((H_PTRS_PER_PTE > R_PTRS_PER_PTE) ? \
+> +				  H_PTRS_PER_PTE : R_PTRS_PER_PTE)
+> +#define MAX_PTRS_PER_PMD	((H_PTRS_PER_PMD > R_PTRS_PER_PMD) ? \
+> +				  H_PTRS_PER_PMD : R_PTRS_PER_PMD)
+> +#define MAX_PTRS_PER_PUD	((H_PTRS_PER_PUD > R_PTRS_PER_PUD) ? \
+> +				  H_PTRS_PER_PUD : R_PTRS_PER_PUD)
 > +
->         vdd_cpux: gpio-regulator {
->                 compatible = "regulator-gpio";
->                 regulator-name = "vdd-cpux";
-> --
-> 2.23.0
->
+
+How about reusing max
+
+#define MAX_PTRS_PER_PTE  max(H_PTRS_PER_PTE, R_PTRS_PER_PTE)
+#define MAX_PTRS_PER_PMD  max(H_PTRS_PER_PMD, R_PTRS_PER_PMD)
+#define MAX_PTRS_PER_PUD  max(H_PTRS_PER_PUD, R_PTRS_PER_PUD)
+
+Balbir Singh.
+
