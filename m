@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC80AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA44C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A387F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73161205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575950529;
-	bh=6VAQ1U2rnpuLdZeDT9xVjPxKpUozILPc+bcz3+w2kEA=;
+	s=default; t=1575950533;
+	bh=m2GXoSyuxJbV9GL011u2OK+TshJgf3LR/XQ5uYfnR1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2XtVCUzEGfRFCgAJ4UhLEDR2/j3zVoSxO0wxYze+oqQv69DTxbCkGgE7S2kvdw355
-	 VHXkZvzz7+hRonfcvBhVIMuyA2nINMpGZmIORGvEqw3zyTySmwDli+r8IzkyRPrwfW
-	 pBYTZN5tLNZXk9el7I9jh5bRCujdH34/QZH9tnKE=
+	b=yfKDIJEQ2/Op5qP8qExzbyr3jE+HWFEdE/YDhoK/bpGGGkhbZYPdgYXovcQqLk2xT
+	 qNo8Qno4JM5NBkSRhDlqdmBUJSDEaLzIG/C44Hstb+Jfv1h8Rga5lrEQgaZP6pFY9V
+	 RV0ST3GZsGQB5NOOqt7DHHwgj62rjVmJPlpB2IsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfLJECI (ORCPT
+        id S1727093AbfLJECF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41612 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:02:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfLJECD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:02:03 -0500
+        id S1726989AbfLJECC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 23:02:02 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BE824654;
-        Tue, 10 Dec 2019 04:02:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A88DB214D8;
+        Tue, 10 Dec 2019 04:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575950522;
-        bh=6VAQ1U2rnpuLdZeDT9xVjPxKpUozILPc+bcz3+w2kEA=;
+        s=default; t=1575950521;
+        bh=m2GXoSyuxJbV9GL011u2OK+TshJgf3LR/XQ5uYfnR1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLq4IfVVuhI1DOVpl+TvFCR4PT8XBDiY0ep5Vwgk89BI8/pKoyTUkE9HuEUiZ5Cfo
-         EGPKH7XI26esWk/htI3rjpYE4j4BdFjocrBpWegscALQ0OdRe+jBuXj8k+Aulo5c04
-         tJBKbCcq0ov7VKJU8NZLw1nmD2ggvcwP6eCkb8qI=
+        b=Kc/tq1xbJEGaYDK4dsApB34Mss7gP2wVa0IoPZ37YBEHSnL9q75BVdCJdPXH26UTK
+         IqSVkU2/iuxDqAfIzmav4rv7ynSsFEvpRnKL/LEXCxI1k6endaK9M0jqVxEq463UXY
+         VZa1cXLgRDW7QTsPS0X1b5kEBc5SPZ/wbT33gUx8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 10/10] rcu: Enable tick for nohz_full CPUs slow to provide expedited QS
-Date:   Mon,  9 Dec 2019 20:01:54 -0800
-Message-Id: <20191210040154.2498-10-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/10] rcu: Update tree_exp.h function-header comments
+Date:   Mon,  9 Dec 2019 20:01:52 -0800
+Message-Id: <20191210040154.2498-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210040122.GA2419@paulmck-ThinkPad-P72>
 References: <20191210040122.GA2419@paulmck-ThinkPad-P72>
@@ -61,158 +61,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-An expedited grace period can be stalled by a nohz_full CPU looping
-in kernel context.  This possibility is currently handled by some
-carefully crafted checks in rcu_read_unlock_special() that enlist help
-from ksoftirqd when permitted by the scheduler.  However, it is exactly
-these checks that require the scheduler avoid holding any of its rq or
-pi locks across rcu_read_unlock() without also having held them across
-the entire RCU read-side critical section.
-
-It would therefore be very nice if expedited grace periods could
-handle nohz_full CPUs looping in kernel context without such checks.
-This commit therefore adds code to the expedited grace period's wait
-and cleanup code that forces the scheduler-clock interrupt on for CPUs
-that fail to quickly supply a quiescent state.  "Quickly" is currently
-a hard-coded single-jiffy delay.
+The function-header comments in kernel/rcu/tree_exp.h have gotten a bit
+out of date, so this commit updates a number of them.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/tick.h  |  5 ++++-
- kernel/rcu/tree.h     |  1 +
- kernel/rcu/tree_exp.h | 52 ++++++++++++++++++++++++++++++++++++++++++++-------
- 3 files changed, 50 insertions(+), 8 deletions(-)
+ kernel/rcu/tree_exp.h | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index 7896f792d3..7340613 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -109,8 +109,10 @@ enum tick_dep_bits {
- 	TICK_DEP_BIT_PERF_EVENTS	= 1,
- 	TICK_DEP_BIT_SCHED		= 2,
- 	TICK_DEP_BIT_CLOCK_UNSTABLE	= 3,
--	TICK_DEP_BIT_RCU		= 4
-+	TICK_DEP_BIT_RCU		= 4,
-+	TICK_DEP_BIT_RCU_EXP		= 5
- };
-+#define TICK_DEP_BIT_MAX TICK_DEP_BIT_RCU_EXP
- 
- #define TICK_DEP_MASK_NONE		0
- #define TICK_DEP_MASK_POSIX_TIMER	(1 << TICK_DEP_BIT_POSIX_TIMER)
-@@ -118,6 +120,7 @@ enum tick_dep_bits {
- #define TICK_DEP_MASK_SCHED		(1 << TICK_DEP_BIT_SCHED)
- #define TICK_DEP_MASK_CLOCK_UNSTABLE	(1 << TICK_DEP_BIT_CLOCK_UNSTABLE)
- #define TICK_DEP_MASK_RCU		(1 << TICK_DEP_BIT_RCU)
-+#define TICK_DEP_MASK_RCU_EXP		(1 << TICK_DEP_BIT_RCU_EXP)
- 
- #ifdef CONFIG_NO_HZ_COMMON
- extern bool tick_nohz_enabled;
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 055c317..f9253ed 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -182,6 +182,7 @@ struct rcu_data {
- 	bool rcu_need_heavy_qs;		/* GP old, so heavy quiescent state! */
- 	bool rcu_urgent_qs;		/* GP old need light quiescent state. */
- 	bool rcu_forced_tick;		/* Forced tick to provide QS. */
-+	bool rcu_forced_tick_exp;	/*   ... provide QS to expedited GP. */
- #ifdef CONFIG_RCU_FAST_NO_HZ
- 	bool all_lazy;			/* All CPU's CBs lazy at idle start? */
- 	unsigned long last_accelerate;	/* Last jiffy CBs were accelerated. */
 diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index 081a179..30b2a02 100644
+index 3923c07..1eafbcd 100644
 --- a/kernel/rcu/tree_exp.h
 +++ b/kernel/rcu/tree_exp.h
-@@ -230,7 +230,9 @@ static void __maybe_unused rcu_report_exp_rnp(struct rcu_node *rnp, bool wake)
- static void rcu_report_exp_cpu_mult(struct rcu_node *rnp,
- 				    unsigned long mask, bool wake)
- {
-+	int cpu;
- 	unsigned long flags;
-+	struct rcu_data *rdp;
- 
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	if (!(rnp->expmask & mask)) {
-@@ -238,6 +240,13 @@ static void rcu_report_exp_cpu_mult(struct rcu_node *rnp,
- 		return;
- 	}
- 	WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
-+	for_each_leaf_node_cpu_mask(rnp, cpu, mask) {
-+		rdp = per_cpu_ptr(&rcu_data, cpu);
-+		if (!IS_ENABLED(CONFIG_NO_HZ_FULL) || !rdp->rcu_forced_tick_exp)
-+			continue;
-+		rdp->rcu_forced_tick_exp = false;
-+		tick_dep_clear_cpu(cpu, TICK_DEP_BIT_RCU_EXP);
-+	}
- 	__rcu_report_exp_rnp(rnp, wake, flags); /* Releases rnp->lock. */
- }
- 
-@@ -450,6 +459,26 @@ static void sync_rcu_exp_select_cpus(void)
+@@ -21,7 +21,7 @@ static void rcu_exp_gp_seq_start(void)
  }
  
  /*
-+ * Wait for the expedited grace period to elapse, within time limit.
-+ * If the time limit is exceeded without the grace period elapsing,
-+ * return false, otherwise return true.
-+ */
-+static bool synchronize_rcu_expedited_wait_once(long tlimit)
-+{
-+	int t;
-+	struct rcu_node *rnp_root = rcu_get_root();
-+
-+	t = swait_event_timeout_exclusive(rcu_state.expedited_wq,
-+					  sync_rcu_exp_done_unlocked(rnp_root),
-+					  tlimit);
-+	// Workqueues should not be signaled.
-+	if (t > 0 || sync_rcu_exp_done_unlocked(rnp_root))
-+		return true;
-+	WARN_ON(t < 0);  /* workqueues should not be signaled. */
-+	return false;
-+}
-+
-+/*
-  * Wait for the expedited grace period to elapse, issuing any needed
-  * RCU CPU stall warnings along the way.
+- * Return then value that expedited-grace-period counter will have
++ * Return the value that the expedited-grace-period counter will have
+  * at the end of the current grace period.
   */
-@@ -460,22 +489,31 @@ static void synchronize_rcu_expedited_wait(void)
- 	unsigned long jiffies_start;
+ static __maybe_unused unsigned long rcu_exp_gp_seq_endval(void)
+@@ -39,7 +39,9 @@ static void rcu_exp_gp_seq_end(void)
+ }
+ 
+ /*
+- * Take a snapshot of the expedited-grace-period counter.
++ * Take a snapshot of the expedited-grace-period counter, which is the
++ * earliest value that will indicate that a full grace period has
++ * elapsed since the current time.
+  */
+ static unsigned long rcu_exp_gp_seq_snap(void)
+ {
+@@ -143,22 +145,18 @@ static void __maybe_unused sync_exp_reset_tree(void)
+  * Return non-zero if there is no RCU expedited grace period in progress
+  * for the specified rcu_node structure, in other words, if all CPUs and
+  * tasks covered by the specified rcu_node structure have done their bit
+- * for the current expedited grace period.  Works only for preemptible
+- * RCU -- other RCU implementation use other means.
+- *
+- * Caller must hold the specificed rcu_node structure's ->lock
++ * for the current expedited grace period.
+  */
+ static bool sync_rcu_exp_done(struct rcu_node *rnp)
+ {
+ 	raw_lockdep_assert_held_rcu_node(rnp);
+-
+ 	return rnp->exp_tasks == NULL &&
+ 	       READ_ONCE(rnp->expmask) == 0;
+ }
+ 
+ /*
+- * Like sync_rcu_exp_done(), but this function assumes the caller doesn't
+- * hold the rcu_node's ->lock, and will acquire and release the lock itself
++ * Like sync_rcu_exp_done(), but where the caller does not hold the
++ * rcu_node's ->lock.
+  */
+ static bool sync_rcu_exp_done_unlocked(struct rcu_node *rnp)
+ {
+@@ -180,8 +178,6 @@ static bool sync_rcu_exp_done_unlocked(struct rcu_node *rnp)
+  * which the task was queued or to one of that rcu_node structure's ancestors,
+  * recursively up the tree.  (Calm down, calm down, we do the recursion
+  * iteratively!)
+- *
+- * Caller must hold the specified rcu_node structure's ->lock.
+  */
+ static void __rcu_report_exp_rnp(struct rcu_node *rnp,
+ 				 bool wake, unsigned long flags)
+@@ -189,6 +185,7 @@ static void __rcu_report_exp_rnp(struct rcu_node *rnp,
+ {
  	unsigned long mask;
- 	int ndetected;
-+	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
- 	struct rcu_node *rnp_root = rcu_get_root();
--	int ret;
  
- 	trace_rcu_exp_grace_period(rcu_state.name, rcu_exp_gp_seq_endval(), TPS("startwait"));
- 	jiffies_stall = rcu_jiffies_till_stall_check();
- 	jiffies_start = jiffies;
-+	if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
-+		if (synchronize_rcu_expedited_wait_once(1))
-+			return;
-+		rcu_for_each_leaf_node(rnp) {
-+			for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-+				rdp = per_cpu_ptr(&rcu_data, cpu);
-+				if (rdp->rcu_forced_tick_exp)
-+					continue;
-+				rdp->rcu_forced_tick_exp = true;
-+				tick_dep_set_cpu(cpu, TICK_DEP_BIT_RCU_EXP);
-+			}
-+		}
-+		WARN_ON_ONCE(1);
-+	}
- 
++	raw_lockdep_assert_held_rcu_node(rnp);
  	for (;;) {
--		ret = swait_event_timeout_exclusive(
--				rcu_state.expedited_wq,
--				sync_rcu_exp_done_unlocked(rnp_root),
--				jiffies_stall);
--		if (ret > 0 || sync_rcu_exp_done_unlocked(rnp_root))
-+		if (synchronize_rcu_expedited_wait_once(jiffies_stall))
- 			return;
--		WARN_ON(ret < 0);  /* workqueues should not be signaled. */
- 		if (rcu_cpu_stall_suppress)
- 			continue;
- 		panic_on_rcu_stall();
+ 		if (!sync_rcu_exp_done(rnp)) {
+ 			if (!rnp->expmask)
+@@ -452,6 +449,10 @@ static void sync_rcu_exp_select_cpus(void)
+ 			flush_work(&rnp->rew.rew_work);
+ }
+ 
++/*
++ * Wait for the expedited grace period to elapse, issuing any needed
++ * RCU CPU stall warnings along the way.
++ */
+ static void synchronize_sched_expedited_wait(void)
+ {
+ 	int cpu;
+@@ -781,7 +782,7 @@ static int rcu_print_task_exp_stall(struct rcu_node *rnp)
+  * implementations, it is still unfriendly to real-time workloads, so is
+  * thus not recommended for any sort of common-case code.  In fact, if
+  * you are using synchronize_rcu_expedited() in a loop, please restructure
+- * your code to batch your updates, and then Use a single synchronize_rcu()
++ * your code to batch your updates, and then use a single synchronize_rcu()
+  * instead.
+  *
+  * This has the same semantics as (but is more brutal than) synchronize_rcu().
 -- 
 2.9.5
 
