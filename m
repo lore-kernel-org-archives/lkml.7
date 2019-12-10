@@ -2,189 +2,474 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE99C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F62073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34B32073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clu6UwUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfLJQmk (ORCPT
+        id S1727833AbfLJQmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:42:40 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:36668 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbfLJQm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:42:26 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ieiad-0005DL-0G; Tue, 10 Dec 2019 09:42:24 -0700
-To:     Jens Axboe <axboe@kernel.dk>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        lkp@lists.01.org
-References: <20191208154020.GK32275@shao2-debian>
- <ee156e51-bede-9c58-b48b-31aac65976ea@kernel.dk>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <03060cee-4820-6706-03e4-11d5ccf3363f@deltatee.com>
-Date:   Tue, 10 Dec 2019 09:42:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 11:42:25 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38074 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfLJQmW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:42:22 -0500
+Received: by mail-pj1-f65.google.com with SMTP id l4so7622478pjt.5;
+        Tue, 10 Dec 2019 08:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=q9bf2Um2I03H1aR/t3yvhuhmSHJaNa/0Zn+VgWwhcjA=;
+        b=clu6UwUAvGq2ztqNbmDKHQ4at62Rhn22aKVuDU/CgAoQnI4dnAgLMsu3W6yXng7QK7
+         a2trSxKbXemF3G0k+WqQ832tcNIebUiJqNTwXoVJRlvopJnSGg8YYu6TwdALEWsf+oaR
+         DRJ1Ax6pAdI+qA/aqKbtRkyMarmeY1rxTQ074Vhi4neZJgNp4q56wiZAPnNXAeakafFy
+         3Rbb8gZNAsRWNw0v9j9lmJs1nOInJHcG2iQU57Trqtp8EsCZT7vfb3VGOe4QBttWBPTo
+         pU4MclX/SMFgxUIqGTWtBPcmjAjSYgHn27qoUIZHJlJ9nBd5Zg9XJ143ihszZalcNxAx
+         +xMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q9bf2Um2I03H1aR/t3yvhuhmSHJaNa/0Zn+VgWwhcjA=;
+        b=ll8TYSrpzA6aQvU3j3/xW3Cw2Pe/dvUBaCLCX2GxRAv49Qj6XtXzI+cf5LqV633lBE
+         jt2apwOtYtq4/hiTgdhdXfEM/xDladb3c5t5nKbmiXzHIdVF746xmQR+H7FJEnZKW+02
+         kmbyX/pBUENEg7Z06moACyl89Ozfi5SUy9ZXyh+huL8FrhIdnmlLPEPYycY+FNaxgjpB
+         CgZVmDDSgA4VAKn5S/bUI4wf99wvtwTeUjw++DGxMbPOf3l91iNpADcp0Uyc0zqcY/Qz
+         PNLKoXby7HHS8vbxPHY6L8NiJsABQ3CzEHWU/PcvGSQ3PS7dUM5OIRUlE+s0AR1ZeROi
+         arzA==
+X-Gm-Message-State: APjAAAUurM8g8xAzpfRN8g8T9reskD0ldkD3sYufJJ4y522wJ3O7dSFN
+        ryY/pckmbs9CycbxWjWE35Y=
+X-Google-Smtp-Source: APXvYqxcjD/0UpITqG0KPZRfHP5YG4Gkz9fH6MNjHVuVho4XW0Vt34CnDNxE6L/YLK1svws/3k1TAQ==
+X-Received: by 2002:a17:90a:8c1:: with SMTP id 1mr6679827pjn.12.1575996141541;
+        Tue, 10 Dec 2019 08:42:21 -0800 (PST)
+Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
+        by smtp.gmail.com with ESMTPSA id j38sm4034634pgj.27.2019.12.10.08.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 08:42:20 -0800 (PST)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Yuantian Tang <andy.tang@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 08/12] thermal: qoriq: Convert driver to use regmap API
+Date:   Tue, 10 Dec 2019 08:41:49 -0800
+Message-Id: <20191210164153.10463-9-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191210164153.10463-1-andrew.smirnov@gmail.com>
+References: <20191210164153.10463-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ee156e51-bede-9c58-b48b-31aac65976ea@kernel.dk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: lkp@lists.01.org, torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, hch@lst.de, rong.a.chen@intel.com, axboe@kernel.dk
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [block] 48d9b0d431: BUG:kernel_NULL_pointer_dereference,address
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert driver to use regmap API, drop custom LE/BE IO helpers and
+simplify bit manipulation using regmap_update_bits(). This also allows
+us to convert some register initialization to use loops and adds
+convenient debug access to TMU registers via debugfs.
 
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Tested-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: linux-imx@nxp.com
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-On 2019-12-09 10:06 p.m., Jens Axboe wrote:
-> Logan,
-> 
-> Are you looking into this one?
+Yuantian, Anson:
 
-Yes, I have a patch I'll send out shortly.
+I don't have access to Layerscape HW that has v2 register layout, so
+if you could give this patch a try and verify that I got the
+'qoriq_yes_ranges' right, I'd really appreciate it.
 
-Logan
+Thanks,
+Andrey Smirnov
 
-> 
-> On 12/8/19 8:40 AM, kernel test robot wrote:
->> FYI, we noticed the following commit (built with gcc-7):
->>
->> commit: 48d9b0d43105e0da2b7c135eedd24e51234fb5e4 ("block: account statistics for passthrough requests")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> in testcase: rcuperf
->> with following parameters:
->>
->> 	runtime: 300s
->> 	perf_type: tasks
->>
->>
->>
->> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
->>
->> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->>
->>
->> +-------------------------------------------------------+------------+------------+
->> |                                                       | 8148f0b564 | 48d9b0d431 |
->> +-------------------------------------------------------+------------+------------+
->> | boot_successes                                        | 8          | 0          |
->> | boot_failures                                         | 0          | 8          |
->> | BUG:kernel_NULL_pointer_dereference,address           | 0          | 8          |
->> | Oops:#[##]                                            | 0          | 8          |
->> | EIP:blk_account_io_completion                         | 0          | 8          |
->> | EIP:ide_output_data                                   | 0          | 8          |
->> | Kernel_panic-not_syncing:Fatal_exception_in_interrupt | 0          | 8          |
->> +-------------------------------------------------------+------------+------------+
->>
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kernel test robot <rong.a.chen@intel.com>
->>
->>
->> [   14.392111] BUG: kernel NULL pointer dereference, address: 000002ac
->> [   14.392607] #PF: supervisor write access in kernel mode
->> [   14.392607] #PF: error_code(0x0002) - not-present page
->> [   14.392607] *pde = 00000000 
->> [   14.392607] Oops: 0002 [#1]
->> [   14.392607] CPU: 0 PID: 237 Comm: kworker/0:1H Not tainted 5.4.0-rc2-00011-g48d9b0d43105e #1
->> [   14.392607] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
->> [   14.392607] Workqueue: kblockd drive_rq_insert_work
->> [   14.392607] EIP: blk_account_io_completion+0x7a/0xf0
->> [   14.392607] Code: 89 54 24 08 31 d2 89 4c 24 04 31 c9 c7 04 24 02 00 00 00 c1 ee 09 e8 f5 21 a6 ff e8 70 5c a7 ff 8b 53 60 8d 04 bd 00 00 00 00 <01> b4 02 ac 02 00 00 8b 9a 88 02 00 00 85 db 74 11 85 d2 74 51 8b
->> [   14.392607] EAX: 00000000 EBX: f5b80000 ECX: 00000000 EDX: 00000000
->> [   14.392607] ESI: 00000000 EDI: 00000000 EBP: f3031e70 ESP: f3031e54
->> [   14.392607] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010046
->> [   14.392607] CR0: 80050033 CR2: 000002ac CR3: 03c25000 CR4: 000406d0
->> [   14.392607] Call Trace:
->> [   14.392607]  <IRQ>
->> [   14.392607]  ? blk_account_io_completion+0x38/0xf0
->> [   14.392607]  blk_update_request+0x85/0x420
->> [   14.392607]  ? _raw_spin_unlock_irqrestore+0x4f/0x60
->> [   14.392607]  ? trace_hardirqs_off+0xca/0xe0
->> [   14.392607]  ? _raw_spin_unlock_irqrestore+0x4f/0x60
->> [   14.392607]  ? complete+0x41/0x50
->> [   14.392607]  ide_end_rq+0x38/0xa0
->> [   14.392607]  ide_complete_rq+0x3d/0x70
->> [   14.392607]  cdrom_newpc_intr+0x258/0xba0
->> [   14.392607]  ? find_held_lock+0x2f/0xa0
->> [   14.392607]  ? cdrom_analyze_sense_data+0x1b0/0x1b0
->> [   14.392607]  ide_intr+0x135/0x250
->> [   14.392607]  __handle_irq_event_percpu+0x3e/0x250
->> [   14.392607]  handle_irq_event_percpu+0x1f/0x50
->> [   14.392607]  handle_irq_event+0x32/0x60
->> [   14.392607]  ? handle_fasteoi_irq+0x160/0x160
->> [   14.392607]  handle_level_irq+0x6c/0x110
->> [   14.392607]  handle_irq+0x72/0xa0
->> [   14.392607]  </IRQ>
->> [   14.392607]  do_IRQ+0x45/0xad
->> [   14.392607]  common_interrupt+0x115/0x11c
->> [   14.392607] EIP: ide_output_data+0xb7/0x140
->> [   14.392607] Code: 00 00 00 0f b7 03 66 89 07 83 c3 02 39 d3 75 f3 83 c4 14 5b 5e 5f 5d c3 8d 76 00 8b 4d ec d1 e9 80 7d f0 00 75 15 89 de 89 fa <f3> 66 6f 83 c4 14 5b 5e 5f 5d c3 8d b6 00 00 00 00 85 c9 74 ee 49
->> [   14.392607] EAX: 00000000 EBX: f5b800ac ECX: 00000000 EDX: 00000170
->> [   14.392607] ESI: f5b800b8 EDI: 00000170 EBP: f6a57dac ESP: f6a57d8c
->> [   14.392607] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010246
->> [   14.392607]  ? print_usage_bug+0x9b/0x1f0
->> [   14.392607]  ? ide_output_data+0xb7/0x140
->> [   14.392607]  ? ide_set_handler+0x42/0x50
->> [   14.392607]  ide_transfer_pc+0x11c/0x2a0
->> [   14.392607]  ? ide_check_atapi_device+0x130/0x130
->> [   14.392607]  ? ide_pc_intr+0x3d0/0x3d0
->> [   14.392607]  ide_issue_pc+0x160/0x250
->> [   14.392607]  ? ide_check_atapi_device+0x130/0x130
->> [   14.392607]  ide_cd_do_request+0x18e/0x3d0
->> [   14.392607]  ide_issue_rq+0x13a/0x6a0
->> [   14.392607]  ? _raw_spin_unlock_irq+0x22/0x30
->> [   14.392607]  ? lockdep_hardirqs_on+0xe4/0x190
->> [   14.392607]  ? _raw_spin_unlock_irq+0x22/0x30
->> [   14.392607]  ? trace_hardirqs_on+0x38/0xe0
->> [   14.392607]  ? drive_rq_insert_work+0x7a/0xf0
->> [   14.392607]  drive_rq_insert_work+0x8a/0xf0
->> [   14.392607]  process_one_work+0x207/0x500
->> [   14.392607]  ? process_one_work+0x16b/0x500
->> [   14.392607]  worker_thread+0x39/0x400
->> [   14.392607]  kthread+0xee/0x110
->> [   14.392607]  ? process_one_work+0x500/0x500
->> [   14.392607]  ? kthread_create_on_node+0x30/0x30
->> [   14.392607]  ret_from_fork+0x1e/0x28
->> [   14.392607] Modules linked in:
->> [   14.392607] CR2: 00000000000002ac
->> [   14.392607] ---[ end trace 2efe0b990b41cd59 ]---
->>
->>
->> To reproduce:
->>
->>         # build kernel
->> 	cd linux
->> 	cp config-5.4.0-rc2-00011-g48d9b0d43105e .config
->> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=i386 olddefconfig prepare modules_prepare bzImage
->>
->>         git clone https://github.com/intel/lkp-tests.git
->>         cd lkp-tests
->>         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
->>
->>
->>
->> Thanks,
->> Rong Chen
->>
-> 
-> 
+ drivers/thermal/qoriq_thermal.c | 228 ++++++++++++++------------------
+ 1 file changed, 98 insertions(+), 130 deletions(-)
+
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 11749c673b3b..6227c940b9b0 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -9,6 +9,7 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/regmap.h>
+ #include <linux/thermal.h>
+ 
+ #include "thermal_core.h"
+@@ -24,85 +25,35 @@
+ #define TMU_VER1		0x1
+ #define TMU_VER2		0x2
+ 
+-/*
+- * QorIQ TMU Registers
+- */
+-struct qoriq_tmu_site_regs {
+-	u32 tritsr;		/* Immediate Temperature Site Register */
+-	u32 tratsr;		/* Average Temperature Site Register */
+-	u8 res0[0x8];
+-};
++#define REGS_TMR	0x000	/* Mode Register */
++#define TMR_DISABLE	0x0
++#define TMR_ME		0x80000000
++#define TMR_ALPF	0x0c000000
+ 
+-struct qoriq_tmu_regs_v1 {
+-	u32 tmr;		/* Mode Register */
+-	u32 tsr;		/* Status Register */
+-	u32 tmtmir;		/* Temperature measurement interval Register */
+-	u8 res0[0x14];
+-	u32 tier;		/* Interrupt Enable Register */
+-	u32 tidr;		/* Interrupt Detect Register */
+-	u32 tiscr;		/* Interrupt Site Capture Register */
+-	u32 ticscr;		/* Interrupt Critical Site Capture Register */
+-	u8 res1[0x10];
+-	u32 tmhtcrh;		/* High Temperature Capture Register */
+-	u32 tmhtcrl;		/* Low Temperature Capture Register */
+-	u8 res2[0x8];
+-	u32 tmhtitr;		/* High Temperature Immediate Threshold */
+-	u32 tmhtatr;		/* High Temperature Average Threshold */
+-	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
+-	u8 res3[0x24];
+-	u32 ttcfgr;		/* Temperature Configuration Register */
+-	u32 tscfgr;		/* Sensor Configuration Register */
+-	u8 res4[0x78];
+-	struct qoriq_tmu_site_regs site[SITES_MAX];
+-	u8 res5[0x9f8];
+-	u32 ipbrr0;		/* IP Block Revision Register 0 */
+-	u32 ipbrr1;		/* IP Block Revision Register 1 */
+-	u8 res6[0x310];
+-	u32 ttrcr[4];		/* Temperature Range Control Register */
+-};
++#define REGS_TMTMIR	0x008	/* Temperature measurement interval Register */
++#define TMTMIR_DEFAULT	0x0000000f
+ 
+-struct qoriq_tmu_regs_v2 {
+-	u32 tmr;		/* Mode Register */
+-	u32 tsr;		/* Status Register */
+-	u32 tmsr;		/* monitor site register */
+-	u32 tmtmir;		/* Temperature measurement interval Register */
+-	u8 res0[0x10];
+-	u32 tier;		/* Interrupt Enable Register */
+-	u32 tidr;		/* Interrupt Detect Register */
+-	u8 res1[0x8];
+-	u32 tiiscr;		/* interrupt immediate site capture register */
+-	u32 tiascr;		/* interrupt average site capture register */
+-	u32 ticscr;		/* Interrupt Critical Site Capture Register */
+-	u32 res2;
+-	u32 tmhtcr;		/* monitor high temperature capture register */
+-	u32 tmltcr;		/* monitor low temperature capture register */
+-	u32 tmrtrcr;	/* monitor rising temperature rate capture register */
+-	u32 tmftrcr;	/* monitor falling temperature rate capture register */
+-	u32 tmhtitr;	/* High Temperature Immediate Threshold */
+-	u32 tmhtatr;	/* High Temperature Average Threshold */
+-	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
+-	u32 res3;
+-	u32 tmltitr;	/* monitor low temperature immediate threshold */
+-	u32 tmltatr;	/* monitor low temperature average threshold register */
+-	u32 tmltactr;	/* monitor low temperature average critical threshold */
+-	u32 res4;
+-	u32 tmrtrctr;	/* monitor rising temperature rate critical threshold */
+-	u32 tmftrctr;	/* monitor falling temperature rate critical threshold*/
+-	u8 res5[0x8];
+-	u32 ttcfgr;	/* Temperature Configuration Register */
+-	u32 tscfgr;	/* Sensor Configuration Register */
+-	u8 res6[0x78];
+-	struct qoriq_tmu_site_regs site[SITES_MAX];
+-	u8 res7[0x9f8];
+-	u32 ipbrr0;		/* IP Block Revision Register 0 */
+-	u32 ipbrr1;		/* IP Block Revision Register 1 */
+-	u8 res8[0x300];
+-	u32 teumr0;
+-	u32 teumr1;
+-	u32 teumr2;
+-	u32 res9;
+-	u32 ttrcr[4];	/* Temperature Range Control Register */
+-};
++#define REGS_V2_TMSR	0x008	/* monitor site register */
++
++#define REGS_V2_TMTMIR	0x00c	/* Temperature measurement interval Register */
++
++#define REGS_TIER	0x020	/* Interrupt Enable Register */
++#define TIER_DISABLE	0x0
++
++
++#define REGS_TTCFGR	0x080	/* Temperature Configuration Register */
++#define REGS_TSCFGR	0x084	/* Sensor Configuration Register */
++
++#define REGS_TRITSR(n)	(0x100 + 16 * (n)) /* Immediate Temperature
++					    * Site Register
++					    */
++#define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
++					   * Control Register
++					   */
++#define REGS_IPBRR(n)		(0xbf8 + 4 * (n)) /* IP Block Revision
++						   * Register n
++						   */
++#define REGS_V2_TEUMR(n)	(0xf00 + 4 * (n))
+ 
+ /*
+  * Thermal zone data
+@@ -113,10 +64,8 @@ struct qoriq_sensor {
+ 
+ struct qoriq_tmu_data {
+ 	int ver;
+-	struct qoriq_tmu_regs_v1 __iomem *regs;
+-	struct qoriq_tmu_regs_v2 __iomem *regs_v2;
++	struct regmap *regmap;
+ 	struct clk *clk;
+-	bool little_endian;
+ 	struct qoriq_sensor	sensor[SITES_MAX];
+ };
+ 
+@@ -125,29 +74,13 @@ static struct qoriq_tmu_data *qoriq_sensor_to_data(struct qoriq_sensor *s)
+ 	return container_of(s, struct qoriq_tmu_data, sensor[s->id]);
+ }
+ 
+-static void tmu_write(struct qoriq_tmu_data *p, u32 val, void __iomem *addr)
+-{
+-	if (p->little_endian)
+-		iowrite32(val, addr);
+-	else
+-		iowrite32be(val, addr);
+-}
+-
+-static u32 tmu_read(struct qoriq_tmu_data *p, void __iomem *addr)
+-{
+-	if (p->little_endian)
+-		return ioread32(addr);
+-	else
+-		return ioread32be(addr);
+-}
+-
+ static int tmu_get_temp(void *p, int *temp)
+ {
+ 	struct qoriq_sensor *qsensor = p;
+ 	struct qoriq_tmu_data *qdata = qoriq_sensor_to_data(qsensor);
+ 	u32 val;
+ 
+-	val = tmu_read(qdata, &qdata->regs->site[qsensor->id].tritsr);
++	regmap_read(qdata->regmap, REGS_TRITSR(qsensor->id), &val);
+ 	*temp = (val & 0xff) * 1000;
+ 
+ 	return 0;
+@@ -189,12 +122,12 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
+ 	/* Enable monitoring */
+ 	if (sites != 0) {
+ 		if (qdata->ver == TMU_VER1) {
+-			tmu_write(qdata, sites | TMR_ME | TMR_ALPF,
+-					&qdata->regs->tmr);
++			regmap_write(qdata->regmap, REGS_TMR,
++				     sites | TMR_ME | TMR_ALPF);
+ 		} else {
+-			tmu_write(qdata, sites, &qdata->regs_v2->tmsr);
+-			tmu_write(qdata, TMR_ME | TMR_ALPF_V2,
+-					&qdata->regs_v2->tmr);
++			regmap_write(qdata->regmap, REGS_V2_TMSR, sites);
++			regmap_write(qdata->regmap, REGS_TMR,
++				     TMR_ME | TMR_ALPF_V2);
+ 		}
+ 	}
+ 
+@@ -223,7 +156,7 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ 	/* Init temperature range registers */
+ 	for (i = 0; i < len; i++)
+-		tmu_write(data, range[i], &data->regs->ttrcr[i]);
++		regmap_write(data->regmap, REGS_TTRnCR(i), range[i]);
+ 
+ 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
+ 	if (calibration == NULL || len % 8) {
+@@ -233,9 +166,9 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ 	for (i = 0; i < len; i += 8, calibration += 2) {
+ 		val = of_read_number(calibration, 1);
+-		tmu_write(data, val, &data->regs->ttcfgr);
++		regmap_write(data->regmap, REGS_TTCFGR, val);
+ 		val = of_read_number(calibration + 1, 1);
+-		tmu_write(data, val, &data->regs->tscfgr);
++		regmap_write(data->regmap, REGS_TSCFGR, val);
+ 	}
+ 
+ 	return 0;
+@@ -244,20 +177,40 @@ static int qoriq_tmu_calibration(struct device *dev,
+ static void qoriq_tmu_init_device(struct qoriq_tmu_data *data)
+ {
+ 	/* Disable interrupt, using polling instead */
+-	tmu_write(data, TIER_DISABLE, &data->regs->tier);
++	regmap_write(data->regmap, REGS_TIER, TIER_DISABLE);
+ 
+ 	/* Set update_interval */
++
+ 	if (data->ver == TMU_VER1) {
+-		tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
++		regmap_write(data->regmap, REGS_TMTMIR, TMTMIR_DEFAULT);
+ 	} else {
+-		tmu_write(data, TMTMIR_DEFAULT, &data->regs_v2->tmtmir);
+-		tmu_write(data, TEUMR0_V2, &data->regs_v2->teumr0);
++		regmap_write(data->regmap, REGS_V2_TMTMIR, TMTMIR_DEFAULT);
++		regmap_write(data->regmap, REGS_V2_TEUMR(0), TEUMR0_V2);
+ 	}
+ 
+ 	/* Disable monitoring */
+-	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
++	regmap_write(data->regmap, REGS_TMR, TMR_DISABLE);
+ }
+ 
++static const struct regmap_range qoriq_yes_ranges[] = {
++	regmap_reg_range(REGS_TMR, REGS_TSCFGR),
++	regmap_reg_range(REGS_TTRnCR(0), REGS_TTRnCR(3)),
++	regmap_reg_range(REGS_V2_TEUMR(0), REGS_V2_TEUMR(2)),
++	regmap_reg_range(REGS_IPBRR(0), REGS_IPBRR(1)),
++	/* Read only registers below */
++	regmap_reg_range(REGS_TRITSR(0), REGS_TRITSR(15)),
++};
++
++static const struct regmap_access_table qoriq_wr_table = {
++	.yes_ranges	= qoriq_yes_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(qoriq_yes_ranges) - 1,
++};
++
++static const struct regmap_access_table qoriq_rd_table = {
++	.yes_ranges	= qoriq_yes_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(qoriq_yes_ranges),
++};
++
+ static int qoriq_tmu_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -265,18 +218,37 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 	struct qoriq_tmu_data *data;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
++	const bool little_endian = of_property_read_bool(np, "little-endian");
++	const enum regmap_endian format_endian =
++		little_endian ? REGMAP_ENDIAN_LITTLE : REGMAP_ENDIAN_BIG;
++	const struct regmap_config regmap_config = {
++		.reg_bits		= 32,
++		.val_bits		= 32,
++		.reg_stride		= 4,
++		.rd_table		= &qoriq_rd_table,
++		.wr_table		= &qoriq_wr_table,
++		.val_format_endian	= format_endian,
++		.max_register		= SZ_4K,
++	};
++	void __iomem *base;
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct qoriq_tmu_data),
+ 			    GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	data->little_endian = of_property_read_bool(np, "little-endian");
+-
+-	data->regs = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(data->regs)) {
++	base = devm_platform_ioremap_resource(pdev, 0);
++	ret = PTR_ERR_OR_ZERO(base);
++	if (ret) {
+ 		dev_err(dev, "Failed to get memory region\n");
+-		return PTR_ERR(data->regs);
++		return ret;
++	}
++
++	data->regmap = devm_regmap_init_mmio(dev, base, &regmap_config);
++	ret = PTR_ERR_OR_ZERO(data->regmap);
++	if (ret) {
++		dev_err(dev, "Failed to init regmap (%d)\n", ret);
++		return ret;
+ 	}
+ 
+ 	data->clk = devm_clk_get_optional(dev, NULL);
+@@ -290,10 +262,12 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* version register offset at: 0xbf8 on both v1 and v2 */
+-	ver = tmu_read(data, &data->regs->ipbrr0);
++	ret = regmap_read(data->regmap, REGS_IPBRR(0), &ver);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to read IP block version\n");
++		return ret;
++	}
+ 	data->ver = (ver >> 8) & 0xff;
+-	if (data->ver == TMU_VER2)
+-		data->regs_v2 = (void __iomem *)data->regs;
+ 
+ 	qoriq_tmu_init_device(data);	/* TMU initialization */
+ 
+@@ -323,7 +297,7 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
+ 
+ 	/* Disable monitoring */
+-	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
++	regmap_write(data->regmap, REGS_TMR, TMR_DISABLE);
+ 
+ 	clk_disable_unprepare(data->clk);
+ 
+@@ -332,13 +306,12 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+ {
+-	u32 tmr;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
++	int ret;
+ 
+-	/* Disable monitoring */
+-	tmr = tmu_read(data, &data->regs->tmr);
+-	tmr &= ~TMR_ME;
+-	tmu_write(data, tmr, &data->regs->tmr);
++	ret = regmap_update_bits(data->regmap, REGS_TMR, TMR_ME, 0);
++	if (ret)
++		return ret;
+ 
+ 	clk_disable_unprepare(data->clk);
+ 
+@@ -347,7 +320,6 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
+ 
+ static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+ {
+-	u32 tmr;
+ 	int ret;
+ 	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
+ 
+@@ -356,11 +328,7 @@ static int __maybe_unused qoriq_tmu_resume(struct device *dev)
+ 		return ret;
+ 
+ 	/* Enable monitoring */
+-	tmr = tmu_read(data, &data->regs->tmr);
+-	tmr |= TMR_ME;
+-	tmu_write(data, tmr, &data->regs->tmr);
+-
+-	return 0;
++	return regmap_update_bits(data->regmap, REGS_TMR, TMR_ME, TMR_ME);
+ }
+ 
+ static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
+-- 
+2.21.0
+
