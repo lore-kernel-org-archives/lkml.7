@@ -2,175 +2,110 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3E2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45DEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006F720838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F64A2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017795;
+	bh=Jyk/8Z7EqHQ3KcmekHNr/pL8PUHTTZ/qsM16FHYsvX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wdzLImZshl37lF1JJtFRRJu2PD8RAIJCmGPcbT4wLgxvMWDfMbodX7j0GfpwmSJIu
+	 paYi7rs4M96w6xOm0cUpneVCBg5wgpTKLbgFPSjLd2B/Mt2a0VsgzwACY06Yu9fcWY
+	 TCi+pT/NtadpAgLmSGAAMEaPm5VMWjKRAhWW4vgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfLJWnH (ORCPT
+        id S1729744AbfLJWnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:43:07 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728028AbfLJWnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:43:05 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbgjb142980
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:03 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wt2etcur1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:03 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 10 Dec 2019 22:43:00 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 22:42:57 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMgEM142139972
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 22:42:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EF4C4C070;
-        Tue, 10 Dec 2019 22:42:56 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0161F4C06F;
-        Tue, 10 Dec 2019 22:42:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.214.111])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Dec 2019 22:42:54 +0000 (GMT)
-Subject: Re: [PATCH v10 3/6] IMA: Define an IMA hook to measure keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Tue, 10 Dec 2019 17:42:54 -0500
-In-Reply-To: <20191204224131.3384-4-nramas@linux.microsoft.com>
-References: <20191204224131.3384-1-nramas@linux.microsoft.com>
-         <20191204224131.3384-4-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 10 Dec 2019 17:43:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbfLJWbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A612077B;
+        Tue, 10 Dec 2019 22:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017068;
+        bh=Jyk/8Z7EqHQ3KcmekHNr/pL8PUHTTZ/qsM16FHYsvX8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KtR1XkAq+VVt981oKpgQHUFeJ/WEAFh5J/BcvO5jEkT+WuRiKO0+7LnHgyYgfWjhJ
+         xdPokCRxYefBAg6pES9oUSD+06MSFy+UIoxtPTSAHV6A80J27N1pVqeJ+MSbyApT49
+         K/Hs9jQQbGsiOOmqrRMjF2EFHA6ZkOnKi3wk+GZY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 27/91] media: ti-vpe: vpe: Make sure YUYV is set as default format
+Date:   Tue, 10 Dec 2019 17:29:31 -0500
+Message-Id: <20191210223035.14270-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121022-0012-0000-0000-00000373A031
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121022-0013-0000-0000-000021AF7488
-Message-Id: <1576017774.4579.42.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 phishscore=0
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
-> Measure asymmetric keys used for verifying file signatures,
-> certificates, etc.
-> 
-> This patch defines a new IMA hook namely ima_post_key_create_or_update()
-> to measure the payload used to create a new key or update an existing key.
-> 
-> The IMA hook is defined in a new file namely ima_asymmetric_keys.c
-> which is built only if CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is enabled.
+From: Benoit Parrot <bparrot@ti.com>
 
-Missing from the last paragraph is the reason for requiring a new
-file.  I would prefix this last paragraph, explaining that the
-asymmetric key structure is only defined when
-CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE is defined.
+[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
 
-Mimi
+v4l2-compliance fails with this message:
 
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  security/integrity/ima/Makefile              |  1 +
->  security/integrity/ima/ima_asymmetric_keys.c | 52 ++++++++++++++++++++
->  2 files changed, 53 insertions(+)
->  create mode 100644 security/integrity/ima/ima_asymmetric_keys.c
-> 
-> diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-> index 31d57cdf2421..207a0a9eb72c 100644
-> --- a/security/integrity/ima/Makefile
-> +++ b/security/integrity/ima/Makefile
-> @@ -12,3 +12,4 @@ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
->  ima-$(CONFIG_IMA_APPRAISE_MODSIG) += ima_modsig.o
->  ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
->  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-> +obj-$(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE) += ima_asymmetric_keys.o
-> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-> new file mode 100644
-> index 000000000000..994d89d58af9
-> --- /dev/null
-> +++ b/security/integrity/ima/ima_asymmetric_keys.c
-> @@ -0,0 +1,52 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2019 Microsoft Corporation
-> + *
-> + * Author: Lakshmi Ramasubramanian (nramas@linux.microsoft.com)
-> + *
-> + * File: ima_asymmetric_keys.c
-> + *       Defines an IMA hook to measure asymmetric keys on key
-> + *       create or update.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <keys/asymmetric-type.h>
-> +#include "ima.h"
-> +
-> +/**
-> + * ima_post_key_create_or_update - measure asymmetric keys
-> + * @keyring: keyring to which the key is linked to
-> + * @key: created or updated key
-> + * @payload: The data used to instantiate or update the key.
-> + * @payload_len: The length of @payload.
-> + * @flags: key flags
-> + * @create: flag indicating whether the key was created or updated
-> + *
-> + * Keys can only be measured, not appraised.
-> + * The payload data used to instantiate or update the key is measured.
-> + */
-> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> +				   const void *payload, size_t payload_len,
-> +				   unsigned long flags, bool create)
-> +{
-> +	/* Only asymmetric keys are handled by this hook. */
-> +	if (key->type != &key_type_asymmetric)
-> +		return;
-> +
-> +	if (!payload || (payload_len == 0))
-> +		return;
-> +
-> +	/*
-> +	 * keyring->description points to the name of the keyring
-> +	 * (such as ".builtin_trusted_keys", ".ima", etc.) to
-> +	 * which the given key is linked to.
-> +	 *
-> +	 * The name of the keyring is passed in the "eventname"
-> +	 * parameter to process_buffer_measurement() and is set
-> +	 * in the "eventname" field in ima_event_data for
-> +	 * the key measurement IMA event.
-> +	 */
-> +	process_buffer_measurement(payload, payload_len,
-> +				   keyring->description, KEY_CHECK, 0);
-> +}
+   fail: v4l2-test-formats.cpp(672): \
+	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+   fail: v4l2-test-formats.cpp(672): \
+	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
+	...
+   test VIDIOC_TRY_FMT: FAIL
+
+The default pixel format was setup as pointing to a specific offset in
+the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
+entry. This became false after the addition on the NV21 format (see
+above commid-id)
+
+So instead of hard-coding an offset which might change over time we need
+to use a lookup helper instead so we know the default will always be what
+we intended.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 067548e14e113..dbb4829acc438 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1998,7 +1998,7 @@ static int vpe_open(struct file *file)
+ 	v4l2_ctrl_handler_setup(hdl);
+ 
+ 	s_q_data = &ctx->q_data[Q_DATA_SRC];
+-	s_q_data->fmt = &vpe_formats[2];
++	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	s_q_data->width = 1920;
+ 	s_q_data->height = 1080;
+ 	s_q_data->bytesperline[VPE_LUMA] = (s_q_data->width *
+-- 
+2.20.1
 
