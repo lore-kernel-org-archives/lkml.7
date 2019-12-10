@@ -2,121 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844C2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F1AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591AF2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC95E2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575989222;
-	bh=O6oH7aEbLpR99ICof6cbh0Ucv+JfuHatu8JFDkQm3M4=;
+	s=default; t=1575989261;
+	bh=t9mW6I2dr+Dg2/7uKgcBKKAq/tKRT4xQ0h18PE3NDVU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XLhJAxFKiqAPjgZAOw3rY7ikxNBP43RFFru1ve0jtvo9ZylKJgot4WA58dgnE3tiL
-	 CAwIkumCMT09+iaEePMT5ZQ2nLVK/O+IsYNEXXf2/KXMkfXNDhiNe0yswFX3gzloVm
-	 GFbHRux1gLEO82e653xiMLN/GLgr+2seADXLegzU=
+	b=sqZmNPFHkNR7kBuwU/aBdUALstn6JdmO213hudiQwM7cUMrEDYwq0ggwx/Ch0IK5w
+	 N3Bc3QAMT15iiyIkuFBPP2LfKU5S9GLEbM/8RNXJXWHnLXID+dFkwX1uCniEJJVJu3
+	 4itAPshMrfh+7zp2hC5xaKJAdgujbCdrD+dwd+kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfLJOrB (ORCPT
+        id S1727535AbfLJOrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:47:01 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37420 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJOrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:47:01 -0500
-Received: by mail-ed1-f68.google.com with SMTP id cy15so16205311edb.4;
-        Tue, 10 Dec 2019 06:47:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YhaZZr/VtnLO8eSaQcdnch7Ah/fM7ZqN8a+3yLWOzB0=;
-        b=TmAhfc5KZel99Qk6C2qwM4/dxmyp0oH1E0QhdgfpEc21/lFhjqnN454inmI9y5OxSS
-         Oi1vaAPU/YXV2R06a51Qw9CvCvjkKzjeCiTLdalavQzQp801QdKpAaQYBi85X5uZ4/UP
-         HjYkp9PlAE6VEsGckbs6q5pAnwsRn3XoZX4+R8xfnK+Me/iHF5P7h5sKw1PhPMJEa2p0
-         7z1V30giJ7clIGROoH+1+xV68e/NVvY4q6khMQDEL9a7aXkC0AyBmR5cMf9bGmpXcL8z
-         msfDDJ9t/KGV7DFazepuHT7LlwbCgrSmflowL113Wds1DKO6/4hoPMvZh4PmUuDwlqY1
-         2uxA==
-X-Gm-Message-State: APjAAAXDLMczuomDg8xnVDo0/CEyzh5ZeKeG85o5x6ZYX4jZaNnlR1ht
-        zIirkQ3PQPd0TxMCmHpTx8A=
-X-Google-Smtp-Source: APXvYqzN26AGf6Gq95ol7usng2Lc94cprpK12qzMUmBicV9faXvBpRLDu6WMkpMOaxtC2z0oN0dWEg==
-X-Received: by 2002:a17:906:5957:: with SMTP id g23mr4155261ejr.187.1575989219144;
-        Tue, 10 Dec 2019 06:46:59 -0800 (PST)
-Received: from pi3 ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id p14sm110628ejr.40.2019.12.10.06.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:46:58 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:46:56 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/10] tty: serial: samsung: allow driver to be built by
- anyone
-Message-ID: <20191210144656.GA11222@pi3>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
+        Tue, 10 Dec 2019 09:47:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727145AbfLJOrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:47:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3581120637;
+        Tue, 10 Dec 2019 14:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575989259;
+        bh=t9mW6I2dr+Dg2/7uKgcBKKAq/tKRT4xQ0h18PE3NDVU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kb15QnBe5+/0sGZPyfGV8xt6u5BKJLLdRfMUCmYQcSGRu4ORb3O4vWwvAc/HQNWMy
+         c13OUy+ybJRy5GsVg1p/JFFwTSvpcNhidAzGa0Nbd8uHjkaH89Td880BBGrk8Vj1j3
+         E5rdW5bkfTd3idM8bNpf5rTqvLYbpcqxcWg68C3s=
+Date:   Tue, 10 Dec 2019 15:47:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Renninger <trenn@suse.de>
+Cc:     Will Deacon <will@kernel.org>,
+        Felix Schnizlein <fschnizlein@suse.com>,
+        linux-kernel@vger.kernel.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
+Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
+Message-ID: <20191210144737.GB3975980@kroah.com>
+References: <20191206162421.15050-1-trenn@suse.de>
+ <25032400.G9DUGnJgnc@skinner.arch.suse.de>
+ <20191209173804.GD7489@willie-the-truck>
+ <11195456.EmMzWPVPDU@skinner.arch.suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <11195456.EmMzWPVPDU@skinner.arch.suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:36:57PM +0100, Greg Kroah-Hartman wrote:
-> There is no need to tie this driver to only the OMAP platform,
-
-s/OMAP/Exynos/
-
-Beside that:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
-
-
-> especially for build testing.  So add COMPILE_TEST as an option allowing
-> it to be built on any platform.
+On Tue, Dec 10, 2019 at 02:33:07PM +0100, Thomas Renninger wrote:
+> On Monday, December 9, 2019 6:38:05 PM CET Will Deacon wrote:
+> > On Mon, Dec 09, 2019 at 12:28:44PM +0100, Thomas Renninger wrote:
+> > > On Monday, December 9, 2019 11:31:11 AM CET Will Deacon wrote:
+> > > > On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
+> > > > > From: Felix Schnizlein <fschnizlein@suse.de>
+> > > > > 
+> > > > > Export all information from /proc/cpuinfo to sysfs:
+> > > > > implementer, architecture, variant, part, revision,
+> > > > > bogomips and flags are exported.
+> > > > > 
+> > > > > Example:
+> > > > > /sys/devices/system/cpu/cpu1/info/:[0]# head *
+> > > 
+> > > ...
+> > > 
+> > > > > ==> flags <==
+> > > > > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
+> > > 
+> > > ...
+> > > 
+> > > > I don't understand why we need this on arm64
 > 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Hyunki Koo <kkoos00@naver.com>
-> Cc: HYUN-KI KOO <hyunki00.koo@samsung.com>
-> Cc: Shinbeom Choi <sbeom.choi@samsung.com>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/tty/serial/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 99f5da3bf913..c835e10bd97e 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -237,7 +237,7 @@ config SERIAL_CLPS711X_CONSOLE
->  
->  config SERIAL_SAMSUNG
->  	tristate "Samsung SoC serial support"
-> -	depends on PLAT_SAMSUNG || ARCH_EXYNOS
-> +	depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
->  	select SERIAL_CORE
->  	help
->  	  Support for the on-chip UARTs on the Samsung S3C24XX series CPUs,
-> -- 
-> 2.24.0
-> 
+> Again: proc is moving to sys.
+
+No.  New stuff is to be added to /sys/, don't add new things to /proc
+unless it deals with processes.
+
+There is no mass-migration of existing /proc files to sysfs for no good
+reason.
+
+> You probably export feature flags in /proc/cpuinfo for a good reason.
+> So where in sysfs should this show up?
+
+Why does it have to live in sysfs if it is already in /proc and parsed
+properly by tools?
+
+thanks,
+
+greg k-h
