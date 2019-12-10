@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B20CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70172C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B57D20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354E0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017255;
-	bh=dSAmDi5K/TDVYc2keDhij+3vb2QweI89i+JjWfeGopI=;
+	s=default; t=1576017259;
+	bh=rs2sJsURr2HfQ37CNR+4elN+tvV4lCBxruCYPnxdazE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXpO16xABt2uzpAZVD37NCMhCAyVJNFEmRwyAVK2wsHuGYxXq8F2BrSAbqznRy8fF
-	 hFm50jcd9qVXO3KVTCzgbdlOT52v2zisvwTZ7jPq43ek3h1VJq2IonrWLKqDbFB2OG
-	 eatjeCHbg8m04JoiwkhS4Mblj3glCPemxiJURIy0=
+	b=JK8P61UpZs/J9/oGGbZsgnD0wLinIktdfBOyuJDMrGP3mfpE3S/yHHEXKc2nZgvW2
+	 08bAbRQrEwAXl6ngf6XHruUmkac6DKiuyxvcYrJVHOXbhTg1k0JVPnufjetX1HNWEb
+	 Kn0Rgrzj1NCjFSCwBh1ORHd1jUrZ/At6cKCcgIgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbfLJWeN (ORCPT
+        id S1730239AbfLJWeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbfLJWdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:54 -0500
+        id S1730058AbfLJWd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD50424653;
-        Tue, 10 Dec 2019 22:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DD4120836;
+        Tue, 10 Dec 2019 22:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017233;
-        bh=dSAmDi5K/TDVYc2keDhij+3vb2QweI89i+JjWfeGopI=;
+        s=default; t=1576017238;
+        bh=rs2sJsURr2HfQ37CNR+4elN+tvV4lCBxruCYPnxdazE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cPpUtubC2qhv8fpQF6Z+D8KWRlqN6lUckRybfRpN5vMke2Eg8lh6b/A33YEO95DFY
-         1XvUDLyTddzwvZK1Sdr4lugfDp7+0BY6D6MLdheoRepEv2MRN53WYzqPG84BKRh9KP
-         25tCDekIIrWXiy85n4ov103y/Och9MBW5VC2UJec=
+        b=ubRyAE7aZrOhNyNgKG+/+nW5ciMy6Dre2NKTyJuB2KB+I/0wGvZcD5HmBpzynI3JQ
+         Du6aLZsth/Xr8lF6YfkrumKsZ7ZMS2ZJNUyx3FfHOdK8Wiu9WIknllbKLO1kk/lkJ4
+         xW7YzgPbfa3tLmEVp6a94rXPqOucTVMq/rySh+W8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 31/71] x86/ioapic: Prevent inconsistent state when moving an interrupt
-Date:   Tue, 10 Dec 2019 17:32:36 -0500
-Message-Id: <20191210223316.14988-31-sashal@kernel.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 35/71] ata: sata_mv, avoid trigerrable BUG_ON
+Date:   Tue, 10 Dec 2019 17:32:40 -0500
+Message-Id: <20191210223316.14988-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -62,79 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
+[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
 
-There is an issue with threaded interrupts which are marked ONESHOT
-and using the fasteoi handler:
+There are several reports that the BUG_ON on unsupported command in
+mv_qc_prep can be triggered under some circumstances:
+https://bugzilla.suse.com/show_bug.cgi?id=1110252
+https://serverfault.com/questions/888897/raid-problems-after-power-outage
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
+https://bugs.centos.org/view.php?id=14998
 
-  if (IS_ONESHOT())
-    mask_irq();
-  ....
-  cond_unmask_eoi_irq()
-    chip->irq_eoi();
-      if (setaffinity_pending) {
-         mask_ioapic();
-         ...
-	 move_affinity();
-	 unmask_ioapic();
-      }
+Let sata_mv handle the failure gracefully: warn about that incl. the
+failed command number and return an AC_ERR_INVALID error. We can do that
+now thanks to the previous patch.
 
-So if setaffinity is pending the interrupt will be moved and then
-unconditionally unmasked at the ioapic level, which is wrong in two
-aspects:
+Remove also the long-standing FIXME.
 
- 1) It should be kept masked up to the point where the threaded handler
-    finished.
+[v2] use %.2x as commands are defined as hexa.
 
- 2) The physical chip state and the software masked state are inconsistent
-
-Guard both the mask and the unmask with a check for the software masked
-state. If the line is marked masked then the ioapic line is also masked, so
-both mask_ioapic() and unmask_ioapic() can be skipped safely.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
-Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/ata/sata_mv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 4d5e8ff3b5e5c..5e8fc9809da3f 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1710,9 +1710,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
- 
- static inline bool ioapic_irqd_mask(struct irq_data *data)
- {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic_irq(data);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic_irq(data);
- 		return true;
- 	}
- 	return false;
-@@ -1749,7 +1750,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+index 729f26322095e..c24bbdb3f76c8 100644
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -2113,12 +2113,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
+ 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
+ 		 * of which are defined/used by Linux.  If we get here, this
+ 		 * driver needs work.
+-		 *
+-		 * FIXME: modify libata to give qc_prep a return value and
+-		 * return error here.
  		 */
- 		if (!io_apic_level_ack_pending(data->chip_data))
- 			irq_move_masked_irq(data);
--		unmask_ioapic_irq(data);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic_irq(data);
+-		BUG_ON(tf->command);
+-		break;
++		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
++				tf->command);
++		return AC_ERR_INVALID;
  	}
- }
- #else
+ 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
+ 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
 -- 
 2.20.1
 
