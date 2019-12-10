@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C88C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0FAC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5802053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277522053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015601;
-	bh=FsQts3PP/nHVQrfv5wO/f72h36bv4yWUk4siqw/b69Q=;
+	s=default; t=1576015604;
+	bh=qr7qJDSjLvNf1OErcECADv5XMiD5LWAvAZgPsolMcz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yw39wYoSb9vqCZCp/52mY45Vg6RXjry3fEzVrXELL9tzDs4NLlQe/UtEHdlmTi24i
-	 uTJ+jO6UWAayQD3FSQtgdOO10Md0hcese2c83PZZX6ANtKh99jvHJYGZEjXBit14yt
-	 Q+DZvufMdu1Aglg0hCR9l3e7vg8Zo01/wK08TaVU=
+	b=eUJZQNXDjPFcu8HkG03beLmT1UFgYMk9NvpCpe7csm42J3LqlsbAGS2+nh92M4Yzx
+	 TdOzWa1vYLEZmRMx3HzFKyuKqO83TAg10NgIe0pwlUdagUgGFTWxzmnmBaw72FyFN8
+	 c+ZPr0ri0f30ZzQEN6zt7f03oe08Y2u7O6LOSqso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfLJWGl (ORCPT
+        id S1729581AbfLJWFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:06:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729563AbfLJWFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 17:05:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727538AbfLJWFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7510C20637;
-        Tue, 10 Dec 2019 22:05:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67857208C3;
+        Tue, 10 Dec 2019 22:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015525;
-        bh=FsQts3PP/nHVQrfv5wO/f72h36bv4yWUk4siqw/b69Q=;
+        s=default; t=1576015505;
+        bh=qr7qJDSjLvNf1OErcECADv5XMiD5LWAvAZgPsolMcz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiBfPoOQzr8o3A2z4AaOIhKkIC0Yg65WXIEvNDT33PaQgY0tlDf4ZASD1WQdhWaGM
-         ikugCz4uEX73rMVlDS97K5hNoomf7pH8pRguJftNfMdq5HRbkbOkXru67oo/BAaZ26
-         346qKl+nHjiorLyyI4hBfbghGbmUfv3MESJ9hbGM=
+        b=sBZW5lKBfVejGC9LbsHedjqNY3u+2QCO0tI63MOEaUr3UZOCVusFKPbX/MVapYKRb
+         c3084H9MhjjzJeTMERNtoL9TqdWzCNhlWoE1D46dj/h6SKO/crY8AdhR/ZVcgyVVfr
+         zakB7jzDv5+hTFnubgCBNYJHG+inaiSDTY51JdSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.14 120/130] fbtft: Make sure string is NULL terminated
-Date:   Tue, 10 Dec 2019 17:02:51 -0500
-Message-Id: <20191210220301.13262-120-sashal@kernel.org>
+Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 104/130] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add dmic format constraint
+Date:   Tue, 10 Dec 2019 17:02:35 -0500
+Message-Id: <20191210220301.13262-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 
-[ Upstream commit 21f585480deb4bcf0d92b08879c35d066dfee030 ]
+[ Upstream commit e2db787bdcb4f2722ecf410168f0583764634e45 ]
 
-New GCC warns about inappropriate use of strncpy():
+On KBL platform, the microphone is attached to external codec(rt5514)
+instead of PCH. However, TDM slot between PCH and codec is 16 bits only.
+In order to avoid setting wrong format, we should add a constraint to
+force to use 16 bits format forever.
 
-drivers/staging/fbtft/fbtft-core.c: In function ‘fbtft_framebuffer_alloc’:
-drivers/staging/fbtft/fbtft-core.c:665:2: warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
-  665 |  strncpy(info->fix.id, dev->driver->name, 16);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Later on the copy is being used with the assumption to be NULL terminated.
-Make sure string is NULL terminated by switching to snprintf().
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20191120095716.26628-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190923162940.199580-1-yuhsuan@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fbtft-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 0cbcbad8f0742..b81c6dfa5b249 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -780,7 +780,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	fbdefio->deferred_io =     fbtft_deferred_io;
- 	fb_deferred_io_init(info);
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index 41cb1fefbd427..405196283688c 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -422,6 +422,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
+ 	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 			dmic_constraints);
  
--	strncpy(info->fix.id, dev->driver->name, 16);
-+	snprintf(info->fix.id, sizeof(info->fix.id), "%s", dev->driver->name);
- 	info->fix.type =           FB_TYPE_PACKED_PIXELS;
- 	info->fix.visual =         FB_VISUAL_TRUECOLOR;
- 	info->fix.xpanstep =	   0;
++	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
++
+ 	return snd_pcm_hw_constraint_list(substream->runtime, 0,
+ 			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
+ }
 -- 
 2.20.1
 
