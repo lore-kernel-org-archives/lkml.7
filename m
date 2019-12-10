@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E5CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9390FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E772053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590E92077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017688;
-	bh=KV9p2utAcaUlwnDRLyL7/a8vX1yDI9Ot2qe5hWZuQeU=;
+	s=default; t=1576017693;
+	bh=YCY9SJX1PgzVA6xBjXs9QXqR7IeaQGAd82YkXGq+9CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DtLhXPLpsx4DxEzIhP/rY4Ca7O+XPM9kRWb9/VgBT8B13xBoC7vlCxifq5IWVpElV
-	 kA6uFBHlXXIAWayPHcpcAhfgKEtTyKCKd+5nBUfcucAke4Um0S6UCfGQpcJYv7LJw5
-	 g3G2dpb6zG5vl58eXe2ytgLZ9fUs2A3MWjtj7PU4=
+	b=U4M4zPrs0wgu4CL5NNNqJMjGwzWWsfEsVsWYiZLs9sB/yPWkn2awKIgVRPxDfIHjb
+	 lMMFEmDONao7iXzI9ir7/qR5ULPMvrrEPBsIUy8uFyQgmOybB95ydn4mHwT+Yft84n
+	 Yym+BPWYowgTBaq3FcSz5CU//LaUvijD4u68zuSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfLJWl1 (ORCPT
+        id S1728850AbfLJWbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51956 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728864AbfLJWbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:49 -0500
+        id S1728585AbfLJWbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F221222C4;
-        Tue, 10 Dec 2019 22:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9F820836;
+        Tue, 10 Dec 2019 22:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017108;
-        bh=KV9p2utAcaUlwnDRLyL7/a8vX1yDI9Ot2qe5hWZuQeU=;
+        s=default; t=1576017093;
+        bh=YCY9SJX1PgzVA6xBjXs9QXqR7IeaQGAd82YkXGq+9CQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RaU3GBICRLTPU9Rw9MVsGtjDfb7JAXIn0w1AnHQIUTwIvguq3pk6UpvQGooyigbwx
-         LIjdkk6gD3k/qGS2jiEW58VNVu6zte4J4Vj8bZJJ9r1rxc8WbYBN0BmRyljbbXSz6p
-         wbVnnUJS7+XOSJE4RIx7KscSQMT/J9L92N3/iD+w=
+        b=jelgK2lreos8lGsO5bH/2Q1+mFk3x+VORAdfSPg/YJ7nEED1qJyaj3PzbtV9rtGdC
+         80djzLMPbw48/i2OladGEbR1Jt+b4ayyZxc+We6rU96UmMGilISAQ4XUe8wM4x67um
+         bT4MBmuUFGm10V6LYLSe1LjjK2KaXUSHB2YYNkoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 61/91] perf probe: Fix to show calling lines of inlined functions
-Date:   Tue, 10 Dec 2019 17:30:05 -0500
-Message-Id: <20191210223035.14270-61-sashal@kernel.org>
+Cc:     Manish Chopra <manishc@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 48/91] bnx2x: Fix PF-VF communication over multi-cos queues.
+Date:   Tue, 10 Dec 2019 17:29:52 -0500
+Message-Id: <20191210223035.14270-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,119 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 86c0bf8539e7f46d91bd105e55eda96e0064caef ]
+[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
 
-Fix to show calling lines of inlined functions (where an inline function
-is called).
+PF driver doesn't enable tx-switching for all cos queues/clients,
+which causes packets drop from PF to VF. Fix this by enabling
+tx-switching on all cos queues/clients.
 
-die_walk_lines() filtered out the lines inside inlined functions based
-on the address. However this also filtered out the lines which call
-those inlined functions from the target function.
-
-To solve this issue, check the call_file and call_line attributes and do
-not filter out if it matches to the line information.
-
-Without this fix, perf probe -L doesn't show some lines correctly.
-(don't see the lines after 17)
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-                                  fsnotify_access(file);
-                                  add_rchar(current, ret);
-                          }
-
-With this fix:
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-       17                         fsnotify_access(file);
-       18                         add_rchar(current, ret);
-                          }
-       20                 inc_syscr(current);
-                  }
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 3aea343c71798..41bfb4c977d03 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -765,7 +765,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	Dwarf_Lines *lines;
- 	Dwarf_Line *line;
- 	Dwarf_Addr addr;
--	const char *fname, *decf = NULL;
-+	const char *fname, *decf = NULL, *inf = NULL;
- 	int lineno, ret = 0;
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
-@@ -809,13 +809,21 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 			 */
- 			if (!dwarf_haspc(rt_die, addr))
- 				continue;
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
+index c6e059119b22e..e8a09d0afe1c9 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
+@@ -2376,15 +2376,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
+ 	/* send the ramrod on all the queues of the PF */
+ 	for_each_eth_queue(bp, i) {
+ 		struct bnx2x_fastpath *fp = &bp->fp[i];
++		int tx_idx;
+ 
+ 		/* Set the appropriate Queue object */
+ 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
+ 
+-		/* Update the Queue state */
+-		rc = bnx2x_queue_state_change(bp, &q_params);
+-		if (rc) {
+-			BNX2X_ERR("Failed to configure Tx switching\n");
+-			return rc;
++		for (tx_idx = FIRST_TX_COS_INDEX;
++		     tx_idx < fp->max_cos; tx_idx++) {
++			q_params.params.update.cid_index = tx_idx;
 +
- 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
-+				/* Call-site check */
-+				inf = die_get_call_file(&die_mem);
-+				if ((inf && !strcmp(inf, decf)) &&
-+				    die_get_call_lineno(&die_mem) == lineno)
-+					goto found;
-+
- 				dwarf_decl_line(&die_mem, &inl);
- 				if (inl != decl ||
- 				    decf != dwarf_decl_file(&die_mem))
- 					continue;
- 			}
++			/* Update the Queue state */
++			rc = bnx2x_queue_state_change(bp, &q_params);
++			if (rc) {
++				BNX2X_ERR("Failed to configure Tx switching\n");
++				return rc;
++			}
  		}
-+found:
- 		/* Get source line */
- 		fname = dwarf_linesrc(line, NULL, NULL);
+ 	}
  
 -- 
 2.20.1
