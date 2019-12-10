@@ -2,138 +2,181 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0BEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBEEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C231320838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375612073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:42:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oK8ybPB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLJMl7 (ORCPT
+        id S1727415AbfLJMmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:41:59 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:55286 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbfLJMl6 (ORCPT
+        Tue, 10 Dec 2019 07:42:31 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35207 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfLJMma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:41:58 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-b0-5def92928a3f
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 72.EB.08102.2929FED5; Tue, 10 Dec 2019 13:41:54 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 10 Dec 2019 13:41:49 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Topic: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Thread-Index: AQHVndzxthsd4Y8wKkm7W/92Uslk+KeRDPcAgAAbkICAAZUNgIAACqYAgAAMmACADvFigIAASP2AgBE6YYCAAA/YgIAACHeA
-Date:   Tue, 10 Dec 2019 12:41:47 +0000
-Message-ID: <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <d29e0eb587b764f3ea77647392e45fac67bbd757.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162502.GJ9761@sirena.org.uk>
-         <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
-         <20191119181325.GD3634@sirena.org.uk>
-         <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
-         <20191119193636.GH3634@sirena.org.uk>
-         <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
-         <20191129120925.GA5747@sirena.org.uk>
-         <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
-         <20191210121129.GA6110@sirena.org.uk>
-In-Reply-To: <20191210121129.GA6110@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AB9C9F4EC100FC4ABA3424286CA79A0F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Dec 2019 07:42:30 -0500
+Received: by mail-io1-f68.google.com with SMTP id v18so18659720iol.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j/7EAXBbAI9svJUE6Ry0Bg/seucFpEnJxo4ekf7aJOI=;
+        b=oK8ybPB7IYFS3Y3T981GNgQnegvjgi6OuXwcNFvcpzUEZ6PK8kKdlYZRrc2HqtRk4F
+         hbtFgXXKawlstDH3S+o99QU/LTIg9XPTPn+9gAfg4zl7CdRV/UhdCgIkDJn3IWLHqX9/
+         4ttPtAOsOu+cate051ojE7eukka6BIqFfTTTdjXp9NbQI73Yro0uM66YOHlfEPCpcBN9
+         QhbXZbRmbx4do2sHD/W6loGQizm3bfvzBB6Lgt03nVQeyE0AVB1qSwgX5SKdn7KpvNyG
+         vmd7Zn57RPiFWmMHEkzDRUsmmEXaIkGM2WNIg8ipePWbJ8yytCd4R3IJ3Qk6pruUVaa8
+         t39g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j/7EAXBbAI9svJUE6Ry0Bg/seucFpEnJxo4ekf7aJOI=;
+        b=Ev2MLvqF9kQETP5AOFz+R69LrIMLwPUhQ4hqchB4I4jWIL2uNXwOhe9xX1MWCjwRND
+         EFMMZQ2Y47QyBo4WiVkwsF9WxZWoj/m5WEvxxvGuvMv7/yqxTaBDzW1KyLasVl9rzIdj
+         YzsZxXaIC9ZwDbfLYxotHjsER1mkVNa1MIdNYlJe1pmELJwNaYcZDTPF7MiaRbWK6Irj
+         Gv1JTaRX+7v3pgzN3Cn6P8xHzg6hei5N7JcnGqO2Yx/FU5vSLmMypzKWDSeOMkVxAXw2
+         iWyo76Igz5hTpY1UqSYk68LjH0xdjq4DP8tbfFPoiM4RYIOHWseVVYVfF1GIGd1QMgcT
+         nYsg==
+X-Gm-Message-State: APjAAAV+AiF0sy7ttesWextk+AeN8nKfBgrwGI0EpJ4NOpygXI5Yigey
+        oXBEFDVyvhmaVZyr4SQ6BpGhbH/OvWE63Q1VlM8=
+X-Google-Smtp-Source: APXvYqz+qMFJ87NylUe5wIjXuGUxrXXeja9olnlnqivXwq7Y7INQY12Pm708Ay2NrACQD5W3YKFCPTM3PJ3+dslJLEg=
+X-Received: by 2002:a5e:9314:: with SMTP id k20mr20961740iom.6.1575981749724;
+ Tue, 10 Dec 2019 04:42:29 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0xbVRzPuW8eVy+ls0emU26yTDf30mlOlmn44LI7YtS5ZIkmyC5woY20
-        JbcFB35hzg3aMQRkmTQ8Nh4bYWhdR/eEBQsIVkUbCmOuDLHNIptpIwILG9u8d9cNPp1f/r/X
-        Ocn/MLjuFJ3CmCx2SbaI+TwVT/S23zuzvqYmlrHJf38rag2M0qgsepJGsw1+Ah2dilAo0lsG
-        UFP/MIkO/9RFoubY1yRyOMpJdN37HYGGzk4CNDk3ANB8sBxDtYunMPRPxQ0SnTjUSqCzTYsA
-        jVyqp5D3728B+uF0kELf9E/QqO1qAEP1bUMEis04MBTwb0cT/gEKHQiM4+hgTz+NHoydIVDl
-        8I60VUJnYycQYuMHaaGx8zPhomuCFlq6pzHB0+GghNBYNyW0VH5FCn9V9BHC/M/VhFDZ1QGE
-        myfchDA4fh4TjjUuYEL76Tu08K9n1fvcRwnbskR70W5TnmXjW3sTjDO3rxAFVbp91QeOUKUg
-        mOQEcQzktsCKaBSoWMeNAtgYeMUJ4hU8BGDdeDnmBAxDcdug8xqtavTcenj0bgulYpyrS4S+
-        vgQVJ3N7YdftMKFpRHh8/h6mYQu8PvkbocYQ3Go4H3lPHbPcu9D5RRhoVeUkDPQNP/LGca/C
-        shv7cRUD7nnoKI1iWpcBem7eIbU7c7C1+1dcwyvgdPjB/3Me9ixMPerCuZeh+9JGDaZB/93X
-        tJRUWHt4itaukAR/rIsQVeAZ17IC15LZtWR2LTO7lpmPA7IDQLNoys8T7dLmDbJUuEG2Gs3K
-        kW01e4C2eLMXwEPfTh/AGOADzzIYv4KNlMQydE9lWXOKjaLNmCkX5ks2H4AMzuvZwUPRDB2b
-        IxaXSLL1MbWSIXgDu2aqOkPHqV2fSFKBJD9mn2MYHrJjVUpokizlSftyTfn2JRpj4tTw+BS9
-        TbLkSLJYaDdmqruRaVOWQ6USld7Lqp21FYhmZapZ/WAdUzXd0Iwz/Q1tzbiOsFgtUoqBDatS
-        TpUaCy1Pim4BAwP4ZHZrtcImKr/vSc4tpQJTKhw56tNsdnGJSikFnvum7aO/z3T/kVbyy5qB
-        Gv2mN0vr9c1NPQ+vxc4tmLzZu15a+frIyd5UR43nyNN7ikO7PmS+dLvNQXfHMcOLn/POc2KU
-        DONlL+yk/pwbFCqycj81zaUWLRYlpX+8J3f2KrYl7+30zvPBsUj7SGj/lXfSk0Pfez/IpkLw
-        jYveHfZaE0/YjOLmtbhsE/8DnRHE3joEAAA=
+References: <20191209115746.12953-1-smoch@web.de>
+In-Reply-To: <20191209115746.12953-1-smoch@web.de>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Tue, 10 Dec 2019 18:12:18 +0530
+Message-ID: <CANAwSgS9ixhyOE2QYQ3CetA=BUVebMan2=9xBKF=U3YXAwCHNQ@mail.gmail.com>
+Subject: Re: [PATCH] mfd: rk808: Always use poweroff when requested
+To:     Soeren Moch <smoch@web.de>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTWFyaywNCg0KT24gVHVlLCAyMDE5LTEyLTEwIGF0IDEyOjExICswMDAwLCBNYXJrIEJy
-b3duIHdyb3RlOg0KPiBPbiBUdWUsIERlYyAxMCwgMjAxOSBhdCAxMToxNDo0OEFNICswMDAwLCBW
-YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiANCj4gPiBQcm9ibGVtIGlzIHRoYXQgaWYgbm8gZGVm
-YXVsdCB2b2x0YWdlcyBhcmUgZ2l2ZW4gZnJvbSBEVCwgdGhlIHRoZQ0KPiA+IGZpcnN0DQo+ID4g
-dm9sdGFnZSBjaGFuZ2VzIGFyZSBsaWtlbHkgdG8gYmUgc2xvdyAocmVxdWlyZSByZWdpc3RlciBh
-Y2Nlc3MgLSBJDQo+ID4gZ3Vlc3MgdGhlIEhXIGRlZmF1bHRzIGFyZSBub3Qgd29ya2luZyBmb3Ig
-bWFueSB1c2UtY2FzZXMpIC0gd2hpY2gNCj4gPiBtYXkNCj4gPiBiZSB1bmRlc2lyYWJsZS4NCj4g
-DQo+IEkgZG9uJ3QgdGhpbmsgdGhhdCdzIGxpa2VseSB0byBiZSBhIHByYWN0aWNhbCBwcm9ibGVt
-LCBhbmQgaXQncyBub3QNCj4gbGlrZWx5IGl0J2QgYmUgd29yc2UgdGhhbiBhbHdheXMgZG9pbmcg
-d3JpdGVzLiAgQSBsb3Qgb2YgdGhpbmdzIGFyZQ0KPiBzbG93ZXIgdGhlIGZpcnN0IHRpbWUgeW91
-IGRvIHRoZW0gYW5kIHlvdSdyZSBzdGlsbCBnb2luZyB0byBoYXZlIHRvDQo+IGRvIHRoZSB3cml0
-ZXMgbm8gbWF0dGVyIHdoYXQuDQoNClRoZSB0aGluZyBpcyB0aGF0IGlmIHdlIGRvIGluaXRpYWwg
-c2V0dGluZyBvZiB2b2x0YWdlcyAoYmFzZWQgb24NCmJpbmRpbmcgZGF0YSkgd2UgY2FuIHNldCB0
-aGUgdm9sdGFnZXMgdG8gcmVnaXN0ZXJzIGJlZm9yZSB3ZSBzd2l0Y2ggdG8NCnRoYXQgcnVuLWxl
-dmVsLiBJZiB3ZSBkb24ndCBkbyBpbml0aWFsIHNldHRpbmcgdGhlbiB3ZSB3aWxsIG9ubHkgZG8N
-CnNldHRpbmcgd2hlbiB2b2x0YWdlIGNoYW5nZSBpcyBhY3R1YWxseSByZXF1ZXN0ZWQgLSB3aGlj
-aCBtYXkgYmUgdG9vDQpsYXRlLiAoSSBhY3R1YWxseSBoZWFyZCBzb21ld2hlcmUgdGhhdCB0aGVy
-ZSBpcyA0MCB1UyB0aW1lIGxpbWl0IC0gYnV0DQpJIGRvbid0IHNlZSBob3cgdGhpcyBpcyBjb3Vu
-dGVkLiBTdGFydGluZyBmcm9tIHdoYXQ/IC0gYW5kIEkgZG9uJ3Qgc2VlDQpob3cgdGhpcyBpcyBn
-dWFyYW50ZWVkIGV2ZW4gd2l0aCBHUElPIGlmIGludGVycnVwdHMgYXJlIHRvIGJlIHNlcnZlZCku
-DQoNCk9UT0gsIEkgYWxzbyBoZWFyZCB0aGF0IHRoZSBTb0MgcHJvYmFibHkgcmVxdWlyZSBhdCBs
-ZWFzdCB0d28gb2YgdGhlDQpidWNrcyB0byBiZSBjb250cm9sbGVkIGFzIGEgZ3JvdXAgKGJ1Y2tz
-IGNvbm5lY3RlZCB0byBTUkFNIGFuZCBDT1JFKSAtDQpwcm9iYWJseSBhbGwgZm91ci4NCg0KU28s
-IEkgYW0gYWdhaW4gd29uZGVyaW5nIGlmIEkgc2hvdWxkIGp1c3QgdXBzdHJlYW0gdGhlIGJhc2lj
-IGNvbnRyb2wNCndpdGggSTJDIGZvciBTb0NzIHdoaWNoIGRvIG5vdCByZXF1aXJlIGZhc3QgRFZT
-IHZvbHRhZ2UgY2hhbmdlcyBhbmQNCnBlcmhhcHMgbWFpbnRhaW4vcHJvdmlkZSBvd24gc2V0IG9m
-IHBhdGNoZXMgd2l0aCBhZGRpdGlvbmFsIGludGVyZmFjZQ0KZm9yIHJ1bi1sZXZlbCBjb250cm9s
-IGZvciB0aG9zZSBjdXN0b21lcnMgd2hvIHJlcXVpcmUgaXQuLi4gU29ycnkgZm9yDQpiZWluZyBz
-dWNoIGEgZGlmZmljdWx0IGd1eS4gRGVjaXNpb24gbWFraW5nIHNlZW1zIHRvIG5vdCBiZSBteSBz
-dHJvbmcNCnBvaW50IDovDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
+Hi Soeren,
+
+On Mon, 9 Dec 2019 at 17:28, Soeren Moch <smoch@web.de> wrote:
+>
+> With the device tree property "rockchip,system-power-controller" we
+> explicitly request to use this PMIC to power off the system. So always
+> register our poweroff function, even if some other handler (probably
+> PSCI poweroff) was registered before.
+>
+> Signed-off-by: Soeren Moch <smoch@web.de>
+> ---
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/mfd/rk808.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index a69a6742ecdc..616e44e7ef98 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -550,7 +550,7 @@ static int rk808_probe(struct i2c_client *client,
+>         const struct mfd_cell *cells;
+>         int nr_pre_init_regs;
+>         int nr_cells;
+> -       int pm_off = 0, msb, lsb;
+> +       int msb, lsb;
+>         unsigned char pmic_id_msb, pmic_id_lsb;
+>         int ret;
+>         int i;
+> @@ -674,16 +674,9 @@ static int rk808_probe(struct i2c_client *client,
+>                 goto err_irq;
+>         }
+>
+> -       pm_off = of_property_read_bool(np,
+> -                               "rockchip,system-power-controller");
+> -       if (pm_off && !pm_power_off) {
+> +       if (of_property_read_bool(np, "rockchip,system-power-controller")) {
+>                 rk808_i2c_client = client;
+>                 pm_power_off = rk808->pm_pwroff_fn;
+> -       }
+> -
+> -       if (pm_off && !pm_power_off_prepare) {
+> -               if (!rk808_i2c_client)
+> -                       rk808_i2c_client = client;
+>                 pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
+>         }
+>
+
+I gave this a try on my Rock960 and Odroid N1
+both got kernel panic below.
+
+[   58.305868] xhci-hcd xhci-hcd.0.auto: USB bus 5 deregistered
+[   58.306747] reboot: Power down
+[   58.307106] ------------[ cut here ]------------
+[   58.307510] No atomic I2C transfer handler for 'i2c-0'
+[   58.308007] WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:41
+i2c_transfer+0xe4/0xf8
+[   58.308696] Modules linked in: snd_soc_hdmi_codec dw_hdmi_i2s_audio
+rockchipdrm analogix_dp brcmfmac nvme dw_mipi_dsi nvme_core dw_hdmi
+panfrost cec brcmutil drm_kms_helper gpu_sched cfg80211 hci_uart drm
+btbcm crct10dif_ce snd_soc_simple_card bluetooth snd_soc_rockchip_i2s
+snd_soc_simple_card_utils snd_soc_rockchip_pcm phy_rockchip_pcie
+ecdh_generic rtc_rk808 ecc pcie_rockchip_host rfkill rockchip_thermal
+ip_tables x_tables ipv6 nf_defrag_ipv6
+[   58.312150] CPU: 0 PID: 1 Comm: shutdown Not tainted 5.5.0-rc1-dirty #1
+[   58.312725] Hardware name: 96boards Rock960 (DT)
+[   58.313131] pstate: 60000085 (nZCv daIf -PAN -UAO)
+[   58.313551] pc : i2c_transfer+0xe4/0xf8
+[   58.313889] lr : i2c_transfer+0xe4/0xf8
+[   58.314225] sp : ffff80001004bb00
+[   58.314516] x29: ffff80001004bb00 x28: ffff00007d208000
+[   58.314981] x27: 0000000000000000 x26: 0000000000000000
+[   58.315446] x25: 0000000000000000 x24: 0000000000000008
+[   58.315910] x23: 0000000000000000 x22: ffff80001004bc74
+[   58.316375] x21: 0000000000000002 x20: ffff80001004bb58
+[   58.316841] x19: ffff0000784f0880 x18: 0000000000000010
+[   58.317305] x17: 0000000000000001 x16: 0000000000000019
+[   58.317770] x15: ffffffffffffffff x14: ffff8000118398c8
+[   58.318236] x13: ffff80009004b867 x12: ffff80001004b86f
+[   58.318701] x11: ffff800011851000 x10: ffff80001004b7f0
+[   58.319166] x9 : 00000000ffffffd0 x8 : ffff800010699ad8
+[   58.319631] x7 : 0000000000000265 x6 : ffff800011a20be9
+[   58.320096] x5 : 0000000000000000 x4 : 0000000000000000
+[   58.320561] x3 : 00000000ffffffff x2 : ffff800011851ab8
+[   58.321026] x1 : d375c0d4f4751f00 x0 : 0000000000000000
+[   58.321491] Call trace:
+[   58.321710]  i2c_transfer+0xe4/0xf8
+[   58.322020]  regmap_i2c_read+0x5c/0x98
+[   58.322350]  _regmap_raw_read+0xcc/0x138
+[   58.322694]  _regmap_bus_read+0x3c/0x70
+[   58.323034]  _regmap_read+0x60/0xe0
+[   58.323341]  _regmap_update_bits+0xc8/0x108
+[   58.323707]  regmap_update_bits_base+0x60/0x90
+[   58.324099]  rk808_device_shutdown+0x38/0x50
+[   58.324476]  machine_power_off+0x24/0x30
+[   58.324823]  kernel_power_off+0x64/0x70
+[   58.325159]  __do_sys_reboot+0x15c/0x240
+[   58.325504]  __arm64_sys_reboot+0x20/0x28
+[   58.325858]  el0_svc_common.constprop.2+0x88/0x150
+[   58.326279]  el0_svc_handler+0x20/0x80
+[   58.326607]  el0_sync_handler+0x118/0x188
+[   58.326960]  el0_sync+0x140/0x180
+[   58.327251] ---[ end trace b1de39d03d724d01 ]---
+
+-Anand
