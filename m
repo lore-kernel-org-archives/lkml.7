@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D31C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F032BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199B2207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61D3205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013014;
-	bh=4v+wu3+/i+OF4T0mA3aDC6lXJenOvIh7tni3jmpi+V8=;
+	s=default; t=1576013018;
+	bh=YOT1hA51aMRKWyCNb+udBQWOOUeijBNCDYNvULjusP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkCmJcJDr8B6DpPccQXZFUeEIgCEfI9ywTeGKfOw78+Ndf8yAYuPSSTlLXS3BiZ2v
-	 zDIA+MCPGekBWiNvTFKqBUrOWeDoW85KM/lNUPL8+gvo2A0seIUeLBHp3uaLqILz7M
-	 NwZqFoT8z+fyE+ELob7RkTarPmyKHYPnP7PH49+0=
+	b=e+fK0bVr0Eh4M9e0OO47XqHWRjjaZzRpTRwhWfN/2IIiIVmdeyWHNeWNtZb4/CAga
+	 8T+G0VEvOlVuymfIufApumFePrtmO0jYUg8iiRIRRJoEGWaC3Yevij3XJyxfwF9hdq
+	 NJpB4VgQ0afPWAu2kqzG3MfJAoV+/88BVPzt+uJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfLJVLK (ORCPT
+        id S1728838AbfLJVXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:23:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbfLJVK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:58 -0500
+        id S1728706AbfLJVLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CEFF246A2;
-        Tue, 10 Dec 2019 21:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88910246B4;
+        Tue, 10 Dec 2019 21:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012258;
-        bh=4v+wu3+/i+OF4T0mA3aDC6lXJenOvIh7tni3jmpi+V8=;
+        s=default; t=1576012269;
+        bh=YOT1hA51aMRKWyCNb+udBQWOOUeijBNCDYNvULjusP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mYvHmgM0m4k/pbq6/M4OkpYxbdB9dW1r3mvswDCNSMCsLcaPkE8Br11VUY8avUOZF
-         /EpovlqrKiHrFW/VNaMKoPFNl4yCq8f+8bl1xGu+YFU8dq3oxBWjbmNlYPeCI8bNUA
-         +5q/l8jpakLw4aGv25hoNwh91Z8bPtb0Wg6HkmEI=
+        b=Lj0/NiLSu86zH92anVEYeDN1YWA7R13ejRVp1pRtvDvj6w3QCDR0Kc5b4UH0i7M8K
+         MUC5fRIVMhilKUgS/myL/UdBqwgzasHvVa+j+MGTVvNN2+Ww0IB+Uob9OiUJOT3u6q
+         Wj1pFc1CIgsXC9NlCPezVvT1H3RqeZdDFJd3FrzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 204/350] nvme: introduce "Command Aborted By host" status code
-Date:   Tue, 10 Dec 2019 16:05:09 -0500
-Message-Id: <20191210210735.9077-165-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 214/350] ALSA: timer: Limit max amount of slave instances
+Date:   Tue, 10 Dec 2019 16:05:19 -0500
+Message-Id: <20191210210735.9077-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,67 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 2dc3947b53f573e8a75ea9cbec5588df88ca502e ]
+[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
 
-Fix the status code of canceled requests initiated by the host according
-to TP4028 (Status Code 0x371):
-"Command Aborted By host: The command was aborted as a result of host
-action (e.g., the host disconnected the Fabric connection)."
+The fuzzer tries to open the timer instances as much as possible, and
+this may cause a system hiccup easily.  We've already introduced the
+cap for the max number of available instances for the h/w timers, and
+we should put such a limit also to the slave timers, too.
 
-Also in a multipath environment, unless otherwise specified, errors of
-this type (path related) should be retried using a different path, if
-one is available.
+This patch introduces the limit to the multiple opened slave timers.
+The upper limit is hard-coded to 1000 for now, which should suffice
+for any practical usages up to now.
 
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c      | 2 +-
- drivers/nvme/host/multipath.c | 1 +
- include/linux/nvme.h          | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ sound/core/timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index fa7ba09dca771..393913e2fb233 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -313,7 +313,7 @@ bool nvme_cancel_request(struct request *req, void *data, bool reserved)
- 	if (blk_mq_request_completed(req))
- 		return true;
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 59ae21b0bb936..013f0e69ff0f7 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -74,6 +74,9 @@ static LIST_HEAD(snd_timer_slave_list);
+ /* lock for slave active lists */
+ static DEFINE_SPINLOCK(slave_active_lock);
  
--	nvme_req(req)->status = NVME_SC_HOST_PATH_ERROR;
-+	nvme_req(req)->status = NVME_SC_HOST_ABORTED_CMD;
- 	blk_mq_complete_request(req);
- 	return true;
- }
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index e0f064dcbd021..132ade51ee877 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -95,6 +95,7 @@ void nvme_failover_req(struct request *req)
++#define MAX_SLAVE_INSTANCES	1000
++static int num_slaves;
++
+ static DEFINE_MUTEX(register_mutex);
+ 
+ static int snd_timer_free(struct snd_timer *timer);
+@@ -252,6 +255,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			err = -EINVAL;
+ 			goto unlock;
  		}
- 		break;
- 	case NVME_SC_HOST_PATH_ERROR:
-+	case NVME_SC_HOST_ABORTED_CMD:
- 		/*
- 		 * Temporary transport disruption in talking to the controller.
- 		 * Try to send on a new path.
-diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-index f61d6906e59d1..a260cd754f28b 100644
---- a/include/linux/nvme.h
-+++ b/include/linux/nvme.h
-@@ -1368,6 +1368,7 @@ enum {
- 	NVME_SC_ANA_INACCESSIBLE	= 0x302,
- 	NVME_SC_ANA_TRANSITION		= 0x303,
- 	NVME_SC_HOST_PATH_ERROR		= 0x370,
-+	NVME_SC_HOST_ABORTED_CMD	= 0x371,
++		if (num_slaves >= MAX_SLAVE_INSTANCES) {
++			err = -EBUSY;
++			goto unlock;
++		}
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+ 			err = -ENOMEM;
+@@ -261,6 +268,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
++		num_slaves++;
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+ 			snd_timer_close_locked(timeri, &card_dev_to_put);
+@@ -356,6 +364,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
+ 	}
  
- 	NVME_SC_CRD			= 0x1800,
- 	NVME_SC_DNR			= 0x4000,
+ 	list_del(&timeri->open_list);
++	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
++		num_slaves--;
+ 
+ 	/* force to stop the timer */
+ 	snd_timer_stop(timeri);
 -- 
 2.20.1
 
