@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A46C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B902214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB65214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011847;
-	bh=v6LmL/NeMzNNjx/i1AH1Pv8OWWxPbJ9jR8WnQcgNOWY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PBlP4PjNbN9qMYq2AZ38LZNGgrKGyNm+yIWOjWzncHvBt+Dypz6MBCq8OhxWlOhCI
-	 F46IgZnH+IJiiGJUTx9k67QpuVC1WiuPkW1+c5rPaMcOzPh5JMVDaBnVcAluDgWvWG
-	 e0UiL44Hm26Ad8cAjA2wM8ScfDtFEFqs5sT2vcfM=
+	s=default; t=1576011851;
+	bh=i9Qf3dkL+Sk4F1NH9W9U/zrqOPyWV6AW4NuExNBI0I8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KBhIpXhKy5svn8Jax7Wn+amOdj8o7dfbZmvEcCyMlC71jhl25N5jGW0NSQ5/e+SQN
+	 4OWxD9feenBUs3WeZkbhoGo4JrElv2lsZCP49RvI9sdbxawZZgj8ec4Al14n+X3Ghd
+	 k8PczXAmtdgA9ng6VN4PFV0bLCoLlm25wJIhyiTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLJVEG (ORCPT
+        id S1726991AbfLJVEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48686 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfLJVEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:05 -0500
+        id S1726589AbfLJVEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A78C20838;
-        Tue, 10 Dec 2019 21:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 252F820828;
+        Tue, 10 Dec 2019 21:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011844;
-        bh=v6LmL/NeMzNNjx/i1AH1Pv8OWWxPbJ9jR8WnQcgNOWY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jc8+necb4q+c6O2tAsz/U3zbbIw2gqVJwv9OPUduw+6vL87/LqGjHv4XXsknMW1GN
-         jYxlul3FN6YBFNfHEkcx+fIdA4pidMuYLa/2UkcY56l6M87HbX0BWCU5bWbfXSRrIt
-         5bz1uPEMm2wOrQfm80fDoqYEYubo+ViBw4Rm0QUQ=
+        s=default; t=1576011846;
+        bh=i9Qf3dkL+Sk4F1NH9W9U/zrqOPyWV6AW4NuExNBI0I8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Pct4bTmYJtTMY7Ugt+9I/IlYJy6tUvWkhldTlwPzFr0l2URDlzCsjSVA2V4du/iDk
+         BsF2zLOiqOURKhYSo75rS/KrpB4/KaqvmNMB097c9mIourAgW/42X1mRrYyz6Y5UAM
+         QQRJSJm/W5VgsNvFpXbtwUhnNYl24buXujJ0fBCw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 001/350] drm/vc4/vc4_hdmi: fill in connector info
-Date:   Tue, 10 Dec 2019 15:58:13 -0500
-Message-Id: <20191210210402.8367-1-sashal@kernel.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chia-I Wu <olvaffe@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 002/350] drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper.
+Date:   Tue, 10 Dec 2019 15:58:14 -0500
+Message-Id: <20191210210402.8367-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
+References: <20191210210402.8367-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,59 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit 66c2dee4ae10a2d841c40b9dd9c7141eb23eee76 ]
+[ Upstream commit 29cf12394c0565d7eb1685bf0c1b4749aa6a8b66 ]
 
-Fill in the connector info, allowing userspace to associate
-the CEC device with the drm connector.
+Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
+This also makes the ioctl run lockless.
 
-Tested on a Raspberry Pi 3B.
+v9: fix return value.
+v5: handle lookup failure.
+v2: use reservation_object_test_signaled_rcu for VIRTGPU_WAIT_NOWAIT.
 
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Eric Anholt <eric@anholt.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823112427.42394-2-hverkuil-cisco@xs4all.nl
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190829103301.3539-3-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 28 +++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index ee7d4e7b0ee33..0853b980bcb31 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1285,6 +1285,9 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 0a88ef11b9d3f..a662394f68921 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -463,25 +463,29 @@ out:
+ }
  
- static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
+-			    struct drm_file *file)
++				 struct drm_file *file)
  {
-+#ifdef CONFIG_DRM_VC4_HDMI_CEC
-+	struct cec_connector_info conn_info;
-+#endif
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	struct vc4_dev *vc4 = drm->dev_private;
-@@ -1403,13 +1406,15 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- #ifdef CONFIG_DRM_VC4_HDMI_CEC
- 	hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
- 					      vc4, "vc4",
--					      CEC_CAP_TRANSMIT |
--					      CEC_CAP_LOG_ADDRS |
--					      CEC_CAP_PASSTHROUGH |
--					      CEC_CAP_RC, 1);
-+					      CEC_CAP_DEFAULTS |
-+					      CEC_CAP_CONNECTOR_INFO, 1);
- 	ret = PTR_ERR_OR_ZERO(hdmi->cec_adap);
- 	if (ret < 0)
- 		goto err_destroy_conn;
-+
-+	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
-+	cec_s_conn_info(hdmi->cec_adap, &conn_info);
-+
- 	HDMI_WRITE(VC4_HDMI_CPU_MASK_SET, 0xffffffff);
- 	value = HDMI_READ(VC4_HDMI_CEC_CNTRL_1);
- 	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
+ 	struct drm_virtgpu_3d_wait *args = data;
+-	struct drm_gem_object *gobj = NULL;
+-	struct virtio_gpu_object *qobj = NULL;
++	struct drm_gem_object *obj;
++	long timeout = 15 * HZ;
+ 	int ret;
+-	bool nowait = false;
+ 
+-	gobj = drm_gem_object_lookup(file, args->handle);
+-	if (gobj == NULL)
++	obj = drm_gem_object_lookup(file, args->handle);
++	if (obj == NULL)
+ 		return -ENOENT;
+ 
+-	qobj = gem_to_virtio_gpu_obj(gobj);
+-
+-	if (args->flags & VIRTGPU_WAIT_NOWAIT)
+-		nowait = true;
+-	ret = virtio_gpu_object_wait(qobj, nowait);
++	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
++		ret = dma_resv_test_signaled_rcu(obj->resv, true);
++	} else {
++		ret = dma_resv_wait_timeout_rcu(obj->resv, true, true,
++						timeout);
++	}
++	if (ret == 0)
++		ret = -EBUSY;
++	else if (ret > 0)
++		ret = 0;
+ 
+-	drm_gem_object_put_unlocked(gobj);
++	drm_gem_object_put_unlocked(obj);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
