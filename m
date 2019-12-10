@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08244C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9C1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1C3205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012575;
-	bh=62YUWTnUhGjAk9LgbavohVRi/4budOKUQ8hxrM+GGr4=;
+	s=default; t=1576012581;
+	bh=H/ys2Wtv/GALGsCkH/q6pJXQUSuQ1ipluh6D6LxfUFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ENA+7Tne2uLFOxlK95Tiw2MLwEZMkN1DEhr0IArRuntZ3NRTpd9gGkP9b8y5bFZhi
-	 ekU4I5azMeC9o9AwTeKcFZc2hSInjw8Flp/fLTDXwkS6p+/suulATaOBSwNC91eeVV
-	 ASOM/kPKYkKDplHbVq8H/NYhvp3yOKUV6ovuLgCE=
+	b=RYfFCeA1qatgtDGrAFGraI3+vAdo3pfGjbbajgnsQaEGGOirR38mC0cn+iXHvm1xk
+	 tGnQbWHgJ0QGAqeElILbyP5jxVCYyvgwtNnHgvDujO9KhU64zaOpM91uyO4b0Ee6Xz
+	 zRH0mTTAm7NPcnhfciofLYiBFC52m7PrWW8q5M1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfLJVQN (ORCPT
+        id S1729274AbfLJVNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:16:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39458 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbfLJVNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:21 -0500
+        id S1729252AbfLJVNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF8D205C9;
-        Tue, 10 Dec 2019 21:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D572077B;
+        Tue, 10 Dec 2019 21:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012401;
-        bh=62YUWTnUhGjAk9LgbavohVRi/4budOKUQ8hxrM+GGr4=;
+        s=default; t=1576012394;
+        bh=H/ys2Wtv/GALGsCkH/q6pJXQUSuQ1ipluh6D6LxfUFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iciywV+KNFCh+NfGo6/RDXMtTTAs7+YvDSOgeAK3NFVSUnZkuN/zgH87GzuH1g2sh
-         Qrzqt7iXoPSyHXGc+H95Nd5kuwh/4ZqsreaRgKg8OghdjLcmISdK7V8TdmXjC/ZzbS
-         8ngTgsIGRrVnKjOptcdcPBjS9zQfpQZ8raDq8TeY=
+        b=QZ6/Ur8cSRhsp6bWIM3H2IPekdem7g5NAOp3kPkcNtM/dLiY5kXctsDYe83/043E/
+         pwpJTa4KrT4iWNMDmmubq2ltG85ptOr1bFIqRsg+E7wF4ol1f/WI4iNHM5VPJ+Mvd3
+         kxap8XLRpvXdtnq88eljv8L4oKBrPwvRSNhOD/Ow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 320/350] iwlwifi: check kasprintf() return value
-Date:   Tue, 10 Dec 2019 16:07:05 -0500
-Message-Id: <20191210210735.9077-281-sashal@kernel.org>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 315/350] perf session: Fix decompression of PERF_RECORD_COMPRESSED records
+Date:   Tue, 10 Dec 2019 16:07:00 -0500
+Message-Id: <20191210210735.9077-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,49 +64,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
+[ Upstream commit bb1835a3b86c73aa534ef6430ad40223728dfbc0 ]
 
-kasprintf() can fail, we should check the return value.
+Avoid termination of trace loading in case the last record in the
+decompressed buffer partly resides in the following mmaped
+PERF_RECORD_COMPRESSED record.
 
-Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
-Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+In this case NULL value returned by fetch_mmaped_event() means to
+proceed to the next mmaped record then decompress it and load compressed
+events.
+
+The issue can be reproduced like this:
+
+  $ perf record -z -- some_long_running_workload
+  $ perf report --stdio -vv
+  decomp (B): 44519 to 163000
+  decomp (B): 48119 to 174800
+  decomp (B): 65527 to 131072
+  fetch_mmaped_event: head=0x1ffe0 event->header_size=0x28, mmap_size=0x20000: fuzzed perf.data?
+  Error:
+  failed to process sample
+  ...
+
+Testing:
+
+  71: Zstd perf.data compression/decompression              : Ok
+
+  $ tools/perf/perf report -vv --stdio
+  decomp (B): 59593 to 262160
+  decomp (B): 4438 to 16512
+  decomp (B): 285 to 880
+  Looking at the vmlinux_path (8 entries long)
+  Using vmlinux for symbols
+  decomp (B): 57474 to 261248
+  prefetch_event: head=0x3fc78 event->header_size=0x28, mmap_size=0x3fc80: fuzzed or compressed perf.data?
+  decomp (B): 25 to 32
+  decomp (B): 52 to 120
+  ...
+
+Fixes: 57fc032ad643 ("perf session: Avoid infinite loop when seeing invalid header.size")
+Link: https://marc.info/?l=linux-kernel&m=156580812427554&w=2
+Co-developed-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/cf782c34-f3f8-2f9f-d6ab-145cee0d5322@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/led.c | 3 +++
- drivers/net/wireless/intel/iwlwifi/mvm/led.c | 3 +++
- 2 files changed, 6 insertions(+)
+ tools/perf/util/session.c | 44 ++++++++++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/led.c b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-index dd387aba33179..e8a4d604b9106 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-@@ -171,6 +171,9 @@ void iwl_leds_init(struct iwl_priv *priv)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 061bb4d6a3f5a..5c172845fa5ac 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1954,8 +1954,8 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
+ }
  
- 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(priv->hw->wiphy));
-+	if (!priv->led.name)
-+		return;
-+
- 	priv->led.brightness_set = iwl_led_brightness_set;
- 	priv->led.blink_set = iwl_led_blink_set;
- 	priv->led.max_brightness = 1;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-index d104da9170ca9..72c4b2b8399d9 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-@@ -129,6 +129,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
+ static union perf_event *
+-fetch_mmaped_event(struct perf_session *session,
+-		   u64 head, size_t mmap_size, char *buf)
++prefetch_event(char *buf, u64 head, size_t mmap_size,
++	       bool needs_swap, union perf_event *error)
+ {
+ 	union perf_event *event;
  
- 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(mvm->hw->wiphy));
-+	if (!mvm->led.name)
-+		return -ENOMEM;
+@@ -1967,20 +1967,32 @@ fetch_mmaped_event(struct perf_session *session,
+ 		return NULL;
+ 
+ 	event = (union perf_event *)(buf + head);
++	if (needs_swap)
++		perf_event_header__bswap(&event->header);
+ 
+-	if (session->header.needs_swap)
++	if (head + event->header.size <= mmap_size)
++		return event;
 +
- 	mvm->led.brightness_set = iwl_led_brightness_set;
- 	mvm->led.max_brightness = 1;
++	/* We're not fetching the event so swap back again */
++	if (needs_swap)
+ 		perf_event_header__bswap(&event->header);
+ 
+-	if (head + event->header.size > mmap_size) {
+-		/* We're not fetching the event so swap back again */
+-		if (session->header.needs_swap)
+-			perf_event_header__bswap(&event->header);
+-		pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx: fuzzed perf.data?\n",
+-			 __func__, head, event->header.size, mmap_size);
+-		return ERR_PTR(-EINVAL);
+-	}
++	pr_debug("%s: head=%#" PRIx64 " event->header_size=%#x, mmap_size=%#zx:"
++		 " fuzzed or compressed perf.data?\n",__func__, head, event->header.size, mmap_size);
+ 
+-	return event;
++	return error;
++}
++
++static union perf_event *
++fetch_mmaped_event(u64 head, size_t mmap_size, char *buf, bool needs_swap)
++{
++	return prefetch_event(buf, head, mmap_size, needs_swap, ERR_PTR(-EINVAL));
++}
++
++static union perf_event *
++fetch_decomp_event(u64 head, size_t mmap_size, char *buf, bool needs_swap)
++{
++	return prefetch_event(buf, head, mmap_size, needs_swap, NULL);
+ }
+ 
+ static int __perf_session__process_decomp_events(struct perf_session *session)
+@@ -1993,10 +2005,8 @@ static int __perf_session__process_decomp_events(struct perf_session *session)
+ 		return 0;
+ 
+ 	while (decomp->head < decomp->size && !session_done()) {
+-		union perf_event *event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
+-
+-		if (IS_ERR(event))
+-			return PTR_ERR(event);
++		union perf_event *event = fetch_decomp_event(decomp->head, decomp->size, decomp->data,
++							     session->header.needs_swap);
+ 
+ 		if (!event)
+ 			break;
+@@ -2096,7 +2106,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 	}
+ 
+ more:
+-	event = fetch_mmaped_event(session, head, mmap_size, buf);
++	event = fetch_mmaped_event(head, mmap_size, buf, session->header.needs_swap);
+ 	if (IS_ERR(event))
+ 		return PTR_ERR(event);
  
 -- 
 2.20.1
