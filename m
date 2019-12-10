@@ -2,75 +2,131 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA770C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F4F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF6D205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfLJV1v (ORCPT
+        id S1728615AbfLJV1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:51 -0500
-Received: from emh04.mail.saunalahti.fi ([62.142.5.110]:59486 "EHLO
-        emh04.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfLJV1s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:27:48 -0500
-Received: from darkstar.musicnaut.iki.fi (85-76-143-83-nat.elisa-mobile.fi [85.76.143.83])
-        by emh04.mail.saunalahti.fi (Postfix) with ESMTP id E27983000B;
-        Tue, 10 Dec 2019 23:27:44 +0200 (EET)
-Date:   Tue, 10 Dec 2019 23:27:44 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Sumit Pundir <pundirsumit11@gmail.com>,
-        linux-kernel@vger.kernel.org, David Daney <ddaney.cavm@gmail.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Laura Lazzati <laura.lazzati.15@gmail.com>
-Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
- controller driver
-Message-ID: <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
- <20191210091509.3546251-2-gregkh@linuxfoundation.org>
- <20191210193153.GB18225@darkstar.musicnaut.iki.fi>
- <20191210201957.GB4070187@kroah.com>
+        Tue, 10 Dec 2019 16:27:54 -0500
+Received: from mga07.intel.com ([134.134.136.100]:7237 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727656AbfLJV1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:27:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 13:27:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="264657141"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Dec 2019 13:27:48 -0800
+Date:   Tue, 10 Dec 2019 13:27:48 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 6/7] KVM: X86: Load guest fpu state when accessing
+ MSRs managed by XSAVES
+Message-ID: <20191210212748.GN15758@linux.intel.com>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191101085222.27997-7-weijiang.yang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210201957.GB4070187@kroah.com>
+In-Reply-To: <20191101085222.27997-7-weijiang.yang@intel.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:19:57PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Dec 10, 2019 at 09:31:54PM +0200, Aaro Koskinen wrote:
-> > Hi,
-> > 
-> > On Tue, Dec 10, 2019 at 10:15:09AM +0100, Greg Kroah-Hartman wrote:
-> > > This driver was merged back in 2013 and shows no progress toward every
-> > > being merged into the "correct" part of the kernel.
-> > 
-> > Do you mean all the patches since 2013 were "no progress"? Thanks.
+On Fri, Nov 01, 2019 at 04:52:21PM +0800, Yang Weijiang wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> I have not seen any proposals to get it out of staging at all.  If the
-> only thing left really is just those two simple TODO lines, then why has
-> it taken 6 years to do that?
+> A handful of CET MSRs are not context switched through "traditional"
+> methods, e.g. VMCS or manual switching, but rather are passed through
+> to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
+> guest's FPU state.
+> 
+> Load the guest's FPU state if userspace is accessing MSRs whose values
+> are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+> can simply do {RD,WR}MSR to access the guest's value.
+> 
+> Note that guest_cpuid_has() is not queried as host userspace is allowed
+> to access MSRs that have not been exposed to the guest, e.g. it might do
+> KVM_SET_MSRS prior to KVM_SET_CPUID2.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 540490d5385f..6275a75d5802 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -104,6 +104,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+>  static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+>  static void store_regs(struct kvm_vcpu *vcpu);
+>  static int sync_regs(struct kvm_vcpu *vcpu);
+> +static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
+> +static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
+>  
+>  struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+>  EXPORT_SYMBOL_GPL(kvm_x86_ops);
+> @@ -3000,6 +3002,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_get_msr_common);
+>  
+> +static bool is_xsaves_msr(u32 index)
+> +{
+> +	return index == MSR_IA32_U_CET ||
+> +	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
+> +}
+> +
+>  /*
+>   * Read or write a bunch of msrs. All parameters are kernel addresses.
+>   *
+> @@ -3010,11 +3018,22 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+>  		    int (*do_msr)(struct kvm_vcpu *vcpu,
+>  				  unsigned index, u64 *data))
+>  {
+> +	bool fpu_loaded = false;
+>  	int i;
+> +	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
+> +	bool cet_xss = kvm_supported_xss() & cet_bits;
+>  
+> -	for (i = 0; i < msrs->nmsrs; ++i)
+> +	for (i = 0; i < msrs->nmsrs; ++i) {
+> +		if (!fpu_loaded && cet_xss &&
+> +		    is_xsaves_msr(entries[i].index)) {
+> +			kvm_load_guest_fpu(vcpu);
 
-Do you mean you did not see the below thread when I asked for help;
-it was a kind of propsal, no? Also things take time when you are just a
-hobbyist reverse engineering undocumented hardware that you also run in
-production. Yes, I'm slow, but the starting point wasn't also a very good.
+This needs to also check for a non-NULL @vcpu.  KVM_GET_MSR can be called
+on the VM to invoke do_get_msr_feature().
 
-https://marc.info/?t=155839354700002&r=1&w=2
-
-I don't mind you deleting the driver, and if you think that "no progress"
-is true then I'm very sorry for all those commits/noise.
-
-A.
+> +			fpu_loaded = true;
+> +		}
+>  		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+>  			break;
+> +	}
+> +	if (fpu_loaded)
+> +		kvm_put_guest_fpu(vcpu);
+>  
+>  	return i;
+>  }
+> -- 
+> 2.17.2
+> 
