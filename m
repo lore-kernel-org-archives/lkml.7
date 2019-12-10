@@ -2,255 +2,210 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375F7C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52866C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EF02077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2BD20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Q3GNI3sy"
+	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="EtJmj+E1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfLJDeX (ORCPT
+        id S1726888AbfLJDhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:34:23 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39751 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLJDeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:34:23 -0500
-Received: by mail-qv1-f65.google.com with SMTP id y8so3616322qvk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 19:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+X0esdOD6X/7u9bEP+E7dYT/yu2cYUeG8mqoRZZshV4=;
-        b=Q3GNI3syfwFeqke50/W65fcByfNwo1y7NxCPT/nITyUVWMDQDnZPeYYRAYfA3KYbhv
-         WQIYTJmE2g4NHhVAXB8iscezQ+bJYQchdaZP+bv5+ZRbzq+mBCms1b0XBqyO9FiZkpNY
-         yPO/sepIWGH6mxCJp+np4P/vtMzWqGGrfwRiV1ym5/beJhSbz2H/CV4J5mihFRWF5MQx
-         QxOIZ7GQVF+DcRIXGOdXSJqQIIpwb3BjXVUNwN/oTTAvi5mw4zpXDKo0DjLeDFggGiOS
-         BynhEKzulXwY7QYbCT4YkcOltopfrm5n5TO33jsRvEm/JGeM1a3CjJeyc2D9NakhJCPX
-         m37A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=+X0esdOD6X/7u9bEP+E7dYT/yu2cYUeG8mqoRZZshV4=;
-        b=NxZmbtvrTW6DzbcOxGfZVdCLydhNMipRy7iPaMVHPp6xN022Eqa810YntRRfLwmzm9
-         UoPW1zlqcoEPbQRBcKNAOdPwnessBkT2JTDAj4JwbQvZCUa2JF+qtcfKUzpfuX6fX4tm
-         dyXb/PKPq+b7XIlwXLgfIP90Army4PujNdo7epGspXYlrysn3FaRgY0pPpHbBj0U1Orv
-         z3Pu7jtYaREI9n1wkeO6q9quHL22/hsn+8APPwKdzw3Pwrj45NwfL+bvtGdSbDHmPtso
-         mFfDFSeviA7TlCm1B7XT6gS7SoE2f9z39z/5QbwTBS4tQUiV4AarwXrwcv0jdsV5dsxJ
-         eMzQ==
-X-Gm-Message-State: APjAAAXshNo2fb+l9EC0hNYPjTLStiCx7bMZZLYmok1UsX7UiykeHPgQ
-        kcHPIEXB9h5DW6cUg1B16sRrGA==
-X-Google-Smtp-Source: APXvYqyXH6r0gNvpvwzc9I4F4PHryVoO41wA8sLOoFlR1UrGUww1Ik6vzPp8mU9RSqWFD1ldwXYOYg==
-X-Received: by 2002:a05:6214:4f0:: with SMTP id cl16mr27280984qvb.213.1575948861893;
-        Mon, 09 Dec 2019 19:34:21 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e21sm549417qkm.55.2019.12.09.19.34.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Dec 2019 19:34:21 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: lockdep warns: cpu_hotplug_lock.rw_sem --> slab_mutex -->
- kn->count#39
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <2F924F88-8146-4868-9099-D824EAFA840E@lca.pw>
-Date:   Mon, 9 Dec 2019 22:34:20 -0500
-Cc:     Daniel Wagner <dwagner@suse.de>, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F94E6EC9-C6EC-41EE-9F35-6E3176193C99@lca.pw>
-References: <20191209182418.7vxer6vmre67ewvt@beryllium.lan>
- <alpine.DEB.2.21.1912092029080.6020@www.lameter.com>
- <2F924F88-8146-4868-9099-D824EAFA840E@lca.pw>
-To:     Christopher Lameter <cl@linux.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Mon, 9 Dec 2019 22:37:06 -0500
+Received: from mail-eopbgr680134.outbound.protection.outlook.com ([40.107.68.134]:57472
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726631AbfLJDhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 22:37:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MpqVGUYW0c+tkICQ0WKyg7NXrJRnrG/Vi5H6vjvWpe8ZtK9Lu2IrT7IJEUsR+Ypo1zAl0v0LCHZPlbhM0Er1yzDbPVoQ21qYKfVak0IP+/HdDITh123Oj141VbiSjYs4+ihaCnLA9ljCVNPoSyiJY9OwLEL1/G3ho+4ib0V4PZNxroBciAxCaXLuXdV8V5ogxOKjEWu1uIcpz7+3G+EPq2npEWrLNTQSLYwy3xHVgYxdij81V4Wo1IhEDnvqCls287IWSI2ip2QttbCWMcJqzC5Q/87WmBPOcMvSUk8WbSbsIXF2fVrMg9vb0tf9jY9ry4ns5DafLmdc8p7wzQjGxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCEyDoZN8Ye4ldjJauUdJCxPc1mDgdamjKVtTztz0d8=;
+ b=GUBnB9qwp1ECd5/3S/NwohMHlep+YMTkDwlL+xGktGCOBx8FSSizWsYehNSumORJnaTCFF50+rY+B63f1rKSSNqYZQwF1nU4JXAf3XHkjJN6r9KP8IOIW7saGNxABrVQOe3wdZvXWXEMQ3wFH/sVHyuFo59Nj0W+f0niWWVs0PhgR+DSQ6H08WBwDqwEUz7M0GdAma61kJUYPeTJl11U3gA3UJAO13PUW+XM7JKVa0JPclp9h6QiM232dovb29bRAxxjotOrfldUfO1TxpJKe0PWtxUbjqwCIyusrkO7G17QmgUeJnHDQdtV+m8ErVE3NYJ9VU5YprFpXsuLqe8iUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
+ dkim=pass header.d=cypress.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JCEyDoZN8Ye4ldjJauUdJCxPc1mDgdamjKVtTztz0d8=;
+ b=EtJmj+E1vg383+DacYRYjUqzGDrBJNJZ0SFVenObVr7VBmX7m8a5PBTdC324+PxnQB7p3AfO/AE6bw1vUFo4DxFr5NMybyhBV2T1byismFpJ72+LLn3qR2q8mRFnEWVvbyXtiL0wHoZ2xXJcl+DOzsEWaCxPhS/rswWtL7TrtjE=
+Received: from CY4PR06MB2342.namprd06.prod.outlook.com (10.169.185.149) by
+ CY4PR06MB2646.namprd06.prod.outlook.com (10.173.39.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Tue, 10 Dec 2019 03:36:59 +0000
+Received: from CY4PR06MB2342.namprd06.prod.outlook.com
+ ([fe80::4930:d9e2:2f15:868d]) by CY4PR06MB2342.namprd06.prod.outlook.com
+ ([fe80::4930:d9e2:2f15:868d%3]) with mapi id 15.20.2538.012; Tue, 10 Dec 2019
+ 03:36:59 +0000
+From:   Chi-Hsien Lin <Chi-Hsien.Lin@cypress.com>
+To:     Soeren Moch <smoch@web.de>, Kalle Valo <kvalo@codeaurora.org>
+CC:     Wright Feng <Wright.Feng@cypress.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/8] brcmfmac: reset two D11 cores if chip has two D11
+ cores
+Thread-Topic: [PATCH 1/8] brcmfmac: reset two D11 cores if chip has two D11
+ cores
+Thread-Index: AQHVruFivdF3yg8HLUiWyyb8GU6mkqeyuF2A
+Date:   Tue, 10 Dec 2019 03:36:59 +0000
+Message-ID: <198521ec-cb41-701c-06d7-0432564dd0d2@cypress.com>
+References: <20191209223822.27236-1-smoch@web.de>
+In-Reply-To: <20191209223822.27236-1-smoch@web.de>
+Reply-To: Chi-Hsien Lin <Chi-Hsien.Lin@cypress.com>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [61.222.14.99]
+user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+x-clientproxiedby: BYAPR06CA0034.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::47) To CY4PR06MB2342.namprd06.prod.outlook.com
+ (2603:10b6:903:13::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chi-Hsien.Lin@cypress.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1d47be61-533a-4fa0-9f72-08d77d22366c
+x-ms-traffictypediagnostic: CY4PR06MB2646:|CY4PR06MB2646:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR06MB26463AC3E62CD9B52911C6CEBB5B0@CY4PR06MB2646.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39860400002)(136003)(189003)(199004)(8936002)(36756003)(6512007)(316002)(2906002)(2616005)(3450700001)(305945005)(31696002)(81166006)(4326008)(81156014)(66446008)(186003)(31686004)(8676002)(64756008)(53546011)(66556008)(66476007)(66946007)(6506007)(478600001)(54906003)(52116002)(26005)(110136005)(229853002)(86362001)(6486002)(5660300002)(71200400001)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR06MB2646;H:CY4PR06MB2342.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cypress.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: grtbSM7AFKV6mFFpw0p/CT6LOQ/9EUa2Hat/kUIF80XHH8ai5lFv6iVVzmDxkwPkTgZTym5EsfSo4i6s2lMv6M9btFPHZRGrHVsfV/sWlfeBpIH9lPKZmzG0nCcMdITmyGuXK8Jm3M/EvZTkqJCHCW6/W8TcJgZG3HqjkVwQbOMIfrsXkMDfgVt2KRkrvuOAHTfsZBHFLyZTivmIwrozk3ZsPH+Yknbl1e7IMX/Lmsrlhem5VZR2Gr88fmYFIG6u3h0rJlt3yyrxja3ng0uD6rgwRTEYKz9Ce82J/0F9CEpZygUDCbHUV1z7G3ho7vHlrk58aavLJz/6wT9ystzHyzND7yT+GvHbfgpubq2/9gdqvzqeQxCC4KHesUuHp0AH2klXzW3HKjsbKWcxI/3s/ypU/YK4R3ovM3saHmSesx5Lv5xFT7AhafEVEsBnA0N1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <72EDCE6390132B49BDD42471533E670F@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: cypress.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d47be61-533a-4fa0-9f72-08d77d22366c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 03:36:59.5561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 011addfc-2c09-450d-8938-e0bbc2dd2376
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d5T1dSwbBlzAzVJp6/yh7GCnVrlo6/CHR5i1+zL5EVwP93UYw7PLz3n7sc/1O//1azEZGWgx1ebFyXr82g3vEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR06MB2646
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Dec 9, 2019, at 10:21 PM, Qian Cai <cai@lca.pw> wrote:
->=20
->=20
->=20
->> On Dec 9, 2019, at 3:33 PM, Christopher Lameter <cl@linux.com> wrote:
->>=20
->> On Mon, 9 Dec 2019, Daniel Wagner wrote:
->>=20
->>> [    5.038862]
->>> [    5.038862] -> #2 (kn->count#39){++++}:
->>> [    5.039329]        __kernfs_remove+0x240/0x2e0
->>> [    5.039717]        kernfs_remove_by_name_ns+0x3c/0x80
->>> [    5.040159]        sysfs_slab_add+0x184/0x250
->>=20
->> sysfs_slab_add should not be called under any lock. But it happens =
-during
->> an initcall (sysfs_slab_init) when the kmalloc slab array is being =
-set up.
->>=20
->> And the problems results from a hotplug event? During system bringup =
-when
->> the slab caches have not been setup yet?
->>=20
->> Is this really something that can happen?
->>=20
->>=20
->=20
->=20
-> It happens to me too with a probably easier to trigger deadlock. =
-Basically, we have,
->=20
-> memcg_create_kmem_cache():
-> cpu_hotplug_lock.rw_sem/mem_hotplug_lock.rw_sem =E2=80=94> kn->count
-
-Correction =E2=80=94 kmemcg_workfn() -> kmemcg_cache_shutdown_fn() does =
-it NOT
-memcg_create_kmem_cache(). How to fix it is beyond my imagination as
-the relevant code looks all too old that probably need a redesign.
-
-> Then, "slabinfo -d=E2=80=9D does the opposite locking order,
->=20
-> kmem_cache_shrink_all+0x50/0x100 =
-(cpu_hotplug_lock.rw_sem/mem_hotplug_lock.rw_sem)
-> shrink_store+0x34/0x60
-> slab_attr_store+0x6c/0x170
-> sysfs_kf_write+0x70/0xb0
-> kernfs_fop_write+0x11c/0x270 ((kn->count)
-> __vfs_write+0x3c/0x70
-> vfs_write+0xcc/0x200
-> ksys_write+0x7c/0x140
-> system_call+0x5c/0x6
->=20
->=20
-> [ 1776.927152][ T9264] WARNING: possible circular locking dependency =
-detected
-> [ 1776.927164][ T9264] 5.5.0-rc1-next-20191209 #2 Not tainted
-> [ 1776.927172][ T9264] =
-------------------------------------------------------
-> [ 1776.927182][ T9264] slabinfo/9264 is trying to acquire lock:
-> [ 1776.927204][ T9264] c000000001072c90 =
-(cpu_hotplug_lock.rw_sem){++++}, at: kmem_cache_shrink_all+0x50/0x100
-> [ 1776.927224][ T9264]=20
-> [ 1776.927224][ T9264] but task is already holding lock:
-> [ 1776.927246][ T9264] c0002013fae02e90 (kn->count#80){++++}, at: =
-kernfs_fop_write+0xe0/0x270
-> [ 1776.927274][ T9264]=20
-> [ 1776.927274][ T9264] which lock already depends on the new lock.
-> [ 1776.927274][ T9264]=20
-> [ 1776.927298][ T9264]=20
-> [ 1776.927298][ T9264] the existing dependency chain (in reverse =
-order) is:
-> [ 1776.927332][ T9264]=20
-> [ 1776.927332][ T9264] -> #2 (kn->count#80){++++}:
-> [ 1776.927355][ T9264]        __kernfs_remove+0x3b0/0x440
-> [ 1776.927374][ T9264]        kernfs_remove+0x48/0x70
-> [ 1776.927405][ T9264]        sysfs_remove_dir+0x78/0xb0
-> [ 1776.927437][ T9264]        kobject_del+0x48/0xa0
-> [ 1776.927458][ T9264]        sysfs_slab_unlink+0x38/0x50
-> [ 1776.927468][ T9264]        shutdown_cache+0x208/0x2b0
-> [ 1776.927477][ T9264]        kmemcg_cache_shutdown_fn+0x20/0x40
-> [ 1776.927509][ T9264]        kmemcg_workfn+0x64/0xa0
-> [ 1776.927530][ T9264]        process_one_work+0x300/0x8e0
-> [ 1776.927550][ T9264]        worker_thread+0x78/0x530
-> [ 1776.927580][ T9264]        kthread+0x1a8/0x1b0
-> [ 1776.927612][ T9264]        ret_from_kernel_thread+0x5c/0x74
-> [ 1776.927641][ T9264]=20
-> [ 1776.927641][ T9264] -> #1 (slab_mutex){+.+.}:
-> [ 1776.927663][ T9264]        __mutex_lock+0xdc/0xb20
-> [ 1776.927672][ T9264]        memcg_create_kmem_cache+0x54/0x230
-> [ 1776.927704][ T9264]        memcg_kmem_cache_create_func+0x3c/0x280
-> [ 1776.927725][ T9264]        process_one_work+0x300/0x8e0
-> [ 1776.927755][ T9264]        worker_thread+0x78/0x530
-> [ 1776.927774][ T9264]        kthread+0x1a8/0x1b0
-> [ 1776.927794][ T9264]        ret_from_kernel_thread+0x5c/0x74
-> [ 1776.927813][ T9264]=20
-> [ 1776.927918][ T9264]=20
-> [ 1776.927918][ T9264] -> #0 (cpu_hotplug_lock.rw_sem){++++}:
-> [ 1776.927954][ T9264]        __lock_acquire+0x1644/0x2360
-> [ 1776.927973][ T9264]        lock_acquire+0x130/0x360
-> [ 1776.927994][ T9264]        cpus_read_lock+0x64/0x170
-> [ 1776.928014][ T9264]        kmem_cache_shrink_all+0x50/0x100
-> [ 1776.928034][ T9264]        shrink_store+0x34/0x60
-> [ 1776.928065][ T9264]        slab_attr_store+0x6c/0x170
-> [ 1776.928085][ T9264]        sysfs_kf_write+0x70/0xb0
-> [ 1776.928115][ T9264]        kernfs_fop_write+0x11c/0x270
-> [ 1776.928136][ T9264]        __vfs_write+0x3c/0x70
-> [ 1776.928156][ T9264]        vfs_write+0xcc/0x200
-> [ 1776.928176][ T9264]        ksys_write+0x7c/0x140
-> [ 1776.928195][ T9264]        system_call+0x5c/0x68
-> [ 1776.928214][ T9264]=20
-> [ 1776.928214][ T9264] other info that might help us debug this:
-> [ 1776.928214][ T9264]=20
-> [ 1776.928238][ T9264] Chain exists of:
-> [ 1776.928238][ T9264]   cpu_hotplug_lock.rw_sem --> slab_mutex --> =
-kn->count#80
-> [ 1776.928238][ T9264]=20
-> [ 1776.928289][ T9264]  Possible unsafe locking scenario:
-> [ 1776.928289][ T9264]=20
-> [ 1776.928321][ T9264]        CPU0                    CPU1
-> [ 1776.928340][ T9264]        ----                    ----
-> [ 1776.928359][ T9264]   lock(kn->count#80);
-> [ 1776.928377][ T9264]                                =
-lock(slab_mutex);
-> [ 1776.928398][ T9264]                                =
-lock(kn->count#80);
-> [ 1776.928418][ T9264]   lock(cpu_hotplug_lock.rw_sem);
-> [ 1776.928438][ T9264]=20
-> [ 1776.928438][ T9264]  *** DEADLOCK ***
-> [ 1776.928438][ T9264]=20
-> [ 1776.928471][ T9264] 3 locks held by slabinfo/9264:
-> [ 1776.928490][ T9264]  #0: c000000042301408 (sb_writers#4){.+.+}, at: =
-vfs_write+0x180/0x200
-> [ 1776.928525][ T9264]  #1: c00020063c2a5680 (&of->mutex){+.+.}, at: =
-kernfs_fop_write+0xd4/0x270
-> [ 1776.928561][ T9264]  #2: c0002013fae02e90 (kn->count#80){++++}, at: =
-kernfs_fop_write+0xe0/0x270
-> [ 1776.928607][ T9264]=20
-> [ 1776.928607][ T9264] stack backtrace:
-> [ 1776.928640][ T9264] CPU: 65 PID: 9264 Comm: slabinfo Not tainted =
-5.5.0-rc1-next-20191209 #2
-> [ 1776.928684][ T9264] Call Trace:
-> [ 1776.928705][ T9264] [c00000162edcf790] [c000000000944460] =
-dump_stack+0xf4/0x164 (unreliable)
-> [ 1776.928740][ T9264] [c00000162edcf7e0] [c0000000001be0e8] =
-print_circular_bug+0x298/0x2b0
-> [ 1776.928773][ T9264] [c00000162edcf880] [c0000000001be360] =
-check_noncircular+0x260/0x320
-> [ 1776.928807][ T9264] [c00000162edcf980] [c0000000001c38c4] =
-__lock_acquire+0x1644/0x2360
-> [ 1776.928840][ T9264] [c00000162edcfae0] [c0000000001c12a0] =
-lock_acquire+0x130/0x360
-> [ 1776.928874][ T9264] [c00000162edcfbc0] [c0000000001063b4] =
-cpus_read_lock+0x64/0x170
-> [ 1776.928907][ T9264] [c00000162edcfc00] [c000000000384620] =
-kmem_cache_shrink_all+0x50/0x100
-> [ 1776.928951][ T9264] [c00000162edcfc40] [c000000000425e14] =
-shrink_store+0x34/0x60
-> [ 1776.928973][ T9264] [c00000162edcfc70] [c000000000423f4c] =
-slab_attr_store+0x6c/0x170
-> [ 1776.929007][ T9264] [c00000162edcfcd0] [c0000000005b7340] =
-sysfs_kf_write+0x70/0xb0
-> [ 1776.929030][ T9264] [c00000162edcfd10] [c0000000005b650c] =
-kernfs_fop_write+0x11c/0x270
-> [ 1776.929063][ T9264] [c00000162edcfd60] [c0000000004a313c] =
-__vfs_write+0x3c/0x70
-> [ 1776.929127][ T9264] [c00000162edcfd80] [c0000000004a61ec] =
-vfs_write+0xcc/0x200
-> [ 1776.929209][ T9264] [c00000162edcfdd0] [c0000000004a658c] =
-ksys_write+0x7c/0x140
-> [ 1776.929299][ T9264] [c00000162edcfe20] [c00000000000b378] =
-system_call+0x5c/0x6
-
+DQoNCk9uIDEyLzEwLzIwMTkgNjozOCwgU29lcmVuIE1vY2ggd3JvdGU6DQo+IEZyb206IFdyaWdo
+dCBGZW5nIDx3cmlnaHQuZmVuZ0BjeXByZXNzLmNvbT4NCj4gDQo+IFRoZXJlIGFyZSB0d28gRDEx
+IGNvcmVzIGluIFJTREIgY2hpcHMgbGlrZSA0MzU5LiBXZSBoYXZlIHRvIHJlc2V0IHR3bw0KPiBE
+MTEgY29yZXMgc2ltdXRhbmVvdXNseSBiZWZvcmUgZmlybXdhcmUgZG93bmxvYWQsIG9yIHRoZSBm
+aXJtd2FyZSBtYXkNCj4gbm90IGJlIGluaXRpYWxpemVkIGNvcnJlY3RseSBhbmQgY2F1c2UgImZ3
+IGluaXRpYWxpemVkIGZhaWxlZCIgZXJyb3IuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBXcmlnaHQg
+RmVuZyA8d3JpZ2h0LmZlbmdAY3lwcmVzcy5jb20+DQpSZXZpZXdlZC1ieTogQ2hpLUhzaWVuIExp
+biA8Y2hpLWhzaWVuLmxpbkBjeXByZXNzLmNvbT4NCg0KPiAtLS0NCj4gQ2M6IEthbGxlIFZhbG8g
+PGt2YWxvQGNvZGVhdXJvcmEub3JnPg0KPiBDYzogQXJlbmQgdmFuIFNwcmllbCA8YXJlbmQudmFu
+c3ByaWVsQGJyb2FkY29tLmNvbT4NCj4gQ2M6IEZyYW5reSBMaW4gPGZyYW5reS5saW5AYnJvYWRj
+b20uY29tPg0KPiBDYzogSGFudGUgTWV1bGVtYW4gPGhhbnRlLm1ldWxlbWFuQGJyb2FkY29tLmNv
+bT4NCj4gQ2M6IENoaS1Ic2llbiBMaW4gPGNoaS1oc2llbi5saW5AY3lwcmVzcy5jb20+DQo+IENj
+OiBXcmlnaHQgRmVuZyA8d3JpZ2h0LmZlbmdAY3lwcmVzcy5jb20+DQo+IENjOiBsaW51eC13aXJl
+bGVzc0B2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGJyY204MDIxMS1kZXYtbGlzdC5wZGxAYnJvYWRj
+b20uY29tDQo+IENjOiBicmNtODAyMTEtZGV2LWxpc3RAY3lwcmVzcy5jb20NCj4gQ2M6IG5ldGRl
+dkB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g
+LS0tDQo+ICAgLi4uL2Jyb2FkY29tL2JyY204MDIxMS9icmNtZm1hYy9jaGlwLmMgICAgICAgIHwg
+NTAgKysrKysrKysrKysrKysrKysrKw0KPiAgIC4uLi9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZt
+YWMvY2hpcC5oICAgICAgICB8ICAxICsNCj4gICAuLi4vYnJvYWRjb20vYnJjbTgwMjExL2JyY21m
+bWFjL3BjaWUuYyAgICAgICAgfCAgMiArLQ0KPiAgIDMgZmlsZXMgY2hhbmdlZCwgNTIgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dp
+cmVsZXNzL2Jyb2FkY29tL2JyY204MDIxMS9icmNtZm1hYy9jaGlwLmMgYi9kcml2ZXJzL25ldC93
+aXJlbGVzcy9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5jDQo+IGluZGV4IGE3OTVk
+NzgxYjRjNS4uMGI1ZmJlNWQ4MjcwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC93aXJlbGVz
+cy9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0
+L3dpcmVsZXNzL2Jyb2FkY29tL2JyY204MDIxMS9icmNtZm1hYy9jaGlwLmMNCj4gQEAgLTQzMywx
+MSArNDMzLDI1IEBAIHN0YXRpYyB2b2lkIGJyY21mX2NoaXBfYWlfcmVzZXRjb3JlKHN0cnVjdCBi
+cmNtZl9jb3JlX3ByaXYgKmNvcmUsIHUzMiBwcmVyZXNldCwNCj4gICB7DQo+ICAgCXN0cnVjdCBi
+cmNtZl9jaGlwX3ByaXYgKmNpOw0KPiAgIAlpbnQgY291bnQ7DQo+ICsJc3RydWN0IGJyY21mX2Nv
+cmUgKmQxMWNvcmUyID0gTlVMTDsNCj4gKwlzdHJ1Y3QgYnJjbWZfY29yZV9wcml2ICpkMTFwcml2
+MiA9IE5VTEw7DQo+IA0KPiAgIAljaSA9IGNvcmUtPmNoaXA7DQo+IA0KPiArCS8qIHNwZWNpYWwg
+aGFuZGxlIHR3byBEMTEgY29yZXMgcmVzZXQgKi8NCj4gKwlpZiAoY29yZS0+cHViLmlkID09IEJD
+TUFfQ09SRV84MDIxMSkgew0KPiArCQlkMTFjb3JlMiA9IGJyY21mX2NoaXBfZ2V0X2QxMWNvcmUo
+JmNpLT5wdWIsIDEpOw0KPiArCQlpZiAoZDExY29yZTIpIHsNCj4gKwkJCWJyY21mX2RiZyhJTkZP
+LCAiZm91bmQgdHdvIGQxMSBjb3JlcywgcmVzZXQgYm90aFxuIik7DQo+ICsJCQlkMTFwcml2MiA9
+IGNvbnRhaW5lcl9vZihkMTFjb3JlMiwNCj4gKwkJCQkJCXN0cnVjdCBicmNtZl9jb3JlX3ByaXYs
+IHB1Yik7DQo+ICsJCX0NCj4gKwl9DQo+ICsNCj4gICAJLyogbXVzdCBkaXNhYmxlIGZpcnN0IHRv
+IHdvcmsgZm9yIGFyYml0cmFyeSBjdXJyZW50IGNvcmUgc3RhdGUgKi8NCj4gICAJYnJjbWZfY2hp
+cF9haV9jb3JlZGlzYWJsZShjb3JlLCBwcmVyZXNldCwgcmVzZXQpOw0KPiArCWlmIChkMTFwcml2
+MikNCj4gKwkJYnJjbWZfY2hpcF9haV9jb3JlZGlzYWJsZShkMTFwcml2MiwgcHJlcmVzZXQsIHJl
+c2V0KTsNCj4gDQo+ICAgCWNvdW50ID0gMDsNCj4gICAJd2hpbGUgKGNpLT5vcHMtPnJlYWQzMihj
+aS0+Y3R4LCBjb3JlLT53cmFwYmFzZSArIEJDTUFfUkVTRVRfQ1RMKSAmDQo+IEBAIC00NDksOSAr
+NDYzLDMwIEBAIHN0YXRpYyB2b2lkIGJyY21mX2NoaXBfYWlfcmVzZXRjb3JlKHN0cnVjdCBicmNt
+Zl9jb3JlX3ByaXYgKmNvcmUsIHUzMiBwcmVyZXNldCwNCj4gICAJCXVzbGVlcF9yYW5nZSg0MCwg
+NjApOw0KPiAgIAl9DQo+IA0KPiArCWlmIChkMTFwcml2Mikgew0KPiArCQljb3VudCA9IDA7DQo+
+ICsJCXdoaWxlIChjaS0+b3BzLT5yZWFkMzIoY2ktPmN0eCwNCj4gKwkJCQkgICAgICAgZDExcHJp
+djItPndyYXBiYXNlICsgQkNNQV9SRVNFVF9DVEwpICYNCj4gKwkJCQkgICAgICAgQkNNQV9SRVNF
+VF9DVExfUkVTRVQpIHsNCj4gKwkJCWNpLT5vcHMtPndyaXRlMzIoY2ktPmN0eCwNCj4gKwkJCQkJ
+IGQxMXByaXYyLT53cmFwYmFzZSArIEJDTUFfUkVTRVRfQ1RMLA0KPiArCQkJCQkgMCk7DQo+ICsJ
+CQljb3VudCsrOw0KPiArCQkJaWYgKGNvdW50ID4gNTApDQo+ICsJCQkJYnJlYWs7DQo+ICsJCQl1
+c2xlZXBfcmFuZ2UoNDAsIDYwKTsNCj4gKwkJfQ0KPiArCX0NCj4gKw0KPiAgIAljaS0+b3BzLT53
+cml0ZTMyKGNpLT5jdHgsIGNvcmUtPndyYXBiYXNlICsgQkNNQV9JT0NUTCwNCj4gICAJCQkgcG9z
+dHJlc2V0IHwgQkNNQV9JT0NUTF9DTEspOw0KPiAgIAljaS0+b3BzLT5yZWFkMzIoY2ktPmN0eCwg
+Y29yZS0+d3JhcGJhc2UgKyBCQ01BX0lPQ1RMKTsNCj4gKw0KPiArCWlmIChkMTFwcml2Mikgew0K
+PiArCQljaS0+b3BzLT53cml0ZTMyKGNpLT5jdHgsIGQxMXByaXYyLT53cmFwYmFzZSArIEJDTUFf
+SU9DVEwsDQo+ICsJCQkJIHBvc3RyZXNldCB8IEJDTUFfSU9DVExfQ0xLKTsNCj4gKwkJY2ktPm9w
+cy0+cmVhZDMyKGNpLT5jdHgsIGQxMXByaXYyLT53cmFwYmFzZSArIEJDTUFfSU9DVEwpOw0KPiAr
+CX0NCj4gICB9DQo+IA0KPiAgIGNoYXIgKmJyY21mX2NoaXBfbmFtZSh1MzIgaWQsIHUzMiByZXYs
+IGNoYXIgKmJ1ZiwgdWludCBsZW4pDQo+IEBAIC0xMTA5LDYgKzExNDQsMjEgQEAgdm9pZCBicmNt
+Zl9jaGlwX2RldGFjaChzdHJ1Y3QgYnJjbWZfY2hpcCAqcHViKQ0KPiAgIAlrZnJlZShjaGlwKTsN
+Cj4gICB9DQo+IA0KPiArc3RydWN0IGJyY21mX2NvcmUgKmJyY21mX2NoaXBfZ2V0X2QxMWNvcmUo
+c3RydWN0IGJyY21mX2NoaXAgKnB1YiwgdTggdW5pdCkNCj4gK3sNCj4gKwlzdHJ1Y3QgYnJjbWZf
+Y2hpcF9wcml2ICpjaGlwOw0KPiArCXN0cnVjdCBicmNtZl9jb3JlX3ByaXYgKmNvcmU7DQo+ICsN
+Cj4gKwljaGlwID0gY29udGFpbmVyX29mKHB1Yiwgc3RydWN0IGJyY21mX2NoaXBfcHJpdiwgcHVi
+KTsNCj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KGNvcmUsICZjaGlwLT5jb3JlcywgbGlzdCkgew0K
+PiArCQlpZiAoY29yZS0+cHViLmlkID09IEJDTUFfQ09SRV84MDIxMSkgew0KPiArCQkJaWYgKHVu
+aXQtLSA9PSAwKQ0KPiArCQkJCXJldHVybiAmY29yZS0+cHViOw0KPiArCQl9DQo+ICsJfQ0KPiAr
+CXJldHVybiBOVUxMOw0KPiArfQ0KPiArDQo+ICAgc3RydWN0IGJyY21mX2NvcmUgKmJyY21mX2No
+aXBfZ2V0X2NvcmUoc3RydWN0IGJyY21mX2NoaXAgKnB1YiwgdTE2IGNvcmVpZCkNCj4gICB7DQo+
+ICAgCXN0cnVjdCBicmNtZl9jaGlwX3ByaXYgKmNoaXA7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L25ldC93aXJlbGVzcy9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5oIGIvZHJpdmVy
+cy9uZXQvd2lyZWxlc3MvYnJvYWRjb20vYnJjbTgwMjExL2JyY21mbWFjL2NoaXAuaA0KPiBpbmRl
+eCA3YjAwZjZhNTllODkuLjhmYTM4NjU4ZTcyNyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQv
+d2lyZWxlc3MvYnJvYWRjb20vYnJjbTgwMjExL2JyY21mbWFjL2NoaXAuaA0KPiArKysgYi9kcml2
+ZXJzL25ldC93aXJlbGVzcy9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5oDQo+IEBA
+IC03NCw2ICs3NCw3IEBAIHN0cnVjdCBicmNtZl9jaGlwICpicmNtZl9jaGlwX2F0dGFjaCh2b2lk
+ICpjdHgsDQo+ICAgCQkJCSAgICAgY29uc3Qgc3RydWN0IGJyY21mX2J1c2NvcmVfb3BzICpvcHMp
+Ow0KPiAgIHZvaWQgYnJjbWZfY2hpcF9kZXRhY2goc3RydWN0IGJyY21mX2NoaXAgKmNoaXApOw0K
+PiAgIHN0cnVjdCBicmNtZl9jb3JlICpicmNtZl9jaGlwX2dldF9jb3JlKHN0cnVjdCBicmNtZl9j
+aGlwICpjaGlwLCB1MTYgY29yZWlkKTsNCj4gK3N0cnVjdCBicmNtZl9jb3JlICpicmNtZl9jaGlw
+X2dldF9kMTFjb3JlKHN0cnVjdCBicmNtZl9jaGlwICpwdWIsIHU4IHVuaXQpOw0KPiAgIHN0cnVj
+dCBicmNtZl9jb3JlICpicmNtZl9jaGlwX2dldF9jaGlwY29tbW9uKHN0cnVjdCBicmNtZl9jaGlw
+ICpjaGlwKTsNCj4gICBzdHJ1Y3QgYnJjbWZfY29yZSAqYnJjbWZfY2hpcF9nZXRfcG11KHN0cnVj
+dCBicmNtZl9jaGlwICpwdWIpOw0KPiAgIGJvb2wgYnJjbWZfY2hpcF9pc2NvcmV1cChzdHJ1Y3Qg
+YnJjbWZfY29yZSAqY29yZSk7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVzcy9i
+cm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvcGNpZS5jIGIvZHJpdmVycy9uZXQvd2lyZWxlc3Mv
+YnJvYWRjb20vYnJjbTgwMjExL2JyY21mbWFjL3BjaWUuYw0KPiBpbmRleCBmNjRjZTUwNzRhNTUu
+LjdhYzcyODA0ZTI4NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvYnJvYWRj
+b20vYnJjbTgwMjExL2JyY21mbWFjL3BjaWUuYw0KPiArKysgYi9kcml2ZXJzL25ldC93aXJlbGVz
+cy9icm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvcGNpZS5jDQo+IEBAIC03OCw3ICs3OCw3IEBA
+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgYnJjbWZfZmlybXdhcmVfbWFwcGluZyBicmNtZl9wY2llX2Z3
+bmFtZXNbXSA9IHsNCj4gICAJQlJDTUZfRldfRU5UUlkoQlJDTV9DQ180MzcxX0NISVBfSUQsIDB4
+RkZGRkZGRkYsIDQzNzEpLA0KPiAgIH07DQo+IA0KPiAtI2RlZmluZSBCUkNNRl9QQ0lFX0ZXX1VQ
+X1RJTUVPVVQJCTIwMDAgLyogbXNlYyAqLw0KPiArI2RlZmluZSBCUkNNRl9QQ0lFX0ZXX1VQX1RJ
+TUVPVVQJCTUwMDAgLyogbXNlYyAqLw0KPiANCj4gICAjZGVmaW5lIEJSQ01GX1BDSUVfUkVHX01B
+UF9TSVpFCQkJKDMyICogMTAyNCkNCj4gDQo+IC0tDQo+IDIuMTcuMQ0KPiANCj4gLg0KPiANCg==
