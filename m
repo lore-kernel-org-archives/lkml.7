@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4266C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8CFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46952053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15AB2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015721;
-	bh=EsO4pfq8x5am+xFHGGvC2piIUiWKLGe3XLzaDDIF1Hw=;
+	s=default; t=1576015729;
+	bh=RdbXfKf5Rzr0OhOxihP2NlquBOZt0BtHA4HrYjLMuwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CuTselWUqwIZiwMNds3MAyxkUyFCBZcJ9QjFRibkN57LlgEy8VZ5eTPHzp3R0Zphs
-	 wqHYq9smAwru+e6k4/GtpbSa2jQfg/q7fvJ1pGY9JB0FO2eJe/Q9NFOLDRY24pLIYk
-	 9SQSS0zD0QdxXkw8DuTuliSJzIiBfZr1yuXwAx2k=
+	b=ZtYlxeoI0448EzKptPUgLTb7/T2TQJWJgogYL9ioqOcFq742yXN8S/5qzobXNletg
+	 EOmuEn9WjDN04eC2EiY7BM/amhNgZtkMmnfDhUTYqSLcNapiqJ9Ao8yZHANssw/8pI
+	 6ylwMIAH8aHLn1R6KoVrDWHVLwZ6x1JtOfmZEe+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfLJWIk (ORCPT
+        id S1728993AbfLJWEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:08:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35634 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfLJWEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:39 -0500
+        id S1728818AbfLJWE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C19222C4;
-        Tue, 10 Dec 2019 22:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E64F92053B;
+        Tue, 10 Dec 2019 22:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015479;
-        bh=EsO4pfq8x5am+xFHGGvC2piIUiWKLGe3XLzaDDIF1Hw=;
+        s=default; t=1576015467;
+        bh=RdbXfKf5Rzr0OhOxihP2NlquBOZt0BtHA4HrYjLMuwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EkUMHaDJse4fXOONAoDGgQtvg2IOOM1xRgl9K4ehX/r6d8bE/2iqjELAA2/p//MSM
-         AjQqujMKr2NTQhIlybwvQWRv8tc59gxvClu+7LelkqSY7siEo+HzN9ddf2YcvQvOGd
-         yXTsSmfRisLXPqWe+JoD4ZrLa4R/+07LvWSyOPTI=
+        b=J80oV2IHPWRBD+3ZSSaPEmv7x5MopSzzJmdEwXdGKiexCPof7FlAT8JY1cILvB/Xe
+         7WU2j36LMI+Qku5Y9cb3mg9s3/sFGrf9aJgRGaabog0SORLMvBb2vkiBTxHrkKWA5k
+         j1KULvF+MZErqtr78lY1MmgPAbkBHL7uapxp0uvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 083/130] perf probe: Fix to list probe event with correct line number
-Date:   Tue, 10 Dec 2019 17:02:14 -0500
-Message-Id: <20191210220301.13262-83-sashal@kernel.org>
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 073/130] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
+Date:   Tue, 10 Dec 2019 17:02:04 -0500
+Message-Id: <20191210220301.13262-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,76 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
 
-[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
+[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
 
-Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-entry address of the function on which a probe is, it will fail when the
-function DIE has only ranges attribute.
+The regs pointer in amd_gpio_irq_handler() should have __iomem
+on it, so add that to fix the following sparse warnings:
 
-To fix this issue, use die_entrypc() instead of dwarf_entrypc().
+drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
+drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
+drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
 
-Without this fix, perf probe -l shows incorrect offset:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
-
-With this:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-amd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index a5731de0e5ebc..5fee71e960a61 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1570,7 +1570,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		/* Get function entry information */
- 		func = basefunc = dwarf_diename(&spdie);
- 		if (!func ||
--		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-+		    die_entrypc(&spdie, &baseaddr) != 0 ||
- 		    dwarf_decl_line(&spdie, &baseline) != 0) {
- 			lineno = 0;
- 			goto post;
-@@ -1587,7 +1587,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
- 						&indie)) {
- 			/* There is an inline function */
--			if (dwarf_entrypc(&indie, &_addr) == 0 &&
-+			if (die_entrypc(&indie, &_addr) == 0 &&
- 			    _addr == addr) {
- 				/*
- 				 * addr is at an inline function entry.
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index b78f42abff2f8..7385cd81498c4 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -509,7 +509,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned int i, irqnr;
+ 	unsigned long flags;
+-	u32 *regs, regval;
++	u32 __iomem *regs;
++	u32  regval;
+ 	u64 status, mask;
+ 
+ 	/* Read the wake status */
 -- 
 2.20.1
 
