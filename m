@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381B9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF126C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0429A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94265206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013657;
-	bh=xywczJzetoKSO5dA4QTPojRAEgE8VkI+wLHVuwEcExE=;
+	s=default; t=1576013660;
+	bh=SRxD/UdSUIhXNsk1VgfV48n5LlcaWg5Vpie+dxeAzck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oi93tPtdq6rDvVc6nJCEa6kLJVBWY370nQlpz2bqb6UZPEPmCbLsbA9vW/nCCqH/q
-	 5UlsFS7IrcRFJFGLc1HcCa9KLS0RRNgx2EVEEJEilzxoFA2lkeRkuP9ADYLpqhNAAq
-	 wytLBfmHlAfvgNdaHkdlquHnjl1CHUqvgxPm48DY=
+	b=vcC2HKCWc6PnDwJC8ZzgYkScv6igPb34I1ie5q7P+XrvGcMfNIFy3X9L91izmRPay
+	 dnuGKeXjj3sHMZ3hkBzyjdiKu7bnMI+0OPm6E78bNHTjCKA4oD/Yxg3YeFFvy6K/6L
+	 3YRJWJmYNgooexOkLOYrDqRMF/5FDVJ0ex1XbL/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfLJVeP (ORCPT
+        id S1728437AbfLJVeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729966AbfLJVeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:12 -0500
+        id S1729981AbfLJVeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86252214AF;
-        Tue, 10 Dec 2019 21:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C923D22464;
+        Tue, 10 Dec 2019 21:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013651;
-        bh=xywczJzetoKSO5dA4QTPojRAEgE8VkI+wLHVuwEcExE=;
+        s=default; t=1576013654;
+        bh=SRxD/UdSUIhXNsk1VgfV48n5LlcaWg5Vpie+dxeAzck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHIHJn3icpZgx9jG07ycvGpciDlU9DMldVCMjZd75oY25qBhdpwKc8zF3AxA5wF9M
-         KuIg/zBmF4EGTbYTgTpJaSTKDZyAp6lzExPKhf9Bqjy9WLQ0YWQM8BoxbUUbyfVekD
-         OX+NYMkADdc4Ys6zsLAfNfHKLt0SeaIJvbHM+lK0=
+        b=DTO5BI+nvC2fIynjNcgFS59EE0rvhBEIygay8H9RAtXlnt9Ia62DxUzQ+kfzVaLK0
+         Em/WpwxRn67WwnFoQ1XRel0p47Q9znZqZnuMf/91Z/X0N6Z1AbqdaWJfqpF9YmgmKf
+         g6s5kSgUkKvmK9dBHvMagnUuKN2FTAiNlmVBuQV8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 090/177] net: hns3: add struct netdev_queue debug info for TX timeout
-Date:   Tue, 10 Dec 2019 16:30:54 -0500
-Message-Id: <20191210213221.11921-90-sashal@kernel.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 093/177] ata: sata_mv, avoid trigerrable BUG_ON
+Date:   Tue, 10 Dec 2019 16:30:57 -0500
+Message-Id: <20191210213221.11921-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit 647522a5ef6401dcdb8ec417421e43fb21910167 ]
+[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
 
-When there is a TX timeout, we can tell if the driver or stack
-has stopped the queue by looking at state field, and when has
-the last packet transmited by looking at trans_start field.
+There are several reports that the BUG_ON on unsupported command in
+mv_qc_prep can be triggered under some circumstances:
+https://bugzilla.suse.com/show_bug.cgi?id=1110252
+https://serverfault.com/questions/888897/raid-problems-after-power-outage
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
+https://bugs.centos.org/view.php?id=14998
 
-So this patch prints these two field in the
-hns3_get_tx_timeo_queue_info().
+Let sata_mv handle the failure gracefully: warn about that incl. the
+failed command number and return an AC_ERR_INVALID error. We can do that
+now thanks to the previous patch.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Remove also the long-standing FIXME.
+
+[v2] use %.2x as commands are defined as hexa.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/ata/sata_mv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b2860087a7dc7..cb5f88f68b016 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1474,6 +1474,9 @@ static bool hns3_get_tx_timeo_queue_info(struct net_device *ndev)
- 		    time_after(jiffies,
- 			       (trans_start + ndev->watchdog_timeo))) {
- 			timeout_queue = i;
-+			netdev_info(ndev, "queue state: 0x%lx, delta msecs: %u\n",
-+				    q->state,
-+				    jiffies_to_msecs(jiffies - trans_start));
- 			break;
- 		}
+diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+index 73ba8e134ca9a..bb6c0220e2aca 100644
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -2111,12 +2111,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
+ 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
+ 		 * of which are defined/used by Linux.  If we get here, this
+ 		 * driver needs work.
+-		 *
+-		 * FIXME: modify libata to give qc_prep a return value and
+-		 * return error here.
+ 		 */
+-		BUG_ON(tf->command);
+-		break;
++		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
++				tf->command);
++		return AC_ERR_INVALID;
  	}
+ 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
+ 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
 -- 
 2.20.1
 
