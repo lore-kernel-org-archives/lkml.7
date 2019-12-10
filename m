@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E83C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD329C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353B5206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EDC222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013124;
-	bh=vS8aMU79NzeSQmkyeMPXtxzGfCOBO5VOntSCYux0bfM=;
+	s=default; t=1576013132;
+	bh=LHlXup6UK4obdIwh8GDiEqMZRzr9DxRSOQoyLqXkURQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w3svtnQAaj1V8w47KnXw6pcP+E5cHmMExDIccfdWJ9X08ghIS+0Ky3QEqdK1BQBTV
-	 PlCVxmCzAvsw6wELCxHxweg5UHX0uOaLAnsRch3G8vxtKEWuRvfkvNtsL1b8iq4ZWM
-	 j4JR2WTZvEzg5LVmJvk9fKd1YCKbR92qKrKqZAaI=
+	b=r8u2I9Rr9vG/uF34t19eNx19iBaKo4tWsU1YHYVQ29yADU/qE+5pP3L0iWi3CmePZ
+	 FBBydJF5mkv/fSWR1lcNy4raqzNlvXdR1s6Pd8BlSxbkAWOQBJF3nXEF8onFMsLqNT
+	 Bi3gB+PfmwtEDfEhyaQqsiazwQMh/fmm9ijvrTes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfLJVZX (ORCPT
+        id S1729515AbfLJVZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:25:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbfLJVKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:35 -0500
+        id S1728972AbfLJVZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75431246A3;
-        Tue, 10 Dec 2019 21:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DDD20836;
+        Tue, 10 Dec 2019 21:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012235;
-        bh=vS8aMU79NzeSQmkyeMPXtxzGfCOBO5VOntSCYux0bfM=;
+        s=default; t=1576013117;
+        bh=LHlXup6UK4obdIwh8GDiEqMZRzr9DxRSOQoyLqXkURQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5PI2NYW31A4bp+bSV6GmldLs6MLuNM3ib014J/oN1Z0wbqVDHd2Y2VVyvQvKzBIN
-         fYYcD5sKjSsWvXhz9rX037ldSTopGCeCMSPt/Bt2tmGZDBNpidxvUGgbCbWnOg2TqI
-         o4qwbhTs7vBvDLPya5HlNEBRIqSUooA3ivCU+g3k=
+        b=d+EsjnCEBSg784M4z5NhMBIFrQkdJz/31J2uFo5gMGa81adDuO9OcfszEZcy/jHS8
+         qNGNRE7rcx/io1FR52CmrqOh7aG/zJeKff8utbU2h4Y19Kvyp87FjDLvAVTQ7gtklt
+         TiFbMwlUUjQxfvbWVU56iZ59k/RB/SLySqhcSAnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 184/350] s390/mm: add mm_pxd_folded() checks to pxd_free()
-Date:   Tue, 10 Dec 2019 16:04:49 -0500
-Message-Id: <20191210210735.9077-145-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 004/292] drm/panel: Add missing drm_panel_init() in panel drivers
+Date:   Tue, 10 Dec 2019 16:20:23 -0500
+Message-Id: <20191210212511.11392-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
+References: <20191210212511.11392-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,70 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
+[ Upstream commit 65abbda8ed7ca48c8807d6b04a77431b438fa659 ]
 
-Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
-page tables. This is not an issue so far, as those functions will actually
-never be called, since no code will reach them when page tables are folded.
+Panels must be initialised with drm_panel_init(). Add the missing
+function call in the panel-raspberrypi-touchscreen.c and
+panel-sitronix-st7789v.c drivers.
 
-In order to avoid future issues, and to make the s390 code more similar to
-other architectures, add mm_pxd_folded() checks, similar to how it is done
-in pxd_free_tlb().
-
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add tests validating architecture
-page table helpers").
-
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190823193245.23876-2-laurent.pinchart@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 +
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c        | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index bccb8f4a63e20..77606c4acd58d 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -56,7 +56,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
- 	return (p4d_t *) table;
- }
--#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
-+
-+static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
-+{
-+	if (!mm_p4d_folded(mm))
-+		crst_table_free(mm, (unsigned long *) p4d);
-+}
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index b5b14aa059ea7..2aa89eaecf6ff 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -426,6 +426,7 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 		return PTR_ERR(ts->dsi);
+ 	}
  
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- {
-@@ -65,7 +70,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
- 	return (pud_t *) table;
- }
--#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
-+
-+static inline void pud_free(struct mm_struct *mm, pud_t *pud)
-+{
-+	if (!mm_pud_folded(mm))
-+		crst_table_free(mm, (unsigned long *) pud);
-+}
++	drm_panel_init(&ts->base);
+ 	ts->base.dev = dev;
+ 	ts->base.funcs = &rpi_touchscreen_funcs;
  
- static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- {
-@@ -83,6 +93,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+index 5e3e92ea9ea69..3b2612ae931e8 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+@@ -381,6 +381,7 @@ static int st7789v_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, ctx);
+ 	ctx->spi = spi;
  
- static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
- {
-+	if (mm_pmd_folded(mm))
-+		return;
- 	pgtable_pmd_page_dtor(virt_to_page(pmd));
- 	crst_table_free(mm, (unsigned long *) pmd);
- }
++	drm_panel_init(&ctx->panel);
+ 	ctx->panel.dev = &spi->dev;
+ 	ctx->panel.funcs = &st7789v_drm_funcs;
+ 
 -- 
 2.20.1
 
