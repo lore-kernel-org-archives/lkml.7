@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4142C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DE32053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294752053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017624;
-	bh=+d/EPeAnK08Y492IrzqNRX5zak9fQNfVoHVoWmvBVg4=;
+	s=default; t=1576017631;
+	bh=Bymy0Gf3MlRjiPsYXtXi4P5IenOWoaNIv/Oh5Iv9PxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfdJ4lpoVsV6bebXlOLbFMqhiy0ZJzvuz5wbpUowH7DdC6HU+04T0yTtLGpUzWZEB
-	 STHy57hi4d2+4VA/VSe0K+ktzulieM9HSe3wFb0uk+ODY5W2Geeq9v+arHE4BDnNmR
-	 jOenKZoOQYysS1DwaFMmgCtlhFMopHwBgQKjR+4Q=
+	b=XCq1b66tgCXD1zREqugPhV3pytrHq5MmJHVcSxAqj+SBX8vHm6MEETxsGnIpk3N4x
+	 reJldIBK1NyE4KD4xG8VbsptFlWaP/P7TC9OosOUCCWTBIkNDfJ7egORHf2uQ5e8c5
+	 36heHV8Ua5eFJJLfeejnRMaZQBkEVRZzBwVwnkl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfLJWkX (ORCPT
+        id S1730555AbfLJWk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:40:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52474 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:40:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbfLJWcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:08 -0500
+        id S1727527AbfLJWcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E17206EC;
-        Tue, 10 Dec 2019 22:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7A820828;
+        Tue, 10 Dec 2019 22:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017127;
-        bh=+d/EPeAnK08Y492IrzqNRX5zak9fQNfVoHVoWmvBVg4=;
+        s=default; t=1576017125;
+        bh=Bymy0Gf3MlRjiPsYXtXi4P5IenOWoaNIv/Oh5Iv9PxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBBPdFYuKPEbO8L3m/j4x7wSGy3lABomuDYjWmVxHVJ3RRKci4QASG+sAGQ/Jm2N+
-         U3Up7r3isbHqliyRfHbHzZXmCU6fAYHEhsKot57B4NWuohSmrrRNNlLTpyK7LK0jEV
-         Y1GghDKixHpVcYucYqo6IcS0cUd717yBSkE3AsaI=
+        b=jgwqe/ogWI5lydkysxm1oj62dn0d/dMmHsgyZ1jzCtIeiNmRULihwIcE3S1bf2yDk
+         /m9S0uDeHYxfxXNVyxyGKJB4aN6yjqAMkDYwRjM5mwmwjGlqYNBYWLbRqoVImnB7CG
+         sZt9qYb9Z99R41h17wIv4IkleiR/Tak73yh+72lU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 77/91] spi: tegra20-slink: add missed clk_unprepare
-Date:   Tue, 10 Dec 2019 17:30:21 -0500
-Message-Id: <20191210223035.14270-77-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 75/91] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Tue, 10 Dec 2019 17:30:19 -0500
+Message-Id: <20191210223035.14270-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,51 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 04358e40ba96d687c0811c21d9dede73f5244a98 ]
+[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Protect against that by always validating the show/store callbacks.
+
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index af2880d0c1126..cf2a329fd8958 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1078,7 +1078,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
- 	}
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index fe4cf5e4acec6..8ce0f6eef89e4 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1151,6 +1151,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1164,6 +1166,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
+ }
  
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
+ 
 -- 
 2.20.1
 
