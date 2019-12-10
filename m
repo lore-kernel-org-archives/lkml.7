@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B26BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DE7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659B0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1CC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014239;
-	bh=lWnVGF3El/SbpEqfrza9Xl4247t0but3w9KlA8qFZR0=;
+	s=default; t=1576014246;
+	bh=Zmqhn+gLHF4HZ1l6ptap/Srkv2xAvfXDEkW1pu0VASY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH+Ynj8S0WfrReNP/X1u5jappX+YinSsKSiNYiHnQaANhc1HwdI7J3JtXrGRU4N8F
-	 3zhydE5iO0wJsNMdUXXd9vfE0su4kBql/XyCOyqzoQxEeOQrztG92moXHEaMnktNvV
-	 F+t5Uss9+Vp5j1bK6aeFt6XuPYty95Bo48mB6OKE=
+	b=fyGCtRN81ISLrKGhDQNNbwjNJbNR1BOg6Xst6/iMF2X4/iNADUjNVnNvhYWcUQTek
+	 Frqg7cN9XsIqNAJcFFa+YcWCWAkheCGoFHsFN3gkNx77L+gnq5j3qRjhxuRgZHjwoM
+	 8tsKbTUfCcmAPtIKnOkSnBNNNYuOA5yT1zHF6jDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfLJVn6 (ORCPT
+        id S1729914AbfLJVoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:43:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37888 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:44:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbfLJVdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:31 -0500
+        id S1728196AbfLJVd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814F82465A;
-        Tue, 10 Dec 2019 21:33:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A2A24655;
+        Tue, 10 Dec 2019 21:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013610;
-        bh=lWnVGF3El/SbpEqfrza9Xl4247t0but3w9KlA8qFZR0=;
+        s=default; t=1576013607;
+        bh=Zmqhn+gLHF4HZ1l6ptap/Srkv2xAvfXDEkW1pu0VASY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkY4xzNull6uIVLK80YlsPh8JGLHaedmhmXDF/HTFb3aNnlwPmwpupymmyHoz2BcB
-         E9PkOFjKxrmNFp18LrQN+VQ0WA9H2kL3bOZmJabg3Tg4HAhuCAZPt1oh0k2KS+PiJa
-         zY4zU22lEnVhi2PJJIX2K192xq0570l8ghbacjmk=
+        b=XhH1yKWIe7HbPDIZHXBcQVglSmsN1tR+G6G5i2kk1QcXGKIDhpTE7PfliqpGDCUe+
+         2YGfpDszWC3wvOUrgmAevVzSm+EIt0ig1gZI/u3p5jxka7jhMtV6diTdUAt0QnGqke
+         GH9YzQBtdT87B0/nXQBvIGUe5mBie334QIGvtvxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 056/177] perf test: Report failure for mmap events
-Date:   Tue, 10 Dec 2019 16:30:20 -0500
-Message-Id: <20191210213221.11921-56-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 054/177] ath10k: Correct error handling of dma_map_single()
+Date:   Tue, 10 Dec 2019 16:30:18 -0500
+Message-Id: <20191210213221.11921-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -63,41 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
+[ Upstream commit d43810b2c1808ac865aa1a2a2c291644bf95345c ]
 
-When fail to mmap events in task exit case, it misses to set 'err' to
--1; thus the testing will not report failure for it.
+The return value of dma_map_single() should be checked for errors using
+dma_mapping_error() and the skb has been dequeued so it needs to be
+freed.
 
-This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
-can report correct result.
+This was found when enabling CONFIG_DMA_API_DEBUG and it warned about the
+missing dma_mapping_error() call.
 
-Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/task-exit.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index e92fa6029ac77..788b0805d2f1e 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -105,6 +105,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- 	if (perf_evlist__mmap(evlist, 128) < 0) {
- 		pr_debug("failed to mmap events: %d (%s)\n", errno,
- 			 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		err = -1;
- 		goto out_delete_evlist;
- 	}
- 
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 174e0ce31c42b..448e3a8c33a6d 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3844,8 +3844,10 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
+ 			     ar->running_fw->fw_file.fw_features)) {
+ 			paddr = dma_map_single(ar->dev, skb->data,
+ 					       skb->len, DMA_TO_DEVICE);
+-			if (!paddr)
++			if (dma_mapping_error(ar->dev, paddr)) {
++				ieee80211_free_txskb(ar->hw, skb);
+ 				continue;
++			}
+ 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
+ 			if (ret) {
+ 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
 -- 
 2.20.1
 
