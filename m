@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E0DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6711C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E52F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA24207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017577;
-	bh=MoNM8gLX5YZBjQ6o+7jPUP6RBquI7F46busEQbi4jzM=;
+	s=default; t=1576017581;
+	bh=c96UM0jcU18or907lSHue/ak1btM61d24pnrAmvpJf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8Vte0Lf2uZ4a/qJ8i14I59SM5BKXpsnFDI3MeKpBtdrcNenBWI01yOdM0VG5ZFR/
-	 3i407zOUzTHiJC2FBeuo4MRhBjNRcdHcoLGV4uwcCTpLLRodbAH5oK1GoEYNRvK6p4
-	 kvl9z7kkZRkVQKmAwzii/zrfw6iREg2LjzhTly0Q=
+	b=K0QBDF5y0FinKWrjPpLZsJK+uR/DuqEKR6+TsK9mZwkBZe0VjaTTOBEJjDMktklpo
+	 NdsRHbY4rbtxb6c86tkwoRVpMjuX42A7qwN3J66O6suMsEAzcqUkYXQUDQtS+357Un
+	 QygSvdwie/ihW3TVNfMHC3tbBgSVsuMGdqS2UvVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730246AbfLJWjf (ORCPT
+        id S1727656AbfLJWcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:39:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54018 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbfLJWdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:20 -0500
+        id S1729019AbfLJWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A770207FF;
-        Tue, 10 Dec 2019 22:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B82624654;
+        Tue, 10 Dec 2019 22:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017199;
-        bh=MoNM8gLX5YZBjQ6o+7jPUP6RBquI7F46busEQbi4jzM=;
+        s=default; t=1576017116;
+        bh=c96UM0jcU18or907lSHue/ak1btM61d24pnrAmvpJf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LggG6qyD5RC3gXHtP9e+mqx9f/rRY8H55s6Ln2D2x105P8mW0P6kXI4oRyPreHD4s
-         Ngl6pVhxNABlL33NbqKViutBw/4jk077Z+cEA8YGv0dDtnOY+HEUYAoomRcYmdv6Uv
-         e5gmxDOud/JS6d2kv1wm9iI6A5ZW7FZlyUfXwxSY=
+        b=ALo06PvFGTBKHQ1iSShcrI0sbGYVAkErCzV7r7E0ZzI1ViU6H6xbWTj1QunzOKGI9
+         j793ePvCxonIDHsT5hfLjNtNtTqMUObAo2ZN3+g9cl9F9WTEkW/R+jDCUS2cXV7q7j
+         IPgiJqswQ8gDdsqSDms1HcdKNTpuxKEktsPe3JRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/71] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Tue, 10 Dec 2019 17:32:07 -0500
-Message-Id: <20191210223316.14988-2-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 68/91] spi: pxa2xx: Add missed security checks
+Date:   Tue, 10 Dec 2019 17:30:12 -0500
+Message-Id: <20191210223035.14270-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
-References: <20191210223316.14988-1-sashal@kernel.org>
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,49 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
 
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index 8b4164343f200..0cf7032ccdc92 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -62,9 +62,9 @@ struct bh1750_chip_info {
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 6dd195b94c578..2f84d7653afd4 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1529,7 +1529,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 	}
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
- 
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
++
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->pdev = pdev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 -- 
 2.20.1
 
