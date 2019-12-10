@@ -2,118 +2,91 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6520CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADC2C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B4F20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EebQ1jgi"
+	by mail.kernel.org (Postfix) with ESMTP id 31AC92073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575973322;
+	bh=6Df/JQ/m4jJ9BtZm68ErO3aZU8IksXPQF3B1hEkYW7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mukSAb9F5VKWtdhO+FCEqZg1t04yfFGv+uuLUMqc9Q7EnsUpkw9+yDur56WzoXKwZ
+	 qPCOpN9Y15msM+Vew6vor8AIkWgrjzS8rrUbm+mif9Y4lTiLPLVx3h7CnMPyBdWy+G
+	 WOnvhNYqZz//7S2k4/2dVIbtDBJrdpNpnxm9VzCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfLJKV6 (ORCPT
+        id S1727444AbfLJKWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:21:58 -0500
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:24439 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJKV5 (ORCPT
+        Tue, 10 Dec 2019 05:22:01 -0500
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:52681 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfLJKV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:21:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575973317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4PhE0mOGPD1zWZASbQ5CWdp3IZVaRYiYD5CdAezDIzg=;
-  b=EebQ1jgiepeEgkAhPB1OXJjmDCAqe5oarwxgCPAkX9gFRup0fr9bUy5v
-   XGfZFw1i+P7ME171ocHatDwqpFLUmP4w+1x9u5HeLmCQxFv/7EhAYTdUN
-   WY7mGAJGqI4n90gxG5FrCg1mtAlav782SckEslFwTJVJTJ7s8BW6eB1Zq
-   g=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: J/Qwc1MLS8uzoplHZItR93vbDIMgnz3emkOpUjrWj9JL23ADQcoIho4tYn5tjdu3JFCBTJ+W8O
- plARZAwoIRJqT0bZ0j1l8NTrKDrhwiDWjQocq8hGJMx6uguvE+U2nXB0bJDEFxebBkMyT/IHKy
- vW2udoFw/dOZ73cpw1J3BTTq1J0jnFgFkBlE4Ml+e85k/r5MyvH8pHxgNzxGIy9dDsek/H23Ax
- TdqTP9EV1nylxtyI3d5TOYZiKYwVR5shwFf9FQxGQE2H79Dppbs5/4u8cj676sEe2NXZwNFvyV
- 2vs=
-X-SBRS: 2.7
-X-MesageID: 9447992
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,299,1571716800"; 
-   d="scan'208";a="9447992"
-Date:   Tue, 10 Dec 2019 11:21:49 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     <axboe@kernel.dk>, <sjpark@amazon.com>, <konrad.wilk@oracle.com>,
-        <pdurrant@amazon.com>, SeongJae Park <sjpark@amazon.de>,
-        <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>
-Subject: Re: [Xen-devel] [PATCH v5 1/2] xenbus/backend: Add memory pressure
- handler callback
-Message-ID: <20191210102023.GF980@Air-de-Roger>
-References: <20191210080628.5264-1-sjpark@amazon.de>
- <20191210080628.5264-2-sjpark@amazon.de>
- <20191210101635.GD980@Air-de-Roger>
+        Tue, 10 Dec 2019 05:21:58 -0500
+Received: by mail-wm1-f52.google.com with SMTP id p9so2503352wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:21:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CSZM3uDVFbgkGr5DOjP7IcHDu8SRtqcHecCMBfj8wdY=;
+        b=bk1OjF1VqQtJjMsGBNsVGJdfcBZnseHh4z8BN+rTKQ8xNgG+3ms3U0jzjSAZprHXS4
+         cdAbnxNvSHuqozBuZsINgY4wjARPKvOdJhRiu1MmY+KXFjk7PPoZGI6ZQnVExyyDXqsa
+         4+j4e2qioxqZS5X2PyxEbpTJQPJY3LiKI9ixESj2gfy0KsqYjPHA2D+XMnhDh2brQSPw
+         WiNo33DRyBj8CIcvX0tbN34TJTZL3ndkdszop1nKWxNNC0uJuvwRlweYVy/Frn0+sNwd
+         i08Q9zXYdlA1j4farnjdaQ59MAdLAr4xO3IyE/LJxzV58syIYyoLJRaNglN4lXQs0Nuy
+         eEEA==
+X-Gm-Message-State: APjAAAU4uCU+at0TQA0GI/Pu9dizn3pSsN3yQhPy7RFyboKvPfVonqDa
+        tblruliTUDVlAED7LqCq2SQ=
+X-Google-Smtp-Source: APXvYqy6ifGo1Gx4DRfjm9s/uVX87SaxM+rvYejqy3++2/RdsMTq7LWzLUAHDAUzgKq0o6g+yDvB7g==
+X-Received: by 2002:a1c:a382:: with SMTP id m124mr4339772wme.90.1575973316781;
+        Tue, 10 Dec 2019 02:21:56 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id k4sm2629758wmk.26.2019.12.10.02.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 02:21:56 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:21:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        akpm@linux-foundation.org
+Subject: Re: [Patch v2] mm/hotplug: Only respect mem= parameter during boot
+ stage
+Message-ID: <20191210102155.GD10404@dhcp22.suse.cz>
+References: <20191210084413.21957-1-bhe@redhat.com>
+ <75188d0f-c609-5417-aa2e-354e76b7ba6e@gmail.com>
+ <429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com>
+ <20191210095002.GA10404@dhcp22.suse.cz>
+ <20191210101100.GM2984@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210101635.GD980@Air-de-Roger>
+In-Reply-To: <20191210101100.GM2984@MiWiFi-R3L-srv>
 User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:16:35AM +0100, Roger Pau Monné wrote:
-> On Tue, Dec 10, 2019 at 08:06:27AM +0000, SeongJae Park wrote:
-> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> > index 869c816d5f8c..cdb075e4182f 100644
-> > --- a/include/xen/xenbus.h
-> > +++ b/include/xen/xenbus.h
-> > @@ -104,6 +104,7 @@ struct xenbus_driver {
-> >  	struct device_driver driver;
-> >  	int (*read_otherend_details)(struct xenbus_device *dev);
-> >  	int (*is_ready)(struct xenbus_device *dev);
-> > +	unsigned (*reclaim)(struct xenbus_device *dev);
+On Tue 10-12-19 18:11:00, Baoquan He wrote:
+> On 12/10/19 at 10:50am, Michal Hocko wrote:
+[...]
+> > [1] Btw. it would have been much better if you posted the version 2 only
+> > after all the feedback got discussed properly.
 > 
-> ... hence I wonder why it's returning an unsigned when it's just
-> ignored.
+> You could have replied to wrong person. 
 > 
-> IMO it should return an int to signal errors, and the return should be
-> ignored.
+> I don't know the use case David told. My motivation was to make memory hotplug
+> not impacted after boot. I thought I have got your question and answered
+> it. I will wait a little longer when post next time.
 
-Meant to write 'shouldn't be ignored' sorry.
-
-Roger.
+let me reply to your original email.
+-- 
+Michal Hocko
+SUSE Labs
