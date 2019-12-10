@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E16C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8E4C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACD3207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469A6214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013545;
-	bh=pghwgZMd4SWZs3qtgTbo4IgWuTXCjN4jCn4pl/oZLUY=;
+	s=default; t=1576013551;
+	bh=kk3/+6go7qsIY4UkBEPYHWNWVbXKrCIUUdRKgsr68gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJzSJlnzB1UHjwfc2p0EXKqvA7yNQGJvCMFxkT0z/ouNrNeLdcp163hKveTAB2nyN
-	 YG9X7CcdEwMigV7zJmzCzP2mEL70h8O/qwR2hJZPuZsLW/rTL/O2jHUY7IQtleaAzi
-	 o2GplwvaclqCHGVtfMcY/fTbFJtUOikzVDzHBLf4=
+	b=BE9KW1Cc05nTkoywjLaJpmY1Fo64VgvUhbI6/Ommyjqcsq9Wo8lNNpLc/8m9BhD+h
+	 xFrEZdsJjOl52cuMiSP79BxF53TrIQzxiY/IN2aRCtsWrev8NHhxyWPNMgnSV/aHZ9
+	 OBJw5Yl0Op02+X/HVVF+hzoz2r8radF3wCqnfolQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfLJVcY (ORCPT
+        id S1728609AbfLJVc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbfLJVJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:15 -0500
+        id S1728484AbfLJVcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DDA224687;
-        Tue, 10 Dec 2019 21:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F16F2073B;
+        Tue, 10 Dec 2019 21:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012154;
-        bh=pghwgZMd4SWZs3qtgTbo4IgWuTXCjN4jCn4pl/oZLUY=;
+        s=default; t=1576013545;
+        bh=kk3/+6go7qsIY4UkBEPYHWNWVbXKrCIUUdRKgsr68gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mijmnRVQfcWQ5wRhAg8l2lIhLGdDo1g6HBQNWPlNfEy+NqXOaE45n6rpYKGjVARR+
-         IHNTJnrLEEMNOvwbAmT6Qx0VJ9OHb1xOedPEPxuHAbhAgQnQOsjbw4TZ6YxAScUbhf
-         JPWYCQqV+16L/Rwxab3B8ffa8MEmg9YmZ5+F+OOw=
+        b=RpgpHsWHXOHdKXLbZklQ/tfMhQzM1g1Piufgi3f9ppNxT9J7CKqzWttw377lR7OeX
+         UAyVMAlnsZWcumRtKy0stdaWBQXVTjWacXpE2ABfd6rLJbcaNA6vKqFLMXZq8Nv22T
+         GHiHLzTNo7FL/OPiqFbaku2tJyAra8oouIXdnBzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 117/350] iio: dac: ad7303: replace mlock with own lock
-Date:   Tue, 10 Dec 2019 16:03:42 -0500
-Message-Id: <20191210210735.9077-78-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 002/177] drm/panel: Add missing drm_panel_init() in panel drivers
+Date:   Tue, 10 Dec 2019 16:29:26 -0500
+Message-Id: <20191210213221.11921-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,85 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
+[ Upstream commit 65abbda8ed7ca48c8807d6b04a77431b438fa659 ]
 
-This change replaces indio_dev's mlock with the driver's own lock. The lock
-is mostly needed to protect state when changing the `dac_cache` info.
-The lock has been extended to `ad7303_read_raw()`, to make sure that the
-cache is updated if an SPI-write is already in progress.
+Panels must be initialised with drm_panel_init(). Add the missing
+function call in the panel-raspberrypi-touchscreen.c and
+panel-sitronix-st7789v.c drivers.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190823193245.23876-2-laurent.pinchart@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/ad7303.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 +
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c        | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-index 8de9f40226e62..14bbac6bee982 100644
---- a/drivers/iio/dac/ad7303.c
-+++ b/drivers/iio/dac/ad7303.c
-@@ -41,6 +41,7 @@ struct ad7303_state {
- 	struct regulator *vdd_reg;
- 	struct regulator *vref_reg;
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index 9a2cb8aeab3a4..aab6a70ece7f0 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -427,6 +427,7 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 		return PTR_ERR(ts->dsi);
+ 	}
  
-+	struct mutex lock;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -79,7 +80,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
++	drm_panel_init(&ts->base);
+ 	ts->base.dev = dev;
+ 	ts->base.funcs = &rpi_touchscreen_funcs;
  
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+index 74284e5afc5d9..89fa17877b336 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+@@ -380,6 +380,7 @@ static int st7789v_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, ctx);
+ 	ctx->spi = spi;
  
- 	if (pwr_down)
- 		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
-@@ -90,7 +91,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	 * mode, so just write one of the DAC channels again */
- 	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
++	drm_panel_init(&ctx->panel);
+ 	ctx->panel.dev = &spi->dev;
+ 	ctx->panel.funcs = &st7789v_drm_funcs;
  
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return len;
- }
- 
-@@ -116,7 +117,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&st->lock);
- 		*val = st->dac_cache[chan->channel];
-+		mutex_unlock(&st->lock);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		vref_uv = ad7303_get_vref(st, chan);
-@@ -144,11 +147,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
- 		if (val >= (1 << chan->scan_type.realbits) || val < 0)
- 			return -EINVAL;
- 
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(&st->lock);
- 		ret = ad7303_write(st, chan->address, val);
- 		if (ret == 0)
- 			st->dac_cache[chan->channel] = val;
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(&st->lock);
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -211,6 +214,8 @@ static int ad7303_probe(struct spi_device *spi)
- 
- 	st->spi = spi;
- 
-+	mutex_init(&st->lock);
-+
- 	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
- 	if (IS_ERR(st->vdd_reg))
- 		return PTR_ERR(st->vdd_reg);
 -- 
 2.20.1
 
