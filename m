@@ -2,129 +2,75 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4343C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0100AC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AA320828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DlqUHBNH"
+	by mail.kernel.org (Postfix) with ESMTP id CAE3820836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575988952;
+	bh=fo4Ig2GCo7sLhJYHhhz6hQKFMZeSD+SQc5ZCTQZ7Fn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WpBVK3AgaGp2q4z7G5b3/BGrkD0KPzbqcm3mKm04HMm2ar/tnP4CiTpoyIWinCWhX
+	 3toY+nmxGSnRL3VJDCxQhtPXn/QVCynRzTlARr6//8mVVa0hhB47FX9d1yW83KZXXq
+	 +nuL39ihsZPuVnKPQx95D5PjD9het8tcKTHykWZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfLJOm1 (ORCPT
+        id S1727642AbfLJOmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:42:27 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50120 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbfLJOm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:42:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575988921; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CYwtMOW9m704uzJQidOmDJN9rPdrQ5RvFlN8Zv2YE/o=;
-        b=DlqUHBNH52HPZtFzdyGHOXj04HeTDWssvHMxTavbLSuBvWg8VEH+SdLkR4pLP3lVHQ5h+H
-        B+D9Xxcoatom0Qcn9rU+xeft5yjMJZSZBB18N2RhumXZIK90tXwhUIShA4IobDYi0whl8Y
-        KW21MehXsT2iMdJQdW3sgTsCz0VL2CY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 5/6] gpu/drm: ingenic: Check for display size in CRTC atomic check
-Date:   Tue, 10 Dec 2019 15:41:41 +0100
-Message-Id: <20191210144142.33143-5-paul@crapouillou.net>
-In-Reply-To: <20191210144142.33143-1-paul@crapouillou.net>
-References: <20191210144142.33143-1-paul@crapouillou.net>
+        Tue, 10 Dec 2019 09:42:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbfLJOma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:42:30 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD3720828;
+        Tue, 10 Dec 2019 14:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575988950;
+        bh=fo4Ig2GCo7sLhJYHhhz6hQKFMZeSD+SQc5ZCTQZ7Fn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QINYYuE12L3diIi6rGVdGnWyLYKBuPqFUs0uVK/eE9fFntivkXgtFqNJz79s/Amzo
+         CP/k3h66us6DwLCAGXrdMFcLzNJRccUJEh/gm/Oqlu80FRmNIB7jVrVGh1LZbvZM4V
+         E05DjsWMZiF+6Gcm61gok6fQPnYpSfyei6rLgvQc=
+Date:   Tue, 10 Dec 2019 15:42:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     devel@driverdev.osuosl.org, alsa-devel@alsa-project.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH for-5.6 0/4] staging: ALSA PCM API updates
+Message-ID: <20191210144228.GA3937513@kroah.com>
+References: <20191210141356.18074-1-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210141356.18074-1-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that the requested display size isn't above the limits supported
-by the CRTC.
+On Tue, Dec 10, 2019 at 03:13:52PM +0100, Takashi Iwai wrote:
+> Hi,
+> 
+> this is a patch set to adapt the latest ALSA PCM API to staging
+> drivers.  Basically these are merely cleanups, as shown in diffstat,
+> and there should be no functional changes.
+> 
+> As the corresponding ALSA PCM API change is found in 5.5-rc1, please
+> apply these on 5.5-rc1 or later.  Or if you prefer, I can merge them
+> through sound tree, too.  Let me know.
 
-- JZ4750 and older support up to 800x600;
-- JZ4755 supports up to 1024x576;
-- JZ4760 and JZ4770 support up to 720p;
-- JZ4780 supports up to 2k.
+Because of some future most driver changes that will be happening
+(hopefully soon), I'll just take all of these in the staging tree now,
+thanks!
 
-v2: No change
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/ingenic-drm.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index cef2f29a9d7a..da681214d0b6 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -152,6 +152,7 @@ struct ingenic_dma_hwdesc {
- 
- struct jz_soc_info {
- 	bool needs_dev_clk;
-+	unsigned int max_width, max_height;
- };
- 
- struct ingenic_drm {
-@@ -163,6 +164,7 @@ struct ingenic_drm {
- 	struct device *dev;
- 	struct regmap *map;
- 	struct clk *lcd_clk, *pix_clk;
-+	const struct jz_soc_info *soc_info;
- 
- 	struct ingenic_dma_hwdesc *dma_hwdesc;
- 	dma_addr_t dma_hwdesc_phys;
-@@ -325,6 +327,10 @@ static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
- 	if (!drm_atomic_crtc_needs_modeset(state))
- 		return 0;
- 
-+	if (state->mode.hdisplay > priv->soc_info->max_height ||
-+	    state->mode.vdisplay > priv->soc_info->max_width)
-+		return -EINVAL;
-+
- 	rate = clk_round_rate(priv->pix_clk,
- 			      state->adjusted_mode.clock * 1000);
- 	if (rate < 0)
-@@ -620,6 +626,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->soc_info = soc_info;
- 	priv->dev = dev;
- 	drm = &priv->drm;
- 	drm->dev_private = priv;
-@@ -635,7 +642,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
- 	drm_mode_config_init(drm);
- 	drm->mode_config.min_width = 0;
- 	drm->mode_config.min_height = 0;
--	drm->mode_config.max_width = 800;
-+	drm->mode_config.max_width = soc_info->max_width;
- 	drm->mode_config.max_height = 4095;
- 	drm->mode_config.funcs = &ingenic_drm_mode_config_funcs;
- 
-@@ -813,10 +820,14 @@ static int ingenic_drm_remove(struct platform_device *pdev)
- 
- static const struct jz_soc_info jz4740_soc_info = {
- 	.needs_dev_clk = true,
-+	.max_width = 800,
-+	.max_height = 600,
- };
- 
- static const struct jz_soc_info jz4725b_soc_info = {
- 	.needs_dev_clk = false,
-+	.max_width = 800,
-+	.max_height = 600,
- };
- 
- static const struct of_device_id ingenic_drm_of_match[] = {
--- 
-2.24.0
-
+greg k-h
