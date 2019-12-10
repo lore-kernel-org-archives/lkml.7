@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BC6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E57EC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9FBF2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B54208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013961;
-	bh=b/KjiDjETamHW9Y/8FNozm/dGxjife84uORnLJ/QAO0=;
+	s=default; t=1576013965;
+	bh=1babmQM4+K24X+5mb2qf7Srsl8X3oOursEsQlBCqiuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEpDT2OFldBavN50IpDN3eN6IvTLnNI6pjsDledcu8giKtaEd1MpP5AcodVTp0YbD
-	 DeSjUtSy/GTIrjI7BQ4w7Q1MGtfq+dz23CEnDxcTUc4ezo7O8V7qMKyXBm8IxxjIrX
-	 aWigpXPs/4jpBeDs4Q64gOoF3PnItKXVsI2wS/5Y=
+	b=D8vezJ+Fu8eR/uVoOQbaFBOY0kDiXwA3S+02PJvojRiNquntHD0OQ4eIRedmbEaXx
+	 CQ/2yKjvHlOgNn8Zuf0wrAD5h/cb1vDeYZ3cH0a8JIGmN0aldBAPwF0wsUkEggKP+g
+	 DLCX/LsqszV13CdWUzvRPYc/IqWvJTQKz61OCfqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbfLJVe6 (ORCPT
+        id S1727101AbfLJVjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730094AbfLJVer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:47 -0500
+        id S1729742AbfLJVfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B91207FF;
-        Tue, 10 Dec 2019 21:34:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2630F207FF;
+        Tue, 10 Dec 2019 21:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013686;
-        bh=b/KjiDjETamHW9Y/8FNozm/dGxjife84uORnLJ/QAO0=;
+        s=default; t=1576013699;
+        bh=1babmQM4+K24X+5mb2qf7Srsl8X3oOursEsQlBCqiuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u405EaP1BZTq8noYYF8BaS8zTwV42211rlTiRHlfmyEt2mUf8xd4eWv+y+w/Cf3hd
-         CRDqY441KJpIMNd4WLzpBIwtmBliv61QDz9a0V1OxFS7eEm6IVhr6jQKGUCWtyQAl8
-         mH9zNFSRfZs0xfcS8KGdVC/C6Q9yPMIzVMhoVc1c=
+        b=JEoVc1hi+TyaFdTiynZr8IDWJRXdYmNmTNrOkpUADhEsyj4TaWaWh1s9usL8r/Byk
+         pItubQs1Qvb3u2mnGxEsahSE33VmMsGtFHGDuQ3n0VvKUowM3vZb5ra7ab85OHp96a
+         O4Kh6W8wvwWUGCAc2Mv7uK4RIJzY83iZD/rVaJuU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 119/177] drm/amdgpu: fix potential double drop fence reference
-Date:   Tue, 10 Dec 2019 16:31:23 -0500
-Message-Id: <20191210213221.11921-119-sashal@kernel.org>
+Cc:     Mike Isely <isely@pobox.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 129/177] media: pvrusb2: Fix oops on tear-down when radio support is not present
+Date:   Tue, 10 Dec 2019 16:31:33 -0500
+Message-Id: <20191210213221.11921-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,43 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Mike Isely <isely@pobox.com>
 
-[ Upstream commit 946ab8db6953535a3a88c957db8328beacdfed9d ]
+[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
 
-The object fence is not set to NULL after its reference is dropped. As a
-result, its reference may be dropped again if error occurs after that,
-which may lead to a use after free bug. To avoid the issue, fence is
-explicitly set to NULL after dropping its reference.
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-Acked-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
+
+[hverkuil: fix two checkpatch warnings]
+
+Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
-index 8904e62dca7ae..41d3142ef3cf0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
-@@ -138,6 +138,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
- 		}
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index e53a80b589a15..04d334152eae2 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -916,8 +916,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    (vp->dev_radio &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
+ }
  
- 		dma_fence_put(fence);
-+		fence = NULL;
- 
- 		r = amdgpu_bo_kmap(vram_obj, &vram_map);
- 		if (r) {
-@@ -183,6 +184,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
- 		}
- 
- 		dma_fence_put(fence);
-+		fence = NULL;
- 
- 		r = amdgpu_bo_kmap(gtt_obj[i], &gtt_map);
- 		if (r) {
+@@ -953,7 +957,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    (!vp->dev_radio ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
