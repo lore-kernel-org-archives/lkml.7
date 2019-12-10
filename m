@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ECC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6410207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B1D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013376;
-	bh=AWW6DfJe2TmspADEsjJm5au/PDX+u4zNhCZjAAL+qBo=;
+	s=default; t=1576013386;
+	bh=bwDrjo4VRhKkKgsT4Y++69KYcmNh0F14L3E37LzRuGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYV5jyVt3HFKb5O2kwrTw+s5i5rKPClwSgTuk79kpKyxVDWOXkqDR7w/OdI0TEjtr
-	 vRtHXmXmTGnVX1x4l5JiC5lRDEAQMM9OeUcp21NCPQjRiyogacuOKJROmfrO3y7op7
-	 8OqUWVuw0ia//0aLbfFfUUFAmiusWxWp4fVD0x8A=
+	b=lBgYE5Y3ZyBgNyEIZNXVJ46j2egYx2ZqO9IPt332qxxJe5uAV7ew5C0pnmDyjPGcf
+	 ftPDBCx5JO7+mnAcdPYy0v+mEfp0+HSZc6bxQW/7keExzDuKe1NwAff0p/H8AMn4RE
+	 lYK39trl7ycdjX6/2YVWw3epeBPqeVD0R30JcK74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfLJVKI (ORCPT
+        id S1727281AbfLJV3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59336 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:29:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbfLJVKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:00 -0500
+        id S1728359AbfLJVKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 694C1246C3;
-        Tue, 10 Dec 2019 21:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D147524680;
+        Tue, 10 Dec 2019 21:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012200;
-        bh=AWW6DfJe2TmspADEsjJm5au/PDX+u4zNhCZjAAL+qBo=;
+        s=default; t=1576012204;
+        bh=bwDrjo4VRhKkKgsT4Y++69KYcmNh0F14L3E37LzRuGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLmNa3yTi5G8A7EcGKdQ6HZ/8ie8XDcjZZR6ZSHjoncEO0Ks0vbP7HBAfCi1DULFY
-         t6e2b+wRWQG0JSIdQfJ2nutBKAxx5b/NeC00b4oV52A0XZ4o7nokY4eVG+amObojHF
-         KXGR3wSh3Kuh1hr3Do34b9PQmOw/d9dv3cPYwwSg=
+        b=U2vCdEKzC67ZGv7kIBY6JAacg3zsM80RXytl1ve80DUaf76DxKBQEPlsLtNoLQtxj
+         WPE93vPtLt0ECqt0bAXaF5Z882ai7u5awohN1xxZCs1VM8Yrs5g9ya8kX67eQeoQUX
+         FhQpz6q59zUVwg1zpamQXw2auaFJpyKhFnGj7dGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 153/350] media: smiapp: Register sensor after enabling runtime PM on the device
-Date:   Tue, 10 Dec 2019 16:04:18 -0500
-Message-Id: <20191210210735.9077-114-sashal@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 157/350] drm: Don't free jobs in wait_event_interruptible()
+Date:   Tue, 10 Dec 2019 16:04:22 -0500
+Message-Id: <20191210210735.9077-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,54 +62,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit 90c9e4a4dba9f4de331372e745fb1991c1faa598 ]
+[ Upstream commit 588b9828f0744ca13555c4a35cd0251ac8ad8ad2 ]
 
-Earlier it was possible that the parts of the driver that assumed runtime
-PM was enabled were being called before runtime PM was enabled in the
-driver's probe function. So enable runtime PM before registering the
-sub-device.
+drm_sched_cleanup_jobs() attempts to free finished jobs, however because
+it is called as the condition of wait_event_interruptible() it must not
+sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Instead let's rename drm_sched_cleanup_jobs() to
+drm_sched_get_cleanup_job() and simply return a job for processing if
+there is one. The caller can then call the free_job() callback outside
+the wait_event_interruptible() where sleeping is possible before
+re-checking and returning to sleep if necessary.
+
+Tested-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Fixes: 5918045c4ed4 ("drm/scheduler: rework job destruction")
+Signed-off-by: Steven Price <steven.price@arm.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/337652/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/scheduler/sched_main.c | 43 ++++++++++++++------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 9adf8e034e7d6..42805dfbffeb9 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -3101,19 +3101,23 @@ static int smiapp_probe(struct i2c_client *client)
- 	if (rval < 0)
- 		goto out_media_entity_cleanup;
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+index f39b97ed4ade4..2af64459b3d77 100644
+--- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -632,43 +632,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
+ }
  
--	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
--	if (rval < 0)
--		goto out_media_entity_cleanup;
+ /**
+- * drm_sched_cleanup_jobs - destroy finished jobs
++ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
+  *
+  * @sched: scheduler instance
+  *
+- * Remove all finished jobs from the mirror list and destroy them.
++ * Returns the next finished job from the mirror list (if there is one)
++ * ready for it to be destroyed.
+  */
+-static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
++static struct drm_sched_job *
++drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
+ {
++	struct drm_sched_job *job;
+ 	unsigned long flags;
+ 
+ 	/* Don't destroy jobs while the timeout worker is running */
+ 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
+ 	    !cancel_delayed_work(&sched->work_tdr))
+-		return;
 -
- 	pm_runtime_set_active(&client->dev);
- 	pm_runtime_get_noresume(&client->dev);
- 	pm_runtime_enable(&client->dev);
-+
-+	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
-+	if (rval < 0)
-+		goto out_disable_runtime_pm;
-+
- 	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
- 	pm_runtime_use_autosuspend(&client->dev);
- 	pm_runtime_put_autosuspend(&client->dev);
++		return NULL;
  
- 	return 0;
+-	while (!list_empty(&sched->ring_mirror_list)) {
+-		struct drm_sched_job *job;
++	spin_lock_irqsave(&sched->job_list_lock, flags);
  
-+out_disable_runtime_pm:
-+	pm_runtime_disable(&client->dev);
+-		job = list_first_entry(&sched->ring_mirror_list,
++	job = list_first_entry_or_null(&sched->ring_mirror_list,
+ 				       struct drm_sched_job, node);
+-		if (!dma_fence_is_signaled(&job->s_fence->finished))
+-			break;
+ 
+-		spin_lock_irqsave(&sched->job_list_lock, flags);
++	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
+ 		/* remove job from ring_mirror_list */
+ 		list_del_init(&job->node);
+-		spin_unlock_irqrestore(&sched->job_list_lock, flags);
+-
+-		sched->ops->free_job(job);
++	} else {
++		job = NULL;
++		/* queue timeout for next job */
++		drm_sched_start_timeout(sched);
+ 	}
+ 
+-	/* queue timeout for next job */
+-	spin_lock_irqsave(&sched->job_list_lock, flags);
+-	drm_sched_start_timeout(sched);
+ 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
+ 
++	return job;
+ }
+ 
+ /**
+@@ -708,12 +706,19 @@ static int drm_sched_main(void *param)
+ 		struct drm_sched_fence *s_fence;
+ 		struct drm_sched_job *sched_job;
+ 		struct dma_fence *fence;
++		struct drm_sched_job *cleanup_job = NULL;
+ 
+ 		wait_event_interruptible(sched->wake_up_worker,
+-					 (drm_sched_cleanup_jobs(sched),
++					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
+ 					 (!drm_sched_blocked(sched) &&
+ 					  (entity = drm_sched_select_entity(sched))) ||
+-					 kthread_should_stop()));
++					 kthread_should_stop());
 +
- out_media_entity_cleanup:
- 	media_entity_cleanup(&sensor->src->sd.entity);
++		if (cleanup_job) {
++			sched->ops->free_job(cleanup_job);
++			/* queue timeout for next job */
++			drm_sched_start_timeout(sched);
++		}
  
+ 		if (!entity)
+ 			continue;
 -- 
 2.20.1
 
