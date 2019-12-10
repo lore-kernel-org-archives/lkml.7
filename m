@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05616C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29113C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE3D20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB0D20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014089;
-	bh=0i+YlOIvWpoWv9zcxHExomUQvTQwO7eIuBLN4B+COtI=;
+	s=default; t=1576014098;
+	bh=KjSWDhtP3ZbIMDyKnEhl+atm1faZHsdM5HPJ2q0Anlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4OoXX4GePKW2OrTUyNHbZmlpOsDowcRY2wVdJ5F60LbnOidPka+IaFPixaw/S+h8
-	 Br3hmszu6dp6cCrpSNdMGEnf1TXJTHP6Cky7y5Pc31KaTKlH42m9/T3heVrVF6Mv4E
-	 956ir13X5jzrRNu7c7C3cy4aUsRPccqljzl8/BNY=
+	b=019WnvUpIK4yKdEoSqcGvnQBDFiL82hwh6wveJCIUQGg56n1ACn++Xti3HL8bHDlE
+	 6j2h6aJ+Moo525scN/CGCrRie2nwqhfb77uNWlfxH8UJ331P5Fe5zm/fOUpLLRAQad
+	 YjVV2xrgedfMgLwsQJmsrEjLXJhprDFkSV74AAwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfLJVl3 (ORCPT
+        id S1729982AbfLJVlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:41:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbfLJVeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:17 -0500
+        id S1729942AbfLJVeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287122073B;
-        Tue, 10 Dec 2019 21:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1877206D5;
+        Tue, 10 Dec 2019 21:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013656;
-        bh=0i+YlOIvWpoWv9zcxHExomUQvTQwO7eIuBLN4B+COtI=;
+        s=default; t=1576013652;
+        bh=KjSWDhtP3ZbIMDyKnEhl+atm1faZHsdM5HPJ2q0Anlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J7golqHszE15aKp/Godq0whZRI7Qgj8UnfoROp4VDLAcl4vDio0tEkdSM/TIIx/RK
-         AHHDvqveohkDls8BySM/nEAsc5ohgXbWYPQ11XwLrYLju4RS36Oud2Uh1ouss5RQNf
-         kNE53dV2utxBntohMIkYhItzM5NousQZrPp4cq7s=
+        b=myP5O2JHdz9ZBQAkjdG7IdvO5EvIco4+EzXxYH8/9fEVUdywFvfdP6qcfXVI2GIKG
+         TsIBCmxy5E2NT/X+ASmymKWCfneJo91k76vdxykRjU+tcdcngDiSoAER3qjdCEvHi0
+         lliOLFRQa6zZzeJXQ0vFBbsLPr6Z2nc2phsMNnRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 095/177] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
-Date:   Tue, 10 Dec 2019 16:30:59 -0500
-Message-Id: <20191210213221.11921-95-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 091/177] libata: Ensure ata_port probe has completed before detach
+Date:   Tue, 10 Dec 2019 16:30:55 -0500
+Message-Id: <20191210213221.11921-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,93 +58,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
+[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
 
-The iio_triggered_buffer_postenable() hook should be called first to
-attach the poll function. The iio_triggered_buffer_predisable() hook is
-called last (as is it should).
+With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
 
-This change moves iio_triggered_buffer_postenable() to be called first. It
-adds iio_triggered_buffer_predisable() on the error paths of the postenable
-hook.
-For the predisable hook, some code-paths have been changed to make sure
-that the iio_triggered_buffer_predisable() hook gets called in case there
-is an error before it.
+[   23.452574] ------------[ cut here ]------------
+[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
+[   23.466047] Modules linked in:
+[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
+[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
+[   23.491065] pc : ata_host_detach+0x15c/0x168
+[   23.495322] lr : ata_host_detach+0x88/0x168
+[   23.499491] sp : ffff800011cabb50
+[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
+[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
+[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
+[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
+[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
+[   23.529286] x19: 0000000000000000 x18: 0000000000000004
+[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
+[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
+[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
+[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
+[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
+[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
+[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
+[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
+[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
+[   23.582272] Call trace:
+[   23.584706]  ata_host_detach+0x15c/0x168
+[   23.588616]  ata_pci_remove_one+0x10/0x18
+[   23.592615]  ahci_remove_one+0x20/0x40
+[   23.596356]  pci_device_remove+0x3c/0xe0
+[   23.600267]  really_probe+0xdc/0x3e0
+[   23.603830]  driver_probe_device+0x58/0x100
+[   23.608000]  device_driver_attach+0x6c/0x90
+[   23.612169]  __driver_attach+0x84/0xc8
+[   23.615908]  bus_for_each_dev+0x74/0xc8
+[   23.619730]  driver_attach+0x20/0x28
+[   23.623292]  bus_add_driver+0x148/0x1f0
+[   23.627115]  driver_register+0x60/0x110
+[   23.630938]  __pci_register_driver+0x40/0x48
+[   23.635199]  ahci_pci_driver_init+0x20/0x28
+[   23.639372]  do_one_initcall+0x5c/0x1b0
+[   23.643199]  kernel_init_freeable+0x1a4/0x24c
+[   23.647546]  kernel_init+0x10/0x108
+[   23.651023]  ret_from_fork+0x10/0x18
+[   23.654590] ---[ end trace 634a14b675b71c13 ]---
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+With KASAN also enabled, we may also get many use-after-free reports.
+
+The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
+attempt to detach the ata_port before it has been probed.
+
+This is because the ata_ports are async probed, meaning that there is no
+guarantee that the ata_port has probed prior to detach. When the ata_port
+does probe in this scenario, we get all sorts of issues as the detach may
+have already happened.
+
+Fix by ensuring synchronisation with async_synchronize_full(). We could
+alternatively use the cookie returned from the ata_port probe
+async_schedule() call, but that means managing the cookie, so more
+complicated.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/ata/libata-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-index c64c6675cae60..4ab052d76d9f5 100644
---- a/drivers/iio/adc/dln2-adc.c
-+++ b/drivers/iio/adc/dln2-adc.c
-@@ -527,6 +527,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 	u16 conflict;
- 	unsigned int trigger_chan;
- 
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
-+
- 	mutex_lock(&dln2->mutex);
- 
- 	/* Enable ADC */
-@@ -540,6 +544,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 				(int)conflict);
- 			ret = -EBUSY;
- 		}
-+		iio_triggered_buffer_predisable(indio_dev);
- 		return ret;
- 	}
- 
-@@ -553,6 +558,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 		if (ret < 0) {
- 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-+			iio_triggered_buffer_predisable(indio_dev);
- 			return ret;
- 		}
- 	} else {
-@@ -560,12 +566,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 	}
- 
--	return iio_triggered_buffer_postenable(indio_dev);
-+	return 0;
- }
- 
- static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 133fed8e4a8bb..85ee6c35d8e0b 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6726,6 +6726,9 @@ void ata_host_detach(struct ata_host *host)
  {
--	int ret;
-+	int ret, ret2;
- 	struct dln2_adc *dln2 = iio_priv(indio_dev);
+ 	int i;
  
- 	mutex_lock(&dln2->mutex);
-@@ -580,12 +586,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
- 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
- 
- 	mutex_unlock(&dln2->mutex);
--	if (ret < 0) {
-+	if (ret < 0)
- 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
--		return ret;
--	}
- 
--	return iio_triggered_buffer_predisable(indio_dev);
-+	ret2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (ret == 0)
-+		ret = ret2;
++	/* Ensure ata_port probe has completed */
++	async_synchronize_full();
 +
-+	return ret;
- }
+ 	for (i = 0; i < host->n_ports; i++)
+ 		ata_port_detach(host->ports[i]);
  
- static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
 -- 
 2.20.1
 
