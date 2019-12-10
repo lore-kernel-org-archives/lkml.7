@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F64C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D270EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BBD205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD27205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012545;
-	bh=nb5yFAF53BWgm75qXbUF4VqZi6/1osmYFffo1aDSVAI=;
+	s=default; t=1576012549;
+	bh=V+vvRML/SZghVHDbOg+jjdRXMepQC3mzOMs2iv2J2Dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I29Yfp6VQZLn6HeG7ScoxvBDYv6dUgfJtA3zjIA1ZAVRObT4Qq214qV6zUJhGcVA0
-	 e8XThsfPaMPcDV9YdX7bklOv7qqBnULLJ1oZ4dp+m0YbkfX3igAkHKo5vLjGzoSOSI
-	 HGPuDS1gYRWI2RBhhEHMIT/mRkDUKlIlBfmDVVp4=
+	b=0HCXyEardnwBlH7TTNIrP8D9W5MFFNmXPBd61s+MDbOo2Ob+H7Z0xH+fyZffXsBU8
+	 9ry6b8HStWRk2X3bVn7F/zr/4LQI9R6wOPx2ZPZMdEVJuUFlbRNh7lMIsowfXfy3IN
+	 AiveiuCL3+s/IMUmbGu+yxTnoyCiS87qM1vUmVJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfLJVPo (ORCPT
+        id S1729353AbfLJVNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:15:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39932 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729361AbfLJVNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:32 -0500
+        id S1729298AbfLJVNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43A4B2467F;
-        Tue, 10 Dec 2019 21:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84AE12077B;
+        Tue, 10 Dec 2019 21:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012412;
-        bh=nb5yFAF53BWgm75qXbUF4VqZi6/1osmYFffo1aDSVAI=;
+        s=default; t=1576012402;
+        bh=V+vvRML/SZghVHDbOg+jjdRXMepQC3mzOMs2iv2J2Dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W80mPfBXffffsDyZom/UOQkWaAqVJIEgKRSzKo1FnPWnrwHZPJPIO4KRS7HLe0AL2
-         0/MEbnJIw7eXOe9syJ/hZdD8yVoXa6N+8lAl7uASMlm10FdY+Q+tQ2RDTsiu5YkjB+
-         S+SeLd1c9reT+M5VOT1vhkoRbx47VvNQf1IkYMzk=
+        b=CnEGJDfuJCzGFwb+YLJoHTIwYzeddXQW6q1wJfTiyXuqCautXgmMYUBME6jNN/ZBi
+         1E+cpzdWsFmzZ72N4oD83e2A91JBbL3YeQBjxwhfzMXXPyP+JUI6SQ4NUS8XveXiDC
+         e3v7rI0RiMwCN8YMhFdTVDaZEaaBChHWfWnhEiSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 329/350] crypto: sun4i-ss - Fix 64-bit size_t warnings
-Date:   Tue, 10 Dec 2019 16:07:14 -0500
-Message-Id: <20191210210735.9077-290-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.4 321/350] fbtft: Make sure string is NULL terminated
+Date:   Tue, 10 Dec 2019 16:07:06 -0500
+Message-Id: <20191210210735.9077-282-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,100 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit d6e9da21ee8246b5e556b3b153401ab045adb986 ]
+[ Upstream commit 21f585480deb4bcf0d92b08879c35d066dfee030 ]
 
-If you try to compile this driver on a 64-bit platform then you
-will get warnings because it mixes size_t with unsigned int which
-only works on 32-bit.
+New GCC warns about inappropriate use of strncpy():
 
-This patch fixes all of the warnings.
+drivers/staging/fbtft/fbtft-core.c: In function ‘fbtft_framebuffer_alloc’:
+drivers/staging/fbtft/fbtft-core.c:665:2: warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
+  665 |  strncpy(info->fix.id, dev->driver->name, 16);
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Later on the copy is being used with the assumption to be NULL terminated.
+Make sure string is NULL terminated by switching to snprintf().
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20191120095716.26628-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/staging/fbtft/fbtft-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-index 6536fd4bee657..7e5e092a23b3c 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-@@ -72,7 +72,8 @@ static int noinline_for_stack sun4i_ss_opti_poll(struct skcipher_request *areq)
- 	oi = 0;
- 	oo = 0;
- 	do {
--		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
-+		todo = min(rx_cnt, ileft);
-+		todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 		if (todo) {
- 			ileft -= todo;
- 			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
-@@ -87,7 +88,8 @@ static int noinline_for_stack sun4i_ss_opti_poll(struct skcipher_request *areq)
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index a0a67aa517f0e..61f0286fb157e 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -666,7 +666,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 	fbdefio->deferred_io =     fbtft_deferred_io;
+ 	fb_deferred_io_init(info);
  
--		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			oleft -= todo;
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
-@@ -239,7 +241,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 			 * todo is the number of consecutive 4byte word that we
- 			 * can read from current SG
- 			 */
--			todo = min3(rx_cnt, ileft / 4, (mi.length - oi) / 4);
-+			todo = min(rx_cnt, ileft / 4);
-+			todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 			if (todo && !ob) {
- 				writesl(ss->base + SS_RXFIFO, mi.addr + oi,
- 					todo);
-@@ -253,8 +256,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * we need to be able to write all buf in one
- 				 * pass, so it is why we min() with rx_cnt
- 				 */
--				todo = min3(rx_cnt * 4 - ob, ileft,
--					    mi.length - oi);
-+				todo = min(rx_cnt * 4 - ob, ileft);
-+				todo = min_t(size_t, todo, mi.length - oi);
- 				memcpy(buf + ob, mi.addr + oi, todo);
- 				ileft -= todo;
- 				oi += todo;
-@@ -274,7 +277,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		spaces = readl(ss->base + SS_FCSR);
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
--		dev_dbg(ss->dev, "%x %u/%u %u/%u cnt=%u %u/%u %u/%u cnt=%u %u\n",
-+		dev_dbg(ss->dev,
-+			"%x %u/%zu %u/%u cnt=%u %u/%zu %u/%u cnt=%u %u\n",
- 			mode,
- 			oi, mi.length, ileft, areq->cryptlen, rx_cnt,
- 			oo, mo.length, oleft, areq->cryptlen, tx_cnt, ob);
-@@ -282,7 +286,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		if (!tx_cnt)
- 			continue;
- 		/* todo in 4bytes word */
--		todo = min3(tx_cnt, oleft / 4, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft / 4);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
- 			oleft -= todo * 4;
-@@ -308,7 +313,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * no more than remaining buffer
- 				 * no need to test against oleft
- 				 */
--				todo = min(mo.length - oo, obl - obo);
-+				todo = min_t(size_t,
-+					     mo.length - oo, obl - obo);
- 				memcpy(mo.addr + oo, bufo + obo, todo);
- 				oleft -= todo;
- 				obo += todo;
+-	strncpy(info->fix.id, dev->driver->name, 16);
++	snprintf(info->fix.id, sizeof(info->fix.id), "%s", dev->driver->name);
+ 	info->fix.type =           FB_TYPE_PACKED_PIXELS;
+ 	info->fix.visual =         FB_VISUAL_TRUECOLOR;
+ 	info->fix.xpanstep =	   0;
 -- 
 2.20.1
 
