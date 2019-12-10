@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91158C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E64C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EB720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5D92053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015548;
-	bh=6GAzeJnc3BpVSu5YGYql2j/HbyBd4pfeYwlXFb1L5SY=;
+	s=default; t=1576015549;
+	bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jAaIpCrx0k8NH7197mLwUn5U4ELJ3bdEpCfmcpWYQUPlwM7I4KNjWvDaE3mvaV8N5
-	 UAVCztowQLyebJvRgZhyXpdXBuhHrUztygUOizBFkKvCXiPrfTnfEdEiiFgFaJwChB
-	 RrnLjMJp1OVhz8hA+fTQMug6htVhzWRynHWb1Gjc=
+	b=npnl3cp0hgoB1dz5MwflOy1RRun+fR1SuBJYvr5U5DbN7t5THQBxIFIWuNBexoWuR
+	 LmTWnAmQX22PJfK8SZA3c17FqtBqZfY1qfoIi4ZTIhad6NDw2CyDNeySJpPO2fAxg6
+	 5SyaYCxZ9yhhGh3zlD/MrxH3WKUkv0+RQJebShOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfLJWFq (ORCPT
+        id S1730160AbfLJWFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37282 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbfLJWFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:37 -0500
+        id S1729789AbfLJWFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF5820838;
-        Tue, 10 Dec 2019 22:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F11720637;
+        Tue, 10 Dec 2019 22:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015537;
-        bh=6GAzeJnc3BpVSu5YGYql2j/HbyBd4pfeYwlXFb1L5SY=;
+        s=default; t=1576015531;
+        bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrXb5PmmjBrS7RFu1fD7zSsu2RduG2iu7Sw/V99yJb/s1GroWGjsNC6SBp6hhhH8T
-         DM0bHoEnMgHkzV+yGMJSHwg7aTD4XcHpO2OW3jiHu2QQFjCHYIK5aeN5y2oNmrZGOz
-         GOafNYcd/tCofsB9vN6HGeeC5ZLVSlw/kHH+z9PU=
+        b=qEEc7HXFH46QUsLr9As92+lPjcn+O5MFDokZooPdEIo1/yxWuV0+DM8YrnYM32n3L
+         1g86IjAddKxbqoyFcDDbdjFnMpVtHNfulJu5tj9f/jOCBsvhf7OUOeEM23jMF5ZEV2
+         STpMZkBZPbHaHMVk2oyg0Yu5wYmfGH61/dBbOlnU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 130/130] net: phy: initialise phydev speed and duplex sanely
-Date:   Tue, 10 Dec 2019 17:03:01 -0500
-Message-Id: <20191210220301.13262-130-sashal@kernel.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 126/130] libtraceevent: Fix memory leakage in copy_filter_type
+Date:   Tue, 10 Dec 2019 17:02:57 -0500
+Message-Id: <20191210220301.13262-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,44 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
+[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
 
-When a phydev is created, the speed and duplex are set to zero and
--1 respectively, rather than using the predefined SPEED_UNKNOWN and
-DUPLEX_UNKNOWN constants.
+It is necessary to free the memory that we have allocated when error occurs.
 
-There is a window at initialisation time where we may report link
-down using the 0/-1 values.  Tidy this up and use the predefined
-constants, so debug doesn't complain with:
-
-"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
-
-when the speed and duplex settings are printed.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index ed7e3c70b511a..a98c227a4c2eb 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -367,8 +367,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 	mdiodev->device_free = phy_mdio_device_free;
- 	mdiodev->device_remove = phy_mdio_device_remove;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 5e10ba796a6f4..569bceff5f51b 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
  
--	dev->speed = 0;
--	dev->duplex = -1;
-+	dev->speed = SPEED_UNKNOWN;
-+	dev->duplex = DUPLEX_UNKNOWN;
- 	dev->pause = 0;
- 	dev->asym_pause = 0;
- 	dev->link = 1;
+ 		arg->type = FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
+ 			arg->boolean.value = 0;
+ 
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
+ 
+ 		filter_type->filter = arg;
+ 
 -- 
 2.20.1
 
