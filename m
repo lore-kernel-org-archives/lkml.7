@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B66C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B1FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9FA208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB573207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575977894;
-	bh=NeE6MYZWFRkcp1EprbbpY6tYeXfa9fh1FICc3NB+rDQ=;
+	s=default; t=1575977897;
+	bh=jnqG6qrJA03sFgDKpKwGlZp+vI8IzN9r5vJ9YDbx3DQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAyEmd0iB6Xs1BEMfBIz8gV+GvzZOdC/xZYxn4rleuvqNG9sqsuGqWVtZqk1VyuS3
-	 GgbrBoIkFHqSqyFNcxDPCUktk58qqFRMBxPev1Qf2J5i2Dd8wDjw4pruscm0xOev1t
-	 /4Cazv2tI2YajsfgoHvG9WLjX6dNvtZGfovF/JDM=
+	b=UaZlRPrpmXvcbPbm3pEzqOv1jW2HKL2u61n5fNfgAFtDR4ymvX0aBrvfzr5QVPa2D
+	 NuoodRB+qi/6dlgICE80/+k2quyBiO0kPpygWR4FRp+gYSvzZbXQiAuSP3Me4BYSZX
+	 3UJPq+58SCwdyXEBVddi4B1Hw4qtLfC829LGxBg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfLJLhy (ORCPT
+        id S1727577AbfLJLiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:37:54 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39901 "EHLO
+        Tue, 10 Dec 2019 06:38:16 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39907 "EHLO
         mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbfLJLhv (ORCPT
+        with ESMTP id S1727407AbfLJLhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:37:51 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so2112150lfb.6;
-        Tue, 10 Dec 2019 03:37:49 -0800 (PST)
+        Tue, 10 Dec 2019 06:37:54 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y1so2112276lfb.6;
+        Tue, 10 Dec 2019 03:37:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZY93hUXgP9MdjxnR094b5yMFKUy+YydKGknr6vwPzSM=;
-        b=ss7kiSP711gFTqT3iMckKzXWfkAlF1673Dcdou2O2mtfrZuvYxjTdzVQsHnwaAOBE2
-         1XteH/vRG8FgqbVHGMkc59Eff18IF6Aa9vO7toaySTYu0eBmZrWIoZixXRUhmP4ehaI+
-         K5YkfDSKYy/gyo0bzXeGuwwCluynVEtYverCYT/cHPAaX8zRDv71av4EjoADPWPI257B
-         WhRfgBhoXf//i3Vbu0hzQIK8nV46hGkSR5vaGW9/U94lMTVhKYQTULLVU9XRg15bkNp4
-         jOTvcJsX+qMXA5NuZLtLoXcKORC2K1El87MwuxVpCEM7f6kr98y8o1ZC3GU62axh1YJo
-         KUeQ==
-X-Gm-Message-State: APjAAAUILQC8W5G6lHq5zPsNxw6OM587jQqL0U2KKSDFAwCFLJj6Sf+c
-        zkcy3iB39BS/XF7PRxO536M=
-X-Google-Smtp-Source: APXvYqzqUPnasg7TcmqZwZCL73CR6bdEW7PtC489KLUT5hWmCeetgNTRr1cvB2nHk0JBXWWB5Qq1tg==
-X-Received: by 2002:a19:6a06:: with SMTP id u6mr14684526lfu.187.1575977868601;
-        Tue, 10 Dec 2019 03:37:48 -0800 (PST)
+        bh=gizESJPdbXxmJNJeGwhGZnMnlbvzjtAzhsJxIVT6qdY=;
+        b=mwNvFNSxoM7/7S0054957ZfHrptP32CUtj0SL5MQ2LCqMZpWqhaTub7ZBuQVNoWAc5
+         T+fJZx/duFNzSvLbW3klt1nae6s7wLMscazySjVkSb7UuvTx+F20g/94fiPUCEzpEMTH
+         7xleGnqBqX1GDDzoQduPZUqwuMY42azI46xTLfAXBIGvkNGCDlf7XVCwVy+ugBar1cIM
+         u3rMWmfVhafIcLnLxU7pU5ZMsdAbZqSCeoGoIhq6TYDmyurJwMyjAQKYSeu0LU9qKP71
+         3ODcNSJgKaNuZ96edUzvWFZI+DeKkfYIjh6Z/T3dJ5Hi0UZ7d7ADXMrmrzgegoi3dwDj
+         bn4w==
+X-Gm-Message-State: APjAAAXKGCKnTwa/WY4hRf4ycaQvUTyGkSXfDLcCPqArF58HrvGkFS8P
+        wQL5+bO2SNTXXH55Yl+MtXCr1fQA
+X-Google-Smtp-Source: APXvYqy6D+qpHF61I1Tn+xu/XYGTKK0i1vpyVAhneBoDXI+DraQ+/PosTwlLTDMvhQC2Yk4jQocOGw==
+X-Received: by 2002:a19:2389:: with SMTP id j131mr17056148lfj.86.1575977871489;
+        Tue, 10 Dec 2019 03:37:51 -0800 (PST)
 Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id f24sm1615955ljm.12.2019.12.10.03.37.47
+        by smtp.gmail.com with ESMTPSA id 207sm1941884ljj.72.2019.12.10.03.37.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:37:47 -0800 (PST)
+        Tue, 10 Dec 2019 03:37:49 -0800 (PST)
 Received: from johan by xi.terra with local (Exim 4.92.3)
         (envelope-from <johan@xi.terra>)
-        id 1iedpt-00013j-QS; Tue, 10 Dec 2019 12:37:49 +0100
+        id 1iedpu-00014F-Cx; Tue, 10 Dec 2019 12:37:50 +0100
 From:   Johan Hovold <johan@kernel.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc:     linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         stable <stable@vger.kernel.org>,
-        Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH 1/7] Input: pegasus_notetaker: fix endpoint sanity check
-Date:   Tue, 10 Dec 2019 12:37:31 +0100
-Message-Id: <20191210113737.4016-2-johan@kernel.org>
+        Florian Echtler <floe@butterbrot.org>
+Subject: [PATCH 7/7] Input: sur40: fix interface sanity checks
+Date:   Tue, 10 Dec 2019 12:37:37 +0100
+Message-Id: <20191210113737.4016-8-johan@kernel.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191210113737.4016-1-johan@kernel.org>
 References: <20191210113737.4016-1-johan@kernel.org>
@@ -72,32 +72,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was checking the number of endpoints of the first alternate
-setting instead of the current one, something which could be used by a
-malicious device (or USB descriptor fuzzer) to trigger a NULL-pointer
-dereference.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-Cc: stable <stable@vger.kernel.org>     # 4.8
-Cc: Martin Kepplinger <martink@posteo.de>
+This in turn could cause the driver to misbehave or trigger a WARN() in
+usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: bdb5c57f209c ("Input: add sur40 driver for Samsung SUR40 (aka MS Surface 2.0/Pixelsense)")
+Cc: stable <stable@vger.kernel.org>     # 3.13
+Cc: Florian Echtler <floe@butterbrot.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/input/tablet/pegasus_notetaker.c | 2 +-
+ drivers/input/touchscreen/sur40.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/tablet/pegasus_notetaker.c b/drivers/input/tablet/pegasus_notetaker.c
-index a1f3a0cb197e..38f087404f7a 100644
---- a/drivers/input/tablet/pegasus_notetaker.c
-+++ b/drivers/input/tablet/pegasus_notetaker.c
-@@ -275,7 +275,7 @@ static int pegasus_probe(struct usb_interface *intf,
+diff --git a/drivers/input/touchscreen/sur40.c b/drivers/input/touchscreen/sur40.c
+index 1dd47dda71cd..34d31c7ec8ba 100644
+--- a/drivers/input/touchscreen/sur40.c
++++ b/drivers/input/touchscreen/sur40.c
+@@ -661,7 +661,7 @@ static int sur40_probe(struct usb_interface *interface,
+ 	int error;
+ 
+ 	/* Check if we really have the right interface. */
+-	iface_desc = &interface->altsetting[0];
++	iface_desc = interface->cur_altsetting;
+ 	if (iface_desc->desc.bInterfaceClass != 0xFF)
  		return -ENODEV;
  
- 	/* Sanity check that the device has an endpoint */
--	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
- 		dev_err(&intf->dev, "Invalid number of endpoints\n");
- 		return -EINVAL;
- 	}
 -- 
 2.24.0
 
