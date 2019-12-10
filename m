@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD93C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34B9C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE84E222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36EE20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015443;
-	bh=zb/n2u+msx7BwtU6xjBm5jMJhAaRbBRGOurrxwbXp1Q=;
+	s=default; t=1576015444;
+	bh=y/AIGhyESa+miggHCYjzstiZ1XXGS4yxFdUcYd0QkwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdPGKRtK9O/efM0efv/jAkhUHNm+o6lGbjQNrj/vzS0kb//e2o0DEV6lL3kRA8L9y
-	 AeSX5yUw0w80sDQEq9VEEA0+s+bsS2BwqCQlNOQy4c20UZDU/TGO03Dx06dnnf/CKV
-	 JDqoBQspnoqycfRicyPet048AzN9uoHB8fk/0agc=
+	b=L2Kzjg5/PHMxMBOEONEbNtg8WJikYn01qm64kd3IRD28MfurwNArvffXE8emIf6dD
+	 DXSaJZcf3oN0kbCZNbpdHMsQce3rHq2ZJmSCpqpAwrWlF08X+/RfyyTwBhRCQtoPpK
+	 JSQBf9Opxv58iq1epApjSAa6d61AilgOa2/JpQb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfLJWEC (ORCPT
+        id S1728451AbfLJWED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728179AbfLJWDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:51 -0500
+        id S1728151AbfLJWDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA33D20838;
-        Tue, 10 Dec 2019 22:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D748F2053B;
+        Tue, 10 Dec 2019 22:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015430;
-        bh=zb/n2u+msx7BwtU6xjBm5jMJhAaRbBRGOurrxwbXp1Q=;
+        s=default; t=1576015432;
+        bh=y/AIGhyESa+miggHCYjzstiZ1XXGS4yxFdUcYd0QkwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWsmZcTKl2k76RFE6ImEdxcjqC+ipYvgpAYAiZ9oNrB68XY/fJJnv6HzR0gm+2zLD
-         Gi0dLUfvaYSd2eeCNkW52l5yBU3S7YFGDEx2esdPWGdoWOvEmS+MtHPDKGAlqLDhM4
-         iipFVXucEtVddN4E+HAgOOsv3/eK1bobjQrEmfkg=
+        b=l3vFtivJxKOnni3rA3aT1ap2cdI1Q4loHhEuaeVGeV00c5T1gI9UuDEa9uRlm1848
+         XUoxok6Ucy9k6wuMXynYWjJYa0NITMWSyZiHYw/LjQZ0D/fP2KlcwEytWnMKLzAykV
+         mSKPqjVEOkuQzlq+z/f+4MJAOqt8gi+IgGfW2M5g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 041/130] extcon: sm5502: Reset registers during initialization
-Date:   Tue, 10 Dec 2019 17:01:32 -0500
-Message-Id: <20191210220301.13262-41-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 042/130] x86/mm: Use the correct function type for native_set_fixmap()
+Date:   Tue, 10 Dec 2019 17:01:33 -0500
+Message-Id: <20191210220301.13262-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,61 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
+[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
 
-On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-seems to keep interrupts enabled for SM5502 when booting Linux.
-Changing the cable state (i.e. plugging in a cable) - until the driver
-is loaded - will therefore produce an interrupt that is never read.
+We call native_set_fixmap indirectly through the function pointer
+struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
+'unsigned' instead of 'enum fixed_addresses'. This patch changes the
+function type for native_set_fixmap to match the pointer, which fixes
+indirect call mismatches with Control-Flow Integrity (CFI) checking.
 
-In this situation, the cable state will be stuck forever on the
-initial state because SM5502 stops sending interrupts.
-This can be avoided by clearing those pending interrupts after
-the driver has been loaded.
-
-One way to do this is to reset all registers to default state
-by writing to SM5502_REG_RESET. This ensures that we start from
-a clean state, with all interrupts disabled.
-
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-sm5502.c | 4 ++++
- drivers/extcon/extcon-sm5502.h | 2 ++
- 2 files changed, 6 insertions(+)
+ arch/x86/include/asm/fixmap.h | 2 +-
+ arch/x86/mm/pgtable.c         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index 106ef0297b537..1a1ee3db3455f 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -69,6 +69,10 @@ struct sm5502_muic_info {
- /* Default value of SM5502 register to bring up MUIC device. */
- static struct reg_data sm5502_reg_data[] = {
- 	{
-+		.reg = SM5502_REG_RESET,
-+		.val = SM5502_REG_RESET_MASK,
-+		.invert = true,
-+	}, {
- 		.reg = SM5502_REG_CONTROL,
- 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
- 		.invert = false,
-diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-index 974b53222f568..12f8b01e57538 100644
---- a/drivers/extcon/extcon-sm5502.h
-+++ b/drivers/extcon/extcon-sm5502.h
-@@ -241,6 +241,8 @@ enum sm5502_reg {
- #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
- 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 6390bd8c141b4..5e12b2319d7a5 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -159,7 +159,7 @@ extern pte_t *kmap_pte;
+ extern pte_t *pkmap_page_table;
  
-+#define SM5502_REG_RESET_MASK			(0x1)
-+
- /* SM5502 Interrupts */
- enum sm5502_irq {
- 	/* INT1 */
+ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
+-void native_set_fixmap(enum fixed_addresses idx,
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ 		       phys_addr_t phys, pgprot_t flags);
+ 
+ #ifndef CONFIG_PARAVIRT
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index b4fd36271f906..55338b3922210 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -590,8 +590,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
+ 	fixmaps_set++;
+ }
+ 
+-void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
+-		       pgprot_t flags)
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
++		       phys_addr_t phys, pgprot_t flags)
+ {
+ 	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
+ }
 -- 
 2.20.1
 
