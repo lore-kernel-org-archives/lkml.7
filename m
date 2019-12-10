@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5118CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7022053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205912053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017753;
-	bh=0YZFfgq7d40fJ7EltrHDzVO2zdHSpUWcOXdN0gPbhV4=;
+	s=default; t=1576017758;
+	bh=mQCliQUuDvr0riFtN9VdVoENc7SI8ZrshGbUX15EB5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQGJlVWLecuy7Mp6q5YIBBPbq1icT3Zn90AWaZKjxI+hW8yFkN6OI7FxXzzjuWBre
-	 iOvYaQsue1KT6qCiiZ6RSvnQOwRQHDo3HHzwLPGi2L7iuOzY+4mCZG2QqiIUS2p+/c
-	 d6tGseOfxxLXtN9cDcUWtT4Bpa+U0ZowkqW+GNjY=
+	b=gjxYxukAshH7ZtG6mq5lC4Nr9nGtgA6avcZP3of1krfuh5LUnGVRVrVFd9lUMdDvp
+	 LxmeMlyT5hracVlm82xcUHVIkuiJjTm/RS6gpryIgiRg11lN8yTr24RKpv7NEZri1O
+	 3HxT3F/L2/fWUKzkozx3Jki3ifYOs0rTxBdvco8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfLJWmb (ORCPT
+        id S1730228AbfLJWmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:42:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:42:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbfLJWbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:25 -0500
+        id S1728361AbfLJWbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72B282077B;
-        Tue, 10 Dec 2019 22:31:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 186C02073D;
+        Tue, 10 Dec 2019 22:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017085;
-        bh=0YZFfgq7d40fJ7EltrHDzVO2zdHSpUWcOXdN0gPbhV4=;
+        s=default; t=1576017082;
+        bh=mQCliQUuDvr0riFtN9VdVoENc7SI8ZrshGbUX15EB5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PP5MQHY0dO2h5ekp7bJuiV24dK02Z4pPNpuqYJK1lIt9zZRNwqjAp3sdGNsNaBvT1
-         I3RLipsyjmArv+EmHTfFkjvRr0Z7ZrfwGE0j/z0MeStonpAvwEpdy3rXDJ6SYkO5Yx
-         Ql/l+0dKPNowyuYv7FJjRfmqYtwkkCLsAkjNKvuE=
+        b=Go7+EBkpl6IcWC7kvHCvDCJDOZAtbUSrgqecb6ECYd1gduVBKiLeAsPx8oM13dvTl
+         QUtwt9wnLdoOoDVFU40jPc5odaQ/uK6Wvq1/X3/UgntPyQdgaqpJMba88muY/TBzgh
+         bfSaP+yRoOFc8ctSsozXEeSxFdZZQzCczQmtpEDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 41/91] x86/ioapic: Prevent inconsistent state when moving an interrupt
-Date:   Tue, 10 Dec 2019 17:29:45 -0500
-Message-Id: <20191210223035.14270-41-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 39/91] iio: pressure: zpa2326: fix iio_triggered_buffer_postenable position
+Date:   Tue, 10 Dec 2019 17:29:43 -0500
+Message-Id: <20191210223035.14270-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -62,79 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
+[ Upstream commit fe2392c67db9730d46f11fc4fadfa7bffa8843fa ]
 
-There is an issue with threaded interrupts which are marked ONESHOT
-and using the fasteoi handler:
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-  if (IS_ONESHOT())
-    mask_irq();
-  ....
-  cond_unmask_eoi_irq()
-    chip->irq_eoi();
-      if (setaffinity_pending) {
-         mask_ioapic();
-         ...
-	 move_affinity();
-	 unmask_ioapic();
-      }
+The iio_triggered_buffer_postenable() should be called before (to attach
+the poll func) and then the
 
-So if setaffinity is pending the interrupt will be moved and then
-unconditionally unmasked at the ioapic level, which is wrong in two
-aspects:
+The iio_triggered_buffer_predisable() function is hooked directly without
+anything, which is probably fine, as the postenable() version seems to also
+do some reset/wake-up of the device.
+This will mean it will be easier when removing it; i.e. it just gets
+removed.
 
- 1) It should be kept masked up to the point where the threaded handler
-    finished.
-
- 2) The physical chip state and the software masked state are inconsistent
-
-Guard both the mask and the unmask with a check for the software masked
-state. If the line is marked masked then the ioapic line is also masked, so
-both mask_ioapic() and unmask_ioapic() can be skipped safely.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
-Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/iio/pressure/zpa2326.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 09dd95cabfc28..3401b28f13121 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1712,9 +1712,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
+diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+index cc002b958f7e8..e79729ee151ed 100644
+--- a/drivers/iio/pressure/zpa2326.c
++++ b/drivers/iio/pressure/zpa2326.c
+@@ -1255,6 +1255,11 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+ 	const struct zpa2326_private *priv = iio_priv(indio_dev);
+ 	int                           err;
  
- static inline bool ioapic_irqd_mask(struct irq_data *data)
- {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic_irq(data);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic_irq(data);
- 		return true;
- 	}
- 	return false;
-@@ -1751,7 +1752,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
++	/* Plug our own trigger event handler. */
++	err = iio_triggered_buffer_postenable(indio_dev);
++	if (err)
++		goto err;
++
+ 	if (!priv->waken) {
+ 		/*
+ 		 * We were already power supplied. Just clear hardware FIFO to
+@@ -1262,7 +1267,7 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
  		 */
- 		if (!io_apic_level_ack_pending(data->chip_data))
- 			irq_move_masked_irq(data);
--		unmask_ioapic_irq(data);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic_irq(data);
+ 		err = zpa2326_clear_fifo(indio_dev, 0);
+ 		if (err)
+-			goto err;
++			goto err_buffer_predisable;
  	}
- }
- #else
+ 
+ 	if (!iio_trigger_using_own(indio_dev) && priv->waken) {
+@@ -1272,16 +1277,13 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+ 		 */
+ 		err = zpa2326_config_oneshot(indio_dev, priv->irq);
+ 		if (err)
+-			goto err;
++			goto err_buffer_predisable;
+ 	}
+ 
+-	/* Plug our own trigger event handler. */
+-	err = iio_triggered_buffer_postenable(indio_dev);
+-	if (err)
+-		goto err;
+-
+ 	return 0;
+ 
++err_buffer_predisable:
++	iio_triggered_buffer_predisable(indio_dev);
+ err:
+ 	zpa2326_err(indio_dev, "failed to enable buffering (%d)", err);
+ 
 -- 
 2.20.1
 
