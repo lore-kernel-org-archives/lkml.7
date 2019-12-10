@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45DEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCDCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F64A2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B2B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017795;
-	bh=Jyk/8Z7EqHQ3KcmekHNr/pL8PUHTTZ/qsM16FHYsvX8=;
+	s=default; t=1576017800;
+	bh=DDCumilzqX1hW15OnazxpP3d5zUeNiUF7JTCApGmrvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wdzLImZshl37lF1JJtFRRJu2PD8RAIJCmGPcbT4wLgxvMWDfMbodX7j0GfpwmSJIu
-	 paYi7rs4M96w6xOm0cUpneVCBg5wgpTKLbgFPSjLd2B/Mt2a0VsgzwACY06Yu9fcWY
-	 TCi+pT/NtadpAgLmSGAAMEaPm5VMWjKRAhWW4vgI=
+	b=wjy43bjrvNgFWWjkObj0eClBkeuXrosX/SgsM71XtcG0cEeV+hEgoPYzalbDntxjR
+	 4tKpT38WTaKhGw+spKNgvAOoEWrr0n8T06tvPaN1Kc06ZpCrQmeIQA40DezWU2biBJ
+	 OMtiYD+ntjeKO6FazXpHGxXhgRE7gD5Sb7QHX0yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfLJWnO (ORCPT
+        id S1730522AbfLJWnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:43:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:43:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbfLJWbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:08 -0500
+        id S1727967AbfLJWbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26A612077B;
-        Tue, 10 Dec 2019 22:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E672920836;
+        Tue, 10 Dec 2019 22:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017068;
-        bh=Jyk/8Z7EqHQ3KcmekHNr/pL8PUHTTZ/qsM16FHYsvX8=;
+        s=default; t=1576017066;
+        bh=DDCumilzqX1hW15OnazxpP3d5zUeNiUF7JTCApGmrvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KtR1XkAq+VVt981oKpgQHUFeJ/WEAFh5J/BcvO5jEkT+WuRiKO0+7LnHgyYgfWjhJ
-         xdPokCRxYefBAg6pES9oUSD+06MSFy+UIoxtPTSAHV6A80J27N1pVqeJ+MSbyApT49
-         K/Hs9jQQbGsiOOmqrRMjF2EFHA6ZkOnKi3wk+GZY=
+        b=DPysJRhM8He4noCCEX+mZ70+P8rQZdcRsS2CjW1h8F+x43OrKDDTXZrzfn8kqA+b+
+         qrnZfUYESY1lUorHUVm/4YpDojTxx/U79nJgVXTzhqVP094v/cz2Av4+M4FYPWXZ90
+         M3GxuA9w+U5pOqR+/dLxgiSbGYsStmCpfdBVlKfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benoit Parrot <bparrot@ti.com>,
@@ -46,9 +46,9 @@ Cc:     Benoit Parrot <bparrot@ti.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 27/91] media: ti-vpe: vpe: Make sure YUYV is set as default format
-Date:   Tue, 10 Dec 2019 17:29:31 -0500
-Message-Id: <20191210223035.14270-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 26/91] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
+Date:   Tue, 10 Dec 2019 17:29:30 -0500
+Message-Id: <20191210223035.14270-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -63,49 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
+[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
 
 v4l2-compliance fails with this message:
 
-   fail: v4l2-test-formats.cpp(672): \
-	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-   fail: v4l2-test-formats.cpp(672): \
-	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
-	...
-   test VIDIOC_TRY_FMT: FAIL
+   fail: v4l2-test-buffers.cpp(294): \
+	(int)g_sequence() < seq.last_seq + 1
+   fail: v4l2-test-buffers.cpp(740): \
+	buf.check(m2m_q, last_m2m_seq)
+   fail: v4l2-test-buffers.cpp(974): \
+	captureBufs(node, q, m2m_q, frame_count, true)
+   test MMAP: FAIL
 
-The default pixel format was setup as pointing to a specific offset in
-the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
-entry. This became false after the addition on the NV21 format (see
-above commid-id)
+The driver is failing to update the source frame sequence number in the
+vb2 buffer object. Only the destination frame sequence was being
+updated.
 
-So instead of hard-coding an offset which might change over time we need
-to use a lookup helper instead so we know the default will always be what
-we intended.
+This is only a reporting issue if the user space app actually cares
+about the frame sequence number. But it is fixed nonetheless.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 067548e14e113..dbb4829acc438 100644
+index da308fa6561fc..067548e14e113 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1998,7 +1998,7 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
+@@ -1298,6 +1298,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
+ 		d_vb->timecode = s_vb->timecode;
  
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
--	s_q_data->fmt = &vpe_formats[2];
-+	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	s_q_data->width = 1920;
- 	s_q_data->height = 1080;
- 	s_q_data->bytesperline[VPE_LUMA] = (s_q_data->width *
+ 	d_vb->sequence = ctx->sequence;
++	s_vb->sequence = ctx->sequence;
+ 
+ 	d_q_data = &ctx->q_data[Q_DATA_DST];
+ 	if (d_q_data->flags & Q_DATA_INTERLACED) {
 -- 
 2.20.1
 
