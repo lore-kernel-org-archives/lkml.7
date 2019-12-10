@@ -2,89 +2,107 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EAC2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47139C04E30
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0AD20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2E02071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DW8tM8/K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K42xURoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLJCEh (ORCPT
+        id S1726787AbfLJCGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:04:37 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4075 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726538AbfLJCEh (ORCPT
+        Mon, 9 Dec 2019 21:06:14 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35479 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfLJCGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:04:37 -0500
-X-UUID: daa344a5669b406182fe414abafd401d-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=IgQuYhZqNMmjibztfb1saVE2u9WvD1IS81QOavynYoU=;
-        b=DW8tM8/Ka3LOpURBGBoTo0BCjYP9AoFYe4okNaeyvDfYnVuIRIyblE1pW80yFo5NO5pIHo3y31TkJdOrrClvLPqexadzDtDBGXDatBbI7eDVPVVxI7KRzfD4+9NHIAEvfJdeT3MDVUcd0GSuGGAlk2ToXJBfVGv1qLbEWpFoBPA=;
-X-UUID: daa344a5669b406182fe414abafd401d-20191210
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1576203821; Tue, 10 Dec 2019 10:04:31 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 10:04:06 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 10:04:11 +0800
-Message-ID: <1575943469.16676.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 03/14] mailbox: cmdq: support mt6779 gce platform
- definition
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Dec 2019 10:04:29 +0800
-In-Reply-To: <1574819937-6246-5-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-5-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 21:06:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j6so18005081lja.2;
+        Mon, 09 Dec 2019 18:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AmQ89GILhlx/U5P8wU6P6IdbZMbjFb3kbbiTdTM2PN8=;
+        b=K42xURoUdWBqhYqBJsTlXFkBp+gv727RKojcVrVpC4YZ8E4bbMVrGlBdAoc1gaY4nl
+         tJAybS6U2p76KORxvwPIY7BrslTlGtz1O/memkiy6v5u3loWBan8WH+YiTYV4SpjV4IC
+         dxZ+82w4EY2WVvdlRPU+pekuBIUvxBnlaR6TZfu1u9//78vSXpvaqVOGQ+84ZiWvw1oj
+         e4M+xiVCD4JHh/qKeVcsexKW2Mwc76yZ9h+F20++l2bcWd2D2xao0oT2gxgXJVhL5R8Q
+         +eFRctm5FdUZRiEnr3K2bTQzX5dKQp04KrvGra/8ZEALyZBjUSoA98hCM0/aWLJvhaVD
+         gK0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AmQ89GILhlx/U5P8wU6P6IdbZMbjFb3kbbiTdTM2PN8=;
+        b=So+FUes6uWJ6ofF+wH2pIfOhJS1nD3FXQjO1LYJPsUah247hWoSGpIL7DLWw+ctS/z
+         cdokKo/xY0Fk118dLDBvLHnBU1dSB0eaoi1bRqTVb0gIC775FtKTAAkX+BSACi4KQ2p4
+         4JwH1MQkmiQvU8mxq4agKKrGvYDAJQguGjbUyK3AOy6rf8LCClL/L1PqUNQDfqEk52tZ
+         sH06JuL9PU1dT0sgd3ylIkdRfOkp/FaAkwsRxcYepwAUB7A0svuK2Vo9qYGrT1wGuhRx
+         L5BK8SYwTNdXobC4sAGXIiWgdcQTostOzH1yhLSYnlAsDzZx+w+tmv4tZyt6+1jRgTDd
+         kWLw==
+X-Gm-Message-State: APjAAAWUamPNmqcx7Eht3X6vKQfPZZeT2Dmx2NdC2zvvg2JrGPBcmHjU
+        00NBZ+508ACluJoAXII9pY4=
+X-Google-Smtp-Source: APXvYqyAlnA1BMRhELESRDbCH7OGjo25oaNp4BWKPx/VCjt0jyNLpGnyzNhReAYH7B90uswNz0W1GA==
+X-Received: by 2002:a2e:8e97:: with SMTP id z23mr17993160ljk.125.1575943571643;
+        Mon, 09 Dec 2019 18:06:11 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id o20sm789018ljc.35.2019.12.09.18.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 18:06:11 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] clk: tegra: Fix double-free in tegra_clk_init()
+Date:   Tue, 10 Dec 2019 05:05:12 +0300
+Message-Id: <20191210020512.6088-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IEFkZCBnY2UgdjQgaGFyZHdhcmUgc3VwcG9ydCB3aXRoIGRpZmZl
-cmVudCB0aHJlYWQgbnVtYmVyIGFuZCBzaGlmdC4NCj4gDQoNClJldmlld2VkLWJ5OiBDSyBIdSA8
-Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8
-ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL21haWxib3gv
-bXRrLWNtZHEtbWFpbGJveC5jIHwgMiArKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
-LmMgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+IGluZGV4IGQ1NTM2NTYz
-ZmNlMS4uZmQ1MTliNmY1MThiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL21haWxib3gvbXRrLWNt
-ZHEtbWFpbGJveC5jDQo+ICsrKyBiL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMN
-Cj4gQEAgLTU3MiwxMCArNTcyLDEyIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBj
-bWRxX3BtX29wcyA9IHsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBnY2VfcGxhdCBnY2Vf
-cGxhdF92MiA9IHsudGhyZWFkX25yID0gMTYsIC5zaGlmdCA9IDB9Ow0KPiAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBnY2VfcGxhdCBnY2VfcGxhdF92MyA9IHsudGhyZWFkX25yID0gMjQsIC5zaGlmdCA9
-IDB9Ow0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBnY2VfcGxhdCBnY2VfcGxhdF92NCA9IHsudGhy
-ZWFkX25yID0gMjQsIC5zaGlmdCA9IDN9Ow0KPiAgDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9m
-X2RldmljZV9pZCBjbWRxX29mX2lkc1tdID0gew0KPiAgCXsuY29tcGF0aWJsZSA9ICJtZWRpYXRl
-ayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKSZnY2VfcGxhdF92Mn0sDQo+ICAJey5jb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9wbGF0
-X3YzfSwNCj4gKwl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LWdjZSIsIC5kYXRhID0g
-KHZvaWQgKikmZ2NlX3BsYXRfdjR9LA0KPiAgCXt9DQo+ICB9Ow0KPiAgDQoNCg==
+It's unlikely to happen in practice ever, but makes static checkers happy.
+
+Fixes: 535f296d47de ("clk: tegra: Add suspend and resume support on Tegra210")
+Reported-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/clk/tegra/clk.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+index e6bd6d1ea012..f6cdce441cf7 100644
+--- a/drivers/clk/tegra/clk.c
++++ b/drivers/clk/tegra/clk.c
+@@ -231,8 +231,10 @@ struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
+ 	periph_banks = banks;
+ 
+ 	clks = kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
+-	if (!clks)
++	if (!clks) {
+ 		kfree(periph_clk_enb_refcnt);
++		return NULL;
++	}
+ 
+ 	clk_num = num;
+ 
+-- 
+2.24.0
 
