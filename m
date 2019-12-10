@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D990CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD93C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEA620838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE84E222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015435;
-	bh=84Rbjmiv/oI6l8x6mreZvE7POjxp2KgMNIzREPjCz9E=;
+	s=default; t=1576015443;
+	bh=zb/n2u+msx7BwtU6xjBm5jMJhAaRbBRGOurrxwbXp1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTOeS3CgTo1LCJUGoVs1Np6+ZUieklTRpLuUEUFJnFiJu26ubLaWjRFSbg8/1i8m3
-	 jHQ2PYjIPHrnf51bTxdU5mB+V6JqsqJdjNAtQPL/1sHeYmwF5uoMoShlfCoLrkP2yq
-	 ncEWOIeTrKWHzGta2erSPB+LzQm0Ml7dKgUiyy/k=
+	b=bdPGKRtK9O/efM0efv/jAkhUHNm+o6lGbjQNrj/vzS0kb//e2o0DEV6lL3kRA8L9y
+	 AeSX5yUw0w80sDQEq9VEEA0+s+bsS2BwqCQlNOQy4c20UZDU/TGO03Dx06dnnf/CKV
+	 JDqoBQspnoqycfRicyPet048AzN9uoHB8fk/0agc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbfLJWDy (ORCPT
+        id S1728422AbfLJWEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbfLJWDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:43 -0500
+        id S1728179AbfLJWDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A1E8222C4;
-        Tue, 10 Dec 2019 22:03:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA33D20838;
+        Tue, 10 Dec 2019 22:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015423;
-        bh=84Rbjmiv/oI6l8x6mreZvE7POjxp2KgMNIzREPjCz9E=;
+        s=default; t=1576015430;
+        bh=zb/n2u+msx7BwtU6xjBm5jMJhAaRbBRGOurrxwbXp1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c23FbxtNOMsT+uNk4W3e2UiO3wUzpBIRL5TJYv9/KU2YQOc2WFKat4+dy/kFJBCPN
-         x+nv0o6qlsVtIQweGPFHgyaSD8M5pv6e/GEJ0V7TdYO4Ql5t+2vScd9qL+NbSzBOrS
-         P/rXc74D57/WNkTkHeopWBAo+14Ov+1tMtThkuJY=
+        b=dWsmZcTKl2k76RFE6ImEdxcjqC+ipYvgpAYAiZ9oNrB68XY/fJJnv6HzR0gm+2zLD
+         Gi0dLUfvaYSd2eeCNkW52l5yBU3S7YFGDEx2esdPWGdoWOvEmS+MtHPDKGAlqLDhM4
+         iipFVXucEtVddN4E+HAgOOsv3/eK1bobjQrEmfkg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 035/130] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
-Date:   Tue, 10 Dec 2019 17:01:26 -0500
-Message-Id: <20191210220301.13262-35-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 041/130] extcon: sm5502: Reset registers during initialization
+Date:   Tue, 10 Dec 2019 17:01:32 -0500
+Message-Id: <20191210220301.13262-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,79 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
+[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
 
-v4l2-compliance warns with this message:
+On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
+seems to keep interrupts enabled for SM5502 when booting Linux.
+Changing the cable state (i.e. plugging in a cable) - until the driver
+is loaded - will therefore produce an interrupt that is never read.
 
-   warn: v4l2-test-formats.cpp(717): \
- 	TRY_FMT cannot handle an invalid pixelformat.
-   warn: v4l2-test-formats.cpp(718): \
- 	This may or may not be a problem. For more information see:
-   warn: v4l2-test-formats.cpp(719): \
- 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
-	...
-   test VIDIOC_TRY_FMT: FAIL
+In this situation, the cable state will be stuck forever on the
+initial state because SM5502 stops sending interrupts.
+This can be avoided by clearing those pending interrupts after
+the driver has been loaded.
 
-We need to make sure that the returns a valid pixel format in all
-instance. Based on the v4l2 framework convention drivers must return a
-valid pixel format when the requested pixel format is either invalid or
-not supported.
+One way to do this is to reset all registers to default state
+by writing to SM5502_REG_RESET. This ensures that we start from
+a clean state, with all interrupts disabled.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/extcon/extcon-sm5502.c | 4 ++++
+ drivers/extcon/extcon-sm5502.h | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 19c0a26146356..4dc08f5a60811 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -352,20 +352,25 @@ enum {
- };
+diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+index 106ef0297b537..1a1ee3db3455f 100644
+--- a/drivers/extcon/extcon-sm5502.c
++++ b/drivers/extcon/extcon-sm5502.c
+@@ -69,6 +69,10 @@ struct sm5502_muic_info {
+ /* Default value of SM5502 register to bring up MUIC device. */
+ static struct reg_data sm5502_reg_data[] = {
+ 	{
++		.reg = SM5502_REG_RESET,
++		.val = SM5502_REG_RESET_MASK,
++		.invert = true,
++	}, {
+ 		.reg = SM5502_REG_CONTROL,
+ 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
+ 		.invert = false,
+diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+index 974b53222f568..12f8b01e57538 100644
+--- a/drivers/extcon/extcon-sm5502.h
++++ b/drivers/extcon/extcon-sm5502.h
+@@ -241,6 +241,8 @@ enum sm5502_reg {
+ #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
+ 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
  
- /* find our format description corresponding to the passed v4l2_format */
--static struct vpe_fmt *find_format(struct v4l2_format *f)
-+static struct vpe_fmt *__find_format(u32 fourcc)
- {
- 	struct vpe_fmt *fmt;
- 	unsigned int k;
- 
- 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
- 		fmt = &vpe_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
-+		if (fmt->fourcc == fourcc)
- 			return fmt;
- 	}
- 
- 	return NULL;
- }
- 
-+static struct vpe_fmt *find_format(struct v4l2_format *f)
-+{
-+	return __find_format(f->fmt.pix.pixelformat);
-+}
++#define SM5502_REG_RESET_MASK			(0x1)
 +
- /*
-  * there is one vpe_dev structure in the driver, it is shared by
-  * all instances.
-@@ -1608,9 +1613,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 	unsigned int stride = 0;
- 
- 	if (!fmt || !(fmt->types & type)) {
--		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
-+		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
- 			pix->pixelformat);
--		return -EINVAL;
-+		fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	}
- 
- 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
+ /* SM5502 Interrupts */
+ enum sm5502_irq {
+ 	/* INT1 */
 -- 
 2.20.1
 
