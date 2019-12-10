@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89195C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A05F20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8C920836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017149;
-	bh=rjSfrTk6hccsxIsy5t+vFA2js1jYVgkiV+mzv5rSymM=;
+	s=default; t=1576017152;
+	bh=xfqzfHzmDVF2NCNq9omTFPeXuBDsh3yuMnBSW7K8NEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glGcsKYui23yN8917GFV45HTh1AURhm9QUiu+oiLplmmDo721bmg0TYABbCa25POi
-	 d7Lh3DEB/NjDfj7BWBjO/QCbz3B0XU2hcAbhLetyuxEcEAPdySqNz/cHYQzVaT/Unk
-	 LnjdqNeDvbb7AegMippB5QPMRsXJjrKaUbdHtz3E=
+	b=g2rZNCTkOch+1/QOo6cpjcec9u+TuY78go5c43bFzURM82dUwD/UO6lO3nzH2SrZn
+	 jjj2SoPCK0BqIQDQ+O/g1NEbJHo4V5HI/C4K7CQc1GBQ/kX7OeibZPYm1cmrzFV3bA
+	 9/l9WyryGBJ8DTR6ZJh6wUZFn+qYm1HMv4O8HyCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfLJWc2 (ORCPT
+        id S1728041AbfLJWca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfLJWcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:09 -0500
+        id S1727549AbfLJWcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A8A24653;
-        Tue, 10 Dec 2019 22:32:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B7621D7D;
+        Tue, 10 Dec 2019 22:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017128;
-        bh=rjSfrTk6hccsxIsy5t+vFA2js1jYVgkiV+mzv5rSymM=;
+        s=default; t=1576017132;
+        bh=xfqzfHzmDVF2NCNq9omTFPeXuBDsh3yuMnBSW7K8NEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yoCu+lQzfdghVqhGkN8+90T5yA4h61w45i4u8slxWBg0Xd6+3GL/FimP8u1VEI+nd
-         k3bLgODc78Un0WP4ns7c3XbpKJDsErIpmx1iRgkIFEJPub+MCfM0QoyJvKcUAwwOYt
-         xLNAgma6c0qK5fO7J7XIgICpmQL4gkopgoSFBGbg=
+        b=BkxErzxwYMQEbJThb6ANIUn1I0kAS9k3ms0IeqRkYjj4U/f51bXtuydqguJgaQbqG
+         zqGNp0Llq5wuCBQOo4LrdlFi1RK4CiNtZ6WD7OYbIq107h6n/ZhwCBqM5TU2NWysLS
+         SowpNJj3VmovWsGGGtFOPeFpNLLy25mPqS8lGkc0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 78/91] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
-Date:   Tue, 10 Dec 2019 17:30:22 -0500
-Message-Id: <20191210223035.14270-78-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 81/91] spi: st-ssc4: add missed pm_runtime_disable
+Date:   Tue, 10 Dec 2019 17:30:25 -0500
+Message-Id: <20191210223035.14270-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -63,71 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
+[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
 
-Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
-adding MMC_CAP_ERASE to the TMIO mmc core:
+The driver forgets to call pm_runtime_disable in probe failure
+and remove.
+Add the missed calls to fix it.
 
-On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
- -- snip --
- This test and due to the discussions with Wolfram and you in this
- thread, I would actually suggest that you enable MMC_CAP_ERASE for all
- tmio variants, rather than just for this particular one.
-
- In other words, set the cap in tmio_mmc_host_probe() should be fine,
- as it seems none of the tmio variants supports HW busy detection at
- this point.
- -- snip --
-
-Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
-
-root@rcar-gen3:~# lsblk
-NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
-mmcblk0boot0 179:8    0    4M  1 disk
-mmcblk0boot1 179:16   0    4M  1 disk
-mmcblk1      179:24   0   30G  0 disk  <--- SD card
-
-root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
-real    0m8.659s
-user    0m0.001s
-sys     0m1.920s
-
-root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
-real    0m1.176s
-user    0m0.001s
-sys     0m0.124s
-
-[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
-
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
-Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_pio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-st-ssc4.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/tmio_mmc_pio.c b/drivers/mmc/host/tmio_mmc_pio.c
-index 0fc1f73b0d237..3e025766181b9 100644
---- a/drivers/mmc/host/tmio_mmc_pio.c
-+++ b/drivers/mmc/host/tmio_mmc_pio.c
-@@ -1076,7 +1076,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host,
- 	tmio_mmc_ops.start_signal_voltage_switch = _host->start_signal_voltage_switch;
- 	mmc->ops = &tmio_mmc_ops;
+diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
+index e54b596384582..710adbc2485f5 100644
+--- a/drivers/spi/spi-st-ssc4.c
++++ b/drivers/spi/spi-st-ssc4.c
+@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
+ 	return 0;
  
--	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
- 	mmc->caps2 |= pdata->capabilities2;
- 	mmc->max_segs = 32;
- 	mmc->max_blk_size = 512;
+ clk_disable:
++	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(spi_st->clk);
+ put_master:
+ 	spi_master_put(master);
+@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct spi_st *spi_st = spi_master_get_devdata(master);
+ 
++	pm_runtime_disable(&pdev->dev);
++
+ 	clk_disable_unprepare(spi_st->clk);
+ 
+ 	pinctrl_pm_select_sleep_state(&pdev->dev);
 -- 
 2.20.1
 
