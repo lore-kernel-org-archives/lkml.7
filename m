@@ -2,142 +2,156 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7544AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B32AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569CC205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BA020637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="a9UqpWI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfLJTE7 (ORCPT
+        id S1727683AbfLJTIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:04:59 -0500
-Received: from mga09.intel.com ([134.134.136.24]:50106 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727603AbfLJTE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:04:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 11:04:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
-   d="scan'208";a="203294114"
-Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
-  by orsmga007.jf.intel.com with ESMTP; 10 Dec 2019 11:04:58 -0800
-Subject: [PATCH] tpm: selftest: add test covering async mode
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     tadeusz.struk@intel.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, jgg@ziepe.ca, mingo@redhat.com,
-        jeffrin@rajagiritech.edu.in, linux-integrity@vger.kernel.org,
-        will@kernel.org, peterhuewe@gmx.de
-Date:   Tue, 10 Dec 2019 11:04:59 -0800
-Message-ID: <157600469924.5042.14784541627191833405.stgit@tstruk-mobl1>
-In-Reply-To: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
-References: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 10 Dec 2019 14:08:34 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45586 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfLJTIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 14:08:34 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 2so281825pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=454uV1cOoqwlPgGnzA3d4nZPEzgWJEr9W54Tx6mSllE=;
+        b=a9UqpWI8m3bt2OIdbLjfvj2LL5RUlqYA+avGfvuI/TYqsBvkVfdOeB8K2KfVRn3bbO
+         7sAQUioicVFF0tMsEQTGXm7XVGxX7Ij7/qwMjpAAgvBcll4vCo8LGz6uRiX81a0K3i1s
+         w8/wsoMK5O7rrvag9eAu1aAtGT+WqTKYQutuDFvfwxjsqLGXt3xPvko/cProN8afMepc
+         td/GYhMWGLqN71Hs9aB5VWV2O6SX04QKnDazCrrZQL2AsaLErwrs1ShcKuIRVXyK/YbY
+         YlllWV3pXkj73aR5q/STTVLYCt6ibE5ZKL/FTjxJybAl2fZrkoVHARBk3UDcyAjhQZ4i
+         6Iog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=454uV1cOoqwlPgGnzA3d4nZPEzgWJEr9W54Tx6mSllE=;
+        b=UDsioE3QFRwHQ6mmrirZHyA+ytd7h6uBE40bLJY7KbdAYnj9Sk+QMGUJle2HgXZnvD
+         yw6aXrSlmxBbuvn9i+Rq+rDm4XFOIyMhZKVLrlvOLeJaIufqW43syzg5cnvr47suIk0q
+         uc+4AjivWl9msXSA5BjMQO3cTF97YFq/YEHQfOJwCcCZdgpR9pimmRXdo0U4iteVpjBx
+         DwGTLmt4rQ6pqqptcR0SdjUOqfSdAMSGxn3vcoFkit+G8fdfgDWD61pC6zASyGOGeRwg
+         ZCUwQ9J7ZpmCD/gwf7uexss7Jj8BG9zz5K+CVyhggz07VhJKrlJtglAnn/uBogMtaUHs
+         CrrQ==
+X-Gm-Message-State: APjAAAWowdPW7ESXgU7AZXc2RVUo362zZ0mUttUl1KQDnMPGHXaR7NhH
+        eZwz/CSJuiWNCpEEB2+mTRWIkA==
+X-Google-Smtp-Source: APXvYqwKTPtiDDOpAsmKtYAyuVpfnhERLJ6IIAxhnLzU3MqfCAahCnezsHH/BCCz+mhGRKhlwAumPw==
+X-Received: by 2002:a63:1346:: with SMTP id 6mr26669783pgt.111.1576004913752;
+        Tue, 10 Dec 2019 11:08:33 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1131::1365? ([2620:10d:c090:180::b7af])
+        by smtp.gmail.com with ESMTPSA id 129sm4394395pfw.71.2019.12.10.11.08.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 11:08:32 -0800 (PST)
+Subject: Re: [PATCH] block: fix NULL pointer dereference in account statistics
+ with IDE
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel test robot <rong.a.chen@intel.com>
+References: <20191210184704.24081-1-logang@deltatee.com>
+ <81ec258d-3bfe-f55a-ba55-83047743bbbe@kernel.dk>
+ <eaa2c3ae-b71b-acca-32a0-494e545d60d9@deltatee.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <bfddce21-0a26-0d3a-6503-189b31c809a5@kernel.dk>
+Date:   Tue, 10 Dec 2019 12:08:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <eaa2c3ae-b71b-acca-32a0-494e545d60d9@deltatee.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a test that sends a tpm cmd in an asyn mode.
-Currently there is a gap in test coverage with regards
-to this functionality.
+On 12/10/19 12:02 PM, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-12-10 11:59 a.m., Jens Axboe wrote:
+>> On 12/10/19 11:47 AM, Logan Gunthorpe wrote:
+>>> The IDE driver creates some passthru requests which never get
+>>> submitted to the block layer in such a way that blk_account_io_start()
+>>> gets called. However, the driver still calls __blk_mq_end_request() in
+>>> ide_end_rq() which will call blk_account_io_completion() which tries
+>>> to dereferences req->part which is never set. See ide_prep_sense() for
+>>> an example of where these requests come from.
+>>>
+>>> To fix this, blk_account_io_completion() and blk_account_io_done()
+>>> should do nothing if req->part is not set.
+>>>
+>>> The back trace of this bug is:
+>>>
+>>>     BUG: kernel NULL pointer dereference, address: 000002ac
+>>>     #PF: supervisor write access in kernel mode
+>>>     #PF: error_code(0x0002) - not-present page
+>>>     *pde = 00000000
+>>>     Oops: 0002 [#1]
+>>>     CPU: 0 PID: 237 Comm: kworker/0:1H Not tainted
+>>>     5.4.0-rc2-00011-g48d9b0d43105e #1
+>>>     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1
+>>>     04/01/2014
+>>>     Workqueue: kblockd drive_rq_insert_work
+>>>     EIP: blk_account_io_completion+0x7a/0xf0
+>>>     Code: 89 54 24 08 31 d2 89 4c 24 04 31 c9 c7 04 24 02 00 00 00 c1 ee
+>>>     09 e8 f5 21 a6 ff e8 70 5c a7 ff 8b 53 60 8d 04 bd 00 00 00 00 <01> b4
+>>>     02 ac 02 00 00 8b 9a 88 02 00 00 85 db 74 11 85 d2 74 51 8b
+>>>     EAX: 00000000 EBX: f5b80000 ECX: 00000000 EDX: 00000000
+>>>     ESI: 00000000 EDI: 00000000 EBP: f3031e70 ESP: f3031e54
+>>>     DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010046
+>>>     CR0: 80050033 CR2: 000002ac CR3: 03c25000 CR4: 000406d0
+>>>     Call Trace:
+>>>      <IRQ>
+>>>       blk_update_request+0x85/0x420
+>>>       ide_end_rq+0x38/0xa0
+>>>       ide_complete_rq+0x3d/0x70
+>>>       cdrom_newpc_intr+0x258/0xba0
+>>>       ide_intr+0x135/0x250
+>>>       __handle_irq_event_percpu+0x3e/0x250
+>>>       handle_irq_event_percpu+0x1f/0x50
+>>>       handle_irq_event+0x32/0x60
+>>>       handle_level_irq+0x6c/0x110
+>>>       handle_irq+0x72/0xa0
+>>>       </IRQ>
+>>>       do_IRQ+0x45/0xad
+>>>       common_interrupt+0x115/0x11c
+>>
+>> Why not just:
+>>
+>> diff --git a/block/blk.h b/block/blk.h
+>> index 6842f28c033e..d7407b5d0200 100644
+>> --- a/block/blk.h
+>> +++ b/block/blk.h
+>> @@ -250,7 +250,7 @@ int blk_dev_init(void);
+>>   */
+>>  static inline bool blk_do_io_stat(struct request *rq)
+>>  {
+>> -	return rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
+>> +	return rq->part && rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
+>>  }
+> 
+> Because blk_account_io_start() also checks blk_do_io_stat() and, in that
+> case, rq->part will never be set (seeing that's the function that
+> typically sets it); thus that solution would disable stats entirely.
 
-Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
----
- tools/testing/selftests/tpm2/test_smoke.sh |    1 +
- tools/testing/selftests/tpm2/tpm2.py       |   19 +++++++++++++++++--
- tools/testing/selftests/tpm2/tpm2_tests.py |   13 +++++++++++++
- 3 files changed, 31 insertions(+), 2 deletions(-)
+Gotcha. I'm fine with the patch you posted in that case.
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 80521d46220c..cb54ab637ea6 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -2,3 +2,4 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
- 
- python -m unittest -v tpm2_tests.SmokeTest
-+python -m unittest -v tpm2_tests.AsyncTest
-diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
-index 828c18584624..d0fcb66a88a6 100644
---- a/tools/testing/selftests/tpm2/tpm2.py
-+++ b/tools/testing/selftests/tpm2/tpm2.py
-@@ -6,8 +6,8 @@ import socket
- import struct
- import sys
- import unittest
--from fcntl import ioctl
--
-+import fcntl
-+import select
- 
- TPM2_ST_NO_SESSIONS = 0x8001
- TPM2_ST_SESSIONS = 0x8002
-@@ -352,6 +352,7 @@ def hex_dump(d):
- class Client:
-     FLAG_DEBUG = 0x01
-     FLAG_SPACE = 0x02
-+    FLAG_NONBLOCK = 0x04
-     TPM_IOC_NEW_SPACE = 0xa200
- 
-     def __init__(self, flags = 0):
-@@ -362,13 +363,27 @@ class Client:
-         else:
-             self.tpm = open('/dev/tpmrm0', 'r+b', buffering=0)
- 
-+        if (self.flags & Client.FLAG_NONBLOCK):
-+            flags = fcntl.fcntl(self.tpm, fcntl.F_GETFL)
-+            flags |= os.O_NONBLOCK
-+            fcntl.fcntl(self.tpm, fcntl.F_SETFL, flags)
-+            self.tpm_poll = select.poll()
-+
-     def close(self):
-         self.tpm.close()
- 
-     def send_cmd(self, cmd):
-         self.tpm.write(cmd)
-+
-+        if (self.flags & Client.FLAG_NONBLOCK):
-+            self.tpm_poll.register(self.tpm, select.POLLIN)
-+            self.tpm_poll.poll(10000)
-+
-         rsp = self.tpm.read()
- 
-+        if (self.flags & Client.FLAG_NONBLOCK):
-+            self.tpm_poll.unregister(self.tpm)
-+
-         if (self.flags & Client.FLAG_DEBUG) != 0:
-             sys.stderr.write('cmd' + os.linesep)
-             sys.stderr.write(hex_dump(cmd) + os.linesep)
-diff --git a/tools/testing/selftests/tpm2/tpm2_tests.py b/tools/testing/selftests/tpm2/tpm2_tests.py
-index d4973be53493..728be7c69b76 100644
---- a/tools/testing/selftests/tpm2/tpm2_tests.py
-+++ b/tools/testing/selftests/tpm2/tpm2_tests.py
-@@ -288,3 +288,16 @@ class SpaceTest(unittest.TestCase):
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_COMMAND_CODE |
-                          tpm2.TSS2_RESMGR_TPM_RC_LAYER)
-+
-+class AsyncTest(unittest.TestCase):
-+    def setUp(self):
-+        logging.basicConfig(filename='AsyncTest.log', level=logging.DEBUG)
-+
-+    def test_async(self):
-+        log = logging.getLogger(__name__)
-+        log.debug(sys._getframe().f_code.co_name)
-+
-+        async_client = tpm2.Client(tpm2.Client.FLAG_NONBLOCK)
-+        log.debug("Calling get_cap in a NON_BLOCKING mode")
-+        async_client.get_cap(tpm2.TPM2_CAP_HANDLES, tpm2.HR_LOADED_SESSION)
-+        async_client.close()
+-- 
+Jens Axboe
 
