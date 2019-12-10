@@ -2,175 +2,248 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D423C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC7C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A1E20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908872077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YAnRX4GK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyP2Wrjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLJBoA (ORCPT
+        id S1726631AbfLJBsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:44:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22862 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726502AbfLJBoA (ORCPT
+        Mon, 9 Dec 2019 20:48:10 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42366 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfLJBsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:44:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575942238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rx07KaVJ8I4rPd4Qc9E0QToLdVk7p8IvSuIUJPkT0Zg=;
-        b=YAnRX4GK9EOKOATih+vj54b+dyIAuB/on1vKlrT3dcUcvqZblkjNY4OXkkByPqTl0Du39Y
-        w9RBcWISh7+/4GFviWCdALLQqQ1NJ1CxhyOun6SP6PMl90PElOUToNgNwYUJPknFUACjjT
-        IVivg46c+siSMQLUPm3iRKe2tsEhD3Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-EcKFFzLtOgSiq6ajvwjvDg-1; Mon, 09 Dec 2019 20:43:54 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F12788AB939;
-        Tue, 10 Dec 2019 01:43:52 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04BB86E51C;
-        Tue, 10 Dec 2019 01:43:39 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 09:43:35 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     tglx@linutronix.de, chenxiang66@hisilicon.com,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        maz@kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk,
-        bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-Message-ID: <20191210014335.GA25022@ming.t460p>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+        Mon, 9 Dec 2019 20:48:10 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y19so12287649lfl.9;
+        Mon, 09 Dec 2019 17:48:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RbApsi06fJZ4JQyn9YruAT0fENTJ10sIt7ZG90JW5+Q=;
+        b=pyP2Wrjv322RJVvAF31wU6JEGAbn6M+TCW+LTSt7WPYzw8zZA4CU3FxecWC5fLsVfN
+         feIUniO3WKqL+B1FSG9ahl853WgHq7dJCk6af4Mt2g2M/n1KiCkkFTmw1gcBRSJ834L9
+         T8Ec24v8UBTtuZ5oFlk7BoPg2iD3wT501jp1oL7WYNTLuZ8u3y+B+ILN6cHs5PY87p1Q
+         /h4J7crXgLGTlB3YYdrKOTlxXuIStFrmeBKhFpixJ91mqG52dgHaEtdbQ5qldWObl/Ln
+         HdltwspeK41iLKT9MJZFz8YBVkTxBoab6iaThdRFk+WTL3rXeuDNxq1ZXb01lr/KbUpn
+         eWNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RbApsi06fJZ4JQyn9YruAT0fENTJ10sIt7ZG90JW5+Q=;
+        b=MRG5VpB+oKsoCkCf7A8qsqiA7T2nt92wo6pcbHHHQkoD0qD4CmKzUPAnA9IbZ0Xsyb
+         DHK9jf2lZkpf8Le39zUnPCLCrk60fyU8RGKQZvK8PKXd+AOoJ4eaBXx03R00sMvme54U
+         PlEIgGAwYNLRlr7I2VgC7pU5AyBGBywZLJFYjb5E64dlRYw1IGkywfjLmToEMCRy65z3
+         DkWoqijgSVTgE1s5cRa+5m3SprXNEwnGP4OpNy5tdgcVZfoDx5vpnCxOn6vbaN+yBftN
+         hPgx0YDew0EUuPsI/I9w3gS3ZzYvB3s7jxGbSlx13zZptLIsLHa5PijDCdBcvPr3gQzL
+         LvzQ==
+X-Gm-Message-State: APjAAAUIeSxzmxG8KYtxs4f8P30rdWb4EMsIS4lBc4oNLKgiR2heu9Gc
+        lJHNYsgL7RrbuseuT+TnFjLN9sh6
+X-Google-Smtp-Source: APXvYqzXL5VP8uMrrpPxJ7Py8YIHwvTvSVP3Z5xSc/Stp85+4W9W7inRV+LfJqW2ALQ99p6EFH+kFQ==
+X-Received: by 2002:ac2:489b:: with SMTP id x27mr17729318lfc.130.1575942487122;
+        Mon, 09 Dec 2019 17:48:07 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id n14sm548932lfe.5.2019.12.09.17.48.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 17:48:06 -0800 (PST)
+Subject: Re: [PATCH 6/6] input: elants: read touchscreen size for EKTF3624
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <06f20ed8e50fe634c59cf3c585d37f1175133533.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <fd020252-0646-5d01-95d6-aff79b8709f6@gmail.com>
+Message-ID: <2f609f7c-cb4f-fccb-83cc-dfed5b8039b3@gmail.com>
+Date:   Tue, 10 Dec 2019 04:48:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: EcKFFzLtOgSiq6ajvwjvDg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <fd020252-0646-5d01-95d6-aff79b8709f6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 02:30:59PM +0000, John Garry wrote:
-> On 07/12/2019 08:03, Ming Lei wrote:
-> > On Fri, Dec 06, 2019 at 10:35:04PM +0800, John Garry wrote:
-> > > Currently the cpu allowed mask for the threaded part of a threaded ir=
-q
-> > > handler will be set to the effective affinity of the hard irq.
-> > >=20
-> > > Typically the effective affinity of the hard irq will be for a single=
- cpu. As such,
-> > > the threaded handler would always run on the same cpu as the hard irq=
-.
-> > >=20
-> > > We have seen scenarios in high data-rate throughput testing that the =
-cpu
-> > > handling the interrupt can be totally saturated handling both the har=
-d
-> > > interrupt and threaded handler parts, limiting throughput.
-> >=20
->=20
-> Hi Ming,
->=20
-> > Frankly speaking, I never observed that single CPU is saturated by one =
-storage
-> > completion queue's interrupt load. Because CPU is still much quicker th=
-an
-> > current storage device.
-> >=20
-> > If there are more drives, one CPU won't handle more than one queue(driv=
-e)'s
-> > interrupt if (nr_drive * nr_hw_queues) < nr_cpu_cores.
->=20
-> Are things this simple? I mean, can you guarantee that fio processes are
-> evenly distributed as such?
+10.12.2019 04:23, Dmitry Osipenko пишет:
+> 10.12.2019 03:19, Michał Mirosław пишет:
+>> EKTF3624 as present in Asus TF300T tablet has touchscreen size encoded
+>> in different registers.
+>>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> ---
+>>  drivers/input/touchscreen/elants_i2c.c | 77 ++++++++++++++++++++++++--
+>>  1 file changed, 72 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+>> index 27aca3971da5..e60a5eb9fb37 100644
+>> --- a/drivers/input/touchscreen/elants_i2c.c
+>> +++ b/drivers/input/touchscreen/elants_i2c.c
+>> @@ -34,7 +34,7 @@
+>>  #include <linux/input/touchscreen.h>
+>>  #include <linux/input/mt.h>
+>>  #include <linux/acpi.h>
+>> -#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>  #include <linux/gpio/consumer.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <asm/unaligned.h>
+>> @@ -42,6 +42,10 @@
+>>  /* Device, Driver information */
+>>  #define DEVICE_NAME	"elants_i2c"
+>>  
+>> +/* Device IDs */
+>> +#define EKTH3500	0
+>> +#define EKTF3624	1
+>> +
+>>  /* Convert from rows or columns into resolution */
+>>  #define ELAN_TS_RESOLUTION(n, m)   (((n) - 1) * (m))
+>>  
+>> @@ -160,6 +164,7 @@ struct elants_data {
+>>  
+>>  	bool wake_irq_enabled;
+>>  	bool keep_power_in_suspend;
+>> +	u8 chip_id;
+>>  
+>>  	/* Must be last to be used for DMA operations */
+>>  	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
+>> @@ -434,7 +439,53 @@ static int elants_i2c_query_bc_version(struct elants_data *ts)
+>>  	return 0;
+>>  }
+>>  
+>> -static int elants_i2c_query_ts_info(struct elants_data *ts)
+>> +static int elants_i2c_query_ts_info_ektf(struct elants_data *ts)
+>> +{
+>> +	struct i2c_client *client = ts->client;
+>> +	int error;
+>> +	u8 resp[4];
+>> +	u16 phy_x, phy_y;
+>> +	const u8 get_xres_cmd[] = {
+>> +		CMD_HEADER_READ, E_INFO_X_RES, 0x00, 0x00
+>> +	};
+>> +	const u8 get_yres_cmd[] = {
+>> +		CMD_HEADER_READ, E_INFO_Y_RES, 0x00, 0x00
+>> +	};
+>> +
+>> +	/* Get X/Y size in mm */
+>> +	error = elants_i2c_execute_command(client, get_xres_cmd,
+>> +					   sizeof(get_xres_cmd),
+>> +					   resp, sizeof(resp), 1,
+>> +					   "get X size");
+>> +	if (error)
+>> +		return error;
+>> +
+>> +	phy_x = resp[2] | ((resp[3] & 0xF0) << 4);
+>> +
+>> +	error = elants_i2c_execute_command(client, get_yres_cmd,
+>> +					   sizeof(get_yres_cmd),
+>> +					   resp, sizeof(resp), 1,
+>> +					   "get Y size");
+>> +	if (error)
+>> +		return error;
+>> +
+>> +	phy_y = resp[2] | ((resp[3] & 0xF0) << 4);
+>> +
+>> +	/* calculate resolution from size */
+>> +	if (!ts->prop.max_x)
+>> +		ts->prop.max_x = 2240;
+>> +	ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
+>> +
+>> +	if (!ts->prop.max_y)
+>> +		ts->prop.max_y = 1408;
+>> +	ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
+>> +
+>> +	dev_dbg(&client->dev, "phy_x=%d, phy_y=%d\n", phy_x, phy_y);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int elants_i2c_query_ts_info_ekth(struct elants_data *ts)
+>>  {
+>>  	struct i2c_client *client = ts->client;
+>>  	int error;
+>> @@ -587,8 +638,20 @@ static int elants_i2c_initialize(struct elants_data *ts)
+>>  		error = elants_i2c_query_test_version(ts);
+>>  	if (!error)
+>>  		error = elants_i2c_query_bc_version(ts);
+>> -	if (!error)
+>> -		error = elants_i2c_query_ts_info(ts);
+>> +
+>> +	switch (ts->chip_id) {
+>> +	case EKTH3500:
+>> +		if (!error)
+>> +			error = elants_i2c_query_ts_info_ekth(ts);
+>> +		break;
+>> +	case EKTF3624:
+>> +		if (!error)
+>> +			error = elants_i2c_query_ts_info_ektf(ts);
+>> +		break;
+>> +	default:
+>> +		unreachable();
+>> +		break;
+>> +	}
+>>  
+>>  	if (error)
+>>  		ts->iap_mode = ELAN_IAP_RECOVERY;
+>> @@ -1185,6 +1248,9 @@ static int elants_i2c_probe(struct i2c_client *client,
+>>  	ts->client = client;
+>>  	i2c_set_clientdata(client, ts);
+>>  
+>> +	if (client->dev.of_node)
+>> +		ts->chip_id = (uintptr_t)of_device_get_match_data(&client->dev);
+>> +
+>>  	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
+>>  	if (IS_ERR(ts->vcc33)) {
+>>  		error = PTR_ERR(ts->vcc33);
+>> @@ -1422,7 +1488,8 @@ MODULE_DEVICE_TABLE(acpi, elants_acpi_id);
+>>  
+>>  #ifdef CONFIG_OF
+>>  static const struct of_device_id elants_of_match[] = {
+>> -	{ .compatible = "elan,ekth3500" },
+>> +	{ .compatible = "elan,ekth3500", .data = (void *)EKTH3500 },
+>> +	{ .compatible = "elan,ektf3624", .data = (void *)EKTF3624 },
+>>  	{ /* sentinel */ }
+>>  };
+>>  MODULE_DEVICE_TABLE(of, elants_of_match);
+> 
+> It also should be possible to remove elants_of_match entirely and do the
+> following in the I2C ID table:
+> 
+> static const struct i2c_device_id elants_i2c_id[] = {
+> 	{ "ekth3500", EKTH3500 },
+> 	{ "ektf3624", EKTF3624 },
+> 	{ }
+> };
+> MODULE_DEVICE_TABLE(i2c, elants_i2c_id);
+> 
+> Then OF core will take care of device ID matching by removing the
+> "elan," part from the compatible value of the device-tree and comparing
+> it with the values in elants_i2c_id[].
+> 
+> And then in elants_i2c_probe() you could :
+> 
+> 	chip->chip_id = (uintptr_t)id->driver_data;
+> 
+> See "drivers/mfd/max77620.c" for the example.
+> 
 
-That is why I ask you for the details of your test.
+But maybe it's not really worth the effort at all since we need to
+override the sizes in device-tree anyway?
 
-If you mean hisilicon SAS, the interrupt load should have been distributed
-well given the device has multiple reply queues for distributing interrupt
-load.
-
->=20
-> >=20
-> > So could you describe your case in a bit detail? Then we can confirm
-> > if this change is really needed.
->=20
-> The issue is that the CPU is saturated in servicing the hard and threaded
-> part of the interrupt together - here's the sort of thing which we saw
-> previously:
-> Before:
-> CPU=09%usr=09%sys=09%irq=09%soft=09%idle
-> all=092.9=0913.1=091.2=094.6=0978.2=09=09=09=09
-> 0=090.0=0929.3=0910.1=0958.6=092.0
-> 1=0918.2=0939.4=090.0=091.0=0941.4
-> 2=090.0=092.0=090.0=090.0=0998.0
->=20
-> CPU0 has no effectively no idle.
-
-The result just shows the saturation, we need to root cause it instead
-of workaround it via random changes.
-
->=20
-> Then, by allowing the threaded part to roam:
-> After:
-> CPU=09%usr=09%sys=09%irq=09%soft=09%idle
-> all=093.5=0918.4=092.7=096.8=0968.6
-> 0=090.0=0920.6=0929.9=0929.9=0919.6
-> 1=090.0=0939.8=090.0=0950.0=0910.2
->=20
-> Note: I think that I may be able to reduce the irq hard part load in the
-> endpoint driver, but not that much such that we see still this issue.
->=20
-> >=20
-> > >=20
-> > > For when the interrupt is managed, allow the threaded part to run on =
-all
-> > > cpus in the irq affinity mask.
-> >=20
-> > I remembered that performance drop is observed by this approach in some
-> > test.
->=20
-> From checking the thread about the NVMe interrupt swamp, just switching t=
-o
-> threaded handler alone degrades performance. I didn't see any specific
-> results for this change from Long Li - https://lkml.org/lkml/2019/8/21/12=
-8
-
-I am pretty clear the reason for Azure, which is caused by aggressive inter=
-rupt
-coalescing, and this behavior shouldn't be very common, and it can be
-addressed by the following patch:
-
-http://lists.infradead.org/pipermail/linux-nvme/2019-November/028008.html
-
-Then please share your lockup story, such as, which HBA/drivers, test steps=
-,
-if you complete IOs from multiple disks(LUNs) on single CPU, if you have
-multiple queues, how many active LUNs involved in the test, ...
-
-
-Thanks,
-Ming
-
+What about to just ignore the firmware values of eKTF3624 for simplicity?
