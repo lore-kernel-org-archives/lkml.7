@@ -2,159 +2,154 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE17C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B4CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCB52073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBybQrbT"
+	by mail.kernel.org (Postfix) with ESMTP id C180B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfLJLlw (ORCPT
+        id S1727420AbfLJLmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:41:52 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40412 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfLJLlv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:41:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so2745553wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 03:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CCNCtyIpljxGbglOKFnRn5m+itMarmJl7+8snb+zxSE=;
-        b=PBybQrbTFnbA6gaSClKcbfpJusLBtFBY3aqxZYLgVvz8j2iCSQxIDJTk8vRJdyX5IQ
-         yC70f61tkLJPxnwNmw7KQ2A/w7luHlokBJxIi754fSUB76TUsD/z6FHiR12gz7wU3+ss
-         GnXisc0hHIgmFv4DZw2cfU7U+QuQbMtE4HsyuJS0iUOteQrsFHJB13L+dqngPzLKfu+s
-         Nnj0G3ywBceqZSP+bYXPQlUms1lhNJC9uL2dwy6mEpSIJibGX8ROmEcLmMQ/mNFPqoWf
-         62vJNmPFjihxUuiTOZ1UnpDe2D1gt24ZR5vGd4OYo8gkggv72rrquEdWS2NdaTNuHPst
-         mWUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CCNCtyIpljxGbglOKFnRn5m+itMarmJl7+8snb+zxSE=;
-        b=kvbM7PA47HunbQG3RkpPiNpJqF7gZ96wUJWYgQJf1D01SoHYZBD5VGWFb+GvQUaXOA
-         +eok/q5suTRFzjS/h/3SJH63nGg30na+b2yJPL4Hbuk2z+aRKSgB8ZyC38F2GCHZKT+R
-         819pqGHrSzqP4iFrzZgdbJsUUcQFbGod258zF36uH8uyhVz9A8Dvr09bYpQidFGbJYQV
-         ohFoqhRryc7CwVc5PLeQoYIuIDEtNC163nL1NoJyo3KmjnP91FqOg1MvJ1bBz1JWJWuZ
-         IjSVk+11gA9H2Gk9czXDkdXSSRB+pAaAbBa3ZE3BhT1rzybSWS66owGCmkTODxmYi2IW
-         KV2Q==
-X-Gm-Message-State: APjAAAX7DFmZ5T4rCVU5Hyqwp0Q9+eDjvvHRvTkvQRxKfkhb+ziu+QOt
-        pOl0EUNq1X0loG66b587rSQ=
-X-Google-Smtp-Source: APXvYqz1fQqZaTpf4dhqEtZPiBvAnmTiVbP5QGngcmFM8sLv7CnFa8gKXc8rhDVNFCTrF27qdAZ7JQ==
-X-Received: by 2002:a7b:c778:: with SMTP id x24mr4664994wmk.119.1575978110010;
-        Tue, 10 Dec 2019 03:41:50 -0800 (PST)
-Received: from debian ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id z83sm1612038wmg.2.2019.12.10.03.41.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 03:41:49 -0800 (PST)
-Date:   Tue, 10 Dec 2019 11:41:47 +0000
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tty: use tty_init_dev_retry() to workaround a
- race condition
-Message-ID: <20191210114147.ivple4ccr4bj6c4h@debian>
-References: <20191121152239.28405-1-sudipm.mukherjee@gmail.com>
- <20191121152239.28405-2-sudipm.mukherjee@gmail.com>
- <20191121164138.GD651886@kroah.com>
- <20191121210155.limd7v6cpd5yz2e7@debian>
- <eef58b47-f208-2ac5-6e02-a87f9568c70f@suse.com>
+        Tue, 10 Dec 2019 06:42:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49924 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727128AbfLJLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:42:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BD75FAF2B;
+        Tue, 10 Dec 2019 11:42:08 +0000 (UTC)
+Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
+ FRONT/BACK_RING_ATTACH
+To:     "Durrant, Paul" <pdurrant@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20191205140123.3817-1-pdurrant@amazon.com>
+ <20191205140123.3817-4-pdurrant@amazon.com>
+ <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
+ <23a1e955fcaa4e948f5290a7252256fb@EX13D32EUC003.ant.amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <6c5b7102-39af-9e83-8571-ff669b23115d@suse.com>
+Date:   Tue, 10 Dec 2019 12:42:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="xyokhrw7wuwg5wwa"
-Content-Disposition: inline
-In-Reply-To: <eef58b47-f208-2ac5-6e02-a87f9568c70f@suse.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <23a1e955fcaa4e948f5290a7252256fb@EX13D32EUC003.ant.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---xyokhrw7wuwg5wwa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Jiri,
-
-On Fri, Nov 22, 2019 at 10:05:09AM +0100, Jiri Slaby wrote:
-> On 21. 11. 19, 22:01, Sudip Mukherjee wrote:
-> > Hi Greg,
-> > 
-> > On Thu, Nov 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
-> >> On Thu, Nov 21, 2019 at 03:22:39PM +0000, Sudip Mukherjee wrote:
-> >>> There seems to be a race condition in tty drivers and I could see on
-> >>> many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-> >>> do 'tty->port->itty = tty' even though tty->port is NULL.
-<snip>
-> >>>
-> >>> uart_add_one_port() registers the console, as soon as it registers, the
-> >>> userspace tries to use it and that leads to tty_open() but
-> >>> uart_add_one_port() has not yet done tty_port_link_device() and so
-> >>> tty->port is not yet configured when control reaches tty_init_dev().
-> >>
-> >> Shouldn't we do tty_port_link_device() before uart_add_one_port() to
-> >> remove that race?  Once you register the console, yes, tty_open() can
-> >> happen, so the driver had better be ready to go at that point in time.
-> >>
-> > 
-> > But tty_port_link_device() is done by uart_add_one_port() itself.
-> > After registering the console uart_add_one_port() will call
-> > tty_port_register_device_attr_serdev() and tty_port_link_device() is
-> > called from this. Thats still tty core.
+On 09.12.19 17:38, Durrant, Paul wrote:
+>> -----Original Message-----
+>> From: Jürgen Groß <jgross@suse.com>
+>> Sent: 09 December 2019 13:55
+>> To: Durrant, Paul <pdurrant@amazon.com>; linux-kernel@vger.kernel.org;
+>> xen-devel@lists.xenproject.org
+>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>; Stefano Stabellini
+>> <sstabellini@kernel.org>
+>> Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
+>> FRONT/BACK_RING_ATTACH
+>>
+>> On 05.12.19 15:01, Paul Durrant wrote:
+>>> Currently these macros will skip over any requests/responses that are
+>>> added to the shared ring whilst it is detached. This, in general, is not
+>>> a desirable semantic since most frontend implementations will eventually
+>>> block waiting for a response which would either never appear or never be
+>>> processed.
+>>>
+>>> NOTE: These macros are currently unused. BACK_RING_ATTACH(), however,
+>> will
+>>>         be used in a subsequent patch.
+>>>
+>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+>>> ---
+>>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>>> Cc: Juergen Gross <jgross@suse.com>
+>>> Cc: Stefano Stabellini <sstabellini@kernel.org>
+>>> ---
+>>>    include/xen/interface/io/ring.h | 4 ++--
+>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/include/xen/interface/io/ring.h
+>> b/include/xen/interface/io/ring.h
+>>> index 3f40501fc60b..405adfed87e6 100644
+>>> --- a/include/xen/interface/io/ring.h
+>>> +++ b/include/xen/interface/io/ring.h
+>>> @@ -143,14 +143,14 @@ struct __name##_back_ring {
+>> 		\
+>>>    #define FRONT_RING_ATTACH(_r, _s, __size) do {				\
+>>>        (_r)->sring = (_s);							\
+>>>        (_r)->req_prod_pvt = (_s)->req_prod;				\
+>>> -    (_r)->rsp_cons = (_s)->rsp_prod;					\
+>>> +    (_r)->rsp_cons = (_s)->req_prod;					\
+>>>        (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+>>>    } while (0)
+>>>
+>>>    #define BACK_RING_ATTACH(_r, _s, __size) do {				\
+>>>        (_r)->sring = (_s);							\
+>>>        (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
+>>> -    (_r)->req_cons = (_s)->req_prod;					\
+>>> +    (_r)->req_cons = (_s)->rsp_prod;					\
+>>>        (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+>>>    } while (0)
+>>
+>> Lets look at all possible scenarios where BACK_RING_ATTACH()
+>> might happen:
+>>
+>> Initially (after [FRONT|BACK]_RING_INIT(), leaving _pvt away):
+>> req_prod=0, rsp_cons=0, rsp_prod=0, req_cons=0
+>> Using BACK_RING_ATTACH() is fine (no change)
+>>
+>> Request queued:
+>> req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=0
+>> Using BACK_RING_ATTACH() is fine (no change)
+>>
+>> and taken by backend:
+>> req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=1
+>> Using BACK_RING_ATTACH() is resetting req_cons to 0, will result
+>> in redoing request (for blk this is fine, other devices like SCSI
+>> tapes will have issues with that). One possible solution would be
+>> to ensure all taken requests are either stopped or the response
+>> is queued already.
 > 
-> Interferences of console vs tty code are ugly. Does it help to simply
-> put tty_port_link_device to uart_add_one_port before uart_configure_port?
+> Yes, it is the assumption that a backend will drain and complete any requests it is handling, but it will not deal with new ones being posted by the frontend. This does appear to be the case for blkback.
+> 
+>>
+>> Response queued:
+>> req_prod=1, rsp_cons=0, rsp_prod=1, req_cons=1
+>> Using BACK_RING_ATTACH() is fine (no change)
+>>
+>> Response taken:
+>> req_prod=1, rsp_cons=1, rsp_prod=1, req_cons=1
+>> Using BACK_RING_ATTACH() is fine (no change)
+>>
+>> In general I believe the [FRONT|BACK]_RING_ATTACH() macros are not
+>> fine to be used in the current state, as the *_pvt fields normally not
+>> accessible by the other end are initialized using the (possibly
+>> untrusted) values from the shared ring. There needs at least to be a
+>> test for the values to be sane, and your change should not result in the
+>> same value to be read twice, as it could have changed in between.
+> 
+> What test would you apply to sanitize the value of the pvt pointer?
 
-sorry for the late response, got busy with an out-of-tree driver.
+For the BACK_RING_ATTACH() case rsp_prod_pvt should not be between
+req_prod and req_cons, and req_cons - rsp_prod_pvt should be <= ring
+size IMO.
 
-It fixes the problem if I put tty_port_link_device() before
-uart_configure_port(). Please check the attached patch and that
-completely fixes the problem. Do you want me to send a proper patch for
-it or do you want me to check more into it?
+> Another option would be to have a backend write its pvt value into the xenstore backend area when the ring is unmapped, so that a new instance definitely resumes where the old one left off. The value of rsp_prod could, of course, be overwritten by the guest at any time and so there's little point in attempting sanitize it.
 
---
-Regards
-Sudip
+I don't think this would be necessary. With above validation in place
+all the guest could do would be to shoot itself in the foot.
 
---xyokhrw7wuwg5wwa
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename=patch
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 351843f847c0..006d478a63be 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2820,6 +2820,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
- 	if (uport->cons && uport->dev)
- 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
- 
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
- 
- 	port->console = uart_console(uport);
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index a9e12b3bc31d..a4f85fc75539 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_port *port,
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
-
---xyokhrw7wuwg5wwa--
+Juergen
