@@ -2,129 +2,155 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752AAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404B02077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4512077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfu2d5H7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kzQSj3z2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfLJWvG (ORCPT
+        id S1727247AbfLJWvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:51:06 -0500
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:35201 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfLJWvF (ORCPT
+        Tue, 10 Dec 2019 17:51:10 -0500
+Received: from gateway36.websitewelcome.com ([192.185.198.13]:16480 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbfLJWvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:51:05 -0500
-Received: by mail-wr1-f54.google.com with SMTP id g17so21962127wro.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:51:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Iq7lLPDxZxyyF6K7jckWs0XvEiXpXcXtYgOmBPW0oiE=;
-        b=qfu2d5H7ZzEuxsIddTw+GLtP96qTv+bVqRU7LssVtRfl7wPwS4w08BJpF9+uo823Z6
-         lgtIu5Zvu3K5vC8P59KtpBKs17wDe09XqWmsGZZ1TRMHUZQYTBFSvG3pG+qjKAR0gKuu
-         0AyvkBjFZ76Q7o6WMY8e2YGWNfQQv3IFO9TIYYqP7xvCgJTclaiyc60ZdsXSd/LeGBlW
-         h9mwYwVVenTJpc5dlFc1BZ55IPjWea/q8jbea52IfZUIz6vorwSCcvFsyMZp6EIRmWRZ
-         Y309LnnM/CWkzpkj7gStv4ey/z0MqbIjka9g2kNqRoDx50c+3W1ZphOhc2xsSAsHuXrj
-         m35A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Iq7lLPDxZxyyF6K7jckWs0XvEiXpXcXtYgOmBPW0oiE=;
-        b=tlDNdY608aKp+jqqlHgdgB/m2Ix+TvBzzOE5Zrob0y6kFkuBL+cnDCOXNtF19/fBYY
-         UxdVFfp4C1qiCDY+FNpKd2XZytkaAfTP9UfR2aqMJT+iTAfLby4Ao4wi5xSGwCbs7Ozf
-         apEMncn7cCec9Pvn9wz5KcAKtkA7vIF8Q7qaFrQ7/ZZFA+SxDO7Dvv4zjzf/q4I+2+Oj
-         UYQeAsQJ3jvpb80gJV1V8lggAksMBwfjkucWVAN/CywsHDwDr4XuEPGj+jS2JAf/SzC0
-         HZN+vZ6cyMqJZthkC2Unw4VpopxAIEmOKT3mMsy6yJf9gzAsuUzYhgl5mI6E/0fGRDhd
-         hyAg==
-X-Gm-Message-State: APjAAAW9rzI+wGNPoU7cvX/YnGybSraFEQvHAlfuiBhjmA+nsR0kbKbr
-        AWsbY8BoKmo4CqUXiteRkP4=
-X-Google-Smtp-Source: APXvYqzWRtBZ0UuaeYln6buH5vRRA/W31n533sLUd++FnjhAQcd4ruwcZMQnYcr+kxgYU2wJVc78Cg==
-X-Received: by 2002:a5d:4805:: with SMTP id l5mr5692293wrq.3.1576018263594;
-        Tue, 10 Dec 2019 14:51:03 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i8sm4884042wro.47.2019.12.10.14.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 14:51:02 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Justin Chen <justinpopo6@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: brcmstb: Add debug UART entry for 7216
-Date:   Tue, 10 Dec 2019 14:48:56 -0800
-Message-Id: <20191210224859.30899-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 10 Dec 2019 17:51:09 -0500
+X-Greylist: delayed 1406 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 17:51:09 EST
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id B298B42023754
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:38:09 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id enyniIJSlHunhenyoiZyuT; Tue, 10 Dec 2019 16:27:42 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bzpeAaT5kT5Duk3AQk2pp02valHVwvZP6PGLFqa0WP0=; b=kzQSj3z24U2BiHYZ7ElBx+Cqvk
+        mbIiYRGr6i5XIJaZQMQ6Wz/Q4TAEx9lyCAWk7BdGVOiNrMXK9IDKXVXUF17WTmrHj+sk34rZ+5oL1
+        m4sygOAKyXhuJ4Jiew81qeo8hVXuUogMPG4wM7gNHD1gGALT6/fBxFk6PDur75nMqScFFR3VEgHhT
+        uK2BpMsOTgNad/6M3wQAquzunipyq5k98xIVRieIKW8XTZtfcqNra2+hR59mnHo0cu26L8ryUEITj
+        F7bKxNr2FvWqsX8Ix9d2r62qD0CiwBT3padxHt9FH+ycLCG1kHKish1qBVSjq2RSE7kZiPn8wNH2n
+        luVgkfWg==;
+Received: from [187.192.35.14] (port=52248 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1ienyn-004Els-Bi; Tue, 10 Dec 2019 16:27:41 -0600
+Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <983e0029-28d1-a428-4932-aa0588225293@embeddedor.com>
+Date:   Tue, 10 Dec 2019 16:28:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.35.14
+X-Source-L: No
+X-Exim-ID: 1ienyn-004Els-Bi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [187.192.35.14]:52248
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+Hi,
 
-7216 has the same memory map as 7278 and the same physical address for
-the UART, alias the definition accordingly.
+On 12/10/19 02:38, Kuninori Morimoto wrote:
+> 
+> Hi Andrew
+> 
+> I'm posting this patch from few month ago,
+> but it seems SH maintainer is not working in these days...
+> 
+> Is it possible to consider about it ?
+> SH compile will be error without this patch.
+> 
 
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
-[florian: expand commit message]
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/include/debug/brcmstb.S | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+I've added this to my -next tree and will consider it for 5.5-rc2.
 
-diff --git a/arch/arm/include/debug/brcmstb.S b/arch/arm/include/debug/brcmstb.S
-index bf8702ee8f86..132a20c4a676 100644
---- a/arch/arm/include/debug/brcmstb.S
-+++ b/arch/arm/include/debug/brcmstb.S
-@@ -31,6 +31,7 @@
- #define UARTA_7268		UARTA_7255
- #define UARTA_7271		UARTA_7268
- #define UARTA_7278		REG_PHYS_ADDR_V7(0x40c000)
-+#define UARTA_7216		UARTA_7278
- #define UARTA_7364		REG_PHYS_ADDR(0x40b000)
- #define UARTA_7366		UARTA_7364
- #define UARTA_74371		REG_PHYS_ADDR(0x406b00)
-@@ -82,17 +83,18 @@ ARM_BE8(	rev	\rv, \rv )
- 
- 		/* Chip specific detection starts here */
- 20:		checkuart(\rp, \rv, 0x33900000, 3390)
--21:		checkuart(\rp, \rv, 0x72500000, 7250)
--22:		checkuart(\rp, \rv, 0x72550000, 7255)
--23:		checkuart(\rp, \rv, 0x72600000, 7260)
--24:		checkuart(\rp, \rv, 0x72680000, 7268)
--25:		checkuart(\rp, \rv, 0x72710000, 7271)
--26:		checkuart(\rp, \rv, 0x72780000, 7278)
--27:		checkuart(\rp, \rv, 0x73640000, 7364)
--28:		checkuart(\rp, \rv, 0x73660000, 7366)
--29:		checkuart(\rp, \rv, 0x07437100, 74371)
--30:		checkuart(\rp, \rv, 0x74390000, 7439)
--31:		checkuart(\rp, \rv, 0x74450000, 7445)
-+21:		checkuart(\rp, \rv, 0x72160000, 7216)
-+22:		checkuart(\rp, \rv, 0x72500000, 7250)
-+23:		checkuart(\rp, \rv, 0x72550000, 7255)
-+24:		checkuart(\rp, \rv, 0x72600000, 7260)
-+25:		checkuart(\rp, \rv, 0x72680000, 7268)
-+26:		checkuart(\rp, \rv, 0x72710000, 7271)
-+27:		checkuart(\rp, \rv, 0x72780000, 7278)
-+28:		checkuart(\rp, \rv, 0x73640000, 7364)
-+29:		checkuart(\rp, \rv, 0x73660000, 7366)
-+30:		checkuart(\rp, \rv, 0x07437100, 74371)
-+31:		checkuart(\rp, \rv, 0x74390000, 7439)
-+32:		checkuart(\rp, \rv, 0x74450000, 7445)
- 
- 		/* No valid UART found */
- 90:		mov	\rp, #0
--- 
-2.17.1
+Thanks!
+--
+Gustavo
 
