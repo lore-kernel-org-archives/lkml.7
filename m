@@ -8,53 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4E9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE031C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C30520652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDC320652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U47CDhuz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAYfknH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfLJUb5 (ORCPT
+        id S1727032AbfLJUcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:31:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34333 "EHLO
+        Tue, 10 Dec 2019 15:32:01 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38373 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbfLJUb5 (ORCPT
+        with ESMTP id S1726364AbfLJUb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:31:57 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r11so9450157pgf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:31:57 -0800 (PST)
+        Tue, 10 Dec 2019 15:31:59 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so9218081pgm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:31:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AXdgRPOupq8mpOVW9fDaoE7i0os1nP349i6MmUYJbLw=;
-        b=U47CDhuz0r/IRPYg0nOXL/3oQEygnoHNuYbU416HhjOKsXQBiAh+ym1mFxz/CLQKm5
-         PAVLw4SDABvaWmZ6bDTz999xnkwov7EtfUtskkLSFlFlTOTXZ48HnONY5r+XacqxAKbd
-         e4orxhyQU+VQR1rtMO9s9kf40rm/F46gVN2XfWisUUBCx5FZAv2/cKL9APa/XGbuMcLj
-         YrBY7CV0GV3tSsguNm5eZkG6axi5HxyKGuXGYLQtKtZxVp4Hx/n7cWGME6g5Zwul9k3A
-         zU0r7xiXBLYg6HK48jJ/YaRswjyf0ppp2QCqkioiri5++NRLEcL34BqwDMkr+uoLZ7GT
-         AM9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=A/c6zfJJrS1aJG6jppJ0JzwIndi82aE8y6QtCeoxQ60=;
+        b=ZAYfknH6apyPpWisMZWD70J3/OlrrCxL8Gh8/H0vPzjcTwa5tGgqHcYy2JVjItrRlE
+         HgLOw5DCSVcvah5RcNdf3oe6e4IQDYBwUv0wWY2Xz/7VSCVA4GyKr+MNpJM+1i1UDZHI
+         HKn0BVkKXSCLrzHouzcAJnc88a4mmWfbOlaCUW85oFrpkr/FN2IdJBT8jQ0Tu3pocy9s
+         bnmk/+CyaxZ3ialSyXrxMz0v3kBfjQEmU1wnqIiLfqpMKxpJRUkSatqtySwPBwbGlGHC
+         nWYkMpwEeAukZIommkVhTY9d18JnyedDOlyr9gOrIY5sTsIJI7qTNv0gCP7sr4vNG0BX
+         RLhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AXdgRPOupq8mpOVW9fDaoE7i0os1nP349i6MmUYJbLw=;
-        b=Uz+4+G54Zov7uFEThAMpoJCeQVbJubwvzQCLr7wf5jZghEvb1+5AAAK3v9OX6S4SZX
-         qUhWrI4jpOjAmFw38oVMQSjTrbLikHu73CI2ucdlZL5f846/RyOxTKU+Hoq1o8sodukW
-         M7uIdLVhNZ7/AAOvIIIPkydnDtGfcsXPP+LxWbu3KM0PaTPqzuyBt+us8eCWLr7jHu2/
-         5FBu62ShNtjasQfNPyykLuo63XGfyobSn3/9TJdX1UNbp/WkO2zUZLx6VOhZU26WQXYu
-         SwGUZ0pov/qdFdaOO8eMEJokJHan7/aU6z8Je0Xl0fkHflrZ79oVVLqTvb1l0bNMavwh
-         8bCA==
-X-Gm-Message-State: APjAAAVPaUWXqDVRZm0i8SQe3vs2lEIbQtVquGW1700l7Ea7v3Eb32GQ
-        Jaeq1dA4Qa7Rvo7KK+/qPEw=
-X-Google-Smtp-Source: APXvYqxPRg90G2e3ms8KufWeN+ZC2r3Ex2vY+OO9rQ98PC7ykiMNV67F2VhmRn+uvjDiPQaOrmxL8A==
-X-Received: by 2002:aa7:8b55:: with SMTP id i21mr37408207pfd.249.1576009916862;
-        Tue, 10 Dec 2019 12:31:56 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=A/c6zfJJrS1aJG6jppJ0JzwIndi82aE8y6QtCeoxQ60=;
+        b=oJogbrht9ywM/dL/1hYzsqh62M9aWPOhFIbUAgoajFQm91HJzv3xe5uY1rLlbVU0e9
+         7tTQAeyXfRTzcoYXOJ4tTS5h8m4FAPkHNTbGQXmDtWNhaXOqZno0HZaBTQpErS6iWbK9
+         UW4+/4JApSuKZuPfmwS/XC9zBgNr93QyzSQkQmTB5JOA6ZIVCUTj0Vp6d3Z5rgbfj/GC
+         MhUcuH/1iz6uJ2tSFBnYT+RHRqpfadBksGaEzwH6fOXz22CizIuQOcAdthxR64tFLItJ
+         uqpnyeuYo/vK0V3OgckBx6jAa3B1g0A6hA7BjcjGzZ87mnTMNdsv7kVHhFewlINsStN2
+         SQfw==
+X-Gm-Message-State: APjAAAVrXomgdmxcrYOKwU7ZLMgRxN4T9GxCFUA8V1wM0WYGIEu0SgPk
+        nbonVFPIy06hWXZI0yoOaQg=
+X-Google-Smtp-Source: APXvYqxO+Ov5pF1gQ2GamItsgHb3CUFTQBD50B8GhuwcFzTJa7s5DAfFUIqgmWSuNZzVvQYauh6GPg==
+X-Received: by 2002:a63:4723:: with SMTP id u35mr25740960pga.194.1576009918720;
+        Tue, 10 Dec 2019 12:31:58 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id b21sm4604086pfp.0.2019.12.10.12.31.55
+        by smtp.gmail.com with ESMTPSA id b22sm1931250pfd.63.2019.12.10.12.31.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 12:31:56 -0800 (PST)
+        Tue, 10 Dec 2019 12:31:58 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     gregkh@linuxfoundation.org, rafael@kernel.org,
         srinivas.kandagatla@linaro.org, vz@mleia.com, khilman@baylibre.com,
@@ -65,86 +66,45 @@ To:     gregkh@linuxfoundation.org, rafael@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org,
         Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] drivers: add devm_platform_ioremap_resource_byname() helper
-Date:   Tue, 10 Dec 2019 20:31:45 +0000
-Message-Id: <20191210203149.7115-1-tiny.windzz@gmail.com>
+Subject: [PATCH 1/5] nvmem: sunxi_sid: convert to devm_platform_ioremap_resource
+Date:   Tue, 10 Dec 2019 20:31:46 +0000
+Message-Id: <20191210203149.7115-2-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191210203149.7115-1-tiny.windzz@gmail.com>
+References: <20191210203149.7115-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are currently 300+ instances of using platform_get_resource_byname()
-and devm_ioremap_resource() together in the kernel tree.
-
-This patch wraps these two calls in a single helper.
+Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/base/platform.c         | 22 +++++++++++++++++++++-
- include/linux/platform_device.h |  3 +++
- 2 files changed, 24 insertions(+), 1 deletion(-)
+ drivers/nvmem/sunxi_sid.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index b6c6c7d97d5b..9c4f5e229600 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -60,6 +60,7 @@ struct resource *platform_get_resource(struct platform_device *dev,
- }
- EXPORT_SYMBOL_GPL(platform_get_resource);
- 
-+#ifdef CONFIG_HAS_IOMEM
- /**
-  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a platform
-  *				    device
-@@ -68,7 +69,7 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
-  *        resource management
-  * @index: resource index
-  */
--#ifdef CONFIG_HAS_IOMEM
-+
- void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
- 					     unsigned int index)
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index e26ef1bbf198..c54adf60b155 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -112,7 +112,6 @@ static int sun8i_sid_read_by_reg(void *context, unsigned int offset,
+ static int sunxi_sid_probe(struct platform_device *pdev)
  {
-@@ -78,6 +79,25 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
- 	return devm_ioremap_resource(&pdev->dev, res);
- }
- EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
-+
-+/**
-+ * devm_platform_ioremap_resource_byname - call devm_ioremap_resource() for
-+ *					   a platform device
-+ *
-+ * @pdev: platform device to use both for memory resource lookup as well as
-+ *        resource managemend
-+ * @name: resource name
-+ */
-+void __iomem *
-+devm_platform_ioremap_resource_byname(struct platform_device *pdev,
-+				      const char *name)
-+{
-+	struct resource *res;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-+	return devm_ioremap_resource(&pdev->dev, res);
-+}
-+EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
- #endif /* CONFIG_HAS_IOMEM */
+ 	struct device *dev = &pdev->dev;
+-	struct resource *res;
+ 	struct nvmem_config *nvmem_cfg;
+ 	struct nvmem_device *nvmem;
+ 	struct sunxi_sid *sid;
+@@ -129,8 +128,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	sid->value_offset = cfg->value_offset;
  
- static int __platform_get_irq(struct platform_device *dev, unsigned int num)
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 1b5cec067533..24ff5da9c532 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -63,6 +63,9 @@ extern int platform_irq_count(struct platform_device *);
- extern struct resource *platform_get_resource_byname(struct platform_device *,
- 						     unsigned int,
- 						     const char *);
-+extern void __iomem *
-+devm_platform_ioremap_resource_byname(struct platform_device *pdev,
-+				      const char *name);
- extern int platform_get_irq_byname(struct platform_device *, const char *);
- extern int platform_add_devices(struct platform_device **, int);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sid->base = devm_ioremap_resource(dev, res);
++	sid->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sid->base))
+ 		return PTR_ERR(sid->base);
  
 -- 
 2.17.1
