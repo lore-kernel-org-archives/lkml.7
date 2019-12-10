@@ -2,375 +2,193 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CED3C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0C6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC18205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79C9208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eNIDMvR7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YsCZNTn/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfLJJce (ORCPT
+        id S1727329AbfLJJco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:32:34 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35821 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfLJJcd (ORCPT
+        Tue, 10 Dec 2019 04:32:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51572 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727022AbfLJJcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:32:33 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c20so2309074wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:32:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PSQScSDnlo93GQoR20fpTB0eabm3bHRkOsN6d+uG2Do=;
-        b=eNIDMvR7jYjMDJ33K7agoubEz5UWh0Io+iFSLRF9tX5UlGsDktzRU0FsSJKS5TNhDd
-         qlzsjbcqiNxRwHPUyzOfiW/xjVrOT7IYd7PwcsGg3vGI/IPjT4UKIhjz5w2JP8ToV1si
-         cZg+la7VhwCun03B5aBU3ewEWjmWEL5W4OWNJ0Sb2ZL5KCCSf4FYxREbcOYL1I9L8wIX
-         2USnsNPJ13f9zZmRgzK7Br5OyU5kNS+VF4hokDJBl2ARoUAn6vaIlrqpHSwm/4BhIz5u
-         1mRXLGPXvGNYdg+npJP0+Gnuoz8JTm6CgmlmIJ/bFSKZ3zUuZN6dZy61nRO83mixc+r0
-         qdHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=PSQScSDnlo93GQoR20fpTB0eabm3bHRkOsN6d+uG2Do=;
-        b=ZJfdbPx9vvW1efiCxOHPkIj3bopMxRCMcC5kfZkNNsc/n/YNJoyO2VBvam7pJML5JG
-         +bHRDqR8sk55yflc9V7ug4mxFhaY/v0F+Eie9zH/kRuzTPg+mbO/xgqZQpVasJbHECbv
-         isXLrwP52gxPlCU0cLXsq/LBTXG3itn5tXoaBgZmwQuBLWqkTNoogn8Ur13gmztJXoyn
-         awtbyhvScp4208ujq/GlkbmlgVGF1R/lyU/mhf4sGG8eSJOWjN9UAWLZxPw1xvZmQKcd
-         LFzyxS1gtWNfd2R+MwbllC9ochq7pduyoq5Ms7JpFYN/AVwa84qVJMNlQmrS89MFKmlD
-         kYsw==
-X-Gm-Message-State: APjAAAVbGqKk0ySPE4V3Y5zxEuCiC49e+ZEcugL4XUfggczz/OxhYdfJ
-        kMqtGucfSUpnWcAC/alRwqvMjA==
-X-Google-Smtp-Source: APXvYqxd7XdmmKIlfxIhihp8NUrV17zAGt34iW5Yzln3ZQcnD4qVroNU36dFKANfT88q64YCiOxP0g==
-X-Received: by 2002:a1c:407:: with SMTP id 7mr3889627wme.29.1575970351127;
-        Tue, 10 Dec 2019 01:32:31 -0800 (PST)
-Received: from dell (h185-20-99-176.host.redstation.co.uk. [185.20.99.176])
-        by smtp.gmail.com with ESMTPSA id f1sm2517194wrp.93.2019.12.10.01.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:32:30 -0800 (PST)
-Date:   Tue, 10 Dec 2019 09:32:25 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 3/6] mfd: rn5t618: add irq support
-Message-ID: <20191210093225.GT3468@dell>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-4-andreas@kemnade.info>
+        Tue, 10 Dec 2019 04:32:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575970361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=Wa+/SCjprQD20xgBJGWAD5ptfzyYCWLrl+yqwPfUX0s=;
+        b=YsCZNTn/0BhaRdAMAYkHIr71d1R5mi4nDRcd/8a2mjQc+M+ZRoe8Z9U+/MEeoNM7ksz168
+        FDhx4DrmepteJJoqKfy9UZEurzg3FMMnbWaUnDks7pHGEvVHntUblTFUz4l13/cwXU6N10
+        Lz8PE1LrshhmreYJxfv1r9YF9tThgrc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-BMsl4S_dP4qDqfVsZZfEAw-1; Tue, 10 Dec 2019 04:32:38 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4C211005502;
+        Tue, 10 Dec 2019 09:32:36 +0000 (UTC)
+Received: from [10.36.117.222] (ovpn-117-222.ams2.redhat.com [10.36.117.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B57B5DA60;
+        Tue, 10 Dec 2019 09:32:35 +0000 (UTC)
+Subject: Re: [Patch v2] mm/hotplug: Only respect mem= parameter during boot
+ stage
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, mhocko@kernel.org, jgross@suse.com,
+        akpm@linux-foundation.org
+References: <20191210084413.21957-1-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1a7a6ae6-e229-981c-9113-0a96683320a0@redhat.com>
+Date:   Tue, 10 Dec 2019 10:32:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20191210084413.21957-1-bhe@redhat.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: BMsl4S_dP4qDqfVsZZfEAw-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191129212045.18325-4-andreas@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Nov 2019, Andreas Kemnade wrote:
+On 10.12.19 09:44, Baoquan He wrote:
+> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=3D
+> parameter") a global varialbe global max_mem_size is added to store
 
-> This adds support for irq handling in the rc5t619 which is required
+Only some nits:
 
-Please capitalise abbreviations and device names (as they do in the
-datasheet).
+s/varialbe global/variable/
 
-> for properly implementing subdevices like rtc.
+> the value parsed from 'mem=3D ', then checked when memory region is
+> added. This truly stops those DIMM from being added into system memory
+s/DIMM/DIMMs/
 
-"RTC"
+> during boot-time.
+>=20
+> However, it also limits the later memory hotplug functionality. Any
+> memory board can't be hot added any more if its region is beyond the
 
-> For now only definitions for the variant rc5t619 are included.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+s/memory board/DIMM/ ?
+
+s/hot added/hotplugged/ ?
+
+> max_mem_size. System will print error like below:
+
+"We will get errors like:"
+
+>=20
+> [  216.387164] acpi PNP0C80:02: add_memory failed
+> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+> [  216.392187] acpi PNP0C80:02: Enumeration failure
+>=20
+> From document of 'mem=3D ' parameter, it should be a restriction during
+
+"the documentation of the"
+
+> boot, but not impact the system memory adding/removing after booting.
+
+"but not impact memory hotplug once booted."
+
+>=20
+>   mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
+> =09          ...
+>=20
+> So fix it by also checking if it's during boot-time when restrict memory
+
+s/when restrict memory adding/restricting to add memory/
+
+> adding. Otherwise, skip the restriction.
+>=20
+> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem=3D parame=
+ter")
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
-> Changes in v3:
-> alignment cleanup
-> 
-> Changes in v2:
-> - no dead code, did some more testing and thinking for that
-> - remove extra empty lines
-> 
->  drivers/mfd/Kconfig         |  1 +
->  drivers/mfd/Makefile        |  2 +-
->  drivers/mfd/rn5t618-core.c  | 34 ++++++++++++++-
->  drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/rn5t618.h | 16 +++++++
->  5 files changed, 136 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/rn5t618-irq.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index ae24d3ea68ea..522e068d0082 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1057,6 +1057,7 @@ config MFD_RN5T618
->  	depends on OF
->  	select MFD_CORE
->  	select REGMAP_I2C
-> +	select REGMAP_IRQ
->  	help
->  	  Say yes here to add support for the Ricoh RN5T567,
->  	  RN5T618, RC5T619 PMIC.
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 110ea700231b..2906d5db67d0 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)		+= rk808.o
->  
-> -rn5t618-objs			:= rn5t618-core.o
-> +rn5t618-objs			:= rn5t618-core.o rn5t618-irq.o
->  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
->  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-> diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
-> index da5cd9c92a59..1e2326217681 100644
-> --- a/drivers/mfd/rn5t618-core.c
-> +++ b/drivers/mfd/rn5t618-core.c
-> @@ -8,6 +8,7 @@
->  
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interrupt.h>
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/rn5t618.h>
->  #include <linux/module.h>
-> @@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->  
->  	i2c_set_clientdata(i2c, priv);
->  	priv->variant = (long)of_id->data;
-> -
-> +	priv->chip_irq = i2c->irq;
-> +	priv->dev = &i2c->dev;
+>  mm/memory_hotplug.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 55ac23ef11c1..989707295d15 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -105,7 +105,11 @@ static struct resource *register_memory_resource(u64=
+ start, u64 size)
+>  =09unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>  =09char *resource_name =3D "System RAM";
+> =20
+> -=09if (start + size > max_mem_size)
+> +=09/*
+> +=09 * Make sure value parsed from 'mem=3D' only restricts memory adding
+> +=09 * during boot-time, so that memory hotplug won't be impacted.
 
-'\n'
+s/during boot-time/while booting/
 
->  	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
->  	if (IS_ERR(priv->regmap)) {
->  		ret = PTR_ERR(priv->regmap);
-> @@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->  		return ret;
->  	}
->  
-> +	if (priv->chip_irq > 0) {
-> +		if (rn5t618_irq_init(priv))
-> +			priv->chip_irq = 0;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -154,15 +161,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
->  	return 0;
->  }
->  
-> +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-> +{
-> +	struct rn5t618 *priv = dev_get_drvdata(dev);
-> +
-> +	if (priv->chip_irq)
-> +		disable_irq(priv->chip_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-> +{
-> +	struct rn5t618 *priv = dev_get_drvdata(dev);
-> +
-> +	if (priv->chip_irq)
-> +		enable_irq(priv->chip_irq);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct i2c_device_id rn5t618_i2c_id[] = {
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
+Only some nits, thanks!
 
-Not this patch I know, but it's strange to see this empty.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-> +static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
-> +			rn5t618_i2c_suspend,
-> +			rn5t618_i2c_resume);
-> +
->  static struct i2c_driver rn5t618_i2c_driver = {
->  	.driver = {
->  		.name = "rn5t618",
->  		.of_match_table = of_match_ptr(rn5t618_of_match),
-> +		.pm = &rn5t618_i2c_dev_pm_ops,
->  	},
->  	.probe = rn5t618_i2c_probe,
->  	.remove = rn5t618_i2c_remove,
-> diff --git a/drivers/mfd/rn5t618-irq.c b/drivers/mfd/rn5t618-irq.c
+--=20
+Thanks,
 
-Why does this need to be separate from the core file?
+David / dhildenb
 
-> new file mode 100644
-> index 000000000000..8a4c56429768
-> --- /dev/null
-> +++ b/drivers/mfd/rn5t618-irq.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2019 Andreas Kemnade
-> + */
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/mfd/rn5t618.h>
-> +
-> +static const struct regmap_irq rc5t619_irqs[] = {
-> +	[RN5T618_IRQ_SYS] = {
-> +		.reg_offset = 0,
-> +		.mask = (0 << 1)
-> +	},
-> +	[RN5T618_IRQ_DCDC] = {
-> +		.reg_offset = 0,
-> +		.mask = (1 << 1)
-
-BIT()
-
-> +	},
-> +	[RN5T618_IRQ_RTC]  = {
-> +		.reg_offset = 0,
-> +		.mask = (1 << 2)
-> +	},
-> +	[RN5T618_IRQ_ADC] = {
-> +		.reg_offset = 0,
-> +		.mask = (1 << 3)
-> +	},
-> +	[RN5T618_IRQ_GPIO] = {
-> +		.reg_offset = 0,
-> +		.mask = (1 << 4)
-> +	},
-> +	[RN5T618_IRQ_CHG] = {
-> +		.reg_offset = 0,
-> +		.mask = (1 << 6),
-> +	}
-> +};
-
-There are probably macros available to tidy this up.
-
-Take a look in include/linux/regmap.h
-
-> +static const struct regmap_irq_chip rc5t619_irq_chip = {
-> +	.name = "rc5t619",
-> +	.irqs = rc5t619_irqs,
-> +	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
-> +	.num_regs = 1,
-> +	.status_base = RN5T618_INTMON,
-> +	.mask_base = RN5T618_INTEN,
-> +	.mask_invert = true,
-> +};
-> +
-> +int rn5t618_irq_init(struct rn5t618 *rn5t618)
-> +{
-> +	const struct regmap_irq_chip *irq_chip;
-> +	int ret;
-> +
-> +	if (!rn5t618->chip_irq)
-> +		return 0;
-> +
-> +	switch (rn5t618->variant) {
-> +	case RC5T619:
-> +		irq_chip = &rc5t619_irq_chip;
-> +		break;
-> +
-> +		/* TODO: check irq definitions for other variants */
-
-No need for this.  It's implied.
-
-OOI, when support for more variants be added?
-
-> +	default:
-> +		irq_chip = NULL;
-> +		break;
-> +	}
-> +
-> +	if (!irq_chip) {
-> +		dev_err(rn5t618->dev, "no IRQ definition known for variant\n");
-
-How about '"Variant %d not currently supported", rn5t618->variant'
-
-> +		return -ENOENT;
-> +	}
-> +
-> +	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
-> +				       rn5t618->chip_irq,
-> +				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +				       0, irq_chip, &rn5t618->irq_data);
-> +	if (ret != 0) {
-
-if (ret)
-
-> +		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-> index d62ef48060b5..edd2b6485e3b 100644
-> --- a/include/linux/mfd/rn5t618.h
-> +++ b/include/linux/mfd/rn5t618.h
-> @@ -242,9 +242,25 @@ enum {
->  	RC5T619,
->  };
->  
-> +/* RN5T618 IRQ definitions */
-> +enum {
-> +	RN5T618_IRQ_SYS,
-
-= 0?
-
-> +	RN5T618_IRQ_DCDC,
-> +	RN5T618_IRQ_RTC,
-> +	RN5T618_IRQ_ADC,
-> +	RN5T618_IRQ_GPIO,
-> +	RN5T618_IRQ_CHG,
-> +	RN5T618_NR_IRQS,
-> +};
-> +
->  struct rn5t618 {
->  	struct regmap *regmap;
-> +	struct device *dev;
->  	long variant;
-> +
-> +	int chip_irq;
-
-Are there any other kinds of IRQ?
-
-If you don't have to differentiate between multiple, just 'irq' will
-do.
-
-This could also get confused with 'irq_chip'.
-
-> +	struct regmap_irq_chip_data *irq_data;
->  };
->  
-> +extern int rn5t618_irq_init(struct rn5t618 *rn5t618);
->  #endif /* __LINUX_MFD_RN5T618_H */
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
