@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B80C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3891CC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1E620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1F6214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015573;
-	bh=+9QeakT8zsEFXvZoD72EDJdovFQKedseNaqZlQY48JA=;
+	s=default; t=1576015580;
+	bh=8zyNla2jXgqDmHpILGytgenyNG3o9448eWYRUveLcKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wt3q046sEZVpoTU0bSakKmzsJWz5RGOWDCw9gu5w/FkqVzKNjx8l1Wn/REWNQzHO
-	 Dshhb5ie/BC5yYfG1fs3t+EMyhSCIevZbivjK5lUcDN+yyMkTtRedlS0y7b+E/8E2N
-	 Y6B6GGQKFB1OQVD3/+6VcvofrAR2NMq6juonuy6w=
+	b=GvGnDglYLoIVCkKfCBtRLbouBFU5LMdRP2Vf22/1/JqeY/bV3DdD73Lg4GIlOOX7L
+	 3pze0GpPKNGOkoo6DKw5LHCuK1HNPzYWIJxnLJFyg1eY6ll+3670L9KN7qwwWONTgv
+	 21kJB/43eL5xv4FZPNq7O47LIvaLu6CowuXDJrGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfLJWGL (ORCPT
+        id S1729794AbfLJWFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:06:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729906AbfLJWFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:34 -0500
+        id S1727307AbfLJWFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1E42073B;
-        Tue, 10 Dec 2019 22:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915422073B;
+        Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015533;
-        bh=+9QeakT8zsEFXvZoD72EDJdovFQKedseNaqZlQY48JA=;
+        s=default; t=1576015516;
+        bh=8zyNla2jXgqDmHpILGytgenyNG3o9448eWYRUveLcKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ci7MpzwxkxFG7OQ8iF0rZVZT6/42KGH6cH6o6inaLdxesV+ltP+4g/eqPvHTfLPPw
-         h3ak5xU5Rifu36c7yOMEbWKo13wdAQepPjki1udcZDVCEnbnTfkGWPQtfgC/DPRfOS
-         T4XQb9Oia8UwOf7M7s9e1e+afMcrYzObXLlDPNDM=
+        b=lce5y2VJXAerrMsuoSQEksOD0zSPI54x4sAtME5LU9bCp9NWQqJxeNMi+dzzchiYW
+         WiB7zsvE85cIgc1RGr8nok5gyVlb04p2WfRzlGbgU7nK9aN8N1xQE8c3l48zCOtRMW
+         Xob8Hw2JjXJAfvH5BKbOGTnydoO9Fp5fdsomn1wc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 127/130] perf parse: Fix potential memory leak when handling tracepoint errors
-Date:   Tue, 10 Dec 2019 17:02:58 -0500
-Message-Id: <20191210220301.13262-127-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        virtualization@lists.linux-foundation.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 113/130] crypto: virtio - deal with unsupported input sizes
+Date:   Tue, 10 Dec 2019 17:02:44 -0500
+Message-Id: <20191210220301.13262-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -68,83 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 4584f084aa9d8033d5911935837dbee7b082d0e9 ]
+[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+Return -EINVAL for input sizes that are not a multiple of the AES
+block size, since they are not supported by our CBC chaining mode.
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
+While at it, remove the pr_err() that reports unsupported key sizes
+being used: we shouldn't spam the kernel log with that.
 
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
-
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: virtualization@lists.linux-foundation.org
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 096c52f296d77..6a9ae16cd098d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -451,6 +451,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
- 
- 	if (!e)
-@@ -464,18 +465,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index 5035b0dc1e40c..e2231a1a05a12 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -110,8 +110,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
+ 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
  		break;
  	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
+-		pr_err("virtio_crypto: Unsupported key length: %d\n",
+-			key_len);
+ 		return -EINVAL;
  	}
+ 	return 0;
+@@ -485,6 +483,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
- }
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
+@@ -505,6 +508,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- static int add_tracepoint(struct list_head *list, int *idx,
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
 -- 
 2.20.1
 
