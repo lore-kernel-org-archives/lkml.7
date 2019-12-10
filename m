@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3407C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C08C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6836720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32183207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576016030;
-	bh=FOKD6FXWX6YBeDn+aiJmzV5MbF2npfo3geb+DF/JBBI=;
+	s=default; t=1576016037;
+	bh=UQ5QM151xBNAmKqQ1a68CNfug4nr/qlV+mQ1CC7aVDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPocudH5mRjfMIfz2m070YqPOX8LksyGfhMTLGOC6FUuNen+xQFgeRy+gHwFJSwU8
-	 RG0ZqymL16BsF+15E8kbnQWBGsw7l4W/mWGPGP9rS2rwxSDKvJA9EBO+/yNsg/8s/y
-	 G7zel2CRFhqRWVr2myLqKsr4ocU3LTwEKeNuEFk4=
+	b=2gsvTnmLMtpf0RwcRooObulwDBket8sNpuLyWqzFsHxZX9W28EqIeOufZ3z1JMpEt
+	 TMRtzgrjk+it6CwhErYTJ1NFiXF8kwJP7CXv1ytpZ5uhrDYn0FsV6VFVicNpVJXrQr
+	 lf8R8kYOulsShmxO+o4w3EEovFRi8XzAmkfwJp2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfLJWNt (ORCPT
+        id S1729216AbfLJWN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33320 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfLJWDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:17 -0500
+        id S1727317AbfLJWDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57272053B;
-        Tue, 10 Dec 2019 22:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F7A208C3;
+        Tue, 10 Dec 2019 22:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015396;
-        bh=FOKD6FXWX6YBeDn+aiJmzV5MbF2npfo3geb+DF/JBBI=;
+        s=default; t=1576015390;
+        bh=UQ5QM151xBNAmKqQ1a68CNfug4nr/qlV+mQ1CC7aVDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAbzOqvbqNi8mD/fb4V8YA34UpPjKM2+RivhuXAxDkkwPLj0ia6DXsvsXFAex7Olq
-         iPfJSpcpr/MJGMFA+WW0+z+vi4uHRvwCySJCabnAuqE7NCE1V7wJk4BsxDP7bMNoLX
-         0twZbnTjmTpDpEZIa6D+B/T6mMAF+8pnCe1sJe1E=
+        b=vbqTkHGCrYGurnJ5vY9W58/a1dIq+gzEJsERk1F3FZRis7gqERrSFYFaFYECsQ+vO
+         N+1zycDPhWujI2TstPcPt5+a78OASQuPk13McRCbCFBgP9iIi1cf9BoHsBA8dS9/L7
+         XNwSCH8mpT5LjCb+BLNWlUz4Iw4+Kt4OTDGK52p4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 012/130] media: am437x-vpfe: Setting STD to current value is not an error
-Date:   Tue, 10 Dec 2019 17:01:03 -0500
-Message-Id: <20191210220301.13262-12-sashal@kernel.org>
+Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 007/130] staging: rtl8188eu: fix possible null dereference
+Date:   Tue, 10 Dec 2019 17:00:58 -0500
+Message-Id: <20191210220301.13262-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Connor Kuehl <connor.kuehl@canonical.com>
 
-[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
+[ Upstream commit 228241944a48113470d3c3b46c88ba7fbe0a274b ]
 
-VIDIOC_S_STD should not return an error if the value is identical
-to the current one.
-This error was highlighted by the v4l2-compliance test.
+Inside a nested 'else' block at the beginning of this function is a
+call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
+If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
+the 'else if' where 'psta' is dereferenced, then we will dereference
+a NULL pointer.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fix this by checking if 'psta' is not NULL before reading its
+'psta->qos_option' data member.
+
+Addresses-Coverity: ("Dereference null return value")
+
+Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20190926150317.5894-1-connor.kuehl@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index dfcc484cab898..e92c5b56be422 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1848,6 +1848,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
+diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+index 904b988ecc4ee..7c895af1ba31c 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
++++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+@@ -805,7 +805,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
+ 			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
  
-+	/* if trying to set the same std then nothing to do */
-+	if (vpfe_standards[vpfe->std_index].std_id == std_id)
-+		return 0;
-+
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
+-			if (psta->qos_option)
++			if (psta && psta->qos_option)
+ 				qos_option = true;
+ 		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
+ 			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
+@@ -813,7 +813,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
+ 			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
+ 
+-			if (psta->qos_option)
++			if (psta && psta->qos_option)
+ 				qos_option = true;
+ 		} else {
+ 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
 -- 
 2.20.1
 
