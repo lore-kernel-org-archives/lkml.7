@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440AFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A415CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9AD20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F72E20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3gPQFGz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gW8aevfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfLJMce (ORCPT
+        id S1727840AbfLJMcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:32:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53575 "EHLO
+        Tue, 10 Dec 2019 07:32:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41512 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727494AbfLJMbY (ORCPT
+        by vger.kernel.org with ESMTP id S1727524AbfLJMbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 07:31:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,35 +29,35 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4CxEQ5z2P35PU5qEnTEcH9MyNfCjukSbjzhDjqs04MQ=;
-        b=b3gPQFGzk7zBc68gDAAPUDR+HL7NECsN5DgBay/ZmN60nPnuT7ew4+1HdKO0fB8uBNOY14
-        v7adsgb654QJXrrQXo780Gg9SbuhhSjebPKaz3weRGOTvTSTmxYY9vDit4FQvNkVYfm3Pa
-        2W1V0vU8WaqZw0X2ahGqAbAvnAt05hs=
+        bh=pbuioiTmP93KKwpWyEIdQ0CrRNe0alBu/p/cHpWJ9C8=;
+        b=gW8aevfD2hawBoemJlEQ2Fq+YSsgbhBJbFWfVtOYzsrDr6EcNhJgEV2aswqvHl0kK5FSwo
+        6C1bYU3W86zci1xyuoy4+dmwiheF6C6dVmRY/0+GxBpM/8bGs2uogMt8tYoiSmiB+J5dTC
+        kTvNW99IamhbLF7rzuiHiGC8melBCyw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-dwRglwilOo-3WYmw05ymMQ-1; Tue, 10 Dec 2019 07:31:18 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-156-OLxBFU2aO6ud1PpJV3SavQ-1; Tue, 10 Dec 2019 07:31:19 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8F5E107ACCD;
-        Tue, 10 Dec 2019 12:31:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C57F0107ACC7;
+        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2396C60BF3;
-        Tue, 10 Dec 2019 12:31:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F4635C21B;
+        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 9516020AE5; Tue, 10 Dec 2019 07:31:15 -0500 (EST)
+        id 0105320C3B; Tue, 10 Dec 2019 07:31:15 -0500 (EST)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: [PATCH v6 02/27] nfs: stash server into struct nfs_mount_info
-Date:   Tue, 10 Dec 2019 07:30:50 -0500
-Message-Id: <20191210123115.1655-3-smayhew@redhat.com>
+Subject: [PATCH v6 21/27] NFS: Add a small buffer in nfs_fs_context to avoid string dup
+Date:   Tue, 10 Dec 2019 07:31:09 -0500
+Message-Id: <20191210123115.1655-22-smayhew@redhat.com>
 In-Reply-To: <20191210123115.1655-1-smayhew@redhat.com>
 References: <20191210123115.1655-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: dwRglwilOo-3WYmw05ymMQ-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: OLxBFU2aO6ud1PpJV3SavQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -66,166 +66,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: David Howells <dhowells@redhat.com>
 
-Reviewed-by: David Howells <dhowells@redhat.com>
+Add a small buffer in nfs_fs_context to avoid string duplication when
+parsing numbers.  Also make the parsing function wrapper place the parsed
+integer directly in the appropriate nfs_fs_context struct member.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nfs/internal.h  |  3 ++-
- fs/nfs/nfs4super.c | 10 ++++------
- fs/nfs/super.c     | 19 ++++++++-----------
- 3 files changed, 14 insertions(+), 18 deletions(-)
+ fs/nfs/fs_context.c | 98 +++++++++++++++++++++------------------------
+ fs/nfs/internal.h   |  2 +
+ 2 files changed, 48 insertions(+), 52 deletions(-)
 
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 92a1e4bd9133..2921c5820c31 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -468,27 +468,38 @@ static int nfs_get_option_str(substring_t args[], cha=
+r **option)
+ =09return !*option;
+ }
+=20
+-static int nfs_get_option_ul(substring_t args[], unsigned long *option)
++static int nfs_get_option_ui(struct nfs_fs_context *ctx,
++=09=09=09     substring_t args[], unsigned int *option)
+ {
+-=09int rc;
+-=09char *string;
++=09match_strlcpy(ctx->buf, args, sizeof(ctx->buf));
++=09return kstrtouint(ctx->buf, 10, option);
++}
+=20
+-=09string =3D match_strdup(args);
+-=09if (string =3D=3D NULL)
+-=09=09return -ENOMEM;
+-=09rc =3D kstrtoul(string, 10, option);
+-=09kfree(string);
++static int nfs_get_option_ui_bound(struct nfs_fs_context *ctx,
++=09=09=09=09   substring_t args[], unsigned int *option,
++=09=09=09=09   unsigned int l_bound, unsigned u_bound)
++{
++=09int ret;
+=20
+-=09return rc;
++=09match_strlcpy(ctx->buf, args, sizeof(ctx->buf));
++=09ret =3D kstrtouint(ctx->buf, 10, option);
++=09if (ret < 0)
++=09=09return ret;
++=09if (*option < l_bound || *option > u_bound)
++=09=09return -ERANGE;
++=09return 0;
+ }
+=20
+-static int nfs_get_option_ul_bound(substring_t args[], unsigned long *opti=
+on,
+-=09=09unsigned long l_bound, unsigned long u_bound)
++static int nfs_get_option_us_bound(struct nfs_fs_context *ctx,
++=09=09=09=09   substring_t args[], unsigned short *option,
++=09=09=09=09   unsigned short l_bound,
++=09=09=09=09   unsigned short u_bound)
+ {
+ =09int ret;
+=20
+-=09ret =3D nfs_get_option_ul(args, option);
+-=09if (ret !=3D 0)
++=09match_strlcpy(ctx->buf, args, sizeof(ctx->buf));
++=09ret =3D kstrtou16(ctx->buf, 10, option);
++=09if (ret < 0)
+ =09=09return ret;
+ =09if (*option < l_bound || *option > u_bound)
+ =09=09return -ERANGE;
+@@ -501,7 +512,6 @@ static int nfs_get_option_ul_bound(substring_t args[], =
+unsigned long *option,
+ static int nfs_fs_context_parse_option(struct nfs_fs_context *ctx, char *p=
+)
+ {
+ =09substring_t args[MAX_OPT_ARGS];
+-=09unsigned long option;
+ =09char *string;
+ =09int token, rc;
+=20
+@@ -609,86 +619,70 @@ static int nfs_fs_context_parse_option(struct nfs_fs_=
+context *ctx, char *p)
+ =09=09 * options that take numeric values
+ =09=09 */
+ =09case Opt_port:
+-=09=09if (nfs_get_option_ul(args, &option) ||
+-=09=09    option > USHRT_MAX)
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->nfs_server.port,
++=09=09=09=09=09    0, USHRT_MAX))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->nfs_server.port =3D option;
+ =09=09break;
+ =09case Opt_rsize:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->rsize))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->rsize =3D option;
+ =09=09break;
+ =09case Opt_wsize:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->wsize))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->wsize =3D option;
+ =09=09break;
+ =09case Opt_bsize:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->bsize))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->bsize =3D option;
+ =09=09break;
+ =09case Opt_timeo:
+-=09=09if (nfs_get_option_ul_bound(args, &option, 1, INT_MAX))
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->timeo, 1, INT_MAX))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->timeo =3D option;
+ =09=09break;
+ =09case Opt_retrans:
+-=09=09if (nfs_get_option_ul_bound(args, &option, 0, INT_MAX))
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->retrans, 0, INT_MAX))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->retrans =3D option;
+ =09=09break;
+ =09case Opt_acregmin:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->acregmin))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->acregmin =3D option;
+ =09=09break;
+ =09case Opt_acregmax:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->acregmax))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->acregmax =3D option;
+ =09=09break;
+ =09case Opt_acdirmin:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->acdirmin))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->acdirmin =3D option;
+ =09=09break;
+ =09case Opt_acdirmax:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->acdirmax))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->acdirmax =3D option;
+ =09=09break;
+ =09case Opt_actimeo:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->acdirmax))
+ =09=09=09goto out_invalid_value;
+ =09=09ctx->acregmin =3D ctx->acregmax =3D
+-=09=09=09ctx->acdirmin =3D ctx->acdirmax =3D option;
++=09=09=09ctx->acdirmin =3D ctx->acdirmax;
+ =09=09break;
+ =09case Opt_namelen:
+-=09=09if (nfs_get_option_ul(args, &option))
++=09=09if (nfs_get_option_ui(ctx, args, &ctx->namlen))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->namlen =3D option;
+ =09=09break;
+ =09case Opt_mountport:
+-=09=09if (nfs_get_option_ul(args, &option) ||
+-=09=09    option > USHRT_MAX)
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->mount_server.port,
++=09=09=09=09=09    0, USHRT_MAX))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->mount_server.port =3D option;
+ =09=09break;
+ =09case Opt_mountvers:
+-=09=09if (nfs_get_option_ul(args, &option) ||
+-=09=09    option < NFS_MNT_VERSION ||
+-=09=09    option > NFS_MNT3_VERSION)
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->mount_server.version,
++=09=09=09=09=09    NFS_MNT_VERSION, NFS_MNT3_VERSION))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->mount_server.version =3D option;
+ =09=09break;
+ =09case Opt_minorversion:
+-=09=09if (nfs_get_option_ul(args, &option))
+-=09=09=09goto out_invalid_value;
+-=09=09if (option > NFS4_MAX_MINOR_VERSION)
++=09=09if (nfs_get_option_ui_bound(ctx, args, &ctx->minorversion,
++=09=09=09=09=09    0, NFS4_MAX_MINOR_VERSION))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->minorversion =3D option;
+ =09=09break;
+=20
+ =09=09/*
+@@ -820,9 +814,9 @@ static int nfs_fs_context_parse_option(struct nfs_fs_co=
+ntext *ctx, char *p)
+ =09=09=09goto out_invalid_address;
+ =09=09break;
+ =09case Opt_nconnect:
+-=09=09if (nfs_get_option_ul_bound(args, &option, 1, NFS_MAX_CONNECTIONS))
++=09=09if (nfs_get_option_us_bound(ctx, args, &ctx->nfs_server.nconnect,
++=09=09=09=09=09    1, NFS_MAX_CONNECTIONS))
+ =09=09=09goto out_invalid_value;
+-=09=09ctx->nfs_server.nconnect =3D option;
+ =09=09break;
+ =09case Opt_lookupcache:
+ =09=09string =3D match_strdup(args);
 diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 24a65da58aa9..8f4900bd04f7 100644
+index d0abc7b65cd2..5342f3e4d565 100644
 --- a/fs/nfs/internal.h
 +++ b/fs/nfs/internal.h
-@@ -142,6 +142,7 @@ struct nfs_mount_info {
- =09int (*set_security)(struct super_block *, struct dentry *, struct nfs_m=
-ount_info *);
- =09struct nfs_parsed_mount_data *parsed;
- =09struct nfs_clone_mount *cloned;
-+=09struct nfs_server *server;
- =09struct nfs_fh *mntfh;
+@@ -122,6 +122,8 @@ struct nfs_fs_context {
+=20
+ =09void=09=09=09*lsm_opts;
+ =09struct net=09=09*net;
++
++=09char=09=09=09buf[32];=09/* Parse buffer */
  };
 =20
-@@ -397,7 +398,7 @@ struct dentry *nfs_try_mount(int, const char *, struct =
-nfs_mount_info *,
- =09=09=09struct nfs_subversion *);
- int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_=
-mount_info *);
- int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nf=
-s_mount_info *);
--struct dentry *nfs_fs_mount_common(struct nfs_server *, int, const char *,
-+struct dentry *nfs_fs_mount_common(int, const char *,
- =09=09=09=09   struct nfs_mount_info *, struct nfs_subversion *);
- struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, =
-void *);
- struct dentry * nfs_xdev_mount_common(struct file_system_type *, int,
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index beeaed872e6c..e7f2fd1925b1 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -109,13 +109,12 @@ nfs4_remote_mount(struct file_system_type *fs_type, i=
-nt flags,
- =09=09  const char *dev_name, void *info)
- {
- =09struct nfs_mount_info *mount_info =3D info;
--=09struct nfs_server *server;
-=20
- =09mount_info->set_security =3D nfs_set_sb_security;
-=20
- =09/* Get a volume representation */
--=09server =3D nfs4_create_server(mount_info, &nfs_v4);
--=09return nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4=
-);
-+=09mount_info->server =3D nfs4_create_server(mount_info, &nfs_v4);
-+=09return nfs_fs_mount_common(flags, dev_name, mount_info, &nfs_v4);
- }
-=20
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type=
-,
-@@ -260,7 +259,6 @@ nfs4_remote_referral_mount(struct file_system_type *fs_=
-type, int flags,
- =09=09.set_security =3D nfs_clone_sb_security,
- =09=09.cloned =3D raw_data,
- =09};
--=09struct nfs_server *server;
- =09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
-=20
- =09dprintk("--> nfs4_referral_get_sb()\n");
-@@ -270,8 +268,8 @@ nfs4_remote_referral_mount(struct file_system_type *fs_=
-type, int flags,
- =09=09goto out;
-=20
- =09/* create a new volume representation */
--=09server =3D nfs4_create_referral_server(mount_info.cloned, mount_info.mn=
-tfh);
--=09mntroot =3D nfs_fs_mount_common(server, flags, dev_name, &mount_info, &=
-nfs_v4);
-+=09mount_info.server =3D nfs4_create_referral_server(mount_info.cloned, mo=
-unt_info.mntfh);
-+=09mntroot =3D nfs_fs_mount_common(flags, dev_name, &mount_info, &nfs_v4);
- out:
- =09nfs_free_fhandle(mount_info.mntfh);
- =09return mntroot;
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index f074c3773f0e..379c7b26051d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1896,14 +1896,12 @@ struct dentry *nfs_try_mount(int flags, const char =
-*dev_name,
- =09=09=09     struct nfs_mount_info *mount_info,
- =09=09=09     struct nfs_subversion *nfs_mod)
- {
--=09struct nfs_server *server;
--
- =09if (mount_info->parsed->need_mount)
--=09=09server =3D nfs_try_mount_request(mount_info, nfs_mod);
-+=09=09mount_info->server =3D nfs_try_mount_request(mount_info, nfs_mod);
- =09else
--=09=09server =3D nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
-+=09=09mount_info->server =3D nfs_mod->rpc_ops->create_server(mount_info, n=
-fs_mod);
-=20
--=09return nfs_fs_mount_common(server, flags, dev_name, mount_info, nfs_mod=
-);
-+=09return nfs_fs_mount_common(flags, dev_name, mount_info, nfs_mod);
- }
- EXPORT_SYMBOL_GPL(nfs_try_mount);
-=20
-@@ -2649,20 +2647,21 @@ static void nfs_set_readahead(struct backing_dev_in=
-fo *bdi,
- =09bdi->io_pages =3D iomax_pages;
- }
-=20
--struct dentry *nfs_fs_mount_common(struct nfs_server *server,
--=09=09=09=09   int flags, const char *dev_name,
-+struct dentry *nfs_fs_mount_common(int flags, const char *dev_name,
- =09=09=09=09   struct nfs_mount_info *mount_info,
- =09=09=09=09   struct nfs_subversion *nfs_mod)
- {
- =09struct super_block *s;
- =09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
- =09int (*compare_super)(struct super_block *, void *) =3D nfs_compare_supe=
-r;
-+=09struct nfs_server *server =3D mount_info->server;
- =09struct nfs_sb_mountdata sb_mntdata =3D {
- =09=09.mntflags =3D flags,
- =09=09.server =3D server,
- =09};
- =09int error;
-=20
-+=09mount_info->server =3D NULL;
- =09if (IS_ERR(server))
- =09=09return ERR_CAST(server);
-=20
-@@ -2803,7 +2802,6 @@ nfs_xdev_mount(struct file_system_type *fs_type, int =
-flags,
- =09=09.set_security =3D nfs_clone_sb_security,
- =09=09.cloned =3D data,
- =09};
--=09struct nfs_server *server;
- =09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
- =09struct nfs_subversion *nfs_mod =3D NFS_SB(data->sb)->nfs_client->cl_nfs=
-_mod;
-=20
-@@ -2812,10 +2810,9 @@ nfs_xdev_mount(struct file_system_type *fs_type, int=
- flags,
- =09mount_info.mntfh =3D mount_info.cloned->fh;
-=20
- =09/* create a new volume representation */
--=09server =3D nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, d=
-ata->fattr, data->authflavor);
-+=09mount_info.server =3D nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), =
-data->fh, data->fattr, data->authflavor);
-=20
--=09mntroot =3D nfs_fs_mount_common(server, flags,
--=09=09=09=09dev_name, &mount_info, nfs_mod);
-+=09mntroot =3D nfs_fs_mount_common(flags, dev_name, &mount_info, nfs_mod);
-=20
- =09dprintk("<-- nfs_xdev_mount() =3D %ld\n",
- =09=09=09IS_ERR(mntroot) ? PTR_ERR(mntroot) : 0L);
+ /* mount_clnt.c */
 --=20
 2.17.2
 
