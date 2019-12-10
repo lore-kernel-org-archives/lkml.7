@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F04AC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0DCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A55F2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C15206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLJLoL (ORCPT
+        id S1727620AbfLJLoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:44:11 -0500
-Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:38948 "EHLO
+        Tue, 10 Dec 2019 06:44:15 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:38962 "EHLO
         faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726957AbfLJLoI (ORCPT
+        by vger.kernel.org with ESMTP id S1726957AbfLJLoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:44:08 -0500
-Received: from faui04g.informatik.uni-erlangen.de (faui04g.informatik.uni-erlangen.de [131.188.30.137])
-        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 5F1CC241838;
-        Tue, 10 Dec 2019 12:44:07 +0100 (CET)
+        Tue, 10 Dec 2019 06:44:13 -0500
+Received: from faui04g.informatik.uni-erlangen.de (faui04g.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:137])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 2D4C1241838;
+        Tue, 10 Dec 2019 12:44:11 +0100 (CET)
 Received: by faui04g.informatik.uni-erlangen.de (Postfix, from userid 66991)
-        id 53934843353; Tue, 10 Dec 2019 12:44:07 +0100 (CET)
+        id 1FEE0843353; Tue, 10 Dec 2019 12:44:11 +0100 (CET)
 From:   Simon Geis <simon.geis@fau.de>
 To:     Dominik Brodowski <linux@dominikbrodowski.net>
 Cc:     Simon Geis <simon.geis@fau.de>,
@@ -34,9 +34,9 @@ Cc:     Simon Geis <simon.geis@fau.de>,
         Adam Zerella <adam.zerella@gmail.com>,
         linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
         Lukas Panzer <lukas.panzer@fau.de>
-Subject: [PATCH v2 03/10] PCMCIA/i82092: remove braces around single statement blocks
-Date:   Tue, 10 Dec 2019 12:43:28 +0100
-Message-Id: <20191210114333.12239-4-simon.geis@fau.de>
+Subject: [PATCH v2 04/10] PCMCIA/i82092: insert blank line after declarations
+Date:   Tue, 10 Dec 2019 12:43:29 +0100
+Message-Id: <20191210114333.12239-5-simon.geis@fau.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210114333.12239-1-simon.geis@fau.de>
 References: <20191210114333.12239-1-simon.geis@fau.de>
@@ -47,76 +47,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove braces around single statement blocks in order to
-maintain the Linux kernel coding style.
+Improve readability of the code by inserting a blank line
+after variable declarations.
 
 Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
 Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
 Signed-off-by: Simon Geis <simon.geis@fau.de>
 
 ---
- drivers/pcmcia/i82092.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/pcmcia/i82092.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-index 2f698d021411..0adac6b24915 100644
+index 0adac6b24915..b9366adfe087 100644
 --- a/drivers/pcmcia/i82092.c
 +++ b/drivers/pcmcia/i82092.c
-@@ -145,9 +145,8 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
- 		sockets[i].socket.ops = &i82092aa_operations;
- 		sockets[i].socket.resource_ops = &pccard_nonstatic_ops;
- 		ret = pcmcia_register_socket(&sockets[i].socket);
--		if (ret) {
-+		if (ret)
- 			goto err_out_free_sockets;
--		}
- 	}
+@@ -188,6 +188,7 @@ static unsigned char indirect_read(int socket, unsigned short reg)
+ 	unsigned short int port;
+ 	unsigned char val;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg += socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -203,6 +204,7 @@ static unsigned short indirect_read16(int socket, unsigned short reg)
+ 	unsigned short int port;
+ 	unsigned short tmp;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg  = reg + socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -220,6 +222,7 @@ static void indirect_write(int socket, unsigned short reg, unsigned char value)
+ {
+ 	unsigned short int port;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg = reg + socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -233,6 +236,7 @@ static void indirect_setbit(int socket, unsigned short reg, unsigned char mask)
+ 	unsigned short int port;
+ 	unsigned char val;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg = reg + socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -250,6 +254,7 @@ static void indirect_resetbit(int socket, unsigned short reg, unsigned char mask
+ 	unsigned short int port;
+ 	unsigned char val;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg = reg + socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -266,6 +271,7 @@ static void indirect_write16(int socket, unsigned short reg, unsigned short valu
+ 	unsigned short int port;
+ 	unsigned char val;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&port_lock, flags);
+ 	reg = reg + socket * 0x40;
+ 	port = sockets[socket].io_base;
+@@ -318,6 +324,7 @@ static irqreturn_t i82092aa_interrupt(int irq, void *dev)
  
- 	leave("i82092aa_pci_probe");
-@@ -155,9 +154,8 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
+ 		for (i = 0; i < socket_count; i++) {
+ 			int csc;
++
+ 			if (sockets[i].card_state == 0) /* Inactive socket, should not happen */
+ 				continue;
  
- err_out_free_sockets:
- 	if (i) {
--		for (i--; i >= 0; i--) {
-+		for (i--; i >= 0; i--)
- 			pcmcia_unregister_socket(&sockets[i].socket);
--		}
- 	}
- 	free_irq(dev->irq, i82092aa_interrupt);
- err_out_free_res:
-@@ -346,9 +344,8 @@ static irqreturn_t i82092aa_interrupt(int irq, void *dev)
- 				events |= (csc & I365_CSC_READY) ? SS_READY : 0;
- 			}
+@@ -363,6 +370,7 @@ static irqreturn_t i82092aa_interrupt(int irq, void *dev)
+ static int card_present(int socketno)
+ {
+ 	unsigned int val;
++
+ 	enter("card_present");
  
--			if (events) {
-+			if (events)
- 				pcmcia_parse_events(&sockets[i].socket, events);
--			}
- 			active |= events;
- 		}
- 
-@@ -430,9 +427,8 @@ static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value)
- 	status = indirect_read(sock, I365_STATUS); /* Interface Status Register */
- 	*value = 0;
- 
--	if ((status & I365_CS_DETECT) == I365_CS_DETECT) {
-+	if ((status & I365_CS_DETECT) == I365_CS_DETECT)
- 		*value |= SS_DETECT;
--	}
- 
- 	/* IO cards have a different meaning of bits 0,1 */
- 	/* Also notice the inverse-logic on the bits */
-@@ -545,9 +541,8 @@ static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *sta
- 	/* Enable specific interrupt events */
- 
- 	reg = 0x00;
--	if (state->csc_mask & SS_DETECT) {
-+	if (state->csc_mask & SS_DETECT)
- 		reg |= I365_CSC_DETECT;
--	}
- 	if (state->flags & SS_IOCARD) {
- 		if (state->csc_mask & SS_STSCHG)
- 			reg |= I365_CSC_STSCHG;
+ 	if ((socketno < 0) || (socketno >= MAX_SOCKETS))
 -- 
 2.20.1
 
