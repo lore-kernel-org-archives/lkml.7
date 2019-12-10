@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EADC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E4DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960E02053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33C520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015716;
-	bh=q+02cbOH45J2xayxwYRdt04y4uJowv+3s+vcyKO6lGE=;
+	s=default; t=1576015718;
+	bh=JnDPBteSPfoKYU5K30yWrhOA4rIidwmx0Sg+aQdsUGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=assP82DvRDbyIt+AJXSA1QQk1/pNsS+3Is5KsxMTWaj/JW2uZ1JwDaYm3wpd4SUQv
-	 sORnNtavjhWHqDQDdtse2+C2NkQN60rpVcEQ2YcJWsG3nQiG9H4J/OnmQCDJLo7wsa
-	 47yOM7otZjGY5/5DRE/JqodyWjprlYLY7ptNymzg=
+	b=cBttth7tzCvpXlSn2P3QKuyimPnIWiAQVJt5fmQZ70AfC4yf6SgZLrdwRaqevZAxp
+	 CNt4eYuWHn5m5K12OlC1b6rTE2KV8Cw8jLH6KQohRqdp0IunsPSJ8qpc4WPLz1cyk1
+	 5nIAwlhUc8MioOc9PPDz74jInOY/aOwRwiOUhjN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbfLJWIf (ORCPT
+        id S1728685AbfLJWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:08:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbfLJWEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 17:04:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728898AbfLJWEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EEC920828;
-        Tue, 10 Dec 2019 22:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D202073B;
+        Tue, 10 Dec 2019 22:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015481;
-        bh=q+02cbOH45J2xayxwYRdt04y4uJowv+3s+vcyKO6lGE=;
+        s=default; t=1576015471;
+        bh=JnDPBteSPfoKYU5K30yWrhOA4rIidwmx0Sg+aQdsUGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndiuwY2V+wuzefXJ+/5Pal3rE+2D/r2NOqRx5gmCNnW3qwY9Vxz8Qer9/Qhsd+wew
-         m6pQExxrUKzpdRFDOhrVE1+SEQtMaiXGFuXbNo1sBrDkdoGSJc4Fnd2AnMaYm2a6qq
-         vXnZgJavcja1ICpOFz1DA0M3CL7HUp42rPjiisTo=
+        b=dDNf8gHmZUHDP9FcA++d/pdNM4yvgShi7UAD8tmdz2+qqNpkuydhVF3569ksPwyX/
+         XD8NvYJm++2U+L1BmyMOl3ym1fq5whxFl/wpQcZ5j/7LvCIS4gjS5WSMgsfXs9iVUy
+         jWMQ+cxPHuaAAQ7iLbnrJOd5sZROtumzeICXOTG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 085/130] perf probe: Fix to probe an inline function which has no entry pc
-Date:   Tue, 10 Dec 2019 17:02:16 -0500
-Message-Id: <20191210220301.13262-85-sashal@kernel.org>
+Cc:     Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 076/130] media: v4l2-core: fix touch support in v4l_g_fmt
+Date:   Tue, 10 Dec 2019 17:02:07 -0500
+Message-Id: <20191210220301.13262-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,70 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Vandana BN <bnvandana@gmail.com>
 
-[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
+the v4l2_pix_format structure to default values.This was
+missing in v4l_g_fmt, which would lead to failures in
+v4l2-compliance tests.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
-
-Without this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-
-With this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 5fee71e960a61..b06b05bd488e2 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -953,7 +953,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 681eef972e63b..7cafc8a57950a 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1363,10 +1363,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return ret;
+ }
+ 
++static void v4l_pix_format_touch(struct v4l2_pix_format *p)
++{
++	/*
++	 * The v4l2_pix_format structure contains fields that make no sense for
++	 * touch. Set them to default values in this case.
++	 */
++
++	p->field = V4L2_FIELD_NONE;
++	p->colorspace = V4L2_COLORSPACE_RAW;
++	p->flags = 0;
++	p->ycbcr_enc = 0;
++	p->quantization = 0;
++	p->xfer_func = 0;
++}
++
+ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
+ 	struct v4l2_format *p = arg;
++	struct video_device *vfd = video_devdata(file);
+ 	int ret = check_fmt(file, p->type);
+ 
+ 	if (ret)
+@@ -1404,6 +1420,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
+ 		/* just in case the driver zeroed it again */
+ 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
++		if (vfd->vfl_type == VFL_TYPE_TOUCH)
++			v4l_pix_format_touch(&p->fmt.pix);
+ 		return ret;
+ 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
+ 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
+@@ -1439,21 +1457,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return -EINVAL;
+ }
+ 
+-static void v4l_pix_format_touch(struct v4l2_pix_format *p)
+-{
+-	/*
+-	 * The v4l2_pix_format structure contains fields that make no sense for
+-	 * touch. Set them to default values in this case.
+-	 */
+-
+-	p->field = V4L2_FIELD_NONE;
+-	p->colorspace = V4L2_COLORSPACE_RAW;
+-	p->flags = 0;
+-	p->ycbcr_enc = 0;
+-	p->quantization = 0;
+-	p->xfer_func = 0;
+-}
+-
+ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
 -- 
 2.20.1
 
