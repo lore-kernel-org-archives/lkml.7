@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5F4C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A44C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E65E206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DFE206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012871;
-	bh=MnjkOJzQpeys/zJdC8tULjlZdIzXW7jVsRu4TsHrD9k=;
+	s=default; t=1576012878;
+	bh=ATa9QuIVN2+F0fqsudF0PnVInf1lvpTGDJ9Gp+lnndc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCkS+r5ac7zyUUhL9Jqz3Ppho1eySeGERblYZI+ZO2obSgFC33lpESmESeA5ySGQS
-	 2HWJGVp8ts25L1QYnWYBlU1Rg5SzOMjf+N1SWsNFBht8GCI4oIXJMpueOSCjWxdSYd
-	 5Li+2idoR+Qjzus/tRHcJtoqPoej7vbDJr3Q7WRM=
+	b=eIxPRO3d1rbtMIbwTPhNVmToKMyhn+VxrG//VIXx8fJHfogFrKO4FxBxwnvae3Xy/
+	 NRxNWe6SOS1nZnSCKGRG44lJsDAVz2kPCtBKceKZRDITrLudymvPHsbqj7rynWvDBI
+	 BEDSYSWEOcbi1JENkHHXCiE+PJP/zibGjEze9Oyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbfLJVVK (ORCPT
+        id S1727104AbfLJVVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:21:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35070 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbfLJVLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:53 -0500
+        id S1728855AbfLJVLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 591F5246A8;
-        Tue, 10 Dec 2019 21:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D486246AE;
+        Tue, 10 Dec 2019 21:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012312;
-        bh=MnjkOJzQpeys/zJdC8tULjlZdIzXW7jVsRu4TsHrD9k=;
+        s=default; t=1576012311;
+        bh=ATa9QuIVN2+F0fqsudF0PnVInf1lvpTGDJ9Gp+lnndc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YBNw3FRXIgSAB5/1mbeqZzh8gJyq0B/LsZ5FuXS75EsqT3EZ+Va2oLBsJonlMPfbE
-         +V74QoafMGXn9c4Uuw1wVQJ19JK7XrZenDpYvQsu/gooGxqyq4Y9Ysx1okG1AIZEad
-         +y6ejDOm/cFyoxEzHLvLMGL9Z1+gS87Em/WrmB+E=
+        b=jL72VLSvctj16S9fCbfy6xbG/r6Cs3mUNzgn7LcdAKMvLyuTUhBn23+2NSK4YEbmV
+         zbCBubjQlQAW1H96i5YU90rM/mqx5EbhkSKrc+76KWoXjExQAdO4xOxO/b9wGhpbCQ
+         zj3ZEm0KM81PnvnBTuSk2e+B1X6WbOVdwpfQWPFs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 247/350] media: exynos4-is: fix wrong mdev and v4l2 dev order in error path
-Date:   Tue, 10 Dec 2019 16:05:52 -0500
-Message-Id: <20191210210735.9077-208-sashal@kernel.org>
+Cc:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 246/350] drm/amdgpu: Avoid accidental thread reactivation.
+Date:   Tue, 10 Dec 2019 16:05:51 -0500
+Message-Id: <20191210210735.9077-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,77 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
 
-[ Upstream commit 4d741cbd58bf889c8a68cf6e592a7892b5c2802e ]
+[ Upstream commit a28fda312a9fabdf0e5f5652449d6197c9fb0a90 ]
 
-When driver is built as module and probe during insmod is deferred
-because of sensor subdevs, there is NULL pointer deference because
-mdev is cleaned up and then access it from v4l2_device_unregister().
-Fix the wrong mdev and v4l2 dev order in error path of probe.
+Problem:
+During GPU reset we call the GPU scheduler to suspend it's
+thread, those two functions in amdgpu also suspend and resume
+the sceduler for their needs but this can collide with GPU
+reset in progress and accidently restart a suspended thread
+before time.
 
-This fixes below null pointer deference:
-   Unable to handle kernel NULL pointer dereference at virtual address 00000000
-   pgd = ca026f68
-   [00000000] *pgd=00000000
-   Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-   [...]
-   Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-   PC is at ida_free+0x7c/0x160
-   LR is at xas_start+0x44/0x204
-   [...]
-   [<c0dafd60>] (ida_free) from [<c083c20c>] (__media_device_unregister_entity+0x18/0xc0)
-   [<c083c20c>] (__media_device_unregister_entity) from [<c083c2e0>] (media_device_unregister_entity+0x2c/0x38)
-   [<c083c2e0>] (media_device_unregister_entity) from [<c0843404>] (v4l2_device_release+0xd0/0x104)
-   [<c0843404>] (v4l2_device_release) from [<c0632558>] (device_release+0x28/0x98)
-   [<c0632558>] (device_release) from [<c0db1204>] (kobject_put+0xa4/0x208)
-   [<c0db1204>] (kct_put) from [<bf00bac4>] (fimc_capture_subdev_unregistered+0x58/0x6c [s5p_fimc])
-   [<bf00bac4>] (fimc_capture_subdev_unregistered [s5p_fimc]) from [<c084a1cc>] (v4l2_device_unregister_subdev+0x6c/0xa8)
-   [<c084a1cc>] (v4l2_device_unregister_subdev) from [<c084a350>] (v4l2_device_unregister+0x64/0x94)
-   [<c084a350>] (v4l2_device_unregister) from [<bf0101ac>] (fimc_md_probe+0x4ec/0xaf8 [s5p_fimc])
-   [...]
+Fix:
+Serialize with GPU reset.
 
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Fixes: 9832e155f1ed ("[media] media-device: split media initialization and registration")
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index a838189d44902..9aaf3b8060d50 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1457,12 +1457,12 @@ static int fimc_md_probe(struct platform_device *pdev)
- 	ret = v4l2_device_register(dev, &fmd->v4l2_dev);
- 	if (ret < 0) {
- 		v4l2_err(v4l2_dev, "Failed to register v4l2_device: %d\n", ret);
--		return ret;
-+		goto err_md;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index 5652cc72ed3a9..81842ba8cd757 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -859,6 +859,9 @@ static int amdgpu_debugfs_test_ib(struct seq_file *m, void *data)
+ 	struct amdgpu_device *adev = dev->dev_private;
+ 	int r = 0, i;
+ 
++	/* Avoid accidently unparking the sched thread during GPU reset */
++	mutex_lock(&adev->lock_reset);
++
+ 	/* hold on the scheduler */
+ 	for (i = 0; i < AMDGPU_MAX_RINGS; i++) {
+ 		struct amdgpu_ring *ring = adev->rings[i];
+@@ -884,6 +887,8 @@ static int amdgpu_debugfs_test_ib(struct seq_file *m, void *data)
+ 		kthread_unpark(ring->sched.thread);
  	}
  
- 	ret = fimc_md_get_clocks(fmd);
- 	if (ret)
--		goto err_md;
-+		goto err_v4l2dev;
- 
- 	ret = fimc_md_get_pinctrl(fmd);
- 	if (ret < 0) {
-@@ -1519,9 +1519,10 @@ static int fimc_md_probe(struct platform_device *pdev)
- 	fimc_md_unregister_entities(fmd);
- err_clk:
- 	fimc_md_put_clocks(fmd);
-+err_v4l2dev:
-+	v4l2_device_unregister(&fmd->v4l2_dev);
- err_md:
- 	media_device_cleanup(&fmd->media_dev);
--	v4l2_device_unregister(&fmd->v4l2_dev);
- 	return ret;
++	mutex_unlock(&adev->lock_reset);
++
+ 	return 0;
  }
  
+@@ -1036,6 +1041,9 @@ static int amdgpu_debugfs_ib_preempt(void *data, u64 val)
+ 	if (!fences)
+ 		return -ENOMEM;
+ 
++	/* Avoid accidently unparking the sched thread during GPU reset */
++	mutex_lock(&adev->lock_reset);
++
+ 	/* stop the scheduler */
+ 	kthread_park(ring->sched.thread);
+ 
+@@ -1075,6 +1083,8 @@ static int amdgpu_debugfs_ib_preempt(void *data, u64 val)
+ 	/* restart the scheduler */
+ 	kthread_unpark(ring->sched.thread);
+ 
++	mutex_unlock(&adev->lock_reset);
++
+ 	ttm_bo_unlock_delayed_workqueue(&adev->mman.bdev, resched);
+ 
+ 	if (fences)
 -- 
 2.20.1
 
