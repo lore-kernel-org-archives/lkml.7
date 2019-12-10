@@ -2,62 +2,58 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48263C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D495C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1268C20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FDB20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZXt/Z1cT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a2oBx3ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfLJMdw (ORCPT
+        id S1727901AbfLJMd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:33:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38008 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727377AbfLJMbW (ORCPT
+        Tue, 10 Dec 2019 07:33:59 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44675 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727351AbfLJMbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:31:22 -0500
+        Tue, 10 Dec 2019 07:31:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575981080;
+        s=mimecast20190719; t=1575981079;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qIAHb/tJHEzLm7W5RvG7Xzy4YFys2XeBX9BwbcnjDFg=;
-        b=ZXt/Z1cTa1LdjmScRVq21rPeYzcGGIqTl1Yo9UyS8Z7uv6CPz5hqlnW7ethordKd/w0WP/
-        pSlmUbmazYHww1GnGOGpJm2MMIhcixi6iS26FtwQk6eXTjdQ9E1FmqL+WFysTPTSBSAUuB
-        qBSh/rvojSsMV+IBTIewE7hoSGbgHUU=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6fYr/YcKzcP2lJn3q4ihsiLHTDwRl+UTgfXSrf1mhKc=;
+        b=a2oBx3iczutqD5oAQvD1QS9fPPNCST+n+wpoE4WSxAQXkZ/TRu4Lz6487iu+2SwIsMHRl7
+        enE2Dhz2oI0tPz4TdVFuAfbP5oBXVBOGc0vDlFUnlQmMfqEWOvo0BNly8iPBST6eE6P5Ck
+        7Xy1ul0YQIc+zroOvtFSW5DwtbcX0mo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-2sWZXRR7McGZzbCKJ2w2iA-1; Tue, 10 Dec 2019 07:31:18 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-59-ZBNHqDn8PB6I1ebKEiGXjA-1; Tue, 10 Dec 2019 07:31:18 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35519189DF45;
-        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EEC8D6FEEE;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95B98100551A;
         Tue, 10 Dec 2019 12:31:16 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 204D45D72A;
+        Tue, 10 Dec 2019 12:31:15 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id AA04920BD0; Tue, 10 Dec 2019 07:31:15 -0500 (EST)
+        id 8CD41209AF; Tue, 10 Dec 2019 07:31:15 -0500 (EST)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: [PATCH v6 06/27] nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
-Date:   Tue, 10 Dec 2019 07:30:54 -0500
-Message-Id: <20191210123115.1655-7-smayhew@redhat.com>
-In-Reply-To: <20191210123115.1655-1-smayhew@redhat.com>
-References: <20191210123115.1655-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 2sWZXRR7McGZzbCKJ2w2iA-1
+Subject: [PATCH v6 00/27] nfs: Mount API conversion
+Date:   Tue, 10 Dec 2019 07:30:48 -0500
+Message-Id: <20191210123115.1655-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: ZBNHqDn8PB6I1ebKEiGXjA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -66,158 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hi Anna, Trond,
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/nfs4super.c | 88 +++++++++++++++++++---------------------------
- 1 file changed, 37 insertions(+), 51 deletions(-)
+Here's a set of patches that converts NFS to use the mount API.  Note that
+there are a lot of preliminary patches, some from David and some from Al.
+The final patch (the one that does the actual conversion) from the David's
+initial posting has been split into 5 separate patches, and the entire set
+has been rebased on top of v5.5-rc1.
 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 8146edf4ce3a..c489942b9069 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -101,37 +101,6 @@ nfs4_remote_mount(struct file_system_type *fs_type, in=
-t flags,
- =09return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
- }
-=20
--static struct vfsmount *nfs_do_root_mount(struct nfs_server *server, int f=
-lags,
--=09=09=09=09=09  struct nfs_mount_info *info,
--=09=09=09=09=09  const char *hostname)
--{
--=09struct vfsmount *root_mnt;
--=09char *root_devname;
--=09size_t len;
--
--=09if (IS_ERR(server))
--=09=09return ERR_CAST(server);
--
--=09len =3D strlen(hostname) + 5;
--=09root_devname =3D kmalloc(len, GFP_KERNEL);
--=09if (root_devname =3D=3D NULL) {
--=09=09nfs_free_server(server);
--=09=09return ERR_PTR(-ENOMEM);
--=09}
--=09/* Does hostname needs to be enclosed in brackets? */
--=09if (strchr(hostname, ':'))
--=09=09snprintf(root_devname, len, "[%s]:/", hostname);
--=09else
--=09=09snprintf(root_devname, len, "%s:/", hostname);
--=09info->server =3D server;
--=09root_mnt =3D vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, =
-info);
--=09if (info->server)
--=09=09nfs_free_server(info->server);
--=09info->server =3D NULL;
--=09kfree(root_devname);
--=09return root_mnt;
--}
--
- struct nfs_referral_count {
- =09struct list_head list;
- =09const struct task_struct *task;
-@@ -198,11 +167,38 @@ static void nfs_referral_loop_unprotect(void)
- =09kfree(p);
- }
-=20
--static struct dentry *nfs_follow_remote_path(struct vfsmount *root_mnt,
--=09=09const char *export_path)
-+static struct dentry *do_nfs4_mount(struct nfs_server *server, int flags,
-+=09=09=09=09    struct nfs_mount_info *info,
-+=09=09=09=09    const char *hostname,
-+=09=09=09=09    const char *export_path)
- {
-+=09struct vfsmount *root_mnt;
- =09struct dentry *dentry;
-+=09char *root_devname;
- =09int err;
-+=09size_t len;
-+
-+=09if (IS_ERR(server))
-+=09=09return ERR_CAST(server);
-+
-+=09len =3D strlen(hostname) + 5;
-+=09root_devname =3D kmalloc(len, GFP_KERNEL);
-+=09if (root_devname =3D=3D NULL) {
-+=09=09nfs_free_server(server);
-+=09=09return ERR_PTR(-ENOMEM);
-+=09}
-+
-+=09/* Does hostname needs to be enclosed in brackets? */
-+=09if (strchr(hostname, ':'))
-+=09=09snprintf(root_devname, len, "[%s]:/", hostname);
-+=09else
-+=09=09snprintf(root_devname, len, "%s:/", hostname);
-+=09info->server =3D server;
-+=09root_mnt =3D vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, =
-info);
-+=09if (info->server)
-+=09=09nfs_free_server(info->server);
-+=09info->server =3D NULL;
-+=09kfree(root_devname);
-=20
- =09if (IS_ERR(root_mnt))
- =09=09return ERR_CAST(root_mnt);
-@@ -223,22 +219,17 @@ struct dentry *nfs4_try_mount(int flags, const char *=
-dev_name,
- =09=09=09      struct nfs_mount_info *mount_info,
- =09=09=09      struct nfs_subversion *nfs_mod)
- {
--=09char *export_path;
--=09struct vfsmount *root_mnt;
--=09struct dentry *res;
- =09struct nfs_parsed_mount_data *data =3D mount_info->parsed;
-+=09struct dentry *res;
-=20
- =09mount_info->set_security =3D nfs_set_sb_security;
-=20
- =09dfprintk(MOUNT, "--> nfs4_try_mount()\n");
-=20
--=09export_path =3D data->nfs_server.export_path;
--=09root_mnt =3D nfs_do_root_mount(
--=09=09=09nfs4_create_server(mount_info, &nfs_v4),
--=09=09=09flags, mount_info,
--=09=09=09data->nfs_server.hostname);
--
--=09res =3D nfs_follow_remote_path(root_mnt, export_path);
-+=09res =3D do_nfs4_mount(nfs4_create_server(mount_info, &nfs_v4),
-+=09=09=09    flags, mount_info,
-+=09=09=09    data->nfs_server.hostname,
-+=09=09=09    data->nfs_server.export_path);
-=20
- =09dfprintk(MOUNT, "<-- nfs4_try_mount() =3D %d%s\n",
- =09=09 PTR_ERR_OR_ZERO(res),
-@@ -258,8 +249,6 @@ static struct dentry *nfs4_referral_mount(struct file_s=
-ystem_type *fs_type,
- =09=09.set_security =3D nfs_clone_sb_security,
- =09=09.cloned =3D data,
- =09};
--=09char *export_path;
--=09struct vfsmount *root_mnt;
- =09struct dentry *res;
-=20
- =09dprintk("--> nfs4_referral_mount()\n");
-@@ -268,13 +257,10 @@ static struct dentry *nfs4_referral_mount(struct file=
-_system_type *fs_type,
- =09if (!mount_info.mntfh)
- =09=09return ERR_PTR(-ENOMEM);
-=20
--=09export_path =3D data->mnt_path;
--=09root_mnt =3D nfs_do_root_mount(
--=09=09=09nfs4_create_referral_server(mount_info.cloned,
--=09=09=09=09=09=09    mount_info.mntfh),
--=09=09=09flags, &mount_info, data->hostname);
-+=09res =3D do_nfs4_mount(nfs4_create_referral_server(mount_info.cloned,
-+=09=09=09=09=09=09=09mount_info.mntfh),
-+=09=09=09    flags, &mount_info, data->hostname, data->mnt_path);
-=20
--=09res =3D nfs_follow_remote_path(root_mnt, export_path);
- =09dprintk("<-- nfs4_referral_mount() =3D %d%s\n",
- =09=09PTR_ERR_OR_ZERO(res),
- =09=09IS_ERR(res) ? " [error]" : "");
+Changes since v5:
+- fixed possible derefence of error pointer in nfs4_validate_fspath()
+  reported by Dan Carpenter
+- rebased on top of v5.5-rc1
+Changes since v4:
+- further split the original "NFS: Add fs_context support" patch (new
+  patch is about 25% smaller than the v4 patch)
+- fixed NFSv4 referral mounts (broken in the original patch)
+- fixed leak of nfs_fattr when fs_context is freed
+Changes since v3:
+- changed license and copyright text in fs/nfs/fs_context.c
+Changes since v2:
+- fixed the conversion of the nconnect=3D option
+- added '#if IS_ENABLED(CONFIG_NFS_V4)' around nfs4_parse_monolithic()
+  to avoid unused-function warning when compiling with v4 disabled
+Chagnes since v1:
+- split up patch 23 into 4 separate patches
+
+-Scott
+
+Al Viro (15):
+  saner calling conventions for nfs_fs_mount_common()
+  nfs: stash server into struct nfs_mount_info
+  nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+  nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+  nfs: don't bother setting/restoring export_path around
+    do_nfs_root_mount()
+  nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+  nfs: lift setting mount_info from nfs_xdev_mount()
+  nfs: stash nfs_subversion reference into nfs_mount_info
+  nfs: don't bother passing nfs_subversion to ->try_mount() and
+    nfs_fs_mount_common()
+  nfs: merge xdev and remote file_system_type
+  nfs: unexport nfs_fs_mount_common()
+  nfs: don't pass nfs_subversion to ->create_server()
+  nfs: get rid of mount_info ->fill_super()
+  nfs_clone_sb_security(): simplify the check for server bogosity
+  nfs: get rid of ->set_security()
+
+David Howells (8):
+  NFS: Move mount parameterisation bits into their own file
+  NFS: Constify mount argument match tables
+  NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+  NFS: Split nfs_parse_mount_options()
+  NFS: Deindent nfs_fs_context_parse_option()
+  NFS: Add a small buffer in nfs_fs_context to avoid string dup
+  NFS: Do some tidying of the parsing code
+  NFS: Add fs_context support.
+
+Scott Mayhew (4):
+  NFS: rename nfs_fs_context pointer arg in a few functions
+  NFS: Convert mount option parsing to use functionality from
+    fs_parser.h
+  NFS: Additional refactoring for fs_context conversion
+  NFS: Attach supplementary error information to fs_context.
+
+ fs/nfs/Makefile         |    2 +-
+ fs/nfs/client.c         |   80 +-
+ fs/nfs/fs_context.c     | 1424 +++++++++++++++++++++++++
+ fs/nfs/fscache.c        |    2 +-
+ fs/nfs/getroot.c        |   73 +-
+ fs/nfs/internal.h       |  132 +--
+ fs/nfs/namespace.c      |  146 ++-
+ fs/nfs/nfs3_fs.h        |    2 +-
+ fs/nfs/nfs3client.c     |    6 +-
+ fs/nfs/nfs3proc.c       |    2 +-
+ fs/nfs/nfs4_fs.h        |    9 +-
+ fs/nfs/nfs4client.c     |   99 +-
+ fs/nfs/nfs4file.c       |    1 +
+ fs/nfs/nfs4namespace.c  |  292 +++---
+ fs/nfs/nfs4proc.c       |    2 +-
+ fs/nfs/nfs4super.c      |  257 ++---
+ fs/nfs/proc.c           |    2 +-
+ fs/nfs/super.c          | 2217 +++++----------------------------------
+ include/linux/nfs_xdr.h |    9 +-
+ 19 files changed, 2287 insertions(+), 2470 deletions(-)
+ create mode 100644 fs/nfs/fs_context.c
+
 --=20
 2.17.2
 
