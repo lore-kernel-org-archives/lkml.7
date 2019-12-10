@@ -2,107 +2,76 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505F4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFC2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247842077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:37:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lj6AdmHY"
+	by mail.kernel.org (Postfix) with ESMTP id B64B6206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfLJPh4 (ORCPT
+        id S1727534AbfLJPkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:37:56 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:45234 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727320AbfLJPhk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:37:40 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B42EEC00A2;
-        Tue, 10 Dec 2019 15:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1575992259; bh=69j7jHbx5yJ5MhVkwHC0PThYgKjCClJKrN77KC+ilaQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=lj6AdmHY5d6/zKnLaJDfKGQkeuwYZ8dPP0k+lRnshmtc+9iZds0nmrUjvP0AK+jWU
-         +5zGv7senN67OngiOPgLBWIAWUX4nQ7xmvb6gtaZT3uJqXqQv6XRRbzYaWNBXNlLV8
-         QpcGGdQBlB3QrDxQu43UJpve+oME81fEwYEWBKbnQSNKpgqnJy4/pHrywG7Y8fM79X
-         IFfxGWBTpxBc3Own+RjQ4DXKmJTOe/cQEqN/dCESfAm0XVDkNo9Vt6jLo2a1w04rPa
-         RZAvqeW0JFsQGJURhMYwkLVahtlh3tpT4ulPkPmLF4zt4Tp2MN3bx8nW3S/3xSBrOU
-         h4AyhzEDoXkMA==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B48B9A005E;
-        Tue, 10 Dec 2019 15:37:36 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id A0FB73E2D9;
-        Tue, 10 Dec 2019 16:37:36 +0100 (CET)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org
-Cc:     Joao.Pinto@synopsys.com, bbrezillon@kernel.org,
-        gregkh@linuxfoundation.org, wsa@the-dreams.de, arnd@arndb.de,
-        broonie@kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [RFC 4/5] i3c: master: add i3c_for_each_dev helper
-Date:   Tue, 10 Dec 2019 16:37:32 +0100
-Message-Id: <5aa3bd64a6082ded430ce27f5ea3f6956d1436ac.1575977795.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1575977795.git.vitor.soares@synopsys.com>
-References: <cover.1575977795.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1575977795.git.vitor.soares@synopsys.com>
-References: <cover.1575977795.git.vitor.soares@synopsys.com>
+        Tue, 10 Dec 2019 10:40:31 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38018 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727178AbfLJPkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:40:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C9CEBAF24;
+        Tue, 10 Dec 2019 15:40:29 +0000 (UTC)
+Subject: Re: [PATCH] x86-64/entry: add instruction suffix to SYSRET
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <cbecab05-9e95-5dec-ef81-499617c153a6@suse.com>
+ <08B92B44-CCA9-4B83-B9CC-F1601D44B73F@amacapital.net>
+From:   Jan Beulich <jbeulich@suse.com>
+Message-ID: <0053f606-f4f7-3951-f40b-b7bd08703590@suse.com>
+Date:   Tue, 10 Dec 2019 16:40:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <08B92B44-CCA9-4B83-B9CC-F1601D44B73F@amacapital.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce i3c_for_each_dev(), an i3c device iterator for use by i3cdev.
+On 10.12.2019 16:29, Andy Lutomirski wrote:
+>> On Dec 10, 2019, at 2:48 AM, Jan Beulich <JBeulich@suse.com> wrote:
+>>
+>> ﻿Omitting suffixes from instructions in AT&T mode is bad practice when
+>> operand size cannot be determined by the assembler from register
+>> operands, and is likely going to be warned about by upstream gas in the
+>> future. Add the missing suffix here.
+>>
+>> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+>>
+>> --- a/arch/x86/entry/entry_64.S
+>> +++ b/arch/x86/entry/entry_64.S
+>> @@ -1728,7 +1728,7 @@ END(nmi)
+>> SYM_CODE_START(ignore_sysret)
+>>    UNWIND_HINT_EMPTY
+>>    mov    $-ENOSYS, %eax
+>> -    sysret
+>> +    sysretl
+> 
+> Isn’t the default sysretq?  sysretl looks more correct, but that suggests
+> that your changelog is wrong.
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
- drivers/i3c/internals.h |  1 +
- drivers/i3c/master.c    | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+No, this is different from ret, and more like iret and lret.
 
-diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
-index bc062e8..a6deedf 100644
---- a/drivers/i3c/internals.h
-+++ b/drivers/i3c/internals.h
-@@ -24,4 +24,5 @@ int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
- int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
- 			       const struct i3c_ibi_setup *req);
- void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev);
-+int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *));
- #endif /* I3C_INTERNAL_H */
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index a9df276..cc41efe 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -2640,6 +2640,18 @@ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev)
- 	dev->ibi = NULL;
- }
- 
-+int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *))
-+{
-+	int res;
-+
-+	mutex_lock(&i3c_core_lock);
-+	res = bus_for_each_dev(&i3c_bus_type, NULL, data, fn);
-+	mutex_unlock(&i3c_core_lock);
-+
-+	return res;
-+}
-+EXPORT_SYMBOL_GPL(i3c_for_each_dev);
-+
- static int __init i3c_init(void)
- {
- 	return bus_register(&i3c_bus_type);
--- 
-2.7.4
+> Is this code even reachable?
 
+Yes afaict, supported by the comment ahead of the symbol. syscall_init()
+puts its address into MSR_CSTAR when !IA32_EMULATION.
+
+Jan
