@@ -2,158 +2,142 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112BFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C65C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDD02077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FBC2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FHEzqdiw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5rS1ded"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfLJUtW (ORCPT
+        id S1727002AbfLJUuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:49:22 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46182 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLJUtV (ORCPT
+        Tue, 10 Dec 2019 15:50:16 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60649 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLJUuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:49:21 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so21554379wrl.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:49:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V/AZ2t09VUW/AwZg0DKTfvbmpgYKKSJqMpv8PcohOgs=;
-        b=FHEzqdiwyyCVFJNtp3JMP/IP50Utxe01eyjmzOQ/ZBSlTdrJz1B5K3gb+SFso6S1r4
-         kp17A35AqjGYxq+7D7VDOVP5IW6/9g6nbcIagPcQH6BMlV/gyIlFRnXG0LaMo5NFKMyT
-         aYFhVxl1rB02WndzY1dHT3/dAaFM/HUhSNXV+YCatX6fmPk3ZRN25sLjBoIju9ImKldZ
-         XeU5vOb22/hbW3CQXWbhXk7VMUK9GAw0SaQ7KB2a/Z2b0JBw7ToC009oSxPccOZKHOd2
-         Cq58nD8FhThrhoQhjEKgAoMumTph+XRumMKaMkBlKCcNW4ctus6EiWC4QtQO4EGF9HNI
-         g+ug==
+        Tue, 10 Dec 2019 15:50:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576011014;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QKUGte0LJJOC+2J/QTsxMNBL/KSTWmiIxFV3NdoEcMk=;
+        b=P5rS1dedEBxFPy5AnXGUz9ogs5rnL+G8tGqNeRh8ENhrU8wqM7+JEOWXSitLFPq2r2yrwF
+        4UFS4AvbtqL+Rmd/62txWgYEjsm0kVpwVZb9NxsV/grwpqgq+cyoKwoC6ievxfKo2S/NmV
+        1vR+S0rUYcz6LeFlakYxRRZKuD4CbXk=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-Kp1i787HO8KAWrXGbgsrtA-1; Tue, 10 Dec 2019 15:50:11 -0500
+Received: by mail-qt1-f198.google.com with SMTP id d9so2847299qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:50:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=V/AZ2t09VUW/AwZg0DKTfvbmpgYKKSJqMpv8PcohOgs=;
-        b=cvWRdrEYgE18tSV8yNPIJy0IRaJMhAHzM2CW5a3Ichr1Fk05GWd77JyRi/XZhgUwz1
-         aEuO+9cQru9BoRe36buRnTNsXOpohmyY7QNRxOazX71afilSSmGAJUrAn7mMLcwvkhRJ
-         uDaxF7qUuXVmT6P73dAWOlKAh3tB3kpZYM9wW9vQ6RumI1l7MYBSV6MAgwgXkrT9X4wF
-         lrHigfXfNG7nimdYM7ZWscjH+l5MaRichu6ICQ4oe025ngPZARkE/x/aDbd12/fiSdo3
-         Wq+4gDrzEH6nSSc3qf3RGmwofgLs2/G71tjT3YK5fqo1eq5/nvWkb75+kud5wXbJtm8Q
-         Ag0Q==
-X-Gm-Message-State: APjAAAVP4WT7a39dkAqXpJFx+kxxm09vhPtr6FVcW1GXrV6jc9Q0n5Jn
-        WGLeDtKrTnKgAQUb91u90A/FohtGoj0=
-X-Google-Smtp-Source: APXvYqwnDauOc0fQoIVirTRKPg1Sv953UOZAdiItJhfxLsl/CRsIjD+hG5gaGdgGt8yRfZREIJuKsQ==
-X-Received: by 2002:a05:6000:f:: with SMTP id h15mr1131641wrx.90.1576010959091;
-        Tue, 10 Dec 2019 12:49:19 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e505:be10:23e:110d? ([2a01:e34:ed2f:f020:e505:be10:23e:110d])
-        by smtp.googlemail.com with ESMTPSA id j12sm4594266wrt.55.2019.12.10.12.49.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 12:49:18 -0800 (PST)
-Subject: Re: [PATCH] thermal: add dependency for
- THERMAL_DEFAULT_GOV_POWER_ALLOCATOR
-To:     Arnd Bergmann <arnd@arndb.de>, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191210204216.3239987-1-arnd@arndb.de>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <22e93dc4-00e5-05db-2264-a4e4efab5770@linaro.org>
-Date:   Tue, 10 Dec 2019 21:49:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L2m4Tv+vpahKKFm5uAjvOrE573uy1RkQak8WAblX7g4=;
+        b=AX2KGRXNK6Te/1gqR1iun1NRPRgnXEySXCnjLIaLjZKkMtEwWHNuHggiSmQWSMz0W5
+         b+qql14fTO0BWbd4NsVBvXzScdjVIQ8noHuCNHmcMUHf2TgPGbiRl0c5ikHkS2wUr1CI
+         lbFCIiB27FWXI4vCSvo0gGyUhf64qOvOK29iBJ0kG7ZNWSZmMZ2bnXvxdEUhxkFbzl0T
+         n+6d5S6oQ+39p2k4ysk7mUv5dnZXOhxWX10DAyg2b+PqthLm/GiUmia+9MbsStPkVTvt
+         r6JYjOQddxPx7WeMfsS9ia+I0UOd0sqnZnzRepEr/7wrfDfOM6c7ybNrZ0iOFY3BY5SX
+         5tCQ==
+X-Gm-Message-State: APjAAAWKGWceNNQNEd/kCo6mnBlVADsJoqbyzhKKJgS+3BahY9KhTeVE
+        5XGCr5069RdJbPCj0Gy+tP25+4b5EOV7nZbdKwHY/nhv4PAFCs2W07Na7ILkXbWc7/dN5JVPVqt
+        pjC3Z9tNdPMJsxZG1qy4FLObB64W1wRthW5Pv+Usl
+X-Received: by 2002:a0c:baad:: with SMTP id x45mr29886299qvf.230.1576011010489;
+        Tue, 10 Dec 2019 12:50:10 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyIAonngUfW9uC+kmuZAs4RSR2w6CHMt+zmLNoDWoivMcdar5w1+a+QgsrZGu/DH2I2RocsrHyDBA/p4a7IrDU=
+X-Received: by 2002:a0c:baad:: with SMTP id x45mr29886279qvf.230.1576011010089;
+ Tue, 10 Dec 2019 12:50:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210204216.3239987-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+ <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+ <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+ <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
+ <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
+ <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com>
+ <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com>
+ <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com> <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com>
+In-Reply-To: <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Tue, 10 Dec 2019 21:49:58 +0100
+Message-ID: <CACO55tvhSM0aATBOK05-05aOc6LeN67=US2zO2jqXKWGTpUZFw@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: Kp1i787HO8KAWrXGbgsrtA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 21:41, Arnd Bergmann wrote:
-> The THERMAL_GOV_POWER_ALLOCATOR symbol requires CONFIG_ENERGY_MODEL:
-> 
-> WARNING: unmet direct dependencies detected for THERMAL_GOV_POWER_ALLOCATOR
->   Depends on [n]: THERMAL [=y] && ENERGY_MODEL [=n]
->   Selected by [y]:
->   - THERMAL_DEFAULT_GOV_POWER_ALLOCATOR [=y] && <choice>
-> 
-> Add this as a dependency for THERMAL_DEFAULT_GOV_POWER_ALLOCATOR to
-> avoid creating invalid configurations.
+On Tue, Dec 10, 2019 at 8:58 PM Dave Airlie <airlied@gmail.com> wrote:
+>
+> On Mon, 9 Dec 2019 at 21:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote=
+:
+> > >
+> > > anybody any other ideas?
+> >
+> > Not yet, but I'm trying to collect some more information.
+> >
+> > > It seems that both patches don't really fix
+> > > the issue and I have no idea left on my side to try out. The only
+> > > thing left I could do to further investigate would be to reverse
+> > > engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
+> > > but I've heard users having similar issues to the one Lyude told us
+> > > about... and I couldn't verify that the patches help there either in =
+a
+> > > reliable way.
+> >
+> > It looks like the newer (8+) versions of Windows expect the GPU driver
+> > to prepare the GPU for power removal in some specific way and the
+> > latter fails if the GPU has not been prepared as expected.
+> >
+> > Because testing indicates that the Windows 7 path in the platform
+> > firmware works, it may be worth trying to do what it does to the PCIe
+> > link before invoking the _OFF method for the power resource
+> > controlling the GPU power.
+> >
+>
+> Remember the pre Win8 path required calling a DSM method to actually
+> power the card down, I think by the time we reach these methods in
+> those cases the card is already gone.
+>
+> Dave.
+>
 
-Hi Arnd,
-
-thanks for the patch. The problem is already fixed.
-
-  -- Daniel
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The point was that the firmware seems to do more in the legacy paths
+and maybe we just have to do those things inside the driver instead
+when using the new method. Also the _DSM call just wraps around the
+interfaces on newer firmware anyway. The OS check is usually what
+makes the difference. I might be wrong about the _DSM call just
+wrapping though, but I think I saw it at least in some firmware at
+some point.
 
