@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D70C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93708C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585F4205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D15205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014359;
-	bh=SBUx8yMp2GaWVuXdQGHugz9n6zPokEyvWLzJ9x4GqU8=;
+	s=default; t=1576014367;
+	bh=RbX6+Z4jCo6nzQ+Vy1qb12MbVoi1m5ZYQ4/pNJpUm9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/b7nTlG7ekRUSM/bsK7Fuvp4U/pq0wKZFENwb3H0Xgo8t+86P9a8q1V6LNDPunp+
-	 nDwvS5G/l6pQkCzq9nd2CAAGlHKBHLWOhGTUBia5SiLGO62XxwNhNDPa2xWkxOYbgx
-	 +5fNB2IEDLmw9+DxRFmstPEPentbhkM8N6kVpCvM=
+	b=VIxCbemB7zFy2nlwyMajH7S+AFkpq79Tb6yQmw9TsKFhMfw9NEPWgJDZQnJKRWFzr
+	 i0cr68u1F8D1ZN2cr67+yr2SejjbMmdmjy49JCuJtARI2HIOOrVxWgHyZeoknMadDv
+	 ER2ifk4X8TXS7ans57iV3jMOrJGl8sDxJJCsPfk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfLJVp6 (ORCPT
+        id S1729813AbfLJVqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:45:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36664 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfLJVcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:52 -0500
+        id S1729498AbfLJVcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 190262465A;
-        Tue, 10 Dec 2019 21:32:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFC7207FF;
+        Tue, 10 Dec 2019 21:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013571;
-        bh=SBUx8yMp2GaWVuXdQGHugz9n6zPokEyvWLzJ9x4GqU8=;
+        s=default; t=1576013570;
+        bh=RbX6+Z4jCo6nzQ+Vy1qb12MbVoi1m5ZYQ4/pNJpUm9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPDF2lSv0z90GZ9oU13EWOciTmNVtvXFjiHP+aa8x+mzWQxzEIHVS2aWt4k/RbMhY
-         T8KqdnKnlgCSJjQt+VM/Oyir1HPSL3nLQGc3ZTLqSQ5mR8EluuZKZZkSQOiwnwee9C
-         okcAUPszue+HoPechpoMOALYyUzvx5fmD2ZlEdyw=
+        b=c8h4SHkzpaB0jqrCSnFLfA5cBZWHc3Lc/Ysr0CFcRNPPaz4UrgY/fJxtO2qwii5yb
+         wQBqxPdtzRadXX5RcYOjpwmWQxD4+rNeCHTXrgOCdbPGL2NyQTqM8IQ946fyXQausl
+         yHZjuIfhs0yO1S6zIIBHxmvAXtWDhcZxHpg2WfTE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Allen Pais <allen.pais@oracle.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 025/177] drm/amdkfd: fix a potential NULL pointer dereference (v2)
-Date:   Tue, 10 Dec 2019 16:29:49 -0500
-Message-Id: <20191210213221.11921-25-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Elena Petrova <lenaptr@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/177] pinctrl: devicetree: Avoid taking direct reference to device name string
+Date:   Tue, 10 Dec 2019 16:29:48 -0500
+Message-Id: <20191210213221.11921-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,42 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 81de29d842ccb776c0f77aa3e2b11b07fff0c0e2 ]
+[ Upstream commit be4c60b563edee3712d392aaeb0943a768df7023 ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+When populating the pinctrl mapping table entries for a device, the
+'dev_name' field for each entry is initialised to point directly at the
+string returned by 'dev_name()' for the device and subsequently used by
+'create_pinctrl()' when looking up the mappings for the device being
+probed.
 
-v2 (Felix Kuehling):
-* Fix compile error (kfifo_free instead of fifo_free)
-* Return proper error code
+This is unreliable in the presence of calls to 'dev_set_name()', which may
+reallocate the device name string leaving the pinctrl mappings with a
+dangling reference. This then leads to a use-after-free every time the
+name is dereferenced by a device probe:
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
+  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
+  | Pointer tag: [13], memory tag: [fe]
+  |
+  | Call trace:
+  |  __kasan_report+0x16c/0x1dc
+  |  kasan_report+0x10/0x18
+  |  check_memory_region
+  |  __hwasan_load1_noabort+0x4c/0x54
+  |  strcmp+0x20/0x64
+  |  create_pinctrl+0x18c/0x7f4
+  |  pinctrl_get+0x90/0x114
+  |  devm_pinctrl_get+0x44/0x98
+  |  pinctrl_bind_pins+0x5c/0x450
+  |  really_probe+0x1c8/0x9a4
+  |  driver_probe_device+0x120/0x1d8
+
+Follow the example of sysfs, and duplicate the device name string before
+stashing it away in the pinctrl mapping entries.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: Elena Petrova <lenaptr@google.com>
+Tested-by: Elena Petrova <lenaptr@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191002124206.22928-1-will@kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-index c56ac47cd3189..bc47f6a444564 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-@@ -62,6 +62,11 @@ int kfd_interrupt_init(struct kfd_dev *kfd)
- 	}
- 
- 	kfd->ih_wq = alloc_workqueue("KFD IH", WQ_HIGHPRI, 1);
-+	if (unlikely(!kfd->ih_wq)) {
-+		kfifo_free(&kfd->ih_fifo);
-+		dev_err(kfd_chardev(), "Failed to allocate KFD IH workqueue\n");
-+		return -ENOMEM;
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 2969ff3162c35..177ee1136e349 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
+ static void dt_free_map(struct pinctrl_dev *pctldev,
+ 		     struct pinctrl_map *map, unsigned num_maps)
+ {
++	int i;
++
++	for (i = 0; i < num_maps; ++i) {
++		kfree_const(map[i].dev_name);
++		map[i].dev_name = NULL;
 +	}
- 	spin_lock_init(&kfd->interrupt_lock);
++
+ 	if (pctldev) {
+ 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 		if (ops->dt_free_map)
+@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
  
- 	INIT_WORK(&kfd->interrupt_work, interrupt_wq);
+ 	/* Initialize common mapping table entry fields */
+ 	for (i = 0; i < num_maps; i++) {
+-		map[i].dev_name = dev_name(p->dev);
++		const char *devname;
++
++		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
++		if (!devname)
++			goto err_free_map;
++
++		map[i].dev_name = devname;
+ 		map[i].name = statename;
+ 		if (pctldev)
+ 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
+@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 
+ 	/* Remember the converted mapping table entries */
+ 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
+-	if (!dt_map) {
+-		dt_free_map(pctldev, map, num_maps);
+-		return -ENOMEM;
+-	}
++	if (!dt_map)
++		goto err_free_map;
+ 
+ 	dt_map->pctldev = pctldev;
+ 	dt_map->map = map;
+@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 	list_add_tail(&dt_map->node, &p->dt_maps);
+ 
+ 	return pinctrl_register_map(map, num_maps, false);
++
++err_free_map:
++	dt_free_map(pctldev, map, num_maps);
++	return -ENOMEM;
+ }
+ 
+ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
 -- 
 2.20.1
 
