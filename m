@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20794C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A026C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64DD24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C112077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012368;
-	bh=TRwGKMpNMAvDMTxkNkuhEWzAfg0IAMCbSfX9dgiBUaA=;
+	s=default; t=1576012372;
+	bh=6ZrutHCfZULgWK9SE9TNvRak3OhPphztuTeNSWShhDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKBlCWqzd20IshqA2ro3lYWATeHhvPG3s9i3ystxRgQrZf+QpZCNYfBhA5Hc0n/D9
-	 Exh5wBKijL7T608fN8UVSc3uVCzdHyexnM6kewvbwukmRwH6UbbtOioCe03gA8GKYc
-	 bfmgWRZZ/UGpmhC71XTEtivzMBnh1vqj6AXT3860=
+	b=URVeupY6UlY88Gh/DTfIdKozWLfpBH9V2lq66B4mav9FUlXqcp2Cgx8pkkq7VIm+o
+	 Dh8DC80/a7k/J5N73CC1S6iyHSeVLdkHJs8N0tfnJbHvPcjXEMYWJwK8SXCO/EUqk1
+	 MREr/3luYM1EvazmjrcScn6YI7wTbAI84TNcoIiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfLJVMq (ORCPT
+        id S1729119AbfLJVMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729037AbfLJVMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:38 -0500
+        id S1729103AbfLJVMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A3D208C3;
-        Tue, 10 Dec 2019 21:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0733321D7D;
+        Tue, 10 Dec 2019 21:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012358;
-        bh=TRwGKMpNMAvDMTxkNkuhEWzAfg0IAMCbSfX9dgiBUaA=;
+        s=default; t=1576012367;
+        bh=6ZrutHCfZULgWK9SE9TNvRak3OhPphztuTeNSWShhDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IsY0KZh1JFaZUWBabwhX1b9egKpM+hW6a+UeGCr71ww1JIhK7A3T6HLWhWlpE9+gf
-         avfYq07ptdPuqNkfRFMHZaf7PAItraq4W0pO5mNhvnzVdMqC5kmbhVOP0XZsKAVIJR
-         Lwqr0diP0Qq1NK2jSMbLsz/2VHmaLjJka5oKMeYc=
+        b=0KbGam5OJsS+KXI8h/v6GW75D13gKPEShJFH8VQiSV6iSt7ieyqIHPZ4PN8paqTPV
+         xRoiqys+Sxwof8UxAO5SQhuLXKSu/Xjhz79BPNm+Y7y/pVDUSqurtWIC0YsyPV780d
+         GFLDEfjxV8MhG1TWeP7mWpag1yAv1iz2FIvgGXu4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Daniel Kranzdorf <dkkranzd@amazon.com>,
-        Firas JahJah <firasj@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 286/350] RDMA/efa: Clear the admin command buffer prior to its submission
-Date:   Tue, 10 Dec 2019 16:06:31 -0500
-Message-Id: <20191210210735.9077-247-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 294/350] spi: tegra20-slink: add missed clk_unprepare
+Date:   Tue, 10 Dec 2019 16:06:39 -0500
+Message-Id: <20191210210735.9077-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,52 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 64c264872b8879e2ab9017eefe9514d4c045c60e ]
+[ Upstream commit 04358e40ba96d687c0811c21d9dede73f5244a98 ]
 
-We cannot rely on the entry memcpy as we only copy the actual size of the
-command, the rest of the bytes must be memset to zero.
+The driver misses calling clk_unprepare in probe failure and remove.
+Add the calls to fix it.
 
-Currently providing non-zero memory will not have any user visible impact.
-However, since admin commands are extendable (in a backwards compatible
-way) everything beyond the size of the command must be cleared to prevent
-issues in the future.
-
-Fixes: 0420e542569b ("RDMA/efa: Implement functions that submit and complete admin commands")
-Link: https://lore.kernel.org/r/20191112092608.46964-1-galpress@amazon.com
-Reviewed-by: Daniel Kranzdorf <dkkranzd@amazon.com>
-Reviewed-by: Firas JahJah <firasj@amazon.com>
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/efa/efa_com.c | 5 ++++-
+ drivers/spi/spi-tegra20-slink.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/efa/efa_com.c b/drivers/infiniband/hw/efa/efa_com.c
-index 3c412bc5b94f1..0778f4f7dccd7 100644
---- a/drivers/infiniband/hw/efa/efa_com.c
-+++ b/drivers/infiniband/hw/efa/efa_com.c
-@@ -317,6 +317,7 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
- 						       struct efa_admin_acq_entry *comp,
- 						       size_t comp_size_in_bytes)
- {
-+	struct efa_admin_aq_entry *aqe;
- 	struct efa_comp_ctx *comp_ctx;
- 	u16 queue_size_mask;
- 	u16 cmd_id;
-@@ -350,7 +351,9 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
+diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
+index 111fffc91435c..374a2a32edcd3 100644
+--- a/drivers/spi/spi-tegra20-slink.c
++++ b/drivers/spi/spi-tegra20-slink.c
+@@ -1073,7 +1073,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
+ 	ret = clk_enable(tspi->clk);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
+-		goto exit_free_master;
++		goto exit_clk_unprepare;
+ 	}
  
- 	reinit_completion(&comp_ctx->wait_event);
+ 	spi_irq = platform_get_irq(pdev, 0);
+@@ -1146,6 +1146,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
+ 	free_irq(spi_irq, tspi);
+ exit_clk_disable:
+ 	clk_disable(tspi->clk);
++exit_clk_unprepare:
++	clk_unprepare(tspi->clk);
+ exit_free_master:
+ 	spi_master_put(master);
+ 	return ret;
+@@ -1159,6 +1161,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
+ 	free_irq(tspi->irq, tspi);
  
--	memcpy(&aq->sq.entries[pi], cmd, cmd_size_in_bytes);
-+	aqe = &aq->sq.entries[pi];
-+	memset(aqe, 0, sizeof(*aqe));
-+	memcpy(aqe, cmd, cmd_size_in_bytes);
+ 	clk_disable(tspi->clk);
++	clk_unprepare(tspi->clk);
  
- 	aq->sq.pc++;
- 	atomic64_inc(&aq->stats.submitted_cmd);
+ 	if (tspi->tx_dma_chan)
+ 		tegra_slink_deinit_dma_param(tspi, false);
 -- 
 2.20.1
 
