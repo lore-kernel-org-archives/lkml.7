@@ -2,102 +2,87 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C60C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46A2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18F32077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575989632;
-	bh=fYmnVBbptrRk0Q6DbseoOA+X1RrYmuA2dXRAN/nJm9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Of/RCoYmlVluSw/TxlUJ5vMOmhnsIjOFJRrVaMrffMaMH5m6Ip/a/blpnd2TMiz65
-	 CplrrtuC84tnvS4lbG2oFjKUKPSQFMz2kjtXvdUMc19t9y2IWUER2ExCTP8b62xGXC
-	 J3Y5haxeVHW0rZKzLVIXRJwaUcorHXtrhT2eS+5g=
+	by mail.kernel.org (Postfix) with ESMTP id 83404207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfLJOxv (ORCPT
+        id S1727601AbfLJOyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:53:51 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42688 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJOxv (ORCPT
+        Tue, 10 Dec 2019 09:54:03 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:36983 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfLJOyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:53:51 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so16193564edv.9;
-        Tue, 10 Dec 2019 06:53:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J3ePAvbBtA2GFkH/GUkVyhurDlAL5lGAx4tH8RkORZ0=;
-        b=a+4rIlANegaZfGrr0z1EA3OyuVbIGEiukgPQV0Ht/N/UoF/Qv7Ivexz/eWkhOIJaFD
-         0zEGp3u40fxKxPInDEedaTY3Ci3IpcTXOIZ6ebmhB13bH0zdDrM12m00nXHwOvPmW/1h
-         AN9jY70gJ/X8JNrHiYLxINAIpO/u47STJM2tpR7iOkHw5jaWY/T460kwoFj3ZZWUslgr
-         xDkYfQqb3ZGf6VuvdldeYhzUt8pf3jbi0ycRo7zpP/FpoyM8c7wuM7Y0uLHrsyEKtPhy
-         WkOXbZJval9LobjRfyPV77NkiePTvpCPvNcSHq1Y70zNm+kFItRZlae+FvBeZTCjR3tK
-         ctVQ==
-X-Gm-Message-State: APjAAAW94IISfkdSLTGU8kqpY7dCpeTarHSPDPqj6FAmtauZN6Rg1VJ/
-        +W4qCRl0ytQ0eRQv0YogNnGHyT6v+z0=
-X-Google-Smtp-Source: APXvYqxqRciyed+2OJtA3xXe9pB4A4wCu/SQT8sBJWcQGqcqWcoGcOTuXxH4KgdXVL9C0KXUH+gJ5g==
-X-Received: by 2002:a17:906:3953:: with SMTP id g19mr3940761eje.227.1575989629067;
-        Tue, 10 Dec 2019 06:53:49 -0800 (PST)
-Received: from pi3 ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id x8sm81066eds.88.2019.12.10.06.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:53:48 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:53:46 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/10] tty: serial: samsung_tty: drop unneded dbg() calls
-Message-ID: <20191210145346.GE11222@pi3>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
- <20191210143706.3928480-6-gregkh@linuxfoundation.org>
+        Tue, 10 Dec 2019 09:54:03 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-1-2078-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 650D260006;
+        Tue, 10 Dec 2019 14:54:00 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 15:53:59 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: fix condition for setting up link
+ interrupt
+Message-ID: <20191210145359.GA90089@kwain>
+References: <20190124131803.14038-1-tbogendoerfer@suse.de>
+ <20190124155137.GD482@lunn.ch>
+ <20190124160741.jady3r2e4dme7c4m@e5254000004ec.dyn.armlinux.org.uk>
+ <20190125083720.GK3662@kwain>
+ <20191208164235.GT1344@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191210143706.3928480-6-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191208164235.GT1344@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:37:02PM +0100, Greg Kroah-Hartman wrote:
-> Now that the kernel has ftrace, any debugging calls that just do "made
-> it to this function!" and "leaving this function!" can be removed.
+Hi Russell,
+
+On Sun, Dec 08, 2019 at 04:42:36PM +0000, Russell King - ARM Linux admin wrote:
 > 
-> On the quest to move the samsung_tty driver over to use the standard
-> kernel debugging functions, drop these unneeded calls.
+> Today, I received an email from Willy Tarreau about this issue which
+> persists to this day with mainline kernels.
 > 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Hyunki Koo <kkoos00@naver.com>
-> Cc: HYUN-KI KOO <hyunki00.koo@samsung.com>
-> Cc: Shinbeom Choi <sbeom.choi@samsung.com>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/tty/serial/samsung_tty.c | 22 ----------------------
->  1 file changed, 22 deletions(-)
+> Willy reminded me that I've been carrying a fix for this, but because
+> of your concerns as stated above, I haven't bothered submitting it
+> through fear of causing regressions (which you seem to know about):
+> 
+>    http://git.armlinux.org.uk/cgit/linux-arm.git/commit/?h=mvpp2&id=67ef3bff255b26cc0d6def8ca99c4e8ae9937727
+> 
+> Just like Thomas' case, the current code is broken for phylink when
+> in-band negotiation is being used - such as with the 1G/2.5G SFP
+> slot on the Macchiatobin.
+> 
+> It seems that resolving the issue has stalled.  Can I merge my patch,
+> or could you state exactly what the problems are with it so that
+> someone else can look into the issues please?
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Yes, please merge your patch (the one dropping the check on
+'!port->phylink'), I've been using it for months. I answered that patch
+submission back then[1] but it seems it was lost somehow :)
 
-Best regards,
-Krzysztof
+Thanks!
+Antoine
 
+[1] https://www.spinics.net/lists/netdev/msg555697.html
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
