@@ -2,83 +2,88 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33AC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DBBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30732073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+y5aLUW"
+	by mail.kernel.org (Postfix) with ESMTP id 1DEA32073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfLJUeR (ORCPT
+        id S1727104AbfLJUeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:34:17 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46041 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJUeR (ORCPT
+        Tue, 10 Dec 2019 15:34:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:57521 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJUeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:34:17 -0500
-Received: by mail-il1-f194.google.com with SMTP id p8so17315786iln.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EINwPsE2o9b6h5y0t6kgOUNqky5nib0p/v1Xe6hDKmc=;
-        b=I+y5aLUWv90/bs4wDnkJybJ03d3qqe40pF4WwlPECm7/Bk82PnjnB33hEe8jy8woEB
-         zztHEiD2drxlz9mUkyz2bWQVt7/ee+xCb7eo1JNU69OsiTp5yFARbWF5QkNFGy3994Tc
-         lSHROKTc+7JyW2dUH1uMe0hPPeZrtA8U5MfvmLZMC6oVHo675XWSNWqHkUJMQ3H84SWP
-         4a1xrl/a7exXXUnOxl2BGMZvvCL12mKyF4MXsAfIzTGhN6E+HQ2YITU2+wR0OSfhKKfk
-         B2kkfvGSnMhpLsEU5T8BaZTgG24un45JrYhgHVbotUyNW13Y/8w4Yn+tkGoSjmSu6yV6
-         +DtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EINwPsE2o9b6h5y0t6kgOUNqky5nib0p/v1Xe6hDKmc=;
-        b=fQUVEKceFS32ZfVTzwE/X7ZfxHS35SwMHi6kAtiVF3sxkLWAV2U6PzNME9rk9INqK2
-         RhrWAUYAEc0pmhCevaD75QE5ZsLDE+t9liyjEzM3w4jmzKUgrFK1Oe/bBskan+yxzshW
-         MwK3JBmHI5a7dZgNIOax4b+KLpjskyJmuz1QI5k/hM4AsbDHqv9XTNRe5ZxiTk2RM2vd
-         hpKNL6pCCI3fav6DemE7n/GBFqUUlPLBxl4kAs5tHhmAvY+MXCkZjYZaGiOvGzOK+aj2
-         LvsIe1OhdxZ/44Oypv7gc0mgagn6xEAvtpCMoDsc9REq/JjKlToFMwfFq3/ztVVvob+J
-         AM3A==
-X-Gm-Message-State: APjAAAWddBr529ZJBWGZunWEmPoXfgsQAvaZnpCGINNyhB2Mta92qnj+
-        ECn5YPFeAtgj4qRcCMK/56LkHHCoeyD52AA5HRw=
-X-Google-Smtp-Source: APXvYqxzyYnXt1ev4ZSaP784KRn0QhAXKh+Y5dGO6ZcL+PEYLLJIMe9IZjwLGVd87ACUvB41iMQ8EMRIktW4tQDJ9D8=
-X-Received: by 2002:a92:4698:: with SMTP id d24mr37036359ilk.104.1576010056697;
- Tue, 10 Dec 2019 12:34:16 -0800 (PST)
+        Tue, 10 Dec 2019 15:34:19 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M8hlZ-1iafTh1vDF-004kr7; Tue, 10 Dec 2019 21:34:12 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     soc@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: mmp: include the correct cputype.h
+Date:   Tue, 10 Dec 2019 21:34:00 +0100
+Message-Id: <20191210203409.2875880-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20191210203149.7115-1-tiny.windzz@gmail.com> <20191210203149.7115-2-tiny.windzz@gmail.com>
-In-Reply-To: <20191210203149.7115-2-tiny.windzz@gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Wed, 11 Dec 2019 04:34:05 +0800
-Message-ID: <CAEExFWtjUSWvgn=zrci=mVTTnqjOcc1WRGSkSSZgR_PbWMv7+A@mail.gmail.com>
-Subject: Re: [PATCH 1/5] nvmem: sunxi_sid: convert to devm_platform_ioremap_resource
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        vz@mleia.com, khilman@baylibre.com,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        andriy.shevchenko@linux.intel.com,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        mans@mansr.com, treding@nvidia.com, suzuki.poulose@arm.com,
-        bgolaszewski@baylibre.com, tglx@linutronix.de
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TYAVyXZgBYEko4NYVCn4X559DV/JN37TG56E9DTOSjQgKZUotME
+ +7SX6MDl243LqHXqdDvEgumQAYCErDA36xAmLWEj8PUEy9hunzEkslRwnZA2MRQu4Ce4ch2
+ i8QQfAihBHYBxnm348B+iQdREe+NBDyg3AXlxUQRt1UxEQHRaYV4cOSKTwu4wbyFEKAt/kp
+ vWWIx6wXTp+ZXCJIEngNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3HiHdPJVe7M=:7cSklzDdqM2TTJj0lOR2Ub
+ 2g5KEPlXreb/mo5YWw7e3DVba9pcj81DkjylhmMqGnz4i35x2eIAm3o/wiB3HnQ0YucEQAqqV
+ PgRljNhR+iQv8AYEwnq5r63vcNRM6or9YaVlsW0QCatE+5s5IozH1nX9CPmNEWcN8AkffFrmH
+ NiLx601YlWIsRvDdWhjRpErHvQ80OeY1dV98Mv3Fs/ZGxJP/4rD6fVQOBYUMFb7x+J3mo9E5Q
+ JVpc9UHwAt41sUhd2TV55lZsyz2+xQPcbjtR+cyBLmi75bhiF6c/6qjIaRRFGRJ/q3i1+9VI2
+ PsOWOxdkQooTTJh0SdhkH4/5z/8FqcYp2SSzHnN6yW4PVoYpM8Y4dZ7xVVC5SAHZXNDTsjxXM
+ Ra4La6NPVq1fNGyf1VYV7f6FhA59mynJv1DwwTSVGfGlYyVYFxbULfFZUC3qJ6gLpkULO+LYn
+ YJ2XcksLuN6cIDwp+ZFIUSPEzP8Q3duijvExGPXSh1sp4v928MHbgtzRrk8I2F7atpp87I1oU
+ gKUMfPIRlXLHQsMkPsG2R3c5OFBn7r+NmH+VPK+BU3v2vT695goh/1C69Vk7XrDv6Bl1m3eg1
+ sRQMMxgU/O8tq6vwpovXbGoTAjioMKz3GRP2hOXGpN0rl1nJ7tNGZ3BWGwsDuoVYhQdgP+yb+
+ 9hBS9C3rNAfH7Y87iTmbvzY3gK405RMJIk/NmjGRfOmQ48SZQshU+YN1rW1CVJnx+4gzBzPRm
+ YizD6uevSC6aIaZbC+DjiM3i9a7BThnXuy6De6uA3iF7cjlJYgWTlSpF/e4I581SD6aqub1s3
+ p+8R7biP43pV2Y7UiAFxkoi5ny8QD6ylcNSo/UJO6OsKsYSFz3mKE3LCtJvFigIeZwUGOdqz7
+ BNmP5NPjKu3Bbh9kxTBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no 5/5 in this patchset, a small mistake.
+The file was moved, causing a build error:
 
-Thx,
-Yangtao
+In file included from /git/arm-soc/arch/arm/mach-mmp/pxa168.c:28:
+arch/arm/mach-mmp/pxa168.h:22:10: fatal error: cputype.h: No such file or directory
+
+Include it from the new location.
+
+Fixes: 32adcaa010fa ("ARM: mmp: move cputype.h to include/linux/soc/")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-mmp/pxa168.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-mmp/pxa168.h b/arch/arm/mach-mmp/pxa168.h
+index 6dd17986e360..34f907cd165a 100644
+--- a/arch/arm/mach-mmp/pxa168.h
++++ b/arch/arm/mach-mmp/pxa168.h
+@@ -17,9 +17,9 @@ extern void pxa168_clear_keypad_wakeup(void);
+ #include <linux/platform_data/keypad-pxa27x.h>
+ #include <linux/pxa168_eth.h>
+ #include <linux/platform_data/mv_usb.h>
++#include <linux/soc/mmp/cputype.h>
+ 
+ #include "devices.h"
+-#include "cputype.h"
+ 
+ extern struct mmp_device_desc pxa168_device_uart1;
+ extern struct mmp_device_desc pxa168_device_uart2;
+-- 
+2.20.0
+
