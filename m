@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D78C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD35C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B497522464
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFB52053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015520;
-	bh=YOu9UTBZrMAjtalmh5Wl+lzo8vM3nHebKvu8uuaFI7Y=;
+	s=default; t=1576015528;
+	bh=ckVPPKvp4QuzvK5hx8lDOR5XHSzzstdV/oyUR08ezrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8YyeA0R0BmREgq43Ue4eYz1h2AanfATg1HNjRzEd2YlDJp5Dowe+0byCBWuOKjt4
-	 uYRd5AYdV7fZ8mytgNVUg+QgHXbZHCHASBfuq59pdIJwWySxof7FzOyFJsU930AJ3V
-	 Jjq5iyds+c39QhJD8R9UY4GJezX3xh9eYj//eozo=
+	b=yws2e3O8hzKba9yjoAFj+CVxEfry9PFSQMQogOvv/Sfd4HAoGgBTb3DaGBkntzYu5
+	 eJgI1Ld3MSc2Kw4N+gSub9Lqjc9locMVpywyl1dPHunAH6uDveIJCFkNcMAxYPv/55
+	 ZnH2AJ5m+lEESlxZ71DIJDP2fzZaLraZCx65iT60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfLJWFT (ORCPT
+        id S1729654AbfLJWF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36096 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfLJWFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:00 -0500
+        id S1727659AbfLJWFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2D0208C3;
-        Tue, 10 Dec 2019 22:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2095208C3;
+        Tue, 10 Dec 2019 22:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015499;
-        bh=YOu9UTBZrMAjtalmh5Wl+lzo8vM3nHebKvu8uuaFI7Y=;
+        s=default; t=1576015509;
+        bh=ckVPPKvp4QuzvK5hx8lDOR5XHSzzstdV/oyUR08ezrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=REGXdGXG5Q0ZfUcY8E93nT0KgtGfFfE6KnzngQs26PL8YSv+am7wzZi9ah1zzyyKT
-         TAyjFexpUvPZZHdlaIGeGCJtwl57qwPnpbLpKOGmjm0bdiULasn7ubMZYJ4w0vUkHR
-         7oqOC8TVdEPpDO3yxLWl1GFFA0cCFBk7zl6eInng=
+        b=A1XjJOw6RakFEUnPMmZI4pxWLUkAYuvI+vDBUNaqBdu0uFIxuhJRSGkP/YpbdOh2S
+         YRBHHdlKniH3LwnBKMx7AfPxJAnck7WLyvuMuupGgcqSRHAhUBsXXDOGsGd/6yaNk1
+         8fd4lDkMNl3/nEUAyMtE6+vnzadn2XD2dNLLL7Vk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Isely <isely@pobox.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 099/130] media: pvrusb2: Fix oops on tear-down when radio support is not present
-Date:   Tue, 10 Dec 2019 17:02:30 -0500
-Message-Id: <20191210220301.13262-99-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 108/130] cpufreq: Register drivers only after CPU devices have been registered
+Date:   Tue, 10 Dec 2019 17:02:39 -0500
+Message-Id: <20191210220301.13262-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,57 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Isely <isely@pobox.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
+[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
 
-In some device configurations there's no radio or radio support in the
-driver.  That's OK, as the driver sets itself up accordingly.  However
-on tear-down in these caes it's still trying to tear down radio
-related context when there isn't anything there, leading to
-dereferences through a null pointer and chaos follows.
+The cpufreq core heavily depends on the availability of the struct
+device for CPUs and if they aren't available at the time cpufreq driver
+is registered, we will never succeed in making cpufreq work.
 
-How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-mystery to me.
+This happens due to following sequence of events:
 
-[hverkuil: fix two checkpatch warnings]
+- cpufreq_register_driver()
+  - subsys_interface_register()
+  - return 0; //successful registration of driver
 
-Signed-off-by: Mike Isely <isely@pobox.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+... at a later point of time
+
+- register_cpu();
+  - device_register();
+    - bus_probe_device();
+      - sif->add_dev();
+	- cpufreq_add_dev();
+	  - get_cpu_device(); //FAILS
+  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
+  - return 0; //CPU registered successfully
+
+Because the per-cpu variable cpu_sys_devices is set only after the CPU
+device is regsitered, cpufreq will never be able to get it when
+cpufreq_add_dev() is called.
+
+This patch avoids this failure by making sure device structure of at
+least CPU0 is available when the cpufreq driver is registered, else
+return -EPROBE_DEFER.
+
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index 4320bda9352df..e0413db267816 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -915,8 +915,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
- 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
--	    !list_empty(&vp->dev_radio->devbase.fh_list))
-+	    (vp->dev_radio &&
-+	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-+		pvr2_trace(PVR2_TRACE_STRUCT,
-+			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
- 		return;
-+	}
- 	pvr2_v4l2_destroy_no_lock(vp);
- }
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 480e8c13567c8..c798a1233e6a0 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2475,6 +2475,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
  
-@@ -990,7 +994,8 @@ static int pvr2_v4l2_release(struct file *file)
- 	kfree(fhp);
- 	if (vp->channel.mc_head->disconnect_flag &&
- 	    list_empty(&vp->dev_video->devbase.fh_list) &&
--	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-+	    (!vp->dev_radio ||
-+	     list_empty(&vp->dev_radio->devbase.fh_list))) {
- 		pvr2_v4l2_destroy_no_lock(vp);
- 	}
- 	return 0;
++	/*
++	 * The cpufreq core depends heavily on the availability of device
++	 * structure, make sure they are available before proceeding further.
++	 */
++	if (!get_cpu_device(0))
++		return -EPROBE_DEFER;
++
+ 	if (!driver_data || !driver_data->verify || !driver_data->init ||
+ 	    !(driver_data->setpolicy || driver_data->target_index ||
+ 		    driver_data->target) ||
 -- 
 2.20.1
 
