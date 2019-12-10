@@ -2,168 +2,107 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE67C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2384C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8262A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g6B5OOLx"
+	by mail.kernel.org (Postfix) with ESMTP id 88F3F20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014453;
+	bh=OQq0SJnACQQXPv+cvqUsF6hu4trKUwzYmaEDPEwK4JM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Xvb9ZA9Cdu3XI4zoKWT5QUr61FVTdarSpA4YeG/NFTIA7BaPVyQ7RzCC0scKLh95Z
+	 tWZAqAa/a+xpXPFvzz/UieMvpYzSIswSSzVgpvNl2YhCyU6374NvG5eUdJwxA5kX6T
+	 es74kcU1O0ke6JP1V/iaQGfLz7gJcp1dxYOt7LWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbfLJVr1 (ORCPT
+        id S1729529AbfLJVrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:47:27 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:42406 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728522AbfLJVc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:27 -0500
-Received: by mail-yw1-f65.google.com with SMTP id w11so7910722ywj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:32:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h2HBW6fWxv/h9l5/xoQmu2icNmaNt5TwBrIw1IUoyYE=;
-        b=g6B5OOLx1gqAh7MPazEsaen/d1R+xGYrL/GP798PFAkHdu2wiunBg2paDTaJceGbIw
-         sWjAhqzIlWpesc2jzY6aw/UcUOvVt5NsNnq5e5nx14owuSFKQofWpCfg2w6HR1MAoE75
-         POHT/xXoBR0ZoNG9TIoRBuXLUNkFcM17CoMaIUQ7ronNRBjck+pGb7DLuMc6mb6B1NtI
-         8jPsnuvDw9MVHELMrhN88JxodOUrR/5TOT01shZZF/r2DTFrEzFc84oW6uT2psRiW69/
-         3BxRoJPf3C8kfQ0qyaJhUEvaxnmLhLN0lMDuLcLsXbMJVLl66ftLXVSPkwnpmHKtWJS7
-         M3fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h2HBW6fWxv/h9l5/xoQmu2icNmaNt5TwBrIw1IUoyYE=;
-        b=jSGV3sdkjyNqHTdqb0bhYRbgae+zGNVBUyS+O3ictgxTMhu17K4Hbe6GbNgg4ez2+d
-         Bhk/8hLMuHd2vO83UrLZkjUmq9UV3p7K+eG+4QvFKbfnvWZzSdFl/mErM/hSBjw56Zi9
-         BW+HElYZ6gPngs3Yw89Aqp6akshfegjR0OGNJPL4YvLs1EVpJPu7sgamHfTmdZjUTlzm
-         lpvGg0eE448e/Y5eVV/QjC0DwdtW5RpX6DzvDFEdZQermBBGF2VXQfTSdVc+iBYVBZ0Z
-         HZDPKhJGNmp4yhMJAdCTIMwkT74AbgPJr3ZL1vqh37orTFoC9CSusAev4nX6VOdM6kib
-         bb+w==
-X-Gm-Message-State: APjAAAWwwpus4u+SexcNutyXiKwrycjJCvOFi9RP+9DO403qOk3qkWau
-        a8xyAH58WPQN5y6vikshofaT+r7q60axZ3ALc1pu0w==
-X-Google-Smtp-Source: APXvYqzU6RMVMM/68NdsM1nTuws4x8Fw3keyEjjXcdNrjesF+lar40piLjYGKtCGGC7Q/Fsal1/sIH9aoZP1c8PRrik=
-X-Received: by 2002:a81:5303:: with SMTP id h3mr26896078ywb.267.1576013546566;
- Tue, 10 Dec 2019 13:32:26 -0800 (PST)
+        Tue, 10 Dec 2019 16:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727229AbfLJVc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:26 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92E1D208C3;
+        Tue, 10 Dec 2019 21:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576013546;
+        bh=OQq0SJnACQQXPv+cvqUsF6hu4trKUwzYmaEDPEwK4JM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WK9VnRSgxwlLiVclryR5ow1+Qj+w8+Xf7SD8Tk0l0wljfQ0N1GDWq4EWpjUncVyMv
+         PP29TEKwugiBdvkX8rGe8oIuv25FRpDvzPZbGoVd30sdWvG/oCVakVBMOE6KrP0DOC
+         gWALswCxU8u3psksGtMw5s9v8ACOACsr7DAHXS/w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 003/177] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Tue, 10 Dec 2019 16:29:27 -0500
+Message-Id: <20191210213221.11921-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191210210735.9077-1-sashal@kernel.org> <20191210210735.9077-238-sashal@kernel.org>
-In-Reply-To: <20191210210735.9077-238-sashal@kernel.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 10 Dec 2019 13:32:15 -0800
-Message-ID: <CABXOdTdO16V4AtO1t=BwXW2=HAtT6CYoSddmrn5T2qZP9hs0eQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM power
- is managed by firmware
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "# v4 . 10+" <stable@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 1:12 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Stephen Boyd <swboyd@chromium.org>
->
-> [ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
->
-> On some platforms, the TPM power is managed by firmware and therefore we
-> don't need to stop the TPM on suspend when going to a light version of
-> suspend such as S0ix ("freeze" suspend state). Add a chip flag,
-> TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
-> platforms can probe for the usage of this light suspend and avoid
-> touching the TPM state across suspend/resume.
->
+From: Brian Masney <masneyb@onstation.org>
 
-Are the patches needed to support CR50 (which need this patch) going
-to be applied to v5.4.y as well ? If not, what is the purpose of
-applying this patch to v5.4.y ?
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-Thanks,
-Guenter
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/char/tpm/tpm-interface.c | 8 +++++++-
->  drivers/char/tpm/tpm.h           | 1 +
->  2 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index d7a3888ad80f0..7f105490604c8 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -23,6 +23,7 @@
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
->  #include <linux/spinlock.h>
-> +#include <linux/suspend.h>
->  #include <linux/freezer.h>
->  #include <linux/tpm_eventlog.h>
->
-> @@ -394,7 +395,11 @@ int tpm_pm_suspend(struct device *dev)
->                 return -ENODEV;
->
->         if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
-> -               return 0;
-> +               goto suspended;
-> +
-> +       if ((chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED) &&
-> +           !pm_suspend_via_firmware())
-> +               goto suspended;
->
->         if (!tpm_chip_start(chip)) {
->                 if (chip->flags & TPM_CHIP_FLAG_TPM2)
-> @@ -405,6 +410,7 @@ int tpm_pm_suspend(struct device *dev)
->                 tpm_chip_stop(chip);
->         }
->
-> +suspended:
->         return rc;
->  }
->  EXPORT_SYMBOL_GPL(tpm_pm_suspend);
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index a7fea3e0ca86a..f3bf2f7f755c8 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -162,6 +162,7 @@ enum tpm_chip_flags {
->         TPM_CHIP_FLAG_VIRTUAL           = BIT(3),
->         TPM_CHIP_FLAG_HAVE_TIMEOUTS     = BIT(4),
->         TPM_CHIP_FLAG_ALWAYS_POWERED    = BIT(5),
-> +       TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED    = BIT(6),
->  };
->
->  #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
-> --
-> 2.20.1
->
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index f8433c93f4634..cc820e9aea1db 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -725,7 +725,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
++
+ 		return PTR_ERR(pdata->dvdd10);
+ 	}
+ 
+@@ -1341,7 +1343,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++
+ 		return err;
+ 	}
+ 
+-- 
+2.20.1
+
