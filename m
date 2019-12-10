@@ -2,88 +2,136 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D724CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CC9C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3B7207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D782053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfLJPqw (ORCPT
+        id S1727436AbfLJPwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:46:52 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:48669 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfLJPqw (ORCPT
+        Tue, 10 Dec 2019 10:52:47 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46816 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727177AbfLJPwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:46:52 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id D29CC2801A03E;
-        Tue, 10 Dec 2019 16:46:49 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 7B3DC973; Tue, 10 Dec 2019 16:46:49 +0100 (CET)
-Date:   Tue, 10 Dec 2019 16:46:49 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: hda/hdmi - Fix duplicate unref of pci_dev
-Message-ID: <20191210154649.o3vsqzrtofhvcjrl@wunner.de>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <77aa6c01aefe1ebc4004e87b0bc714f2759f15c4.1575985006.git.lukas@wunner.de>
- <MWHPR12MB1358AEEBD730A4EDA78894E6F75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
+        Tue, 10 Dec 2019 10:52:46 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iehoZ-0004zV-8y; Tue, 10 Dec 2019 15:52:43 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iehoY-0000Jh-Mn; Tue, 10 Dec 2019 15:52:42 +0000
+Message-ID: <579a587821a4f9571881d583fd5650aee6eb5d0f.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 10/72] video: of: display_timing: Add of_node_put()
+ in of_get_display_timing()
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Doug Anderson <dianders@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        David Airlie <airlied@linux.ie>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 10 Dec 2019 15:52:37 +0000
+In-Reply-To: <20191210132732.GG2703785@ulmo>
+References: <lsq.1575813164.154362148@decadent.org.uk>
+         <lsq.1575813165.830287385@decadent.org.uk>
+         <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
+         <20191210132732.GG2703785@ulmo>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-UkQufnX/opDL5IZVgKKo"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR12MB1358AEEBD730A4EDA78894E6F75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:34:27PM +0000, Deucher, Alexander wrote:
-> > Nicholas Johnson reports a null pointer deref as well as a refcount underflow
-> > upon hot-removal of a Thunderbolt-attached AMD eGPU.
-> > He's bisected the issue down to commit 586bc4aab878 ("ALSA: hda/hdmi - fix
-> > vgaswitcheroo detection for AMD").
-> > 
-> > The commit iterates over PCI devices using pci_get_class() and unreferences
-> > each device found, even though pci_get_class() subsequently unreferences
-> > the device as well.  Fix it.
-> 
-> The pci_dev_put() a few lines above should probably be dropped as well.
 
-That one looks fine to me.  The refcount is already increased in the
-caller get_bound_vga() via pci_get_domain_bus_and_slot() and it's
-increased again in atpx_present() via pci_get_class().  It needs to
-be decremented in atpx_present() to avoid leaking a ref.
+--=-UkQufnX/opDL5IZVgKKo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Tue, 2019-12-10 at 14:27 +0100, Thierry Reding wrote:
+> On Mon, Dec 09, 2019 at 01:19:01PM -0800, Doug Anderson wrote:
+> > Hi,
+> >=20
+> > On Sun, Dec 8, 2019 at 5:54 AM Ben Hutchings <ben@decadent.org.uk> wrot=
+e:
+> > > 3.16.79-rc1 review patch.  If anyone has any objections, please let m=
+e know.
+> > >=20
+> > > ------------------
+> > >=20
+> > > From: Douglas Anderson <dianders@chromium.org>
+> > >=20
+> > > commit 4faba50edbcc1df467f8f308893edc3fdd95536e upstream.
+> > >=20
+> > > =3D46romcode inspection it can be seen that of_get_display_timing() i=
+s
+> > > lacking an of_node_put().  Add it.
+> >=20
+> > I don't object, but I am curious why "From code" got turned into
+> > "=3D46romcode" in the commit message.
+>=20
+> I vaguely recall earlier versions of patchwork doing something similar.
+> This has to do with lines starting with "From" needing special treatment
+> in some situations. I'm not exactly sure about the details, but I think
+> this is only needed for the mailbox format, so whatever happened here
+> was probably a bit over the top.
 
-Lukas
+I generate a single mbox file for review, and then feed that through
+"formail ... sendmail".  So "From " in a mail body does need to be
+escaped (but this shouldn't be visibile to receivers).  The Perl MIME
+module doesn't handle mbox output, so I had to implement it myself and
+I got this wrong.  I've now committed a fix so this shouldn't happen
+again.
 
-> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c index
-> > 35b4526f0d28..b856b89378ac 100644
-> > --- a/sound/pci/hda/hda_intel.c
-> > +++ b/sound/pci/hda/hda_intel.c
-> > @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
-> >  				return true;
-> >  			}
-> >  		}
-> > -		pci_dev_put(pdev);
-> >  	}
-> >  	return false;
-> >  }
-> > --
-> > 2.24.0
+Ben.
+
+--=20
+Ben Hutchings
+Experience is directly proportional to the value of equipment destroyed
+                                                    - Carolyn Scheppner
+
+
+
+--=-UkQufnX/opDL5IZVgKKo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3vv0UACgkQ57/I7JWG
+EQk6/BAAu4Ji3PwblaG50Y5rR3VtqcvqRt4SmZcF1jjempowdJR79wVgCh3IdUlG
+31CLJN9kNCX0yzq0t694m/WB+6zv2U2IjGg797TBw08tQfdUdRMpbBP6yj03QUss
+d1NiCcU9hKdZ0DMm4kPon4uwjTQQKmHWtsM8FaTuXJiTK7fO9pMKRY8tFwHIOsdd
+gytssgYPTjw67T8YoQAQQlLnc+atTxSiO/Np/LM2LAvebXmXC0TdK5B+M6j5VGp/
+RXNDQQQvlovCzOhD8qGOfopflgXcTRfcA56ht+kcKIM5jEddCUY/+e66KAwCoWdj
+OBx6lvsdNf9wqKuYf/II7JRKU76C3b3hC8gY83nJvUpqOuycllUDWcjA7poAL24Z
+URk21aJDkzA3ZGwBqsZJl505w755xjQyBaQ6+buqe5J6c0aY06hm6+vLvt0Yt1Ca
+OfHa5mbQaSTr3JQUcnglDOniopsXx77r3g+AtwT7scJz9fj4BLP0+NgaOQQTGGuq
+CDf73UibPqAH2syUNo+WGw0K8ekB/lKOX7shXc1V5Si0D8YIR7XgLbphR6PN58/L
+xDeuMXAZoJsETaUb0r1zfaOLCD58QRu7u7nVHLcTDBX2vU8pZRvZWLj2OxX9Paq3
+3P17A/OrbjTU1R2VQT3g5KQv/v2w0VOYDhfuQKHJDKTL1/VkW2w=
+=fw8B
+-----END PGP SIGNATURE-----
+
+--=-UkQufnX/opDL5IZVgKKo--
