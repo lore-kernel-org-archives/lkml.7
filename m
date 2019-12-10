@@ -2,159 +2,127 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C556EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C792C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939C7207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A0D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017511;
-	bh=FZWcj2uubErXZMXLQWTdtQCV61a2rTeZ4M7n9iQJZWM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QvLj3+kLUinvJJf+lzMBQkeD7qjVV+q2afpYQlGbEMCu3avMWzNEqCaA4qGq4Th+z
-	 U/36Xv83i00LJupZyVtnkLReth9E+XsgdK1Ut8FrFCnx/hP2FCLe/kYFmVonBT/MBR
-	 A6pc/Q2tCXEKU5iKIeYA+68iVhRsaoPPlZDXyPww=
+	s=default; t=1576017518;
+	bh=iXrNNQ+iLcuxDivbefHTA17DGz9vPsw1x9aknKSRrxM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BtVhNTqu81AmdPrQmeqjnU/7G28BGpK9dpkI3UhfQqlZoXekSmACdx9LU5oP+Rw64
+	 Ak9NZx4q0q002Gz5aFngF6rqcj8aqceqm66YiKxkPlQ9ciOV+iWRgHUvsfPUO3zNXO
+	 Zp8964p4LTrwR/dRPFWEGWDRGH+eIKnANvjfmUmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbfLJWia (ORCPT
+        id S1729868AbfLJWdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:38:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59774 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:33:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbfLJWi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:38:27 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729083AbfLJWdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:31 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B00C2077B;
-        Tue, 10 Dec 2019 22:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 554E821556;
+        Tue, 10 Dec 2019 22:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017506;
-        bh=FZWcj2uubErXZMXLQWTdtQCV61a2rTeZ4M7n9iQJZWM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=CIdHPCv75hoxrLSG5mf3J7CFnStYJucNShYdzH3Ok01S2/G/jzAsvjNsIO7ao2Wzq
-         mcwEx4ATmZQS2ZO8qbh+zxJjQWQXs65EDu7Y/w8n9xwr9iJ6t4pLzSkVbQf3nGA4Xm
-         8qC0Vv+CoMejsHy4TZnUv3mwRXlKCNR3Cd5JeGsM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DF8D2352276D; Tue, 10 Dec 2019 14:38:25 -0800 (PST)
-Date:   Tue, 10 Dec 2019 14:38:25 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ying Xue <ying.xue@windriver.com>
-Cc:     linux-kernel@vger.kernel.org, jon.maloy@ericsson.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        torvalds@linux-foundation.org, mingo@kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH net/tipc] Replace rcu_swap_protected() with
- rcu_replace_pointer()
-Message-ID: <20191210223825.GS2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
- <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
+        s=default; t=1576017210;
+        bh=iXrNNQ+iLcuxDivbefHTA17DGz9vPsw1x9aknKSRrxM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eaoDdMB3QoahxGAp0KiSYUBUFdQtEkzipnV8nrs7BZgk0g7vIzijAbnSrUaTGhvIp
+         /nUKgXMG/s5xlyN8KCTZCzKuLWIUoh1TIUPz2eWppw+xSo8yIwlZ5m3I8QL5Yh/nKA
+         vny17QR5FormFNF/Vv7a9jEj5YXCik7+Uv9vrwOk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/71] media: ov6650: Fix stored frame format not in sync with hardware
+Date:   Tue, 10 Dec 2019 17:32:16 -0500
+Message-Id: <20191210223316.14988-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
+References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 10:36:59PM +0800, Ying Xue wrote:
-> On 12/10/19 11:31 AM, Paul E. McKenney wrote:
-> > This commit replaces the use of rcu_swap_protected() with the more
-> > intuitively appealing rcu_replace_pointer() as a step towards removing
-> > rcu_swap_protected().
-> > 
-> > Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-> > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Jon Maloy <jon.maloy@ericsson.com>
-> > Cc: Ying Xue <ying.xue@windriver.com>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: <netdev@vger.kernel.org>
-> > Cc: <tipc-discussion@lists.sourceforge.net>
-> > 
-> > diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-> > index 990a872..64cf831 100644
-> > --- a/net/tipc/crypto.c
-> > +++ b/net/tipc/crypto.c
-> > @@ -258,7 +258,7 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
-> >  	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
-> >  
-> >  #define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
-> > -	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
-> > +	rcu_replace_pointer((rcu_ptr), (ptr), lockdep_is_held(lock))
-> 
-> (ptr) = rcu_replace_pointer((rcu_ptr), (ptr), lockdep_is_held(lock))
-> 
-> >  
-> >  #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
-> >  do {									\
-> > @@ -1189,7 +1189,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
-> >  
-> >  	/* Move passive key if any */
-> >  	if (key.passive) {
-> > -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-> > +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, &rx->lock);
-> 
-> tipc_aead_rcu_swap() is only called here in TIPC module. If we use
-> rcu_replace_pointer() to switch pointers instead of calling
-> tipc_aead_rcu_swap() macro, I think we should completely remove
-> tipc_aead_rcu_swap().
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-Good catch, thank you!  How about the following instead?
+[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
 
-							Thanx, Paul
+The driver stores frame format settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, those settings are updated before they are actually applied
+on hardware.  If an error occurs on device update, the stored settings
+my not reflect hardware state anymore and consecutive calls to
+.get_fmt() may return incorrect information.  That in turn may affect
+ability of a bridge device to use correct DMA transfer settings if such
+incorrect informmation on active frame format returned by .get_fmt() is
+used.
 
-------------------------------------------------------------------------
+Assuming a failed device update means its state hasn't changed, update
+frame format related settings stored in the device private structure
+only after they are successfully applied so the stored values always
+reflect hardware state as closely as possible.
 
-commit 4ee8e2c68b076867b7a5af82a38010fffcab611c
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Mon Dec 9 19:13:45 2019 -0800
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/soc_camera/ov6650.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-    net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
-    
-    This commit replaces the use of rcu_swap_protected() with the more
-    intuitively appealing rcu_replace_pointer() as a step towards removing
-    rcu_swap_protected().
-    
-    Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-    Reported-by: kbuild test robot <lkp@intel.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    Cc: Jon Maloy <jon.maloy@ericsson.com>
-    Cc: Ying Xue <ying.xue@windriver.com>
-    Cc: "David S. Miller" <davem@davemloft.net>
-    Cc: <netdev@vger.kernel.org>
-    Cc: <tipc-discussion@lists.sourceforge.net>
-
-diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-index 990a872..978d2db 100644
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
- #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
- 	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
- 
--#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
--	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
--
- #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
- do {									\
- 	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
-@@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
- 
- 	/* Move passive key if any */
- 	if (key.passive) {
--		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-+		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, &rx->lock);
- 		x = (key.passive - key.pending + new_pending) % KEY_MAX;
- 		new_passive = (x <= 0) ? x + KEY_MAX : x;
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 4e19f5e5d8cf7..bb55ddfbf7337 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -611,7 +611,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+ 		return -EINVAL;
  	}
+-	priv->code = code;
+ 
+ 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
+ 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
+@@ -637,7 +636,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_dbg(&client->dev, "max resolution: CIF\n");
+ 		coma_mask |= COMA_QCIF;
+ 	}
+-	priv->half_scale = half_scale;
+ 
+ 	if (sense) {
+ 		if (sense->master_clock == 8000000) {
+@@ -677,8 +675,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
+ 	if (!ret)
+ 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+-	if (!ret)
++	if (!ret) {
++		priv->half_scale = half_scale;
++
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
++	}
++	if (!ret)
++		priv->code = code;
+ 
+ 	if (!ret) {
+ 		mf->colorspace	= priv->colorspace;
+-- 
+2.20.1
+
