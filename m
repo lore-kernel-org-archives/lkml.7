@@ -2,366 +2,183 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640CFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A2DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2946520726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BD820726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLJL4v (ORCPT
+        id S1727334AbfLJMBK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:56:51 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49605 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfLJL4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:56:50 -0500
-Received: from erbse.hi.pengutronix.de ([2001:67c:670:100:9e5c:8eff:fece:cdfe])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <bst@pengutronix.de>)
-        id 1iee8H-00015P-CO; Tue, 10 Dec 2019 12:56:49 +0100
-Subject: Re: [PATCH 06/12] crypto: caam - change return code in
- caam_jr_enqueue function
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx <linux-imx@nxp.com>,
-        kernel@pengutronix.de
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-7-git-send-email-iuliana.prodan@nxp.com>
-From:   Bastian Krause <bst@pengutronix.de>
-Message-ID: <705afee0-155b-2b6f-3b57-615a07fb7e4f@pengutronix.de>
-Date:   Tue, 10 Dec 2019 12:56:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1574029845-22796-7-git-send-email-iuliana.prodan@nxp.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 10 Dec 2019 07:01:10 -0500
+Received: from mail-oln040092254106.outbound.protection.outlook.com ([40.92.254.106]:26657
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726957AbfLJMBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:01:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hjm/C8F6fIS9GvLzHQeLjF22/0t/DBGDdOaflWxhvZfLOZXqJtbkt631p6zIrRkdEJq7llX1N4fYYJHD3zT0/1u9gMRvIbELGn/cBOqcnUnSCWEkW81D2THwVFjRXkvyjz9U+3r2UuWZ+0COwExEoLsyQ8jPJFLT2KjQu74+VEwHkFuFtJYZe6kdo1hvAcbmBaCwJB2Hr8mtRf19/1mCgR0eHd/KuKtPpIyB7hpaFqwrKq5CQax6HkOh61nMFN8tFa0RHnHQXaZy42j+LzPEJ8F17yqoJi+bZnggHU2XsKC6EtR6xXyMpcZe0+/9RAhANQoTq8X9OEXisJU9w+rPZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M7PJhKF7h1bccWxklF0ePrLbeo1o3ZNjk9P/usksGJ0=;
+ b=h1ZdJ/4QOYzE57kesD+1mY8TbauIX7J7VIUV46j6ar5DVTIyZckd9gtj4vBglpy6gPAXYQbTslycCuisGPvnoT3kMs9Q9r2sb0fw/t0VZVlF0pGY3TJ5AXpCABo4K5e17AKzZ9MvflbgZlw5GzHGGKCDWXpAhsxz0j+rFrM83bNLyLvXwVym9KfwpXEHAAa3i4c5YyjQ+HQBCvFHCnqiEzL75jH56eoRvzj3CKryMERCUEZc2YIflVNUfwsrmLcL8As2qeN6/GpuAA2pAPNNcx1GVpkkfl6rCD05DDjJ43hlHMKXyx7E+2fs2uM7jYpRs9GzFheRVU28aGwMAI9cXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT006.eop-APC01.prod.protection.outlook.com
+ (10.152.250.54) by SG2APC01HT043.eop-APC01.prod.protection.outlook.com
+ (10.152.250.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Tue, 10 Dec
+ 2019 12:00:23 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
+ SG2APC01FT006.mail.protection.outlook.com (10.152.250.165) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.25 via Frontend Transport; Tue, 10 Dec 2019 12:00:23 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Tue, 10 Dec
+ 2019 12:00:23 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: Linux v5.5 serious PCI bug
+Thread-Topic: Linux v5.5 serious PCI bug
+Thread-Index: AQHVrozxq7Q7SfMf80m5ItEmvTDCAqexx4+AgAAF4YCAASwpAIAATBAA
+Date:   Tue, 10 Dec 2019 12:00:23 +0000
+Message-ID: <PSXP216MB04384F89D9D9DDA6999347CF805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191209131239.GP2665@lahna.fi.intel.com>
+ <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191210072800.GY2665@lahna.fi.intel.com>
+In-Reply-To: <20191210072800.GY2665@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:9e5c:8eff:fece:cdfe
-X-SA-Exim-Mail-From: bst@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY4P282CA0010.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:a0::20) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:31D4FA7B0E20B4A5F12CD9809972C86C29587ECED2EE00A2BC8BEB81ED1DBF32;UpperCasedChecksum:7D78B5B1EE5982E9DFCBF47D40C9C718E4F661FCB9A45165CBC18606695DBEEA;SizeAsReceived:7712;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [tCfVBWck0ytF2xECBnXpUOc094LKuSsXHHqqptRNXAb1pMgV7OryxDQoCLG1fMqI5fGaxq97rA4=]
+x-microsoft-original-message-id: <20191210120011.GA2302@nicholas-usb>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: af0b131a-d037-4b37-bb76-08d77d6888fb
+x-ms-traffictypediagnostic: SG2APC01HT043:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KLu6szqehAW0ZDCD9ZJMRzLxXjrPlGekeYXn/FQJ1XqaSHrLAY7hxkkswuq3aCkJD8rdpou+dUNi/WxWPNIvAMuzFkIS1FVRViUx9qlvlJHw2uNMpdcltlCHY1olDSk6zzNzWse+CSA6p85r76ICxXMe9qHpODfShxoTOxCfRMA3W+dlnkwJ+6xiITCFOyZS
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5DB306D412262F4BAF207230775CCDD6@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: af0b131a-d037-4b37-bb76-08d77d6888fb
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 12:00:23.0531
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 11/17/19 11:30 PM, Iuliana Prodan wrote:
-> Change the return code of caam_jr_enqueue function to -EINPROGRESS, in
-> case of success, -ENOSPC in case the CAAM is busy (has no space left
-> in job ring queue), -EIO if it cannot map the caller's descriptor.
+On Tue, Dec 10, 2019 at 09:28:00AM +0200, mika.westerberg@linux.intel.com wrote:
+> On Mon, Dec 09, 2019 at 01:33:49PM +0000, Nicholas Johnson wrote:
+> > On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> > > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > > > Hi,
+> > > > 
+> > > > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > > > GPU driver.
+> > > > 
+> > > > We had:
+> > > > - kernel NULL pointer dereference
+> > > > - refcount_t: underflow; use-after-free.
+> > > > 
+> > > > Attaching dmesg for now; will bisect and come back with results.
+> > > 
+> > > Looks like something related to iommu. Does it work if you disable it?
+> > > (intel_iommu=off in the command line).
+> > On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> > > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > > > Hi,
+> > > > 
+> > > > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > > > GPU driver.
+> > > > 
+> > > > We had:
+> > > > - kernel NULL pointer dereference
+> > > > - refcount_t: underflow; use-after-free.
+> > > > 
+> > > > Attaching dmesg for now; will bisect and come back with results.
+> > > 
+> > > Looks like something related to iommu. Does it work if you disable it?
+> > > (intel_iommu=off in the command line).
+> > I thought it could be that, too.
+> > 
+> > The attachment "dmesg-4" from the original email is with iommu parameters.
+> > The attachment "dmesg-5" from the original email is with no iommu parameters.
+> > Attaching here "dmesg-6" with the iommu explicitly set off like you said.
+> > 
+> > No difference, still broken. Although, with iommu off, there are less stack traces.
+> > 
+> > Could it be sysfs-related?
 > 
-> Update, also, the cases for resource-freeing for each algorithm type.
+> Bisect would probably be the best option to find the culprit commit.
+> There are couple of commits done for pciehp so reverting them one by one
+> may help as well:
 > 
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
->  drivers/crypto/caam/caamalg.c  | 16 ++++------------
->  drivers/crypto/caam/caamhash.c | 34 +++++++++++-----------------------
->  drivers/crypto/caam/caampkc.c  | 16 ++++++++--------
->  drivers/crypto/caam/caamrng.c  |  4 ++--
->  drivers/crypto/caam/jr.c       |  8 ++++----
->  drivers/crypto/caam/key_gen.c  |  2 +-
->  6 files changed, 30 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-> index 6e021692..21b6172 100644
-> --- a/drivers/crypto/caam/caamalg.c
-> +++ b/drivers/crypto/caam/caamalg.c
-> @@ -1417,9 +1417,7 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		aead_unmap(jrdev, edesc, req);
->  		kfree(edesc);
->  	}
-> @@ -1462,9 +1460,7 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
->  
->  	desc = edesc->hw_desc;
->  	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		aead_unmap(jrdev, edesc, req);
->  		kfree(edesc);
->  	}
-> @@ -1507,9 +1503,7 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
->  
->  	desc = edesc->hw_desc;
->  	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		aead_unmap(jrdev, edesc, req);
->  		kfree(edesc);
->  	}
-> @@ -1725,9 +1719,7 @@ static inline int skcipher_crypt(struct skcipher_request *req, bool encrypt)
->  	desc = edesc->hw_desc;
->  	ret = caam_jr_enqueue(jrdev, desc, skcipher_crypt_done, req);
->  
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		skcipher_unmap(jrdev, edesc, req);
->  		kfree(edesc);
->  	}
-> diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
-> index 5f9f16c..baf4ab1 100644
-> --- a/drivers/crypto/caam/caamhash.c
-> +++ b/drivers/crypto/caam/caamhash.c
-> @@ -422,7 +422,7 @@ static int hash_digest_key(struct caam_hash_ctx *ctx, u32 *keylen, u8 *key,
->  	init_completion(&result.completion);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, split_key_done, &result);
-> -	if (!ret) {
-> +	if (ret == -EINPROGRESS) {
->  		/* in progress */
->  		wait_for_completion(&result.completion);
->  		ret = result.err;
-> @@ -858,10 +858,8 @@ static int ahash_update_ctx(struct ahash_request *req)
->  				     desc_bytes(desc), 1);
->  
->  		ret = caam_jr_enqueue(jrdev, desc, ahash_done_bi, req);
-> -		if (ret)
-> +		if (ret != -EINPROGRESS)
->  			goto unmap_ctx;
-> -
-> -		ret = -EINPROGRESS;
->  	} else if (*next_buflen) {
->  		scatterwalk_map_and_copy(buf + *buflen, req->src, 0,
->  					 req->nbytes, 0);
-> @@ -936,10 +934,9 @@ static int ahash_final_ctx(struct ahash_request *req)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, ahash_done_ctx_src, req);
-> -	if (ret)
-> -		goto unmap_ctx;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
-> -	return -EINPROGRESS;
->   unmap_ctx:
->  	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
->  	kfree(edesc);
-> @@ -1013,10 +1010,9 @@ static int ahash_finup_ctx(struct ahash_request *req)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, ahash_done_ctx_src, req);
-> -	if (ret)
-> -		goto unmap_ctx;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
-> -	return -EINPROGRESS;
->   unmap_ctx:
->  	ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_BIDIRECTIONAL);
->  	kfree(edesc);
-> @@ -1086,9 +1082,7 @@ static int ahash_digest(struct ahash_request *req)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, ahash_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
->  		kfree(edesc);
->  	}
-> @@ -1138,9 +1132,7 @@ static int ahash_final_no_ctx(struct ahash_request *req)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, ahash_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
->  		kfree(edesc);
->  	}
-> @@ -1258,10 +1250,9 @@ static int ahash_update_no_ctx(struct ahash_request *req)
->  				     desc_bytes(desc), 1);
->  
->  		ret = caam_jr_enqueue(jrdev, desc, ahash_done_ctx_dst, req);
-> -		if (ret)
-> +		if (ret != -EINPROGRESS)
->  			goto unmap_ctx;
->  
-> -		ret = -EINPROGRESS;
->  		state->update = ahash_update_ctx;
->  		state->finup = ahash_finup_ctx;
->  		state->final = ahash_final_ctx;
-> @@ -1353,9 +1344,7 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
->  			     1);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, ahash_done, req);
-> -	if (!ret) {
-> -		ret = -EINPROGRESS;
-> -	} else {
-> +	if (ret != -EINPROGRESS) {
->  		ahash_unmap_ctx(jrdev, edesc, req, digestsize, DMA_FROM_DEVICE);
->  		kfree(edesc);
->  	}
-> @@ -1452,10 +1441,9 @@ static int ahash_update_first(struct ahash_request *req)
->  				     desc_bytes(desc), 1);
->  
->  		ret = caam_jr_enqueue(jrdev, desc, ahash_done_ctx_dst, req);
-> -		if (ret)
-> +		if (ret != -EINPROGRESS)
->  			goto unmap_ctx;
->  
-> -		ret = -EINPROGRESS;
->  		state->update = ahash_update_ctx;
->  		state->finup = ahash_finup_ctx;
->  		state->final = ahash_final_ctx;
-> diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
-> index ebf1677..7f7ea32 100644
-> --- a/drivers/crypto/caam/caampkc.c
-> +++ b/drivers/crypto/caam/caampkc.c
-> @@ -634,8 +634,8 @@ static int caam_rsa_enc(struct akcipher_request *req)
->  	init_rsa_pub_desc(edesc->hw_desc, &edesc->pdb.pub);
->  
->  	ret = caam_jr_enqueue(jrdev, edesc->hw_desc, rsa_pub_done, req);
-> -	if (!ret)
-> -		return -EINPROGRESS;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
->  	rsa_pub_unmap(jrdev, edesc, req);
->  
-> @@ -667,8 +667,8 @@ static int caam_rsa_dec_priv_f1(struct akcipher_request *req)
->  	init_rsa_priv_f1_desc(edesc->hw_desc, &edesc->pdb.priv_f1);
->  
->  	ret = caam_jr_enqueue(jrdev, edesc->hw_desc, rsa_priv_f_done, req);
-> -	if (!ret)
-> -		return -EINPROGRESS;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
->  	rsa_priv_f1_unmap(jrdev, edesc, req);
->  
-> @@ -700,8 +700,8 @@ static int caam_rsa_dec_priv_f2(struct akcipher_request *req)
->  	init_rsa_priv_f2_desc(edesc->hw_desc, &edesc->pdb.priv_f2);
->  
->  	ret = caam_jr_enqueue(jrdev, edesc->hw_desc, rsa_priv_f_done, req);
-> -	if (!ret)
-> -		return -EINPROGRESS;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
->  	rsa_priv_f2_unmap(jrdev, edesc, req);
->  
-> @@ -733,8 +733,8 @@ static int caam_rsa_dec_priv_f3(struct akcipher_request *req)
->  	init_rsa_priv_f3_desc(edesc->hw_desc, &edesc->pdb.priv_f3);
->  
->  	ret = caam_jr_enqueue(jrdev, edesc->hw_desc, rsa_priv_f_done, req);
-> -	if (!ret)
-> -		return -EINPROGRESS;
-> +	if (ret == -EINPROGRESS)
-> +		return ret;
->  
->  	rsa_priv_f3_unmap(jrdev, edesc, req);
->  
-> diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
-> index e8baaca..e3e4bf2 100644
-> --- a/drivers/crypto/caam/caamrng.c
-> +++ b/drivers/crypto/caam/caamrng.c
-> @@ -133,7 +133,7 @@ static inline int submit_job(struct caam_rng_ctx *ctx, int to_current)
->  	dev_dbg(jrdev, "submitting job %d\n", !(to_current ^ ctx->current_buf));
->  	init_completion(&bd->filled);
->  	err = caam_jr_enqueue(jrdev, desc, rng_done, ctx);
-> -	if (err)
-> +	if (err != EINPROGRESS)
+>   87d0f2a5536f PCI: pciehp: Prevent deadlock on disconnect
+>   75fcc0ce72e5 PCI: pciehp: Do not disable interrupt twice on suspend
+>   b94ec12dfaee PCI: pciehp: Refactor infinite loop in pcie_poll_cmd()
+>   157c1062fcd8 PCI: pciehp: Avoid returning prematurely from sysfs requests
+You are not going to believe this. The offending commit is in the SOUND 
+subsystem. I thought I had messed up the bisect when only sound commits 
+were showing near the end.
 
-Shouldn't this be -EINPROGRESS ?
+And yes, I double checked.
 
->  		complete(&bd->filled); /* don't wait on failed job*/
->  	else
->  		atomic_inc(&bd->empty); /* note if pending */
-> @@ -153,7 +153,7 @@ static int caam_read(struct hwrng *rng, void *data, size_t max, bool wait)
->  		if (atomic_read(&bd->empty) == BUF_EMPTY) {
->  			err = submit_job(ctx, 1);
->  			/* if can't submit job, can't even wait */
-> -			if (err)
-> +			if (err != EINPROGRESS)
+Reverted, compiled, tested that it started working.
+Reapplied, compiled, tested that it stopped working.
+Twice.
 
-And here the same?
+The following is the culprit responsible for the issues:
 
-Regards,
-Bastian
+commit 586bc4aab878efcf672536f0cdec3d04b6990c94
+Author: Alex Deucher <alexander.deucher@amd.com>
+Date:   Fri Nov 22 16:43:50 2019 -0500
 
->  				return 0;
->  		}
->  		/* no immediate data, so exit if not waiting */
-> diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-> index fc97cde..df2a050 100644
-> --- a/drivers/crypto/caam/jr.c
-> +++ b/drivers/crypto/caam/jr.c
-> @@ -324,8 +324,8 @@ void caam_jr_free(struct device *rdev)
->  EXPORT_SYMBOL(caam_jr_free);
->  
->  /**
-> - * caam_jr_enqueue() - Enqueue a job descriptor head. Returns 0 if OK,
-> - * -EBUSY if the queue is full, -EIO if it cannot map the caller's
-> + * caam_jr_enqueue() - Enqueue a job descriptor head. Returns -EINPROGRESS
-> + * if OK, -ENOSPC if the queue is full, -EIO if it cannot map the caller's
->   * descriptor.
->   * @dev:  device of the job ring to be used. This device should have
->   *        been assigned prior by caam_jr_register().
-> @@ -377,7 +377,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
->  	    CIRC_SPACE(head, tail, JOBR_DEPTH) <= 0) {
->  		spin_unlock_bh(&jrp->inplock);
->  		dma_unmap_single(dev, desc_dma, desc_size, DMA_TO_DEVICE);
-> -		return -EBUSY;
-> +		return -ENOSPC;
->  	}
->  
->  	head_entry = &jrp->entinfo[head];
-> @@ -414,7 +414,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
->  
->  	spin_unlock_bh(&jrp->inplock);
->  
-> -	return 0;
-> +	return -EINPROGRESS;
->  }
->  EXPORT_SYMBOL(caam_jr_enqueue);
->  
-> diff --git a/drivers/crypto/caam/key_gen.c b/drivers/crypto/caam/key_gen.c
-> index 5a851dd..b0e8a49 100644
-> --- a/drivers/crypto/caam/key_gen.c
-> +++ b/drivers/crypto/caam/key_gen.c
-> @@ -108,7 +108,7 @@ int gen_split_key(struct device *jrdev, u8 *key_out,
->  	init_completion(&result.completion);
->  
->  	ret = caam_jr_enqueue(jrdev, desc, split_key_done, &result);
-> -	if (!ret) {
-> +	if (ret == -EINPROGRESS) {
->  		/* in progress */
->  		wait_for_completion(&result.completion);
->  		ret = result.err;
-> 
+    ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD
 
+It is playing with PCI devices. Clearly they did not consider 
+hot-removal. I am guessing it is seeing the audio PCI func of the AMD 
+card in that Thunderbolt eGPU enclosure.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I will collect information, make a bugzilla report and contact the AMD 
+team. If anybody wants to be cc'd in then let me know. Sorry for 
+bothering you and Bjorn with something which actually has nothing 
+directly to do with the PCI subsystem or Thunderbolt.
+
+I strongly hope that the upcoming Intel Xe GPU driver allows for 
+surprise-removal in Linux without any crashing of kernel or userspace. 
+The amdgpu and nouveau drivers do not take to surprise removal kindly, 
+even without the above sound bug applying to AMD.
+
+Kind regards,
+Nicholas
