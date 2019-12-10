@@ -2,113 +2,114 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E674C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA35EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A912073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FD920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576011232;
+	bh=fkev4MRGf9Lhg8tjRG4U3dQfBAMe6/SLbFZByzfr46g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NGVMBjrs5t4tEtERUBIi21AB5fh0kBks5CpoIn+j3xMJY3+Bv5FIXPFj+07H2mxd5
+	 tQQyvqNrEKOkTf6Vowr4vuz/HXZ5VRwu8KUdwWnM6bJZQBpRi+qUQaAyioqSFz/hXz
+	 AHQ+WKeNw7QlUjZXK6bR1IOHC2Xz3nte3RrvQhws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfLJUwJ (ORCPT
+        id S1726901AbfLJUxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:52:09 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:41911 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLJUwI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:52:08 -0500
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mdva2-1i7Mwb1bSo-00b4PA for <linux-kernel@vger.kernel.org>; Tue, 10 Dec
- 2019 21:52:07 +0100
-Received: by mail-qt1-f181.google.com with SMTP id d5so4137026qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:52:07 -0800 (PST)
-X-Gm-Message-State: APjAAAWPqDqi+ERyVsWLR1DqU/752knclVNS7+nqczWfjx6fyrngY/00
-        l6Ej6uCh5lrkS7FXCqZX97fhokjqk7KojRgd5tA=
-X-Google-Smtp-Source: APXvYqx1uN5tm9eCOzoQBysKWKFpMTzZPxr5PqaW9bDfYB2yfC5l95PFbwxivepFESYFJ8F3qgkDRXUfr5anVcdWFA0=
-X-Received: by 2002:ac8:3a27:: with SMTP id w36mr31351077qte.204.1576011126328;
- Tue, 10 Dec 2019 12:52:06 -0800 (PST)
+        Tue, 10 Dec 2019 15:53:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfLJUxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 15:53:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29D62206EC;
+        Tue, 10 Dec 2019 20:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576011230;
+        bh=fkev4MRGf9Lhg8tjRG4U3dQfBAMe6/SLbFZByzfr46g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MJ+yXHaw9iREFbIOuodzq9CaRUiVqEoOvWrbIbVYlqase9BSf1E/o1d2VepJuxPi7
+         HpJGb0VaGyHQqtvI3TkQSv9hCyYi13p0TSkCuatWGyaC+Em5K+XQyZQTbrlDOSL+by
+         yWHyMPXWVUIXKnQdNnauCUuUp64VlKwmpHHt09r4=
+Date:   Tue, 10 Dec 2019 21:53:48 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org,
+        fschnitzlein@suse.de, Felix Schnizlein <fschnizlein@suse.com>,
+        Thomas Renninger <trenn@suse.com>
+Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
+Message-ID: <20191210205348.GA4080658@kroah.com>
+References: <20191206162421.15050-1-trenn@suse.de>
+ <20191206162421.15050-3-trenn@suse.de>
+ <20191206163656.GC86904@kroah.com>
+ <87sglroqix.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20191210195941.931745-1-arnd@arndb.de> <cded03ab-40fe-a904-7b1f-5b3623bb7af4@amd.com>
-In-Reply-To: <cded03ab-40fe-a904-7b1f-5b3623bb7af4@amd.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 10 Dec 2019 21:51:49 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3XHWPBOsCpFtdoT8F-pAMXaekDOX1rNjjMWKLN6WSK6w@mail.gmail.com>
-Message-ID: <CAK8P3a3XHWPBOsCpFtdoT8F-pAMXaekDOX1rNjjMWKLN6WSK6w@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: include linux/slab.h where needed
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Eric Yang <Eric.Yang2@amd.com>, Roman Li <Roman.Li@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Strauss <michael.strauss@amd.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:oljtm7MBh2EuGsqK1MIrX4qRTs1Z1e9HmMtnoaYHANv/WhV8rvN
- K+hUUimEFinqfuX1IStG/MVsMB1i84npQqXWb2ap9FiARR5myeB5Qdl/mPFC147TfsK4jpF
- Ty6JaHcePLAGWkIOyDEu9PDeUgO2Ym8jXEWgfI5qSqfs4YAQE7ieYq9UPGc0yIdjavUo4aC
- 4loBY2QeeEZyzG3pFWwoA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:szinTJ8XRQ8=:JC4e7kScSbrCX0Ai7I196b
- A/UFOnF1+vLwkCOfTtgLvrMKGDcEHZiaUqObl1GorkWek+lO8SWrQqL74YIXJlnX/ZdJh+BsD
- stiwjPZnrMrsqkEZftDfUrlw6w4SMMA+cv+yzUWNQVcZ9OmDGtQYQCaAPJw0J2rhmb/d1OpV2
- XQex49onnR/Eoh4G+R11gF+UoB8KnlS5nQz7jV2h1QrwGcp6HO1Gole2dx8QuYu3Hc4+lnoeN
- GJNRfxyzBU+ZSK8ymJ8nrDIUt5BErV/vKeKaA8/510/s/QrueeMadqY1GNasLs6pgE7UdeAcl
- 33QbgVPtRLcozDU1kw7APme/QoA/zlLvNum3nMyGRHYSRY1rsJiwlXEwGdCGHL7GsFXrr9Axq
- koE0XZSBelCqlVNJqRg3p0CYqu48++lSLMzrk3Z+MQLT8LtgWLz5iODvF4zmMKXmDRTs6S7gz
- Ble/2ZUo+uFinTvgWl6rR1Np3+1ZbB5Nq2TVt+1RsFfaufU7/JaQr0FQCt5q8C8dEIm0VAxKB
- 66hb3Z+Ei7ShhQ4E5fRTjwp2v3CB6xW7trssSdkUbPx2TTba1Wwa+utN54MJlFvCC4LU8+K1N
- qoHugotG+iGtV1yoSCVg1Zl0N1CnkBIIAxQh2BC56i6ge6ECfuhXjGfXTAoJyOsiT5/IRYTx7
- KmaekWcN5DGLXrJUp5jTnrvwn0idjtuz1YuuLVKdQuMmbMyOPaYehHqQsBkRqckT2o7Huup9V
- 8qb9QwvtJfol2zlsMFmlnzlDVKMiGUBmLklziUYizJ2ehj4N2VhD8XNYBpyjUJqmT2tG8qQhi
- VRLFDaeXxbajc0XpvutK7leawKgIXvPapgfFAhh4qxFRD4aHBUHulHtK9On3tjjPwABPRexuZ
- 6YK4bkDirsSkoxM3Xkkw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87sglroqix.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:30 PM Kazlauskas, Nicholas
-<nicholas.kazlauskas@amd.com> wrote:
->
-> On 2019-12-10 2:59 p.m., Arnd Bergmann wrote:
-> > Calling kzalloc() and related functions requires the
-> > linux/slab.h header to be included:
+On Tue, Dec 10, 2019 at 09:48:54PM +0100, Thomas Gleixner wrote:
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Fri, Dec 06, 2019 at 05:24:20PM +0100, Thomas Renninger wrote:
+> >> From: Felix Schnizlein <fschnizlein@suse.de>
+> >> ==> flags <==
+> >> fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm cpuid_fault invpcid_single pti ssbd ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt arat umip
 > >
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In function 'dcn21_ipp_create':
-> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:679:3: error: implicit declaration of function 'kzalloc'; did you mean 'd_alloc'? [-Werror=implicit-function-declaration]
-> >     kzalloc(sizeof(struct dcn10_ipp), GFP_KERNEL);
+> > One file with all of that?  We are going to run into problems
+> > eventually, that should be split up.
 > >
-> > A lot of other headers also miss a direct include in this file,
-> > but this is the only one that causes a problem for now.
+> > Just like bugs, that's going to just grow over time and eventually
+> > overflow PAGE_SIZE :(
 > >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> What version of the kernel are you building?
+> > Make this:
+> >   ├── flags
+> >   │   ├── fpu
+> >   │   ├── vme
+> > ...
+> >
+> > Much simpler to parse, right?
+> 
+> Well, I'm not really sure whether 100+ files are simpler to parse.
+> 
+> Aside of that I really don't see the value for 100+ files per CPU which
+> are just returning 1 or True or whatever as long as you are not
+> suggesting to provide real feature files which have 0/1 or True/False
+> content.
+> 
+> But I still don't get the whole thing. The only "argument" I've seen so
+> far is the 'proc moves to sys' mantra, but that does not make it any
+> better.
 
-This is v5.5-rc1, plus some local patches.
+That is not a valid mantra, as I tried to explain later in this thread.
 
-> We have:
->
-> #include <linux/slab.h>
->
-> in os_types.h which gets included as part of this file:
->
-> #include <dc.h> -> #include <dc_types.h> -> #include <os_types.h>
+I don't understand the need for this patchset either, all I was trying
+to do was to at least make it sane from a sysfs-point-of-view if people
+really wanted to do this type of thing.
 
-I don't see linux/slab.h in os_types.h. I now see that commit
-4fc4dca8320e ("drm/amd: drop use of drmp.h in os_types.h")
-was merged into linux-5.3, which may have caused this.
+> We won't get rid of /proc/cpuinfo for a very long time simply because
+> too much userspace uses it. Introducing a mess in /sys/ in parallel just
+> for following the mantra does not help much.
 
-I also don't see anything in os_types.h that needs linux/slab.h.
+Again, invalid mantra, not a valid reason :)
 
-    Arnd
+I think this is a patchset in search of a problem, which is why it was
+dropped all those years ago...
+
+thanks,
+
+greg k-h
