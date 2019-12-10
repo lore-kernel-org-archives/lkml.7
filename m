@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34BCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BABC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0DF206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387F420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013812;
-	bh=uWX06uUxFeX8zetLZ36TwHYzBpw/f58N2akuobGPiWI=;
+	s=default; t=1576013819;
+	bh=npsU3Tkq9ypAkx+NT03DyFG5s5xVAbtLqZD9rw+f7yg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNOVAyQDfjjpAaf5aUswAHIWJTht8zlzRmxJIW0lGoE6jRSMw6MfW+Uz+ZPpgUNPL
-	 4ErvkQW2+mfw7mGQhAbDoPWAev9m0JRYzSUcIqxMWJ9nhG1lm9uEPoMOQiIlFUR3WZ
-	 ptzG4g2Rw9hwfIyMW0ttdo/JKkbl35OpMzBEUFZc=
+	b=iFS1+I8IIJjkg9MbRIM9E2Ier3iOraYzYTVoWq0X6h853db0LjwRLbEEQiRjRIu2u
+	 0IJbiKLsUrk6A7WKp8pJs1fWPznXcp277yLLTFjCd5hcK2OHfs3+B57d8OKYNBMHqm
+	 VWaTJsD4U7Ap2PbdrCe0bWWWthZA6T7YeWVHqn7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfLJVgv (ORCPT
+        id S1730334AbfLJVfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:36:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730350AbfLJVfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:43 -0500
+        id S1729663AbfLJVfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C2024654;
-        Tue, 10 Dec 2019 21:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58AFD2465C;
+        Tue, 10 Dec 2019 21:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013743;
-        bh=uWX06uUxFeX8zetLZ36TwHYzBpw/f58N2akuobGPiWI=;
+        s=default; t=1576013733;
+        bh=npsU3Tkq9ypAkx+NT03DyFG5s5xVAbtLqZD9rw+f7yg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZV2l75WTyasJprFKBs0H15uNO24QfcROR0aSClo8zIp6HcqXSqTqwX4PXQ4MQLqNY
-         gQgyW+EeGEWEaJgnqPvGJF0koaz1EGJie7lGrSqPPl051DPNCkdvnNVZBK9zmKUNae
-         zvzIJ8sroe1TRUvQic1l/+8Wt1OmQmsXzMWY9eBU=
+        b=xpSGs1JTn11/EcJ8fczwXl92yrCq+ibPC0kTA7glVtZKUHQfpSY9yGs1mlPMWGNq2
+         UiOf6kXsEIcyruL1UIngT/rj9FqvJse2nqSPrHgSVmcaZ/Ed8sgG08By4aB+TdES5l
+         eU7Cv5TdEa5tjCMgw0OOwS9ATkYoKYTv927t/3mw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 165/177] fbtft: Make sure string is NULL terminated
-Date:   Tue, 10 Dec 2019 16:32:09 -0500
-Message-Id: <20191210213221.11921-165-sashal@kernel.org>
+Cc:     Omar Sandoval <osandov@fb.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 157/177] btrfs: don't prematurely free work in run_ordered_work()
+Date:   Tue, 10 Dec 2019 16:32:01 -0500
+Message-Id: <20191210213221.11921-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,41 +60,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit 21f585480deb4bcf0d92b08879c35d066dfee030 ]
+[ Upstream commit c495dcd6fbe1dce51811a76bb85b4675f6494938 ]
 
-New GCC warns about inappropriate use of strncpy():
+We hit the following very strange deadlock on a system with Btrfs on a
+loop device backed by another Btrfs filesystem:
 
-drivers/staging/fbtft/fbtft-core.c: In function ‘fbtft_framebuffer_alloc’:
-drivers/staging/fbtft/fbtft-core.c:665:2: warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
-  665 |  strncpy(info->fix.id, dev->driver->name, 16);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. The top (loop device) filesystem queues an async_cow work item from
+   cow_file_range_async(). We'll call this work X.
+2. Worker thread A starts work X (normal_work_helper()).
+3. Worker thread A executes the ordered work for the top filesystem
+   (run_ordered_work()).
+4. Worker thread A finishes the ordered work for work X and frees X
+   (work->ordered_free()).
+5. Worker thread A executes another ordered work and gets blocked on I/O
+   to the bottom filesystem (still in run_ordered_work()).
+6. Meanwhile, the bottom filesystem allocates and queues an async_cow
+   work item which happens to be the recently-freed X.
+7. The workqueue code sees that X is already being executed by worker
+   thread A, so it schedules X to be executed _after_ worker thread A
+   finishes (see the find_worker_executing_work() call in
+   process_one_work()).
 
-Later on the copy is being used with the assumption to be NULL terminated.
-Make sure string is NULL terminated by switching to snprintf().
+Now, the top filesystem is waiting for I/O on the bottom filesystem, but
+the bottom filesystem is waiting for the top filesystem to finish, so we
+deadlock.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20191120095716.26628-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This happens because we are breaking the workqueue assumption that a
+work item cannot be recycled while it still depends on other work. Fix
+it by waiting to free the work item until we are done with all of the
+related ordered work.
+
+P.S.:
+
+One might ask why the workqueue code doesn't try to detect a recycled
+work item. It actually does try by checking whether the work item has
+the same work function (find_worker_executing_work()), but in our case
+the function is the same. This is the only key that the workqueue code
+has available to compare, short of adding an additional, layer-violating
+"custom key". Considering that we're the only ones that have ever hit
+this, we should just play by the rules.
+
+Unfortunately, we haven't been able to create a minimal reproducer other
+than our full container setup using a compress-force=zstd filesystem on
+top of another compress-force=zstd filesystem.
+
+Suggested-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fbtft-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/async-thread.c | 56 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 44 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 16fcf633e60f8..3fe4738720eab 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -771,7 +771,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	fbdefio->deferred_io =     fbtft_deferred_io;
- 	fb_deferred_io_init(info);
+diff --git a/fs/btrfs/async-thread.c b/fs/btrfs/async-thread.c
+index d522494698fa4..02e4e903dfe9f 100644
+--- a/fs/btrfs/async-thread.c
++++ b/fs/btrfs/async-thread.c
+@@ -252,16 +252,17 @@ static inline void thresh_exec_hook(struct __btrfs_workqueue *wq)
+ 	}
+ }
  
--	strncpy(info->fix.id, dev->driver->name, 16);
-+	snprintf(info->fix.id, sizeof(info->fix.id), "%s", dev->driver->name);
- 	info->fix.type =           FB_TYPE_PACKED_PIXELS;
- 	info->fix.visual =         FB_VISUAL_TRUECOLOR;
- 	info->fix.xpanstep =	   0;
+-static void run_ordered_work(struct __btrfs_workqueue *wq)
++static void run_ordered_work(struct __btrfs_workqueue *wq,
++			     struct btrfs_work *self)
+ {
+ 	struct list_head *list = &wq->ordered_list;
+ 	struct btrfs_work *work;
+ 	spinlock_t *lock = &wq->list_lock;
+ 	unsigned long flags;
++	void *wtag;
++	bool free_self = false;
+ 
+ 	while (1) {
+-		void *wtag;
+-
+ 		spin_lock_irqsave(lock, flags);
+ 		if (list_empty(list))
+ 			break;
+@@ -287,16 +288,47 @@ static void run_ordered_work(struct __btrfs_workqueue *wq)
+ 		list_del(&work->ordered_list);
+ 		spin_unlock_irqrestore(lock, flags);
+ 
+-		/*
+-		 * We don't want to call the ordered free functions with the
+-		 * lock held though. Save the work as tag for the trace event,
+-		 * because the callback could free the structure.
+-		 */
+-		wtag = work;
+-		work->ordered_free(work);
+-		trace_btrfs_all_work_done(wq->fs_info, wtag);
++		if (work == self) {
++			/*
++			 * This is the work item that the worker is currently
++			 * executing.
++			 *
++			 * The kernel workqueue code guarantees non-reentrancy
++			 * of work items. I.e., if a work item with the same
++			 * address and work function is queued twice, the second
++			 * execution is blocked until the first one finishes. A
++			 * work item may be freed and recycled with the same
++			 * work function; the workqueue code assumes that the
++			 * original work item cannot depend on the recycled work
++			 * item in that case (see find_worker_executing_work()).
++			 *
++			 * Note that the work of one Btrfs filesystem may depend
++			 * on the work of another Btrfs filesystem via, e.g., a
++			 * loop device. Therefore, we must not allow the current
++			 * work item to be recycled until we are really done,
++			 * otherwise we break the above assumption and can
++			 * deadlock.
++			 */
++			free_self = true;
++		} else {
++			/*
++			 * We don't want to call the ordered free functions with
++			 * the lock held though. Save the work as tag for the
++			 * trace event, because the callback could free the
++			 * structure.
++			 */
++			wtag = work;
++			work->ordered_free(work);
++			trace_btrfs_all_work_done(wq->fs_info, wtag);
++		}
+ 	}
+ 	spin_unlock_irqrestore(lock, flags);
++
++	if (free_self) {
++		wtag = self;
++		self->ordered_free(self);
++		trace_btrfs_all_work_done(wq->fs_info, wtag);
++	}
+ }
+ 
+ static void normal_work_helper(struct btrfs_work *work)
+@@ -324,7 +356,7 @@ static void normal_work_helper(struct btrfs_work *work)
+ 	work->func(work);
+ 	if (need_order) {
+ 		set_bit(WORK_DONE_BIT, &work->flags);
+-		run_ordered_work(wq);
++		run_ordered_work(wq, work);
+ 	}
+ 	if (!need_order)
+ 		trace_btrfs_all_work_done(wq->fs_info, wtag);
 -- 
 2.20.1
 
