@@ -2,121 +2,97 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731ABC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EFFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4FB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E800720836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017769;
+	bh=liTrcPA/gmUVmqbPhhMcuFvRir8+iX6pr/GE8YldxqQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZXNawT/VP3t7P3XZUTNNiuuyU+plcNoIjydTkkaITzUKSLK5KfVxsaTsVhbsqScIJ
+	 8GZftmQK3uWzaztSVPLFuvNjyc3EuYQGDbqhBnZs/E3pb9fcZlalckk2yRGZccx74q
+	 4e5ikYuJ01tkRX7iIUxbU+uYdFZSnFg9X1o3WDMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbfLJWml (ORCPT
+        id S1728281AbfLJWbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:42:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729511AbfLJWmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:42:39 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbZh9004984
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:42:38 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wtbt187c6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:42:38 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 10 Dec 2019 22:42:36 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 22:42:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMgVBZ47382822
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 22:42:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76564A4069;
-        Tue, 10 Dec 2019 22:42:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49ECBA4068;
-        Tue, 10 Dec 2019 22:42:30 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.214.111])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Dec 2019 22:42:30 +0000 (GMT)
-Subject: Re: [PATCH v10 1/6] IMA: Check IMA policy flag
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Tue, 10 Dec 2019 17:42:29 -0500
-In-Reply-To: <20191204224131.3384-2-nramas@linux.microsoft.com>
-References: <20191204224131.3384-1-nramas@linux.microsoft.com>
-         <20191204224131.3384-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 10 Dec 2019 17:31:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728220AbfLJWbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:17 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2C12073D;
+        Tue, 10 Dec 2019 22:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017076;
+        bh=liTrcPA/gmUVmqbPhhMcuFvRir8+iX6pr/GE8YldxqQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0HTML7Qqye+wqI4KUobwAJHIBVX9OU8mpWXslwZLzTZSBVaU+qKtcgBUzfg5uKaRf
+         WpdA49VwO6qVqaLewLA2m7R9yVZbrADZ9l1PkMCK6VoNWC+Jmnhg/rJzg1sfOKR/Rm
+         UGemYoqHZnLaNz3MNdNlC3FU9coZOOPKohCeXiYY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/91] iio: adc: max1027: Reset the device at probe time
+Date:   Tue, 10 Dec 2019 17:29:38 -0500
+Message-Id: <20191210223035.14270-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121022-0028-0000-0000-000003C757F1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121022-0029-0000-0000-0000248A899B
-Message-Id: <1576017749.4579.40.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 impostorscore=0 clxscore=1015 adultscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
-> Return immediately from process_buffer_measurement()
-> if the IMA policy flag is set to zero. Not doing this
-> can result in kernel panic when process_buffer_measurement()
-> is called before IMA is initialized (for instance, when
-> the IMA hook is called when a key is added to
-> the .builtin_trusted_keys keyring).
-> 
-> This change adds the check in process_buffer_measurement()
-> to return immediately if ima_policy_flag is set to zero.
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Patch descriptions aren't suppose to be written as pseudo code.  Start
-with the current status and problem description.
+[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
 
-For example, "process_buffer_measurement() may be called prior to IMA being initialized, which would result in a kernel panic.  This patch ..."
+All the registers are configured by the driver, let's reset the chip
+at probe time, avoiding any conflict with a possible earlier
+configuration.
 
-Mimi
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/adc/max1027.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_main.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index d7e987baf127..9b35db2fc777 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -655,6 +655,9 @@ void process_buffer_measurement(const void *buf, int size,
->  	int action = 0;
->  	u32 secid;
->  
-> +	if (!ima_policy_flag)
-> +		return;
-> +
->  	/*
->  	 * Both LSM hooks and auxilary based buffer measurements are
->  	 * based on policy.  To avoid code duplication, differentiate
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 712fbd2b1f162..ec3f7bc70b75e 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -471,6 +471,14 @@ static int max1027_probe(struct spi_device *spi)
+ 		goto fail_dev_register;
+ 	}
+ 
++	/* Internal reset */
++	st->reg = MAX1027_RST_REG;
++	ret = spi_write(st->spi, &st->reg, 1);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
++		return ret;
++	}
++
+ 	/* Disable averaging */
+ 	st->reg = MAX1027_AVG_REG;
+ 	ret = spi_write(st->spi, &st->reg, 1);
+-- 
+2.20.1
 
