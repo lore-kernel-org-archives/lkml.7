@@ -2,94 +2,105 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A909C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B57C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF4920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:27:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kqjOHnsT";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IC44f+FS"
+	by mail.kernel.org (Postfix) with ESMTP id C3F1A21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017039;
+	bh=Iv9R8Ul4w25f2mlnMFnuSz4NUF3fG7WfUuLMlnkLd/E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uBDkSPjwa+yeYSDr+fFdInULM7idMfUNES4XHrJBSzskxkcrpsaD/PDYAiA7NuYnv
+	 eKx8qnbUJfH9KW+dk3W4QFRRv+T0o+YVwO9+MB1KcqCV1/W4C4b+If935eJSBz62aN
+	 /w7SUvWigFhal/r5IAt+EOwTUnTjEZrkKsKWZyFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLJW10 (ORCPT
+        id S1726835AbfLJWaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:27:26 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:60998
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbfLJW1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:27:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=kqjOHnsTX2ImT7/4FP7DdoMUB5nfkElAn5lfjIGOr1BUXTNLbnOGdXR2SQbqbily
-        +Jqr/eaEeeVBfMB3Ayoq5W7hM6swlmE+JVTpDKgSxbOit6qoCcR62rzwM1tpKBq7ueT
-        0LiLyX53+lIJMROVszvtN46WIVAKPW7knAdLRV0I=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=IC44f+FS9xUHKxAV0bz6aLrPNMNm3SPR84JAo62z10KRmD3MDNydi2Cvu7H8jF7d
-        CWZHQe8bgGVzVKiT4EYX2vgnzfNHsE4HFeqkQE7j7cOnBXqcptBunlwsGNTOIlJ0nvH
-        LfoMSpM9b+yxd4PWBHzMThiyr+seyepHFOU993LA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8DA2C2BB50
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 10 Dec 2019 22:27:24 +0000
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
-Message-ID: <0101016ef1ec96ab-5815fb77-649a-4783-95ca-cc32d7161d47-000000@us-west-2.amazonses.com>
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
- <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+        Tue, 10 Dec 2019 17:30:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfLJWai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB53206EC;
+        Tue, 10 Dec 2019 22:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017037;
+        bh=Iv9R8Ul4w25f2mlnMFnuSz4NUF3fG7WfUuLMlnkLd/E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O0eQnqm/LIxDxBZqWyJi2r1KSduVHnx+8Zti3ddS08q3HyYibVQQ+0n6EiDrBjIUE
+         LrtUF5s1V/Cv0hOIDW39KtG3lMhoPEo970KlX/xlvvuhp22X7rDXFTWpjVfIDsDYmu
+         wp3QLQNYJeMOqpGnsfXGJevY0V0dmRxGQ0tqVZu8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/91] drm: mst: Fix query_payload ack reply struct
+Date:   Tue, 10 Dec 2019 17:29:05 -0500
+Message-Id: <20191210223035.14270-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-SES-Outgoing: 2019.12.10-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
->Specify wakeup parent irqchip for sc7180 TLMM.
->
->Cc: devicetree@vger.kernel.org
->Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+From: Sean Paul <seanpaul@chromium.org>
 
->---
-> arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
-> 1 file changed, 1 insertion(+)
->
->diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->index 69d5e2c..9040eee 100644
->--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->@@ -321,6 +321,7 @@
-> 			interrupt-controller;
-> 			#interrupt-cells = <2>;
-> 			gpio-ranges = <&tlmm 0 0 120>;
->+			wakeup-parent = <&pdc>;
->
-> 			qup_uart2_default: qup-uart2-default {
-> 				pinmux {
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
+
+Spec says[1] Allocated_PBN is 16 bits
+
+[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Todd Previte <tprevite@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/drm/drm_dp_mst_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index 0032076705970..c0542de64690a 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -312,7 +312,7 @@ struct drm_dp_resource_status_notify {
+ 
+ struct drm_dp_query_payload_ack_reply {
+ 	u8 port_number;
+-	u8 allocated_pbn;
++	u16 allocated_pbn;
+ };
+ 
+ struct drm_dp_sideband_msg_req_body {
+-- 
+2.20.1
+
