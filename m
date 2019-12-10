@@ -2,139 +2,148 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFAFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F24C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA6720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BB9205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UIc0pMNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfLJEfJ (ORCPT
+        id S1726874AbfLJElB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:35:09 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:38963 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfLJEfI (ORCPT
+        Mon, 9 Dec 2019 23:41:01 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:41799 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfLJElB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:35:08 -0500
-Received: by mail-io1-f70.google.com with SMTP id u13so12366956iol.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 20:35:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ojUsEZmdHCxS3AxxhdmlegdxZox/znL15KjV4PQzpWY=;
-        b=qZU/9qsS+1NDjxVF4YKjQHEUH7iMvG2l8XelaIP0IT2IiH1St/5Hw4yYLtl+pBHUpA
-         Pkm5xVPBw3NwedHdt2owxz0MxvWSgqZ78x3aUp4lgyPzouPyZtj5v6nELfSsOz3ExG9F
-         c2FP/ZzwcUV4ZDgiG90644nxxAYW2j+Uj8GSibFFsFbYNCD+meUEBN3ofl+nPfaL+aTi
-         wK+esiyxdRHKzVx11vdlme4C7JmAL/v6/oOBNRCrfGBjm0cOqD/NOfSx+JXfWA46Rpqx
-         R+1YNEu9G+P9CWISIRcWbpQBy9SLwjpMzphPuV3ejuABjf11uwuYP1lxATSKEDfIxcN9
-         ZEqw==
-X-Gm-Message-State: APjAAAUfspquVo+P9khr+PVcfB8lF1AzVebprnpkw/QQLsTMyghb2HIf
-        V3Kgmak3HPyv3qGh1ieXUnOONo5hsduY1v7Vsj9CesLXXfhn
-X-Google-Smtp-Source: APXvYqxtY4ucMI2e+tz8tCQDhxmqZLWTzAv+U0BPSTC6krA/zKqyEzVTXXPPyX9XbROjO707XOsxABLM7n78xjcpZIous7+eq2US
+        Mon, 9 Dec 2019 23:41:01 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191210044057epoutp022197a69eb2a315f73bbd087b719e5273~e6MYcLU4V0190601906epoutp021
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:40:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191210044057epoutp022197a69eb2a315f73bbd087b719e5273~e6MYcLU4V0190601906epoutp021
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575952857;
+        bh=0aHgv6I5n6zloYGGXpmUFbpr1AC6keJ830N7MzWtD3k=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=UIc0pMNn/c04HQj81dkyoHw0KiJGGGU916hHaeNLMSH43iqQV7vQr1yRRCKBgAH+E
+         ZuRWH1E+hMbBF0Dm4nxwB9+U4rJ2zRlbmoWIgm6K9hHaSW/v1iVviO0/tjXTpsLF5z
+         LsrVu76U7uUSS64HgqXUvIAZ4rr87C2eCSznKArc=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191210044056epcas1p469d65f6853c497793675e3e118eb9824~e6MX6O_ng2442824428epcas1p4P;
+        Tue, 10 Dec 2019 04:40:56 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47X6nf3f5vzMqYkY; Tue, 10 Dec
+        2019 04:40:54 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.F0.48019.FC12FED5; Tue, 10 Dec 2019 13:40:47 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191210044046epcas1p3e9343cc918be7dd39f49592cf1047e1c~e6MOp_BNz1727817278epcas1p3I;
+        Tue, 10 Dec 2019 04:40:46 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191210044046epsmtrp282f32f7a7949189d4cbd74e06265cdb2~e6MOpEIsU0529105291epsmtrp2_;
+        Tue, 10 Dec 2019 04:40:46 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-fe-5def21cfdb65
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BB.1A.06569.EC12FED5; Tue, 10 Dec 2019 13:40:46 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191210044046epsmtip14192116ffeb1cff8bdaae28f419c7ab8~e6MOiKLXs1173711737epsmtip1B;
+        Tue, 10 Dec 2019 04:40:46 +0000 (GMT)
+Subject: Re: [PATCH 01/10] extcon: arizona: Correct clean up if
+ arizona_identify_headphone fails
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     myungjoo.ham@samsung.com, patches@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <c1db1ef9-91e7-0475-8c19-86fd8102cd17@samsung.com>
+Date:   Tue, 10 Dec 2019 13:47:12 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:9f9c:: with SMTP id z28mr32065504ilk.239.1575952507966;
- Mon, 09 Dec 2019 20:35:07 -0800 (PST)
-Date:   Mon, 09 Dec 2019 20:35:07 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006b9e8d059952095e@google.com>
-Subject: KASAN: global-out-of-bounds Read in fbcon_get_font
-From:   syzbot <syzbot+29d4ed7f3bdedf2aa2fd@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        dri-devel@lists.freedesktop.org, ghalat@redhat.com,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191209110916.29524-1-ckeepax@opensource.cirrus.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphk+LIzCtJLcpLzFFi42LZdlhTT/e84vtYg1Wt0hZXWjcxWlzeNYfN
+        4nbjCjaLz+/3szqweEyf85/Ro2/LKkaPz5vkApijsm0yUhNTUosUUvOS81My89JtlbyD453j
+        Tc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgLYpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yV
+        UgtScgosC/SKE3OLS/PS9ZLzc60MDQyMTIEKE7IzOs6+ZC34z17xoX0mWwPjNbYuRk4OCQET
+        iXm3jzJ3MXJxCAnsYJToaJnKBuF8YpR4f+g2lPONUWLbocmMMC1L+v5DtexllPhy6TYLhPOe
+        UeLM6vvMIFXCAkkSb59cALNFBIwkPh6/xQRiMwtESyz4vAxsOZuAlsT+FzfAbH4BRYmrPx6D
+        beAVsJP4390AVM/BwSKgKrFyuwdIWFQgTOLkthaoEkGJkzOfsIDYnALOEmue72KBGC8ucevJ
+        fKhV8hLb384BO1RC4AibxNSJ06E+cJG40nKAGcIWlnh1fAs7hC0l8fndXmjAVEusPHmEDaK5
+        g1Fiy/4LrBAJY4n9SyeDHccsoCmxfpc+RFhRYufvuYwQi/kk3n3tYQUpkRDglehoE4IoUZa4
+        /OAuE4QtKbG4vZNtAqPSLCTvzELywiwkL8xCWLaAkWUVo1hqQXFuemqxYYEJcmxvYgSnRC2L
+        HYx7zvkcYhTgYFTi4V3g8C5WiDWxrLgy9xCjBAezkgjv8TagEG9KYmVValF+fFFpTmrxIUZT
+        YGBPZJYSTc4Hpuu8knhDUyNjY2MLE0MzU0NDJXFejh8XY4UE0hNLUrNTUwtSi2D6mDg4pRoY
+        o367y20pkFNg8sm4uLTKMXLzpF4Z8Sd3GUT6L07M3pb52jvtt+K7j5MWFT79MWHP9UVBRuZ3
+        Aj5/N/PY8UPkWKVmZKLLo97FlRka4mKbryyXr5F+suDH+/WZkjG5UisPbty67xTDhOap6ScC
+        l/rotD9a3yN5iHWC1i5zm2mFT++a7LywSiZeRomlOCPRUIu5qDgRAMm2VvSfAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsWy7bCSnO45xfexBu++qVtcad3EaHF51xw2
+        i9uNK9gsPr/fz+rA4jF9zn9Gj74tqxg9Pm+SC2CO4rJJSc3JLEst0rdL4MroOPuSteA/e8WH
+        9plsDYzX2LoYOTkkBEwklvT9Z+5i5OIQEtjNKHHjykNGiISkxLSLR4ESHEC2sMThw8UQNW8Z
+        JWYsaWUBqREWSJJ4++QCM4gtImAk8fH4LSYQm1kgWuJS/1cWiIZpjBIdLyaDFbEJaEnsf3ED
+        bDO/gKLE1R+PwZbxCthJ/O9uYAJZxiKgKrFyuwdIWFQgTGLnksdMECWCEidnPgHbyyngLLHm
+        +S4WiF3qEn/mXWKGsMUlbj2ZD3WDvMT2t3OYJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJyb
+        nltsWGCUl1quV5yYW1yal66XnJ+7iREcG1paOxhPnIg/xCjAwajEw+th9y5WiDWxrLgy9xCj
+        BAezkgjv8TagEG9KYmVValF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6p
+        BsbkoHf6l8relyXL8r3XDNpQ1dDSrasl0rWAU+RBjJV3Rfjfp6w/qubrb5+zvZT9QfcS3sAr
+        ibahzjxnouNNNCLf35HJPrPGQqpRN0JqzcGmy032sksiJplcsf/PueHM7L+Ka+4udr9/iStT
+        Rin9mYFQZb23hrmGUMnKQ0ffz/v1Sv+z+MLN65VYijMSDbWYi4oTAXUSQY6JAgAA
+X-CMS-MailID: 20191210044046epcas1p3e9343cc918be7dd39f49592cf1047e1c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209110925epcas4p3731ec3380f882027824b188439aa3bc9
+References: <CGME20191209110925epcas4p3731ec3380f882027824b188439aa3bc9@epcas4p3.samsung.com>
+        <20191209110916.29524-1-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 12/9/19 8:09 PM, Charles Keepax wrote:
+> In the error path of arizona_identify_headphone, neither the clamp nor
+> the PM runtime are cleaned up. Add calls to clean up both of these.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/extcon/extcon-arizona.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+> index e970134c95fab..79e9a24101823 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -724,6 +724,9 @@ static void arizona_identify_headphone(struct arizona_extcon_info *info)
+>  	return;
+>  
+>  err:
+> +	arizona_extcon_hp_clamp(info, false);
+> +	pm_runtime_put_autosuspend(info->dev);
+> +
+>  	regmap_update_bits(arizona->regmap, ARIZONA_ACCESSORY_DETECT_MODE_1,
+>  			   ARIZONA_ACCDET_MODE_MASK, ARIZONA_ACCDET_MODE_MIC);
+>  
+> 
 
-syzbot found the following crash on:
+Applied these patches in this series. Thanks.
 
-HEAD commit:    6cf8298d Add linux-next specific files for 20191209
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=168bbb7ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=682fc0ce6c86e3c7
-dashboard link: https://syzkaller.appspot.com/bug?extid=29d4ed7f3bdedf2aa2fd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fff061e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+29d4ed7f3bdedf2aa2fd@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: global-out-of-bounds in memcpy include/linux/string.h:425  
-[inline]
-BUG: KASAN: global-out-of-bounds in fbcon_get_font+0x2b2/0x5e0  
-drivers/video/fbdev/core/fbcon.c:2465
-Read of size 32 at addr ffffffff88729d80 by task syz-executor.3/9100
-
-CPU: 1 PID: 9100 Comm: syz-executor.3 Not tainted  
-5.5.0-rc1-next-20191209-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  memcpy+0x24/0x50 mm/kasan/common.c:125
-  memcpy include/linux/string.h:425 [inline]
-  fbcon_get_font+0x2b2/0x5e0 drivers/video/fbdev/core/fbcon.c:2465
-  con_font_get drivers/tty/vt/vt.c:4446 [inline]
-  con_font_op+0x20b/0x1270 drivers/tty/vt/vt.c:4605
-  vt_ioctl+0xd2e/0x26d0 drivers/tty/vt/vt_ioctl.c:913
-  tty_ioctl+0xa37/0x14f0 drivers/tty/tty_io.c:2660
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a6f9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f30314dcc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a6f9
-RDX: 0000000000713000 RSI: 0000000000004b60 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f30314dd6d4
-R13: 00000000004c6d87 R14: 00000000004dd3e0 R15: 00000000ffffffff
-
-The buggy address belongs to the variable:
-  fontdata_8x16+0x1000/0x1120
-
-Memory state around the buggy address:
-  ffffffff88729c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffffffff88729d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffffffff88729d80: fa fa fa fa 06 fa fa fa fa fa fa fa 05 fa fa fa
-                    ^
-  ffffffff88729e00: fa fa fa fa 06 fa fa fa fa fa fa fa 00 00 03 fa
-  ffffffff88729e80: fa fa fa fa 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
