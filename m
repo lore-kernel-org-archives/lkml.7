@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F7BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE6AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 021362073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F2120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014036;
-	bh=EvHTOFS/Wi1mdk5fejw4Bt9iQW097+kytCxSoHc3ov0=;
+	s=default; t=1576014045;
+	bh=RTb71w6JQiLTCar9gcPlOjum+qxLqkUUOFM4ZXT1ok8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzbGCCGJ5AEj9h7vWwhTiFxtks4xhNnYR2oB1POGoX5ituz64bAF9IdsxmLkKH13j
-	 wkTIIOczDWjQwOK877mr2lSzC09iHytBNhonynht68bMtBJq69PfilJYmA9j2No2zf
-	 fQWrxLTPG9+6ihfStDKZrryWyLJmOO7f3TGLq9F8=
+	b=khtzcTiF3yG7QAnlEKDYLBaM+quRow1fZt+7BMnCehX4KTNS76Ic9i3RYgCK6Ywsr
+	 c6MMk6bCz/hgpniGOnnajvkeFoDz4Iaa4m8vmUIt6ZCpZkb5U+oiAgswMQB5sLqM4z
+	 jCEFynq7GIAibXYx3V1kRZriku+0Pd4rdTRm7eu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfLJVke (ORCPT
+        id S1730220AbfLJVkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:40:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39668 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:40:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbfLJVeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:31 -0500
+        id S1729614AbfLJVe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A28EE20836;
-        Tue, 10 Dec 2019 21:34:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED962073B;
+        Tue, 10 Dec 2019 21:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013671;
-        bh=EvHTOFS/Wi1mdk5fejw4Bt9iQW097+kytCxSoHc3ov0=;
+        s=default; t=1576013668;
+        bh=RTb71w6JQiLTCar9gcPlOjum+qxLqkUUOFM4ZXT1ok8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/QaVf0EtOAYC691WD4G25xGs+fC0bCtutTMUrg5d1XDkLnbkeXOVUcivo8QyVJOh
-         pwOAGTSq7WKdVmCkG5WWBmrJ3D00Kfsl7sSsp3Dn8U74i03oDsacnb4pQjUGiKAre+
-         tABN+BgsabP9/vxfNp3ar/REbAQUHGCoqIc8/Mvw=
+        b=so1xB12AvBt9Ay5yUsAE/1AXTQ6LNq4mehVf2SSx561WJ1J9iHEyyC2a5qhMANrR1
+         3ZhegeAQW7C3fOe6zJG1dK6MmBJz7lgkfZ9UqHenz4O+VvVP/hlsACchGOlaRVfWe8
+         96GyOW+s8nKLJUywmXQ9O6okr07rFj7ma8Pv+Gts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 108/177] perf probe: Fix to find range-only function instance
-Date:   Tue, 10 Dec 2019 16:31:12 -0500
-Message-Id: <20191210213221.11921-108-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 105/177] spi: img-spfi: fix potential double release
+Date:   Tue, 10 Dec 2019 16:31:09 -0500
+Message-Id: <20191210213221.11921-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,48 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
+[ Upstream commit e9a8ba9769a0e354341bc6cc01b98aadcea1dfe9 ]
 
-Fix die_is_func_instance() to find range-only function instance.
+The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
+are released. As a result, they will be released again, either on the
+error handling branch in the same function or in the corresponding
+remove function, i.e. img_spfi_remove(). This patch fixes the bug by
+setting the two members to NULL.
 
-In some case, a function instance can be made without any low PC or
-entry PC, but only with address ranges by optimization.  (e.g. cold text
-partially in "text.unlikely" section) To find such function instance, we
-have to check the range attribute too.
-
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/1573007769-20131-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/spi-img-spfi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 7eb7de5aee44b..5bbb87f63ecba 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -331,10 +331,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
-+	Dwarf_Attribute attr_mem;
- 
- 	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
-+	return !dwarf_func_inline(dw_die) &&
-+	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
- }
-+
- /**
-  * die_get_data_member_location - Get the data-member offset
-  * @mb_die: a DIE of a member of a data structure
+diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
+index e6eb979f1b8a0..e4b31d6e6e33e 100644
+--- a/drivers/spi/spi-img-spfi.c
++++ b/drivers/spi/spi-img-spfi.c
+@@ -676,6 +676,8 @@ static int img_spfi_probe(struct platform_device *pdev)
+ 			dma_release_channel(spfi->tx_ch);
+ 		if (spfi->rx_ch)
+ 			dma_release_channel(spfi->rx_ch);
++		spfi->tx_ch = NULL;
++		spfi->rx_ch = NULL;
+ 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
+ 	} else {
+ 		master->dma_tx = spfi->tx_ch;
 -- 
 2.20.1
 
