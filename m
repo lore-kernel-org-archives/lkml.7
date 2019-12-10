@@ -2,103 +2,150 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B1FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72103C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB573207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575977897;
-	bh=jnqG6qrJA03sFgDKpKwGlZp+vI8IzN9r5vJ9YDbx3DQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaZlRPrpmXvcbPbm3pEzqOv1jW2HKL2u61n5fNfgAFtDR4ymvX0aBrvfzr5QVPa2D
-	 NuoodRB+qi/6dlgICE80/+k2quyBiO0kPpygWR4FRp+gYSvzZbXQiAuSP3Me4BYSZX
-	 3UJPq+58SCwdyXEBVddi4B1Hw4qtLfC829LGxBg4=
+	by mail.kernel.org (Postfix) with ESMTP id 4563F20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DYqzdHVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfLJLiQ (ORCPT
+        id S1727599AbfLJLiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:38:16 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39907 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbfLJLhy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:37:54 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so2112276lfb.6;
-        Tue, 10 Dec 2019 03:37:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gizESJPdbXxmJNJeGwhGZnMnlbvzjtAzhsJxIVT6qdY=;
-        b=mwNvFNSxoM7/7S0054957ZfHrptP32CUtj0SL5MQ2LCqMZpWqhaTub7ZBuQVNoWAc5
-         T+fJZx/duFNzSvLbW3klt1nae6s7wLMscazySjVkSb7UuvTx+F20g/94fiPUCEzpEMTH
-         7xleGnqBqX1GDDzoQduPZUqwuMY42azI46xTLfAXBIGvkNGCDlf7XVCwVy+ugBar1cIM
-         u3rMWmfVhafIcLnLxU7pU5ZMsdAbZqSCeoGoIhq6TYDmyurJwMyjAQKYSeu0LU9qKP71
-         3ODcNSJgKaNuZ96edUzvWFZI+DeKkfYIjh6Z/T3dJ5Hi0UZ7d7ADXMrmrzgegoi3dwDj
-         bn4w==
-X-Gm-Message-State: APjAAAXKGCKnTwa/WY4hRf4ycaQvUTyGkSXfDLcCPqArF58HrvGkFS8P
-        wQL5+bO2SNTXXH55Yl+MtXCr1fQA
-X-Google-Smtp-Source: APXvYqy6D+qpHF61I1Tn+xu/XYGTKK0i1vpyVAhneBoDXI+DraQ+/PosTwlLTDMvhQC2Yk4jQocOGw==
-X-Received: by 2002:a19:2389:: with SMTP id j131mr17056148lfj.86.1575977871489;
-        Tue, 10 Dec 2019 03:37:51 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id 207sm1941884ljj.72.2019.12.10.03.37.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:37:49 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iedpu-00014F-Cx; Tue, 10 Dec 2019 12:37:50 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Florian Echtler <floe@butterbrot.org>
-Subject: [PATCH 7/7] Input: sur40: fix interface sanity checks
-Date:   Tue, 10 Dec 2019 12:37:37 +0100
-Message-Id: <20191210113737.4016-8-johan@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210113737.4016-1-johan@kernel.org>
-References: <20191210113737.4016-1-johan@kernel.org>
+        Tue, 10 Dec 2019 06:38:22 -0500
+Received: from mout.gmx.net ([212.227.15.15]:39033 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfLJLhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:37:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1575977828;
+        bh=He5CmkAr29FB4eRkHCWB5ZuYfLynVAdGIaPMEFclt6s=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=DYqzdHVF3y06fAIXaE34SiDAOXxtMS0iMf4tbr1NeEs2LTBwlLeLZU1UnvRoNYZww
+         p5qEgZyz8GYP9B7mBKQoLECKd85cU+Ydm//VbFwzzwZ2BRS/MQacS1jWkp8niWsGj6
+         4lzXDmK9bdKNTGVlshtPgFE61gIVkJtAFfVI1JdM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.43.95] ([185.53.43.95]) by web-mail.gmx.net
+ (3c-app-gmx-bs14.server.lan [172.19.170.66]) (via HTTP); Tue, 10 Dec 2019
+ 12:37:08 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <trinity-be64e2d4-f70d-4bd8-82aa-fb5b07de0149-1575977828752@3c-app-gmx-bs14>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Landen Chao" <landen.chao@mediatek.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        "Landen Chao" <landen.chao@mediatek.com>
+Subject: Aw: [PATCH net-next 0/6] net-next: dsa: mt7530: add support for
+ MT7531
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 10 Dec 2019 12:37:08 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <cover.1575914275.git.landen.chao@mediatek.com>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:4r71h9Id7lIxLvhWGaanz8HzVDn2EN4RDfdcEk93knYE5eLJt3mSN3keYSRt852HP3ezg
+ dBD8EAohBV7/z3Y8L50s6x5trisCsEm6WrRDoVWkLUFLmAGr3SvqFvfvqV16qZptKs7OhfEkt1Sz
+ CQoqy0ysdmK0EJJq9zNF+DEcPm2gfIXsZtClhWjqR8iEdZtNUbr25JKrrlOLilkTkONwxoDzuLHA
+ Y8oGaZngiKm8j8U8UI9maT/CVxDsGfaTyb1PD1kGDS0RghX7ngay1cM+xlKnsfZ7a+1P+WaxaPDs
+ 84=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y+zfh0Nni9M=:d1BklLbL735ejs8j88j0bC
+ mpbX9pJBwfbOSVwp4/Bishz6v3EBsAU68LYy+DejDCXgRBUODaqznRkE6gafuko9FT5rhQ89z
+ 6CVr7ZfYWtHIJ87rlcCwkxZB3xZnyL4SS7nctqsOS6W4Vs+VfChBOXhta1UvEjIdyzxn3Eww3
+ grYrGOhh5F5jdlWrgCKws7kVbFZqXndDhKHLgIbBso0nm3Kd9u2RG88Jx2lNnrPc61Ibe8VUz
+ THLjI6IVcGDARMHSJXKicoghxd0NjJaW625vZahyqr+Jhxtx9S7KOCNE6rYbh4arVnY8JvtHD
+ Fpuh0OxLyldsAwhIBIGsiYm1ZD0OI2jIKAKuYgQ/1Z6lyJQdgnIM5CstNNgssoBZrlSjW1Y/a
+ AxpHrfoB2W8RowBd5H3l1y0VreRKuDNqqtS6Pe/rBrN9PTw6b6ZyLJ4YXoLNQBjw/aE9hmaQm
+ bTfXsL83vCcBAhOSlqdT78pJ0iPVjbF8ntMYxUBV+nJxp5Ck1a4CJWRmH+W/eZpqrhuVeGtfV
+ ymxyiR+9Gi8t/oRhwoBqXqACKgkw/nZEuF+0WcftL6SQvQc1cRcn9sh2BMiWJPzIMH+Sro6fp
+ Gfrm1FMebISZYVCIcGhZmXnqdyfHKtpMhJgoIGqiU0Dy04dck/X/RX4Eb8ZJgT1Ag7aQGApaN
+ wjmIBkZAioBxyr5MYv0J7q31pbvBdZuMhNIqGUkaoMEaMpCIRWK7MAo8tV42PhudlRCE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Hi
 
-This in turn could cause the driver to misbehave or trigger a WARN() in
-usb_submit_urb() that kernels with panic_on_warn set would choke on.
+thank you for the DSA-driver, works so far, but a bit to improve:
 
-Fixes: bdb5c57f209c ("Input: add sur40 driver for Samsung SUR40 (aka MS Surface 2.0/Pixelsense)")
-Cc: stable <stable@vger.kernel.org>     # 3.13
-Cc: Florian Echtler <floe@butterbrot.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/input/touchscreen/sur40.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+i got some retransmitts on RX (TX looks good)...i guess a clk/pll problem
 
-diff --git a/drivers/input/touchscreen/sur40.c b/drivers/input/touchscreen/sur40.c
-index 1dd47dda71cd..34d31c7ec8ba 100644
---- a/drivers/input/touchscreen/sur40.c
-+++ b/drivers/input/touchscreen/sur40.c
-@@ -661,7 +661,7 @@ static int sur40_probe(struct usb_interface *interface,
- 	int error;
- 
- 	/* Check if we really have the right interface. */
--	iface_desc = &interface->altsetting[0];
-+	iface_desc = interface->cur_altsetting;
- 	if (iface_desc->desc.bInterfaceClass != 0xFF)
- 		return -ENODEV;
- 
--- 
-2.24.0
+Iperf3-Client (BPI-R64,192.168.0.19):
 
+root@bpi-r64:~# iperf3 -c 192.168.0.21
+Connecting to host 192.168.0.21, port 5201
+[  5] local 192.168.0.19 port 56412 connected to 192.168.0.21 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   114 MBytes   957 Mbits/sec    0   1003 KBytes
+[  5]   1.00-2.00   sec   113 MBytes   944 Mbits/sec    0   1.08 MBytes
+[  5]   2.00-3.00   sec   112 MBytes   941 Mbits/sec    0   1.08 MBytes
+[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec    0   1.08 MBytes
+[  5]   4.00-5.00   sec   112 MBytes   942 Mbits/sec    0   1.08 MBytes
+[  5]   5.00-6.00   sec   112 MBytes   944 Mbits/sec    0   1.21 MBytes
+[  5]   6.00-7.00   sec   112 MBytes   944 Mbits/sec    0   1.27 MBytes
+[  5]   7.00-8.00   sec   112 MBytes   943 Mbits/sec    0   1.27 MBytes
+[  5]   8.00-9.00   sec   111 MBytes   934 Mbits/sec    0   1.27 MBytes
+[  5]   9.00-10.00  sec   112 MBytes   944 Mbits/sec    0   1.27 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   943 Mbits/sec    0             sender
+[  5]   0.00-10.00  sec  1.10 GBytes   941 Mbits/sec                  receiver
+
+iperf Done.
+
+root@bpi-r64:~# iperf3 -c 192.168.0.21 -R
+Connecting to host 192.168.0.21, port 5201
+Reverse mode, remote host 192.168.0.21 is sending
+[  5] local 192.168.0.19 port 56420 connected to 192.168.0.21 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   112 MBytes   941 Mbits/sec
+[  5]   1.00-2.00   sec   112 MBytes   941 Mbits/sec
+[  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec
+[  5]   3.00-4.00   sec   112 MBytes   941 Mbits/sec
+[  5]   4.00-5.00   sec   112 MBytes   937 Mbits/sec
+[  5]   5.00-6.00   sec   112 MBytes   941 Mbits/sec
+[  5]   6.00-7.00   sec   111 MBytes   933 Mbits/sec
+[  5]   7.00-8.00   sec   112 MBytes   939 Mbits/sec
+[  5]   8.00-9.00   sec   112 MBytes   936 Mbits/sec
+[  5]   9.00-10.00  sec   112 MBytes   941 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec  605             sender
+[  5]   0.00-10.00  sec  1.09 GBytes   939 Mbits/sec                  receiver
+
+iperf Done.
+
+Iperf3-Server (my Laptop,192.168.0.21, reverse mode only):
+
+Accepted connection from 192.168.0.19, port 56418
+[  5] local 192.168.0.21 port 5201 connected to 192.168.0.19 port 56420
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  5]   0.00-1.00   sec   115 MBytes   965 Mbits/sec    0    772 KBytes
+[  5]   1.00-2.00   sec   112 MBytes   944 Mbits/sec    0    772 KBytes
+[  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  157    643 KBytes
+[  5]   3.00-4.00   sec   112 MBytes   944 Mbits/sec    0    755 KBytes
+[  5]   4.00-5.00   sec   111 MBytes   933 Mbits/sec  141    625 KBytes
+[  5]   5.00-6.00   sec   112 MBytes   944 Mbits/sec    0    740 KBytes
+[  5]   6.00-7.00   sec   111 MBytes   933 Mbits/sec  307    438 KBytes
+[  5]   7.00-8.00   sec   111 MBytes   933 Mbits/sec    0    585 KBytes
+[  5]   8.00-9.00   sec   112 MBytes   944 Mbits/sec    0    700 KBytes
+[  5]   9.00-10.00  sec   112 MBytes   944 Mbits/sec    0    803 KBytes
+[  5]  10.00-10.00  sec  0.00 Bytes  0.00 bits/sec    0    803 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  5]   0.00-10.00  sec  1.10 GBytes   942 Mbits/sec  605             sender
+[  5]   0.00-10.00  sec  0.00 Bytes  0.00 bits/sec                  receiver
+
+regards Frank
+
+[1] https://github.com/frank-w/BPI-R2-4.14/tree/5.5-r64-netnext
