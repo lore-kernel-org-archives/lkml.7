@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1C3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9977DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B51520637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6368120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013934;
-	bh=ntkEWq9Az0k28/gTcB607fPXcFBKNmq2wsDSzXmVA3g=;
+	s=default; t=1576013942;
+	bh=UsFge4YEgym3cSiL3TRhR/2HajMfTQjerqMq7R8bwDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjB1dm3hUl2DsBZVu2VyTqQV8ljXnmIFGOxQdiFg4aKk0PdcnxxAQrb+49R+pO88b
-	 OoIVzZz7D1PmBfsugO38m1ioplwj+gsPWLUFjdFx1ORKVaETaul0drpZdkcEbLIp9T
-	 MVWpUdE6Q6fBu1dHIVYjG/dxpRKPgDSJjezIBtfw=
+	b=ji3q+nEEXD4rXcLcmCmeo3NoGa+RTcXCtAScXrWg559+GXZo/LLmD7aLCnaxtgfTt
+	 R2g/8ncZ5PRsbcXj0Bo4TouP8BQe70HKW4FMSbejnJ476eV7l+30ho87IvC7qT4Uix
+	 2pNVbDyvc7fD+7TFkc/Oe6LDc7t3I+mmTV9Mnf54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfLJViw (ORCPT
+        id S1730209AbfLJVjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:38:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:39:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730199AbfLJVfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:11 -0500
+        id S1727391AbfLJVfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B431D205C9;
-        Tue, 10 Dec 2019 21:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406FD205C9;
+        Tue, 10 Dec 2019 21:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013711;
-        bh=ntkEWq9Az0k28/gTcB607fPXcFBKNmq2wsDSzXmVA3g=;
+        s=default; t=1576013707;
+        bh=UsFge4YEgym3cSiL3TRhR/2HajMfTQjerqMq7R8bwDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgHPw6sezCp/WWPfJ0JI+rXtO4EnvuzbL20xOSna7LXMNHFAEmlue+wi136Zqq9D7
-         Y6/he9K9o+3Tgr9Q1lTtI2p3z+eWOD1WwzeAPltn/gbHJMGmdKxHQt04RJOEaJ2+ej
-         IUVMfCQnrQX7BVQ8ttk6/k1cohVvdEA8kk1h/iKU=
+        b=NToVKoEaKIhFlgNpND6MqWWUlDLWR88hV3/5DMuT+vJXfA7s5EElBNqn5Ce7WUNFf
+         fvfEmWz7UNRnlC/EMbL1h0ShYQmwfLsBYS4tnXPI+9ITf1ETG1YwUxMC7Too348ike
+         OpCyvVb8+Rem7qteKy7lJrwM5LSsttzLlJUu+uyw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 139/177] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 16:31:43 -0500
-Message-Id: <20191210213221.11921-139-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 135/177] spi: pxa2xx: Add missed security checks
+Date:   Tue, 10 Dec 2019 16:31:39 -0500
+Message-Id: <20191210213221.11921-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,71 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
 
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index b2c68fbf26346..41925f2206940 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -462,10 +462,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index f41333817c501..525388126e260 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1470,7 +1470,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 	}
+ 
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
 +
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -537,7 +538,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -565,7 +566,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->pdev = pdev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 -- 
 2.20.1
 
