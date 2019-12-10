@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B516C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD82C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A1D20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E314E24682
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013927;
-	bh=PVEGQdHiy+KQDr4ywzZbSqkTER8rUHDJ++jaJtm196k=;
+	s=default; t=1576013931;
+	bh=hVLwqxTTnoHu9vdi6vsWB0Jc9NYZCRbLQz1JUSevkes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyWr/lvyEdwNP9dbIm10/ur96B08iAmXg0YpacY/rXS7IsEIjYIBptv1xUV5JcgKN
-	 p7jt3p/7OkLIDuxtFBgo8z9FdZp4lGfWoxjtqznc1cpWSGOBeXvoI08fonlz96oUwZ
-	 XgEYR1yig3nttSkeFRP3kTsXINmWSCX2ZXZLf+OY=
+	b=joGXlnA+3Xs6NMyP6iGsVTRELCjbSsmzu1UmAMOZf8u5dODcVBatfvh05fUYfJ24p
+	 2UoZbDBHHHHcD5BT/0d0YhptRJBmUacXUXCnfY4LDga5YDuSulCIFUWYleTCn6ZjBI
+	 kZEJZgPGGYRNUajBQGYnduLZySa63VLGUCR7322k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLJVfM (ORCPT
+        id S1729750AbfLJVit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40466 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbfLJVe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:58 -0500
+        id S1727524AbfLJVfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A61B92465A;
-        Tue, 10 Dec 2019 21:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB43122464;
+        Tue, 10 Dec 2019 21:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013697;
-        bh=PVEGQdHiy+KQDr4ywzZbSqkTER8rUHDJ++jaJtm196k=;
+        s=default; t=1576013712;
+        bh=hVLwqxTTnoHu9vdi6vsWB0Jc9NYZCRbLQz1JUSevkes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yaNPWpMJPOCDW6RtJk2+ywyt+GHu+lGIzJPbXNCxUnlu1Ni3z26GQ2rUo+8y2N+Ga
-         W6B3QWjHZgP8vGcqpD5p+WPVMdmvy9HV9s5jp2uRdQ3HeJyY3EAmxsUL+8udwS6fLS
-         8DxITwGLRa+qnwNlFV8RPwkjLmIWSiwn331lVSlA=
+        b=E3DImD2Zuyy3dDXzY8j74sRoXjqrAhvegB9hbAnvbuuA5zPib3Bpl3yqnD7YAOrnG
+         YfEpeyygqwA/5YWWey9+661q8TzXfupe/i8rltZ9kW+kjoanOqjHH7ZI2xJLYiFvYl
+         iFn6GziJxeiiuCWoj0FYY37e/SsxDun5NhK4tHZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Hou Bao Hou <houbao@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 127/177] ath10k: fix get invalid tx rate for Mesh metric
-Date:   Tue, 10 Dec 2019 16:31:31 -0500
-Message-Id: <20191210213221.11921-127-sashal@kernel.org>
+Cc:     Eduard Hasenleithner <eduard@hasenleithner.at>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 140/177] nvme: Discard workaround for non-conformant devices
+Date:   Tue, 10 Dec 2019 16:31:44 -0500
+Message-Id: <20191210213221.11921-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -62,40 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Eduard Hasenleithner <eduard@hasenleithner.at>
 
-[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
+[ Upstream commit 530436c45ef2e446c12538a400e465929a0b3ade ]
 
-ath10k does not provide transmit rate info per MSDU
-in tx completion, mark that as -1 so mac80211
-will ignore the rates. This fixes mac80211 update Mesh
-link metric with invalid transmit rate info.
+Users observe IOMMU related errors when performing discard on nvme from
+non-compliant nvme devices reading beyond the end of the DMA mapped
+ranges to discard.
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00035
+Two different variants of this behavior have been observed: SM22XX
+controllers round up the read size to a multiple of 512 bytes, and Phison
+E12 unconditionally reads the maximum discard size allowed by the spec
+(256 segments or 4kB).
 
-Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Make nvme_setup_discard unconditionally allocate the maximum DSM buffer
+so the driver DMA maps a memory range that will always succeed.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202665 many
+Signed-off-by: Eduard Hasenleithner <eduard@hasenleithner.at>
+[changelog, use existing define, kernel coding style]
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index 6f62ddc0494c3..6c47e4b6aa6cd 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -101,6 +101,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c4ff4f079448e..d4944d038a3ff 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -551,8 +551,14 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 	struct nvme_dsm_range *range;
+ 	struct bio *bio;
  
- 	info = IEEE80211_SKB_CB(msdu);
- 	memset(&info->status, 0, sizeof(info->status));
-+	info->status.rates[0].idx = -1;
+-	range = kmalloc_array(segments, sizeof(*range),
+-				GFP_ATOMIC | __GFP_NOWARN);
++	/*
++	 * Some devices do not consider the DSM 'Number of Ranges' field when
++	 * determining how much data to DMA. Always allocate memory for maximum
++	 * number of segments to prevent device reading beyond end of buffer.
++	 */
++	static const size_t alloc_size = sizeof(*range) * NVME_DSM_MAX_RANGES;
 +
- 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
++	range = kzalloc(alloc_size, GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!range) {
+ 		/*
+ 		 * If we fail allocation our range, fallback to the controller
+@@ -593,7 +599,7 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
  
- 	if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
+ 	req->special_vec.bv_page = virt_to_page(range);
+ 	req->special_vec.bv_offset = offset_in_page(range);
+-	req->special_vec.bv_len = sizeof(*range) * segments;
++	req->special_vec.bv_len = alloc_size;
+ 	req->rq_flags |= RQF_SPECIAL_PAYLOAD;
+ 
+ 	return BLK_STS_OK;
 -- 
 2.20.1
 
