@@ -2,125 +2,227 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE828C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EF4C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5AA206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BC72073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i4EdORzI";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="WVG+KdzY"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZICkPQ0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfLJJPB (ORCPT
+        id S1727114AbfLJJRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:15:01 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:49512
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726911AbfLJJO7 (ORCPT
+        Tue, 10 Dec 2019 04:17:19 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:50741 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbfLJJRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:14:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575969298;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=Ujunv0R/WM+sahEPNbxCRS3Q2pY5WCU98/q3fvcKML8=;
-        b=i4EdORzIKrgPNIfR9Bxyo4wxrK/iL4LfFfJG84rdc3ISY6TqTAsHWUrEiwtuFjRe
-        SSBsMPeXY58DVH1HWQh2aGc7hXmnhPwMEjUM6Js9yaUHafWmkSHshHnk9lqREvsTZ30
-        v20ekgdc7/aotHyNUScJiW1aTFJ/En/J/Metg+1w=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575969298;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=Ujunv0R/WM+sahEPNbxCRS3Q2pY5WCU98/q3fvcKML8=;
-        b=WVG+KdzY0rjNjihzCNe8vhl7NrlmESxDszVZW6fw9GZX25xMpfEZbEnRFPM5ovOK
-        Stpl7gYID/zKO4gkwZQlXB0isq2WSBZ2soHYPMKlF0VhO2y2EMLU+o+ky9AZ0/RzTyi
-        PerZozhaAnEgDTR1tgnwQn99iClTLKy1w4SMrkPs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 279BBC447BC
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Soeren Moch <smoch@web.de>, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-References: <20191209223822.27236-1-smoch@web.de> <2668270.pdtvSLGib8@diego>
-        <2cf70216-8d98-4122-4f4e-b8254089a017@web.de>
-        <6162240.GiEx4hqPFh@diego>
-Date:   Tue, 10 Dec 2019 09:14:58 +0000
-In-Reply-To: <6162240.GiEx4hqPFh@diego> ("Heiko \=\?utf-8\?Q\?St\=C3\=BCbner\=22'\?\=
- \=\?utf-8\?Q\?s\?\= message of "Tue, 10
-        Dec 2019 02:18:24 +0100")
-Message-ID: <0101016eef17168b-4b99c805-9c89-4ce6-a4fc-02f5e2b80c6d-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SES-Outgoing: 2019.12.10-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Tue, 10 Dec 2019 04:17:19 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id xBA9F3nk002286;
+        Tue, 10 Dec 2019 18:15:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBA9F3nk002286
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1575969304;
+        bh=fZSJ9406U2jMjTj0MJPsSAKAuiCbOY7z777j3BlnS64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZICkPQ0qlKaZ5gvesye64Ajer4Y29LiQHJTthQMyXqWchv1Oz6XlkHQGYD46IHJVb
+         oETXHqu+ORXaEeG2zHFMNaJ8eoHO2Vw5BKDohlNsjkKWCdgyYpZPX2e8Y5c05iVQ+J
+         lpEEVP48mVGbii42pFZXO41SCVxny/qq5XKolD5ekOkNNKd+jsgDOFzwHfL46T1QbH
+         EciXXoHdlaw8FYEn/Qg/Q4d4FhPPrRvw7TM4vumikxXMK6F/dUBL9xdOL3tkht9bc4
+         b+iqdsdNEcaOtiy//c13esKtEgHx/A0AvXUDXTgL4nXUWmmHGDA+5F6DeMQ94K1nGw
+         HD1IxhqkAZl8Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: denali: add reset controlling
+Date:   Tue, 10 Dec 2019 18:14:53 +0900
+Message-Id: <20191210091453.26346-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiko St=C3=BCbner <heiko@sntech.de> writes:
+According to the Denali User's Guide, this IP has two reset signals.
 
-> Hi Soeren,
->
-> Am Dienstag, 10. Dezember 2019, 00:29:21 CET schrieb Soeren Moch:
->> On 10.12.19 00:08, Heiko St=C3=BCbner wrote:
->> > Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
->> >> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
->> >> The BCM4359/9 wifi controller in this module is connected to sdio0,
->> >> enable this interface.
->> >>
->> >> Signed-off-by: Soeren Moch <smoch@web.de>
->> >> ---
->> >> Not sure where to place exactly the sdio0 node in the dts because
->> >> existing sd nodes are not sorted alphabetically.
->> >>
->> >> This last patch in this brcmfmac patch series probably should be pick=
-ed
->> >> up by Heiko independently of the rest of this series. It was sent tog=
-ether
->> >> to show how this brcmfmac extension for 4359-sdio support with RSDB is
->> >> used and tested.
->> > node placement looks good so I can apply it, just a general questions
->> > I only got patch 8/8 are patches 1-7 relevant for this one and what ar=
-e they?
->> Patches 1-7 are the patches to support the BCM4359 chipset with SDIO
->> interface in the linux brcmfmac net-wireless driver, see [1].
->>=20
->> So this patch series has 2 parts:
->> patches 1-7: add support for the wifi chipset in the wireless driver,
->> this has to go through net-wireless
->> patch 8: enable the wifi module with this chipset on RockPro64, this pat=
-ch
->
-> Thanks for the clarification :-) .
->
-> As patch 8 "only" does the core sdio node, it doesn't really depend on the
-> earlier ones and you can submit any uart-hooks for bluetooth once the
-> other patches land I guess.
->
->
->> If this was confusing, what would be the ideal way to post such series?
->
-> I think every maintainer has some slightly different perspective on this,
-> but personally I like getting the whole series to follow the discussion b=
-ut
-> also to just see when the driver-side changes get merged, as the dts-parts
-> need to wait for that in a lot of cases.
+  rst_n:     reset most of FFs in the controller core
+  reg_rst_n: reset all FFs in the register interface, and in the
+             initialization sequence
 
-FWIW I prefer the same as Heiko. If I don't see all the patches in the
-patchset I start worrying if patchwork lost them, or something, and then
-it takes more time from me to investigate what happened. So I strongly
-recommend sending the whole series to everyone as it saves time.
+This commit supports controlling those reset signals, although they
+might be often tied up together in actual SoC integration.
 
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+One thing that should be kept in mind is the automated initialization
+sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
+deasserted.
+
+When the reset is deasserted, the controller issues a RESET command
+to the chip select 0, and attempts to read out the chip ID, and further
+more, ONFI parameters if it is an ONFI-compliant device. Then, the
+controller sets up the relevant registers based on the detected
+device parameters.
+
+This process is just redundant for Linux because nand_scan_ident()
+probes devices and sets up parameters accordingly. Rather, this hardware
+feature is annoying because it ends up with misdetection due to bugs.
+
+So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
+specific fixup code") changed the driver to not rely on it.
+
+However, there is no way to prevent it from running. The IP provides
+the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
+usually out of software control, and dependent on SoC implementation.
+As for the Socionext UniPhier platform, LD4 always enables it. For the
+later SoCs, the bootstrap sequence runs depending on the boot mode.
+
+I added usleep_range() to make the driver wait until the sequence
+finishes. Otherwise, the driver would fail to detect the chip due
+to the race between the driver and hardware-controlled sequence.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
+ drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
+ 2 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index b32aed1db46d..a48b17fb969a 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -14,6 +14,11 @@ Required properties:
+     interface clock, and the ECC circuit clock.
+   - clock-names: should contain "nand", "nand_x", "ecc"
+ 
++Optional properties:
++  - resets: may contain phandles to the controller core reset, the register
++ reset
++  - reset-names: may contain "nand", "reg"
++
+ Sub-nodes:
+   Sub-nodes represent available NAND chips.
+ 
+@@ -46,6 +51,8 @@ nand: nand@ff900000 {
+ 	reg-names = "nand_data", "denali_reg";
+ 	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+ 	clock-names = "nand", "nand_x", "ecc";
++	resets = <&nand_rst>, <&nand_reg_rst>;
++	reset-names = "nand", "reg";
+ 	interrupts = <0 144 4>;
+ 
+ 	nand@0 {
+diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
+index 8b779a899dcf..132bc6cc066c 100644
+--- a/drivers/mtd/nand/raw/denali_dt.c
++++ b/drivers/mtd/nand/raw/denali_dt.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+@@ -14,6 +15,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #include "denali.h"
+ 
+@@ -22,6 +24,8 @@ struct denali_dt {
+ 	struct clk *clk;	/* core clock */
+ 	struct clk *clk_x;	/* bus interface clock */
+ 	struct clk *clk_ecc;	/* ECC circuit clock */
++	struct reset_control *rst;	/* core reset */
++	struct reset_control *rst_reg;	/* register reset */
+ };
+ 
+ struct denali_dt_data {
+@@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dt->clk_ecc))
+ 		return PTR_ERR(dt->clk_ecc);
+ 
++	dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
++	if (IS_ERR(dt->rst))
++		return PTR_ERR(dt->rst);
++
++	dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
++	if (IS_ERR(dt->rst_reg))
++		return PTR_ERR(dt->rst_reg);
++
+ 	ret = clk_prepare_enable(dt->clk);
+ 	if (ret)
+ 		return ret;
+@@ -166,10 +178,30 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 	denali->clk_rate = clk_get_rate(dt->clk);
+ 	denali->clk_x_rate = clk_get_rate(dt->clk_x);
+ 
+-	ret = denali_init(denali);
++	/*
++	 * Deassert the register reset, and the core reset in this order.
++	 * Deasserting the core reset while the register reset is asserted
++	 * will cause unpredictable behavior in the controller.
++	 */
++	ret = reset_control_deassert(dt->rst_reg);
+ 	if (ret)
+ 		goto out_disable_clk_ecc;
+ 
++	ret = reset_control_deassert(dt->rst);
++	if (ret)
++		goto out_assert_rst_reg;
++
++	/*
++	 * When the reset is deasserted, the initialization sequence is kicked
++	 * (bootstrap process). This will take a while, and the driver must
++	 * wait until it finished in order to avoid unpredictable behavior.
++	 */
++	usleep_range(200, 1000);
++
++	ret = denali_init(denali);
++	if (ret)
++		goto out_assert_rst;
++
+ 	for_each_child_of_node(dev->of_node, np) {
+ 		ret = denali_dt_chip_init(denali, np);
+ 		if (ret) {
+@@ -184,6 +216,10 @@ static int denali_dt_probe(struct platform_device *pdev)
+ 
+ out_remove_denali:
+ 	denali_remove(denali);
++out_assert_rst:
++	reset_control_assert(dt->rst);
++out_assert_rst_reg:
++	reset_control_assert(dt->rst_reg);
+ out_disable_clk_ecc:
+ 	clk_disable_unprepare(dt->clk_ecc);
+ out_disable_clk_x:
+@@ -199,6 +235,8 @@ static int denali_dt_remove(struct platform_device *pdev)
+ 	struct denali_dt *dt = platform_get_drvdata(pdev);
+ 
+ 	denali_remove(&dt->controller);
++	reset_control_assert(dt->rst);
++	reset_control_assert(dt->rst_reg);
+ 	clk_disable_unprepare(dt->clk_ecc);
+ 	clk_disable_unprepare(dt->clk_x);
+ 	clk_disable_unprepare(dt->clk);
+-- 
+2.17.1
+
