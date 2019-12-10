@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ACCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8123C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7547D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC452073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013968;
-	bh=OOpD9PamP9vp9zu6mLWVGirheqv7YB1TKXhsNglJtaY=;
+	s=default; t=1576013977;
+	bh=2eDlXtX3WBn6Bcur3PKL2GDuBPxlLS0q1n6EY8Q/PnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c457YPLxlZBtN0lXCFiORMi/0oG31DdOnlRQc65KiuK87huxNfUQOQD5gceQQFBJH
-	 VnCVWMIbKwNBNQZf6kQJkJ2P5zzHQfGCG1CGIJfwpqjiwWl2yoHcCRuxcKjJMLgkU4
-	 kEybUx0qDSKJfKBNOCe4/UEa7zIfPj1Cg9l8MN8Y=
+	b=UZOKpt0S0gUZvoJuwrNCEZJatmCidKAaRL45tYAhlh9yLw0lmtTn0neHiZvxRWjaQ
+	 LmPbFo+CpQealD2KK3eQTf0+PEKdWCQa4CnpdGGGpaEXDn0iDvFCUkX+I8Rp3fU8GU
+	 QzZtm5HuZR9BqEjWsocJwEjzp69tBt7kHp9Hde9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfLJVj1 (ORCPT
+        id S1729023AbfLJVjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40478 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbfLJVe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:59 -0500
+        id S1730136AbfLJVe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9A5206D5;
-        Tue, 10 Dec 2019 21:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2C3205C9;
+        Tue, 10 Dec 2019 21:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013698;
-        bh=OOpD9PamP9vp9zu6mLWVGirheqv7YB1TKXhsNglJtaY=;
+        s=default; t=1576013696;
+        bh=2eDlXtX3WBn6Bcur3PKL2GDuBPxlLS0q1n6EY8Q/PnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0u+N0Avp1gLINbA8WiOGYeD/484luDyG5ELvlsTEY30oX63CrgRNiEn1s33o5i/5c
-         Cbka8seyF1pElXH+v2RVbDQmXDSlk1x5wVq3Kn4jjJKiLQCPQl8gMXN8dOb4oCK7Ia
-         eGl4t1lPbjIWF/+9q0hdlL7MjNbp8FOkJQBcV9LY=
+        b=Zagw2gzEC3kVKZDxC7V6dh3j3B9jEsgYlt+p827HgNtJsq3urcc2qRkdEGxYrPBiU
+         6y7mEg9RRd3utrjRdH4clLkUTjSlc1tlFGkOnqO48wX09je+ySBWSTJgSEw1MF9Je9
+         BxNcoz/kgywi8Qt/ZEugw2H7xr2B7SLtSBsCOCVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 128/177] fsi: core: Fix small accesses and unaligned offsets via sysfs
-Date:   Tue, 10 Dec 2019 16:31:32 -0500
-Message-Id: <20191210213221.11921-128-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 126/177] perf probe: Filter out instances except for inlined subroutine and subprogram
+Date:   Tue, 10 Dec 2019 16:31:30 -0500
+Message-Id: <20191210213221.11921-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,108 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 9f4c2b516b4f031e3cd0e45957f4150b3c1a083d ]
+[ Upstream commit da6cb952a89efe24bb76c4971370d485737a2d85 ]
 
-Subtracting the offset delta from four-byte alignment lead to wrapping
-of the requested length where `count` is less than `off`. Generalise the
-length handling to enable and optimise aligned access sizes for all
-offset and size combinations. The new formula produces the following
-results for given offset and count values:
+Filter out instances except for inlined_subroutine and subprogram DIE in
+die_walk_instances() and die_is_func_instance().
 
-    offset  count | length
-    --------------+-------
-    0       1     | 1
-    0       2     | 2
-    0       3     | 2
-    0       4     | 4
-    0       5     | 4
-    1       1     | 1
-    1       2     | 1
-    1       3     | 1
-    1       4     | 1
-    1       5     | 1
-    2       1     | 1
-    2       2     | 2
-    2       3     | 2
-    2       4     | 2
-    2       5     | 2
-    3       1     | 1
-    3       2     | 1
-    3       3     | 1
-    3       4     | 1
-    3       5     | 1
+This fixes an issue that perf probe sets some probes on calling address
+instead of a target function itself.
 
-We might need something like this for the cfam chardevs as well, for
-example we don't currently implement any alignment restrictions /
-handling in the hardware master driver.
+When perf probe walks on instances of an abstruct origin (a kind of
+function prototype of inlined function), die_walk_instances() can also
+pass a GNU_call_site (a GNU extension for call site) to callback. Since
+it is not an inlined instance of target function, we have to filter out
+when searching a probe point.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20191108051945.7109-6-joel@jms.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Without this patch, perf probe sets probes on call site address too.This
+can happen on some function which is marked "inlined", but has actual
+symbol. (I'm not sure why GCC mark it "inlined"):
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2500017
+  p:probe/vfs_read_1 _text+2499468
+  p:probe/vfs_read_2 _text+2499563
+  p:probe/vfs_read_3 _text+2498876
+  p:probe/vfs_read_4 _text+2498512
+  p:probe/vfs_read_5 _text+2498627
+
+With this patch:
+
+Slightly different results, similar tho:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2498512
+
+Committer testing:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+Before:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3131557
+  p:probe/vfs_read_1 _text+3130975
+  p:probe/vfs_read_2 _text+3131047
+  p:probe/vfs_read_3 _text+3130380
+  p:probe/vfs_read_4 _text+3130000
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+
+After:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3130000
+  #
+
+Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-core.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 2c31563fdcae7..c6fa9b393e84b 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -552,6 +552,31 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 65a782864bb8f..dc50fb1d5a189 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -325,18 +325,22 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+  * @dw_die: a DIE
+  *
+  * Ensure that this DIE is an instance (which has an entry address).
+- * This returns true if @dw_die is a function instance. If not, you need to
+- * call die_walk_instances() to find actual instances.
++ * This returns true if @dw_die is a function instance. If not, the @dw_die
++ * must be a prototype. You can use die_walk_instances() to find actual
++ * instances.
+  **/
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
+ 	Dwarf_Attribute attr_mem;
++	int tag = dwarf_tag(dw_die);
+ 
+-	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) &&
+-	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
+-		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
++	if (tag != DW_TAG_subprogram &&
++	    tag != DW_TAG_inlined_subroutine)
++		return false;
++
++	return dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
  }
  
-+static unsigned long aligned_access_size(size_t offset, size_t count)
-+{
-+	unsigned long offset_unit, count_unit;
-+
-+	/* Criteria:
-+	 *
-+	 * 1. Access size must be less than or equal to the maximum access
-+	 *    width or the highest power-of-two factor of offset
-+	 * 2. Access size must be less than or equal to the amount specified by
-+	 *    count
-+	 *
-+	 * The access width is optimal if we can calculate 1 to be strictly
-+	 * equal while still satisfying 2.
-+	 */
-+
-+	/* Find 1 by the bottom bit of offset (with a 4 byte access cap) */
-+	offset_unit = BIT(__builtin_ctzl(offset | 4));
-+
-+	/* Find 2 by the top bit of count */
-+	count_unit = BIT(8 * sizeof(unsigned long) - 1 - __builtin_clzl(count));
-+
-+	/* Constrain the maximum access width to the minimum of both criteria */
-+	return BIT(__builtin_ctzl(offset_unit | count_unit));
-+}
-+
- static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		struct kobject *kobj, struct bin_attribute *attr, char *buf,
- 		loff_t off, size_t count)
-@@ -567,8 +592,7 @@ static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		return -EINVAL;
+ /**
+@@ -615,6 +619,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+ 	Dwarf_Die *origin;
+ 	int tmp;
  
- 	for (total_len = 0; total_len < count; total_len += read_len) {
--		read_len = min_t(size_t, count, 4);
--		read_len -= off & 0x3;
-+		read_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
- 		if (rc)
-@@ -595,8 +619,7 @@ static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += write_len) {
--		write_len = min_t(size_t, count, 4);
--		write_len -= off & 0x3;
-+		write_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
- 		if (rc)
++	if (!die_is_func_instance(inst))
++		return DIE_FIND_CB_CONTINUE;
++
+ 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
+ 	if (attr == NULL)
+ 		return DIE_FIND_CB_CONTINUE;
 -- 
 2.20.1
 
