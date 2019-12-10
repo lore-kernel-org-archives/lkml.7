@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E9C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126C7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59808206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82D3205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013450;
-	bh=TXOjcJ55rsjrjIq01c8fBm2rN0iwB/1z+jhNZ8jUdSw=;
+	s=default; t=1576013457;
+	bh=bEkRQMpQvd4EfqHnUl/S8Zj4dUSGUvPCaLdi5gR09UA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uNyaB96S2AbhlpodpzB7yOiC9sPCalT1rSxgyVIm9KH2LIW9LYfB0h2j7MkjJoTZ/
-	 vZwRHlBCqiyQ2lE+KEjQJXE84U4KxJfhmT2hkWXz4jukR1Q/7rO/iV0mbKRyi7yPNK
-	 0ibCB91ghBP1vBXWIjg2UX3GObu+5hq1/pkX9MtQ=
+	b=yYvBjc1eBn0y0bdc1cRpmFUzJ8KsQf7tHTRaoFv1MSRdmzckDxlkTl99270NZNg5+
+	 fwUn3hquNL1QoJf1O2DgO+a1VHEnUfn3GqdkX396x1dJSYUi8tXVngYLPOtIXhh4Yu
+	 iz0y9S/WcIWaOkNbXDYi1zomdJsVFQ5A794nS78c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfLJVJn (ORCPT
+        id S1728356AbfLJVa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58422 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:30:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfLJVJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:38 -0500
+        id S1727892AbfLJVJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C8D246AB;
-        Tue, 10 Dec 2019 21:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10F252077B;
+        Tue, 10 Dec 2019 21:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012177;
-        bh=TXOjcJ55rsjrjIq01c8fBm2rN0iwB/1z+jhNZ8jUdSw=;
+        s=default; t=1576012179;
+        bh=bEkRQMpQvd4EfqHnUl/S8Zj4dUSGUvPCaLdi5gR09UA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8yYXpWJEw09QAcLlHyrVpjp+ngtc1qfoECVmPmJasshLGqoJ0dw9nTFqNVUr3Xtp
-         V7ZQ3NfjKwJClpcLVmXkFQ+20seSh/JErFHATaYBJLcJpaN35SwN+sBMA2I2aFQ9tT
-         wmvD+zvR9RcSdPBml0N9OqKv+mPNGlOp0f1RNKa8=
+        b=G6fB6cvpADxtzwvvI1aZJOHECNKgl1qZhphXSLp+3rvURdPhkeenNAIJ6MzdZA986
+         UKGiOrtRgdxmqnrUwH00ygtcBZCEsVqa5oiEQIaFP2ud1SQJx34D8VCKS4gTgIkc1B
+         CFhuzwUNk6s5v3bH2o1kYKX8lKED+hjEXkdEyhsw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weihang Li <liweihang@hisilicon.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 135/350] RDMA/hns: Fix wrong parameters when initial mtt of srq->idx_que
-Date:   Tue, 10 Dec 2019 16:04:00 -0500
-Message-Id: <20191210210735.9077-96-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 137/350] iio: pressure: zpa2326: fix iio_triggered_buffer_postenable position
+Date:   Tue, 10 Dec 2019 16:04:02 -0500
+Message-Id: <20191210210735.9077-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,74 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit e8a07de57ea4ca7c2d604871c52826e66899fc70 ]
+[ Upstream commit fe2392c67db9730d46f11fc4fadfa7bffa8843fa ]
 
-The parameters npages used to initial mtt of srq->idx_que shouldn't be
-same with srq's. And page_shift should be calculated from idx_buf_pg_sz.
-This patch fixes above issues and use field named npage and page_shift
-in hns_roce_buf instead of two temporary variables to let us use them
-anywhere.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-Fixes: 18df508c7970 ("RDMA/hns: Remove if-else judgment statements for creating srq")
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Link: https://lore.kernel.org/r/1567566885-23088-3-git-send-email-liweihang@hisilicon.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+The iio_triggered_buffer_postenable() should be called before (to attach
+the poll func) and then the
+
+The iio_triggered_buffer_predisable() function is hooked directly without
+anything, which is probably fine, as the postenable() version seems to also
+do some reset/wake-up of the device.
+This will mean it will be easier when removing it; i.e. it just gets
+removed.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_srq.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ drivers/iio/pressure/zpa2326.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_srq.c b/drivers/infiniband/hw/hns/hns_roce_srq.c
-index 43ea2c13b2122..108667ae6b14c 100644
---- a/drivers/infiniband/hw/hns/hns_roce_srq.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_srq.c
-@@ -180,8 +180,7 @@ static int create_user_srq(struct hns_roce_srq *srq, struct ib_udata *udata,
- {
- 	struct hns_roce_dev *hr_dev = to_hr_dev(srq->ibsrq.device);
- 	struct hns_roce_ib_create_srq  ucmd;
--	u32 page_shift;
--	u32 npages;
-+	struct hns_roce_buf *buf;
- 	int ret;
+diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+index 9d0d07930236e..99dfe33ee402f 100644
+--- a/drivers/iio/pressure/zpa2326.c
++++ b/drivers/iio/pressure/zpa2326.c
+@@ -1243,6 +1243,11 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+ 	const struct zpa2326_private *priv = iio_priv(indio_dev);
+ 	int                           err;
  
- 	if (ib_copy_from_udata(&ucmd, udata, sizeof(ucmd)))
-@@ -191,11 +190,13 @@ static int create_user_srq(struct hns_roce_srq *srq, struct ib_udata *udata,
- 	if (IS_ERR(srq->umem))
- 		return PTR_ERR(srq->umem);
- 
--	npages = (ib_umem_page_count(srq->umem) +
--		(1 << hr_dev->caps.srqwqe_buf_pg_sz) - 1) /
--		(1 << hr_dev->caps.srqwqe_buf_pg_sz);
--	page_shift = PAGE_SHIFT + hr_dev->caps.srqwqe_buf_pg_sz;
--	ret = hns_roce_mtt_init(hr_dev, npages, page_shift, &srq->mtt);
-+	buf = &srq->buf;
-+	buf->npages = (ib_umem_page_count(srq->umem) +
-+		       (1 << hr_dev->caps.srqwqe_buf_pg_sz) - 1) /
-+		      (1 << hr_dev->caps.srqwqe_buf_pg_sz);
-+	buf->page_shift = PAGE_SHIFT + hr_dev->caps.srqwqe_buf_pg_sz;
-+	ret = hns_roce_mtt_init(hr_dev, buf->npages, buf->page_shift,
-+				&srq->mtt);
- 	if (ret)
- 		goto err_user_buf;
- 
-@@ -212,9 +213,12 @@ static int create_user_srq(struct hns_roce_srq *srq, struct ib_udata *udata,
- 		goto err_user_srq_mtt;
++	/* Plug our own trigger event handler. */
++	err = iio_triggered_buffer_postenable(indio_dev);
++	if (err)
++		goto err;
++
+ 	if (!priv->waken) {
+ 		/*
+ 		 * We were already power supplied. Just clear hardware FIFO to
+@@ -1250,7 +1255,7 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+ 		 */
+ 		err = zpa2326_clear_fifo(indio_dev, 0);
+ 		if (err)
+-			goto err;
++			goto err_buffer_predisable;
  	}
  
--	ret = hns_roce_mtt_init(hr_dev, ib_umem_page_count(srq->idx_que.umem),
--				PAGE_SHIFT, &srq->idx_que.mtt);
+ 	if (!iio_trigger_using_own(indio_dev) && priv->waken) {
+@@ -1260,16 +1265,13 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
+ 		 */
+ 		err = zpa2326_config_oneshot(indio_dev, priv->irq);
+ 		if (err)
+-			goto err;
++			goto err_buffer_predisable;
+ 	}
+ 
+-	/* Plug our own trigger event handler. */
+-	err = iio_triggered_buffer_postenable(indio_dev);
+-	if (err)
+-		goto err;
 -
-+	buf = &srq->idx_que.idx_buf;
-+	buf->npages = DIV_ROUND_UP(ib_umem_page_count(srq->idx_que.umem),
-+				   1 << hr_dev->caps.idx_buf_pg_sz);
-+	buf->page_shift = PAGE_SHIFT + hr_dev->caps.idx_buf_pg_sz;
-+	ret = hns_roce_mtt_init(hr_dev, buf->npages, buf->page_shift,
-+				&srq->idx_que.mtt);
- 	if (ret) {
- 		dev_err(hr_dev->dev, "hns_roce_mtt_init error for idx que\n");
- 		goto err_user_idx_mtt;
+ 	return 0;
+ 
++err_buffer_predisable:
++	iio_triggered_buffer_predisable(indio_dev);
+ err:
+ 	zpa2326_err(indio_dev, "failed to enable buffering (%d)", err);
+ 
 -- 
 2.20.1
 
