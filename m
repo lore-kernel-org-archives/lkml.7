@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC54DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9561C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F3D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF04E206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013432;
-	bh=LOmML4j0AvqWLR08iz2857qkXOPq9QctwnVX/F+K1Gk=;
+	s=default; t=1576013437;
+	bh=rxzjSJnbj4/fdS6pWGsFMYoWLp+HgY8/eUiuyL01MtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yz0kl2JfKctrBcOF5D4CesJVV9Gkggdu3lLaegIbPZUkmhKgMJmAp3TihFTRiVvDV
-	 4yOhoKJ8Az+v7C+UV4iHVW+BvepR6CsaohKcOlW74nzGJyrKKGRNXif1bRiQNbjMwf
-	 XBC74sZFIVLlNuxpRThqahfv+QzYtuTUOnDx7rdM=
+	b=DJL20qkRtRyY/2frvrQZWGdrvyganDs2Gskc7jD187cYPbymLpC5zESevN8qWWiJa
+	 zbtKTdjO6X+O/Dbef7z5QC6NBSf+uGINn516MuYci/VrB1L4S1EUy/5oU2xWVUPrHQ
+	 vCf+DyCpr73nfzwfCTAgZTn5KJ+wSYVuZ22HeUH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfLJVab (ORCPT
+        id S1728287AbfLJVJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:30:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58794 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbfLJVJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:49 -0500
+        id S1727558AbfLJVJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76098246A2;
-        Tue, 10 Dec 2019 21:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95FFC24697;
+        Tue, 10 Dec 2019 21:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012188;
-        bh=LOmML4j0AvqWLR08iz2857qkXOPq9QctwnVX/F+K1Gk=;
+        s=default; t=1576012184;
+        bh=rxzjSJnbj4/fdS6pWGsFMYoWLp+HgY8/eUiuyL01MtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4iE8ce0AhvVJh9i2UKLfRXBdYuiCf5+6L+fPYSTcGlQhYTy4KGcLxDjj0fMundVS
-         mbXwix3r8Sb9x6o/lbYmHJlpcJCJf+OCnUKd7b2zbFwBdnf26OrMscrUxl/bWSlFhc
-         2kvF/SB4pO2CpoG3IulSP2EkPaC0gDFYrCGGxEdc=
+        b=S1mupsZxIiO0d2l2/AIPNupAASsV4YZieIfnIvAPhKznyyTPvewKGx+miNooye3D2
+         kumTtg8pzMTADiovtEYtzn18KEpmgSgwwnl0OLdjcOixDQt5RjAMRPx5SxpimkJzvE
+         6Esx2g5HYCf7JXAkPu7/v1KUBvda8aI08uniT0U8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 144/350] media: cedrus: Fix undefined shift with a SHIFT_AND_MASK_BITS macro
-Date:   Tue, 10 Dec 2019 16:04:09 -0500
-Message-Id: <20191210210735.9077-105-sashal@kernel.org>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        tony camuso <tcamuso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 141/350] ipmi: Don't allow device module unload when in use
+Date:   Tue, 10 Dec 2019 16:04:06 -0500
+Message-Id: <20191210210735.9077-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,117 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit 06eff2150d4db991ca236f3d05a9dc0101475aea ]
+[ Upstream commit cbb79863fc3175ed5ac506465948b02a893a8235 ]
 
-We need to shift and mask values at different occasions to fill up
-cedrus registers. This was done using macros that don't explicitly
-treat arguments as unsigned, leading to possibly undefined behavior.
+If something has the IPMI driver open, don't allow the device
+module to be unloaded.  Before it would unload and the user would
+get errors on use.
 
-Introduce the SHIFT_AND_MASK_BITS macro and use it where possible.
-In cases where it doesn't apply as-is, explicitly cast to unsigned
-instead.
+This change is made on user request, and it makes it consistent
+with the I2C driver, which has the same behavior.
 
-This macro should be moved to include/linux/bits.h eventually.
+It does change things a little bit with respect to kernel users.
+If the ACPI or IPMI watchdog (or any other kernel user) has
+created a user, then the device module cannot be unloaded.  Before
+it could be unloaded,
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This does not affect hot-plug.  If the device goes away (it's on
+something removable that is removed or is hot-removed via sysfs)
+then it still behaves as it did before.
+
+Reported-by: tony camuso <tcamuso@redhat.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Tested-by: tony camuso <tcamuso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/media/sunxi/cedrus/cedrus_regs.h  | 31 ++++++++++---------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
+ include/linux/ipmi_smi.h            | 12 ++++++++----
+ 2 files changed, 24 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-index ddd29788d685b..f9dd8cbf34582 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-@@ -10,6 +10,9 @@
- #ifndef _CEDRUS_REGS_H_
- #define _CEDRUS_REGS_H_
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index 2aab80e19ae06..3c8a559506e86 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -448,6 +448,8 @@ enum ipmi_stat_indexes {
  
-+#define SHIFT_AND_MASK_BITS(v, h, l) \
-+	(((unsigned long)(v) << (l)) & GENMASK(h, l))
+ #define IPMI_IPMB_NUM_SEQ	64
+ struct ipmi_smi {
++	struct module *owner;
 +
+ 	/* What interface number are we? */
+ 	int intf_num;
+ 
+@@ -1220,6 +1222,11 @@ int ipmi_create_user(unsigned int          if_num,
+ 	if (rv)
+ 		goto out_kfree;
+ 
++	if (!try_module_get(intf->owner)) {
++		rv = -ENODEV;
++		goto out_kfree;
++	}
++
+ 	/* Note that each existing user holds a refcount to the interface. */
+ 	kref_get(&intf->refcount);
+ 
+@@ -1349,6 +1356,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
+ 	}
+ 
+ 	kref_put(&intf->refcount, intf_free);
++	module_put(intf->owner);
+ }
+ 
+ int ipmi_destroy_user(struct ipmi_user *user)
+@@ -2459,7 +2467,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+  * been recently fetched, this will just use the cached data.  Otherwise
+  * it will run a new fetch.
+  *
+- * Except for the first time this is called (in ipmi_register_smi()),
++ * Except for the first time this is called (in ipmi_add_smi()),
+  * this will always return good data;
+  */
+ static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
+@@ -3377,10 +3385,11 @@ static void redo_bmc_reg(struct work_struct *work)
+ 	kref_put(&intf->refcount, intf_free);
+ }
+ 
+-int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+-		      void		       *send_info,
+-		      struct device            *si_dev,
+-		      unsigned char            slave_addr)
++int ipmi_add_smi(struct module         *owner,
++		 const struct ipmi_smi_handlers *handlers,
++		 void		       *send_info,
++		 struct device         *si_dev,
++		 unsigned char         slave_addr)
+ {
+ 	int              i, j;
+ 	int              rv;
+@@ -3406,7 +3415,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+ 		return rv;
+ 	}
+ 
+-
++	intf->owner = owner;
+ 	intf->bmc = &intf->tmp_bmc;
+ 	INIT_LIST_HEAD(&intf->bmc->intfs);
+ 	mutex_init(&intf->bmc->dyn_mutex);
+@@ -3514,7 +3523,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+ 
+ 	return rv;
+ }
+-EXPORT_SYMBOL(ipmi_register_smi);
++EXPORT_SYMBOL(ipmi_add_smi);
+ 
+ static void deliver_smi_err_response(struct ipmi_smi *intf,
+ 				     struct ipmi_smi_msg *msg,
+diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
+index 4dc66157d8723..deec18b8944a8 100644
+--- a/include/linux/ipmi_smi.h
++++ b/include/linux/ipmi_smi.h
+@@ -224,10 +224,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
+  * is called, and the lower layer must get the interface from that
+  * call.
+  */
+-int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
+-		      void                     *send_info,
+-		      struct device            *dev,
+-		      unsigned char            slave_addr);
++int ipmi_add_smi(struct module            *owner,
++		 const struct ipmi_smi_handlers *handlers,
++		 void                     *send_info,
++		 struct device            *dev,
++		 unsigned char            slave_addr);
++
++#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
++	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
+ 
  /*
-  * Common acronyms and contractions used in register descriptions:
-  * * VLD : Variable-Length Decoder
-@@ -37,8 +40,8 @@
- #define VE_PRIMARY_CHROMA_BUF_LEN		0xc4
- #define VE_PRIMARY_FB_LINE_STRIDE		0xc8
- 
--#define VE_PRIMARY_FB_LINE_STRIDE_CHROMA(s)	(((s) << 16) & GENMASK(31, 16))
--#define VE_PRIMARY_FB_LINE_STRIDE_LUMA(s)	(((s) << 0) & GENMASK(15, 0))
-+#define VE_PRIMARY_FB_LINE_STRIDE_CHROMA(s)	SHIFT_AND_MASK_BITS(s, 31, 16)
-+#define VE_PRIMARY_FB_LINE_STRIDE_LUMA(s)	SHIFT_AND_MASK_BITS(s, 15, 0)
- 
- #define VE_CHROMA_BUF_LEN			0xe8
- 
-@@ -46,7 +49,7 @@
- #define VE_SECONDARY_OUT_FMT_EXT		(0x01 << 30)
- #define VE_SECONDARY_OUT_FMT_YU12		(0x02 << 30)
- #define VE_SECONDARY_OUT_FMT_YV12		(0x03 << 30)
--#define VE_CHROMA_BUF_LEN_SDRT(l)		((l) & GENMASK(27, 0))
-+#define VE_CHROMA_BUF_LEN_SDRT(l)		SHIFT_AND_MASK_BITS(l, 27, 0)
- 
- #define VE_PRIMARY_OUT_FMT			0xec
- 
-@@ -69,15 +72,15 @@
- 
- #define VE_DEC_MPEG_MP12HDR			(VE_ENGINE_DEC_MPEG + 0x00)
- 
--#define VE_DEC_MPEG_MP12HDR_SLICE_TYPE(t)	(((t) << 28) & GENMASK(30, 28))
-+#define VE_DEC_MPEG_MP12HDR_SLICE_TYPE(t)	SHIFT_AND_MASK_BITS(t, 30, 28)
- #define VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y)	(24 - 4 * (y) - 8 * (x))
- #define VE_DEC_MPEG_MP12HDR_F_CODE(__x, __y, __v) \
--	(((__v) & GENMASK(3, 0)) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(__x, __y))
-+	(((unsigned long)(__v) & GENMASK(3, 0)) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(__x, __y))
- 
- #define VE_DEC_MPEG_MP12HDR_INTRA_DC_PRECISION(p) \
--	(((p) << 10) & GENMASK(11, 10))
-+	SHIFT_AND_MASK_BITS(p, 11, 10)
- #define VE_DEC_MPEG_MP12HDR_INTRA_PICTURE_STRUCTURE(s) \
--	(((s) << 8) & GENMASK(9, 8))
-+	SHIFT_AND_MASK_BITS(s, 9, 8)
- #define VE_DEC_MPEG_MP12HDR_TOP_FIELD_FIRST(v) \
- 	((v) ? BIT(7) : 0)
- #define VE_DEC_MPEG_MP12HDR_FRAME_PRED_FRAME_DCT(v) \
-@@ -98,19 +101,19 @@
- #define VE_DEC_MPEG_PICCODEDSIZE		(VE_ENGINE_DEC_MPEG + 0x08)
- 
- #define VE_DEC_MPEG_PICCODEDSIZE_WIDTH(w) \
--	((DIV_ROUND_UP((w), 16) << 8) & GENMASK(15, 8))
-+	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((w), 16), 15, 8)
- #define VE_DEC_MPEG_PICCODEDSIZE_HEIGHT(h) \
--	((DIV_ROUND_UP((h), 16) << 0) & GENMASK(7, 0))
-+	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((h), 16), 7, 0)
- 
- #define VE_DEC_MPEG_PICBOUNDSIZE		(VE_ENGINE_DEC_MPEG + 0x0c)
- 
--#define VE_DEC_MPEG_PICBOUNDSIZE_WIDTH(w)	(((w) << 16) & GENMASK(27, 16))
--#define VE_DEC_MPEG_PICBOUNDSIZE_HEIGHT(h)	(((h) << 0) & GENMASK(11, 0))
-+#define VE_DEC_MPEG_PICBOUNDSIZE_WIDTH(w)	SHIFT_AND_MASK_BITS(w, 27, 16)
-+#define VE_DEC_MPEG_PICBOUNDSIZE_HEIGHT(h)	SHIFT_AND_MASK_BITS(h, 11, 0)
- 
- #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
- 
--#define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
--#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
-+#define VE_DEC_MPEG_MBADDR_X(w)			SHIFT_AND_MASK_BITS(w, 15, 8)
-+#define VE_DEC_MPEG_MBADDR_Y(h)			SHIFT_AND_MASK_BITS(h, 7, 0)
- 
- #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
- 
-@@ -225,7 +228,7 @@
- #define VE_DEC_MPEG_IQMINPUT_FLAG_INTRA		(0x01 << 14)
- #define VE_DEC_MPEG_IQMINPUT_FLAG_NON_INTRA	(0x00 << 14)
- #define VE_DEC_MPEG_IQMINPUT_WEIGHT(i, v) \
--	(((v) & GENMASK(7, 0)) | (((i) << 8) & GENMASK(13, 8)))
-+	(SHIFT_AND_MASK_BITS(i, 13, 8) | SHIFT_AND_MASK_BITS(v, 7, 0))
- 
- #define VE_DEC_MPEG_ERROR			(VE_ENGINE_DEC_MPEG + 0xc4)
- #define VE_DEC_MPEG_CRTMBADDR			(VE_ENGINE_DEC_MPEG + 0xc8)
+  * Remove a low-level interface from the IPMI driver.  This will
 -- 
 2.20.1
 
