@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4C2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6454FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED1C92077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366EF2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017285;
-	bh=KVELWriR2M1QbPsog9zvcEmalOdJbCRZm84jFAznJBQ=;
+	s=default; t=1576017287;
+	bh=EsSPc1sd0gY4a2b0lTfTBWwaoUMyF6gbZdlDgiamZ8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHOwpFGDMsAxObg37IYY5AUlaHz3htvVRXGsBmsrzzsX/96YRF0bSRrd+sjVft4aH
-	 VeLZxenSSEvvFr3zWTXB0FoWU7bjHDuHYhrYeHMFs6BrynDtBjrCDw0Y2dQFBpW2xd
-	 qqXG0pX8zSKNM5+DPqzIA7jaVX4Mw1B2LF7oyZ5k=
+	b=P3rWHeD3jpgdj6AWwINwTCXLAQUwyM6yg/7Vs+kD7tvYw/0aIIFjAD2JS9gwQBCu1
+	 pQYlb7+7rHS+E2qKHjG72WXOjTdJnuoq13Kdju2EMuhST1Rj/MfzjPn5S8rxramiRz
+	 fiEhBVobOCKv1ml7tEzUBaE6BNuQNQHgthqdnAoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbfLJWen (ORCPT
+        id S1730470AbfLJWeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56072 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730380AbfLJWed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:33 -0500
+        id S1730423AbfLJWeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2527820828;
-        Tue, 10 Dec 2019 22:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F31720836;
+        Tue, 10 Dec 2019 22:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017272;
-        bh=KVELWriR2M1QbPsog9zvcEmalOdJbCRZm84jFAznJBQ=;
+        s=default; t=1576017276;
+        bh=EsSPc1sd0gY4a2b0lTfTBWwaoUMyF6gbZdlDgiamZ8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TIcZJN+cVE5+3j9ChNbBsg9P1oialFuC7PGFMwwn79T98eem/YAPox30Y/Kp13b5
-         KROr0Ceo9TP0JvTadfd20CuwEvrkGDQeikLwgYr2I6TUArHesIiFvgLBkQCTPyTByo
-         ofnGpMdur82v6lVd9G7zTu5+++YcAA6RyDQ1sY8o=
+        b=ZO30B8VLqD59iNmr+DPk5JdV6E6vgbll/dVnkkQkRx7Wl1CPoKm7oW/JYHdWArbKg
+         FEICLU93AAREYCaEAA0a5jt90iaQOISDTiG5n4JMfB4CfuPzNwVPHMRIw4kTNigBHB
+         59OTzDnzHt3x08Yl/4ccCtM87QMAAYku679fY+nY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 64/71] iwlwifi: check kasprintf() return value
-Date:   Tue, 10 Dec 2019 17:33:09 -0500
-Message-Id: <20191210223316.14988-64-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 67/71] crypto: vmx - Avoid weird build failures
+Date:   Tue, 10 Dec 2019 17:33:12 -0500
+Message-Id: <20191210223316.14988-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -60,50 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
+[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
 
-kasprintf() can fail, we should check the return value.
+In the vmx crypto Makefile we assign to a variable called TARGET and
+pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
 
-Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
-Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+The variable is meant to describe what flavour of powerpc we're
+building for, eg. either 32 or 64-bit, and big or little endian.
+
+Unfortunately TARGET is a fairly common name for a make variable, and
+if it happens that TARGET is specified as a command line parameter to
+make, the value specified on the command line will override our value.
+
+In particular this can happen if the kernel Makefile is driven by an
+external Makefile that uses TARGET for something.
+
+This leads to weird build failures, eg:
+  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
+  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+
+Which shows that we passed an empty value for $(TARGET) to the perl
+script, confirmed with make V=1:
+
+  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
+
+We can avoid this confusion by using override, to tell make that we
+don't want anything to override our variable, even a value specified
+on the command line. We can also use a less common name, given the
+script calls it "flavour", let's use that.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/iwlwifi/dvm/led.c | 3 +++
- drivers/net/wireless/iwlwifi/mvm/led.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/crypto/vmx/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/iwlwifi/dvm/led.c b/drivers/net/wireless/iwlwifi/dvm/led.c
-index ca4d6692cc4eb..47e5fa70483d1 100644
---- a/drivers/net/wireless/iwlwifi/dvm/led.c
-+++ b/drivers/net/wireless/iwlwifi/dvm/led.c
-@@ -184,6 +184,9 @@ void iwl_leds_init(struct iwl_priv *priv)
+diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
+index d28ab96a24759..7663494809a0c 100644
+--- a/drivers/crypto/vmx/Makefile
++++ b/drivers/crypto/vmx/Makefile
+@@ -2,13 +2,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
+ vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o ghash.o
  
- 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(priv->hw->wiphy));
-+	if (!priv->led.name)
-+		return;
-+
- 	priv->led.brightness_set = iwl_led_brightness_set;
- 	priv->led.blink_set = iwl_led_blink_set;
- 	priv->led.max_brightness = 1;
-diff --git a/drivers/net/wireless/iwlwifi/mvm/led.c b/drivers/net/wireless/iwlwifi/mvm/led.c
-index e3b3cf4dbd77a..948be43e4d266 100644
---- a/drivers/net/wireless/iwlwifi/mvm/led.c
-+++ b/drivers/net/wireless/iwlwifi/mvm/led.c
-@@ -109,6 +109,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-TARGET := linux-ppc64le
++override flavour := linux-ppc64le
+ else
+-TARGET := linux-ppc64
++override flavour := linux-ppc64
+ endif
  
- 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(mvm->hw->wiphy));
-+	if (!mvm->led.name)
-+		return -ENOMEM;
-+
- 	mvm->led.brightness_set = iwl_led_brightness_set;
- 	mvm->led.max_brightness = 1;
+ quiet_cmd_perl = PERL $@
+-      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
++      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
  
+ $(src)/aesp8-ppc.S: $(src)/aesp8-ppc.pl
+ 	$(call cmd,perl)
 -- 
 2.20.1
 
