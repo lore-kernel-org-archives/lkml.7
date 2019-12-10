@@ -2,51 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CC8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A19C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD1420838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831E120838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017212;
-	bh=0paNQ3KtIheJ2LxxBgv2LUM89tiwChRj4J8wYO41Q68=;
+	s=default; t=1576017219;
+	bh=dGlrQtKk+2i3iVauwHrp2MuaUdZqTCOvi9Gm7Ko0JIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wlb+qbgQ0W1vxevTtRyT87ktMAqBDjBiDqeyLLR0r8g/0OmPdBN/5I1AbTabVNxCb
-	 WIlvxd0/fYe+WRB0nm4htnNDs8jS/EyRDhpOcepslsLMxYMBVqsDNFMNjuwwAAVxKE
-	 d4cxqZgIeMIjxanvP60fpnJA5XqcpZa6WtjbyZmA=
+	b=SZgXEstyPanFxieBPzonCDEZNC8FXK8ub4B2OL/k6KHQFOCXMd6jaiLgiortdf5NS
+	 MZSbXiXn2HLjiVgf2ubVS8yqameMkeRehogjo1RjuM/bFqz2h8JsPLnoPNl1SXrp39
+	 kadTBWiwQ9PlgYKMhA7ZeM5DBJsSJFw3TDAesU7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbfLJWda (ORCPT
+        id S1729893AbfLJWdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54216 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:33:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbfLJWd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:26 -0500
+        id S1729811AbfLJWdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABCCA20836;
-        Tue, 10 Dec 2019 22:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F572207FF;
+        Tue, 10 Dec 2019 22:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017205;
-        bh=0paNQ3KtIheJ2LxxBgv2LUM89tiwChRj4J8wYO41Q68=;
+        s=default; t=1576017211;
+        bh=dGlrQtKk+2i3iVauwHrp2MuaUdZqTCOvi9Gm7Ko0JIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2JDpTQoArIpq4JnHWPOLC/woo9QTPZk1b0DVOFXcJrrKZcNAQ8jjmA+YFXa75V2A
-         9necBXsufCkyxHpKXch0LBP7bB+agaq5OXHcxQngMEHBdWZcxRrZg0kyvoz5uXvdbK
-         VBl2Iu4cZppQ8ztmdrmhnzzvHO6aDQvZo2WMn0R4=
+        b=AjGZeC/4VLtMNJuUMNInEaTzTJX0jhNxTegip9q6m7zcDlYE7eizxsSVlZRY0+NjG
+         qqhlltC3dR3AvgqI2plOqoAv7LF21eWSiO0r3BJzlG4B4UOwMNBXotYC26hqX+BtYH
+         NIYD8idsG9WUKCbxWZNfsTM0IAjNNrmBB1BJtP1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/71] IB/iser: bound protection_sg size by data_sg size
-Date:   Tue, 10 Dec 2019 17:32:12 -0500
-Message-Id: <20191210223316.14988-7-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.4 12/71] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
+Date:   Tue, 10 Dec 2019 17:32:17 -0500
+Message-Id: <20191210223316.14988-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,38 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+When building cpupower with clang, the following warning appears:
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+ utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
+ prior initialization of this subobject [-Winitializer-overrides]
+                 .desc                   = N_("Processor Package C2"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                              ^~~~~~
+ utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
+ is here
+                 .desc                   = N_("Processor Package C9"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                             ^~~~~~
+ 1 warning generated.
+
+This appears to be a copy and paste or merge mistake because the name
+and id fields both have PC9 in them, not PC2. Remove the second
+assignment to fix the warning.
+
+Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/718
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 9080161e01af1..edb064f9f0f14 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_conn->device->dev_attr.sig_prot_cap;
- 
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
+diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+index ebeaba6571a38..475e18e043187 100644
+--- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
+ 	{
+ 		.name			= "PC9",
+ 		.desc			= N_("Processor Package C9"),
+-		.desc			= N_("Processor Package C2"),
+ 		.id			= PC9,
+ 		.range			= RANGE_PACKAGE,
+ 		.get_count_percent	= hsw_ext_get_count_percent,
 -- 
 2.20.1
 
