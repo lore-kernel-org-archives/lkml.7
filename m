@@ -2,212 +2,161 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401FFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A6C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12952071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3692A20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="uZaQ7cQe"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sb87YeZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfLJBz1 (ORCPT
+        id S1726683AbfLJB5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:55:27 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61825 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726538AbfLJBz0 (ORCPT
+        Mon, 9 Dec 2019 20:57:51 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37195 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfLJB5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:55:26 -0500
-X-UUID: 34349c59b1ea4d059b785dcfb22f0f4f-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=982g9dOwewSGMZ2O7hXVzIKUMw7xMt+hL8+JyD3K+Vs=;
-        b=uZaQ7cQe4fjytkh4JOaviVooU/CfNLnDqTsd7oedT2a33v/5AtbbMwfnyzERD/O4/2Gs9EGyjEcrtK8r2uTBHiazzsYDm1X9vKSDCslghqT3n9/0+bGvY6W5LyZx2c2p280Gv54FM3lZB00An0L7m8gfrXVFlz06/q7PIem73VU=;
-X-UUID: 34349c59b1ea4d059b785dcfb22f0f4f-20191210
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 563836277; Tue, 10 Dec 2019 09:55:07 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 09:54:48 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 09:54:48 +0800
-Message-ID: <1575942906.12891.6.camel@mtksdaap41>
-Subject: Re: [PATCH v2 02/14] mailbox: cmdq: variablize address shift in
- platform
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Dec 2019 09:55:06 +0800
-In-Reply-To: <1574819937-6246-4-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-4-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 20:57:50 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ep17so6697211pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 17:57:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=X0ZaIoyR0nAfoAh+OKYqyipN9nS86d8k81AmmebC5Dc=;
+        b=sb87YeZvIf6gK8MxK8th+yPOx87KM8qaPeiKcUwKrOIbUgAb9I5pwdg/HMyYMEDSSx
+         UIUHeTq/3n/rBqNZHIglSd1ZJQNnRBMbk3fl2Jm5pL0BAUlr6J6zFW9eqct/2KKka5/+
+         rF/C68G6ytDbE9x3eU5OLeWVNKeFrN9mcSo/Vw1Itifv2X0/apYsiYes1MIpbZpxWJ2s
+         5LOa/8C2bnf2YXD0bT0S+gAJjfIgQh9JeEWoYt/LoXh45DUXGqJ2cEsH1ffV7gkHSTox
+         UD0gocftINsuxU3GYY/IsPowiTQjL9g9wJqSZdBmrIc02mg++MVUodsJqTT1Tc3U1I0V
+         43/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=X0ZaIoyR0nAfoAh+OKYqyipN9nS86d8k81AmmebC5Dc=;
+        b=g1ZlcWO0Jqju0ti6bKmtadvlNGyEP+GptYB9HrW49ODmE4Ow5lfRcnEMgII5g2sf9i
+         RctW8OqTCQ3V+m0yAfZDYFJvvvj8VB9sCrBHNnCdKxRiNPBtfmQEzoFObeqz5zl1jMx5
+         gpI+2RxTbprvtysnSeU+Z0896EMk7Ld1UygZL+iXSdGyiTWb6EBryIzUbRA0S8lOgIVT
+         O9iErp8b96C9x+rLtfs1FN+jxLvQUj76uFnCkWXjVOAgjPhLmSRCEx0bU/8/7c+Mf1Pz
+         VLwGHGS7ODalMYoZyBk7bqSFWgBWCBtR72wk1frheJZqJzg8sInG4kEj9Iv4qTKa2eNs
+         xEGA==
+X-Gm-Message-State: APjAAAVyJm48F8Tkb9+kYUBWeuHycfo5v2r4IEpzAIge1+ny6n3Nsmly
+        gJaFWq2sG+z8cQq4ERpZx+Crqg==
+X-Google-Smtp-Source: APXvYqys8ovS57cLyC7J/rp5+/z3FlN6mLZcXsxEwRgLeXUTRjanA6cqMt/mABIv9OcM6hrstcgOXQ==
+X-Received: by 2002:a17:90a:28a1:: with SMTP id f30mr2508921pjd.77.1575943069618;
+        Mon, 09 Dec 2019 17:57:49 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id h11sm775665pgv.38.2019.12.09.17.57.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 17:57:49 -0800 (PST)
+Date:   Mon, 9 Dec 2019 17:57:45 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>, <ast@fb.com>,
+        <daniel@iogearbox.net>, <andrii.nakryiko@gmail.com>,
+        <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191209175745.2d96a1f0@cakuba.netronome.com>
+In-Reply-To: <20191210011438.4182911-12-andriin@fb.com>
+References: <20191210011438.4182911-1-andriin@fb.com>
+        <20191210011438.4182911-12-andriin@fb.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IFNvbWUgZ2NlIGhhcmR3YXJlIHNoaWZ0IHBjIGFuZCBlbmQgYWRk
-cmVzcyBpbiByZWdpc3RlciB0byBzdXBwb3J0DQo+IGxhcmdlIGRyYW0gYWRkcmVzc2luZy4NCj4g
-SW1wbGVtZW50IGdjZSBhZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5k
-IHJlZ2lzdGVyLg0KPiBBbmQgYWRkIHNoaWZ0IGJpdCBpbiBwbGF0Zm9ybSBkZWZpbml0aW9uLg0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVk
-aWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMg
-ICAgICAgfCA1NyArKysrKysrKysrKysrKysrKystLS0tLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiAgaW5jbHVkZS9saW51eC9tYWlsYm94
-L210ay1jbWRxLW1haWxib3guaCB8ICAyICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0
-aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tYWls
-Ym94L210ay1jbWRxLW1haWxib3guYyBiL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
-LmMNCj4gaW5kZXggOWE2Y2U5ZjVhN2RiLi5kNTUzNjU2M2ZjZTEgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gKysrIGIvZHJpdmVycy9tYWlsYm94
-L210ay1jbWRxLW1haWxib3guYw0KPiBAQCAtNzYsOCArNzYsMjEgQEAgc3RydWN0IGNtZHEgew0K
-PiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiAgCXN0cnVjdCBjbGsJCSpjbG9jazsN
-Cj4gIAlib29sCQkJc3VzcGVuZGVkOw0KPiArCXU4CQkJc2hpZnRfcGE7DQo+ICB9Ow0KPiAgDQo+
-ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiArCXUzMiB0aHJlYWRfbnI7DQo+ICsJdTggc2hpZnQ7DQo+
-ICt9Ow0KPiArDQo+ICt1OCBjbWRxX21ib3hfc2hpZnQoc3RydWN0IG1ib3hfY2hhbiAqY2hhbikN
-Cj4gK3sNCj4gKwlzdHJ1Y3QgY21kcSAqY21kcSA9IGNvbnRhaW5lcl9vZihjaGFuLT5tYm94LCBz
-dHJ1Y3QgY21kcSwgbWJveCk7DQo+ICsNCj4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ICt9
-DQoNCkVYUE9SVF9TWU1CT0woY21kcV9tYm94X3NoaWZ0KTsNCg0KPiArDQo+ICBzdGF0aWMgaW50
-IGNtZHFfdGhyZWFkX3N1c3BlbmQoc3RydWN0IGNtZHEgKmNtZHEsIHN0cnVjdCBjbWRxX3RocmVh
-ZCAqdGhyZWFkKQ0KPiAgew0KPiAgCXUzMiBzdGF0dXM7DQo+IEBAIC0xNzYsNiArMTg5LDcgQEAg
-c3RhdGljIHZvaWQgY21kcV90YXNrX3JlbW92ZV93ZmUoc3RydWN0IGNtZHFfdGFzayAqdGFzaykN
-Cj4gIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSB0YXNrLT5jbWRxLT5tYm94LmRldjsNCj4g
-IAl1NjQgKmJhc2UgPSB0YXNrLT5wa3QtPnZhX2Jhc2U7DQo+ICsJc3RydWN0IGNtZHEgKmNtZHEg
-PSB0YXNrLT5jbWRxOw0KPiAgCWludCBpOw0KPiAgDQo+ICAJZG1hX3N5bmNfc2luZ2xlX2Zvcl9j
-cHUoZGV2LCB0YXNrLT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gQEAgLTE4
-Myw3ICsxOTcsNyBAQCBzdGF0aWMgdm9pZCBjbWRxX3Rhc2tfcmVtb3ZlX3dmZShzdHJ1Y3QgY21k
-cV90YXNrICp0YXNrKQ0KPiAgCWZvciAoaSA9IDA7IGkgPCBDTURRX05VTV9DTUQodGFzay0+cGt0
-KTsgaSsrKQ0KPiAgCQlpZiAoY21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gIAkJCWJh
-c2VbaV0gPSAodTY0KUNNRFFfSlVNUF9CWV9PRkZTRVQgPDwgMzIgfA0KPiAtCQkJCSAgQ01EUV9K
-VU1QX1BBU1M7DQo+ICsJCQkJICBDTURRX0pVTVBfUEFTUyA+PiBjbWRxLT5zaGlmdF9wYTsNCg0K
-Y21kcSBpcyBvbmx5IHVzZWQgaGVyZSwgc28gSSB3b3VsZCBsaWtlDQoNCkNNRFFfSlVNUF9QQVNT
-ID4+IHRhc2stPmNtZHEtPnNoaWZ0X3BhOw0KDQo+ICAJZG1hX3N5bmNfc2luZ2xlX2Zvcl9kZXZp
-Y2UoZGV2LCB0YXNrLT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gIAkJCQkg
-ICBETUFfVE9fREVWSUNFKTsNCj4gIH0NCj4gQEAgLTIyMSwxMyArMjM1LDE1IEBAIHN0YXRpYyB2
-b2lkIGNtZHFfdGFza19oYW5kbGVfZXJyb3Ioc3RydWN0IGNtZHFfdGFzayAqdGFzaykNCj4gIHsN
-Cj4gIAlzdHJ1Y3QgY21kcV90aHJlYWQgKnRocmVhZCA9IHRhc2stPnRocmVhZDsNCj4gIAlzdHJ1
-Y3QgY21kcV90YXNrICpuZXh0X3Rhc2s7DQo+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSB0YXNrLT5j
-bWRxOw0KPiAgDQo+ICAJZGV2X2Vycih0YXNrLT5jbWRxLT5tYm94LmRldiwgInRhc2sgMHglcCBl
-cnJvclxuIiwgdGFzayk7DQo+ICAJV0FSTl9PTihjbWRxX3RocmVhZF9zdXNwZW5kKHRhc2stPmNt
-ZHEsIHRocmVhZCkgPCAwKTsNCj4gIAluZXh0X3Rhc2sgPSBsaXN0X2ZpcnN0X2VudHJ5X29yX251
-bGwoJnRocmVhZC0+dGFza19idXN5X2xpc3QsDQo+ICAJCQlzdHJ1Y3QgY21kcV90YXNrLCBsaXN0
-X2VudHJ5KTsNCj4gIAlpZiAobmV4dF90YXNrKQ0KPiAtCQl3cml0ZWwobmV4dF90YXNrLT5wYV9i
-YXNlLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiArCQl3cml0ZWwobmV4
-dF90YXNrLT5wYV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiArCQkgICAgICAgdGhyZWFkLT5i
-YXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAljbWRxX3RocmVhZF9yZXN1bWUodGhyZWFk
-KTsNCj4gIH0NCj4gIA0KPiBAQCAtMjU3LDcgKzI3Myw3IEBAIHN0YXRpYyB2b2lkIGNtZHFfdGhy
-ZWFkX2lycV9oYW5kbGVyKHN0cnVjdCBjbWRxICpjbWRxLA0KPiAgCWVsc2UNCj4gIAkJcmV0dXJu
-Ow0KPiAgDQo+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJf
-QUREUik7DQo+ICsJY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJf
-QUREUikgPDwgY21kcS0+c2hpZnRfcGE7DQo+ICANCj4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5X3Nh
-ZmUodGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4gIAkJCQkgbGlzdF9lbnRy
-eSkgew0KPiBAQCAtMzczLDE2ICszODksMjAgQEAgc3RhdGljIGludCBjbWRxX21ib3hfc2VuZF9k
-YXRhKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4sIHZvaWQgKmRhdGEpDQo+ICAJCVdBUk5fT04oY2xr
-X2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gIAkJV0FSTl9PTihjbWRxX3RocmVhZF9yZXNl
-dChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+ICANCj4gLQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UsIHRo
-cmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQo+IC0JCXdyaXRlbCh0YXNrLT5wYV9i
-YXNlICsgcGt0LT5jbWRfYnVmX3NpemUsDQo+ICsJCXdyaXRlbCh0YXNrLT5wYV9iYXNlID4+IGNt
-ZHEtPnNoaWZ0X3BhLA0KPiArCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9B
-RERSKTsNCj4gKwkJd3JpdGVsKCh0YXNrLT5wYV9iYXNlICsgcGt0LT5jbWRfYnVmX3NpemUpID4+
-IGNtZHEtPnNoaWZ0X3BhLA0KPiAgCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5E
-X0FERFIpOw0KPiArDQo+ICAJCXdyaXRlbCh0aHJlYWQtPnByaW9yaXR5LCB0aHJlYWQtPmJhc2Ug
-KyBDTURRX1RIUl9QUklPUklUWSk7DQo+ICAJCXdyaXRlbChDTURRX1RIUl9JUlFfRU4sIHRocmVh
-ZC0+YmFzZSArIENNRFFfVEhSX0lSUV9FTkFCTEUpOw0KPiAgCQl3cml0ZWwoQ01EUV9USFJfRU5B
-QkxFRCwgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5BQkxFX1RBU0spOw0KPiAgCX0gZWxzZSB7
-DQo+ICAJCVdBUk5fT04oY21kcV90aHJlYWRfc3VzcGVuZChjbWRxLCB0aHJlYWQpIDwgMCk7DQo+
-IC0JCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0K
-PiAtCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRfQUREUik7DQo+
-ICsJCWN1cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpIDw8
-DQo+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gKwkJZW5kX3BhID0gcmVhZGwodGhyZWFkLT5iYXNl
-ICsgQ01EUV9USFJfRU5EX0FERFIpIDw8DQo+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gIA0KPiAg
-CQkvKg0KPiAgCQkgKiBBdG9taWMgZXhlY3V0aW9uIHNob3VsZCByZW1vdmUgdGhlIGZvbGxvd2lu
-ZyB3ZmUsIGkuZS4gb25seQ0KPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0YXRpYyBpbnQgY21kcV9t
-Ym94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiAgCQkJ
-CWNtZHFfdGhyZWFkX3dhaXRfZW5kKHRocmVhZCwgZW5kX3BhKTsNCj4gIAkJCQlXQVJOX09OKGNt
-ZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiAgCQkJCS8qIHNldCB0byB0
-aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCj4gKwkJ
-CQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gIAkJCQkgICAgICAg
-dGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAkJCX0gZWxzZSB7DQo+ICAJ
-CQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4gQEAgLTQwNywxNCArNDI3
-LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpj
-aGFuLCB2b2lkICpkYXRhKQ0KPiAgCQkJaWYgKGN1cnJfcGEgPT0gZW5kX3BhIC0gQ01EUV9JTlNU
-X1NJWkUgfHwNCj4gIAkJCSAgICBjdXJyX3BhID09IGVuZF9wYSkgew0KPiAgCQkJCS8qIHNldCB0
-byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gLQkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSwNCj4g
-KwkJCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gIAkJCQkgICAg
-ICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gIAkJCX0gZWxzZSB7DQo+
-ICAJCQkJY21kcV90YXNrX2luc2VydF9pbnRvX3RocmVhZCh0YXNrKTsNCj4gIAkJCQlzbXBfbWIo
-KTsgLyogbW9kaWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8NCj4gIAkJCX0NCj4gIAkJ
-fQ0KPiAtCQl3cml0ZWwodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiArCQl3
-cml0ZWwoKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRf
-cGEsDQo+ICAJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9FTkRfQUREUik7DQo+ICAJ
-CWNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiAgCX0NCj4gQEAgLTQ2MSw2ICs0ODEsNyBA
-QCBzdGF0aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
-IAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gIAlzdHJ1Y3QgY21kcSAqY21kcTsNCj4gIAlpbnQg
-ZXJyLCBpOw0KPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0KPiAgDQo+ICAJY21kcSA9
-IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqY21kcSksIEdGUF9LRVJORUwpOw0KPiAgCWlmICgh
-Y21kcSkNCj4gQEAgLTQ3OSw3ICs1MDAsMTQgQEAgc3RhdGljIGludCBjbWRxX3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgCX0NCj4g
-IA0KPiAtCWNtZHEtPnRocmVhZF9uciA9ICh1MzIpKHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dl
-dF9tYXRjaF9kYXRhKGRldik7DQo+ICsJcGxhdF9kYXRhID0gKHN0cnVjdCBnY2VfcGxhdCAqKW9m
-X2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiArCWlmICghcGxhdF9kYXRhKSB7DQo+ICsJ
-CWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBtYXRjaCBkYXRhXG4iKTsNCj4gKwkJcmV0dXJu
-IC1FSU5WQUw7DQo+ICsJfQ0KPiArDQo+ICsJY21kcS0+dGhyZWFkX25yID0gcGxhdF9kYXRhLT50
-aHJlYWRfbnI7DQo+ICsJY21kcS0+c2hpZnRfcGEgPSBwbGF0X2RhdGEtPnNoaWZ0Ow0KPiAgCWNt
-ZHEtPmlycV9tYXNrID0gR0VOTUFTSyhjbWRxLT50aHJlYWRfbnIgLSAxLCAwKTsNCj4gIAllcnIg
-PSBkZXZtX3JlcXVlc3RfaXJxKGRldiwgY21kcS0+aXJxLCBjbWRxX2lycV9oYW5kbGVyLCBJUlFG
-X1NIQVJFRCwNCj4gIAkJCSAgICAgICAibXRrX2NtZHEiLCBjbWRxKTsNCj4gQEAgLTU0Miw5ICs1
-NzAsMTIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGNtZHFfcG1fb3BzID0gew0K
-PiAgCS5yZXN1bWUgPSBjbWRxX3Jlc3VtZSwNCj4gIH07DQo+ICANCj4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2LCAuc2hpZnQgPSAw
-fTsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjMgPSB7LnRocmVh
-ZF9uciA9IDI0LCAuc2hpZnQgPSAwfTsNCg0KRm9yIGdsb2JhbCB2YXJpYWJsZSwgeW91IG5lZWQg
-bm90IHRvIGluaXRpYWxpemUgaXQgdG8gemVyby4NCg0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBjbWRxX29mX2lkc1tdID0gew0KPiAtCXsuY29tcGF0aWJsZSA9ICJt
-ZWRpYXRlayxtdDgxNzMtZ2NlIiwgLmRhdGEgPSAodm9pZCAqKTE2fSwNCj4gLQl7LmNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRhID0gKHZvaWQgKikyNH0sDQo+ICsJey5j
-b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9w
-bGF0X3YyfSwNCj4gKwl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLWdjZSIsIC5kYXRh
-ID0gKHZvaWQgKikmZ2NlX3BsYXRfdjN9LA0KPiAgCXt9DQo+ICB9Ow0KPiAgDQo+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29j
-L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDlhZGQwZmQ1ZmE2Yy4uMjc0ZjZm
-MzExZDA1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
-ZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBA
-QCAtMjgxLDYgKzI4MSw3IEBAIEVYUE9SVF9TWU1CT0woY21kcV9wa3RfcG9sbF9tYXNrKTsNCj4g
-IA0KPiAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCkN
-Cj4gIHsNCj4gKwlzdHJ1Y3QgY21kcV9jbGllbnQgKmNsID0gcGt0LT5jbDsNCj4gIAlzdHJ1Y3Qg
-Y21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gIAlpbnQgZXJyOw0KPiAgDQo+IEBA
-IC0yOTMsNyArMjk0LDcgQEAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21k
-cV9wa3QgKnBrdCkNCj4gIA0KPiAgCS8qIEpVTVAgdG8gZW5kICovDQo+ICAJaW5zdC5vcCA9IENN
-RFFfQ09ERV9KVU1QOw0KPiAtCWluc3QudmFsdWUgPSBDTURRX0pVTVBfUEFTUzsNCj4gKwlpbnN0
-LnZhbHVlID0gQ01EUV9KVU1QX1BBU1MgPj4gY21kcV9tYm94X3NoaWZ0KGNsLT5jaGFuKTsNCg0K
-Y2wgaXMgdXNlZCBvbmx5IGhlcmUsIHNvIEkgd291bGQgbGlrZQ0KDQpjbWRxX21ib3hfc2hpZnQo
-cGt0LT5jbC0+Y2hhbik7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAJZXJyID0gY21kcV9wa3RfYXBw
-ZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gIA0KPiAgCXJldHVybiBlcnI7DQo+IGRpZmYgLS1n
-aXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIvaW5jbHVkZS9s
-aW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCBhNGRjNDVmYmVjMGEuLmRm
-ZTViMmViODVjYyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRx
-LW1haWxib3guaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJv
-eC5oDQo+IEBAIC04OCw0ICs4OCw2IEBAIHN0cnVjdCBjbWRxX3BrdCB7DQo+ICAJdm9pZAkJCSpj
-bDsNCj4gIH07DQo+ICANCj4gK3U4IGNtZHFfbWJveF9zaGlmdChzdHJ1Y3QgbWJveF9jaGFuICpj
-aGFuKTsNCj4gKw0KPiAgI2VuZGlmIC8qIF9fTVRLX0NNRFFfTUFJTEJPWF9IX18gKi8NCg0K
+On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:
+> struct <object-name> {
+> 	/* used by libbpf's skeleton API */
+> 	struct bpf_object_skeleton *skeleton;
+> 	/* bpf_object for libbpf APIs */
+> 	struct bpf_object *obj;
+> 	struct {
+> 		/* for every defined map in BPF object: */
+> 		struct bpf_map *<map-name>;
+> 	} maps;
+> 	struct {
+> 		/* for every program in BPF object: */
+> 		struct bpf_program *<program-name>;
+> 	} progs;
+> 	struct {
+> 		/* for every program in BPF object: */
+> 		struct bpf_link *<program-name>;
+> 	} links;
+> 	/* for every present global data section: */
+> 	struct <object-name>__<one of bss, data, or rodata> {
+> 		/* memory layout of corresponding data section,
+> 		 * with every defined variable represented as a struct field
+> 		 * with exactly the same type, but without const/volatile
+> 		 * modifiers, e.g.:
+> 		 */
+> 		 int *my_var_1;
+> 		 ...
+> 	} *<one of bss, data, or rodata>;
+> };
 
+I think I understand how this is useful, but perhaps the problem here
+is that we're using C for everything, and simple programs for which
+loading the ELF is majority of the code would be better of being
+written in a dynamic language like python?  Would it perhaps be a
+better idea to work on some high-level language bindings than spend
+time writing code gens and working around limitations of C?
+
+> This provides great usability improvements:
+> - no need to look up maps and programs by name, instead just
+>   my_obj->maps.my_map or my_obj->progs.my_prog would give necessary
+>   bpf_map/bpf_program pointers, which user can pass to existing libbpf APIs;
+> - pre-defined places for bpf_links, which will be automatically populated for
+>   program types that libbpf knows how to attach automatically (currently
+>   tracepoints, kprobe/kretprobe, raw tracepoint and tracing programs). On
+>   tearing down skeleton, all active bpf_links will be destroyed (meaning BPF
+>   programs will be detached, if they are attached). For cases in which libbpf
+>   doesn't know how to auto-attach BPF program, user can manually create link
+>   after loading skeleton and they will be auto-detached on skeleton
+>   destruction:
+> 
+> 	my_obj->links.my_fancy_prog = bpf_program__attach_cgroup_whatever(
+> 		my_obj->progs.my_fancy_prog, <whatever extra param);
+> 
+> - it's extremely easy and convenient to work with global data from userspace
+>   now. Both for read-only and read/write variables, it's possible to
+>   pre-initialize them before skeleton is loaded:
+> 
+> 	skel = my_obj__open(raw_embed_data);
+> 	my_obj->rodata->my_var = 123;
+> 	my_obj__load(skel); /* 123 will be initialization value for my_var */
+> 
+>   After load, if kernel supports mmap() for BPF arrays, user can still read
+>   (and write for .bss and .data) variables values, but at that point it will
+>   be directly mmap()-ed to BPF array, backing global variables. This allows to
+>   seamlessly exchange data with BPF side. From userspace program's POV, all
+>   the pointers and memory contents stay the same, but mapped kernel memory
+>   changes to point to created map.
+>   If kernel doesn't yet support mmap() for BPF arrays, it's still possible to
+>   use those data section structs to pre-initialize .bss, .data, and .rodata,
+>   but after load their pointers will be reset to NULL, allowing user code to
+>   gracefully handle this condition, if necessary.
+> 
+> Given a big surface area, skeleton is kept as an experimental non-public
+> API for now, until more feedback and real-world experience is collected.
+
+That makes no sense to me. bpftool has the same backward compat
+requirements as libbpf. You're just pushing the requirements from
+one component to the other. Feedback and real-world use cases have 
+to be exercised before code is merged to any project with backward
+compatibility requirements :(
+
+Also please run checkpatch on your patches, and fix reverse xmas tree.
+This is bpftool, not libbpf. Creating a separate tool for this codegen
+stuff is also an option IMHO.
