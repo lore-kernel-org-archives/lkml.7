@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CAEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B418C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7F5205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165C8206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012641;
-	bh=cp4phJm/TezhfmFoD663bW+TwsJsekUBu7sOpwQxN5s=;
+	s=default; t=1576012646;
+	bh=u0aHa+I+Jg9B2MxzGcgEWpk6L/1D3U3c2zfgH+wGegg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KV3hb5W5X2Tmb97dbpMTIQ2O56GxBoOi41GIYEnXkweBpYoIBgifm9gHrxGAaGH7y
-	 k3gV2uDI04Ud0jEqOIIQUSueRRR4RO4RCNb+KjiAHRGPg/PmU4oo7/5d0SKrhIG45t
-	 T14P+AnQJNvSWJEEqhD2bdxnSd7iR16PHTT8f91s=
+	b=LB/NGBeD3GJftR0S9jvvV9wmFQSU95nbiIiA6QnmUKALIqvuP1cytnqiGfUfQmCre
+	 Sb89D07LziDtECjjHA5sey11Pt+PWBKWVIhXK+UG2Z0zz4uEdLdaOvQv375kvtXxjR
+	 9ybWUUCVHX2YUOoRjbm0/xvFcM7ms/UwcYRbrUXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfLJVRR (ORCPT
+        id S1729144AbfLJVM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:17:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38634 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfLJVNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:00 -0500
+        id S1729126AbfLJVMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8733721D7D;
-        Tue, 10 Dec 2019 21:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272EA222C4;
+        Tue, 10 Dec 2019 21:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012380;
-        bh=cp4phJm/TezhfmFoD663bW+TwsJsekUBu7sOpwQxN5s=;
+        s=default; t=1576012373;
+        bh=u0aHa+I+Jg9B2MxzGcgEWpk6L/1D3U3c2zfgH+wGegg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqBkxtHuTToxyhbWQHC9XvQvIWrcP2x6+U0Mrlhekrk8oyzB00vkgax5xmrerc+nH
-         xQ+8VBg+0q8Ceq2u8r47fD89soyo1Mjrb0byvKhc58J/VDW2ai6Byy4T7TE3Y1RjOD
-         XQKLqUB1pm3QOQVFc+w9kCEJQY+dGfYRxde3a+vk=
+        b=2Oe3pjyr4pTbr7icGH6edWTuZxhbu+R8ZF88kGQwXxzhEn90ONpdSpLWrbFOMXK6F
+         y9TPmno/CeWCvzSWgxBzFAImIHGcW2kGTNB5mXMhYNrZ9puUTkFipOFzTbKskAQAim
+         iU++NQ5L6bBi2w3u1Yr587qwSKCiH/7LNzPahX/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 304/350] ASoC: wm5100: add missed pm_runtime_disable
-Date:   Tue, 10 Dec 2019 16:06:49 -0500
-Message-Id: <20191210210735.9077-265-sashal@kernel.org>
+Cc:     Omar Sandoval <osandov@fb.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 299/350] btrfs: don't prematurely free work in end_workqueue_fn()
+Date:   Tue, 10 Dec 2019 16:06:44 -0500
+Message-Id: <20191210210735.9077-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit b1176bbb70866f24099cd2720283c7219fb4a81c ]
+[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
 
-The driver forgets to call pm_runtime_disable in remove and
-probe failure.
-Add the calls to fix it.
+Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+the work item) and then calls bio_endio(). This is another potential
+instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20191118073707.28298-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+In particular, the endio call may depend on other work items. For
+example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+__btrfs_correct_data_nocsum() -> dio_read_error() ->
+submit_dio_repair_bio(), which submits a bio that is also completed
+through a end_workqueue_fn() work item. However,
+__btrfs_correct_data_nocsum() waits for the newly submitted bio to
+complete, thus it depends on another work item.
+
+This example currently usually works because we use different workqueue
+helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+However, it may deadlock with stacked filesystems and is fragile
+overall. The proper fix is to free the work item at the very end of the
+work function, so let's do that.
+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm5100.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/disk-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm5100.c b/sound/soc/codecs/wm5100.c
-index 4af0e519e6235..91cc63c5a51fa 100644
---- a/sound/soc/codecs/wm5100.c
-+++ b/sound/soc/codecs/wm5100.c
-@@ -2617,6 +2617,7 @@ static int wm5100_i2c_probe(struct i2c_client *i2c,
- 	return ret;
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 402b61bf345cd..3895c21853cc4 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1657,8 +1657,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
+ 	bio->bi_status = end_io_wq->status;
+ 	bio->bi_private = end_io_wq->private;
+ 	bio->bi_end_io = end_io_wq->end_io;
+-	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ 	bio_endio(bio);
++	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ }
  
- err_reset:
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm5100);
- 	wm5100_free_gpio(i2c);
-@@ -2640,6 +2641,7 @@ static int wm5100_i2c_remove(struct i2c_client *i2c)
- {
- 	struct wm5100_priv *wm5100 = i2c_get_clientdata(i2c);
- 
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm5100);
- 	wm5100_free_gpio(i2c);
+ static int cleaner_kthread(void *arg)
 -- 
 2.20.1
 
