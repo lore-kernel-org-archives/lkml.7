@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47277C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11312C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D723205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A85205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013465;
-	bh=RjW3nAfjJen7ymY+pr2pcyJdsQqV3ckNW602UmKrxCo=;
+	s=default; t=1576013467;
+	bh=oW7QC7ZN3sDu53rgPYqBtojvRFrE+jG2HcylGdisCL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MbnUENvwkhVvxWI3nWN97c5K1iVe+iAQP6aWajJmOSrA7Wy7l1+4J8YtNvDK8+cpK
-	 J8xFDkWvcjti6ZYhPIGHZ008KjPV7L56rca3Po09IHt7iPllTfqwSZh0S4rz57bzAC
-	 vvwfYmYT+u4gt/EiaScnct/RyW/rQtcGGMXdFSQk=
+	b=otsyGNnnsbKv3rFKv1eLkUXQAuQy4DXouGj+9qk0piwXem8nyybf+UCl53LDzM5Tg
+	 kzFGYKTjkn5i2Oz+JGn/6NBjML9hptuxbeM/68QknaGXpd7k5p6jMAqeQjH//bWXx2
+	 K4eYYq8/ABo7apB5jSqV7UvrkORNy7z1ECoiPIq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfLJVbD (ORCPT
+        id S1728243AbfLJVJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:31:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbfLJVJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:39 -0500
+        id S1728211AbfLJVJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD5A24696;
-        Tue, 10 Dec 2019 21:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5565246AF;
+        Tue, 10 Dec 2019 21:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012178;
-        bh=RjW3nAfjJen7ymY+pr2pcyJdsQqV3ckNW602UmKrxCo=;
+        s=default; t=1576012174;
+        bh=oW7QC7ZN3sDu53rgPYqBtojvRFrE+jG2HcylGdisCL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pIDXTCk2hUED0aRBXT+nw9GZuzeishEMZROwO7p3LxkRd/192pgQ7UxrclSnkT9QI
-         wU7NX2xclnxRrBdaQ9uaJmtCYs0qR+pHXF2OYp/V8IozWuw/DfaFR3ul/Tk1fUNfn2
-         63M81QABE4SPcYrpokAWvT0mfOp7GtwSLLMBzzhk=
+        b=W13duTr1XBqXhgqkrQaTsEqgF+fXheSzF8lFe2Mg5u6YODrQh7oshGRmE8G+M6YqL
+         slm3+4vxpN4i9I8fVhbMnhUJDwE+wYskAyz10Hrgt76xT5ZFb0Xh9G/hTlMoOgdPnC
+         mQjO8WHg1/J4Bk42ZnuHEng0iIYu97CR3vPLRqUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 136/350] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Tue, 10 Dec 2019 16:04:01 -0500
-Message-Id: <20191210210735.9077-97-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 132/350] selftests/bpf: Make a copy of subtest name
+Date:   Tue, 10 Dec 2019 16:03:57 -0500
+Message-Id: <20191210210735.9077-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,42 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit f90415e9600c5227131531c0ed11514a2d3bbe62 ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+test_progs never created a copy of subtest name, rather just stored
+pointer to whatever string test provided. This is bad as that string
+might be freed or modified by the end of subtest. Fix this by creating
+a copy of given subtest name when subtest starts.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191021033902.3856966-6-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/bpf/test_progs.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index 167c10767dd42..900e5499249d5 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index af75a1c7a4587..3bf18364c67c9 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -20,7 +20,7 @@ struct prog_test_def {
+ 	bool tested;
+ 	bool need_cgroup_cleanup;
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
+-	const char *subtest_name;
++	char *subtest_name;
+ 	int subtest_num;
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
+ 	/* store counts before subtest started */
+@@ -81,16 +81,17 @@ void test__end_subtest()
+ 	fprintf(env.stdout, "#%d/%d %s:%s\n",
+ 	       test->test_num, test->subtest_num,
+ 	       test->subtest_name, sub_error_cnt ? "FAIL" : "OK");
++
++	free(test->subtest_name);
++	test->subtest_name = NULL;
+ }
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
+ bool test__start_subtest(const char *name)
+ {
+ 	struct prog_test_def *test = env.test;
  
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+-	if (test->subtest_name) {
++	if (test->subtest_name)
+ 		test__end_subtest();
+-		test->subtest_name = NULL;
+-	}
+ 
+ 	test->subtest_num++;
+ 
+@@ -104,7 +105,13 @@ bool test__start_subtest(const char *name)
+ 	if (!should_run(&env.subtest_selector, test->subtest_num, name))
+ 		return false;
+ 
+-	test->subtest_name = name;
++	test->subtest_name = strdup(name);
++	if (!test->subtest_name) {
++		fprintf(env.stderr,
++			"Subtest #%d: failed to copy subtest name!\n",
++			test->subtest_num);
++		return false;
++	}
+ 	env.test->old_error_cnt = env.test->error_cnt;
+ 
+ 	return true;
 -- 
 2.20.1
 
