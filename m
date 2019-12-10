@@ -2,107 +2,136 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D460DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C08DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A657220828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017633;
-	bh=+A2phvID+gqjmzb3uCb5NALuzM4a0PEWBErOw+JcLQo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ALh1xKPyYM05FtKC21iYSCCXPVVMmS1kyYyUtMQRaixr3KufdyeSpm7nLHpPYzX1
-	 KlV+MOOPwPjjqQbH7ZmLyMu8+oOAciYG/16Lea0orLJ9cAJQaez6PVBGBtr2GINZ+G
-	 0XsTO2tw8KwzIrShMiJ81rLL1gzQzB4/VcJH+sc8=
+	by mail.kernel.org (Postfix) with ESMTP id 39C3C20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fyRCRyjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfLJWk3 (ORCPT
+        id S1730557AbfLJWki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:40:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbfLJWcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:06 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C49D21D7D;
-        Tue, 10 Dec 2019 22:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017126;
-        bh=+A2phvID+gqjmzb3uCb5NALuzM4a0PEWBErOw+JcLQo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DK+ErQLAUb4Z7XeXRxdEIzL6ALkCDAwGX9M4qdI3XGIp9aZVGN1BuyhB+s2Szb/TE
-         nveBSkl1jwPi41wCbx093IJ8n2T+hh+imVhzw6wpP1nsK0KgmciwHcQc7BhIvukt7o
-         I80vzMVLFoMKhlvgF0tp56eKRB+4V+2m24G6hLAI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 76/91] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Tue, 10 Dec 2019 17:30:20 -0500
-Message-Id: <20191210223035.14270-76-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 17:40:38 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41242 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfLJWkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:40:36 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s18so568683pfd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WhKcV9MhcHZ+rIDrMbDQc0mCzV2/LXUFgnxbFQ0koe4=;
+        b=fyRCRyjbRw/ahnal1DJZEhKbTukOYXWTOelfdC8IxlZgyJU+E3zpokgvCb1OZDcZX0
+         jEDUuL8VcXF5Zb0x26s2whsrtlzlfAyiWCiOvfgIznuT7lnviKisWYSUAGwUkKWKtvsR
+         6C4zCpSjJYjo6TgSp3Vp5idWbKVS57L/XUoJFEAYFjul+FGbzK1aeXcoHpFpcbMZZTSu
+         6KxjbQZLq3putByW3nDo65b5EQUTK5bPAVPk9vdsixG1I13zhNmCBAq6cd9QjUVlAOFd
+         FwIHkUCTi73L9mmgrYXepJZs6Ni9rfM56GzZ+SAjWh58R5h9IzpU7QSmtnmb68XxAyDh
+         jY0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WhKcV9MhcHZ+rIDrMbDQc0mCzV2/LXUFgnxbFQ0koe4=;
+        b=P7hzUV3NoV9BU9mF3afT4c3wS497Cgn1wjJP4FOAwV+nzF4KSHojOno4q4bRLTXARj
+         nGm/GExO8Mxr5rR9QMCuM2b8nBf7+Nj+IM8nXIcs+Z5t4ZIqhoCQnC6proRJrw4L5hrx
+         26Yq2v/uhhwV/ky7iTTbZFL+cZl95tgtxuW6VQbHCz7NpniQGb7Mkcq1/eG9fPNsMQpX
+         PE57U2vthDGpCy0ptnhC7/By3Hr47eDGHbNWBpUJ76ACTPLiAEWqyrxrACYwajWIBzPE
+         vOAcyiegeXYhCDgsARzEc6kANAFmg4x+wU1TjdpteTYCCSwMsB4eSUmYvzU9el8+KMrF
+         V41w==
+X-Gm-Message-State: APjAAAWH9Selxzqr869QqkqCjEh24IAaM68LKGV1dbhIw/PHgMn5QLLi
+        mUY+JREtVorRIJ2NyrYMajMELhZUOr82uvq1zNpx8g==
+X-Google-Smtp-Source: APXvYqziJWsPEGOvugy3+CzJsahNAxfE/CC9fJFp4r9R7cQDicZqjz0W5POh7mTSbWDdnZwsIhgGNBtzww4m99wZcsc=
+X-Received: by 2002:a63:480f:: with SMTP id v15mr481015pga.201.1576017635129;
+ Tue, 10 Dec 2019 14:40:35 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191206020153.228283-1-brendanhiggins@google.com>
+ <20191206020153.228283-2-brendanhiggins@google.com> <f217945d-ab64-10cc-bb12-3a4d810ff25a@cambridgegreys.com>
+ <CAFd5g45cSKATfw4GKPw6QdhQKDNi=0gcDRjQ7N0T1XrdtSTPrg@mail.gmail.com>
+ <20191207012108.GA220741@google.com> <15f048d3-07ab-61c1-c6e0-0712e626dd33@cambridgegreys.com>
+ <CAFd5g448yZ5nSVLnN0gvsv3jLnhWG+dzJgvH1jdV+s2eTq4wxg@mail.gmail.com>
+ <1785498655.111829.1575936178298.JavaMail.zimbra@nod.at> <87f182c6-82a3-d696-72e4-ddaa781a655b@cambridgegreys.com>
+In-Reply-To: <87f182c6-82a3-d696-72e4-ddaa781a655b@cambridgegreys.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 10 Dec 2019 14:40:24 -0800
+Message-ID: <CAFd5g46osmFBka0X60A+_mmetpreG+abnh_+GQmVrr+PPxrqxg@mail.gmail.com>
+Subject: Re: [RFC v1 1/2] um: drivers: remove support for UML_NET_PCAP
+To:     Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        davidgow <davidgow@google.com>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+On Mon, Dec 9, 2019 at 11:14 PM Anton Ivanov
+<anton.ivanov@cambridgegreys.com> wrote:
+>
+> On 10/12/2019 00:02, Richard Weinberger wrote:
+> > ----- Urspr=C3=BCngliche Mail -----
+> >> Von: "Brendan Higgins" <brendanhiggins@google.com>
+> >>> IMHO we should at least mark them as "obsolete" and start preparing t=
+o
+> >>> remove them.
+> >>
+> >> Alright, I will send a patch out which marks the other network drivers
+> >> as "obsolete".
+> >>
+> >> Clarification: Should I mark all UML network devices as "obsolete"
+> >> except for NET_VECTOR? Daemon and MCAST looked to me (I am not a
+> >> networking expert), like they might not be covered by vector.
+> >
+> > No. Why?
+> >
+> > Thanks,
+> > //richard
+> >
+> > _______________________________________________
+> > linux-um mailing list
+> > linux-um@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-um
+> >
+> At least pcap and vde are maintenance issues. They do not even build toda=
+y.
+>
+> Off the top of my head, daemon needs fixes to the switch - it has an
+> O(n) performance hit for n=3D"number of ports" as well as a few other iss=
+ues.
+>
+> Tap has a fully functional replacement
+>
+> Pcap has a fully functional replacement
+>
+> mcast for 2 instances is functionally equivalent to running l2tp or gre
+> back-to-back.
+>
+> IMHO we can start marking some of them as obsolete.
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+It looked to me like this discussion is ongoing; however, it seemed
+like the discussion might be boiling down to *which* drivers should be
+marked obsolete, so I decided to go ahead and send a patch which marks
+everything as deprecated. I figured it would make it easier to focus
+the conversation on what, if anything, should be marked obsolete:
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+https://lore.kernel.org/lkml/20191210223403.244842-1-brendanhiggins@google.=
+com/T/#u
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+Also, Anton, I flat out stole a bunch of your comments on this thread
+to make my commit message. Just respond with the appropriate tags
+(co-developed-by, etc) if you want to be credited for them. As it is,
+I marked you as "suggested-by".
 
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
-
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index b78e60eb600f1..d0aa4d0a5537e 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -62,6 +62,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -289,7 +290,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
- 
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
--- 
-2.20.1
-
+Cheers!
