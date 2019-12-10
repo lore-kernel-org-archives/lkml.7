@@ -2,136 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8A8C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8434CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A2E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0EE20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+MeZ1Vr"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c+oeEFfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLJJbr (ORCPT
+        id S1727303AbfLJJbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:31:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35638 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfLJJbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:31:47 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so19204164wro.2;
-        Tue, 10 Dec 2019 01:31:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bpI+KSQjVizekLOTqRO9QHhCCkeA25xOcgVNFSMIVJ4=;
-        b=a+MeZ1Vrjiw5Y7skASSivWiCZqb/XvferZcrYNnkoSGw/nmgJX645OcRxXyTPnQOWZ
-         PRPo/kAAL+oGi32ezRt2Au6WjY8i35tMWo8FsQLlBwuLyHODXFSOTDw+IMhmS6QBkeko
-         Pu5olkeP8uSzjS6fhX4KgBfsBhHmPZsgKQB9Cy+8JlVG25n7T4sKBREGBSPk0OdrhuQx
-         /EjkcNTW5BqcIOjlEpHQPN8dxB7XuhzY4HLy1atEth0MZebZpvoOXhxbvTLte+u/AnZI
-         z42tg3m6fVRKyv4lbIFSiSWjaz93D8upIY/vZZwVdO1IqMLwlmHtXmqczYwJnhhSYSJj
-         7VDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bpI+KSQjVizekLOTqRO9QHhCCkeA25xOcgVNFSMIVJ4=;
-        b=kZxzVS1LlCZl3xrboppiKca2RVCo+kRIWUFsOIJ2YKeOPAD2r1MxQFWjoSMfBSkCdy
-         YnFzMFh1gFVcY0KbKdlcDbJorRsvpen0N2rO9bq/xJL96WHAZ/+BVIvnvfjLLiRZMHRT
-         mUp8wCSmLo9zSQicptbXRrVY5eY/07NKtogJMr6LvEGRgQBxlEeBzXJs0PUhXjWexKOA
-         TPRyYhLvURzzB5p352IxILNPl53R/3BGg08+9k6xBkYVbQDKu2CxEki8fGcpjYxozb5M
-         ZJRNoHDbSfMB04Upkk94X2br0UrToWA30cm7OcA0R4bM/vjdoNp5AVzWyT1uB016U7O0
-         84jw==
-X-Gm-Message-State: APjAAAV9iV7WCoIom6AiZ2Q0bpqEcPiAQTARjICgvF9b/tqpH7bDMChC
-        gObL81/kIJZUGeWVQ4B+b1gQRiFQqEfF285e
-X-Google-Smtp-Source: APXvYqxWGiaybhCl9DlfGoAm1B5j8O5erlMSACMm9aif0qYGOKaX9NqvbLu4rN9iI1ca4/OPF4INig==
-X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr2102243wru.150.1575970304470;
-        Tue, 10 Dec 2019 01:31:44 -0800 (PST)
-Received: from localhost.localdomain (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id n3sm2372611wmc.27.2019.12.10.01.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:31:43 -0800 (PST)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] clocksource/hyperv: Set TSC clocksource as default w/ InvariantTSC
-Date:   Tue, 10 Dec 2019 10:30:54 +0100
-Message-Id: <20191210093054.32230-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210093054.32230-1-parri.andrea@gmail.com>
-References: <20191210093054.32230-1-parri.andrea@gmail.com>
+        Tue, 10 Dec 2019 04:31:52 -0500
+Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:31495
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726915AbfLJJbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:31:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NT0dZ59o8t0Zz5KulJ0ocL143aF51zSHXRADA8Z6Qweguqtl89IKqXO+N+Fdw4VaZ6Ro941GEsoljgo/g/DCR/qGrXJSL1nZI0vMjzJ+a0iAs3bdwzkSC3pq97BkL9SXah1IGnWXashQwgd2UrxHIwIQ9c5iOZLv+zdbzu1pG92v80CXfhxAdfCkENxqCPEIyadF8oq3KbSOmAU4OUpZGNoYZlQBcRH3Uj1XF1wSJVg6evFNujz5epaO02wjqEz1L/vETTca/u5wQ01WoMAt+7nAQQwL7+oOHp+Bl+jX8QwyES4I0WlMRJmfxFbiW7PYMBPCEvRdHiFUJ98cfvqVBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
+ b=dIWWbDR0sOX7LL9P8uiljH2S4zKjxq0S9DsWMiVfVG6zERdD2ANkXVJfjhYBAbRFS7yNzsg7qptGRODewL+uKtg10K7GCheluCH8t9uRkhomuHst31yOEyqRL38tpsgEc5rOH929KjWjA6xSnDS76upu+qLje2X//j86IDUsUEdhuNkY75fzR0icRdIAa+GxjhvsXA7/5VyoH5BaAiJT7k5fp3qxhca4Tgk9tejtXed2MskgsFWdMwEdWq7Ghw54vVZOPqzBifWpmk4dbhyUhzq5BU+w2RZRwjhvMkpffRPL7FPNN8netThPf/HqAptQdLljFNSXINkeKtLP9bbA9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
+ b=c+oeEFfUuPB4V8GBVjAFd903LhaoYPXqhfF6X+Lue8uRP8MB/JhH3FqQNpgMTqbpk7wy+AuR66mA6yUbfllKD5Y3dVgyi20uCDRszaQ6tQyjgqUZJpDL/iEPMii+6z1Q+LkcaKV1oZj8rttuczqcJ6GJTr6iRKW6tLUvQKTKr2I=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3502.eurprd04.prod.outlook.com (52.134.6.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Tue, 10 Dec 2019 09:31:48 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
+ 09:31:48 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrei Botila <andrei.botila@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] crypto: caam/qi2 - remove double buffering for ahash
+Thread-Topic: [PATCH 2/2] crypto: caam/qi2 - remove double buffering for ahash
+Thread-Index: AQHVrrIh3yV1/0x7hkmMMJGBljM36Q==
+Date:   Tue, 10 Dec 2019 09:31:48 +0000
+Message-ID: <VI1PR0402MB34851B7EE78BAF4FBCCF534D985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1575910796-13897-1-git-send-email-andrei.botila@nxp.com>
+ <1575910796-13897-2-git-send-email-andrei.botila@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 274e6c6b-aed3-4f96-6828-08d77d53c7d9
+x-ms-traffictypediagnostic: VI1PR0402MB3502:|VI1PR0402MB3502:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB350287E6D0FBAA6AE63D5E81985B0@VI1PR0402MB3502.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(71190400001)(52536014)(55016002)(9686003)(66556008)(71200400001)(64756008)(33656002)(66446008)(305945005)(110136005)(54906003)(91956017)(86362001)(76116006)(66946007)(66476007)(229853002)(6636002)(8936002)(478600001)(316002)(5660300002)(53546011)(6506007)(44832011)(186003)(4326008)(4744005)(26005)(8676002)(2906002)(7696005)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3502;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XeNNEdhXOQAv2oIy5CaOzZ5oYivLiJfKH0hdXcmnAjU0Y/Xg7p2kXHLU60T2Ry4Vcot2iBW4jjuvffJt5N/FVOKet0MsS8rkBoVInZqOrfxN52z+E6mqNwI3kEnQnvPWGoYETUmWEHpcuilD4YKvGu7NKwAfestAWy0n6O3k7rqQLs2DFMhH4UHtVnqceXHU/Lu54jhyRNeyg9onBv6T+QVR15nJ3wa2b0GiiLGbP677Gy63z7m+ol4j8tJPZ7cho6CevUt2jGRVY9/3kUT5xQpa6mqxrIEmzeuHEchNiipeFcYn8BnOAstrtgHBgYiU7TzxTFruAr2yQc6GkU3spHcYsHN2yiJlII1z5iQltV9jQvRLdQ9GThFsIb+iV1aC4sujPHmGzq51I9g5hhQ+X2lUq7qHU2kRtELRRwmyS8/XNrJWwXs44rfwgkRFTpxE
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 274e6c6b-aed3-4f96-6828-08d77d53c7d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 09:31:48.3177
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZBvQ8qWN4JOYiZeqlVhH55XnjtVOguRqfTiqv+AlrWQJgwM2++UECDhOb1VeCd5KmArXKENXnv5m9iHmj4DFFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3502
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the Hyper-V clocksource ratings to 250, below the TSC clocksource
-rating of 300.  In configurations where Hyper-V offers an InvariantTSC,
-the TSC is not marked "unstable", so the TSC clocksource is available
-and preferred.  With the higher rating, it will be the default.  On
-older hardware and Hyper-V versions, the TSC is marked "unstable", so no
-TSC clocksource is created and the selected Hyper-V clocksource will be
-the default.
-
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
----
- drivers/clocksource/hyperv_timer.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 0eb528db4822d..6a92f945916d4 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -302,6 +302,14 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
-  * the other that uses the TSC reference page feature as defined in the
-  * TLFS.  The MSR version is for compatibility with old versions of
-  * Hyper-V and 32-bit x86.  The TSC reference page version is preferred.
-+ *
-+ * The Hyper-V clocksource ratings of 250 are chosen to be below the
-+ * TSC clocksource rating of 300.  In configurations where Hyper-V offers
-+ * an InvariantTSC, the TSC is not marked "unstable", so the TSC clocksource
-+ * is available and preferred.  With the higher rating, it will be the
-+ * default.  On older hardware and Hyper-V versions, the TSC is marked
-+ * "unstable", so no TSC clocksource is created and the selected Hyper-V
-+ * clocksource will be the default.
-  */
- 
- u64 (*hv_read_reference_counter)(void);
-@@ -340,7 +348,7 @@ static u64 read_hv_sched_clock_tsc(void)
- 
- static struct clocksource hyperv_cs_tsc = {
- 	.name	= "hyperv_clocksource_tsc_page",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_tsc_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -370,7 +378,7 @@ static u64 read_hv_sched_clock_msr(void)
- 
- static struct clocksource hyperv_cs_msr = {
- 	.name	= "hyperv_clocksource_msr",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_msr_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
--- 
-2.24.0
-
+On 12/9/2019 7:00 PM, Andrei Botila wrote:=0A=
+> Previously double buffering was used for storing previous and next=0A=
+> "less-than-block-size" bytes. Double buffering can be removed by moving=
+=0A=
+> the copy of next "less-than-block-size" bytes after current request is=0A=
+> executed by HW.=0A=
+> =0A=
+> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
