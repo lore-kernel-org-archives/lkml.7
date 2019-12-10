@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E24C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FC9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D7220838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D586C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbfLJNYe (ORCPT
+        id S1727777AbfLJNYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:24:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:44318 "EHLO foss.arm.com"
+        Tue, 10 Dec 2019 08:24:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:44304 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfLJNYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:24:32 -0500
+        id S1727758AbfLJNYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:24:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39A411045;
-        Tue, 10 Dec 2019 05:24:31 -0800 (PST)
-Received: from DESKTOP-VLO843J.cambridge.arm.com (DESKTOP-VLO843J.cambridge.arm.com [10.1.26.198])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DD263F52E;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C03D328;
         Tue, 10 Dec 2019 05:24:30 -0800 (PST)
+Received: from DESKTOP-VLO843J.cambridge.arm.com (DESKTOP-VLO843J.cambridge.arm.com [10.1.26.198])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1EE7B3F52E;
+        Tue, 10 Dec 2019 05:24:29 -0800 (PST)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org, heiko@sntech.de, smoch@web.de,
         linux.amoon@gmail.com, linux-rockchip@lists.infradead.org
-Subject: [PATCH 4/4] mfd: rk808: Convert RK805 to syscore/PM ops
-Date:   Tue, 10 Dec 2019 13:24:33 +0000
-Message-Id: <8642045f0657c9e782cd698eb08777c9d4c10c8d.1575932654.git.robin.murphy@arm.com>
+Subject: [PATCH 3/4] mfd: rk808: Reduce shutdown duplication
+Date:   Tue, 10 Dec 2019 13:24:32 +0000
+Message-Id: <2376f722b917f55cbf49c5f3da0c341457900dee.1575932654.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1575932654.git.robin.murphy@arm.com>
 References: <cover.1575932654.git.robin.murphy@arm.com>
@@ -40,34 +40,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK805 has the same kind of dual-role sleep/shutdown pin as RK809/RK817,
-so it makes little sense for the driver to have to have two completely
-different mechanisms to handle essentially the same thing. Bring RK805
-in line with the RK809/RK817 flow to clean things up.
+Rather than having 3 almost-identical functions plus the machinery to
+keep track of them, it's far simpler to just dynamically select the
+appropriate register field per variant.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/mfd/rk808.c       | 58 +++++++++++++++++----------------------
+ drivers/mfd/rk808.c       | 56 +++++++++++++--------------------------
  include/linux/mfd/rk808.h |  1 -
- 2 files changed, 25 insertions(+), 34 deletions(-)
+ 2 files changed, 19 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-index 657b8baa3b8a..e88bdb889d3a 100644
+index 387105830736..657b8baa3b8a 100644
 --- a/drivers/mfd/rk808.c
 +++ b/drivers/mfd/rk808.c
-@@ -186,7 +186,6 @@ static const struct rk808_reg_data rk805_pre_init_reg[] = {
- 	{RK805_BUCK4_CONFIG_REG, RK805_BUCK3_4_ILMAX_MASK,
- 				 RK805_BUCK4_ILMAX_3500MA},
- 	{RK805_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK, BUCK_ILMIN_400MA},
--	{RK805_GPIO_IO_POL_REG, SLP_SD_MSK, SLEEP_FUN},
- 	{RK805_THERMAL_REG, TEMP_HOTDIE_MSK, TEMP115C},
- };
- 
-@@ -449,21 +448,6 @@ static const struct regmap_irq_chip rk818_irq_chip = {
+@@ -449,21 +449,6 @@ static const struct regmap_irq_chip rk818_irq_chip = {
  
  static struct i2c_client *rk808_i2c_client;
  
--static void rk805_device_shutdown_prepare(void)
+-static void rk805_device_shutdown(void)
 -{
 -	int ret;
 -	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
@@ -76,107 +67,114 @@ index 657b8baa3b8a..e88bdb889d3a 100644
 -		return;
 -
 -	ret = regmap_update_bits(rk808->regmap,
--				 RK805_GPIO_IO_POL_REG,
--				 SLP_SD_MSK, SHUTDOWN_FUN);
+-				 RK805_DEV_CTRL_REG,
+-				 DEV_OFF, DEV_OFF);
 -	if (ret)
 -		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
 -}
 -
+ static void rk805_device_shutdown_prepare(void)
+ {
+ 	int ret;
+@@ -482,29 +467,29 @@ static void rk805_device_shutdown_prepare(void)
  static void rk808_device_shutdown(void)
  {
  	int ret;
-@@ -499,17 +483,29 @@ static void rk8xx_syscore_shutdown(void)
++	unsigned int reg, bit;
  	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
- 	int ret;
  
--	if (system_state == SYSTEM_POWER_OFF &&
--	    (rk808->variant == RK809_ID || rk808->variant == RK817_ID)) {
-+	if (system_state != SYSTEM_POWER_OFF)
-+	       return;
-+
+ 	if (!rk808)
+ 		return;
+ 
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK808_DEVCTRL_REG,
+-				 DEV_OFF_RST, DEV_OFF_RST);
+-	if (ret)
+-		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
+-}
+-
+-static void rk818_device_shutdown(void)
+-{
+-	int ret;
+-	struct rk808 *rk808 = i2c_get_clientdata(rk808_i2c_client);
+-
+-	if (!rk808)
 +	switch (rk808->variant) {
 +	case RK805_ID:
-+		ret = regmap_update_bits(rk808->regmap,
-+					 RK805_GPIO_IO_POL_REG,
-+					 SLP_SD_MSK,
-+					 SHUTDOWN_FUN);
++		reg = RK805_DEV_CTRL_REG;
++		bit = DEV_OFF;
 +		break;
-+	case RK809_ID:
-+	case RK817_ID:
- 		ret = regmap_update_bits(rk808->regmap,
- 					 RK817_SYS_CFG(3),
- 					 RK817_SLPPIN_FUNC_MSK,
- 					 SLPPIN_DN_FUN);
--		if (ret) {
--			dev_warn(&rk808_i2c_client->dev,
--				 "Cannot switch to power down function\n");
--		}
++	case RK808_ID:
++		reg = RK808_DEVCTRL_REG,
++		bit = DEV_OFF_RST;
++		break;
++	case RK818_ID:
++		reg = RK818_DEVCTRL_REG;
++		bit = DEV_OFF;
 +		break;
 +	default:
-+		return;
- 	}
-+	if (ret)
-+		dev_warn(&rk808_i2c_client->dev,
-+			 "Cannot switch to power down function\n");
+ 		return;
+-
+-	ret = regmap_update_bits(rk808->regmap,
+-				 RK818_DEVCTRL_REG,
+-				 DEV_OFF, DEV_OFF);
++	}
++	ret = regmap_update_bits(rk808->regmap, reg, bit, bit);
+ 	if (ret)
+ 		dev_err(&rk808_i2c_client->dev, "Failed to shutdown device!\n");
  }
- 
- static struct syscore_ops rk808_syscore_ops = {
-@@ -579,7 +575,6 @@ static int rk808_probe(struct i2c_client *client,
+@@ -594,7 +579,6 @@ static int rk808_probe(struct i2c_client *client,
  		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
  		cells = rk805s;
  		nr_cells = ARRAY_SIZE(rk805s);
--		rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
+-		rk808->pm_pwroff_fn = rk805_device_shutdown;
+ 		rk808->pm_pwroff_prep_fn = rk805_device_shutdown_prepare;
  		break;
  	case RK808_ID:
- 		rk808->regmap_cfg = &rk808_regmap_config;
-@@ -658,10 +653,8 @@ static int rk808_probe(struct i2c_client *client,
- 		goto err_irq;
- 	}
- 
--	if (of_property_read_bool(np, "rockchip,system-power-controller")) {
-+	if (of_property_read_bool(np, "rockchip,system-power-controller"))
- 		pm_power_off = rk808_device_shutdown;
--		pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
--	}
- 
- 	return 0;
- 
-@@ -686,13 +679,6 @@ static int rk808_remove(struct i2c_client *client)
- 	if (pm_power_off == rk808_device_shutdown)
- 		pm_power_off = NULL;
- 
--	/**
--	 * As above, check if the pointer is set by us before overwrite.
--	 */
--	if (rk808->pm_pwroff_prep_fn &&
--	    pm_power_off_prepare == rk808->pm_pwroff_prep_fn)
--		pm_power_off_prepare = NULL;
--
- 	return 0;
- }
- 
-@@ -702,6 +688,12 @@ static int __maybe_unused rk8xx_suspend(struct device *dev)
- 	int ret = 0;
- 
- 	switch (rk808->variant) {
-+	case RK805_ID:
-+		ret = regmap_update_bits(rk808->regmap,
-+					 RK805_GPIO_IO_POL_REG,
-+					 SLP_SD_MSK,
-+					 SLEEP_FUN);
-+		break;
+@@ -604,7 +588,6 @@ static int rk808_probe(struct i2c_client *client,
+ 		nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
+ 		cells = rk808s;
+ 		nr_cells = ARRAY_SIZE(rk808s);
+-		rk808->pm_pwroff_fn = rk808_device_shutdown;
+ 		break;
+ 	case RK818_ID:
+ 		rk808->regmap_cfg = &rk818_regmap_config;
+@@ -613,7 +596,6 @@ static int rk808_probe(struct i2c_client *client,
+ 		nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
+ 		cells = rk818s;
+ 		nr_cells = ARRAY_SIZE(rk818s);
+-		rk808->pm_pwroff_fn = rk818_device_shutdown;
+ 		break;
  	case RK809_ID:
  	case RK817_ID:
- 		ret = regmap_update_bits(rk808->regmap,
+@@ -677,7 +659,7 @@ static int rk808_probe(struct i2c_client *client,
+ 	}
+ 
+ 	if (of_property_read_bool(np, "rockchip,system-power-controller")) {
+-		pm_power_off = rk808->pm_pwroff_fn;
++		pm_power_off = rk808_device_shutdown;
+ 		pm_power_off_prepare = rk808->pm_pwroff_prep_fn;
+ 	}
+ 
+@@ -701,7 +683,7 @@ static int rk808_remove(struct i2c_client *client)
+ 	 * pm_power_off may points to a function from another module.
+ 	 * Check if the pointer is set by us and only then overwrite it.
+ 	 */
+-	if (rk808->pm_pwroff_fn && pm_power_off == rk808->pm_pwroff_fn)
++	if (pm_power_off == rk808_device_shutdown)
+ 		pm_power_off = NULL;
+ 
+ 	/**
 diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-index b038653fa87e..e07f6e61cd38 100644
+index a59bf323f713..b038653fa87e 100644
 --- a/include/linux/mfd/rk808.h
 +++ b/include/linux/mfd/rk808.h
-@@ -620,6 +620,5 @@ struct rk808 {
+@@ -620,7 +620,6 @@ struct rk808 {
  	long				variant;
  	const struct regmap_config	*regmap_cfg;
  	const struct regmap_irq_chip	*regmap_irq_chip;
--	void				(*pm_pwroff_prep_fn)(void);
+-	void				(*pm_pwroff_fn)(void);
+ 	void				(*pm_pwroff_prep_fn)(void);
  };
  #endif /* __LINUX_REGULATOR_RK808_H */
 -- 
