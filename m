@@ -7,52 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E9C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382ABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D2B20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0988C214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017352;
-	bh=TnmJRhBb//oTsZBfpdqPqEFtu3itymCKsMYWxOrUxzw=;
+	s=default; t=1576017355;
+	bh=iWr8FhlVMl2xbZR/aLjzGNvGy6OCfZbeoGEI9tL1hcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vf4k+qqa8y8Hgz97QcfnvR6Xt6gRXDAwnPI5U92o++Wv4Ju0AMDqE7VnEfQZmCq8V
-	 BkRJ7JMrjtXese+oF+GHUNjpFDqJpzRQlJY+jcCNgcH/OiU9JOp4Hd4WYUj4L0/Z6t
-	 Lucr8s6erwuudOnLN9Ox042aOQrYOuVycm9Ai4ec=
+	b=Zzf49efBS+g++T3Wyoh+4iOr286ZdIKMZayW6K5ZAyKpeLHabw/FKZJ1mQox+T3/2
+	 7FA7j643U8qSMONb/1jfFlCmbBrQ/50DVbpqTNpuS/LL7AjE2Zdk0uWv1Blvi3XANw
+	 1M7w7UzMKIsHAv1glsQgBQ6UA2+O0rPsYpDGV3Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfLJWe3 (ORCPT
+        id S1730149AbfLJWfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55412 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:35:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729599AbfLJWeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:10 -0500
+        id S1729548AbfLJWe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC39120836;
-        Tue, 10 Dec 2019 22:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8208E2465B;
+        Tue, 10 Dec 2019 22:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017249;
-        bh=TnmJRhBb//oTsZBfpdqPqEFtu3itymCKsMYWxOrUxzw=;
+        s=default; t=1576017268;
+        bh=iWr8FhlVMl2xbZR/aLjzGNvGy6OCfZbeoGEI9tL1hcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yZ3Mm4+Rd2U/VLONBX5uWY1Xb5WIhGWNhO96p0aE/NNVNfnIiLN/GKQX0wZdYsIeZ
-         acLWiVlpkom46A2K6G1/+sNzuxscCpWd/piEPGBQYBrh0jo/cTl21MXCGgmM/RSXKY
-         uuigfG7eASDB2F2nfyPCRj82nJk/hKbb7U7ZraAU=
+        b=wMAQjC5z6eHI3W2sPJsOUPLwynB5Tf5zvNUGYUOrKDJFScP8eWuXQYKvER709nUTV
+         jZYZLCkDsQ2NWJHcYm83H0HeLch3UtY4E3m8TZSQYsb6ZxKENozSPWGhnpXUopXJuW
+         a1ZpR0hV+j/Y1ey+qqLdNUUyhoHqePBPT/yAAM0Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 45/71] perf probe: Fix to show inlined function callsite without entry_pc
-Date:   Tue, 10 Dec 2019 17:32:50 -0500
-Message-Id: <20191210223316.14988-45-sashal@kernel.org>
+Cc:     Lianbo Jiang <lijiang@redhat.com>,
+        kbuild test robot <lkp@intel.com>,
+        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
+        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
+        ebiederm@xmission.com, horms@verge.net.au,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
+        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 60/71] x86/crash: Add a forward declaration of struct kimage
+Date:   Tue, 10 Dec 2019 17:33:05 -0500
+Message-Id: <20191210223316.14988-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,110 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
+[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+Add a forward declaration of struct kimage to the crash.h header because
+future changes will invoke a crash-specific function from the realmode
+init path and the compiler will complain otherwise like this:
 
-Without this:
+  In file included from arch/x86/realmode/init.c:11:
+  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      5 | int crash_load_segments(struct kimage *image);
+        |                                ^~~~~~
+  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      6 | int crash_copy_backup_region(struct kimage *image);
+        |                                     ^~~~~~
+  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      7 | int crash_setup_memmap_entries(struct kimage *image,
+        |
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+ [ bp: Rewrite the commit message. ]
 
-With this patch:
-
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
-  Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
-
-  [root@quaco ~]#
-
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
-
-Ok, Intel system here... :-)
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: bhe@redhat.com
+Cc: d.hatayama@fujitsu.com
+Cc: dhowells@redhat.com
+Cc: dyoung@redhat.com
+Cc: ebiederm@xmission.com
+Cc: horms@verge.net.au
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jürgen Gross <jgross@suse.com>
+Cc: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: vgoyal@redhat.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
+Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/crash.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index ed7777ed4d384..5f32fed5eeb30 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -659,7 +659,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
+index f498411f2500b..1b15304dd0980 100644
+--- a/arch/x86/include/asm/crash.h
++++ b/arch/x86/include/asm/crash.h
+@@ -1,6 +1,8 @@
+ #ifndef _ASM_X86_CRASH_H
+ #define _ASM_X86_CRASH_H
+ 
++struct kimage;
++
+ int crash_load_segments(struct kimage *image);
+ int crash_copy_backup_region(struct kimage *image);
+ int crash_setup_memmap_entries(struct kimage *image,
 -- 
 2.20.1
 
