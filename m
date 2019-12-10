@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21058C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673AFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67692080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373952080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="i0XscqF4"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="WtYMlSZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfLJATe (ORCPT
+        id S1727629AbfLJATj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:19:34 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:61015 "EHLO rere.qmqm.pl"
+        Mon, 9 Dec 2019 19:19:39 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:33426 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfLJATU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727435AbfLJATU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 19:19:20 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47X0ws4XrzzLy;
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47X0ws1pr4zKW;
         Tue, 10 Dec 2019 01:16:45 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575937005; bh=J1UtFVWRaaOezDGDF6HSdi8ypeDqB+/Qknt3TL2K7FU=;
+        t=1575937005; bh=YsyNObBBW1OvJDWq+l2QUR44LJx4brO0CWUVjUFNO6I=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=i0XscqF4kH3hybzld3O5NYlb83BWA7wvZqt6U1dSV+Yi/eEigU+dnSw2xOscLBczv
-         dJ9MnDMXlzGT50VhguhqNFgDoalsjFU1767T7P8yRZ1sufT4KVprNKSmAgiHamlMye
-         R1O3uQqYOnxlred+O+jnaBoRadbsTQmouQb9cceczYaDT8bz3v2tpzqiAVPP1nxIKA
-         jBFZqnVvbEDrPG+SoC4vXHrvos7+zoIlgo36NWXbxpkmEhg5lKbXXrS7hu8ApP3eru
-         H4eHfs8jcJrve3tfTcJZ66ILQH7ekfLCryPRRNAJRtadSZbscfnyhU7EDkix6O8PRU
-         IvnuthGoE0KOw==
+        b=WtYMlSZCQ3PVpW0dr9oxJkJm3qsavL4CXsGsKF2SW6MWhbSpXLiFno9XEiqEJEYTK
+         hEzWm41lhpTpqklbPgGpkLjL5dag0s4skYYTsBR0VL06wVkt7ZDmpc+8euA9+Bq3N6
+         hpLR8U9u1fKESj0LxxTSngKJ/qouyICKZAYE22VtMu9PrmEUiws63ocqJjKV4IvC72
+         6gm0KHScnpdSYBjwWr+7Xf4zP5zT/7KLe5eLCm6mFbllRsFHKL1+viZ1xVsLupbnn9
+         mQcXLGPnReSxd/BU8XvkTzA2kxktt9HZARWNOoz5NnE1NJJzSWuJBNuiLfEceeIzsM
+         0qfly5zBIyalg==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Tue, 10 Dec 2019 01:19:18 +0100
-Message-Id: <5b017222a771fcef78876a18bcd80603c29c25f0.1575936961.git.mirq-linux@rere.qmqm.pl>
+Date:   Tue, 10 Dec 2019 01:19:17 +0100
+Message-Id: <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH 4/6] input: elants: detect max_x/y from hardware
+Subject: [PATCH 3/6] input: elants: support common touchscreen DT properties
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -53,61 +53,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read max_x/y from hardware when not specified in devicetree.
-
-elants_i2c_initialize() call is moved after inputdev allocation (but
-still before making it visible) to allow the function to see DT-provided
-values.
+Support common DT properties like axis inversions to complement
+information obtained from device's firmware.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/input/touchscreen/elants_i2c.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/input/touchscreen/elants_i2c.c | 27 ++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index 02bd5e3e2171..2e6c9aa60496 100644
+index eadd26d5a06f..02bd5e3e2171 100644
 --- a/drivers/input/touchscreen/elants_i2c.c
 +++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -498,9 +498,11 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+@@ -31,6 +31,7 @@
+ #include <linux/buffer_head.h>
+ #include <linux/slab.h>
+ #include <linux/firmware.h>
++#include <linux/input/touchscreen.h>
+ #include <linux/input/mt.h>
+ #include <linux/acpi.h>
+ #include <linux/of.h>
+@@ -146,8 +147,7 @@ struct elants_data {
+ 	u16 hw_version;
+ 	unsigned int x_res;	/* resolution in units/mm */
+ 	unsigned int y_res;
+-	unsigned int x_max;
+-	unsigned int y_max;
++	struct touchscreen_properties prop;
+ 
+ 	enum elants_state state;
+ 	enum elants_iap_mode iap_mode;
+@@ -498,10 +498,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
  			 rows, cols, osr);
  	} else {
  		/* translate trace number to TS resolution */
--		ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
-+		if (!ts->prop.max_x)
-+			ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
- 		ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
--		ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
-+		if (!ts->prop.max_y)
-+			ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
- 		ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
+-		ts->x_max = ELAN_TS_RESOLUTION(rows, osr);
+-		ts->x_res = DIV_ROUND_CLOSEST(ts->x_max, phy_x);
+-		ts->y_max = ELAN_TS_RESOLUTION(cols, osr);
+-		ts->y_res = DIV_ROUND_CLOSEST(ts->y_max, phy_y);
++		ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
++		ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
++		ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
++		ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
  	}
  
-@@ -1235,12 +1237,6 @@ static int elants_i2c_probe(struct i2c_client *client,
- 		return -ENXIO;
- 	}
+ 	return 0;
+@@ -833,8 +833,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
  
--	error = elants_i2c_initialize(ts);
--	if (error) {
--		dev_err(&client->dev, "failed to initialize: %d\n", error);
--		return error;
--	}
--
- 	ts->input = devm_input_allocate_device(&client->dev);
- 	if (!ts->input) {
- 		dev_err(&client->dev, "Failed to allocate input device\n");
-@@ -1252,6 +1248,12 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 			input_mt_slot(input, i);
+ 			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
++			touchscreen_report_pos(input, &ts->prop, x, y, true);
+ 			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+ 			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
  
- 	touchscreen_parse_properties(ts->input, true, &ts->prop);
+@@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	ts->input->name = "Elan Touchscreen";
+ 	ts->input->id.bustype = BUS_I2C;
  
-+	error = elants_i2c_initialize(ts);
-+	if (error) {
-+		dev_err(&client->dev, "failed to initialize: %d\n", error);
-+		return error;
-+	}
++	touchscreen_parse_properties(ts->input, true, &ts->prop);
 +
  	__set_bit(BTN_TOUCH, ts->input->keybit);
  	__set_bit(EV_ABS, ts->input->evbit);
  	__set_bit(EV_KEY, ts->input->evbit);
+ 
+ 	/* Single touch input params setup */
+-	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
++	input_set_abs_params(ts->input, ABS_X, 0, ts->prop.max_x, 0, 0);
++	input_set_abs_params(ts->input, ABS_Y, 0, ts->prop.max_y, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
+@@ -1271,8 +1272,10 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
+-	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, ts->x_max, 0, 0);
+-	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
++	input_set_abs_params(ts->input, ABS_MT_POSITION_X,
++			     0, ts->prop.max_x, 0, 0);
++	input_set_abs_params(ts->input, ABS_MT_POSITION_Y,
++			     0, ts->prop.max_y, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
 -- 
 2.20.1
 
