@@ -4,58 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001DDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90501C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B905D24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6019424683
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012017;
-	bh=d1/7Kds7v+ai1CEyfO3dNe/acNmNrUZKjnSwFaYm9G0=;
+	s=default; t=1576012020;
+	bh=ceteDlM2gzudgpK7lNIbnJYzwn+zR/DJXRfsggSRc00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lspfxR3fbLZ+XO/K2JDmb3DBOv4g8Vt/BrsLE26nXgG/YJ9jz79CjJ6mswOyvUfGe
-	 eshu6vzH9/toq6acpUZkut3k6lNdAX9C99245b4eF7jiVpYh75jjoiaMA1Qx4dTdqR
-	 Rdsjsnony9j4M+uJgFfBlKhsJhJM+P+5Fb/SdXxk=
+	b=wQEAI/oth5lY3GUMYoxoLc+4+fVj1/y4L9SBDkjndopQXeEd8tGoJwFKeURSNvvG5
+	 AeGGf0hgaNwoKBGsCJU5jo9RJUNWAt2G5W8g3oyXFxz7Eh2BSoZ5aKwq6mq6ZwWG8W
+	 E9Hd34LbvbdCcBVhbIocjqDgIYGxYlEyEJoMN61c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfLJVEN (ORCPT
+        id S1727308AbfLJVG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfLJVEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:08 -0500
+        id S1727035AbfLJVEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5605121556;
-        Tue, 10 Dec 2019 21:04:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6801221D7D;
+        Tue, 10 Dec 2019 21:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011847;
-        bh=d1/7Kds7v+ai1CEyfO3dNe/acNmNrUZKjnSwFaYm9G0=;
+        s=default; t=1576011852;
+        bh=ceteDlM2gzudgpK7lNIbnJYzwn+zR/DJXRfsggSRc00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=El+nUov5hUp5pNedX2Mfb5oOpo+u60kAV4k4gyCEq41/PPocwW/ZMvFAsWhGgSMO1
-         4j1fTlgLK8mlm7rgZpsxLnUHUYZk4hkkM7LFpbbIcigTnfDIqaXhVC/XC+IHfOo1gQ
-         pKlOJNBudJaWbe8gtSnAZsgdMXNADxacW1MDR/ts=
+        b=nWZLDrdgdmxqvSiASswsIDBFiLH6jJIT7+masRpXwKfUip0Bpe44enKWZwftOMnH6
+         Xgi/nAiSZa4oG5/NNZYE8QftEGp0OugucXwWPc7v4niwQ6E+JveTvD5zfKRU5nehJK
+         lDxex0ew0pRBUmI64CMLZdUB8tZmzH6kzNu8CuJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
-        Todd Previte <tprevite@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 003/350] drm: mst: Fix query_payload ack reply struct
-Date:   Tue, 10 Dec 2019 15:58:15 -0500
-Message-Id: <20191210210402.8367-3-sashal@kernel.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andres Rodriguez <andresx7@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 007/350] drm: Use EOPNOTSUPP, not ENOTSUPP
+Date:   Tue, 10 Dec 2019 15:58:19 -0500
+Message-Id: <20191210210402.8367-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,45 +68,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
+[ Upstream commit c7581a414d28413c1dd6d116d44859b5a52e0950 ]
 
-Spec says[1] Allocated_PBN is 16 bits
+- it's what we recommend in our docs:
 
-[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#recommended-ioctl-return-values
 
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Todd Previte <tprevite@gmail.com>
-Cc: Dave Airlie <airlied@redhat.com>
+- it's the overwhelmingly used error code for "operation not
+  supported", at least in drm core (slightly less so in drivers):
+
+$ git grep EOPNOTSUPP -- drivers/gpu/drm/*c | wc -l
+83
+$ git grep ENOTSUPP -- drivers/gpu/drm/*c | wc -l
+5
+
+- include/linux/errno.h makes it fairly clear that these are for nfsv3
+  (plus they also have error codes above 512, which is the block with
+  some special behaviour ...)
+
+/* Defined for the NFSv3 protocol */
+
+If the above isn't reflecting current practice, then I guess we should
+at least update the docs.
+
+Noralf commented:
+
+Ben Hutchings made this comment[1] in a thread about use of ENOTSUPP in
+drivers:
+
+  glibc's strerror() returns these strings for ENOTSUPP and EOPNOTSUPP
+  respectively:
+
+  "Unknown error 524"
+  "Operation not supported"
+
+So at least for errors returned to userspace EOPNOTSUPP makes sense.
+
+José asked:
+
+> Hopefully this will not break any userspace
+
+None of the functions in drm_edid.c affected by this reach userspace,
+it's all driver internal.
+
+Same for the mipi function, that error code should be handled by
+drivers. Drivers are supposed to remap "the hw is on fire" to EIO when
+reporting up to userspace, but I think if a driver sees this it would
+be a driver bug.
+v2: Augment commit message with comments from Noralf and José
+
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Acked-by: Noralf Trønnes <noralf@tronnes.org>
+Cc: José Roberto de Souza <jose.souza@intel.com>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Maxime Ripard <mripard@kernel.org>
 Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Andres Rodriguez <andresx7@gmail.com>
+Cc: Noralf Trønnes <noralf@tronnes.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190904143942.31756-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_dp_mst_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_edid.c     | 6 +++---
+ drivers/gpu/drm/drm_mipi_dbi.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index 2ba6253ea6d3f..fc349204a71bd 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -334,7 +334,7 @@ struct drm_dp_resource_status_notify {
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 6b0177112e18d..3f50b8865db4c 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -3722,7 +3722,7 @@ cea_db_offsets(const u8 *cea, int *start, int *end)
+ 		if (*end < 4 || *end > 127)
+ 			return -ERANGE;
+ 	} else {
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
  
- struct drm_dp_query_payload_ack_reply {
- 	u8 port_number;
--	u8 allocated_pbn;
-+	u16 allocated_pbn;
- };
+ 	return 0;
+@@ -4191,7 +4191,7 @@ int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads)
  
- struct drm_dp_sideband_msg_req_body {
+ 	if (cea_revision(cea) < 3) {
+ 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	if (cea_db_offsets(cea, &start, &end)) {
+@@ -4252,7 +4252,7 @@ int drm_edid_to_speaker_allocation(struct edid *edid, u8 **sadb)
+ 
+ 	if (cea_revision(cea) < 3) {
+ 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	if (cea_db_offsets(cea, &start, &end)) {
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index c4ee2709a6f32..f8154316a3b0d 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -955,7 +955,7 @@ static int mipi_dbi_typec1_command(struct mipi_dbi *dbi, u8 *cmd,
+ 	int ret;
+ 
+ 	if (mipi_dbi_command_is_read(dbi, *cmd))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	MIPI_DBI_DEBUG_COMMAND(*cmd, parameters, num);
+ 
 -- 
 2.20.1
 
