@@ -2,101 +2,119 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F733C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141F6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF522077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575989528;
-	bh=dFAzoWFqZ3axImMuFtqVBpswlNQq1NMO/hoo1pIY4vI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eHXtWZ5bzm2olpKbhJ3YHJa8bDL74y9PefeG6b/5v8F2rKVK3qOmghAYvdbhhV5DY
-	 nrndXxPPy8GGXonAvoWLuU/MNr1zaaaborQyWAyVuXOCYYfnADTjCS2jQWGEHlXssi
-	 /sMgAvxAzx6zMjSvRYKyL8X4z0FsMpZq6gd9FoAI=
+	by mail.kernel.org (Postfix) with ESMTP id DC85A2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VqS3SpQ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfLJOwH (ORCPT
+        id S1727542AbfLJOxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:52:07 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46710 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfLJOwH (ORCPT
+        Tue, 10 Dec 2019 09:53:14 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:18750 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfLJOxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:52:07 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m8so16172641edi.13;
-        Tue, 10 Dec 2019 06:52:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vnMo0Q3LhdLOTfXftmwazBAlZMLfT/1Z0Eq6LrQUqdc=;
-        b=adoZTKddLqHvuYyIzQFY1Gx43lt3pjw3kYkZ1J+HKzPnj+gbYU4t1/G0d3c9PAIo51
-         gMSab1fBkpepKR0lfFBMC5ibUmOG7AAH1P9sMD+cUNuKrgV/CPBVFG/9FwQGldomW3ny
-         Ty9R7YIQPvfvYzVLIW7PvC8DYhe5ozbyLhZXnQZpxKltcQXthlXBS6jVg4tPtKk8eCqm
-         6OcOnBrqaSjtWxljxKyqbuMY5nf1/THInhPiDx66/0Rrsw+be/GmH2hsveiqV4+eAubi
-         sSQEd0g+JJGZgRl5mplU/9bKOgprc6R9ICTFCiwCsjNfkmah9XjCcHYtYXCqVSCrhzrF
-         vbRQ==
-X-Gm-Message-State: APjAAAViWlIpwNawOGoHXEtWnWdyaYHOP4upIxO1Hb9ZN8xls5YTcpEz
-        C7LUMpP3JDfrmjg0umA7DIQ=
-X-Google-Smtp-Source: APXvYqw8E22/mA1z+Pv20fl6fJbN59CqfIhZcA5CUD+tWG45/U1MB8pFtq/LQzK21g3Bfic01PlZWQ==
-X-Received: by 2002:a05:6402:17f2:: with SMTP id t18mr40260410edy.9.1575989524821;
-        Tue, 10 Dec 2019 06:52:04 -0800 (PST)
-Received: from pi3 ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id m17sm76622edq.37.2019.12.10.06.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:52:04 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:52:02 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/10] tty: serial: samsung_tty: delete samsung.h
-Message-ID: <20191210145202.GD11222@pi3>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
- <20191210143706.3928480-5-gregkh@linuxfoundation.org>
+        Tue, 10 Dec 2019 09:53:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575989593; x=1607525593;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NAV6kZQrewVA32BcVnXou+TwbV5q6MZxjxEtrGeNo8M=;
+  b=VqS3SpQ5JJ2oVUm7hETyjPKTuQAxYpYpBnjjT2gO5u8an9JWUl7dTmme
+   iSA53jSaCo8v9J3FLYsP6/mMKSxDWjCMarkzWL8k8tuRjzEi2ULl1vp0d
+   mS1DLMsKhIhi5FoeciX6faUSMdzyyNPh8+KIHVkGYKSnVgYVcC3ph8KQG
+   4=;
+IronPort-SDR: wVWUhxat8iw5Q6ERyDQmmnGyVDPqrDPvphLeTNPJ5eufTf7zRgq8/rqezj2Zfh8mbPGQUj9a9W
+ 6wuUfkDS+udQ==
+X-IronPort-AV: E=Sophos;i="5.69,300,1571702400"; 
+   d="scan'208";a="7928558"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 10 Dec 2019 14:53:11 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id A2C651A1EEE;
+        Tue, 10 Dec 2019 14:53:10 +0000 (UTC)
+Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 10 Dec 2019 14:53:10 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 10 Dec 2019 14:53:09 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 10 Dec 2019 14:53:07 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Paul Durrant <pdurrant@amazon.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] xen-blkback: prevent premature module unload
+Date:   Tue, 10 Dec 2019 14:53:05 +0000
+Message-ID: <20191210145305.6605-1-pdurrant@amazon.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191210143706.3928480-5-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:37:01PM +0100, Greg Kroah-Hartman wrote:
-> There is no need for a .h file for a single .c file, so just move all of
-> the content of samsung.h into samsung_tty.c
-> 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Hyunki Koo <kkoos00@naver.com>
-> Cc: HYUN-KI KOO <hyunki00.koo@samsung.com>
-> Cc: Shinbeom Choi <sbeom.choi@samsung.com>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/tty/serial/samsung.h     | 144 -------------------------------
->  drivers/tty/serial/samsung_tty.c | 133 +++++++++++++++++++++++++++-
->  2 files changed, 130 insertions(+), 147 deletions(-)
->  delete mode 100644 drivers/tty/serial/samsung.h
+Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
+cache. This cache is destoyed when xen-blkif is unloaded so it is
+necessary to wait for the deferred free routine used for such objects to
+complete. This necessity was missed in commit 14855954f636 "xen-blkback:
+allow module to be cleanly unloaded". This patch fixes the problem by
+taking/releasing extra module references in xen_blkif_alloc/free()
+respectively.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+---
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: "Roger Pau Monné" <roger.pau@citrix.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index e8c5c54e1d26..59d576d27ca7 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -171,6 +171,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
+ 	blkif->domid = domid;
+ 	atomic_set(&blkif->refcnt, 1);
+ 	init_completion(&blkif->drain_complete);
++
++	/*
++	 * Because freeing back to the cache may be deferred, it is not
++	 * safe to unload the module (and hence destroy the cache) until
++	 * this has completed. To prevent premature unloading, take an
++	 * extra module reference here and release only when the object
++	 * has been free back to the cache.
++	 */
++	__module_get(THIS_MODULE);
+ 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
+ 
+ 	return blkif;
+@@ -320,6 +329,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
+ 
+ 	/* Make sure everything is drained before shutting down */
+ 	kmem_cache_free(xen_blkif_cachep, blkif);
++	module_put(THIS_MODULE);
+ }
+ 
+ int __init xen_blkif_interface_init(void)
+-- 
+2.20.1
 
