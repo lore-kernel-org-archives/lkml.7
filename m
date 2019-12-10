@@ -2,118 +2,101 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD814C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4C4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4079206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B658206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SfH4rbV9"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="u61jC3dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfLJSnI (ORCPT
+        id S1727733AbfLJSnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:43:08 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45694 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727568AbfLJSnI (ORCPT
+        Tue, 10 Dec 2019 13:43:49 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51314 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbfLJSnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:43:08 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so250585pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:43:07 -0800 (PST)
+        Tue, 10 Dec 2019 13:43:47 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d73so1126029wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:43:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=cXgeofGslOi+RjL/J6mEqJJEbNd8kJE15RHzG972FUQ=;
-        b=SfH4rbV9YZ1hWUHfo6cMIDDXDMylmGSkT93R4GTh+Vcu9RUxPGbiNBkAG3NbdHpxLv
-         G1SKn9dJ2jYhaRCFo3u55A1kll1ZmyWpn4zM876CL3bjaHxBuPO16j48vc4Eamz3b/k1
-         K2RPNZft07rIOQeGIXjppjTzrLmt28J4ZXLxwcsdCt1AxZ4CGFaTm/Y/wbPnPG71pkIw
-         GRKkwd5rks5xS9URrQMyPKsIEowX25fbB4RuXFxGhqmoGv39UtNs0dWn79kCP+ec1XLo
-         hNxzRCHUIR3xk7YRLPXCX9yEIBs86nu0PTIHkJ84zHzuJ4p4qhBV+Ga6CCnNwEp974ba
-         klHA==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=/T5WjX6H/ErjoxiBfZBOaK9N8M3Emjx06kbzRJKScRU=;
+        b=u61jC3dd5btuU1LTirGEHKGHO/sJAFpAvEbzr+r1IhSxUBB5d0YLbmzQBXxIGwpBqC
+         dyShA8AuIfIsoS6Gt89TdqqcNVg4/oxz9xEbe43RzdYkG00ZvC74qekSPQ4p4RVpYWS0
+         erL4Shrlk+eanoB++nsy6IlIDey4C0c5fJYz8A18wCVW3s4aZgx/X+UsPX+XKO1MLNU6
+         5jWbrMHbQk61z+gM/h8jjPZ08CyI4F4iTrqWSz7cOkoagX2DbAFgXX6PXs7sJrQBTJ1h
+         Fdv4BNBKcV42OHJJQe1DoQTwprZLJkMe9B2qIF5lFvN1pws65xCHBUq3ao8/2bwpghuw
+         bXwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=cXgeofGslOi+RjL/J6mEqJJEbNd8kJE15RHzG972FUQ=;
-        b=MxHfqRjWxXC6c2cD70CgLF0KwgFR+p82Y0mVS/4nhHHV3Y031nFrXHTIooZ3Qr8JGk
-         Gbc2XoNXkFRFfUzLpWx/dD3XrIoTi+/8UEYC/vhekwLu3ykOL8D6u8szNuKD3IWR5Zf1
-         m/1SWPaFgBarCYTwYgEs7wNXL9UjRkoxiQKYzEsPTEkeo6iF3LmpoRNQo3qWW8t8cW8U
-         gFyMxrT/31+YSBAUYowULpafiLgfY7d8bU/f15Dk3OktvbLfUy2MN9J+yH9AvG+YhJ4a
-         SQCGiWBGJfjzU3F6aWG9r7pVdDM41FQmbYg4OjpU7f4O4j8p+5sRPc0G+lOFZ6I71Gu5
-         VXkg==
-X-Gm-Message-State: APjAAAVDCHuJ+TVStAcNbmlA4n1beQw5kJ6arbwvOSaZdoIZywAUThxu
-        92i4qi33+VPcUrZZRbUh+/foyg==
-X-Google-Smtp-Source: APXvYqxAch1OM+Hj+dyhmaGulL00rkkcafPXofsHFHUk6+pyjE/E1S2dK7Z5HJ8gaKs6VYJkuFVJkA==
-X-Received: by 2002:aa7:8d4d:: with SMTP id s13mr14405829pfe.18.1576003387448;
-        Tue, 10 Dec 2019 10:43:07 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id k15sm4313480pfg.37.2019.12.10.10.43.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 10:43:06 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-In-Reply-To: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-References: <20191202111253.94872-1-jian.hu@amlogic.com> <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-Date:   Tue, 10 Dec 2019 10:43:06 -0800
-Message-ID: <7hwob4owcl.fsf@baylibre.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/T5WjX6H/ErjoxiBfZBOaK9N8M3Emjx06kbzRJKScRU=;
+        b=fmiv9rQ+tDPY0jpMQP897ZLBCjR6j/BZtmI0oK4pLge4el2bOQFQu7NyN4GllxcgOb
+         DmVNLEhjY+lE2LSJZy4tTpWYO9bslSXn0js+Md/CGVQlSqG/dZ2aJhwYLDN67/63qYMS
+         Nwd5kQYcczxrtc3Y6ls3cNOXsZSsRhvpB9NuL5FadqpO4Khci2JKHR9VOdCyvcExau+/
+         svzNC2cjy8TopV+EL0j81fnjIIIYmcJWSTm0TDB+ipg9VsVlbSlfdruOADmxaL6zG3rL
+         lukdE2oNg8Eza2TkaJtTmgdIelSzrrJsJJIkVwoE+TQ9n2IQPXkSOHnOcCAmcaWtYOwR
+         l84g==
+X-Gm-Message-State: APjAAAWUrUCTag5KDPlF3Ldv4u1LTUdye4NkOnB3T4QKaz9+8afPxnz6
+        jMHrQvH/SaWanyiTiImnrl2JLw==
+X-Google-Smtp-Source: APXvYqxvMexfjRMDF/ZdvhMlXOWa9ckksgWIQ7Dd4HvHvuiFS9+JslyuWH/yANwKzxTom9TBT9/iKw==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr6749458wml.67.1576003424871;
+        Tue, 10 Dec 2019 10:43:44 -0800 (PST)
+Received: from localhost (ip-94-113-220-172.net.upcbroadband.cz. [94.113.220.172])
+        by smtp.gmail.com with ESMTPSA id o4sm4121296wrx.25.2019.12.10.10.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 10:43:44 -0800 (PST)
+Date:   Tue, 10 Dec 2019 19:43:43 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/5] rtnetlink: provide permanent hardware
+ address in RTM_NEWLINK
+Message-ID: <20191210184343.GB7075@nanopsycho>
+References: <cover.1575982069.git.mkubecek@suse.cz>
+ <7c28b1aa87436515de39e04206db36f6f374dc2f.1575982069.git.mkubecek@suse.cz>
+ <20191210095105.1f0008f5@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210095105.1f0008f5@cakuba.netronome.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
->
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG.The I2C nodes
->> depend on pinmux and clock controller.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>  1 file changed, 149 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..d0a73d953f5e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -16,6 +16,13 @@
->>  	#address-cells = <2>;
->>  	#size-cells = <2>;
+Tue, Dec 10, 2019 at 06:51:05PM CET, jakub.kicinski@netronome.com wrote:
+>On Tue, 10 Dec 2019 14:07:53 +0100 (CET), Michal Kubecek wrote:
+>> @@ -1822,6 +1826,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+>>  	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
+>>  	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
+>>  				    .len = ALTIFNAMSIZ - 1 },
+>> +	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+>>  };
 >>  
->> +	aliases {
->> +		i2c0 = &i2c0;
->> +		i2c1 = &i2c1;
->> +		i2c2 = &i2c2;
->> +		i2c3 = &i2c3;
->> +	};
->> +
+>>  static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
 >
-> I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
->
-> Such aliases are usually assigned as needed by each board design:
-> meson-a1-ad401.dts in your case.
+>Jiri, I just noticed ifla_policy didn't get strict_start_type set when
+>ALT_IFNAME was added, should we add it in net? 🤔
 
-Agreed.  I don't think SoC-wide aliases are a great idea.
-
-Kevin
+Hmm, I guess that is a good idea.
