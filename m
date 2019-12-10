@@ -2,151 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0688C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5572C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF062053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glGU9x02"
+	by mail.kernel.org (Postfix) with ESMTP id 8A91A2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576018448;
+	bh=xiMoy7GjqiE2pdfBtbdz4V+ljFI3QmXpQyv7un7NzPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WdCI4xguQX9DkB9HzKqqvBQl0waZIaANkrB2bdr9kJ/b9DutDt8znrcQKuzkx6Acd
+	 S17l85+5B2ZpWRT7+CNR522ZUKJtjHAdQTz3AviSv0c8lByme+ZA/6Rex0HPG+uCnZ
+	 /Hgv4lT8vh2Tie3p7mgjnPX6LZr9SpGaUAoZAB6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfLJWxY (ORCPT
+        id S1727307AbfLJWyH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:53:24 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46605 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJWxX (ORCPT
+        Tue, 10 Dec 2019 17:54:07 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35845 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfLJWyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:53:23 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so9601219pgb.13;
-        Tue, 10 Dec 2019 14:53:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=dUDhi+vrizCDQsGj4pc5jWU26FSBssN6Xxld2hQXfVA=;
-        b=glGU9x02KRDnsK6A5AaLs4rMCnVwW3EE4N4dp/TxbNWO/ZBbszGfmMqnw7HdES9cxE
-         Pja83pvNOaSNHHtCXiYZ0kaTelWQzDvI58yV/FcQCGdLfHbt28xPjw1Tebg1dyojyEzG
-         hpX2QWFSCsknI6nJiriz2OLae7gZRVx8yS5xbR+2tK/sfAKzsTSroqj50MlfedJoDP3S
-         GVw4VIhuNqphzVT311+/nDoVDh/8OiaaBO1hwqD/R3wSsYGOOgqnrRf8G4AuMk0TwTYZ
-         Pylt7PZqspGPlBhBCS5M1yKnd1yJ818brA+OwED6jbXKfRr1jSnI5kfTjxbbY+xXRUoS
-         Vs8w==
+        Tue, 10 Dec 2019 17:54:07 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so8978234pgc.3;
+        Tue, 10 Dec 2019 14:54:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=dUDhi+vrizCDQsGj4pc5jWU26FSBssN6Xxld2hQXfVA=;
-        b=bORDvV8CGSoCmpwvFVZsntP8lE6PaXDfs6JLkKNgD+BU1LkSY3LUX2DwRjH3hRr+iJ
-         6EdjFtMbe+MjAuzZI17JGAIjna2qa4dsJww5UlXHpf8NiPSfG9uSHx5cS0MpchzD/2In
-         gBwCgsnAl1an6E156dYjD+g0pd4s78Yl0iWup+IOAXQxvYOe9UzkKLQSflLRe1ZhczW8
-         3TujUOBD18BkVZnNf01G97wpM2PqOetzKMFQumf/LUDBZgggPbKmYRip1dsCC8p02jmI
-         6mq0UtMxaVOmeoin+lXieKRT3vBdhbTGPyFfiqjeitbHGkPamyAyoI4f8nztpdBbTLwH
-         8yLw==
-X-Gm-Message-State: APjAAAWanKK9Cttnvk86gJFEQCIqnrmRL6LuVYqATLqUf2JY/Cb8scF1
-        AxTKY8aOjHc5F4oi8opPvig=
-X-Google-Smtp-Source: APXvYqyaoXewPtk6K9LcJ2BvDJm09Y0mkTH2JS0qcJmsPhCtrlORmEXitFkhZ7Qbka6vFiST/SILVQ==
-X-Received: by 2002:aa7:8658:: with SMTP id a24mr304483pfo.87.1576018402986;
-        Tue, 10 Dec 2019 14:53:22 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:a25c])
-        by smtp.gmail.com with ESMTPSA id e7sm70381pfe.168.2019.12.10.14.53.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 14:53:22 -0800 (PST)
-Date:   Tue, 10 Dec 2019 14:53:21 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
-Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
- ksyms
-Message-ID: <20191210225320.pymey5md727e4m5x@ast-mbp.dhcp.thefacebook.com>
-References: <20191210181412.151226-1-toke@redhat.com>
- <20191210125457.13f7821a@cakuba.netronome.com>
- <87eexbhopo.fsf@toke.dk>
- <20191210132428.4470a7b0@cakuba.netronome.com>
- <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
- <20191210135205.529044a4@cakuba.netronome.com>
+        bh=Uc6nUyx0tWcpYbMt8ma4oxDDyJv0615QHHpUzzEGUYg=;
+        b=rxTdYtyGil11OqU8xmilGx2QIhnrRQcS1GdxFVeauU7mqgYLfkCMHh1d3sSWVL6NJl
+         ivjN7IxT979Jzm1kaPgtIi+QihFy4Oqn8D8VEreDwBd4voC4cOBRJw/hfBvT/Rj1Qg5o
+         DAI1vPVqmDnCXyX7pcRvgADjtky6zy/SzXGUv7SdPv7aqIJouSsxSjIXZVqOMA8hn90x
+         D34Al5YdmKeXNEvRde7WF4RCvVwVWdCxmUpX7xcrumDKwgdhNVmrqpiyP81cAYmWO1Ff
+         JVDBlvKxf52ZuWJoVUtTA+xr1XBh8dC1prX8OrjqzZMsyKNgnJws5sppaxegBVSsclTd
+         eDTw==
+X-Gm-Message-State: APjAAAUXkOvoij9bOIJndIpMr1fc5+Aw4gPwNVBnc5gKztuDC0LHY5wf
+        uAfJ/uDi5ppSEFqRfpJVFcM=
+X-Google-Smtp-Source: APXvYqzT4nRMuygUybmv0z7MJHp0Jn15ImWI/vUXkOVE8NMGjoWmLiq4x33grbemVSea0CIPzLKwZQ==
+X-Received: by 2002:aa7:9d0d:: with SMTP id k13mr344069pfp.254.1576018446035;
+        Tue, 10 Dec 2019 14:54:06 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id d4sm37554pjz.12.2019.12.10.14.54.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 14:54:05 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:55:03 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, mturquette@baylibre.com,
+        sboyd@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: Re: [PATCH 1/5] clk: Ingenic: Adjust code to make it compatible with
+ X1830.
+Message-ID: <20191210225503.nf77ksu2sznngbp2@lantea.localdomain>
+References: <1574825576-91028-1-git-send-email-zhouyanjie@zoho.com>
+ <1574825576-91028-2-git-send-email-zhouyanjie@zoho.com>
+ <1574876253.3.4@crapouillou.net>
+ <5DDF694B.1000902@zoho.com>
+ <1575026622.3.2@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210135205.529044a4@cakuba.netronome.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1575026622.3.2@crapouillou.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:52:05PM -0800, Jakub Kicinski wrote:
-> On Tue, 10 Dec 2019 13:31:50 -0800, Alexei Starovoitov wrote:
-> > On Tue, Dec 10, 2019 at 01:24:28PM -0800, Jakub Kicinski wrote:
-> > > On Tue, 10 Dec 2019 22:09:55 +0100, Toke Høiland-Jørgensen wrote:  
-> > > > Jakub Kicinski <jakub.kicinski@netronome.com> writes:  
-> > > > > On Tue, 10 Dec 2019 19:14:12 +0100, Toke Høiland-Jørgensen wrote:    
-> > > > >> When the kptr_restrict sysctl is set, the kernel can fail to return
-> > > > >> jited_ksyms or jited_prog_insns, but still have positive values in
-> > > > >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when trying
-> > > > >> to dump the program because it only checks the len fields not the actual
-> > > > >> pointers to the instructions and ksyms.
-> > > > >> 
-> > > > >> Fix this by adding the missing checks.
-> > > > >> 
-> > > > >> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>    
-> > > > >
-> > > > > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-> > > > >
-> > > > > and
-> > > > >
-> > > > > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm field")
-> > > > >
-> > > > > ?    
-> > > > 
-> > > > Yeah, guess so? Although I must admit it's not quite clear to me whether
-> > > > bpftool gets stable backports, or if it follows the "only moving
-> > > > forward" credo of libbpf?  
+Hi Paul, Zhou,
+
+On Fri, Nov 29, 2019 at 12:23:42PM +0100, Paul Cercueil wrote:
+> > > > @@ -93,8 +93,17 @@ ingenic_pll_recalc_rate(struct clk_hw *hw,
+> > > > unsigned long parent_rate)
+> > > >      n += pll_info->n_offset;
+> > > >      od_enc = ctl >> pll_info->od_shift;
+> > > >      od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+> > > > -    bypass = !pll_info->no_bypass_bit &&
+> > > > -         !!(ctl & BIT(pll_info->bypass_bit));
+> > > > +
+> > > > +    if (pll_info->version >= CGU_X1830) {
+> > > > +        spin_lock_irqsave(&cgu->lock, flags);
+> > > > +        ctl = readl(cgu->base + pll_info->reg[0]);
+> > > > +        spin_unlock_irqrestore(&cgu->lock, flags);
 > > > 
-> > > bpftool does not have a GH repo, and seeing strength of Alexei's
-> > > arguments in the recent discussion - I don't think it will. So no
-> > > reason for bpftool to be "special"  
+> > > Why the spinlock?
+> > > 
 > > 
-> > bpftool always was and will be a special user of libbpf.
+> > The original code used spinlock when reading the control register,
+> > so when reading this new control register, I think it should also
+> > be added with spinlock.
 > 
-> There we go again. Making proclamations without any justification or
-> explanation.
+> Well, the original code looks wrong to me. There's nothing to protect here.
 > 
-> Maybe there is a language barrier between us, but I wrote the initial
-> bpftool code, so I don't see how you (who authored one patch) can say
-> what it was or is. Do you mean to say what you intend to make it?
+> Maybe @Paul Burton can shed some light?
 
-When code lands it becomes the part of the code that maintainers keep in the
-best shape possible considering contributions from many parties. Original
-author of the code is equal to everyone else who submits patches. The job of
-the maintainer is to mediate folks who contribute the patches. Sounds like you
-expected to own bpftool as a single owner. I don't think kernel is such place.
-In most projects I'm aware of the OWNERS file is discouraged. The kernel is
-such project. The kernel has MAINTAINERS file which lists people most
-knowledgeable in the area and who's job is to keep the code in good shape,
-consider long term growth, etc. Maintainers are not owners of the code.
+I wish I could remember, but I agree it seems pointless here. The only
+way I can think it could be of any use is if writes to the CGU register
+we're accessing aren't atomic (ie. if we could observe a partially
+completed write), but I don't believe that's the case.
 
-bpftool became way more than what it was when initially landed. Just like
-libbpf was implemented mainly by huawei folks and used in perf only. Now perf
-is a minority and original authors are not contributing any more. I'm sure you
-thought of bpftool as cli for sys_bpf only. Well thankfully it outgrew this
-narrow view point. bpftool btf dump file doesn't call sys_bpf at all.
-bpftool perf | net using several other kernel apis. I think it's a good growth
-trajectory for bpftool. More people use it and like it.
+So Zhou, if you want to drop the spinlock here from your X1830 path &
+ideally also add a patch to remove it in the non-X1830 path that would
+be great.
 
-> Upstreaming bpftool was a big mistake, but we live and we learn
-
-ok. Not going count on your help anymore.
-Since you're not interesting in helping please don't stall it either.
-
+Thanks,
+    Paul
