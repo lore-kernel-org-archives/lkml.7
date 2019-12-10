@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2340BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41731C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF54C2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0904C20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015484;
-	bh=BbpxCoyvun3ZTlYPtQUKIrqp6jDkN0LqSuzOmQTuhJM=;
+	s=default; t=1576015489;
+	bh=HdAdkZBjVJvIGAndfdwegkCYqkRRT+FGu3rgFZFe29E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmxY0UkTSjLfg2XFlbATlF7aXWq0At6SQmDF2XsHVPOUgz9Bx9o/tW6XCD6bgfGXt
-	 A3GQtNzhlw1bqGiiMT7A6cmWIiCFbjMeqnGZ5jMCtfAbRTZl79hcOypFA5Er9bi17H
-	 /Dw+pZVTDZ3Axg0AJutbICEHc3n7cwc9BzTUj4GQ=
+	b=gyzdRKSet0uwVzVTGYIVcRkV8c//QGC7+URIcnabOV4RKVhAL0phsl9BSyA+Jn2f4
+	 fZTuz6193PRDMEJtAfNtVjlAO3EvKp0PQMr6GOt4B5La63ghVssU+o4o5dcqFIWxHI
+	 D7e/Zmetw/VTwcO3yFL4kxbDdTlxrx0Y2Z7t7m04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfLJWEm (ORCPT
+        id S1728808AbfLJWEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbfLJWEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:34 -0500
+        id S1729001AbfLJWEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEFBB2077B;
-        Tue, 10 Dec 2019 22:04:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADD320637;
+        Tue, 10 Dec 2019 22:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015473;
-        bh=BbpxCoyvun3ZTlYPtQUKIrqp6jDkN0LqSuzOmQTuhJM=;
+        s=default; t=1576015478;
+        bh=HdAdkZBjVJvIGAndfdwegkCYqkRRT+FGu3rgFZFe29E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QfGqeTYr8fYl3gElSKU7/OMX3EHQj4VvEZJLR0xz77PUEmRmnfvVVPvisi+lUB1My
-         7KmSwB5qkpVSE2T2vkoASWzd33as9BgpgUNRtZZ/KhZGrjc+mEqbO+uSHstYPrrYAT
-         faa2CzQ6yhh9y7aXpgb+39mQw7xFWjPy6e5Hs6i8=
+        b=ZBM++T17cl50TviCYHRUaOuuu7TMIHgNzy7LoBRHifyw5iwiw/n53JrY+BKxticjM
+         y4mxhENa7l4U2pyht4i60pgkFz3cExEUSrLWQfMW+Fm5LykyVxJL42ah4LUU7bn6j2
+         zO056y3B0Vl/sk/kI9ojSC2ejeSQrmdce64GOELU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 078/130] bnx2x: Fix PF-VF communication over multi-cos queues.
-Date:   Tue, 10 Dec 2019 17:02:09 -0500
-Message-Id: <20191210220301.13262-78-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 082/130] perf probe: Fix to find range-only function instance
+Date:   Tue, 10 Dec 2019 17:02:13 -0500
+Message-Id: <20191210220301.13262-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,52 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
+[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
 
-PF driver doesn't enable tx-switching for all cos queues/clients,
-which causes packets drop from PF to VF. Fix this by enabling
-tx-switching on all cos queues/clients.
+Fix die_is_func_instance() to find range-only function instance.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In some case, a function instance can be made without any low PC or
+entry PC, but only with address ranges by optimization.  (e.g. cold text
+partially in "text.unlikely" section) To find such function instance, we
+have to check the range attribute too.
+
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/dwarf-aux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index 9ca994d0bab66..1977e0c552dff 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -2389,15 +2389,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
- 	/* send the ramrod on all the queues of the PF */
- 	for_each_eth_queue(bp, i) {
- 		struct bnx2x_fastpath *fp = &bp->fp[i];
-+		int tx_idx;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index f5acda13dcfa7..bc52b38407066 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -331,10 +331,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
++	Dwarf_Attribute attr_mem;
  
- 		/* Set the appropriate Queue object */
- 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
- 
--		/* Update the Queue state */
--		rc = bnx2x_queue_state_change(bp, &q_params);
--		if (rc) {
--			BNX2X_ERR("Failed to configure Tx switching\n");
--			return rc;
-+		for (tx_idx = FIRST_TX_COS_INDEX;
-+		     tx_idx < fp->max_cos; tx_idx++) {
-+			q_params.params.update.cid_index = tx_idx;
+ 	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
++	return !dwarf_func_inline(dw_die) &&
++	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
+ }
 +
-+			/* Update the Queue state */
-+			rc = bnx2x_queue_state_change(bp, &q_params);
-+			if (rc) {
-+				BNX2X_ERR("Failed to configure Tx switching\n");
-+				return rc;
-+			}
- 		}
- 	}
- 
+ /**
+  * die_get_data_member_location - Get the data-member offset
+  * @mb_die: a DIE of a member of a data structure
 -- 
 2.20.1
 
