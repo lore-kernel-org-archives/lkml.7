@@ -2,129 +2,125 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC04C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E710B20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCtNVB18"
+	by mail.kernel.org (Postfix) with ESMTP id DCBE32071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLJCPy (ORCPT
+        id S1726771AbfLJCWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:15:54 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44247 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfLJCPx (ORCPT
+        Mon, 9 Dec 2019 21:22:03 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50650 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726598AbfLJCWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:15:53 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x7so8068140pgl.11;
-        Mon, 09 Dec 2019 18:15:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
-        b=qCtNVB18l4AXH3spU0ssTTWN9LziniY+tGLO5PgmoQBm4LP2kr+u/IstmffKCZ199+
-         tOVBNiCcnXHk9jnv8HAozN/t8h1b59cHEZRCxBx9YzTnEZVe7f/LX1efff9NM7OG7UHR
-         66XR/yfafX6snheRcg+Yj6jo8rVHZ4JqzC0DdnH200Z5LbVaxzs6VAOE327E9r/9KO0d
-         np81G6P60lGqE+BOII9bDmZVQTSCtQORPqDq43lmZzX41w1I24y6dJq5F6uc4ZUaDqV3
-         ZxBG/QnLQ+PBSgXEhGWRP/z/RVdWoqG+/6hwAbEHG3rxjmyXH/pgplvucJJ5hc0x2xJ5
-         n9yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
-        b=jwAAEQD5vKJJgxfiwBxxJsKYcY6W7dVuMeKhgOdqxuLFcR1dAHU/cwVq7OzFV/ce3x
-         v3bgcDjCMVnbt0bid5Dwb7Vah76EXAqVaaLQZgqQB+dm2eOpWIffgy5ppDbXVaOZEBRS
-         j0Fei5GZIqYoSBMUCUhHTDH50YXP3Y+uin1ukamZ6KkZBgEsT+i32h+wjQlC3Ip4eJki
-         ontnpdaQ12n5LXS9Zga9VeVw5rkVzKlWsbAJqNn+xtIte26X/aq6jHJa8DGTA6kgziiF
-         uTbM5LWBP9EY2SDDwEGX2od+D4aWu3NJMU66hmHyZDh6nOxgCWH7w1vdN7U8JA6YF35B
-         kLpw==
-X-Gm-Message-State: APjAAAXKFQ5kk0Hr+WwqDvLrLLfOGWDpMCAXPZU0vqYzi8eQham9F7kZ
-        K/Zp6W8sW34LHmdxi7PjGZd4kw8F
-X-Google-Smtp-Source: APXvYqy0qwnCTB1mskWQjDuVFXOnTeLnHaka5/VTEI+Bs7ZCHYEqRCkGA0QcpPA+DbJVCWkzmd+F2g==
-X-Received: by 2002:a62:1d55:: with SMTP id d82mr32879494pfd.165.1575944152488;
-        Mon, 09 Dec 2019 18:15:52 -0800 (PST)
-Received: from sol.lan (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
-        by smtp.gmail.com with ESMTPSA id m13sm790391pga.70.2019.12.09.18.15.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 18:15:51 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        bamv2005@gmail.com
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
-Date:   Tue, 10 Dec 2019 10:15:25 +0800
-Message-Id: <20191210021525.13455-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 9 Dec 2019 21:22:03 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TkUheNY_1575944515;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TkUheNY_1575944515)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Dec 2019 10:21:58 +0800
+Subject: Re: [PATCH v5 0/2] sched/numa: introduce numa locality
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+Message-ID: <96342524-142e-c616-1e7e-ce05dfd9ca09@linux.alibaba.com>
+Date:   Tue, 10 Dec 2019 10:19:58 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Restore the external behavior of gpio-mockup to what it was prior to the
-change to using GPIO_LINE_DIRECTION.
+Hi Peter, Ingo
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
+We have reformed the implementation for several times, now it's very
+simple and easy to use, there are also a document to guide admin on
+how to use not only the NUMA locality, but also other per-cgroup NUMA
+statistics, we hope this could make things easier for other NUMA users.
 
-Fix a regression introduced in v5.5-rc1.
+As now there are no more comments, would you please take a look at this
+patch set, see if it's good enough to be picked?
 
-The change to GPIO_LINE_DIRECTION reversed the polarity of the
-dir field within gpio-mockup.c, but overlooked inverting the value on
-initialization and when returned by gpio_mockup_get_direction.
-The latter is a bug.
-The former is a problem for tests which assume initial conditions,
-specifically the mockup used to initialize chips with all lines as inputs.
-That superficially appeared to be the case after the previous patch due
-to the bug in gpio_mockup_get_direction.
+Regards,
+Michael Wang
 
- drivers/gpio/gpio-mockup.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 56d647a30e3e..c4fdc192ea4e 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
- 	int direction;
- 
- 	mutex_lock(&chip->lock);
--	direction = !chip->lines[offset].dir;
-+	direction = chip->lines[offset].dir;
- 	mutex_unlock(&chip->lock);
- 
- 	return direction;
-@@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	struct gpio_chip *gc;
- 	struct device *dev;
- 	const char *name;
--	int rv, base;
-+	int rv, base, i;
- 	u16 ngpio;
- 
- 	dev = &pdev->dev;
-@@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	if (!chip->lines)
- 		return -ENOMEM;
- 
-+	for (i = 0; i < gc->ngpio; i++)
-+		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
-+
- 	if (device_property_read_bool(dev, "named-gpio-lines")) {
- 		rv = gpio_mockup_name_lines(dev, chip);
- 		if (rv)
--- 
-2.24.0
-
+On 2019/12/5 下午2:53, 王贇 wrote:
+> Since v4:
+>   * improved documentation
+> Since v3:
+>   * fix comments and improved documentation
+> Since v2:
+>   * simplified the locality concept & implementation
+> Since v1:
+>   * improved documentation
+> 
+> Modern production environment could use hundreds of cgroup to control
+> the resources for different workloads, along with the complicated
+> resource binding.
+> 
+> On NUMA platforms where we have multiple nodes, things become even more
+> complicated, we hope there are more local memory access to improve the
+> performance, and NUMA Balancing keep working hard to achieve that,
+> however, wrong memory policy or node binding could easily waste the
+> effort, result a lot of remote page accessing.
+> 
+> We need to notice such problems, then we got chance to fix it before
+> there are too much damages, however, there are no good monitoring
+> approach yet to help catch the mouse who introduced the remote access.
+> 
+> This patch set is trying to fill in the missing pieces， by introduce
+> the per-cgroup NUMA locality info, with this new statistics, we could
+> achieve the daily monitoring on NUMA efficiency, to give warning when
+> things going too wrong.
+> 
+> Please check the second patch for more details.
+> 
+> Michael Wang (2):
+>   sched/numa: introduce per-cgroup NUMA locality info
+>   sched/numa: documentation for per-cgroup numa statistics
+> 
+>  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
+>  Documentation/admin-guide/index.rst             |   1 +
+>  Documentation/admin-guide/kernel-parameters.txt |   4 +
+>  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+>  include/linux/sched.h                           |  15 ++
+>  include/linux/sched/sysctl.h                    |   6 +
+>  init/Kconfig                                    |  11 ++
+>  kernel/sched/core.c                             |  75 ++++++++++
+>  kernel/sched/fair.c                             |  62 +++++++++
+>  kernel/sched/sched.h                            |  12 ++
+>  kernel/sysctl.c                                 |  11 ++
+>  11 files changed, 384 insertions(+)
+>  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+> 
