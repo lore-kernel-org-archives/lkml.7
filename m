@@ -2,100 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625BCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ECAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3459820637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD522077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S5kJVxPB"
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="lpHjPuP+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MNiyCRZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLJOji (ORCPT
+        id S1727518AbfLJOlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:39:38 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:48137 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfLJOji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:39:38 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47XN4R2jvMz9txPV;
-        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S5kJVxPB; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id h_8fAE0U-HoN; Tue, 10 Dec 2019 15:39:35 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47XN4R1Whkz9txPQ;
-        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1575988775; bh=gC07UrkwsOByoVoBIV4uyW1SIFHfck0w0oYmnN2eVmc=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=S5kJVxPBDtEJof7P7KiznADxbNG3gE1jXaxpcR3MKMReOTnvMUIuCOPU2EwO2JYvz
-         bQF+6k36pGkxUSHvMr2woVfbXc1TrlcRFqStmczYl+Zel3SHLk7Imx+672RESlTwWE
-         TGGY3rLrhsFplKCs29s3aOxdlXrG4Jy0gYxaqwLk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A165C8B815;
-        Tue, 10 Dec 2019 15:39:36 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Hn7oLwJSlDri; Tue, 10 Dec 2019 15:39:36 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 96E4F8B754;
-        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
-Subject: Re: [PATCH v2 2/4] kasan: use MAX_PTRS_PER_* for early shadow
-To:     Balbir Singh <bsingharora@gmail.com>,
-        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-3-dja@axtens.net>
- <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <5d1ec6e3-777e-9f23-ea8f-50361a29302f@c-s.fr>
-Date:   Tue, 10 Dec 2019 15:39:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 09:41:10 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:37705 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbfLJOlJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:41:09 -0500
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6954322480;
+        Tue, 10 Dec 2019 09:41:08 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 10 Dec 2019 09:41:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
+        from:to:cc:subject:date:message-id:mime-version:content-type; s=
+        fm1; bh=QyRY1SH/TcZCYCqQzwGfCLBox8YaWx+EjaKhewFMq/s=; b=lpHjPuP+
+        sElkQXi6GriJD0Oooj/CgBCmct25KCYWjWwpWmon6OBdR68ouEPaITKLQl8SOdZD
+        52StJ5Wdc7/1GuLcvldMlcw6prrfVYTRA42q5kItSP3ljMUFN/WP5ArEWJJYp7iD
+        pt3Jvp+dlZrzyjVDIDFBD0v53PzwlutNW6c27m9k7j+2xOUMqMOsgZf4wryMmCSU
+        +Ke/sGSnlSHo+aSF2NcwoEy7Fep6MsGlH/Tub45rc+aNnqZ6UOlf6yHUaiYFNXtp
+        S3u3W5J/aUNqu1fxwDlaCrY2KDRfs+//yHCdsSOeF4juz8Pz+6rMhLbdFPkzXRM4
+        r8a9G38O8ZEjfg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:message-id
+        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm1; bh=QyRY1SH/TcZCYCqQzwGfCLBox8YaW
+        x+EjaKhewFMq/s=; b=MNiyCRZaJ7w+0JHZW8F+zPkUKzRyGOHMrbod3X5SiZYKs
+        wA5Xj+PA2v4uXsvWEorNrvj82MHBXbDdwNgEflQh7YGJUHDT5shfqTRtfIVsYE0n
+        /b4rQgTI2u8TzW27e18UUMcDAC+HMhk2OjvZ9bfjOPHjHfnMSUoPQ6OrQFX1Z1U6
+        m84GKDV7kSOm3OQqCdkpk1bOpW+VYcxemxhgAv+K7/WwXavHI/1Ye8q9nSgQbt7M
+        kk0Ia3th8kTWOi27ng1zc4Xj56SPK0r/0a3udLJB81VUm5GxBpK6BiySl8CkY3Yb
+        n10bhvBfR+L8luCuvMmXKeopQnwrjRqU2XnQLODvg==
+X-ME-Sender: <xms:g67vXYoel1BAGTsg5iDOS_jPaGl0vrU5euYoodmCDDpXis6vguDHvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelfedgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkfggtgesthdtredttddttdenucfhrhhomheptehlhihsshgrucft
+    ohhsshcuoehhihesrghlhihsshgrrdhisheqnecukfhppeejledrvdefhedruddvfedrud
+    ehfeenucfrrghrrghmpehmrghilhhfrhhomhephhhisegrlhihshhsrgdrihhsnecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:g67vXS7yJIqk4oiSO2_XD6hKzEA2mUFFtyY_hq6z_g_JW4pTpc2Vxw>
+    <xmx:g67vXYNeY-tnl4HZSy6j_lpgqfwXOafnkXpKiH9Ve8Zo2H5KiQvbHA>
+    <xmx:g67vXUP5-0mJChTthckGIKMo6Wb3gBHdc8tsSi1OJKbfBfr6xiY7tA>
+    <xmx:hK7vXdzuISu9OFCA9EOrt6RULcUdpOrqe3i1oQSVvqvIHWtVU-0Cqg>
+Received: from x220.qyliss.net (p4feb7b99.dip0.t-ipconnect.de [79.235.123.153])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6E1018005C;
+        Tue, 10 Dec 2019 09:41:07 -0500 (EST)
+Received: by x220.qyliss.net (Postfix, from userid 1000)
+        id 33C301455C4; Tue, 10 Dec 2019 14:41:04 +0000 (UTC)
+From:   Alyssa Ross <hi@alyssa.is>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, linux-crypto@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: Bogus dependency for HW_RANDOM_VIRTIO with oldconfig
+Date:   Tue, 10 Dec 2019 14:41:04 +0000
+Message-ID: <87wob4tf9b.fsf@alyssa.is>
 MIME-Version: 1.0
-In-Reply-To: <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I'm new here and not sure if I'm contacting the correct people/groups --
+please point me in the right direction if not.  I don't know if the
+culprit here is Kconfig, the virtio Kconfig file, the hw_random Kconfig
+file, or some combination of those.
 
+I believe I have discovered an issue with the order in which make
+oldconfig asks for virtio-related options, and would appreciate some
+advice on how to solve it:
 
-Le 10/12/2019 à 10:36, Balbir Singh a écrit :
-> 
-> 
-> On 10/12/19 3:47 pm, Daniel Axtens wrote:
->> This helps with powerpc support, and should have no effect on
->> anything else.
->>
->> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> 
-> If you follow the recommendations by Christophe and I, you don't need this patch
+HW_RANDOM_VIRTIO=y depends on VIRTIO=y.  In my kernel, VIRTIO=y is
+selected by VIRITO_PCI=y, but when make oldconfig prompts for
+HW_RANDOM_VIRTIO, VIRTIO_PCI has not been prompted for yet, and so
+VIRTIO is still set to m.
 
-I guess you mean Patch 1 (the one adding the const to all arches) is not 
-needed. Of course this one (Patch 2) is needed as it is the one that 
-changes kasan.h to use const table size instead of impossible variable 
-table size.
+This means that it's not possible for me to set HW_RANDOM_VIRTIO=y using
+oldconfig without setting an VIRTIO-selecting option I don't need, but
+that is prompted for _before_ HW_RANDOM_VIRTIO.  One such option that I
+have identified so far is VOP.  It is prompted for before
+HW_RANDOM_VIRTIO, and so if I set VOP=y it is now possible to set
+HW_RANDOM_VIRTIO.
 
-And that would also fix the problem reported by the kbuild test robot.
+When using menuconfig on a config file generated with oldconfig, that
+does not have HW_RANDOM_VIRTIO enabled, I am able to set HW_RANDOM=y and
+HW_RANDOM_VIRTIO=y, and after saving I can confirm that no other changes
+have been made to the configuration file.  This tells me that there's no
+need for a dependency on e.g. VOP, except when using oldconfig.
 
-Christophe
+So, I think there is an ordering issue here, and that oldconfig
+should not prompt for HW_RANDOM_VIRTIO until after any option that might
+select VIRTIO=y.
+
+I would be happy to try to submit or test a patch to fix this, but I
+don't know where to go from here.
