@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B472C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB05F2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187C62073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013241;
-	bh=YyPzPT3aJVPf7MSddQdNvkX3fuIxyFCU9WurLQdBgRg=;
+	s=default; t=1576013248;
+	bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cvHY3XD806cD1GLOGJRNr8wxgbTxI2LVoINmeemM7X/oxqvrw6ojyPZ7TEEg/ezfb
-	 ozcQAF3D5jmMn/csrdmOX0Lw4pLXw99CF6phf24zPga8+G2U1mnI1FCWycYy+fePKV
-	 lFrOjnEmuZ650XObFdTFsb5XfG1hRGT0iU0onIpI=
+	b=EYU7iRwo7lXHclrTlmDApEy5LK4hjZ5l5BI8fZ/dpuafmsadd9vrAkWzDhfBJiJG1
+	 sCUYsFjSmwidixsVXd13pb3Tf0LdCiczAWYF5X2keto2stQmBS+fzioCCZ8STlbSw9
+	 jkAIu3tKOLOQ9tjCko+PCryhegX7G9aJKzsc9k2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfLJV1Q (ORCPT
+        id S1727789AbfLJV10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729469AbfLJVZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:25 -0500
+        id S1727313AbfLJVZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA4521D7D;
-        Tue, 10 Dec 2019 21:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABD9214D8;
+        Tue, 10 Dec 2019 21:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013124;
-        bh=YyPzPT3aJVPf7MSddQdNvkX3fuIxyFCU9WurLQdBgRg=;
+        s=default; t=1576013120;
+        bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ims8hFC10XSfU4AOwHQHYXKyDwM/w9zt2fAB0IG8wJ6DuedKit/SKGpXd2NrPNdd3
-         9Xrdi0oUh2gox0abTFIgMxwbrObKYm2E2OmUqzYVhTzunVzl4pQYCbrUEVlWEj5+Wo
-         hesumOoRaQh3+uV3P1WjHHvNrn0lU/T/9v8ms0dc=
+        b=GncRLLB4kaiq51/QZMRHjWNrUESvlKy03OgQclCASdGVj0qsSpTv9TNDvh89imzGj
+         3v+sV6L3oiLZpq36iuHzmTr3IRDxsUWfBQOkE5IqKeD++oY7khY4DbGeyrgIFSWAB8
+         siV4Qeg2iDZqC5+EaLuArWZAYjcqT0TWxD+6iNn4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Zhang <Jack.Zhang1@amd.com>, Feifei Xu <Feifei.Xu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 010/292] drm/amdgpu/sriov: add ring_stop before ring_create in psp v11 code
-Date:   Tue, 10 Dec 2019 16:20:29 -0500
-Message-Id: <20191210212511.11392-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 007/292] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Tue, 10 Dec 2019 16:20:26 -0500
+Message-Id: <20191210212511.11392-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -60,111 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 51c0f58e9f6af3a387d14608033e6796a7ad90ee ]
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-psp  v11 code missed ring stop in ring create function(VMR)
-while psp v3.1 code had the code. This will cause VM destroy1
-fail and psp ring create fail.
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-For SIOV-VF, ring_stop should not be deleted in ring_create
-function.
-
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 61 ++++++++++++++------------
- 1 file changed, 34 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-index 41b72588adcf5..68774524e58bb 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-@@ -373,6 +373,34 @@ static bool psp_v11_0_support_vmr_ring(struct psp_context *psp)
- 	return false;
- }
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index 3c7cc5af735ce..56df07cdab68f 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -715,7 +715,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
++
+ 		return PTR_ERR(pdata->dvdd10);
+ 	}
  
-+static int psp_v11_0_ring_stop(struct psp_context *psp,
-+			      enum psp_ring_type ring_type)
-+{
-+	int ret = 0;
-+	struct amdgpu_device *adev = psp->adev;
-+
-+	/* Write the ring destroy command*/
-+	if (psp_v11_0_support_vmr_ring(psp))
-+		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
-+				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
-+	else
-+		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
-+				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
-+
-+	/* there might be handshake issue with hardware which needs delay */
-+	mdelay(20);
-+
-+	/* Wait for response flag (bit 31) */
-+	if (psp_v11_0_support_vmr_ring(psp))
-+		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
-+				   0x80000000, 0x80000000, false);
-+	else
-+		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
-+				   0x80000000, 0x80000000, false);
-+
-+	return ret;
-+}
-+
- static int psp_v11_0_ring_create(struct psp_context *psp,
- 				enum psp_ring_type ring_type)
- {
-@@ -382,6 +410,12 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
- 	struct amdgpu_device *adev = psp->adev;
+@@ -1332,7 +1334,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
  
- 	if (psp_v11_0_support_vmr_ring(psp)) {
-+		ret = psp_v11_0_ring_stop(psp, ring_type);
-+		if (ret) {
-+			DRM_ERROR("psp_v11_0_ring_stop_sriov failed!\n");
-+			return ret;
-+		}
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
 +
- 		/* Write low address of the ring to C2PMSG_102 */
- 		psp_ring_reg = lower_32_bits(ring->ring_mem_mc_addr);
- 		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_102, psp_ring_reg);
-@@ -426,33 +460,6 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
- 	return ret;
- }
+ 		return err;
+ 	}
  
--static int psp_v11_0_ring_stop(struct psp_context *psp,
--			      enum psp_ring_type ring_type)
--{
--	int ret = 0;
--	struct amdgpu_device *adev = psp->adev;
--
--	/* Write the ring destroy command*/
--	if (psp_v11_0_support_vmr_ring(psp))
--		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
--				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
--	else
--		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
--				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
--
--	/* there might be handshake issue with hardware which needs delay */
--	mdelay(20);
--
--	/* Wait for response flag (bit 31) */
--	if (psp_v11_0_support_vmr_ring(psp))
--		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
--				   0x80000000, 0x80000000, false);
--	else
--		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
--				   0x80000000, 0x80000000, false);
--
--	return ret;
--}
- 
- static int psp_v11_0_ring_destroy(struct psp_context *psp,
- 				 enum psp_ring_type ring_type)
 -- 
 2.20.1
 
