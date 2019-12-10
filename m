@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AB0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7D0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95818208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF79920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014063;
-	bh=BaOJLlsaJCuwyylSLKMNeU454E8WKcHKVG/Ej1RBeow=;
+	s=default; t=1576014065;
+	bh=ZwpzM8Y0sqnzkQFfcAOhYlxqY7bdpTFSVMrrVZOOfqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmdC08+JCPIbVZgnaU1djwDH/wN8iy+h/uxw+mLEiUnzE722AoggaULiwV60pzWV+
-	 TbuPqDTH7LhoaSxP564PdSM4BsuhD5Uw1/sub44TbRvo+Snh9hU4nHccl5d0OLjd7n
-	 uIbN69kcCOF0OrI7y6VvjnGGflmoUk5wv5QlIXMc=
+	b=zBTnOMnKP13En5c7K/LXpLTm4ouHZNywh21SgqHzxqyR/HI1lfRJExSF6OjdRCoou
+	 pBjet5BPTwt0+3j38/dhdx9n7VHwIeTkdXG3ia9sHp3wROU51o+KZSHyYc3PxPzZrN
+	 Mxg7BtRsEcEmzD1q3hrj1Bemwgp1zQLCaBizomrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbfLJVlC (ORCPT
+        id S1730261AbfLJVlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:41:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39534 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730027AbfLJVeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:25 -0500
+        id S1730023AbfLJVeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A09C22464;
-        Tue, 10 Dec 2019 21:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C35AF24654;
+        Tue, 10 Dec 2019 21:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013665;
-        bh=BaOJLlsaJCuwyylSLKMNeU454E8WKcHKVG/Ej1RBeow=;
+        s=default; t=1576013662;
+        bh=ZwpzM8Y0sqnzkQFfcAOhYlxqY7bdpTFSVMrrVZOOfqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=et2Ys//IG+GzwStFn7P/tad0zhDqBmKUZjpwfveO4NTs8Lzp/Cx0WCHbWY5ATWNF+
-         5LrxVnJG4eli+LX4lkSRHp1M/NYptX0Fmu8qNtdnTousvlYkkpVM1MO5cOj5qPq9Nn
-         SM3N1ZPGXi2tWtPt3untK0DW8yWCJpMW2Q6HVBYs=
+        b=Uzf72vEfpyg+IvBraPH57fgOh1dwULjIo9/zAGx6VblOG7+IXIfrv6YYZBavY2GEN
+         NvQXfqta1PThL/T2WkJ0nRwbSu8t4RHoHFbjYHAi60Zz+bvTqj7vqXTfmRCne86eKK
+         hs9lNY1pSbkDdHCGf/4udGP9hv7eeeS/7skjlcIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 102/177] nvmem: imx-ocotp: reset error status on probe
-Date:   Tue, 10 Dec 2019 16:31:06 -0500
-Message-Id: <20191210213221.11921-102-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 100/177] media: rcar_drif: fix a memory disclosure
+Date:   Tue, 10 Dec 2019 16:31:04 -0500
+Message-Id: <20191210213221.11921-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,39 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
+[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
 
-If software running before the OCOTP driver is loaded left the
-controller with the error status pending, the driver will never
-be able to complete the read timing setup. Reset the error status
-on probe to make sure the controller is in usable state.
+"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
+like msi2500 and airspy do, the fix initializes it to avoid
+memory disclosures.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/imx-ocotp.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/rcar_drif.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index afb429a417fe0..926d9cc080cf4 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -466,6 +466,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
+diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
+index 81413ab52475d..b677d014e7bab 100644
+--- a/drivers/media/platform/rcar_drif.c
++++ b/drivers/media/platform/rcar_drif.c
+@@ -912,6 +912,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
+ {
+ 	struct rcar_drif_sdr *sdr = video_drvdata(file);
  
-+	clk_prepare_enable(priv->clk);
-+	imx_ocotp_clr_err_if_set(priv->base);
-+	clk_disable_unprepare(priv->clk);
-+
- 	priv->params = of_device_get_match_data(&pdev->dev);
- 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
- 	imx_ocotp_nvmem_config.dev = dev;
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
+ 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
+ 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
+ 
 -- 
 2.20.1
 
