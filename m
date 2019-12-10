@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41731C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C48C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0904C20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898F92077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015489;
-	bh=HdAdkZBjVJvIGAndfdwegkCYqkRRT+FGu3rgFZFe29E=;
+	s=default; t=1576015491;
+	bh=CjWNdN6lnt3G+P/OAH3fp92SZBoiZG4p/gPtxOnKQjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyzdRKSet0uwVzVTGYIVcRkV8c//QGC7+URIcnabOV4RKVhAL0phsl9BSyA+Jn2f4
-	 fZTuz6193PRDMEJtAfNtVjlAO3EvKp0PQMr6GOt4B5La63ghVssU+o4o5dcqFIWxHI
-	 D7e/Zmetw/VTwcO3yFL4kxbDdTlxrx0Y2Z7t7m04=
+	b=dr5MojqQ+y5P31z8RuxYgMWWEHCFiaYIryurdZU1YQwsgGO97oTOKZnk0rT52GxRe
+	 lKC+CsQ6lpKOOJUCFot8DTl8xvoOxq/NoOs2SuYsvg8iCqLoCV2wy00EhLgdxpgPHa
+	 nQyszzLNHVlgwvHOdsMeSQStYyTfON2IJq5xxNCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfLJWEr (ORCPT
+        id S1729164AbfLJWEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbfLJWEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:38 -0500
+        id S1729052AbfLJWEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ADD320637;
-        Tue, 10 Dec 2019 22:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71342208C3;
+        Tue, 10 Dec 2019 22:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015478;
-        bh=HdAdkZBjVJvIGAndfdwegkCYqkRRT+FGu3rgFZFe29E=;
+        s=default; t=1576015480;
+        bh=CjWNdN6lnt3G+P/OAH3fp92SZBoiZG4p/gPtxOnKQjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBM++T17cl50TviCYHRUaOuuu7TMIHgNzy7LoBRHifyw5iwiw/n53JrY+BKxticjM
-         y4mxhENa7l4U2pyht4i60pgkFz3cExEUSrLWQfMW+Fm5LykyVxJL42ah4LUU7bn6j2
-         zO056y3B0Vl/sk/kI9ojSC2ejeSQrmdce64GOELU=
+        b=Nm8G7QIYVsOTViE/jKJ54DDnIm7xruP9lF3qulTeunB+hdCYpPJpuwyKTlqT04Vgy
+         ngVp36mefCR7WSVsnAbJ2StCjdq/jIpGl/Kr9adpu+husXN+YBu83LOGhJZGh0ejOn
+         bheoPce0XJTWdWs6dmkpcnQK1ct2mBftWl+cROpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 082/130] perf probe: Fix to find range-only function instance
-Date:   Tue, 10 Dec 2019 17:02:13 -0500
-Message-Id: <20191210220301.13262-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 084/130] perf probe: Walk function lines in lexical blocks
+Date:   Tue, 10 Dec 2019 17:02:15 -0500
+Message-Id: <20191210220301.13262-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -63,46 +63,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
+[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
 
-Fix die_is_func_instance() to find range-only function instance.
+Since some inlined functions are in lexical blocks of given function, we
+have to recursively walk through the DIE tree.  Without this fix,
+perf-probe -L can miss the inlined functions which is in a lexical block
+(like if (..) { func() } case.)
 
-In some case, a function instance can be made without any low PC or
-entry PC, but only with address ranges by optimization.  (e.g. cold text
-partially in "text.unlikely" section) To find such function instance, we
-have to check the range attribute too.
+However, even though, to walk the lines in a given function, we don't
+need to follow the children DIE of inlined functions because those do
+not have any lines in the specified function.
 
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+We need to walk though whole trees only if we walk all lines in a given
+file, because an inlined function can include another inlined function
+in the same file.
+
+Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index f5acda13dcfa7..bc52b38407066 100644
+index bc52b38407066..e5406e5adb68c 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -331,10 +331,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
-+	Dwarf_Attribute attr_mem;
+@@ -691,10 +691,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
+ 		}
++		if (!lw->recursive)
++			return DIE_FIND_CB_SIBLING;
+ 	}
+-	if (!lw->recursive)
+-		/* Don't need to search recursively */
+-		return DIE_FIND_CB_SIBLING;
  
- 	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
-+	return !dwarf_func_inline(dw_die) &&
-+	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
- }
-+
- /**
-  * die_get_data_member_location - Get the data-member offset
-  * @mb_die: a DIE of a member of a data structure
+ 	if (addr) {
+ 		fname = dwarf_decl_file(in_die);
+@@ -741,6 +740,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
+ {
+ 	struct __line_walk_param *lw = data;
+ 
++	/*
++	 * Since inlined function can include another inlined function in
++	 * the same file, we need to walk in it recursively.
++	 */
+ 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
+ 	if (lw->retval != 0)
+ 		return DWARF_CB_ABORT;
+@@ -830,8 +833,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	 */
+ 	if (rt_die != cu_die)
+ 		/*
+-		 * Don't need walk functions recursively, because nested
+-		 * inlined functions don't have lines of the specified DIE.
++		 * Don't need walk inlined functions recursively, because
++		 * inner inlined functions don't have the lines of the
++		 * specified function.
+ 		 */
+ 		ret = __die_walk_funclines(rt_die, false, callback, data);
+ 	else {
 -- 
 2.20.1
 
