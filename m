@@ -2,57 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04EAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EEA207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9869E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="L61NRZme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLJTcR (ORCPT
+        id S1726879AbfLJTeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:32:17 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47522 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfLJTcR (ORCPT
+        Tue, 10 Dec 2019 14:34:09 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:51212 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726018AbfLJTeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:32:17 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D271A146E9458;
-        Tue, 10 Dec 2019 11:32:16 -0800 (PST)
-Date:   Tue, 10 Dec 2019 11:32:16 -0800 (PST)
-Message-Id: <20191210.113216.1897128321839303084.davem@davemloft.net>
-To:     mst@redhat.com
-Cc:     linux-kernel@vger.kernel.org, jcfaracco@gmail.com,
-        netdev@vger.kernel.org, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com
-Subject: Re: [PATCH net-next v11 0/3] netdev: ndo_tx_timeout cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191210130837.47913-1-mst@redhat.com>
-References: <20191210130837.47913-1-mst@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 11:32:17 -0800 (PST)
+        Tue, 10 Dec 2019 14:34:08 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7D64842D3C;
+        Tue, 10 Dec 2019 19:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1576006447; bh=ZffVsjWWGh1itDtLj4Vj4fQ7Nz1zxZpDACTfelkIyfU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=L61NRZmeN6rLBE/F0P9gaRH0tLWLoicQWML1OoDRTi4BdwYfgTrQfIju1fMfJiGdh
+         7p7pWleN2IWrZ4wXh9C/iLxtd4OX2DvTXxb1KTabgXboROtj4oSzZnm0q66PL6xSYv
+         HBg9QE2uBsc82R4X+uqporTWgsZAK3ZEb5xGG20eG+ydUBVMlmF26ok2ke28dx6nXI
+         HlACdYro6rEqiuYQge9Hf+8w7ue3rZ5cjfuRwOQhJZvly+Yhu2raIBPQUOiwsi7OH0
+         O8f+Dujb9chx3ZMPc+6sTZzF6YEbzoOpB1V8yP+AeXX9CF5DM7yQ3LLOTiwVefgtjY
+         C4CRkCRGxL9Mg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 1950FA00A3;
+        Tue, 10 Dec 2019 19:34:06 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 7/8] net: stmmac: 16KB buffer must be 16 byte aligned
+Date:   Tue, 10 Dec 2019 20:33:59 +0100
+Message-Id: <c118b5b3e44538d78c8fc5925e5dbd7eabe081a8.1576005975.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
+References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
+References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Date: Tue, 10 Dec 2019 08:08:58 -0500
+The 16KB RX Buffer must also be 16 byte aligned. Fix it.
 
-> Sorry about the churn, v10 was based on net - not on net-next
-> by mistake.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Ugh sorry, I just saw this.  vger is sending postings massively out of
-order today.
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Ignore my previous reply to #1 :-)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index b210e987a1db..94f94686cf7d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -365,9 +365,8 @@ struct dma_features {
+ 	unsigned int arpoffsel;
+ };
+ 
+-/* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+-#define BUF_SIZE_16KiB 16384
+-/* RX Buffer size must be < 8191 and multiple of 4/8/16 bytes */
++/* RX Buffer size must be multiple of 4/8/16 bytes */
++#define BUF_SIZE_16KiB 16368
+ #define BUF_SIZE_8KiB 8188
+ #define BUF_SIZE_4KiB 4096
+ #define BUF_SIZE_2KiB 2048
+-- 
+2.7.4
+
