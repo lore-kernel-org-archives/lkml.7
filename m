@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26C4C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDC720652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A830D24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012003;
-	bh=OVm9mkPVQwdIdrLxA4tL02QJ6UnFpGy52HqcT+4xRO4=;
+	s=default; t=1576012007;
+	bh=LHlXup6UK4obdIwh8GDiEqMZRzr9DxRSOQoyLqXkURQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bW7vIYTRyx5AJ9+ldr96bNpAOl+jiX3MdB9KIt2Mo5jWX8Lp5FRfPrUt1ZQ+kbWQz
-	 pghPn9lDi0pWguqkMXJfCay1C0PBUqg2NNT31/ZOy6OTeRsqTWH0FdEYKAjWcFdvsQ
-	 rVmdleC89r2ZsATeN9FrkYSLLWX3lSNpW+0ezm94=
+	b=enjE3eTeh15n6U6GfvHdT5FFh5Prgjmbid4M814huoiBDqWPCT67LtnE8RxLlvkHJ
+	 6hcYVw2JentZ5/hLLUR/hWHxH8lk1m2CK9G4P4Pp96pVzVoY5y3abFHWsVN91PcLMi
+	 im9BOor1S7uk/tjsb7SnqCV0zJZEST5e4+AsCetk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfLJVET (ORCPT
+        id S1727104AbfLJVER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49040 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfLJVEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:14 -0500
+        id S1726988AbfLJVEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDDB22464;
-        Tue, 10 Dec 2019 21:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E906B22B48;
+        Tue, 10 Dec 2019 21:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011853;
-        bh=OVm9mkPVQwdIdrLxA4tL02QJ6UnFpGy52HqcT+4xRO4=;
+        s=default; t=1576011849;
+        bh=LHlXup6UK4obdIwh8GDiEqMZRzr9DxRSOQoyLqXkURQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8C/2FyGrRupP1ZCky/gMWzgKn0VA9NrcPh+HYyP8ThhKwX0PNbBRrN9CCZjufjRa
-         wVLrAYuuYIV5RXBszu5b+GpvLJyJXO5StvvnUUUVxaot5Sw2CzPe8aJ9PyuduS1Eiy
-         HwY5QAEW4K3QiwAEBI5bxDgn/8To7XP4TfP4rRO8=
+        b=WB8SeYI1kRl/WUmM+IkN+7PsRraMOkci8qcPpyPuPlZ6VPEUS9z084+n3URgRz78W
+         JizKiA+DL/IcNyd5xk5XRV6fnFblNKlb4cNqm4wLXoYXaPlockcwW8dP9Lb37m3xI+
+         8N8rn4dwkkJs+0WZJVEeWlV1MD+fFSoL1D8fRg6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jing Zhou <Jing.Zhou@amd.com>, Wenjing Liu <Wenjing.Liu@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 008/350] drm/amd/display: verify stream link before link test
-Date:   Tue, 10 Dec 2019 15:58:20 -0500
-Message-Id: <20191210210402.8367-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 005/350] drm/panel: Add missing drm_panel_init() in panel drivers
+Date:   Tue, 10 Dec 2019 15:58:17 -0500
+Message-Id: <20191210210402.8367-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -61,40 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Zhou <Jing.Zhou@amd.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit b131932215c993ea5adf8192d1de2e8d6b23048d ]
+[ Upstream commit 65abbda8ed7ca48c8807d6b04a77431b438fa659 ]
 
-[Why]
-DP1.2 LL CTS test failure.
+Panels must be initialised with drm_panel_init(). Add the missing
+function call in the panel-raspberrypi-touchscreen.c and
+panel-sitronix-st7789v.c drivers.
 
-[How]
-The failure is caused by not verify stream link is equal
-to link, only check stream and link is not null.
-
-Signed-off-by: Jing Zhou <Jing.Zhou@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190823193245.23876-2-laurent.pinchart@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 +
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c        | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-index 79438c4f1e20b..a519dbc5ecb65 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-@@ -277,7 +277,8 @@ void dp_retrain_link_dp_test(struct dc_link *link,
- 		if (pipes[i].stream != NULL &&
- 			!pipes[i].top_pipe && !pipes[i].prev_odm_pipe &&
- 			pipes[i].stream->link != NULL &&
--			pipes[i].stream_res.stream_enc != NULL) {
-+			pipes[i].stream_res.stream_enc != NULL &&
-+			pipes[i].stream->link == link) {
- 			udelay(100);
+diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+index b5b14aa059ea7..2aa89eaecf6ff 100644
+--- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
++++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
+@@ -426,6 +426,7 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
+ 		return PTR_ERR(ts->dsi);
+ 	}
  
- 			pipes[i].stream_res.stream_enc->funcs->dp_blank(
++	drm_panel_init(&ts->base);
+ 	ts->base.dev = dev;
+ 	ts->base.funcs = &rpi_touchscreen_funcs;
+ 
+diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+index 5e3e92ea9ea69..3b2612ae931e8 100644
+--- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
++++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+@@ -381,6 +381,7 @@ static int st7789v_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, ctx);
+ 	ctx->spi = spi;
+ 
++	drm_panel_init(&ctx->panel);
+ 	ctx->panel.dev = &spi->dev;
+ 	ctx->panel.funcs = &st7789v_drm_funcs;
+ 
 -- 
 2.20.1
 
