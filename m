@@ -2,161 +2,143 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B508C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 05:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 05:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6065B20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 05:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A768C20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 05:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8bGqPWv"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="oh0C7uIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfLJFhx (ORCPT
+        id S1726916AbfLJFjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 00:37:53 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:41602 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfLJFhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 00:37:53 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ca19so6916708pjb.8;
-        Mon, 09 Dec 2019 21:37:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=93jiaHca4EssK1FrB0ZD+vlxRNxOIkPL2Gvfj6wAjrs=;
-        b=f8bGqPWv9jFexQ3+/1p7H7zgG/pfozkxHk5xCjI5zoHK1Q7JGMv2VAfOsYa8KSuPpC
-         4iIb5f2JAYGBDiKeb8K4bsGuxdxy4SfQR3aGD9fumHPmLbG9DkdcIATj2Z150YiSHiBf
-         9l1kSGZwCh/E9zqDxQQEd34OpDKhwYf2tsHwThqxu7ouGuHF4/0mV4BdAgxzF7cpDRRC
-         m5rAmGHHgGDdEKZsyVjGjPXIVvGShAy41loDKdtFjYUfzXyeCiUIhjjUWto63VSha3zz
-         lHjk1Bs+UgmXT/mb4The2bTP809rPdy76RonLuojzqMMKIb08HLu+WyyjhoMWVosCD03
-         vbxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=93jiaHca4EssK1FrB0ZD+vlxRNxOIkPL2Gvfj6wAjrs=;
-        b=p3Zcb6Lbc16hNVyP/Yx7/WC0rHjX5272U33KKEYVd+Sv+pCzV2r7DqxfHRHbqa199r
-         vyUY2Kz3FGI8wc9Vd5shxfTasa6EOU/APbjDQ2oV9gOv/UoqmsswNZoHFr69epPnD3qy
-         FEC0dAwvSjZ1Gmh02DnAQF/ofD/G6rx0bsHQflD0mP6q6uPNt3CTT0IFHyNl1i4Mr/AY
-         YrTq3rbQJ+P9/4Kq3ZoR31piZlYnPByNRkkt+hGHeMQmwIyEKreUqk95M2kJpYU0Qa0P
-         Ft3mj/zQ+8lCNqQq4cv6iLyFceQKcYOT9xMv7IT6ssO4ITDLG/3v7aazXJdIuyOlDF5m
-         i6xg==
-X-Gm-Message-State: APjAAAUpXRr6Xdi2wLChEYrECIdFh2LTr8xHJayk1n9Eb4HColhOImgx
-        QNjZrp3hyfwj1OyX3ArkgWk=
-X-Google-Smtp-Source: APXvYqzvqcqss4VN9bzi2rJdG6EFDIZtvq7AJ+gTxgSbFi5YfSCeGmgRyP5oAZcdmFnp+fFuusOQUw==
-X-Received: by 2002:a17:902:b095:: with SMTP id p21mr32946718plr.313.1575956272512;
-        Mon, 09 Dec 2019 21:37:52 -0800 (PST)
-Received: from ruantu.dev.localdomain ([103.103.128.212])
-        by smtp.gmail.com with ESMTPSA id a17sm1152642pjv.6.2019.12.09.21.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 21:37:52 -0800 (PST)
-From:   ruantu <mtwget@gmail.com>
-To:     jic23@kernel.org
-Cc:     mtwget@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: iio: chemical: Add bindings for Dynament Premier series single gas sensor
-Date:   Tue, 10 Dec 2019 13:37:44 +0800
-Message-Id: <20191210053744.732093-1-mtwget@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 10 Dec 2019 00:39:06 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35845 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfLJFjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 00:39:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47X84f2hMWz9sPh;
+        Tue, 10 Dec 2019 16:38:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575956339;
+        bh=AJJmChoZySTIyWE83Z5yC6HwYtTJxCcMfpSc/t0wIek=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oh0C7uIziTe2KFhQXT/UZFD1ykXWT3KzZy2GcDl1bv9Dgscgs8Vy/RZzaP7VAcTpC
+         MMq0t512TOWxCJMxZiqCmYyfxgXuYG0l0ciZpHbcB65d0iqoYz9SwBckWY7nsM6Zt5
+         3XuNlzQzqy3qCrJoLgqqIbX2n/S45HM+FCZaBqnfwny6IzhU6rLZU0fqE0AztOyY4M
+         ymIjtDnrIpmw8cYROGAFOQUBDQUTaUf43JYHGh1Cr3NDFu0zNTHdCwiqVc3dEMVBMt
+         vOVYhCat2y1NcuEBHN6KiMqCofdccvmhbtopsyDcjwCt0mBXDAYzn3t0WCRK01gEG3
+         uKc9wTuBc4Dqw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, kasan-dev@googlegroups.com,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops)
+In-Reply-To: <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+Date:   Tue, 10 Dec 2019 16:38:54 +1100
+Message-ID: <87wob4pwnl.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dynament Premier series single gas sensor.
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Fri, Dec 06, 2019 at 11:46:11PM +1100, Michael Ellerman wrote:
+>> -----BEGIN PGP SIGNED MESSAGE-----
+>> Hash: SHA256
+>> 
+>> Hi Linus,
+>> 
+>> Please pull another powerpc update for 5.5.
+>> 
+>> As you'll see from the diffstat this is mostly not powerpc code. In order to do
+>> KASAN instrumentation of bitops we needed to juggle some of the generic bitops
+>> headers.
+>> 
+>> Because those changes potentially affect several architectures I wasn't
+>> confident putting them directly into my tree, so I've had them sitting in a
+>> topic branch. That branch (topic/kasan-bitops) has been in linux-next for a
+>> month, and I've not had any feedback that it's caused any problems.
+>> 
+>> So I think this is good to merge, but it's a standalone pull so if anyone does
+>> object it's not a problem.
+>
+> No objections, but here:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?h=topic/kasan-bitops&id=81d2c6f81996e01fbcd2b5aeefbb519e21c806e9
+>
+> you write:
+>
+>   "Currently bitops-instrumented.h assumes that the architecture provides
+> atomic, non-atomic and locking bitops (e.g. both set_bit and __set_bit).
+> This is true on x86 and s390, but is not always true: there is a
+> generic bitops/non-atomic.h header that provides generic non-atomic
+> operations, and also a generic bitops/lock.h for locking operations."
+>
+> Is there any actual benefit for PPC to using their own atomic bitops
+> over bitops/lock.h ? I'm thinking that the generic code is fairly
+> optimal for most LL/SC architectures.
 
-Signed-off-by: ruantu <mtwget@gmail.com>
----
- .../iio/chemical/dynament,premier.yaml        | 43 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- MAINTAINERS                                   |  1 +
- 3 files changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+Good question, I'll have a look.
 
-diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-new file mode 100644
-index 000000000000..076ae9d90cee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Dynament Premier series single gas sensor
-+
-+maintainers:
-+  - ruantu <mtwget@gmail.com>
-+
-+description: |
-+  single gas sensor capable of measuring gas concentration of dust
-+  particles, multi-gas sensor are not supported.
-+
-+  Specifications about the sensor can be found at:
-+    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
-+
-+properties:
-+  compatible:
-+    enum:
-+      - dynament,premier
-+
-+  vcc-supply:
-+    description: regulator that provides power to the sensor
-+
-+  reset-gpios:
-+    description: GPIO connected to the RESET line
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    serial {
-+      single-gas-sensor {
-+        compatible = "dynament,premier";
-+        vcc-supply = <&reg_vcc5v0>;
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..5afca0586c41 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -261,6 +261,8 @@ patternProperties:
-     description: Dragino Technology Co., Limited
-   "^dserve,.*":
-     description: dServe Technology B.V.
-+  "^dynament,.*":
-+    description: Dynament, Ltd.
-   "^ea,.*":
-     description: Embedded Artists AB
-   "^ebs-systart,.*":
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 18c26558ddfe..84592789e01b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13137,6 +13137,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
- M:	ruantu <mtwget@gmail.com>
- S:	Maintained
- F:	drivers/iio/chemical/premier.c
-+F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
- 
- PLANTOWER PMS7003 AIR POLLUTION SENSOR DRIVER
- M:	Tomasz Duszynski <tduszyns@gmail.com>
--- 
-2.24.0
+There seems to be confusion about what the type of the bit number is,
+which is leading to sign extension in some cases and not others.
 
+eg, comparing the generic clear_bit_unlock() vs ours:
+
+ 1 c000000000031890 <generic_clear_bit_unlock>:             1 c0000000000319a0 <ppc_clear_bit_unlock>:
+                                                            2         extsw   r3,r3
+                                                            3         li      r10,1
+                                                            4         srawi   r9,r3,6
+                                                            5         addze   r9,r9
+                                                            6         rlwinm  r8,r9,6,0,25
+                                                            7         extsw   r9,r9
+                                                            8         subf    r3,r8,r3
+ 2         rlwinm  r9,r3,29,3,28                            9         rldicr  r9,r9,3,60
+                                                           10         sld     r3,r10,r3
+ 3         add     r4,r4,r9                                11         add     r4,r4,r9
+ 4         lwsync                                          12         lwsync
+ 5         li      r9,-2
+ 6         clrlwi  r3,r3,26
+ 7         rotld   r3,r9,r3
+ 8         ldarx   r9,0,r4                                 13         ldarx   r9,0,r4
+ 9         and     r10,r3,r9                               14         andc    r9,r9,r3
+10         stdcx.  r10,0,r4                                15         stdcx.  r9,0,r4
+11         bne-    <generic_clear_bit_unlock+0x18>         16         bne-    <ppc_clear_bit_unlock+0x2c>
+12         blr                                             17         blr
+
+It looks like in actual usage it often doesn't matter, ie. when we pass
+a constant bit number it all gets inlined and the compiler works it out.
+
+It looks like the type should be unsigned long?
+
+  Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
+  arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+  arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
+  arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+  arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
+  include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
+  include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
+
+So I guess step one is to convert our versions to use unsigned long, so
+we're at least not tripping over that difference when comparing the
+assembly.
+
+cheers
