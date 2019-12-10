@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252FFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FD1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E374C20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D230D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013914;
-	bh=LGGLpN9446DPXRNWT7ia7WmCS+8dFNjLYAqjDsFvlbU=;
+	s=default; t=1576013917;
+	bh=uMzTj59C+aYkV51XN2tz7lF9MA0IC/TM/rAz6NoK6Mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Bu8MX9JmST/5EzwMNMteAfrC1Gt0cGy0bXbkUBg4fYzpFq6UdsX3oUksnh7XVJl5
-	 z7109bPcM6sCvDhUhvb0DjAXlAciIu4jtwSrGxGJtTO1YTLyWgDuqEB7w654bHKXMV
-	 EAB133iOE3qKfsDJV0aLjCHBlDG9VDa8ZvLT+7pQ=
+	b=XPnCEXyrshvzHhXD38SVvsoud3/akw8kOkQdgnU823+WdjaD6QCRmNNmVWwc8f9s2
+	 eeawqkuOxsQh/4wnriauDUH7BQ4LNWjyd6OeI6l3/Wqux7GwVuvLar8xHPmKAf9m1p
+	 LyZ0ZWbHVZ3hkvHVhvL9V5GxtOufASwVM1YRsc8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbfLJVfP (ORCPT
+        id S1729919AbfLJVig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40512 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:38:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730157AbfLJVfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:01 -0500
+        id S1730203AbfLJVfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4129D24654;
-        Tue, 10 Dec 2019 21:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5367205C9;
+        Tue, 10 Dec 2019 21:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013700;
-        bh=LGGLpN9446DPXRNWT7ia7WmCS+8dFNjLYAqjDsFvlbU=;
+        s=default; t=1576013713;
+        bh=uMzTj59C+aYkV51XN2tz7lF9MA0IC/TM/rAz6NoK6Mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTdrBtunAJdsD55DqZHJ0n5KGdlKFVg/RHxdTnUKPRUHt8OXaYcU1JDF5xT8KLljY
-         1bHg2e+7/SGDfxcMeiNg1V3ZHDcKtx1pbsT+PfdU3KLNNTRb/pIRPkAN/6yJM3r5T4
-         hOcCRTbniqokb/aTtPsYIJEZgDaxg7qwArd+kjaY=
+        b=WS0THuoaV3TiK1s28d5yuSghdA13qxo82MrpMZnZpCFOelwQhjy+GzOy4JVa7K26U
+         +g81dGdvZRsxtBN53kqUvuAww5Rso3xcFQ4ms+mV/HaMd01EqvztFCYwVlNJ7GChAN
+         Bdc3aP3CzdMLvTPsL9P4PWfLLVez4E9PES5oLrEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 130/177] soundwire: intel: fix PDI/stream mapping for Bulk
-Date:   Tue, 10 Dec 2019 16:31:34 -0500
-Message-Id: <20191210213221.11921-130-sashal@kernel.org>
+Cc:     Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 141/177] net: bcmgenet: Add RGMII_RXID support
+Date:   Tue, 10 Dec 2019 16:31:45 -0500
+Message-Id: <20191210213221.11921-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,51 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit c134f914e9f55b7817e2bae625ec0e5f1379f7cd ]
+[ Upstream commit da38802211cc3fd294211a642932edb09e3af632 ]
 
-The previous formula is incorrect for PDI0/1, the mapping is not
-linear but has a discontinuity between PDI1 and PDI2.
+This adds the missing support for the PHY mode RGMII_RXID.
+It's necessary for the Raspberry Pi 4.
 
-This change has no effect on PCM PDIs (same mapping).
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191022232948.17156-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/intel.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 29bc99c4a7b66..e49d3c810677a 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -352,7 +352,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	unsigned int link_id = sdw->instance;
- 	int pdi_conf = 0;
- 
--	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
-+	/* the Bulk and PCM streams are not contiguous */
-+	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
-+	if (pdi->num >= 2)
-+		pdi->intel_alh_id += 2;
- 
- 	/*
- 	 * Program stream parameters to stream SHIM register
-@@ -381,7 +384,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	unsigned int link_id = sdw->instance;
- 	unsigned int conf;
- 
--	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
-+	/* the Bulk and PCM streams are not contiguous */
-+	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
-+	if (pdi->num >= 2)
-+		pdi->intel_alh_id += 2;
- 
- 	/* Program Stream config ALH register */
- 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index a5049d637791d..10dcf8cb523f2 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -283,6 +283,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 		bcmgenet_sys_writel(priv,
+ 				    PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
+ 		break;
++
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++		phy_name = "external RGMII (RX delay)";
++		port_ctrl = PORT_MODE_EXT_GPHY;
++		break;
+ 	default:
+ 		dev_err(kdev, "unknown phy mode: %d\n", priv->phy_interface);
+ 		return -EINVAL;
 -- 
 2.20.1
 
