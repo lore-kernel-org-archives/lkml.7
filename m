@@ -2,216 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F55C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020A5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC1F2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575978310;
-	bh=YOujrXl73e6+aFeoX4p52tGgaTv9XddjcJSq7ucWiqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lctFQDYsr8nCRGT94794okulDzstm/IVfBbXyPAhsKidu2kg4iCHifElsDoWSZrVA
-	 hj6NJx0e92z7mOZ/YDaiW+/eDueEajF6RBWVKwHZxdnCAqvnIvxLn470GP8NN7mp9D
-	 9BXz786NhmixISZ/qM4odUaMnysqRfU99rKXxTak=
+	by mail.kernel.org (Postfix) with ESMTP id D36D5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfLJLox (ORCPT
+        id S1727467AbfLJLpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:44:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 06:45:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:41044 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbfLJLov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:44:51 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94C2D2077B;
-        Tue, 10 Dec 2019 11:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575978290;
-        bh=YOujrXl73e6+aFeoX4p52tGgaTv9XddjcJSq7ucWiqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=18m2L8qbAzR6HbzKts9WV9nLbZ/kjxTHEWwzlwF63Oi2zdRySHUhYvaE6PZueWzYY
-         ZQdHcF6yTsvYvekH+jjWjiX1vlga4ENXLC6ROvyog4mTBTBYIqiaab69Vrvr4y8Uyn
-         NjO7hW5hNdNItKaTzO+agIY9rpwAnmFO+nXDgcHU=
-Date:   Tue, 10 Dec 2019 11:44:45 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        hdanton@sina.com, akpm@linux-foundation.org
-Subject: Re: WARNING: refcount bug in cdev_get
-Message-ID: <20191210114444.GA17673@willie-the-truck>
-References: <000000000000bf410005909463ff@google.com>
- <20191204115055.GA24783@willie-the-truck>
- <20191204123148.GA3626092@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204123148.GA3626092@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727177AbfLJLpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:45:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A8BB1FB;
+        Tue, 10 Dec 2019 03:45:14 -0800 (PST)
+Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B5A93F6CF;
+        Tue, 10 Dec 2019 03:45:13 -0800 (PST)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, shuah@kernel.org
+Subject: [PATCH v2] selftests: fix build behaviour on targets' failures
+Date:   Tue, 10 Dec 2019 11:44:59 +0000
+Message-Id: <20191210114459.11405-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Currently, when some of the KSFT subsystems fails to build, the toplevel
+KSFT Makefile just keeps carrying on with the build process.
 
-On Wed, Dec 04, 2019 at 01:31:48PM +0100, Greg KH wrote:
-> On Wed, Dec 04, 2019 at 11:50:56AM +0000, Will Deacon wrote:
-> > On Tue, Aug 20, 2019 at 03:58:06PM -0700, syzbot wrote:
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    2d63ba3e Merge tag 'pm-5.3-rc5' of git://git.kernel.org/pu..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=165d3302600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=82defefbbd8527e1c2cb
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c8ab3c600000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be0c4c600000
-> > > 
-> > > Bisection is inconclusive: the bug happens on the oldest tested release.
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11de3622600000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15de3622600000
-> > > 
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-> > > 
-> > > ------------[ cut here ]------------
-> > > refcount_t: increment on 0; use-after-free.
-> > > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156 refcount_inc_checked
-> > > lib/refcount.c:156 [inline]
-> > > WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156
-> > > refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-> > > Kernel panic - not syncing: panic_on_warn set ...
-> > 
-> > [...]
-> > 
-> > > RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
-> > > RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-> > > Code: 1d 8e c6 64 06 31 ff 89 de e8 ab 9c 35 fe 84 db 75 dd e8 62 9b 35 fe
-> > > 48 c7 c7 00 05 c6 87 c6 05 6e c6 64 06 01 e8 67 26 07 fe <0f> 0b eb c1 90 90
-> > > 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
-> > > RSP: 0018:ffff8880907d78b8 EFLAGS: 00010282
-> > > RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> > > RDX: 0000000000000000 RSI: ffffffff815c2466 RDI: ffffed10120faf09
-> > > RBP: ffff8880907d78c8 R08: ffff8880a771a200 R09: fffffbfff134ae48
-> > > R10: fffffbfff134ae47 R11: ffffffff89a5723f R12: ffff88809ea2bb80
-> > > R13: 0000000000000000 R14: ffff88809ff6cd40 R15: ffff8880a1c56480
-> > >  kref_get include/linux/kref.h:45 [inline]
-> > >  kobject_get+0x66/0xc0 lib/kobject.c:644
-> > >  cdev_get+0x60/0xb0 fs/char_dev.c:355
-> > >  chrdev_open+0xb0/0x6b0 fs/char_dev.c:400
-> > >  do_dentry_open+0x4df/0x1250 fs/open.c:797
-> > >  vfs_open+0xa0/0xd0 fs/open.c:906
-> > >  do_last fs/namei.c:3416 [inline]
-> > >  path_openat+0x10e9/0x4630 fs/namei.c:3533
-> > >  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> > >  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
-> > 
-> > FWIW, we've run into this same crash on arm64 so it would be nice to see it
-> > fixed upstream. It looks like Hillf's reply (which included a patch) didn't
-> > make it to the kernel mailing lists for some reason, but it is available
-> > here:
-> > 
-> > https://groups.google.com/forum/#!original/syzkaller-bugs/PnQNxBrWv_8/X1ygj8d8DgAJ
-> 
-> No one is going to go and dig a patch out of google groups :(
+This behaviour is expected and desirable especially in the context of a CI
+system running KSelfTest, since it is not always easy to guarantee that the
+most recent and esoteric dependencies are respected across all KSFT TARGETS
+in a timely manner.
 
-Sure, just thought it was worth mentioning after digging up the history.
+Unfortunately, as of now, this holds true only if the very last of the
+built subsystems could have been successfully compiled: if the last of
+those subsystem instead failed to build, such failure is taken as the whole
+outcome of the Makefile target and the complete build/install process halts
+even though many other preceding subsytems were in fact already built
+successfully.
 
-> > A simpler fix would just be to use kobject_get_unless_zero() directly in
-> > cdev_get(), but that looks odd in this specific case because chrdev_open()
-> > holds the 'cdev_lock' and you'd hope that finding the kobject in the inode
-> > with that held would mean that it's not being freed at the same time.
-> 
-> When using kref_get_unless_zero() that implies that a lock is not being
-> used and you are relying on the kobject only instead.
-> 
-> But I thought we had a lock in play here, so why would changing this
-> actually fix anything?
+Fix the KSFT Makefile behaviour related to all/install targets in order
+to fail as a whole only when the all/install targets have failed for all
+of the requested TARGETS, while succeeding when at least one of TARGETS
+has been successfully built.
 
-I don't think the lock is always used. For example, look at chrdev_open(),
-which appears in the backtrace; the locked code is:
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+---
+This patch is based on ksft/fixes branch from:
 
-	spin_lock(&cdev_lock);
-	p = inode->i_cdev;
-	if (!p) {
-		struct kobject *kobj;
-		int idx;
-		spin_unlock(&cdev_lock);
-		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
-		if (!kobj)
-			return -ENXIO;
-		new = container_of(kobj, struct cdev, kobj);
-		spin_lock(&cdev_lock);
-		/* Check i_cdev again in case somebody beat us to it while
-		   we dropped the lock. */
-		p = inode->i_cdev;
-		if (!p) {
-			inode->i_cdev = p = new;
-			list_add(&inode->i_devices, &p->list);
-			new = NULL;
-		} else if (!cdev_get(p))
-			ret = -ENXIO;
-	} else if (!cdev_get(p))
-		ret = -ENXIO;
-	spin_unlock(&cdev_lock);
-	cdev_put(new);
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
 
-So the idea is that multiple threads serialise on the 'cdev_lock' and then
-check 'inode->i_cdev' to figure out if the device has already been probed,
-taking a reference to it if it's available or probing it via kobj_lookup()
-otherwise. I think that's backwards with respect to things like cdev_put(),
-where the refcount is dropped *before* 'inode->i_cdev' is cleared to NULL.
-In which case, if a concurrent call to cdev_put() can drop the refcount
-to zero without 'cdev_lock' held, then you could get a use-after-free on
-this path thanks to a dangling pointer in 'inode->i_cdev'..
+on top of commit (~5.5-rc1):
 
-Looking slightly ahead in this same function, there are error paths which
-appear to do exactly that:
+99e51aa8f701 Documentation: kunit: add documentation for kunit_tool
 
-	fops = fops_get(p->ops);
-	if (!fops)
-		goto out_cdev_put;
+Building with either:
 
-	replace_fops(filp, fops);
-	if (filp->f_op->open) {
-		ret = filp->f_op->open(inode, filp);
-		if (ret)
-			goto out_cdev_put;
-	}
+make kselftest-install \
+	     KSFT_INSTALL_PATH=/tmp/KSFT \
+	     TARGETS="exec arm64 bpf"
 
-	return 0;
+make -C tools/testing/selftests  install \
+	     KSFT_INSTALL_PATH=/tmp/KSFT \
+	     TARGETS="exec arm64 bpf"
 
- out_cdev_put:
-	cdev_put(p);
-	return ret;
+(with 'bpf' not building clean on my setup in the above case)
 
-In which case the thread which installed 'inode->i_cdev' earlier on can
-now drop its refcount to zero without the lock held if, for example, the
-filp->f_op->open() call fails.
+and veryfying that build/install completes if at least one of TARGETS can
+be successfully built, and any successfully built subsystem is installed.
 
-But note, this is purely based on code inspection -- the C reproducer from
-syzkaller doesn't work for me, so I've not been able to test any fixes either.
-It's also worth noting that cdev_put() is called from __fput(), but I think the
-reference counting on the file means we're ok there.
+Changes:
+-------
+V1 --> V2
+- rebased on 5.5-rc1
+- rewording commit message
+- dropped RFC tag
+---
+ tools/testing/selftests/Makefile | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-> This code hasn't changed in 15+ years, what suddenly changed that causes
-> problems here?
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index b001c602414b..86b2a3fca04d 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -143,11 +143,13 @@ else
+ endif
+ 
+ all: khdr
+-	@for TARGET in $(TARGETS); do		\
+-		BUILD_TARGET=$$BUILD/$$TARGET;	\
+-		mkdir $$BUILD_TARGET  -p;	\
+-		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;\
+-	done;
++	@ret=1;							\
++	for TARGET in $(TARGETS); do				\
++		BUILD_TARGET=$$BUILD/$$TARGET;			\
++		mkdir $$BUILD_TARGET  -p;			\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET;	\
++		ret=$$((ret * $$?));				\
++	done; exit $$ret;
+ 
+ run_tests: all
+ 	@for TARGET in $(TARGETS); do \
+@@ -196,10 +198,12 @@ ifdef INSTALL_PATH
+ 	install -m 744 kselftest/module.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/runner.sh $(INSTALL_PATH)/kselftest/
+ 	install -m 744 kselftest/prefix.pl $(INSTALL_PATH)/kselftest/
+-	@for TARGET in $(TARGETS); do \
++	@ret=1;	\
++	for TARGET in $(TARGETS); do \
+ 		BUILD_TARGET=$$BUILD/$$TARGET;	\
+ 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET INSTALL_PATH=$(INSTALL_PATH)/$$TARGET install; \
+-	done;
++		ret=$$((ret * $$?));		\
++	done; exit $$ret;
+ 
+ 	@# Ask all targets to emit their test scripts
+ 	echo "#!/bin/sh" > $(ALL_SCRIPT)
+-- 
+2.17.1
 
-I suppose one thing to consider is that the refcount code is relatively new,
-so it could be that the actual use-after-free is extremely rare, but we're
-now seeing that it's at least potentially an issue.
-
-Thoughts?
-
-Will
