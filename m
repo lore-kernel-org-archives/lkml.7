@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CE8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B63C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50742205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE974205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013146;
-	bh=U3DpyrRA2XLyMI7ScgE+KagD0uAkQoaCUTFYrTEi90M=;
+	s=default; t=1576013149;
+	bh=vtZNkzsy8DFt1Q/58XFfk+K8dFflnhuuZF5YwJriTNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDY6IvjLL4M9GSlU3jrY02PLEm59IU5sPqZD/K+BWArKD5fVWzJFaxZeyGn+RhK24
-	 ZOLO/frwZhDxF25aUDBmYgJ/0h9dIvW5vMDK+9BUpntCoZQkBINWjt7JvYwjuP0rSV
-	 vtf6Wq6U1ko3a9kGdTa12Hvm2diYLbk64DPmxhiE=
+	b=A6pCnkOKbr3nkwlpxJx2ytECTYYModGRsTJGBfIX6WqylwUovN01OajhHfV595/E0
+	 vcKUBpJl6wdPsovAf6KIKe5oyZFcZ4gRYCkuf8lFL+evpP9QRkNiW1wFZeH7CYObl1
+	 zQb2IEEGVDYF0kUCgNwzgiCgZc8eVqSulsiayzpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbfLJVZo (ORCPT
+        id S1729584AbfLJVZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56608 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:25:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfLJVZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:32 -0500
+        id S1729212AbfLJVZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42EE20838;
-        Tue, 10 Dec 2019 21:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F39D4207FF;
+        Tue, 10 Dec 2019 21:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013131;
-        bh=U3DpyrRA2XLyMI7ScgE+KagD0uAkQoaCUTFYrTEi90M=;
+        s=default; t=1576013133;
+        bh=vtZNkzsy8DFt1Q/58XFfk+K8dFflnhuuZF5YwJriTNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/y05wfKHIen93cmK7qERc+eEpwHbLaEHoo7a3CzFwUtTFWO8ojargZnWnr2GSAW/
-         9nWBwE7QcaJaLQKkJsc4dmbf8GMaqVl8dxJXmq0S1BxLGLPt6O3+KFLr/AtgBjcyzU
-         MtVan6YGrsAk3nIad8pepZRR6MBZ74hXkoiFQmvI=
+        b=THLiRnpyJXam4trNy8SlSRnwW5PAgksh/b9dS7SKKyQU4FaVcvWP3eANsTxWsNS9A
+         8CY0W+V2x0vwHoGAyq/3qYb/VH62TXWYzNYCD/z8jSXPhCw5dARk6VHi9kWuolTjp4
+         0vR3/aisgO24T+4esNnEZxs7Ihvi5suJi/2lP/uo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukasz Majewski <lukma@denx.de>, Mark Brown <broonie@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 016/292] spi: Add call to spi_slave_abort() function when spidev driver is released
-Date:   Tue, 10 Dec 2019 16:20:35 -0500
-Message-Id: <20191210212511.11392-16-sashal@kernel.org>
+Cc:     Connor Kuehl <connor.kuehl@canonical.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.3 018/292] staging: rtl8188eu: fix possible null dereference
+Date:   Tue, 10 Dec 2019 16:20:37 -0500
+Message-Id: <20191210212511.11392-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -59,47 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Majewski <lukma@denx.de>
+From: Connor Kuehl <connor.kuehl@canonical.com>
 
-[ Upstream commit 9f918a728cf86b2757b6a7025e1f46824bfe3155 ]
+[ Upstream commit 228241944a48113470d3c3b46c88ba7fbe0a274b ]
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+Inside a nested 'else' block at the beginning of this function is a
+call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
+If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
+the 'else if' where 'psta' is dereferenced, then we will dereference
+a NULL pointer.
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+Fix this by checking if 'psta' is not NULL before reading its
+'psta->qos_option' data member.
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
+Addresses-Coverity: ("Dereference null return value")
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Link: https://lore.kernel.org/r/20190926150317.5894-1-connor.kuehl@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 255786f2e8447..3ea9d8a3e6e89 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -627,6 +627,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+#ifdef CONFIG_SPI_SLAVE
-+	spi_slave_abort(spidev->spi);
-+#endif
- 	mutex_unlock(&device_list_lock);
+diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+index 952f2ab513478..c37591657bac4 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
++++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+@@ -776,7 +776,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
+ 			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
  
- 	return 0;
+-			if (psta->qos_option)
++			if (psta && psta->qos_option)
+ 				qos_option = true;
+ 		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
+ 			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
+@@ -784,7 +784,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
+ 			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
+ 
+-			if (psta->qos_option)
++			if (psta && psta->qos_option)
+ 				qos_option = true;
+ 		} else {
+ 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
 -- 
 2.20.1
 
