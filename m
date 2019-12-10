@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39B1C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0154C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D5A206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2CF820836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012712;
-	bh=/vREOKb9jodj8o9mPrlJrZrDr+M2BGghOsruvxTRfek=;
+	s=default; t=1576012714;
+	bh=nrKFeK8ZfpA0LOttrffsxHf9XaNKRKS8gtS1ILBWzz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYnvxLD1YU+CUZYFAf9CPzjetmzOKqRJkmJYKK7O+IvOIS8vxvvLajlTHJajWLj36
-	 Gx2YcH0eZCmDyPkL/1hNAxwT6VCVHoElxZ0aV3z1sSOFoej5gWEqQw8AQ+N6cq1SRz
-	 5Ryw5qWEPmSzUrpEt+y+XWwfr6QFxNwEthSwjq8E=
+	b=F66MKSHp59amqrTPQhTfN9dVDxvqCgIucy1C1ELShE5k1x+1ooPWMKOtO7ZrgefwK
+	 ochB+lZQ8XCgXjbMOhVN40hsNvtyHG5AwXEBo809l4RQjdduzWX4mP0Iqa2v4p8mk2
+	 rFwlxjrGz96ySWj2KU9KFGwyn+p6uAc39Dl2PdiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfLJVMl (ORCPT
+        id S1729253AbfLJVSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:18:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbfLJVM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:28 -0500
+        id S1729059AbfLJVMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB38214AF;
-        Tue, 10 Dec 2019 21:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D94682464B;
+        Tue, 10 Dec 2019 21:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012348;
-        bh=/vREOKb9jodj8o9mPrlJrZrDr+M2BGghOsruvxTRfek=;
+        s=default; t=1576012361;
+        bh=nrKFeK8ZfpA0LOttrffsxHf9XaNKRKS8gtS1ILBWzz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N2tfhTb1ZpIEwdlicpLthKa92E+Npwh+eUuBDpvqPdZwvXlWLgpikus5ZHLvzJxqU
-         fdytjTwWdas1yfXHWhL6Gp/y/opKxsiGF2pzc9y1SOeFggC+YfIM8sQgilnx8GEqK3
-         gSDevFsBVxHi85XyOKmBAWniZe4m+cc2pye/X2R4=
+        b=E4O4kVDTPfBp933OWfwDW+Rj692YBkJeJvKNQfrc5jZ5VY+Qgbs7Aeuz35vkpYkkG
+         RYEz+jcPbNEc6+3k4fBoBbSb7gKKILzGlDH3K0mqfTL19pNRALNLD9aVk7oms3/hcx
+         XmG+zw6AFWqTAQputvb0IdAfvBPkt2ovO7nNZP4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>, ralf@linux-mips.org,
+        jhogan@kernel.org, john@phrozen.org, NeilBrown <neil@brown.name>,
+        linux-mips@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 278/350] parport: load lowlevel driver if ports not found
-Date:   Tue, 10 Dec 2019 16:06:23 -0500
-Message-Id: <20191210210735.9077-239-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 288/350] MIPS: ralink: enable PCI support only if driver for mt7621 SoC is selected
+Date:   Tue, 10 Dec 2019 16:06:33 -0500
+Message-Id: <20191210210735.9077-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,70 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
+[ Upstream commit 3b2fa0c92686562ac0b8cf00c0326a45814f8e18 ]
 
-Usually all the distro will load the parport low level driver as part
-of their initialization. But we can get into a situation where all the
-parallel port drivers are built as module and we unload all the modules
-at a later time. Then if we just do "modprobe parport" it will only
-load the parport module and will not load the low level driver which
-will actually register the ports. So, check the bus if there is any
-parport registered, if not, load the low level driver.
+Some versions of SoC MT7621 have three PCI express hosts. Some boards
+make use of those PCI through the staging driver mt7621-pci. Recently
+PCI support has been removed from MT7621 Soc kernel configuration due
+to a build error. This makes imposible to compile staging driver and
+produces a regression for gnubee based boards. Enable support for PCI
+again but enable it only if staging mt7621-pci driver is selected.
 
-We can get into the above situation with all distro but only Suse has
-setup the alias for "parport_lowlevel" and so it only works in Suse.
-Users of Debian based distro will need to load the lowlevel module
-manually.
-
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
+Fixes: c4d48cf5e2f0 ("MIPS: ralink: deactivate PCI support for SOC_MT7621")
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: john@phrozen.org
+Cc: NeilBrown <neil@brown.name>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Link: https://lore.kernel.org/r/20191019081233.7337-1-sergio.paracuellos@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/mips/ralink/Kconfig           | 1 +
+ drivers/staging/mt7621-pci/Kconfig | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 7b4ee33c19354..15c81cffd2de2 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -230,6 +230,18 @@ static int port_check(struct device *dev, void *dev_drv)
- 	return 0;
- }
+diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
+index 1434fa60f3db1..94e9ce9944944 100644
+--- a/arch/mips/ralink/Kconfig
++++ b/arch/mips/ralink/Kconfig
+@@ -51,6 +51,7 @@ choice
+ 		select MIPS_GIC
+ 		select COMMON_CLK
+ 		select CLKSRC_MIPS_GIC
++		select HAVE_PCI if PCI_MT7621
+ endchoice
  
-+/*
-+ * Iterates through all the devices connected to the bus and return 1
-+ * if the device is a parallel port.
-+ */
-+
-+static int port_detect(struct device *dev, void *dev_drv)
-+{
-+	if (is_parport(dev))
-+		return 1;
-+	return 0;
-+}
-+
- /**
-  *	parport_register_driver - register a parallel port device driver
-  *	@drv: structure describing the driver
-@@ -282,6 +294,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
- 		if (ret)
- 			return ret;
- 
-+		/*
-+		 * check if bus has any parallel port registered, if
-+		 * none is found then load the lowlevel driver.
-+		 */
-+		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-+				       port_detect);
-+		if (!ret)
-+			get_lowlevel_driver();
-+
- 		mutex_lock(&registration_lock);
- 		if (drv->match_port)
- 			bus_for_each_dev(&parport_bus_type, NULL, drv,
+ choice
+diff --git a/drivers/staging/mt7621-pci/Kconfig b/drivers/staging/mt7621-pci/Kconfig
+index af928b75a9403..ce58042f2f211 100644
+--- a/drivers/staging/mt7621-pci/Kconfig
++++ b/drivers/staging/mt7621-pci/Kconfig
+@@ -2,7 +2,6 @@
+ config PCI_MT7621
+ 	tristate "MediaTek MT7621 PCI Controller"
+ 	depends on RALINK
+-	depends on PCI
+ 	select PCI_DRIVERS_GENERIC
+ 	help
+ 	  This selects a driver for the MediaTek MT7621 PCI Controller.
 -- 
 2.20.1
 
