@@ -2,206 +2,110 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9148C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7757C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E75206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D633206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qAyRZKwW"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pnYDze4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLJHrB (ORCPT
+        id S1727327AbfLJHu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:47:01 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:12786 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfLJHrB (ORCPT
+        Tue, 10 Dec 2019 02:50:26 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:12613 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726071AbfLJHu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:47:01 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191210074656epoutp042872043f52651f808314c6e8a11e15d3~e8uxEqQjX0307303073epoutp047
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:46:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191210074656epoutp042872043f52651f808314c6e8a11e15d3~e8uxEqQjX0307303073epoutp047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575964016;
-        bh=ai8509VNNNtg7PGRnPyCmwNZWYdJnA3gZTpwHNd5lps=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=qAyRZKwWEBlvZ/McDot32HUDVmY+bYtQ3kE7gefhugoVHN8FiJ1610vgzraw+K6TV
-         JiJVZJSLFh7ggywev9cSU4IZ+gatjqhNgq921gJnxOh0ZikQsXbo/Jdj3/B5t/5+Ef
-         KxbttGHfcRf38Cvzq4eKWK/pBayOGevBJreN4jMM=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191210074655epcas1p13b9d26ccfbc8479be65da2b76c65eb9c~e8uwypRfr2849828498epcas1p1k;
-        Tue, 10 Dec 2019 07:46:55 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47XBwD19bgzMqYm3; Tue, 10 Dec
-        2019 07:46:52 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        60.53.48019.A6D4FED5; Tue, 10 Dec 2019 16:46:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191210074649epcas1p2a8c7a93753c45988558fe7e949758a70~e8uq3W_6X2887328873epcas1p2B;
-        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191210074649epsmtrp1f117c9a11cc132cc00183cff65148b8a~e8uq2pLnT2121421214epsmtrp1p;
-        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-73-5def4d6a1565
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        35.68.10238.96D4FED5; Tue, 10 Dec 2019 16:46:49 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191210074649epsmtip25dbe9c54d08beaf9b6c93e0d189400a2~e8uqmtnDd2402124021epsmtip2m;
-        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
-Subject: Re: [PATCH 1/4] PM / devfreq: reuse system workqueue machanism
-To:     Kamil Konieczny <k.konieczny@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <9926005a-c030-a823-fd65-6b8578e39218@samsung.com>
-Date:   Tue, 10 Dec 2019 16:53:15 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 10 Dec 2019 02:50:26 -0500
+X-UUID: 328127590f9f48e6a0b31a4a1175a6c3-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JL3qkLaljq80IvyBNK1e0OAptSLHH1w7K2FYS4Mu4+8=;
+        b=pnYDze4PDw3LNvqsJ9N4j1pEKHzA6nP7bTtf5VdAtRdg62/wshCcXA0I+rXCj4TpesT5BKuR2OnBUtsFti05F5uz5aoa0Dn1bFAyp8bWKaypVtKNJFFueIH+Npb4YKMWPQS7hSoATkJZX6KjTIEtJeVh7L5xYseeyUOkPZ4JRGo=;
+X-UUID: 328127590f9f48e6a0b31a4a1175a6c3-20191210
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1483728837; Tue, 10 Dec 2019 15:50:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 15:50:03 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 15:50:26 +0800
+Message-ID: <1575964221.13210.1.camel@mtksdaap41>
+Subject: Re: [PATCH v2 11/14] soc: mediatek: cmdq: export finalize function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Dec 2019 15:50:21 +0800
+In-Reply-To: <1574819937-6246-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-13-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut7vdXZfLX/N1WlDrRoTG0quurpXLnjOyEgKDyOziLrrci90Z
-        WREV5rP3SxtagyjLHpZZLSsEG4VSWViRlVBkZOUDzB4SPXa9i/zv+33nO3znO79DERovqaUs
-        djfvsnNWmlTJr9+N0es3rhjIivdVhrJXquoVrHewSsG2t19Wsg939SrZjqZqkv2y14/Yi/4u
-        Jftq51kylUprqCsj0/Y11qG0Lw2TMoi1+fPyeM7Mu3S8PcdhtthzU+jlq7MXZRtmxTN6Jpmd
-        TevsnI1PoRenZ+iXWqyBCWjdJs5aEKAyOEGg44zzXI4CN6/LcwjuFJp3mq3OZOdMgbMJBfbc
-        mTkO2xwmPj7BEBBuyM/7tbtd5hyK3rzvQR/agZ6Fl6MQCnASfC37hsqRitJgH4J3f9qU0mMQ
-        wfDz1mDlGwLvb7+8HFEjLSWeUIm/g+BMbU9QNBBoHy4hRFE4NsGdq5miRQTWQ6/vNCFqCHxC
-        Br3HHivEAoljobnnBSniMDwFnv14h0SsxkZ4f61nhJfjaXD2Q79SxJE4E1qvFwU146H1eLdc
-        xCF4Phw98JkQMYGj4WX3SZmEJ8ONvuoRY8ADJAzX9iml0IvhbfGQTMLh8Ol+Y5DXwsf9xUG8
-        Fc61+kmpuRRBY7M0NeBEaD59WCamJHAM1DfFSfQUuPmzBknG46D/6x6FtC01lBZrJMlU6HjT
-        FbSdAKdKysgDiPaMiuMZFcEzKoLnv5kXyetQFO8UbLm8wDiTRv92Axq5zljWh24/Sm9BmEJ0
-        qNqb2p+lUXCbhEJbCwKKoCPU94sDlNrMFW7hXY5sV4GVF1qQIbDtg4Q2MscRuHW7O5sxJCQm
-        JrJJzCwDw9DRaurHkywNzuXcfD7PO3nXvz4ZFaLdgYo2HMlk8ZDuhknd1fmgTXd+SY12xkRr
-        0dO7ay7ek71elXHtVmEY0aa6Kk81mbsqiXrv91pTeNT0zTH+McmWXQtMOOGC53FnRcmEGUbL
-        2DF0EdM551PTwu3Mthajh5/dTKl8D+f2d5S+r1h3af3EldtVIRVpy4yDHtnGM8mRh14N03Ih
-        j2NiCZfA/QWa7g0iswMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXjfT932swfSrkhYbZ6xntVjwaQar
-        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2CO4rJJ
-        Sc3JLEst0rdL4Mr423qeqeCLeEXfmbeMDYxXhbsYOTgkBEwk2mfxdDFycQgJ7GaUuNvwiamL
-        kRMoLikx7eJRZogaYYnDh4shat4ySjz4vpgNJC4s4C6xd3MYSLmIgK7Emx1LmUFqmAUWMEnM
-        vzmRBaJhLZPEjO8TWEGq2AS0JPa/uMEGYvMLKEpc/fGYEcTmFbCTeLr1BVicRUBVYsXzd+wg
-        tqhAmMTOJY+ZIGoEJU7OfMICYnMK2EtMnfCaGcRmFlCX+DPvEpQtLnHryXwmCFteYvvbOcwT
-        GIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI4hLc0d
-        jJeXxB9iFOBgVOLhXeDwLlaINbGsuDL3EKMEB7OSCO/xNqAQb0piZVVqUX58UWlOavEhRmkO
-        FiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFINjLMXdUSvef8/41329ojlSy8b7Cwrzv4bovRP
-        /9ckoe/hX/41vL6kf8d17lobvh3Pn9x6cJpzis3ei/2Bz/P/8qlPeu/Gdks3YdGZwuzjyZ17
-        W3Nm2Yhae2zhb8r6r/FDkyfk1pyi9Sl7mlKfn5QK7ki7KlkfMK03sWXDHq+At8st18hODJmg
-        EKrEUpyRaKjFXFScCADfdg1UnQIAAA==
-X-CMS-MailID: 20191210074649epcas1p2a8c7a93753c45988558fe7e949758a70
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
-References: <20191209144425.13321-1-k.konieczny@samsung.com>
-        <CGME20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2@eucas1p1.samsung.com>
-        <20191209144425.13321-2-k.konieczny@samsung.com>
-        <2eab8a20-1701-94dc-410a-bb072a5f5b4e@samsung.com>
-        <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 4:28 PM, Kamil Konieczny wrote:
-> On 10.12.2019 02:41, Chanwoo Choi wrote:
->> On 12/9/19 11:44 PM, Kamil Konieczny wrote:
->>> There is no need for creating another workqueue, it is enough
->>> to reuse system_freezable_power_efficient one.
->>>
->>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->>> ---
->>>  drivers/devfreq/devfreq.c | 6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>> index 46a7ff7c2994..955949c6fc1f 100644
->>> --- a/drivers/devfreq/devfreq.c
->>> +++ b/drivers/devfreq/devfreq.c
->>> @@ -1532,11 +1532,11 @@ static int __init devfreq_init(void)
->>>  		return PTR_ERR(devfreq_class);
->>>  	}
->>>  
->>> -	devfreq_wq = create_freezable_workqueue("devfreq_wq");
->>> +	devfreq_wq = system_freezable_power_efficient_wq;
->>
->> It affect the behaviors of whole device drivers using devfreq subsystem.
->> It is not good to change the workqueue type without any reasonable
->> data like experiment result, power-consumption result and performance
->> result for almost device drivers using devfreq subsystem.
->>
->> Are there any problem or any benefit to change workqueue type?
-> 
-> The workqueue is freezable with additional capability of 'power_efficient',
-> it is already developed by linux community so why not reuse it ?
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEV4cG9ydCBmaW5hbGl6ZSBmdW5jdGlvbiB0byBjbGllbnQgd2hp
+Y2ggaGVscHMgYXBwZW5kIGVvYyBhbmQganVtcA0KPiBjb21tYW5kIHRvIHBrdC4NCg0KUmV2aWV3
+ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+
+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyB8IDcgKystLS0tLQ0KPiAg
+aW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCAgfCA4ICsrKysrKysrDQo+ICAy
+IGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMgYi9kcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBpbmRleCAyNDRiODUyOGViMTYu
+LjM4ZTBjMTNlMTkyMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEtaGVscGVyLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
+LmMNCj4gQEAgLTM5Miw3ICszOTIsNyBAQCBpbnQgY21kcV9wa3RfYXNzaWduKHN0cnVjdCBjbWRx
+X3BrdCAqcGt0LCB1MTYgcmVnX2lkeCwgdTMyIHZhbHVlKQ0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJP
+TChjbWRxX3BrdF9hc3NpZ24pOw0KPiAgDQo+IC1zdGF0aWMgaW50IGNtZHFfcGt0X2ZpbmFsaXpl
+KHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiAraW50IGNtZHFfcGt0X2ZpbmFsaXplKHN0cnVjdCBj
+bWRxX3BrdCAqcGt0KQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2NsaWVudCAqY2wgPSBwa3QtPmNs
+Ow0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9Ow0KPiBAQCAtNDEy
+LDYgKzQxMiw3IEBAIHN0YXRpYyBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNtZHFfcGt0
+ICpwa3QpDQo+ICANCj4gIAlyZXR1cm4gZXJyOw0KPiAgfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRx
+X3BrdF9maW5hbGl6ZSk7DQo+ICANCj4gIHN0YXRpYyB2b2lkIGNtZHFfcGt0X2ZsdXNoX2FzeW5j
+X2NiKHN0cnVjdCBjbWRxX2NiX2RhdGEgZGF0YSkNCj4gIHsNCj4gQEAgLTQ0NiwxMCArNDQ3LDYg
+QEAgaW50IGNtZHFfcGt0X2ZsdXNoX2FzeW5jKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCBjbWRxX2Fz
+eW5jX2ZsdXNoX2NiIGNiLA0KPiAgCXVuc2lnbmVkIGxvbmcgZmxhZ3MgPSAwOw0KPiAgCXN0cnVj
+dCBjbWRxX2NsaWVudCAqY2xpZW50ID0gKHN0cnVjdCBjbWRxX2NsaWVudCAqKXBrdC0+Y2w7DQo+
+ICANCj4gLQllcnIgPSBjbWRxX3BrdF9maW5hbGl6ZShwa3QpOw0KPiAtCWlmIChlcnIgPCAwKQ0K
+PiAtCQlyZXR1cm4gZXJyOw0KPiAtDQo+ICAJcGt0LT5jYi5jYiA9IGNiOw0KPiAgCXBrdC0+Y2Iu
+ZGF0YSA9IGRhdGE7DQo+ICAJcGt0LT5hc3luY19jYi5jYiA9IGNtZHFfcGt0X2ZsdXNoX2FzeW5j
+X2NiOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEu
+aCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggNGJjZTI0
+MGRiYjU2Li45OThiYzkwZjlkYTkgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21l
+ZGlhdGVrL210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
+LWNtZHEuaA0KPiBAQCAtMjA0LDYgKzIwNCwxNCBAQCBpbnQgY21kcV9wa3RfcG9sbF9tYXNrKHN0
+cnVjdCBjbWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAgKi8NCj4gIGludCBjbWRxX3BrdF9h
+c3NpZ24oc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiByZWdfaWR4LCB1MzIgdmFsdWUpOw0KPiAg
+DQo+ICsvKioNCj4gKyAqIGNtZHFfcGt0X2ZpbmFsaXplKCkgLSBBcHBlbmQgRU9DIGFuZCBqdW1w
+IGNvbW1hbmQgdG8gcGt0Lg0KPiArICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQo+ICsgKg0KPiAr
+ICogUmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVk
+DQo+ICsgKi8NCj4gK2ludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCk7
+DQo+ICsNCj4gIC8qKg0KPiAgICogY21kcV9wa3RfZmx1c2hfYXN5bmMoKSAtIHRyaWdnZXIgQ01E
+USB0byBhc3luY2hyb25vdXNseSBleGVjdXRlIHRoZSBDTURRDQo+ICAgKiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGFja2V0IGFuZCBjYWxsIGJhY2sgYXQgdGhlIGVuZCBvZiBkb25lIHBhY2tl
+dA0KDQo=
 
-As you agreed below, why don't you suggest the any reasonable test result
-with this patch? As I commented, it affects the all device drivers. 
-It is necessary to suggest the test result on multiple scenarios
-in order to prevent the any power-consumption and performance regression.
-It is not easy to change them without any data.
-
-Frankly, if you test almost scenarios and suggest the reasonable result
-that anyone can understand, like there are never difference
-between "create_freezable_workqueue("devfreq_wq");" and system_freezable_power_efficient_wq.
-But you don't suggest any data.
-
-- The original devfreq_wq include the only work related to devfreq.
-- system_freezable_power_efficient_wq include the all works registered
-from both other subsystem and device drivers in linux kernel.
-
-> 
->> Actually, it is not simple to change the like just one device driver
->> because devfreq subsytem is very important for both performance
->> and power-consumption.
-> 
-> I agree. The name of this wq promises what you want, both freezable
-> and power efficiency.
-> 
->> If you hope to change the feature related to both performance 
->> and power-consumption, please suggest the reasonable data
->> with fundamental reason.
->>
->> So, I can't agree it.
->>
->>
->>>  	if (!devfreq_wq) {
->>>  		class_destroy(devfreq_class);
->>> -		pr_err("%s: couldn't create workqueue\n", __FILE__);
->>> -		return -ENOMEM;
->>> +		pr_err("%s: system_freezable_power_efficient_wq isn't initialized\n", __FILE__);
->>> +		return -EINVAL;
->>>  	}
->>>  	devfreq_class->dev_groups = devfreq_groups;
->>>  
->>>
->>
->>
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
