@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B03C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D87EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E82205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54C06207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013229;
-	bh=RjyOyzkymbS78Bw6jx5PlKqDlLp6NTiXl2Gst2Hr03U=;
+	s=default; t=1576013233;
+	bh=/SVe0pXGAgiWiU2Aj/V5oelee8zM1PXTQwlxRsZFXfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqtD4wMHByIgQqEyUdxzYNsT4O/UEh21KY9oyjgrskBbQ1OVDZ9o+mtS2NwFYGUqQ
-	 XmHSC9SG82vvyTi/WCgH/38rfBZAOIaEOTUDdXT1XC93ojUPSHZyaSKYxVb2gMcBZ6
-	 XPONMZd7ptuYhW77LwZogOslV5aVYkpM+0rftrIo=
+	b=NCvnqWT+kxlydzNaWxRF7qPklx2fKTySCdo8Lf39dvCZ0ztvyLVXb3z+XqQKjI+6O
+	 cMn1r9WMph0WzGXSnKfmA0bWD7KRRbQ8GlRjpFiBONgbf2tR7QvTI9D83P+pzo4dKt
+	 1Fu0alEaPiLU/RKt7GMgtkeiVje6C0e/4xqd0yfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfLJVZ1 (ORCPT
+        id S1727295AbfLJV1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55820 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:27:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728816AbfLJVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:15 -0500
+        id S1729383AbfLJVZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E573B2073B;
-        Tue, 10 Dec 2019 21:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1647B20838;
+        Tue, 10 Dec 2019 21:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013115;
-        bh=RjyOyzkymbS78Bw6jx5PlKqDlLp6NTiXl2Gst2Hr03U=;
+        s=default; t=1576013128;
+        bh=/SVe0pXGAgiWiU2Aj/V5oelee8zM1PXTQwlxRsZFXfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHl6e+GlaKUv0Zn/Mdpmv6JmcVBGNV1j3shMf3ToxLX+npS5J25fLhpGA5/EMCAtG
-         3FkSIsIgBiUAwVVkbsryTgPCODyie68KUHd0Nt/A6+Gk4ZfHFjne6nL9lpWd11vS0s
-         jGcAcBkgNuBu9CqVzbDe5SsVI7jJdM0d1duCCZdc=
+        b=faz4JOax0bCt5FUiU9HVE5JPH/jOAo6gysdzyZBmcZfmXIf0icq9dAjLqmPUoOhPC
+         hdZq7/vVBxSwAD+dOj6/WeoA6RH8GSvJMm9NLNAzcu+3Tm4qfEl0pL2uSR7y9waD8N
+         cOjE1qCk53JbqJ+axlZUpc9tIWTjQsuG5lTnUjiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
-        Todd Previte <tprevite@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 002/292] drm: mst: Fix query_payload ack reply struct
-Date:   Tue, 10 Dec 2019 16:20:21 -0500
-Message-Id: <20191210212511.11392-2-sashal@kernel.org>
+Cc:     Martin Tsai <martin.tsai@amd.com>,
+        Charlene Liu <Charlene.Liu@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.3 013/292] drm/amd/display: Handle virtual signal type in disable_link()
+Date:   Tue, 10 Dec 2019 16:20:32 -0500
+Message-Id: <20191210212511.11392-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -64,45 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Martin Tsai <martin.tsai@amd.com>
 
-[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
+[ Upstream commit 616f5b65f1c02d3d6ae370644670d14c57de2fd8 ]
 
-Spec says[1] Allocated_PBN is 16 bits
+[Why]
+The new implementation changed the behavior to allow process setMode
+to DAL when DAL returns empty mode query for unplugged display.
+This will trigger additional disable_link().
+When unplug HDMI from MST dock, driver will update stream->signal to
+"Virtual". disable_link() will call disable_output() if the signal type
+is not DP and induce other displays on MST dock show black screen.
 
-[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+[How]
+Don't need to process disable_output() if the signal type is virtual.
 
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Todd Previte <tprevite@gmail.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Signed-off-by: Martin Tsai <martin.tsai@amd.com>
+Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_dp_mst_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index 8c97a5f92c470..e1b812ef28ef2 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -334,7 +334,7 @@ struct drm_dp_resource_status_notify {
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 355b4ba127966..90217cf83ce17 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -2157,8 +2157,10 @@ static void disable_link(struct dc_link *link, enum signal_type signal)
+ 			dp_set_fec_ready(link, false);
+ 		}
+ #endif
+-	} else
+-		link->link_enc->funcs->disable_output(link->link_enc, signal);
++	} else {
++		if (signal != SIGNAL_TYPE_VIRTUAL)
++			link->link_enc->funcs->disable_output(link->link_enc, signal);
++	}
  
- struct drm_dp_query_payload_ack_reply {
- 	u8 port_number;
--	u8 allocated_pbn;
-+	u16 allocated_pbn;
- };
- 
- struct drm_dp_sideband_msg_req_body {
+ 	if (signal == SIGNAL_TYPE_DISPLAY_PORT_MST) {
+ 		/* MST disable link only when no stream use the link */
 -- 
 2.20.1
 
