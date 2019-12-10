@@ -2,87 +2,105 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD31C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E8DC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5AF2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:02:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xZWRhz+C"
+	by mail.kernel.org (Postfix) with ESMTP id 3FFD2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576015386;
+	bh=ZfBmlXo3vN9jtE9PM4yjP2v5WtY9rXLaxQLCYP9rM/I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rrnf+xMLfCAyGXGbuSdPbuVLoOEySLEzmwUu2rfgFU7nvNBfIeG9yj9IayzfJf07A
+	 AofSr1P/OZA03MwMd1Hxzv4bqf5L9U+bV1xVhmlGRfLhHFINs5JHGjXZD/8iDOwdAi
+	 n5LMC7q8QwKcHERZemF1ypE53zCI/o87W/DPHjjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfLJWCl (ORCPT
+        id S1727192AbfLJWDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:02:41 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46138 "EHLO vps0.lunn.ch"
+        Tue, 10 Dec 2019 17:03:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfLJWCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:02:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=oNrhFWA1lMqgOP0XHTa3xdZ+GV9N7jCyBqMVj23yRHs=; b=xZWRhz+CFM5NfZoAhdE/Gf5Ate
-        jwkCAm8gpKDWE3b5P9ajfLkTLdVB6mq5zla3yoyBXTl7B6q88/vbXgqargSm/6APZB/TKAoXevZv4
-        oTGN3doiai+QIEhx1FqEk3Fa7u7QZwAndwta5kY3sotOnTY49pV6t4NxXfpKEYe8xkuI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ienaR-0007qA-JO; Tue, 10 Dec 2019 23:02:31 +0100
-Date:   Tue, 10 Dec 2019 23:02:31 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     Landen Chao <landen.chao@mediatek.com>, f.fainelli@gmail.com,
-        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
- switch
-Message-ID: <20191210220231.GA30053@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
- <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
- <20191210163557.GC27714@lunn.ch>
- <20191210213351.2df6acbf@nic.cz>
+        id S1726417AbfLJWDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:04 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D300F20637;
+        Tue, 10 Dec 2019 22:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576015384;
+        bh=ZfBmlXo3vN9jtE9PM4yjP2v5WtY9rXLaxQLCYP9rM/I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aMQthjis+J/NCwE1fsE8FX1VJUOSU2S2+MBC4kfgmzFdwYJWsHIVtyLR5rFOZlTA7
+         N6/hWhwHM0COp05DytwGGNdR0tBtqWSKWhB7gabQl/i/cXJVZXn25GwLH1LLPulhAy
+         I6kvD4eR/89+aFDY5oajknjPZ9nKaXypS/HwdA8I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 001/130] drm: mst: Fix query_payload ack reply struct
+Date:   Tue, 10 Dec 2019 17:00:52 -0500
+Message-Id: <20191210220301.13262-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210213351.2df6acbf@nic.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:33:51PM +0100, Marek Behun wrote:
-> On Tue, 10 Dec 2019 17:35:57 +0100
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > On Tue, Dec 10, 2019 at 04:14:40PM +0800, Landen Chao wrote:
-> > > Add new support for MT7531:
-> > > 
-> > > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
-> > > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
-> > > port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
-> > > or HSGMII in different HW sku.  
-> > 
-> > Hi Landen
-> > 
-> > Looking at the code, you seem to treat HSGMII as 2500Base-X. Is this
-> > correct? Or is it SGMII over clocked to 2.5Gbps?
-> > 
-> > 	 Andrew
-> 
-> How would that work? Would 10 and 100 be overclocked to 25 and 250?
+From: Sean Paul <seanpaul@chromium.org>
 
-No. SGMII clocked up to 2.5G does not support any of the lower
-speeds. And inband signalling does not make much sense, the control
-word is all wrong.
+[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
 
-     Andrew
+Spec says[1] Allocated_PBN is 16 bits
+
+[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Todd Previte <tprevite@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/drm/drm_dp_mst_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index d55abb75f29ae..eec6cba204ea8 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -313,7 +313,7 @@ struct drm_dp_resource_status_notify {
+ 
+ struct drm_dp_query_payload_ack_reply {
+ 	u8 port_number;
+-	u8 allocated_pbn;
++	u16 allocated_pbn;
+ };
+ 
+ struct drm_dp_sideband_msg_req_body {
+-- 
+2.20.1
+
