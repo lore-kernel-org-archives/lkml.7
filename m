@@ -2,100 +2,126 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF93C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9ED205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbTprTIG"
+	by mail.kernel.org (Postfix) with ESMTP id E70DB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013284;
+	bh=oadTmD8xMyFAJq7acvFQcDeq9NwvEcS53HvNHrBQQkY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N2m7VdBAOFYy+kp3i9mO7RpHW1YFP+zyEkn7UKhD9eVzVV4PfRSpKtiwme4B2Q8g1
+	 Uadl+NyimGujrzJXp3XdpbvENJK1a6P60+F2UX8Rv63PRDLYjzKfvyWPriDZG+3JZV
+	 P8PI/Kvm++WzT+BXezSHWYa0irE3qjNTSIftiXYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfLJV16 (ORCPT
+        id S1727975AbfLJV1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:58 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32854 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728835AbfLJV1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:27:52 -0500
-Received: by mail-io1-f67.google.com with SMTP id s25so5715100iob.0;
-        Tue, 10 Dec 2019 13:27:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=H5mECpigsi5IoO0Gd/OMlOo5Xgi22xFbljTixm/LvJ8=;
-        b=bbTprTIGy7WRDm/au9WDFJRyIht5M9SgTqsn/gyE+mocmzykvQab24Jh8AiBQhy9mO
-         4h3/EYBeRJK+WS6KuJeUlj3PWkTwabcs2eJ0s8p6MtRiKeOKjs0DNAeEqH7loPWkP+4s
-         zx8ka4wdOgAz/CrkdyCeRczY5tY1nRr+UqVb/LSdYthWiDHaD91NMzpfUfxkwzX27r7I
-         g5k4TjWDvgt1R2nqF98iS3n4NdjTuEdHRAyaz4aBcx48in4266/zivrqfuVsYLvO9tlc
-         OxWeHL2Ng8MMBld4JW+/gAWmupONWBbZS8/ItfF6Y4FL4/nErkmf4tFGHroQNdGx9P4i
-         LLRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=H5mECpigsi5IoO0Gd/OMlOo5Xgi22xFbljTixm/LvJ8=;
-        b=G8MR6BmIVFjxchlQEAKbDKpMN8OBNRlk0QinptwOFqaxmoHlc+CgPDT7gJD4fO1Csw
-         do+czHV0/y2LltnRJP3CTEBagTe3AmbcK8fckm33mlBZGn7ZKGhB+xNYLYju499vCvem
-         1G4nJnjxa/EXJ0kltpAw3Il944svZT7CfwDJgHiW4YWzBMonC/kM3zjEsdO2AWx4YqbF
-         MeabCqe3iE4NsPp22kMIN9DzYq7NCXsE7e3931UjqgaUUmj/oojtleGqZ5dRDvkGGGMe
-         ZBuKowVtkAq4fG6E94Se41mC6gNIL2fqzoLDvvqEJefthJeLpcdvvUbguOpWC1WhDsQ8
-         vPoA==
-X-Gm-Message-State: APjAAAVL2EoiEIiVovVqBRF3fqr2T1V0hb1TQIFWKRHZd/NAp1RX3a3h
-        HQkzGgBX/Gg11WhpJ/6wa/z3sOgE2XSYXTW9+KU=
-X-Google-Smtp-Source: APXvYqxxlVGO15l7eYtfNXjfLTjwFKDhTrtm/h/TOVV/jLIopcfB40ClbnrIG3zGec04yiaa6oSt6D9GMyznieRnHDU=
-X-Received: by 2002:a02:a915:: with SMTP id n21mr28189604jam.117.1576013271029;
- Tue, 10 Dec 2019 13:27:51 -0800 (PST)
+        Tue, 10 Dec 2019 16:27:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728526AbfLJVKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:32 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCBB246A3;
+        Tue, 10 Dec 2019 21:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012232;
+        bh=oadTmD8xMyFAJq7acvFQcDeq9NwvEcS53HvNHrBQQkY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S/5VUTNxY0qJpaRLHBYwlQBYeXRd5H3FjmmMI+jQf05F2mEwpIjHCRevSIYKroJV6
+         VAfP0IM+DHHEyLEgNWMwaa8N+GMVW3tRaqCkWdVKmm4yc9nK2No8hXiDqpI9JqxcMs
+         M3cqjgqn1F1QwhQVwLOiEHAqz7Zq8cadRj9jCVME=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 181/350] phy: qcom-usb-hs: Fix extcon double register after power cycle
+Date:   Tue, 10 Dec 2019 16:04:46 -0500
+Message-Id: <20191210210735.9077-142-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191210102916.842-1-agruenba@redhat.com> <20191210203252.GA99875@magnolia>
- <CAHpGcMJMgttnXu48wHnP-WqdPkuXBaFd+COKV9XiRP6VrtRUVg@mail.gmail.com> <20191210212552.GC99875@magnolia>
-In-Reply-To: <20191210212552.GC99875@magnolia>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Tue, 10 Dec 2019 22:27:40 +0100
-Message-ID: <CAHpGcMJxoekJvZqW3=9B7Jfpo43N1XzayY0TQc7eWLjHVwvQXg@mail.gmail.com>
-Subject: Re: [PATCH] iomap: Export iomap_page_create and iomap_set_range_uptodate
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Di., 10. Dez. 2019 um 22:25 Uhr schrieb Darrick J. Wong
-<darrick.wong@oracle.com>:
-> On Tue, Dec 10, 2019 at 09:39:31PM +0100, Andreas Gr=C3=BCnbacher wrote:
-> > Am Di., 10. Dez. 2019 um 21:33 Uhr schrieb Darrick J. Wong
-> > <darrick.wong@oracle.com>:
-> > > On Tue, Dec 10, 2019 at 11:29:16AM +0100, Andreas Gruenbacher wrote:
-> > > > These two functions are needed by filesystems for converting inline
-> > > > ("stuffed") inodes into non-inline inodes.
-> > > >
-> > > > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> > >
-> > > Looks fine to me... this is a 5.6 change, correct?
-> >
-> > Yes, so there's still plenty of time to get things in place until
-> > then. I'd like to hear from Christoph if he has any objections. In any
-> > case, this patch isn't going to break anything.
->
-> By the way, the other symbols in fs/iomap/ are all EXPORT_SYMBOL_GPL.
-> Does gfs2/RH/anyone have a particular requirement for EXPORT_SYMBOL, or
-> could we make the new exports _GPL to match the rest?
+From: Stephan Gerhold <stephan@gerhold.net>
 
-I don't mind EXPORT_SYMBOL_GPL.
+[ Upstream commit 64f86b9978449ff05bfa6c64b4c5439e21e9c80b ]
 
-Thanks,
-Andreas
+Commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+switched from extcon_register_notifier() to the resource-managed
+API, i.e. devm_extcon_register_notifier().
+
+This is problematic in this case, because the extcon notifier
+is dynamically registered/unregistered whenever the PHY is powered
+on/off. The resource-managed API does not unregister the notifier
+until the driver is removed, so as soon as the PHY is power cycled,
+attempting to register the notifier again results in:
+
+	double register detected
+	WARNING: CPU: 1 PID: 182 at kernel/notifier.c:26 notifier_chain_register+0x74/0xa0
+	Call trace:
+	 ...
+	 extcon_register_notifier+0x74/0xb8
+	 devm_extcon_register_notifier+0x54/0xb8
+	 qcom_usb_hs_phy_power_on+0x1fc/0x208
+	 ...
+
+... and USB stops working after plugging the cable out and in
+another time.
+
+The easiest way to fix this is to make a partial revert of
+commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+and avoid using the resource-managed API in this case.
+
+Fixes: f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/phy/qualcomm/phy-qcom-usb-hs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+index b163b3a1558d5..61054272a7c8b 100644
+--- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
++++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+@@ -158,8 +158,8 @@ static int qcom_usb_hs_phy_power_on(struct phy *phy)
+ 		/* setup initial state */
+ 		qcom_usb_hs_phy_vbus_notifier(&uphy->vbus_notify, state,
+ 					      uphy->vbus_edev);
+-		ret = devm_extcon_register_notifier(&ulpi->dev, uphy->vbus_edev,
+-				EXTCON_USB, &uphy->vbus_notify);
++		ret = extcon_register_notifier(uphy->vbus_edev, EXTCON_USB,
++					       &uphy->vbus_notify);
+ 		if (ret)
+ 			goto err_ulpi;
+ 	}
+@@ -180,6 +180,9 @@ static int qcom_usb_hs_phy_power_off(struct phy *phy)
+ {
+ 	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
+ 
++	if (uphy->vbus_edev)
++		extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
++					   &uphy->vbus_notify);
+ 	regulator_disable(uphy->v3p3);
+ 	regulator_disable(uphy->v1p8);
+ 	clk_disable_unprepare(uphy->sleep_clk);
+-- 
+2.20.1
+
