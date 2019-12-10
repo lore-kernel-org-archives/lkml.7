@@ -2,183 +2,403 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB386C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90700C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF2D2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E98122B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MrvvEQqZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CYf1AKpQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfLJQ6g (ORCPT
+        id S1727727AbfLJQ73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:58:36 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29645 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727535AbfLJQ6g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:58:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575997114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kloBvw8RGWK1lP3SGtf1eARoYVSiVMuq6V2S364vtNA=;
-        b=MrvvEQqZ9IjHgdWhnGrLfZ9sNtPcN7QYa1fx9SLjWFrM5vYLWv2tHPpYLgVrzVzLR9Mt93
-        oF0QnKIa1ktTt5G6g2N8U99IPbE+/LcM4C1oABEXzZOzmIG2EYg/Ty5figCyC44hy41q/G
-        mZ4DYI5GFbu5TfY51ILoUVQvk2rjFJA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-a3Q0C6xYPXGoFovyHN5gSQ-1; Tue, 10 Dec 2019 11:58:31 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38AA41005512;
-        Tue, 10 Dec 2019 16:58:30 +0000 (UTC)
-Received: from x1.home (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3154360BE1;
-        Tue, 10 Dec 2019 16:58:25 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 09:58:24 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [RFC PATCH 1/9] vfio/pci: introduce mediate ops to intercept
- vfio-pci ops
-Message-ID: <20191210095824.5c4cdad7@x1.home>
-In-Reply-To: <20191210024422.GA27331@joy-OptiPlex-7040>
-References: <20191205032419.29606-1-yan.y.zhao@intel.com>
-        <20191205032536.29653-1-yan.y.zhao@intel.com>
-        <20191205165519.106bd210@x1.home>
-        <20191206075655.GG31791@joy-OptiPlex-7040>
-        <20191206142226.2698a2be@x1.home>
-        <20191209034225.GK31791@joy-OptiPlex-7040>
-        <20191209170339.2cb3d06e@x1.home>
-        <20191210024422.GA27331@joy-OptiPlex-7040>
-Organization: Red Hat
+        Tue, 10 Dec 2019 11:59:29 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:52460 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727562AbfLJQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:59:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=e3Eayld71WxoF0AxZFlGK/z0blEZ1CibDBODXOeXOiE=; b=CYf1AKpQ1qbBFXJcu5z/pJ6sF
+        nh83owO/XV7FrNQ3czOssfgw9JXkw48tQv/Z+xoQOPcO/bOh9x3DuiamxgPnCTAjBPFl2Ym/O371Q
+        tYWbgE+Qgj+wgiuHPG2xs7/z3Cx/rReOVmJAG9eKVBsd08QZxakVRSlW0ezG8/oTlOMSU=;
+Received: from [185.238.219.18] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ieir0-0007Tk-U7; Tue, 10 Dec 2019 17:59:19 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ieiqu-00055E-Oo; Tue, 10 Dec 2019 17:59:12 +0100
+Date:   Tue, 10 Dec 2019 17:59:00 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v3 3/6] mfd: rn5t618: add irq support
+Message-ID: <20191210175900.64df7de8@kemnade.info>
+In-Reply-To: <20191210093225.GT3468@dell>
+References: <20191129212045.18325-1-andreas@kemnade.info>
+        <20191129212045.18325-4-andreas@kemnade.info>
+        <20191210093225.GT3468@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: a3Q0C6xYPXGoFovyHN5gSQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Dv09M1d72KUKicRX56C2L8A"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 21:44:23 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+--Sig_/Dv09M1d72KUKicRX56C2L8A
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > Currently, yes, i40e has build dependency on vfio-pci.
-> > > > > It's like this, if i40e decides to support SRIOV and compiles in vf
-> > > > > related code who depends on vfio-pci, it will also have build dependency
-> > > > > on vfio-pci. isn't it natural?    
-> > > > 
-> > > > No, this is not natural.  There are certainly i40e VF use cases that
-> > > > have no interest in vfio and having dependencies between the two
-> > > > modules is unacceptable.  I think you probably want to modularize the
-> > > > i40e vfio support code and then perhaps register a table in vfio-pci
-> > > > that the vfio-pci code can perform a module request when using a
-> > > > compatible device.  Just and idea, there might be better options.  I
-> > > > will not accept a solution that requires unloading the i40e driver in
-> > > > order to unload the vfio-pci driver.  It's inconvenient with just one
-> > > > NIC driver, imagine how poorly that scales.
-> > > >     
-> > > what about this way:
-> > > mediate driver registers a module notifier and every time when
-> > > vfio_pci is loaded, register to vfio_pci its mediate ops?
-> > > (Just like in below sample code)
-> > > This way vfio-pci is free to unload and this registering only gives
-> > > vfio-pci a name of what module to request.
-> > > After that,
-> > > in vfio_pci_open(), vfio-pci requests the mediate driver. (or puts
-> > > the mediate driver when mediate driver does not support mediating the
-> > > device)
-> > > in vfio_pci_release(), vfio-pci puts the mediate driver.
-> > > 
-> > > static void register_mediate_ops(void)
-> > > {
-> > >         int (*func)(struct vfio_pci_mediate_ops *ops) = NULL;
-> > > 
-> > >         func = symbol_get(vfio_pci_register_mediate_ops);
-> > > 
-> > >         if (func) {
-> > >                 func(&igd_dt_ops);
-> > >                 symbol_put(vfio_pci_register_mediate_ops);
-> > >         }
-> > > }
-> > > 
-> > > static int igd_module_notify(struct notifier_block *self,
-> > >                               unsigned long val, void *data)
-> > > {
-> > >         struct module *mod = data;
-> > >         int ret = 0;
-> > > 
-> > >         switch (val) {
-> > >         case MODULE_STATE_LIVE:
-> > >                 if (!strcmp(mod->name, "vfio_pci"))
-> > >                         register_mediate_ops();
-> > >                 break;
-> > >         case MODULE_STATE_GOING:
-> > >                 break;
-> > >         default:
-> > >                 break;
-> > >         }
-> > >         return ret;
-> > > }
-> > > 
-> > > static struct notifier_block igd_module_nb = {
-> > >         .notifier_call = igd_module_notify,
-> > >         .priority = 0,
-> > > };
-> > > 
-> > > 
-> > > 
-> > > static int __init igd_dt_init(void)
-> > > {
-> > > 	...
-> > > 	register_mediate_ops();
-> > > 	register_module_notifier(&igd_module_nb);
-> > > 	...
-> > > 	return 0;
-> > > }  
-> > 
-> > 
-> > No, this is bad.  Please look at MODULE_ALIAS() and request_module() as
-> > used in the vfio-platform for loading reset driver modules.  I think
-> > the correct approach is that vfio-pci should perform a request_module()
-> > based on the device being probed.  Having the mediation provider
-> > listening for vfio-pci and registering itself regardless of whether we
-> > intend to use it assumes that we will want to use it and assumes that
-> > the mediation provider module is already loaded.  We should be able to
-> > support demand loading of modules that may serve no other purpose than
-> > providing this mediation.  Thanks,  
-> hi Alex
-> Thanks for this message.
-> So is it good to create a separate module as mediation provider driver,
-> and alias its module name to "vfio-pci-mediate-vid-did".
-> Then when vfio-pci probes the device, it requests module of that name ?
+On Tue, 10 Dec 2019 09:32:25 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-I think this would give us an option to have the mediator as a separate
-module, but not require it.  Maybe rather than a request_module(),
-where if we follow the platform reset example we'd then expect the init
-code for the module to register into a list, we could do a
-symbol_request().  AIUI, this would give us a reference to the symbol
-if the module providing it is already loaded, and request a module
-(perhaps via an alias) if it's not already load.  Thanks,
+> On Fri, 29 Nov 2019, Andreas Kemnade wrote:
+>=20
+> > This adds support for irq handling in the rc5t619 which is required =20
+>=20
+> Please capitalise abbreviations and device names (as they do in the
+> datasheet).
+>=20
+for IRQ vs. irq: I see both things in commit messages. Is there any rule ab=
+out
+that?
 
-Alex
+> > for properly implementing subdevices like rtc. =20
+>=20
+> "RTC"
+>=20
+> > For now only definitions for the variant rc5t619 are included.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Changes in v3:
+> > alignment cleanup
+> >=20
+> > Changes in v2:
+> > - no dead code, did some more testing and thinking for that
+> > - remove extra empty lines
+> >=20
+> >  drivers/mfd/Kconfig         |  1 +
+> >  drivers/mfd/Makefile        |  2 +-
+> >  drivers/mfd/rn5t618-core.c  | 34 ++++++++++++++-
+> >  drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/rn5t618.h | 16 +++++++
+> >  5 files changed, 136 insertions(+), 2 deletions(-)
+> >  create mode 100644 drivers/mfd/rn5t618-irq.c
+> >=20
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index ae24d3ea68ea..522e068d0082 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -1057,6 +1057,7 @@ config MFD_RN5T618
+> >  	depends on OF
+> >  	select MFD_CORE
+> >  	select REGMAP_I2C
+> > +	select REGMAP_IRQ
+> >  	help
+> >  	  Say yes here to add support for the Ricoh RN5T567,
+> >  	  RN5T618, RC5T619 PMIC.
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 110ea700231b..2906d5db67d0 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
+> >  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
+> >  obj-$(CONFIG_MFD_RK808)		+=3D rk808.o
+> > =20
+> > -rn5t618-objs			:=3D rn5t618-core.o
+> > +rn5t618-objs			:=3D rn5t618-core.o rn5t618-irq.o
+> >  obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
+> >  obj-$(CONFIG_MFD_SEC_CORE)	+=3D sec-core.o sec-irq.o
+> >  obj-$(CONFIG_MFD_SYSCON)	+=3D syscon.o
+> > diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
+> > index da5cd9c92a59..1e2326217681 100644
+> > --- a/drivers/mfd/rn5t618-core.c
+> > +++ b/drivers/mfd/rn5t618-core.c
+> > @@ -8,6 +8,7 @@
+> > =20
+> >  #include <linux/delay.h>
+> >  #include <linux/i2c.h>
+> > +#include <linux/interrupt.h>
+> >  #include <linux/mfd/core.h>
+> >  #include <linux/mfd/rn5t618.h>
+> >  #include <linux/module.h>
+> > @@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+> > =20
+> >  	i2c_set_clientdata(i2c, priv);
+> >  	priv->variant =3D (long)of_id->data;
+> > -
+> > +	priv->chip_irq =3D i2c->irq;
+> > +	priv->dev =3D &i2c->dev; =20
+>=20
+> '\n'
+>=20
+> >  	priv->regmap =3D devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
+> >  	if (IS_ERR(priv->regmap)) {
+> >  		ret =3D PTR_ERR(priv->regmap);
+> > @@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2=
+c,
+> >  		return ret;
+> >  	}
+> > =20
+> > +	if (priv->chip_irq > 0) {
+> > +		if (rn5t618_irq_init(priv))
+> > +			priv->chip_irq =3D 0;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> > =20
+> > @@ -154,15 +161,40 @@ static int rn5t618_i2c_remove(struct i2c_client *=
+i2c)
+> >  	return 0;
+> >  }
+> > =20
+> > +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
+> > +{
+> > +	struct rn5t618 *priv =3D dev_get_drvdata(dev);
+> > +
+> > +	if (priv->chip_irq)
+> > +		disable_irq(priv->chip_irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
+> > +{
+> > +	struct rn5t618 *priv =3D dev_get_drvdata(dev);
+> > +
+> > +	if (priv->chip_irq)
+> > +		enable_irq(priv->chip_irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct i2c_device_id rn5t618_i2c_id[] =3D {
+> >  	{ }
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id); =20
+>=20
+> Not this patch I know, but it's strange to see this empty.
+>
 
+Yes, should be cleaned up. For now the device tree stuff seems to kick in.
+=20
+> > +static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
+> > +			rn5t618_i2c_suspend,
+> > +			rn5t618_i2c_resume);
+> > +
+> >  static struct i2c_driver rn5t618_i2c_driver =3D {
+> >  	.driver =3D {
+> >  		.name =3D "rn5t618",
+> >  		.of_match_table =3D of_match_ptr(rn5t618_of_match),
+> > +		.pm =3D &rn5t618_i2c_dev_pm_ops,
+> >  	},
+> >  	.probe =3D rn5t618_i2c_probe,
+> >  	.remove =3D rn5t618_i2c_remove,
+> > diff --git a/drivers/mfd/rn5t618-irq.c b/drivers/mfd/rn5t618-irq.c =20
+>=20
+> Why does this need to be separate from the core file?
+>=20
+It does not need. It is not that complex. There will just be another set of
+tables for the rn5t618
+
+> > new file mode 100644
+> > index 000000000000..8a4c56429768
+> > --- /dev/null
+> > +++ b/drivers/mfd/rn5t618-irq.c
+> > @@ -0,0 +1,85 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Copyright 2019 Andreas Kemnade
+> > + */
+> > +#include <linux/device.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#include <linux/mfd/rn5t618.h>
+> > +
+> > +static const struct regmap_irq rc5t619_irqs[] =3D {
+> > +	[RN5T618_IRQ_SYS] =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (0 << 1)
+> > +	},
+> > +	[RN5T618_IRQ_DCDC] =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (1 << 1) =20
+>=20
+> BIT()
+>=20
+yes, makes things more readable.
+
+> > +	},
+> > +	[RN5T618_IRQ_RTC]  =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (1 << 2)
+> > +	},
+> > +	[RN5T618_IRQ_ADC] =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (1 << 3)
+> > +	},
+> > +	[RN5T618_IRQ_GPIO] =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (1 << 4)
+> > +	},
+> > +	[RN5T618_IRQ_CHG] =3D {
+> > +		.reg_offset =3D 0,
+> > +		.mask =3D (1 << 6),
+> > +	}
+> > +}; =20
+>=20
+> There are probably macros available to tidy this up.
+>=20
+> Take a look in include/linux/regmap.h
+>=20
+I will have a look.
+
+> > +static const struct regmap_irq_chip rc5t619_irq_chip =3D {
+> > +	.name =3D "rc5t619",
+> > +	.irqs =3D rc5t619_irqs,
+> > +	.num_irqs =3D ARRAY_SIZE(rc5t619_irqs),
+> > +	.num_regs =3D 1,
+> > +	.status_base =3D RN5T618_INTMON,
+> > +	.mask_base =3D RN5T618_INTEN,
+> > +	.mask_invert =3D true,
+> > +};
+> > +
+> > +int rn5t618_irq_init(struct rn5t618 *rn5t618)
+> > +{
+> > +	const struct regmap_irq_chip *irq_chip;
+> > +	int ret;
+> > +
+> > +	if (!rn5t618->chip_irq)
+> > +		return 0;
+> > +
+> > +	switch (rn5t618->variant) {
+> > +	case RC5T619:
+> > +		irq_chip =3D &rc5t619_irq_chip;
+> > +		break;
+> > +
+> > +		/* TODO: check irq definitions for other variants */ =20
+>=20
+> No need for this.  It's implied.
+>=20
+> OOI, when support for more variants be added?
+>=20
+I have done research about the RN5T618. It has just the RTC IRQ missing, I =
+could just
+add the table for it to prepare the path for others. I cannot test it but
+since there are no users yet, it does not harm that it is not well-tested.
+
+No idea about the RN5T567.
+
+> > +	default:
+> > +		irq_chip =3D NULL;
+> > +		break;
+> > +	}
+> > +
+> > +	if (!irq_chip) {
+> > +		dev_err(rn5t618->dev, "no IRQ definition known for variant\n"); =20
+>=20
+> How about '"Variant %d not currently supported", rn5t618->variant'
+>=20
+makes sense.
+
+> > +		return -ENOENT;
+> > +	}
+> > +
+> > +	ret =3D devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
+> > +				       rn5t618->chip_irq,
+> > +				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> > +				       0, irq_chip, &rn5t618->irq_data);
+> > +	if (ret !=3D 0) { =20
+>=20
+> if (ret)
+>=20
+> > +		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+> > index d62ef48060b5..edd2b6485e3b 100644
+> > --- a/include/linux/mfd/rn5t618.h
+> > +++ b/include/linux/mfd/rn5t618.h
+> > @@ -242,9 +242,25 @@ enum {
+> >  	RC5T619,
+> >  };
+> > =20
+> > +/* RN5T618 IRQ definitions */
+> > +enum {
+> > +	RN5T618_IRQ_SYS, =20
+>=20
+> =3D 0?
+>=20
+> > +	RN5T618_IRQ_DCDC,
+> > +	RN5T618_IRQ_RTC,
+> > +	RN5T618_IRQ_ADC,
+> > +	RN5T618_IRQ_GPIO,
+> > +	RN5T618_IRQ_CHG,
+> > +	RN5T618_NR_IRQS,
+> > +};
+> > +
+> >  struct rn5t618 {
+> >  	struct regmap *regmap;
+> > +	struct device *dev;
+> >  	long variant;
+> > +
+> > +	int chip_irq; =20
+>=20
+> Are there any other kinds of IRQ?
+>=20
+there is some separate battery low input for the charger which
+could be modeled as an IRQ.
+But that could be handled entirely there when I am at it and
+in the corresponding subdevice.=20
+
+Regards,
+Andreas
+
+--Sig_/Dv09M1d72KUKicRX56C2L8A
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl3vztQACgkQl4jFM1s/
+ye94Eg//X7sWu/swNKNaYfDxa1hoIU7i4W0iEJiDxN47uejAeMeMgFPb+C0H/Hjs
+JCYmHgdu96WQQ48qW7oaKQmZ3zhTNTHE4LiUYIrpwPoSbwSbk4Q3MD1wLGUN88kq
+txmt5l+l7rVjkP0LOo/HFb8qmVSAwrlR4OXUpX3cs//qFBed/n5jhW69TZJAJXl7
++jZA+c57Nz5zlNFghm98izQNXPHE6Q57xZmR9C8rNKJeoKSyu1y6zC9FDeEgjfKm
+EQVktS86hfDbClkrvl1juecoRtmygDc8RW7gz0MGLYreTayQXUAT0WGimExP4OD9
+7916tP9ddJ/HJSzvCC2E7HfTi/z3fCPOYfLkr26f7EWFOjQ+Vhi6XucJnnpa7i4G
+kXUfXvDg0GEAJNR4btxRlzdXfUQAPBgRM9gbaw/Cys6QC7XZLd3X9+IfEzgha1Ow
+DA2JocsJ6K2GKbQmMS/EGYHpL1yJo4ayZ3yykOmWSUGCaG7CTzbZL08B/K/Z0KOQ
+FXPXGUTLiIhPnUwgpVEDrSvS074MN3rWnT0hz5CQpCH8h5QbqTsa4cvxaLoNccqo
+5yx0QB8yFD5nQbKVRdA4MAyagRilhd22Ei6meJmOT/ahBCcp/gQeg5vFp6bq85BR
+P9B6F0nP8vF1Lo14ARoMBqKyu84uM8bFLyzkNGpkptwlZ0AaEY0=
+=4yQw
+-----END PGP SIGNATURE-----
+
+--Sig_/Dv09M1d72KUKicRX56C2L8A--
