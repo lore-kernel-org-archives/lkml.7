@@ -2,103 +2,121 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F45AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DB52073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575978513;
-	bh=8d0SrljTHsF+EaguAIGZIxPZ5IZZN2GfwLBZI3M/vBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAhwjLynbEwsu6pcHLNyi8Acyz82k+nhM6mj0XWL7ix0Wwa0qKYjadCFl1Lhht+uU
-	 nmNUDHrcuqJ/c1SYtGVJde2LiHbSpMSXnQYOqh75e8Dm4QROOOW+ZZ+sfUeP8LnZrS
-	 CgB73GFZt1TdyO0e0LxIUyLHA8qg4ugwi0cyIy9k=
+	by mail.kernel.org (Postfix) with ESMTP id 710AD2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfLJLsc (ORCPT
+        id S1727757AbfLJLsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:32 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44717 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLJLsB (ORCPT
+        Tue, 10 Dec 2019 06:48:37 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:43168 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727219AbfLJLr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:48:01 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so13420924lfa.11;
-        Tue, 10 Dec 2019 03:48:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5C4SF4dYqrrVgr3TXUeoZ9GHkn69qJJjE9pwXzPrJrg=;
-        b=Si+8ZLYo0AA6ktzMy5qnifeF6iHPmhrrKQGZFW+MWFY6p3HBdRO6AKtVTNG0zHD5dg
-         bcZLhSRdbuzF4Rv3BepQJd4sdJJqGofcdq9wlfhwfJutBsa63y0/3F2EvyZKGJ4fczM4
-         BkCEPKFxvHSDX18Q1Z14EZKyBosjGND3taU4OYOa9bqNQKKPYL2tW7cdTHPxNnqT1EJP
-         nFv9srB69i88zdPrUN7hfgjqCBdXfxbcQC6NN4y21C9dWl6qVDvQnUO5xPn4HUwXH/7I
-         LRmQiczx04H1jWpczSBm5EAqIJcOeLGdnpcj0reRCvAMQn3OWKkk/lNSGHZCEHA5NoPJ
-         v8zw==
-X-Gm-Message-State: APjAAAXnB9NGsgq0Exur1ctRlVzJAkeWNpsTniEYVHC6KW9LB9J/ntCC
-        7/pVcZ0aja8WVHBmlB7W5tZVhGf7
-X-Google-Smtp-Source: APXvYqxzDhvpXC8Gs8pOUopECbJJEaJy4ZsNQJ3HROeJjafJrIC0HjKI+nYfNFhmf3ZJhA1OTxsboA==
-X-Received: by 2002:ac2:4476:: with SMTP id y22mr18829851lfl.169.1575978479262;
-        Tue, 10 Dec 2019 03:47:59 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id i1sm1640753lji.71.2019.12.10.03.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iedzk-0001LQ-Ej; Tue, 10 Dec 2019 12:48:00 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        devel@driverdev.osuosl.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH 1/2] staging: rtl8188eu: fix interface sanity check
-Date:   Tue, 10 Dec 2019 12:47:50 +0100
-Message-Id: <20191210114751.5119-2-johan@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210114751.5119-1-johan@kernel.org>
-References: <20191210114751.5119-1-johan@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 06:47:59 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TkX6Iwu_1575978474;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkX6Iwu_1575978474)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Dec 2019 19:47:55 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: [PATCH v5 8/8] mm/lru: debug checking for page memcg moving and lock_page_memcg
+Date:   Tue, 10 Dec 2019 19:46:24 +0800
+Message-Id: <1575978384-222381-9-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+The extra irq disable/enable and BUG_ON checking costs 5% readtwice
+performance on a 2 socket * 26 cores * HT box.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Need to remove them later?
 
-Fixes: c2478d39076b ("staging: r8188eu: Add files for new driver - part 20")
-Cc: stable <stable@vger.kernel.org>     # 3.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/compaction.c |  4 ++++
+ mm/memcontrol.c | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-index 4fac9dca798e..a7cac0719b8b 100644
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -70,7 +70,7 @@ static struct dvobj_priv *usb_dvobj_init(struct usb_interface *usb_intf)
- 	phost_conf = pusbd->actconfig;
- 	pconf_desc = &phost_conf->desc;
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 0907eec3db84..7f750a9100af 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -972,6 +972,10 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
+ 			locked_lruvec = lruvec;
  
--	phost_iface = &usb_intf->altsetting[0];
-+	phost_iface = usb_intf->cur_altsetting;
- 	piface_desc = &phost_iface->desc;
++#ifdef	CONFIG_MEMCG
++			if (!mem_cgroup_disabled())
++				VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
++#endif
+ 			/* Try get exclusive access under lock */
+ 			if (!skip_updated) {
+ 				skip_updated = true;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 4a92689c37d6..833df0ce1bc1 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1255,6 +1255,10 @@ struct lruvec *lock_page_lruvec_irq(struct page *page)
+ 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
+ 	spin_lock_irq(&lruvec->lru_lock);
  
- 	pdvobjpriv->NumInterfaces = pconf_desc->bNumInterfaces;
++#ifdef CONFIG_MEMCG
++	if (!mem_cgroup_disabled())
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
++#endif
+ 	return lruvec;
+ }
+ 
+@@ -1267,6 +1271,10 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page, unsigned long *flags)
+ 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
+ 	spin_lock_irqsave(&lruvec->lru_lock, *flags);
+ 
++#ifdef CONFIG_MEMCG
++	if (!mem_cgroup_disabled())
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
++#endif
+ 	return lruvec;
+ }
+ 
+@@ -2015,6 +2023,11 @@ struct mem_cgroup *lock_page_memcg(struct page *page)
+ 	if (unlikely(!memcg))
+ 		return NULL;
+ 
++	/* temporary lockdep checking, need remove */
++	local_irq_save(flags);
++	might_lock(&memcg->move_lock);
++	local_irq_restore(flags);
++
+ 	if (atomic_read(&memcg->moving_account) <= 0)
+ 		return memcg;
+ 
 -- 
-2.24.0
+1.8.3.1
 
