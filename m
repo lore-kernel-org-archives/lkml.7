@@ -2,54 +2,51 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BCDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0F8205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F7120838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012468;
-	bh=/ksDbFlGRX6NYNxfX+vFNg4/P4WU9zfrrWSCuSQmOYc=;
+	s=default; t=1576012471;
+	bh=XM9dQd3kPg6XfL3Juj+uxV70f9dwsDukZaIS4aX6BTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G9Q4O7hikImZWdf0/SrRr5a6iTa3q5kobghJJndPsh0pNuxxH6PeecIeakibqGlCY
-	 vyvyFHXH2B+VRW0YxRgTo7NsZbhZNDH6Bu5SbrZHwozFecA4Y839PpWlig5ftLjLoN
-	 dTlxQaICotzz5Y9m0b03bcnPhFl3vEKAyZr2FM3U=
+	b=CBLMTjY+eY2JOepjYwGT8A+1H2dVGnrr/BeOqJsKnfJNzKdNNeP5HR7JeNaeUJWFh
+	 SG644rN679adZSYqt2RJAE1M8O+xmrzDtsxKwS0SHvmTbuP3x+yWEgfDy2yoe9Wwch
+	 +J/FYQVjhTRWtmP6idav+t+ceC0xZ7+UM9B3WOWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfLJVO1 (ORCPT
+        id S1729329AbfLJVO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:14:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729477AbfLJVNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:55 -0500
+        id S1729474AbfLJVNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC4920838;
-        Tue, 10 Dec 2019 21:13:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E6E214D8;
+        Tue, 10 Dec 2019 21:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012435;
-        bh=/ksDbFlGRX6NYNxfX+vFNg4/P4WU9zfrrWSCuSQmOYc=;
+        s=default; t=1576012433;
+        bh=XM9dQd3kPg6XfL3Juj+uxV70f9dwsDukZaIS4aX6BTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gt0UIjSvfwlxG0jy64tMAUFt0MhwbRtwyeZ01yz8ExwOwPRpSZJmQjcC3RWiYDIOW
-         9OzKNxg5lo9mW2CxQyaIwlboVE8NMagUv37YRs5HToy7cr6c0ztZM8PCv5LTZnHV5p
-         Ckz7eTnSNfcEkeDBB1BvHRlneD/eTwrsLcC4/3i0=
+        b=npsbdZeJnQ88ujnJEtNv+tC56hxEpZ8B5vE7/FCuTKDcOmItVYLQflxqs480DN+VN
+         u4ZAachV481OCt3/o/KDY7cpnvgg7rkirgR4gCyZ7YeBBAByBzh6geQha9SRIB3Uei
+         RL4DbOcTwU7c9Ma45K8zv9Pno5OC5DKoy4YnWx9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Starrett <luke.starrett@broadcom.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 347/350] RDMA/bnxt_re: Fix chip number validation Broadcom's Gen P5 series
-Date:   Tue, 10 Dec 2019 16:07:32 -0500
-Message-Id: <20191210210735.9077-308-sashal@kernel.org>
+Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 346/350] bpf: Provide better register bounds after jmp32 instructions
+Date:   Tue, 10 Dec 2019 16:07:31 -0500
+Message-Id: <20191210210735.9077-307-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,54 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Starrett <luke.starrett@broadcom.com>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit e284b159c6881c8bec9713daba2653268f4c4948 ]
+[ Upstream commit 581738a681b6faae5725c2555439189ca81c0f1f ]
 
-In the first version of Gen P5 ASIC, chip-id was always set to 0x1750 for
-all adaptor port configurations. This has been fixed in the new chip rev.
+With latest llvm (trunk https://github.com/llvm/llvm-project),
+test_progs, which has +alu32 enabled, failed for strobemeta.o.
+The verifier output looks like below with edit to replace large
+decimal numbers with hex ones.
+ 193: (85) call bpf_probe_read_user_str#114
+   R0=inv(id=0)
+ 194: (26) if w0 > 0x1 goto pc+4
+   R0_w=inv(id=0,umax_value=0xffffffff00000001)
+ 195: (6b) *(u16 *)(r7 +80) = r0
+ 196: (bc) w6 = w0
+   R6_w=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
+ 197: (67) r6 <<= 32
+   R6_w=inv(id=0,smax_value=0x7fffffff00000000,umax_value=0xffffffff00000000,
+            var_off=(0x0; 0xffffffff00000000))
+ 198: (77) r6 >>= 32
+   R6=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
+ ...
+ 201: (79) r8 = *(u64 *)(r10 -416)
+   R8_w=map_value(id=0,off=40,ks=4,vs=13872,imm=0)
+ 202: (0f) r8 += r6
+   R8_w=map_value(id=0,off=40,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
+ 203: (07) r8 += 9696
+   R8_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
+ ...
+ 255: (bf) r1 = r8
+   R1_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
+ ...
+ 257: (85) call bpf_probe_read_user_str#114
+ R1 unbounded memory access, make sure to bounds check any array access into a map
 
-Due to this missing fix users are not able to use adaptors based on latest
-chip rev of Broadcom's Gen P5 adaptors.
+The value range for register r6 at insn 198 should be really just 0/1.
+The umax_value=0xffffffff caused later verification failure.
 
-Fixes: ae8637e13185 ("RDMA/bnxt_re: Add chip context to identify 57500 series")
-Link: https://lore.kernel.org/r/1574317343-23300-2-git-send-email-devesh.sharma@broadcom.com
-Signed-off-by: Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Luke Starrett <luke.starrett@broadcom.com>
-Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+After jmp instructions, the current verifier already tried to use just
+obtained information to get better register range. The current mechanism is
+for 64bit register only. This patch implemented to tighten the range
+for 32bit sub-registers after jmp32 instructions.
+With the patch, we have the below range ranges for the
+above code sequence:
+ 193: (85) call bpf_probe_read_user_str#114
+   R0=inv(id=0)
+ 194: (26) if w0 > 0x1 goto pc+4
+   R0_w=inv(id=0,smax_value=0x7fffffff00000001,umax_value=0xffffffff00000001,
+            var_off=(0x0; 0xffffffff00000001))
+ 195: (6b) *(u16 *)(r7 +80) = r0
+ 196: (bc) w6 = w0
+   R6_w=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0x1))
+ 197: (67) r6 <<= 32
+   R6_w=inv(id=0,umax_value=0x100000000,var_off=(0x0; 0x100000000))
+ 198: (77) r6 >>= 32
+   R6=inv(id=0,umax_value=1,var_off=(0x0; 0x1))
+ ...
+ 201: (79) r8 = *(u64 *)(r10 -416)
+   R8_w=map_value(id=0,off=40,ks=4,vs=13872,imm=0)
+ 202: (0f) r8 += r6
+   R8_w=map_value(id=0,off=40,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
+ 203: (07) r8 += 9696
+   R8_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
+ ...
+ 255: (bf) r1 = r8
+   R1_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
+ ...
+ 257: (85) call bpf_probe_read_user_str#114
+ ...
+
+At insn 194, the register R0 has better var_off.mask and smax_value.
+Especially, the var_off.mask ensures later lshift and rshift
+maintains proper value range.
+
+Suggested-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191121170650.449030-1-yhs@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/qplib_res.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/bpf/verifier.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_res.h b/drivers/infiniband/hw/bnxt_re/qplib_res.h
-index fbda11a7ab1aa..aaa76d7921857 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_res.h
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_res.h
-@@ -186,7 +186,9 @@ struct bnxt_qplib_chip_ctx {
- 	u8	chip_metal;
- };
- 
--#define CHIP_NUM_57500          0x1750
-+#define CHIP_NUM_57508		0x1750
-+#define CHIP_NUM_57504		0x1751
-+#define CHIP_NUM_57502		0x1752
- 
- struct bnxt_qplib_res {
- 	struct pci_dev			*pdev;
-@@ -203,7 +205,9 @@ struct bnxt_qplib_res {
- 
- static inline bool bnxt_qplib_is_chip_gen_p5(struct bnxt_qplib_chip_ctx *cctx)
- {
--	return (cctx->chip_num == CHIP_NUM_57500);
-+	return (cctx->chip_num == CHIP_NUM_57508 ||
-+		cctx->chip_num == CHIP_NUM_57504 ||
-+		cctx->chip_num == CHIP_NUM_57502);
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 87181cd5bafd7..df033c5877cbe 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -978,6 +978,17 @@ static void __reg_bound_offset(struct bpf_reg_state *reg)
+ 						 reg->umax_value));
  }
  
- static inline u8 bnxt_qplib_get_hwq_type(struct bnxt_qplib_res *res)
++static void __reg_bound_offset32(struct bpf_reg_state *reg)
++{
++	u64 mask = 0xffffFFFF;
++	struct tnum range = tnum_range(reg->umin_value & mask,
++				       reg->umax_value & mask);
++	struct tnum lo32 = tnum_cast(reg->var_off, 4);
++	struct tnum hi32 = tnum_lshift(tnum_rshift(reg->var_off, 32), 32);
++
++	reg->var_off = tnum_or(hi32, tnum_intersect(lo32, range));
++}
++
+ /* Reset the min/max bounds of a register */
+ static void __mark_reg_unbounded(struct bpf_reg_state *reg)
+ {
+@@ -5433,6 +5444,10 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
+ 	/* We might have learned some bits from the bounds. */
+ 	__reg_bound_offset(false_reg);
+ 	__reg_bound_offset(true_reg);
++	if (is_jmp32) {
++		__reg_bound_offset32(false_reg);
++		__reg_bound_offset32(true_reg);
++	}
+ 	/* Intersecting with the old var_off might have improved our bounds
+ 	 * slightly.  e.g. if umax was 0x7f...f and var_off was (0; 0xf...fc),
+ 	 * then new var_off is (0; 0x7f...fc) which improves our umax.
+@@ -5542,6 +5557,10 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
+ 	/* We might have learned some bits from the bounds. */
+ 	__reg_bound_offset(false_reg);
+ 	__reg_bound_offset(true_reg);
++	if (is_jmp32) {
++		__reg_bound_offset32(false_reg);
++		__reg_bound_offset32(true_reg);
++	}
+ 	/* Intersecting with the old var_off might have improved our bounds
+ 	 * slightly.  e.g. if umax was 0x7f...f and var_off was (0; 0xf...fc),
+ 	 * then new var_off is (0; 0x7f...fc) which improves our umax.
 -- 
 2.20.1
 
