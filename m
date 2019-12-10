@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF326C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F4A2468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881D32467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011888;
-	bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
+	s=default; t=1576011895;
+	bh=rNb+H5LSxb9ktazmFlQfBcK/babKnR1gKD6EbEEnGtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XjVa6+KaWiuFXAFRdF19NGqJ7gYCyzPqsxfCKg0zaih+r+idr/7do4dqxxVe/8N6T
-	 VdYxMNWU2+qirfaCowPX819DGkhBei9jzByAM8KogrWCBCJ2zQ/eurQQJE8jcFmMcC
-	 yEI8xXkyqeVW8TCQiC69btQIXsd5RWvjZ6zioZxE=
+	b=k6Ghxh1Xscp7SxWZ5xmBqrr63JBy0waJ/clDc6s+shWn82OL8cZSxnD9aCIgnUSGn
+	 EhiUh6czpBwfegHFjGoGVqhiGlc1LnKr/S1E8Ga1JCa5urWCZcrQJ4pgEnRyMpl3b/
+	 O06JTV1e9TniuC3ygTgc0l3ZpC8RzDuMe2PM/hFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfLJVEr (ORCPT
+        id S1727605AbfLJVEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfLJVEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:38 -0500
+        id S1727527AbfLJVEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E501524684;
-        Tue, 10 Dec 2019 21:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10A702468B;
+        Tue, 10 Dec 2019 21:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011877;
-        bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
+        s=default; t=1576011886;
+        bh=rNb+H5LSxb9ktazmFlQfBcK/babKnR1gKD6EbEEnGtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h32rXEU4/NbMNr4UU1xCdOw/LqkZD42tvb/LH/fCPFtcHC298Rs5bFFPqx8K2CIsH
-         +KoOBOe94ffzP9SvJBY6bwoP3hxDEWWCWXn6fmza5CXCxU8eJCOhTU3UK7yMZw6woe
-         s+e5Bh25E3srr8KVzxAKYCojL1PJjoyi+SxC49qI=
+        b=iYoxRUfaUbDmURu4ByP++vhPEaZshmOiIhBnVT9pJ9Is3dnmcPxZFavPr8Mqlwzq5
+         I+fETX5pukwO0yBYBV2kZ3FJHbxDJwmGv9FSvFJSsVEeNI4ITzH+17KDSuDsGH5BTI
+         HIsFPETqK0m/cArr0SRby2RvB95FDGP/yi3sNyiI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 029/350] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
-Date:   Tue, 10 Dec 2019 15:58:41 -0500
-Message-Id: <20191210210402.8367-29-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/350] media: vim2m: Fix abort issue
+Date:   Tue, 10 Dec 2019 15:58:49 -0500
+Message-Id: <20191210210402.8367-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -60,79 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 7666dfd533d4c55733037775d47a8e3551b341a2 ]
+[ Upstream commit c362f77a243bfd1daec21b6c36491c061ee2f31b ]
 
-This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
+Currently, if start streaming -> stop streaming -> start streaming
+sequence is executed, driver will end job prematurely, if ctx->translen
+is higher than 1, because "aborting" flag is still set from previous
+stop streaming command.
 
-According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
-24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
-this errata merely fixed an accidental double definition in the Hardware
-User's Manual Rev. 1.00.  The real definition is still present in later
-revisions of the manual (Rev. 1.50 and Rev. 2.00).
+Fix that by clearing "aborting" flag in start streaming handler.
 
-Hence revert the commit to recover the definition.
-
-Based on a patch in the BSP by Takeshi Kihara
-<takeshi.kihara.df@renesas.com>.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Link: https://lore.kernel.org/r/20190904121658.2617-4-geert+renesas@glider.be
+Fixes: 96d8eab5d0a1 ("V4L/DVB: [v5,2/2] v4l: Add a mem-to-mem videobuf framework test device")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/vim2m.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-index 3808409cab385..5200dadd6b3ef 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
+diff --git a/drivers/media/platform/vim2m.c b/drivers/media/platform/vim2m.c
+index acd3bd48c7e21..2d79cdc130c58 100644
+--- a/drivers/media/platform/vim2m.c
++++ b/drivers/media/platform/vim2m.c
+@@ -1073,6 +1073,9 @@ static int vim2m_start_streaming(struct vb2_queue *q, unsigned int count)
+ 	if (!q_data)
+ 		return -EINVAL;
  
- /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
-+#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
- #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
- #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
- #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
-@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- 
- #define PINMUX_MOD_SELS	\
- \
-+			MOD_SEL1_31 \
- MOD_SEL0_30_29		MOD_SEL1_30 \
- 			MOD_SEL1_29 \
- MOD_SEL0_28		MOD_SEL1_28 \
-@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
--	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
-+	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
- 
- 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
- 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
-@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
--	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
-+	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
- 
- 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
- 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
-@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
- 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
- 			     GROUP(
--		/* RESERVED 31 */
--		0, 0,
-+		MOD_SEL1_31
- 		MOD_SEL1_30
- 		MOD_SEL1_29
- 		MOD_SEL1_28
++	if (V4L2_TYPE_IS_OUTPUT(q->type))
++		ctx->aborting = 0;
++
+ 	q_data->sequence = 0;
+ 	return 0;
+ }
 -- 
 2.20.1
 
