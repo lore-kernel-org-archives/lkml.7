@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29671C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6AEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EE820828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A072077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012822;
-	bh=k7/LvRIg+FVurNHsLIAF9XCyp1knTfLcFUKzl/naCUw=;
+	s=default; t=1576012827;
+	bh=qdaUEd6RSCneTSpQtuhwyYlffqnjWBzGQouSCxqiKgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EW9Gvmp/2kdOVG87QC4GDaETENFV0tpaCZGPhUyszR6dnI3WNWDDXoqflc5RNRT0K
-	 6F9DzW1h9K5qQlaotY4aGxn7Awem1ctCCTGTIUu2C2UbxQeF9zIEAaeIXKsyEkqUj0
-	 IZ1lbNUM2uw5xjTm4VwK/xM7OvqdUiVxapAYIiyY=
+	b=jl629j9UtFVS5xJhz+zAlAcxXxzNL/FV+I0bVUUVHCu+vCgPrbvc0ajNzFBVc1lNn
+	 CDPDiFd2ZP7hOs4W8hYOYkqvZcOt4QBklT4WN2tEqHkjl6q8zcNYL8l7AZrSoA0fS1
+	 e7AOIKUidp9m74ty7E8tmZAfZnVEdfs9+YAqp1AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfLJVMK (ORCPT
+        id S1729084AbfLJVU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35276 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:20:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbfLJVL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:59 -0500
+        id S1728381AbfLJVMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CAC24697;
-        Tue, 10 Dec 2019 21:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358B0246B5;
+        Tue, 10 Dec 2019 21:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012318;
-        bh=k7/LvRIg+FVurNHsLIAF9XCyp1knTfLcFUKzl/naCUw=;
+        s=default; t=1576012329;
+        bh=qdaUEd6RSCneTSpQtuhwyYlffqnjWBzGQouSCxqiKgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQw/wknF5eI4tOnh5/N+b0fQz6zDIJ4bkJAcq25ssWJweYRZmCF9qOlJomcqWH5s/
-         QEtKBlA4Au38torxja+IhfaZVpxhfAlnlZ8AgfgC11VgPZPld0JXBue6hkZajz+tgJ
-         Dy+sIrUOsZ79FCF9yEIc/+eDkMEImx6NWk9rB7Zo=
+        b=YqyeRVFqpx4daUCRMeRCId8Rv2j5CafFRqo2fMJNtWlV0hf9+5gOG1xegoMhy8i5N
+         i1wqFDsS11fvmdb65ETjROwvYqIlDwNa3ExGnPWrTy0OKJqZOrBnupj+NmEPngMrBW
+         Jcx4P2nwGXjdngFMXVm4+U2/ZMq+oHlMd0xS+MHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Isely <isely@pobox.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 252/350] media: pvrusb2: Fix oops on tear-down when radio support is not present
-Date:   Tue, 10 Dec 2019 16:05:57 -0500
-Message-Id: <20191210210735.9077-213-sashal@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 261/350] EDAC/ghes: Fix grain calculation
+Date:   Tue, 10 Dec 2019 16:06:06 -0500
+Message-Id: <20191210210735.9077-222-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,57 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Isely <isely@pobox.com>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
+[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
 
-In some device configurations there's no radio or radio support in the
-driver.  That's OK, as the driver sets itself up accordingly.  However
-on tear-down in these caes it's still trying to tear down radio
-related context when there isn't anything there, leading to
-dereferences through a null pointer and chaos follows.
+The current code to convert a physical address mask to a grain
+(defined as granularity in bytes) is:
 
-How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-mystery to me.
+	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
 
-[hverkuil: fix two checkpatch warnings]
+This is broken in several ways:
 
-Signed-off-by: Mike Isely <isely@pobox.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+1) It calculates to wrong grain values. E.g., a physical address mask
+of ~0xfff should give a grain of 0x1000. Without considering
+PAGE_MASK, there is an off-by-one. Things are worse when also
+filtering it with ~PAGE_MASK. This will calculate to a grain with the
+upper bits set. In the example it even calculates to ~0.
+
+2) The grain does not depend on and is unrelated to the kernel's
+page-size. The page-size only matters when unmapping memory in
+memory_failure(). Smaller grains are wrongly rounded up to the
+page-size, on architectures with a configurable page-size (e.g. arm64)
+this could round up to the even bigger page-size of the hypervisor.
+
+Fix this with:
+
+	e->grain = ~mem_err->physical_addr_mask + 1;
+
+The grain_bits are defined as:
+
+	grain = 1 << grain_bits;
+
+Change also the grain_bits calculation accordingly, it is the same
+formula as in edac_mc.c now and the code can be unified.
+
+The value in ->physical_addr_mask coming from firmware is assumed to
+be contiguous, but this is not sanity-checked. However, in case the
+mask is non-contiguous, a conversion to grain_bits effectively
+converts the grain bit mask to a power of 2 by rounding it up.
+
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/edac/ghes_edac.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index a34717eba409b..eaa08c7999d4f 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -898,8 +898,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
- 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
--	    !list_empty(&vp->dev_radio->devbase.fh_list))
-+	    (vp->dev_radio &&
-+	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-+		pvr2_trace(PVR2_TRACE_STRUCT,
-+			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
- 		return;
-+	}
- 	pvr2_v4l2_destroy_no_lock(vp);
- }
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index f6f6a688c009d..1858baa96211b 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -231,6 +231,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	/* Cleans the error report buffer */
+ 	memset(e, 0, sizeof (*e));
+ 	e->error_count = 1;
++	e->grain = 1;
+ 	strcpy(e->label, "unknown label");
+ 	e->msg = pvt->msg;
+ 	e->other_detail = pvt->other_detail;
+@@ -326,7 +327,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
  
-@@ -935,7 +939,8 @@ static int pvr2_v4l2_release(struct file *file)
- 	kfree(fhp);
- 	if (vp->channel.mc_head->disconnect_flag &&
- 	    list_empty(&vp->dev_video->devbase.fh_list) &&
--	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-+	    (!vp->dev_radio ||
-+	     list_empty(&vp->dev_radio->devbase.fh_list))) {
- 		pvr2_v4l2_destroy_no_lock(vp);
- 	}
- 	return 0;
+ 	/* Error grain */
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+-		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
++		e->grain = ~mem_err->physical_addr_mask + 1;
+ 
+ 	/* Memory error location, mapped on e->location */
+ 	p = e->location;
+@@ -442,8 +443,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) = '\0';
+ 
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
++
++	grain_bits = fls_long(e->grain - 1);
++
+ 	/* Generate the trace event */
+-	grain_bits = fls_long(e->grain);
+ 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+ 		 "APEI location: %s %s", e->location, e->other_detail);
+ 	trace_mc_event(type, e->msg, e->label, e->error_count,
 -- 
 2.20.1
 
