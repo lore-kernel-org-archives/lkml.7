@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C67FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E62C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DA520637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B59F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015511;
-	bh=czWuvlV9URtwlCcqjfP+/2aCPH16Qa+KXq7McMfhOnY=;
+	s=default; t=1576015515;
+	bh=bUapwW9hxA9yG13dhWbibDtVoEwpmtvoM5yQzER5YyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPpl00+SyDCc2e/sCfghN7W3VUfulzp2twS90BIa+HyrskOrSsauXHUZ9XeiCM1Ho
-	 QRVu+Hew3Wz7aZKkdin30Luh3LNab+4tEUd4mzGVMwv5WkP641kfyIG/32GL1rbnxH
-	 v/5kcEKO2oL2ADvt9l7Ez51/qAH3UEgsEdPwBo7k=
+	b=t3M1a4oulNtHd9cceY1J7SYi9vWtD6yLlZVkJaAygrhC2fezoKkIfaFW9rCLcu5HM
+	 zVy/xG0rRZF6qGpevzhVUAIWHzD6YOAeBLBxHSnx+jW38BksKWWgWZOED81fVp6WGb
+	 Jp4FmHFshz16GbU63zIH6jNeu6ZyFTj2Tpc7850I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbfLJWFJ (ORCPT
+        id S1727950AbfLJWFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35984 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfLJWEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:54 -0500
+        id S1729262AbfLJWE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DC321D7D;
-        Tue, 10 Dec 2019 22:04:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3330622B48;
+        Tue, 10 Dec 2019 22:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015493;
-        bh=czWuvlV9URtwlCcqjfP+/2aCPH16Qa+KXq7McMfhOnY=;
+        s=default; t=1576015497;
+        bh=bUapwW9hxA9yG13dhWbibDtVoEwpmtvoM5yQzER5YyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ClRxLnnxXg9v+V/bPXHnG1XDUJCQzdimEfl15szfMT1tNmv8cq8p/VLEHs8bIdIGT
-         BT6RQW0n0Lqwx4Qrno2C6ntWqgIKgcEcVcx+oZiQTbNam85auWA3lK6KPdklata09A
-         L1FzL10mXvHjk4Ta0pcJCz8YZa98gB4uv7hojS18=
+        b=YNbm2k1Lq9k0015M3DX8Me4Y/mBfil00atsH1qIzv9jg0tpVooqlDmIIRJPdVx3Mz
+         s0JzBP0PtfpNCmJimfI0py4YPEicn2O5csEqCwkRvWdfqNoO/BNJT/CW1VlLpOCGpL
+         RrSI31T/g0guPdzkM8T+apLL7JxuyoOmyetkuiW4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 094/130] perf probe: Fix to show calling lines of inlined functions
-Date:   Tue, 10 Dec 2019 17:02:25 -0500
-Message-Id: <20191210220301.13262-94-sashal@kernel.org>
+Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
+        Hou Bao Hou <houbao@codeaurora.org>,
+        Anilkumar Kolli <akolli@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 097/130] ath10k: fix get invalid tx rate for Mesh metric
+Date:   Tue, 10 Dec 2019 17:02:28 -0500
+Message-Id: <20191210220301.13262-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,120 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 86c0bf8539e7f46d91bd105e55eda96e0064caef ]
+[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
 
-Fix to show calling lines of inlined functions (where an inline function
-is called).
+ath10k does not provide transmit rate info per MSDU
+in tx completion, mark that as -1 so mac80211
+will ignore the rates. This fixes mac80211 update Mesh
+link metric with invalid transmit rate info.
 
-die_walk_lines() filtered out the lines inside inlined functions based
-on the address. However this also filtered out the lines which call
-those inlined functions from the target function.
+Tested HW: QCA9984
+Tested FW: 10.4-3.9.0.2-00035
 
-To solve this issue, check the call_file and call_line attributes and do
-not filter out if it matches to the line information.
-
-Without this fix, perf probe -L doesn't show some lines correctly.
-(don't see the lines after 17)
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-                                  fsnotify_access(file);
-                                  add_rchar(current, ret);
-                          }
-
-With this fix:
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-       17                         fsnotify_access(file);
-       18                         add_rchar(current, ret);
-                          }
-       20                 inc_syscr(current);
-                  }
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 0a5de865563cf..49f9c65f1a9c1 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -768,7 +768,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	Dwarf_Lines *lines;
- 	Dwarf_Line *line;
- 	Dwarf_Addr addr;
--	const char *fname, *decf = NULL;
-+	const char *fname, *decf = NULL, *inf = NULL;
- 	int lineno, ret = 0;
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
-@@ -812,13 +812,21 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 			 */
- 			if (!dwarf_haspc(rt_die, addr))
- 				continue;
-+
- 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
-+				/* Call-site check */
-+				inf = die_get_call_file(&die_mem);
-+				if ((inf && !strcmp(inf, decf)) &&
-+				    die_get_call_lineno(&die_mem) == lineno)
-+					goto found;
-+
- 				dwarf_decl_line(&die_mem, &inl);
- 				if (inl != decl ||
- 				    decf != dwarf_decl_file(&die_mem))
- 					continue;
- 			}
- 		}
-+found:
- 		/* Get source line */
- 		fname = dwarf_linesrc(line, NULL, NULL);
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index d4986f626c35c..9999c8c40269d 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -100,6 +100,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
  
+ 	info = IEEE80211_SKB_CB(msdu);
+ 	memset(&info->status, 0, sizeof(info->status));
++	info->status.rates[0].idx = -1;
++
+ 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
+ 
+ 	if (tx_done->status == HTT_TX_COMPL_STATE_DISCARD) {
 -- 
 2.20.1
 
