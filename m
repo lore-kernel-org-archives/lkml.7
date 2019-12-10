@@ -2,90 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0D1C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA9C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D4F20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575978492;
-	bh=WdQ8uzKRyzMp22Qhf5vcnt/N7u4psSl5tSqD7IiYtM4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=k/bbggT5u6papjOvTZDiVeCXe1S5l8uGaMWgxOwiSt8SIls/uRZ/g0/7bM9rolpht
-	 hgaIts5HkUYQhnzZ7c9EGUJkQEq9fk0HtPYD/2UMvBUNRviBJ7QSr9k/3q8qoHqayZ
-	 WnCdcBXk4Fan7A813/1aER+QEOUAggoT20tcK8O0=
+	by mail.kernel.org (Postfix) with ESMTP id 9749F2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfLJLsE (ORCPT
+        id S1727520AbfLJLsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:04 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33206 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLJLsB (ORCPT
+        Tue, 10 Dec 2019 06:48:13 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38675 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727525AbfLJLsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:48:01 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so13511968lfl.0;
-        Tue, 10 Dec 2019 03:47:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fo/kQPoTgufoLl6OwS4X1boPbPzO5kmha82cPWUC2hI=;
-        b=OdNe0vn+8QvjfD8P6ecHAg/78T9yojBKTgVES0rTqrwJ1Zmy20dX2afqpFVknXapY2
-         W3OZQTRXrUhYcPcKcD4IgjlU+ioQDUYOLP1NmWBGHlhvoBsyu8k46DA+eaXWFEcnpe8/
-         zT4i5XuL1KmwBMabU7yV/yN4C86cCw0vxffqwWge9WYZR8gr7/k4ukoviGHai4kOO+Eg
-         1DOfZ/+aI6DCRAsP5FzTGeZ5yZFUfSWHRe/2jCUpcRiIztCGP3nRmEWUr7YKE+Ukuwm2
-         hykpNogYp3dWv6bLP7yr6B1eZtbqtGLOojYHj4Jxa/Q+Un10S7EsdDw2fmvbRN7ccE91
-         cRRA==
-X-Gm-Message-State: APjAAAXJ+LrgAJncIsn7f9e8n0hCcPlHf9ECqnTBt4QSzkR2JZaia4Xb
-        CbOjeZ5acO93W4UQIUzarFmM/hSS
-X-Google-Smtp-Source: APXvYqxRUBIZ41AnH3QnCgB0Q1gJnSjg59UHuxgq9xRqKYyhr1qDqMrwe00Je2S+QZyu/YP+ZLbnuA==
-X-Received: by 2002:ac2:4849:: with SMTP id 9mr18316401lfy.11.1575978478770;
-        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id e21sm1757836lfc.63.2019.12.10.03.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iedzk-0001LN-An; Tue, 10 Dec 2019 12:48:00 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
-        devel@driverdev.osuosl.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 0/2] staging: fix USB altsetting bugs
-Date:   Tue, 10 Dec 2019 12:47:49 +0100
-Message-Id: <20191210114751.5119-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 06:48:08 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0TkXAoo._1575978473;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkXAoo._1575978473)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Dec 2019 19:47:54 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: [PATCH v5 6/8] mm/pgdat: remove pgdat lru_lock
+Date:   Tue, 10 Dec 2019 19:46:22 +0800
+Message-Id: <1575978384-222381-7-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We had quite a few drivers using the first alternate setting instead of
-the current one when doing descriptor sanity checks. This is mostly an
-issue on kernels with panic_on_warn set due to a WARN() in
-usb_submit_urb(), but since we've started backporting such fixes (e.g.
-as reported by syzbot), I've marked these for stable as well.
+Now pgdat.lru_lock was replaced by lruvec lock. It's not used anymore.
 
-Johan
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+---
+ include/linux/mmzone.h | 1 -
+ mm/page_alloc.c        | 1 -
+ 2 files changed, 2 deletions(-)
 
-
-Johan Hovold (2):
-  staging: rtl8188eu: fix interface sanity check
-  staging: rtl8712: fix interface sanity check
-
- drivers/staging/rtl8188eu/os_dep/usb_intf.c | 2 +-
- drivers/staging/rtl8712/usb_intf.c          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index a13b8a602ee5..a9334c8d42c8 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -734,7 +734,6 @@ struct deferred_split {
+ 
+ 	/* Write-intensive fields used by page reclaim */
+ 	ZONE_PADDING(_pad1_)
+-	spinlock_t		lru_lock;
+ 
+ #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+ 	/*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index f5ecbacb0e04..e8f2c8f755f4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6803,7 +6803,6 @@ static void __meminit pgdat_init_internals(struct pglist_data *pgdat)
+ 	init_waitqueue_head(&pgdat->pfmemalloc_wait);
+ 
+ 	pgdat_page_ext_init(pgdat);
+-	spin_lock_init(&pgdat->lru_lock);
+ 	lruvec_init(&pgdat->__lruvec);
+ }
+ 
 -- 
-2.24.0
+1.8.3.1
 
