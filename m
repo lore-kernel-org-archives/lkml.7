@@ -2,135 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F033EC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F2C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59062077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575981942;
-	bh=BwdDEsRyP1FN087aCkpEelb6uamwGsSzpEAVkxjQrlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0t4roRkMuhOVRURYe51Tv64izhpV8u/BZX75t5W3eDEV7yDgm3GFcNdF0zW3dyW8Y
-	 +cb925CMjVHIhzCMeAxKYeLwNR9Cq53ICcRDT85P1Nsq4uYIa58p0KI6Zycc4QHRnl
-	 GbghQXdPawz5r2HndD2YJ37eIUc0+nuGsK5wRi7E=
+	by mail.kernel.org (Postfix) with ESMTP id 85BC62073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfLJMpm (ORCPT
+        id S1727385AbfLJMqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:45:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:42958 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbfLJMpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:45:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C1B1FB;
-        Tue, 10 Dec 2019 04:45:40 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51F903F52E;
-        Tue, 10 Dec 2019 04:45:39 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:45:37 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        Tue, 10 Dec 2019 07:46:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727131AbfLJMqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:46:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 44A83ABC4;
+        Tue, 10 Dec 2019 12:46:47 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 13:46:46 +0100
+Message-ID: <s5h1rtccpqh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191210124537.GD6110@sirena.org.uk>
-References: <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
- <20191210121129.GA6110@sirena.org.uk>
- <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
-Content-Disposition: inline
-In-Reply-To: <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        alexander.deucher@amd.com, tiwai@suse.de
+Subject: Re: Linux v5.5 serious PCI bug
+In-Reply-To: <20191210122941.zzybs4z5jphpjsu2@wunner.de>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <20191209131239.GP2665@lahna.fi.intel.com>
+        <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <20191210072800.GY2665@lahna.fi.intel.com>
+        <PSXP216MB04384F89D9D9DDA6999347CF805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <20191210122941.zzybs4z5jphpjsu2@wunner.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 10 Dec 2019 13:29:41 +0100,
+Lukas Wunner wrote:
+> 
+> [cc += Alex, Takashi]
+> 
+> On Tue, Dec 10, 2019 at 12:00:23PM +0000, Nicholas Johnson wrote:
+> > On Tue, Dec 10, 2019 at 09:28:00AM +0200, mika.westerberg@linux.intel.com wrote:
+> > > On Mon, Dec 09, 2019 at 01:33:49PM +0000, Nicholas Johnson wrote:
+> > > > On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
+> > > > > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
+> > > > > > I have compiled Linux v5.5-rc1 and thought all was good until I 
+> > > > > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
+> > > > > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
+> > > > > > GPU driver.
+> > > > > > 
+> > > > > > We had:
+> > > > > > - kernel NULL pointer dereference
+> > > > > > - refcount_t: underflow; use-after-free.
+> > 
+> > The following is the culprit responsible for the issues:
+> > 
+> > commit 586bc4aab878efcf672536f0cdec3d04b6990c94
+> > Author: Alex Deucher <alexander.deucher@amd.com>
+> > Date:   Fri Nov 22 16:43:50 2019 -0500
+> > 
+> >     ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD
+> 
+> Does the below fix the issue?
+> 
+> -- >8 --
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index 35b4526f0d28..b856b89378ac 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
+>  				return true;
+>  			}
+>  		}
+> -		pci_dev_put(pdev);
+>  	}
+>  	return false;
+>  }
 
---eqp4TxRxnD4KrmFZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Oh this looks really like a bug, even if this isn't the root cause.
 
-On Tue, Dec 10, 2019 at 12:41:47PM +0000, Vaittinen, Matti wrote:
+Care to submit a proper patch?
 
-> The thing is that if we do initial setting of voltages (based on
-> binding data) we can set the voltages to registers before we switch to
-> that run-level. If we don't do initial setting then we will only do
-> setting when voltage change is actually requested - which may be too
-> late. (I actually heard somewhere that there is 40 uS time limit - but
-> I don't see how this is counted. Starting from what? - and I don't see
-> how this is guaranteed even with GPIO if interrupts are to be served).
 
-I suspect that if that limit is a real thing it's from some runtime
-performance metrics where people are doing benchmarking to verify that
-everything is working fine rather than an absolute thing that is a basic
-requirement for operation.
+thanks,
 
-> So, I am again wondering if I should just upstream the basic control
-> with I2C for SoCs which do not require fast DVS voltage changes and
-> perhaps maintain/provide own set of patches with additional interface
-> for run-level control for those customers who require it... Sorry for
-> being such a difficult guy. Decision making seems to not be my strong
-> point :/
-
-Yes, definitely submit the basic stuff separately - the GPIO changes can
-be reviewed as a separate, incremental patch.
-
---eqp4TxRxnD4KrmFZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vk3EACgkQJNaLcl1U
-h9Bvzgf+OZFrjIN4TOeKvgJNSsiobO5Bs89BP1ju3K4lv6xdMQ3fvnRTWKKCtbsb
-UZpmBdkVI6WQplfTQvAup1x6f9Uvxqngq2TsZKwm1JkfZY6CkoelQayXILnLCNgZ
-c4lOSXdIceavGUIzXvcy9DrOLvixaQRFcSTxKblkDQ4k1nCpdCfyZ2zTC0UxFVB4
-wtHK9/TuD83EfEXTC0U+jSoTlqXB6SGY8iMNbUiV2wUQJGlZVBAM6kCneaDGMk1S
-tAO0+eUBuaT2MCYm/AHdjX4YxZGqstLzZJ7RAbHlVu/kW6xY4XN9oOi8TXkWZaH+
-shZxrjt43yVFuIqZGsKNKD++GvSPdg==
-=ttCh
------END PGP SIGNATURE-----
-
---eqp4TxRxnD4KrmFZ--
+Takashi
