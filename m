@@ -2,114 +2,164 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7562DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8575EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E4820828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD282077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5gdEnXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfLJOzU (ORCPT
+        id S1727862AbfLJOzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:55:20 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41533 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfLJOzT (ORCPT
+        Tue, 10 Dec 2019 09:55:23 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34566 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfLJOzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:55:19 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r27so15701560otc.8;
-        Tue, 10 Dec 2019 06:55:19 -0800 (PST)
+        Tue, 10 Dec 2019 09:55:22 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j11so6389638pjs.1;
+        Tue, 10 Dec 2019 06:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=O0mxM2akhs1azWPtzdXiIb6fHUMPLCLScLzWjLvsN/k=;
+        b=f5gdEnXu/jpogrrmQnS3TU7rCbVYwV4sl7HWZYj8XCwQDRsudZh0YdckkFN3kLU3Tx
+         S62mgMTtsKuyYT5NGuWuHNR922jc13dCiCJdUXqGXsmES2w8L8cWvQSqREg0xroCcWzL
+         Sk5wyFl6i0rWt0jOCaSCRUzBV3sSdhSgAy0HgBtZpHYjFSjJl3UFWW7TXgWoGaa8VR1Z
+         wRtGef/BkhlmHX7oMKTe4p+ydhN/hHqktqKE71S4QoNKdkwsVZWOoTnHQhwr6qYf8fK9
+         EsfeMbCCuL6nGygWwB87o8pDHeP1XE+JlOOzD55FKV0uGG0WJ6Bao9qSklsxXEYJNG1B
+         zHnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sxfx8pYcfnvd3lqW1qImtgwu7XzTFQuwrY147FPzqGI=;
-        b=YRyoRk57De2c4zcSJKKnR566euN0kLevtMG85WIwzl6M5FpKJB8pwbGP7AXKM/AxNd
-         Nld0WUKfOFGhYIP/P9/7IIHExb8cIuXnM2VW/xex87Lf5HVnpdP+yYZU174NpKDyQRqc
-         2lQt2tl7oYMNaEalKntzAUizrWIu8B49ampjbXzPOC4n2KaUwLcPzTLHIk2VqO4abL8n
-         QjNJ1sFFblQfRywwVVOrgjukQnGbtxQ9ISQBA+XLye86Jh/jJc/lzK6TjDoOQ5pheEkr
-         LmVFfg6HKM+rjMQ2DaOyJQ4QOd2/zeDn5oj/guSfnIwQvfgcJ55XIdh1eE8uDWCdC3U1
-         CXtg==
-X-Gm-Message-State: APjAAAWk81x3IigLOJ6XIdcsylnqR2yoJuBQKGsBAL23Rtm7sziZQ8S+
-        x6acJ/4ojIc5MjGLF5ICbGRdyGWB1Sgva0N0gRY=
-X-Google-Smtp-Source: APXvYqyvpesdaROFU80iQbYfg6jNyZzt/R79xRmZAAQaMqkHwq20yaDGs/xYgnPW9xtctjeHu1wtxLpcUrAqR6E22Hg=
-X-Received: by 2002:a9d:6c81:: with SMTP id c1mr24883423otr.39.1575989718977;
- Tue, 10 Dec 2019 06:55:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=O0mxM2akhs1azWPtzdXiIb6fHUMPLCLScLzWjLvsN/k=;
+        b=LUL8AJC9VrVN/woCKlmCCQFm2hVqF8ebJSqkQG8yH7vi/fOM5cCxatuuar0+rGiPLn
+         rbiQ2DnivH81NiNfolLguksSFUX5ue9Nh9GL8+lj/qutB7pxV2U440w8F/qNDnAH7IwT
+         IWd1OEKeq+EjcLFv2Ufc7ROqN0OeI/wSDWcrADTRJ+YmlLrA+QT9/rHjqw55+q3BS3o+
+         LEjtolVIZlfiDrc3UypcSWoQgJ6aP63XYwQKewsZ2XwzS9p1rlJj12I7jEKsR1Zhyl0f
+         t9O5VLFMiL7/lTBK2nN0N7JWVKzUKI+qXBIWBJq9ocWHFAjv4huB8xm7pbomHNPBsmZv
+         sZhg==
+X-Gm-Message-State: APjAAAW/Aswp81I6aHpmZzLvEzFmqT3u5cEvFIvgd4nE6wqxORzkGhzB
+        5XKlo2sMXrXnfjTcwUOyEHg=
+X-Google-Smtp-Source: APXvYqxZhrwjqd8WvaspMBoCdMauMryqbbfQfMaCo9PcP1VwqPlCTsMO1HUsCqw6oIl1IMzv7OexvA==
+X-Received: by 2002:a17:902:409:: with SMTP id 9mr35448362ple.306.1575989721931;
+        Tue, 10 Dec 2019 06:55:21 -0800 (PST)
+Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id e16sm3731207pff.181.2019.12.10.06.55.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 06:55:21 -0800 (PST)
+Date:   Tue, 10 Dec 2019 22:55:15 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Message-ID: <20191210145515.GB3509@sol>
+References: <20191210021525.13455-1-warthog618@gmail.com>
+ <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191030184844.84219-1-edumazet@google.com>
-In-Reply-To: <20191030184844.84219-1-edumazet@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 10 Dec 2019 15:55:08 +0100
-Message-ID: <CAMuHMdVK=dUxhJh1pjLe4bGn3V=FHJ_90oga0USRBw-wSqd8Pw@mail.gmail.com>
-Subject: Re: [PATCH] dma-debug: increase HASH_SIZE
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 8:13 PM Eric Dumazet <edumazet@google.com> wrote:
-> With modern NIC, it is not unusual having about ~256,000 active dma
-> mappings. Hash size of 1024 buckets is too small.
->
-> Forcing full cache line per bucket does not seem useful,
-> especially now that we have a contention on free_entries_lock
-> for allocations and freeing of entries. Better using space
-> to fit more buckets.
->
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  kernel/dma/debug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-> index 4ad74f5987ea9e95f9bb5e2d1592254e367d24fb..35e2a853bff9c482d789ab331d79aaee07753a97 100644
-> --- a/kernel/dma/debug.c
-> +++ b/kernel/dma/debug.c
-> @@ -27,7 +27,7 @@
->
->  #include <asm/sections.h>
->
-> -#define HASH_SIZE       1024ULL
-> +#define HASH_SIZE       16384ULL
->  #define HASH_FN_SHIFT   13
->  #define HASH_FN_MASK    (HASH_SIZE - 1)
->
-> @@ -87,7 +87,7 @@ typedef bool (*match_fn)(struct dma_debug_entry *, struct dma_debug_entry *);
->  struct hash_bucket {
->         struct list_head list;
->         spinlock_t lock;
-> -} ____cacheline_aligned_in_smp;
-> +};
->
->  /* Hash list to save the allocated dma addresses */
->  static struct hash_bucket dma_entry_hash[HASH_SIZE];
+On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
+> wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > Restore the external behavior of gpio-mockup to what it was prior to the
+> > change to using GPIO_LINE_DIRECTION.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >
+> > Fix a regression introduced in v5.5-rc1.
+> >
+> > The change to GPIO_LINE_DIRECTION reversed the polarity of the
+> > dir field within gpio-mockup.c, but overlooked inverting the value on
+> > initialization and when returned by gpio_mockup_get_direction.
+> > The latter is a bug.
+> > The former is a problem for tests which assume initial conditions,
+> > specifically the mockup used to initialize chips with all lines as inputs.
+> > That superficially appeared to be the case after the previous patch due
+> > to the bug in gpio_mockup_get_direction.
+> >
+> >  drivers/gpio/gpio-mockup.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > index 56d647a30e3e..c4fdc192ea4e 100644
+> > --- a/drivers/gpio/gpio-mockup.c
+> > +++ b/drivers/gpio/gpio-mockup.c
+> > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+> >         int direction;
+> >
+> >         mutex_lock(&chip->lock);
+> > -       direction = !chip->lines[offset].dir;
+> > +       direction = chip->lines[offset].dir;
+> >         mutex_unlock(&chip->lock);
+> >
+> >         return direction;
+> > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> >         struct gpio_chip *gc;
+> >         struct device *dev;
+> >         const char *name;
+> > -       int rv, base;
+> > +       int rv, base, i;
+> >         u16 ngpio;
+> >
+> >         dev = &pdev->dev;
+> > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> >         if (!chip->lines)
+> >                 return -ENOMEM;
+> >
+> > +       for (i = 0; i < gc->ngpio; i++)
+> > +               chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
+> > +
+> >         if (device_property_read_bool(dev, "named-gpio-lines")) {
+> >                 rv = gpio_mockup_name_lines(dev, chip);
+> >                 if (rv)
+> > --
+> > 2.24.0
+> >
+> 
+> Hi Kent,
+> 
+> I was applying and testing your libgpiod series and noticed that the
+> gpio-tools tests fail after applying patches 16 & 17 (with linux
+> v5.5-rc1). Is this fix related to this?
+> 
 
-JFTR, this increases dma_entry_hash size by 327680 bytes, and pushes
-a few more boards beyond their bootloader-imposed kernel size limits.
+I don't think so.  I've only been able to trip this problem with a
+couple of corner cases in my Go uapi test suite.
+I have been unable to reproduce it with the tools as it requires
+multiple requests with the same chip fd, including an as-is, to trip.
 
-Disabling CONFIG_DMA_API_DEBUG fixes that.
-Of course the real fix is to fix the bootloaders...
+And running the libgpiod tests against v5.5-rc1 works for me.
+Can you provide more details as to the errors you are seeing?
 
-Gr{oetje,eeting}s,
+Btw, I was writing tests for your LINEINFO_WATCH patch v2, which I was
+applying to v5.5-rc1, when I ran across this.  That works ok if I
+__packed the changed struct.
+And I can confirm that patch v2 doesn't isolate watches on different
+chip fds.
 
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kent.
