@@ -2,147 +2,104 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE07CC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92519C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD5020652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5930A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575984100;
+	bh=8P87T1yHgfauLuw8yUb0MnPXfIUFnN3hoj5S+HXjXIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wVz+CpbSYfIu69zl/m3/vcmno75JTfBh49Iik3wb/p4UrW+G05IUEzDnD9L0ZjaC4
+	 UbgoFBMArWOQ0pleeKKsXUXaujPI7ZtfUL2gQ2mxDsqn8NDL5DD7yzh9SETJXEzDfp
+	 +U03aCC1/EbmGgm/WUnNcz9DbDgwIweM69Q3LOVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfLJNSu (ORCPT
+        id S1727385AbfLJNVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:18:50 -0500
-Received: from mga01.intel.com ([192.55.52.88]:15353 "EHLO mga01.intel.com"
+        Tue, 10 Dec 2019 08:21:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:43912 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfLJNSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:18:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 05:18:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
-   d="scan'208";a="203184967"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.249.173.162]) ([10.249.173.162])
-  by orsmga007.jf.intel.com with ESMTP; 10 Dec 2019 05:18:47 -0800
-Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
- Write Policy
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191202070348.32148-1-tao3.xu@intel.com>
- <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
- <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com>
- <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
- <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com>
- <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <82e7361e-256e-002c-6b30-601cec1fad07@intel.com>
-Date:   Tue, 10 Dec 2019 21:18:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1727211AbfLJNVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:21:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 378ED328;
+        Tue, 10 Dec 2019 05:21:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB59F3F52E;
+        Tue, 10 Dec 2019 05:21:37 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:21:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] regulator: max77650: add of_match table
+Message-ID: <20191210132136.GG6110@sirena.org.uk>
+References: <20191210100725.11005-1-brgl@bgdev.pl>
+ <20191210121227.GB6110@sirena.org.uk>
+ <CAMRc=MftOnQVAUjOz=UGV-S2HKPpiucQp98xYTdxgt7d8obCMg@mail.gmail.com>
+ <20191210130244.GE6110@sirena.org.uk>
+ <CAMRc=MenTgffszv4NsbCKRhH0TcRPSTLbeP3BttW9fmFBjLdCA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QWpDgw58+k1mSFBj"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MenTgffszv4NsbCKRhH0TcRPSTLbeP3BttW9fmFBjLdCA@mail.gmail.com>
+X-Cookie: We have ears, earther...FOUR OF THEM!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/2019 4:27 PM, Rafael J. Wysocki wrote:
-> On Tue, Dec 10, 2019 at 9:19 AM Tao Xu <tao3.xu@intel.com> wrote:
->>
->> On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
->>> On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
->>>>
->>>> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
->>>>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
->>>>>>
->>>>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
->>>>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
->>>>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
->>>>>> 2 is "Write Through" for Write Policy.
->>>>>
->>>>> Well, I'm not sure what the connection between the above statement,
->>>>> which is correct AFAICS, and the changes made by the patch is.
->>>>>
->>>>> Is that the *_OTHER symbol names are confusing or something deeper?
->>>>>
->>>>
->>>> Because in include/acpi/actbl1.h:
->>>>
->>>> #define ACPI_HMAT_CA_NONE                     (0)
->>>>
->>>> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
->>>>
->>>>       enum cache_indexing {
->>>>              NODE_CACHE_DIRECT_MAP,
->>>>              NODE_CACHE_INDEXED,
->>>>              NODE_CACHE_OTHER,
->>>>       };
->>>> NODE_CACHE_OTHER is 2, and for otner enum:
->>>>
->>>>             case ACPI_HMAT_CA_DIRECT_MAPPED:
->>>>                     tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
->>>>                     break;
->>>>             case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
->>>>                     tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
->>>>                     break;
->>>> in include/acpi/actbl1.h:
->>>>
->>>>     #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
->>>>     #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
->>>>
->>>> but in include/linux/node.h:
->>>>
->>>> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is incorrect.
->>>
->>> Why is it incorrect?
->>
->> Sorry I paste the wrong pre-define.
->>
->> This is the incorrect line:
->>
->> case ACPI_HMAT_CA_DIRECT_MAPPED:
->> tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
->>
->> ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means
->> if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in
->> cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole
->> switch codes:
-> 
-> This is a mapping between the ACPI-defined values and the generic ones
-> defined in the kernel.  There is not rule I know of by which they must
-> be the same numbers.  Or is there such a rule which I'm missing?
-> 
-> As long as cache_attrs.indexing is used consistently going forward,
-> the difference between the ACPI-defined numbers and its values
-> shouldn't matter, should it?
-> 
-Yes, it will not influence the ACPI HMAT tables. Only influence is the 
-sysfs, as in 
-https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html:
 
-# tree sys/devices/system/node/node0/memory_side_cache/
-/sys/devices/system/node/node0/memory_side_cache/
-|-- index1
-|   |-- indexing
-|   |-- line_size
-|   |-- size
-|   `-- write_policy
+--QWpDgw58+k1mSFBj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-indexing is parsed in this file, so it can be read by user-space. 
-Although now there is no user-space tool use this information to do some 
-thing. But I am wondering if it is used in the future, someone use it to 
-show the memory side cache information to user or use it to do 
-performance turning.
+On Tue, Dec 10, 2019 at 02:10:15PM +0100, Bartosz Golaszewski wrote:
+> wt., 10 gru 2019 o 14:02 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+
+> > This seems to work fine for other drivers and the platform bus has to be
+> > usable on systems that don't use DT so that doesn't sound right.  Which
+> > MODULE_ALIAS() are you using exactly?
+
+> MODULE_ALIAS("platform:max77650-regulator");
+
+Huh, that should work...  I wonder if adding a compatible to the DT has
+messed it up, does it work without the compatible in the .dts (and with
+the of_compatible removed from the MFD driver I guess)?
+
+> > > Besides: the DT bindings define the compatible for sub-nodes already.
+> > > We should probably conform to that.
+
+> > I would say that's a mistake and should be fixed, this particular way of
+> > loading the regulators is a Linux implementation detail.
+
+> Fixed by removing this from the bindings?
+
+Yeah.  Though it may be too late, shame I didn't catch this when it was
+merged :(
+
+--QWpDgw58+k1mSFBj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vm98ACgkQJNaLcl1U
+h9Cafwf/a3oxPbhu5Pta4vakVb1PxMAJdTKejo/JdqsYMWi/ZQTBNNH/FfInbp7T
+D2zcDVZP/TNsmiEfpU2jPdKWjViPodD7lMFRqt+poeHmGDIqKBfO+MfQY8nZI5MH
+N5WA+PCYhePQeF0imK/9MnPfFigZwIPNWmyrY+S4hzqdmO4sMl0aSJ2YrR/o64sa
+Nu1qE8ALJ6S8anzLHm4X1iO3HGbpNHfEceZ4Ddr3UwWra4YpLNWLwoPGKX8XwN+V
+QqU6wPmbBsXhtlVSWBzoNhy0m6/1ZXswhnTE36MGLER5OtZg4/XTngVn3CrAZyDi
+MLjacZOLe5NREbuFhWuB0cgRlbFI+g==
+=nIJk
+-----END PGP SIGNATURE-----
+
+--QWpDgw58+k1mSFBj--
