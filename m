@@ -2,260 +2,144 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7D7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EDC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0C02073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfA+nEQC"
+	by mail.kernel.org (Postfix) with ESMTP id 535542073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfLJKLQ (ORCPT
+        id S1727333AbfLJKLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:11:16 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28514 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727219AbfLJKLN (ORCPT
+        Tue, 10 Dec 2019 05:11:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727305AbfLJKLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:11:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575972671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=/fNSAK93ztMW9L1B/NS00CbJs6KXG9nyQ8geCOXUcHA=;
-        b=NfA+nEQCABHL83P1v4tkr9VrDUNo67/RGhQ2Gn5FqzFD9fvhA/MhTdqMV32qewKrGP6v+R
-        22v5z0/tgIG9TXo9G5f1xmc01l384a7ypTNws6TdxvVne8kXg1kuFzTAMb83bA466TEEMj
-        yFsqb/cb9oARGpEPZjWN5c7tQWDo3Xk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-laAmNaQoMZGmiLgtL7GHyQ-1; Tue, 10 Dec 2019 05:11:08 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B25F18AAFA2;
-        Tue, 10 Dec 2019 10:11:06 +0000 (UTC)
-Received: from [10.36.117.222] (ovpn-117-222.ams2.redhat.com [10.36.117.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 450B75D6D4;
-        Tue, 10 Dec 2019 10:11:04 +0000 (UTC)
-Subject: Re: [PATCH v1 1/3] mm: fix uninitialized memmaps on a partially
- populated last section
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Bob Picco <bob.picco@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20191209174836.11063-1-david@redhat.com>
- <20191209174836.11063-2-david@redhat.com>
- <20191209211502.zhbvzv2qwbvcperm@ca-dmjordan1.us.oracle.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c0733e11-bf06-8813-11de-019cdbddef34@redhat.com>
-Date:   Tue, 10 Dec 2019 11:11:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 10 Dec 2019 05:11:30 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAA7Fi4058096
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:11:28 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsknaqw9q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:11:28 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 10 Dec 2019 10:11:26 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 10:11:21 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAABKum50004096
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 10:11:20 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2951C42042;
+        Tue, 10 Dec 2019 10:11:20 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 670BC42052;
+        Tue, 10 Dec 2019 10:11:17 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 10 Dec 2019 10:11:17 +0000 (GMT)
+Date:   Tue, 10 Dec 2019 15:41:16 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
+ kthread
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191209211502.zhbvzv2qwbvcperm@ca-dmjordan1.us.oracle.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: laAmNaQoMZGmiLgtL7GHyQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19121010-0012-0000-0000-000003736E80
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121010-0013-0000-0000-000021AF4031
+Message-Id: <20191210101116.GA9139@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 22:15, Daniel Jordan wrote:
-> Hi David,
->=20
-> On Mon, Dec 09, 2019 at 06:48:34PM +0100, David Hildenbrand wrote:
->> If max_pfn is not aligned to a section boundary, we can easily run into
->> BUGs. This can e.g., be triggered on x86-64 under QEMU by specifying a
->> memory size that is not a multiple of 128MB (e.g., 4097MB, but also
->> 4160MB). I was told that on real HW, we can easily have this scenario
->> (esp., one of the main reasons sub-section hotadd of devmem was added).
->>
->> The issue is, that we have a valid memmap (pfn_valid()) for the
->> whole section, and the whole section will be marked "online".
->> pfn_to_online_page() will succeed, but the memmap contains garbage.
->>
->> E.g., doing a "cat /proc/kpageflags > /dev/null" results in
->>
->> [  303.218313] BUG: unable to handle page fault for address: fffffffffff=
-ffffe
->> [  303.218899] #PF: supervisor read access in kernel mode
->> [  303.219344] #PF: error_code(0x0000) - not-present page
->> [  303.219787] PGD 12614067 P4D 12614067 PUD 12616067 PMD 0
->> [  303.220266] Oops: 0000 [#1] SMP NOPTI
->> [  303.220587] CPU: 0 PID: 424 Comm: cat Not tainted 5.4.0-next-20191128=
-+ #17
->=20
+* Vincent Guittot <vincent.guittot@linaro.org> [2019-12-10 10:43:46]:
 
-Hi Daniel,
+> On Tue, 10 Dec 2019 at 06:43, Srikar Dronamraju
+> <srikar@linux.vnet.ibm.com> wrote:
+> >
+> > This is more prone to happen if the current running task is CPU
+> > intensive and the sched_wake_up_granularity is set to larger value.
+> > When the sched_wake_up_granularity was relatively small, it was observed
+> > that the bound thread would complete before the load balancer would have
+> > chosen to move the cache hot task to a different CPU.
+> >
+> > To deal with this situation, the current running task would yield to a
+> > per CPU bound kthread, provided kthread is not CPU intensive.
+> >
+> > /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+> >
+> > (With sched_wake_up_granularity set to 15ms)
+> 
+> So you increase sched_wake_up_granularity to a high level to ensure
+> that current is no preempted by waking thread but then you add a way
+> to finally preempt it which is somewhat weird IMO
+> 
 
-> I can't reproduce this on x86-64 qemu, next-20191128 or mainline, with ei=
-ther
-> memory size.  What config are you using?  How often are you hitting it?
+Yes, setting to a smaller value will help mitigate/solve the problem.
+There may be folks out who have traditionally set a high wake_up_granularity
+(and have seen better performance with it), who may miss out that when using
+blk-mq, such settings will cause more harm. And they may continue to see
+some performance regressions when they move to a lower wake_up_granularity.
 
-Thanks for verifying! Hah, there is one piece missing to reproduce via
-"cat /proc/kpageflags > /dev/null" that I ignored on my QEMU cmdline (see b=
-elow)
+> Have you tried to increase the priority of workqueue thread  (decrease
+> nice priority) ? This is the right way to reduce the impact of the
+> sched_wake_up_granularity on the wakeup of your specific kthread.
+> Because what you want at the end is keeping a low wakeup granularity
+> for these io workqueues
+> 
 
-I can reproduce it reliably (QEMU with "-m 4160M") via
+Yes, people can tune the priority of workqueue threads and infact it may be
+easier to set wake_up_granularity to a lower value. However the point is how
+do we make everyone aware that they are running into a performance issue
+with a higher wakeup_granularity?
 
-[root@localhost ~]# uname -a
-Linux localhost 5.5.0-rc1-next-20191209 #93 SMP Tue Dec 10 10:46:19 CET 201=
-9 x86_64 x86_64 x86_64 GNU/Linux
-[root@localhost ~]# ./page-types -r -a 0x144001
-[  200.476376] BUG: unable to handle page fault for address: ffffffffffffff=
-fe
-[  200.477500] #PF: supervisor read access in kernel mode
-[  200.478334] #PF: error_code(0x0000) - not-present page
-[  200.479076] PGD 59614067 P4D 59614067 PUD 59616067 PMD 0=20
-[  200.479557] Oops: 0000 [#4] SMP NOPTI
-[  200.479875] CPU: 0 PID: 603 Comm: page-types Tainted: G      D W        =
- 5.5.0-rc1-next-20191209 #93
-[  200.480646] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-[  200.481648] RIP: 0010:stable_page_flags+0x4d/0x410
-[  200.482061] Code: f3 ff 41 89 c0 48 b8 00 00 00 00 01 00 00 00 45 84 c0 =
-0f 85 cd 02 00 00 48 8b 53 08 48 8b 2b 48f
-[  200.483644] RSP: 0018:ffffb139401cbe60 EFLAGS: 00010202
-[  200.484091] RAX: fffffffffffffffe RBX: fffffbeec5100040 RCX: 00000000000=
-00000
-[  200.484697] RDX: 0000000000000001 RSI: ffffffff9535c7cd RDI: 00000000000=
-00246
-[  200.485313] RBP: ffffffffffffffff R08: 0000000000000000 R09: 00000000000=
-00000
-[  200.485917] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000001=
-44001
-[  200.486523] R13: 00007ffd6ba55f48 R14: 00007ffd6ba55f40 R15: ffffb139401=
-cbf08
-[  200.487130] FS:  00007f68df717580(0000) GS:ffff9ec77fa00000(0000) knlGS:=
-0000000000000000
-[  200.487804] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  200.488295] CR2: fffffffffffffffe CR3: 0000000135d48000 CR4: 00000000000=
-006f0
-[  200.488897] Call Trace:
-[  200.489115]  kpageflags_read+0xe9/0x140
-[  200.489447]  proc_reg_read+0x3c/0x60
-[  200.489755]  vfs_read+0xc2/0x170
-[  200.490037]  ksys_pread64+0x65/0xa0
-[  200.490352]  do_syscall_64+0x5c/0xa0
-[  200.490665]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-(tool located in tools/vm/page-types.c, see also patch #2)
-
-
-To reproduce via "cat /proc/kpageflags > /dev/null", you have to
-hot/coldplug one DIMM, to move max_pfn beyond the garbage memmap
-(see also patch #2). My QEMU cmdline with Fedora 31:
-
-qemu-system-x86_64 \
-    --enable-kvm \
-    -m 4160M,slots=3D4,maxmem=3D8G \
-    -hda Fedora-Cloud-Base-31-1.9.x86_64.qcow2 \
-    -machine pc \
-    -nographic \
-    -nodefaults \
-    -chardev stdio,id=3Dserial,signal=3Doff \
-    -device isa-serial,chardev=3Dserial \
-    -object memory-backend-ram,id=3Dmem0,size=3D1024M \
-    -device pc-dimm,id=3Ddimm0,memdev=3Dmem0
-
-[root@localhost ~]# uname -a
-Linux localhost 5.3.7-301.fc31.x86_64 #1 SMP Mon Oct 21 19:18:58 UTC 2019 x=
-86_64 x86_64 x86_64 GNU/Linux
-[root@localhost ~]# cat /proc/kpageflags > /dev/null
-[  111.517275] BUG: unable to handle page fault for address: ffffffffffffff=
-fe
-[  111.517907] #PF: supervisor read access in kernel mode
-[  111.518333] #PF: error_code(0x0000) - not-present page
-[  111.518771] PGD a240e067 P4D a240e067 PUD a2410067 PMD 0=20
-
->=20
-> It may not have anything to do with the config, and I may be getting luck=
-y with
-> the garbage in my memory.
->=20
-
-Some things that might be relevant from my config.
-
-# CONFIG_PAGE_POISONING is not set
-CONFIG_DEFERRED_STRUCT_PAGE_INIT=3Dy
-CONFIG_SPARSEMEM_EXTREME=3Dy
-CONFIG_SPARSEMEM_VMEMMAP_ENABLE=3Dy
-CONFIG_SPARSEMEM_VMEMMAP=3Dy
-CONFIG_HAVE_MEMBLOCK_NODE_MAP=3Dy
-CONFIG_MEMORY_HOTPLUG=3Dy
-CONFIG_MEMORY_HOTPLUG_SPARSE=3Dy
-CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=3Dy
-
-The F31 default config should make it trigger.
-
-
-Will update this patch description - thanks!
-
-...
-
---=20
-Thanks,
-
-David / dhildenb
+-- 
+Thanks and Regards
+Srikar Dronamraju
 
