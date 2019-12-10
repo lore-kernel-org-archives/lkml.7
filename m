@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D3BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51779C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427272053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2D82077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017729;
-	bh=gYXfXuxRY9mg/QgwO8RreWgUOh9JEFtJ4kuEz0sHxng=;
+	s=default; t=1576017733;
+	bh=ztm9+c7mnXrc+ghtQEh2nXABFn+MTsi79zBf51x//Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kuOzxGprRhAIdP6nhlWP07C7aEAv0mP/8H7RFRJ2E/uM/sfuO81V05qxCZ6JMfud7
-	 XKtwFwV78RyIVHe1cmgMoOg1oSi4Mn3kMDYt4S+JpADMyysyQb6SVyA4pX1e/WZbrO
-	 vRGOe1SW0HZYzETfc5nR07Xqxa3aYEV4teQuTCs4=
+	b=dU6/mGQaTqX1IQERhsAWKn1z+SGaZK6M6rHEaP6A9iLIymbsrHaI2BXPf8TxuGOUo
+	 POcb0Ta0yAxiekZCZSxQ9T/Ivzx96xbsiuvmaPUcy7lCXhM3c4E8lLOGiH6bWYu6nq
+	 sQDd2eaRHj05QdM5NZhP9z8nco+CfE8Ff6jbTb0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfLJWbc (ORCPT
+        id S1729469AbfLJWmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51382 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:42:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbfLJWbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:22 -0500
+        id S1728536AbfLJWbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10A9C2077B;
-        Tue, 10 Dec 2019 22:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDEC20828;
+        Tue, 10 Dec 2019 22:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017081;
-        bh=gYXfXuxRY9mg/QgwO8RreWgUOh9JEFtJ4kuEz0sHxng=;
+        s=default; t=1576017091;
+        bh=ztm9+c7mnXrc+ghtQEh2nXABFn+MTsi79zBf51x//Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghNbuEkXpFmnCRa3WVCFk/sB8bZjR3OY+Gfrw8TKyF/CtnLCN7hAROClrM/VX7nrn
-         LfvcRyMwmRAMF5ZghzCyFJGtCH64bwz4/r5KS4BJIgI4R27GFYLpazKesjBVcf2W9Y
-         YyZWyw4XkB9aVpQQdLsuENT2OUxlAom2fIHcK5jY=
+        b=OJwE5/WZBfdbgpeL2aZhjsd2tQAjn7fgPVY1mmHsZGPVohb93tjPdAVdosLu7sY3w
+         Z5lpE8uyHjL/iureknpiBlDrv9fMC5EtJaLbGZDEi1pyvUWrTVHVzuRPr5nUIxvEdH
+         QGpXyorKFsfkLNaIGef7I+cy5dS+hcxWTHh0TfeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 38/91] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Tue, 10 Dec 2019 17:29:42 -0500
-Message-Id: <20191210223035.14270-38-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 46/91] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Tue, 10 Dec 2019 17:29:50 -0500
+Message-Id: <20191210223035.14270-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,42 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
+
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index da9fd34b95505..caa6da02206aa 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
- 
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
- 
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 2fb9a7b71b412..a2667c9b5819a 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -133,7 +133,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 33232041ee86d..3eccc9b3ca84a 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1453,7 +1453,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
 -- 
 2.20.1
 
