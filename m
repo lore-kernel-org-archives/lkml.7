@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956A8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1380C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6202F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B28207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017154;
-	bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
+	s=default; t=1576017156;
+	bh=MAg7twYwRu+7UcjxFxWbapy1cQ/MH8MFkJYaPnnScc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgIX0ESmFbrFknj9lWAo+sA/FP+4PZlMigsfQ4Wy6jFYxbn7ajsp615GjFnM2L3iY
-	 PxNqMvIigTX2yRcjTBBkHULSji0GQLBX+8cJGoSrGgYi/mgkz0Z5rhCu+63hhNKXRz
-	 GrJgDXb5BjbI4hNhvu0+pq9nNmE5e0BLTgLypCfg=
+	b=M6GP1hrsoML7uxm+WkcA8PzkHLdfUgH18TL1SamLOw8h/QDcoGOvQqbOi2irLXXAN
+	 JvFB81XzGnfziiXt8AtjvOPOeIuQ4Grfn5TWXCFALh2vlRSTJz3HmgqzxXLbXsIctN
+	 tH+IxC2pjCoYDEKZ7l+cyhXd2pkWw0Nd0Vlwu7Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfLJWcd (ORCPT
+        id S1729624AbfLJWcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbfLJWcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:21 -0500
+        id S1729436AbfLJWcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DB73206EC;
-        Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F106214D8;
+        Tue, 10 Dec 2019 22:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017141;
-        bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
+        s=default; t=1576017143;
+        bh=MAg7twYwRu+7UcjxFxWbapy1cQ/MH8MFkJYaPnnScc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tRu50ERfPHiHAvbPGLqt0ls3D4JO9I1QY/73DywNhM5fLtOiclzoZIzm3JHsj5bun
-         1wg2G0je4qfKJQ6v9OEUmzGz66KFNQaTGmG46crt8RGCxAo+GrQ5rO09nmivxPx7UU
-         f/s1tBq+o28iTAEz3Rgschsi2/DX64geA0xEPlA4=
+        b=2ba5N3nzclfYBeonl1PaCQJ+d4jYDzE6lpLatd0utOUMEMtt5lB15xvr4hJmGLfUy
+         Iw8At+nJpNLxZfS32JrQiYBsL7xnmF1rmZahw0w74OGOzV08eM5z0DM0G3VWFP6caQ
+         +FRgwpPkroR7TCGCBg7CGLyZ/VX+otLfmk0ihS14=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hewenliang <hewenliang4@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+Cc:     Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 88/91] libtraceevent: Fix memory leakage in copy_filter_type
-Date:   Tue, 10 Dec 2019 17:30:32 -0500
-Message-Id: <20191210223035.14270-88-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 89/91] perf parse: Fix potential memory leak when handling tracepoint errors
+Date:   Tue, 10 Dec 2019 17:30:33 -0500
+Message-Id: <20191210223035.14270-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,53 +68,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
+[ Upstream commit 4584f084aa9d8033d5911935837dbee7b082d0e9 ]
 
-It is necessary to free the memory that we have allocated when error occurs.
+An error may be in place when tracepoint_error is called, use
+parse_events__handle_error to avoid a memory leak and to capture the
+first and last error. Error detected by LLVM's libFuzzer using the
+following event:
 
-Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+$ perf stat -e 'msr/event/,f:e'
+event syntax error: 'msr/event/,f:e'
+                     \___ can't access trace events
+
+Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
+Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
+
+Initial error:
+event syntax error: 'msr/event/,f:e'
+                                \___ no value assigned for term
+Run 'perf list' for a list of valid events
+
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/parse-filter.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 5e10ba796a6f4..569bceff5f51b 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
- 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
- 		/* Add trivial event */
- 		arg = allocate_arg();
--		if (arg == NULL)
-+		if (arg == NULL) {
-+			free(str);
- 			return -1;
-+		}
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6193be6d7639d..cfb64369a18d1 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -440,6 +440,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
+ static void tracepoint_error(struct parse_events_error *e, int err,
+ 			     const char *sys, const char *name)
+ {
++	const char *str;
+ 	char help[BUFSIZ];
  
- 		arg->type = FILTER_ARG_BOOLEAN;
- 		if (strcmp(str, "TRUE") == 0)
-@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
- 			arg->boolean.value = 0;
+ 	if (!e)
+@@ -453,18 +454,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
  
- 		filter_type = add_filter_type(filter, event->id);
--		if (filter_type == NULL)
-+		if (filter_type == NULL) {
-+			free(str);
-+			free_arg(arg);
- 			return -1;
-+		}
+ 	switch (err) {
+ 	case EACCES:
+-		e->str = strdup("can't access trace events");
++		str = "can't access trace events";
+ 		break;
+ 	case ENOENT:
+-		e->str = strdup("unknown tracepoint");
++		str = "unknown tracepoint";
+ 		break;
+ 	default:
+-		e->str = strdup("failed to add tracepoint");
++		str = "failed to add tracepoint";
+ 		break;
+ 	}
  
- 		filter_type->filter = arg;
+ 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
+-	e->help = strdup(help);
++	parse_events__handle_error(e, 0, strdup(str), strdup(help));
+ }
  
+ static int add_tracepoint(struct list_head *list, int *idx,
 -- 
 2.20.1
 
