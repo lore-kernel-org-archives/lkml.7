@@ -2,83 +2,118 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D17C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1A2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D33206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E73206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:01:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8zu9xI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfLJM7C (ORCPT
+        id S1727412AbfLJNA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:59:02 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54125 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfLJM7B (ORCPT
+        Tue, 10 Dec 2019 08:00:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54392 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727317AbfLJNA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:59:01 -0500
-Received: by mail-io1-f72.google.com with SMTP id m10so13200433ioo.20
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:59:01 -0800 (PST)
+        Tue, 10 Dec 2019 08:00:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575982857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9e82RZxMOLIpTiokhMnuko25lsVYhsTU5bajYGHD3E0=;
+        b=V8zu9xI+ef3gpnHazMZjMQOemwfbPUiWLpeT3GSH+fU7axnNWwqrqeT/vq+xbq3zCfz+c6
+        eiDcsdCR/KS2ddqH/NzlgCFExiHmmS0ENFWurm0mHYVu93Shie+Xui8GSLJR8MFLulQJwS
+        jDbuqMSVIlD7iz861L2n9MuatQhDVK0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-q3ScnFJDO8iFhLQgwj5CnA-1; Tue, 10 Dec 2019 08:00:56 -0500
+Received: by mail-qk1-f197.google.com with SMTP id g28so12151027qkl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:00:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=K7gPl1FphJWhh8zq+KZGN6d9O0Mc9hz+Z8xkj8vZdlQ=;
-        b=lc9UWFYv4mgWazfau5JB4NoRQUvvScJNXrnnn+ggM8+7fNbPeuKm92/F/a8llyJME4
-         V3/QtFoCeSKTgFeM9UTf5jYQ2U2Bes7tnJNPOQBZH+gd11MMU2Pv/kgcSNv8UcbAJE9o
-         Ix+gW09fJt8EG3QishSBXdFyAEMcbq38BYQuPdqpF4DkgVDxusi3b1nKiPo8Xg3PLgyZ
-         eqixJAVd6qfPU1IOCWuAPYnaEv4EVnSHIroFZPvlLrH9iN2/apSt8HEt9K0P0URFg1yz
-         LbzzKmcT2jYeltJabSQ+sgMvf3Vrj2/JnhrUHIhnvfJAA4xEn0/zalHHDKEpgs6KObV+
-         VqzQ==
-X-Gm-Message-State: APjAAAWhVPbbeAsw9S7K+As9ukcuwFT9Smn6Q4e93cq/cBqx08spQtiw
-        +gVqrpVb0iIr1OMh58iGtD4T1eHs5NrNvGEKqpgQ6X1fhtPF
-X-Google-Smtp-Source: APXvYqwDCe80r9YbW2QQnA0KjjLSvil/nEblKeil0eEsHFedCe59r/gm8ekpcNZa3NtXqCgGqqZ6wrMr2kggORAQDm9RLlN60DpJ
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wrMmlrBt1X+KXyyzVL2v0JpYF8+uVnrQFFbGuDQ2s1k=;
+        b=WOzcyNnWKgiv/zYg6hi2/66iaaadTZ/neG5fPLe1d+Ja2SzNJeEGK1PsAm44DzKQH/
+         sGHNf0G8bP2NmVc8j4k0gU7liO6cJsAPDcnodLb2trQlweNzGStJjZZ90W56saC7sMMN
+         2jDRd5ebpuSEQ0nIbfSt1BBLrNf453dKDz+uHtM8ZkQEFmqFHwnV0zoesoIqY3dM3vyT
+         BRccC7CqUr6oCdkSt8DZidGGDkA/zwL40jDTiLiUQRqlYrRguh/I8wnTlXlx60mzs1N2
+         Ms5I+PmO2mlA2xpo2NAN3ghlsi7lhTZpiwapvZukjJ8bDmZnhZH6BdS8Dpbf759cjV62
+         C41Q==
+X-Gm-Message-State: APjAAAX/+YaInNfNjk27HOPbOi8jE+1YGe6j0IjQFGzvPo2ulSyuy3Hy
+        j24WGIxHuYMJnShSRUM1p5/Olvqsfw9nocR7Tw1uM1wPTvnbv0KG3nxhvDGsBSWDFQLU+yQmQEX
+        6Gf9BnnZ9Bv8D4SzwoQwvOww2
+X-Received: by 2002:ae9:ec0a:: with SMTP id h10mr30081128qkg.303.1575982856005;
+        Tue, 10 Dec 2019 05:00:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxdPfBVccegJ+sVSh7D3UbOkyDGw8L3+H+QRIw+97A58lq6K5FGQi/nFFUXP/L4WSIDyLcgYg==
+X-Received: by 2002:ae9:ec0a:: with SMTP id h10mr30081108qkg.303.1575982855810;
+        Tue, 10 Dec 2019 05:00:55 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id n20sm138085qkk.54.2019.12.10.05.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 05:00:55 -0800 (PST)
+Date:   Tue, 10 Dec 2019 08:00:50 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org, Julio Faracco <jcfaracco@gmail.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, mst@redhat.com,
+        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        dnmendes76@gmail.com, Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH net-next v10 3/3] netronome: use the new txqueue timeout
+ argument
+Message-ID: <20191210130014.47179-4-mst@redhat.com>
+References: <20191210130014.47179-1-mst@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:5e4b:: with SMTP id s72mr32788228ilb.211.1575982741163;
- Tue, 10 Dec 2019 04:59:01 -0800 (PST)
-Date:   Tue, 10 Dec 2019 04:59:01 -0800
-In-Reply-To: <0000000000007f075c0598f7aa38@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007598ae0599591335@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bit_putcs
-From:   syzbot <syzbot+998dec6452146bd7a90c@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, coreteam@netfilter.org,
-        davem@davemloft.net, dri-devel@lists.freedesktop.org,
-        gwshan@linux.vnet.ibm.com, kaber@trash.net,
-        kadlec@blackhole.kfki.hu, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, ruscur@russell.cc, stewart@linux.vnet.ibm.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191210130014.47179-1-mst@redhat.com>
+X-Mailer: git-send-email 2.22.0.678.g13338e74b8
+X-Mutt-Fcc: =sent
+X-MC-Unique: q3ScnFJDO8iFhLQgwj5CnA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+---
+ drivers/net/ethernet/netronome/nfp/nfp_net_common.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-commit 2de50e9674fc4ca3c6174b04477f69eb26b4ee31
-Author: Russell Currey <ruscur@russell.cc>
-Date:   Mon Feb 8 04:08:20 2016 +0000
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/=
+net/ethernet/netronome/nfp/nfp_net_common.c
+index 41a808b14d76..eb1f9bed4833 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+@@ -1323,14 +1323,8 @@ nfp_net_tx_ring_reset(struct nfp_net_dp *dp, struct =
+nfp_net_tx_ring *tx_ring)
+ static void nfp_net_tx_timeout(struct net_device *netdev, unsigned int txq=
+ueue)
+ {
+ =09struct nfp_net *nn =3D netdev_priv(netdev);
+-=09int i;
+=20
+-=09for (i =3D 0; i < nn->dp.netdev->real_num_tx_queues; i++) {
+-=09=09if (!netif_tx_queue_stopped(netdev_get_tx_queue(netdev, i)))
+-=09=09=09continue;
+-=09=09nn_warn(nn, "TX timeout on ring: %d\n", i);
+-=09}
+-=09nn_warn(nn, "TX watchdog timeout\n");
++=09nn_warn(nn, "TX watchdog timeout on ring: %u\n", txqueue);
+ }
+=20
+ /* Receive processing
+--=20
+MST
 
-     powerpc/powernv: Remove support for p5ioc2
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16af042ae00000
-start commit:   9455d25f Merge tag 'ntb-5.5' of git://github.com/jonmason/..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15af042ae00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11af042ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a3b8f5088d4043a
-dashboard link: https://syzkaller.appspot.com/bug?extid=998dec6452146bd7a90c
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fa5c2ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e327f2e00000
-
-Reported-by: syzbot+998dec6452146bd7a90c@syzkaller.appspotmail.com
-Fixes: 2de50e9674fc ("powerpc/powernv: Remove support for p5ioc2")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
