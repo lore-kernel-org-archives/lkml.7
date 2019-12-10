@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41260C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E0DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCC42053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E52F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017572;
-	bh=wLl7Ehs+bVTJdIG5mZkS94SOeaPFy8FIKq6DuJkj17I=;
+	s=default; t=1576017577;
+	bh=MoNM8gLX5YZBjQ6o+7jPUP6RBquI7F46busEQbi4jzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6CpozwdLSsWSkNWmhTgabzY+kNkmibQQuAIVxAySYeuerW+ic/QxB+D9S4BC/vWn
-	 A2B44kHoRQO9sLefnt8xZ6U0nN35B5t1eEhO3VKgpbF7TVK6lhfTuJemM+ke3lKZo2
-	 +kXIhg1lIRR7df8twFxenBSv5hH6ZAyjqkcYckJ0=
+	b=K8Vte0Lf2uZ4a/qJ8i14I59SM5BKXpsnFDI3MeKpBtdrcNenBWI01yOdM0VG5ZFR/
+	 3i407zOUzTHiJC2FBeuo4MRhBjNRcdHcoLGV4uwcCTpLLRodbAH5oK1GoEYNRvK6p4
+	 kvl9z7kkZRkVQKmAwzii/zrfw6iREg2LjzhTly0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfLJWjZ (ORCPT
+        id S1730246AbfLJWjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:39:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbfLJWdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:22 -0500
+        id S1729723AbfLJWdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C1320836;
-        Tue, 10 Dec 2019 22:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A770207FF;
+        Tue, 10 Dec 2019 22:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017202;
-        bh=wLl7Ehs+bVTJdIG5mZkS94SOeaPFy8FIKq6DuJkj17I=;
+        s=default; t=1576017199;
+        bh=MoNM8gLX5YZBjQ6o+7jPUP6RBquI7F46busEQbi4jzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FG2QzvghzWC9vGThOTjdAerWMmDWP85KVJ7e3ymXLAtXRKwfd+dICeuNLGa3XQ2wl
-         iv2sLnqmOBiZLMT9Mqztl6rlkfSV2D0OGv7bL46a9bhX4y44xw34KSgX9xJ/xtO0qp
-         BKi33K+yo9ikLJ6xxljIir5yXCRHCdGT6hvLsyAo=
+        b=LggG6qyD5RC3gXHtP9e+mqx9f/rRY8H55s6Ln2D2x105P8mW0P6kXI4oRyPreHD4s
+         Ngl6pVhxNABlL33NbqKViutBw/4jk077Z+cEA8YGv0dDtnOY+HEUYAoomRcYmdv6Uv
+         e5gmxDOud/JS6d2kv1wm9iI6A5ZW7FZlyUfXwxSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukasz Majewski <lukma@denx.de>, Mark Brown <broonie@kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/71] spi: Add call to spi_slave_abort() function when spidev driver is released
-Date:   Tue, 10 Dec 2019 17:32:09 -0500
-Message-Id: <20191210223316.14988-4-sashal@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/71] iio: light: bh1750: Resolve compiler warning and make code more readable
+Date:   Tue, 10 Dec 2019 17:32:07 -0500
+Message-Id: <20191210223316.14988-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,47 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukasz Majewski <lukma@denx.de>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 9f918a728cf86b2757b6a7025e1f46824bfe3155 ]
+[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
 
-This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
-in the slave mode (like NXP's dspi driver for Vybrid SoC).
+Separate the declaration of struct bh1750_chip_info from definition
+of bh1750_chip_info_tbl[] in a single statement as it makes the code
+hard to read, and with the extra newline it makes it look as if the
+bh1750_chip_info_tbl[] had no explicit type.
 
-When SPI HW works in this mode - the master is responsible for providing
-CS and CLK signals. However, when some fault happens - like for example
-distortion on SPI lines - the SPI Linux driver needs a chance to recover
-from this abnormal situation and prepare itself for next (correct)
-transmission.
+This change also resolves the following compiler warning about the
+unusual position of the static keyword that can be seen when building
+with warnings enabled (W=1):
 
-This change doesn't pose any threat on drivers working in master mode as
-spi_slave_abort() function checks if SPI slave mode is supported.
+drivers/iio/light/bh1750.c:64:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
+BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spidev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iio/light/bh1750.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index c5f1045561acc..3709088d4d244 100644
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -662,6 +662,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
- 		if (dofree)
- 			kfree(spidev);
- 	}
-+#ifdef CONFIG_SPI_SLAVE
-+	spi_slave_abort(spidev->spi);
-+#endif
- 	mutex_unlock(&device_list_lock);
+diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+index 8b4164343f200..0cf7032ccdc92 100644
+--- a/drivers/iio/light/bh1750.c
++++ b/drivers/iio/light/bh1750.c
+@@ -62,9 +62,9 @@ struct bh1750_chip_info {
  
- 	return 0;
+ 	u16 int_time_low_mask;
+ 	u16 int_time_high_mask;
+-}
++};
+ 
+-static const bh1750_chip_info_tbl[] = {
++static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
+ 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
+ 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
+ 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
 -- 
 2.20.1
 
