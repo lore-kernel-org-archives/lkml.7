@@ -2,102 +2,131 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606F3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E472C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3331720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017918;
-	bh=4n1+cgSPG+Q3PdJV3wULbmnWpvMoFwWjuPiLf5+Y50s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ip4nipl3IVFEinjTaEV526ZKnmg703yjz4dEvtt5ejt96vzHZTIpQOCAQRG75/Bhm
-	 w3SXaP1NVEoGdlklXDwGMBu0+qgC0k0PvmcMB6JMn6Qqeudf5+prgSHGm+TcRaQvEh
-	 57CymJIRhOoVESEuiL+8iA/FeZYDEM07PY7NP7iQ=
+	by mail.kernel.org (Postfix) with ESMTP id DD9D920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbBYG0u1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfLJWpR (ORCPT
+        id S1727109AbfLJWsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:45:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfLJWaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0923C20836;
-        Tue, 10 Dec 2019 22:30:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017045;
-        bh=4n1+cgSPG+Q3PdJV3wULbmnWpvMoFwWjuPiLf5+Y50s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etsJmZ5qMebPb5AHIo6Wc38njdz32zF1kROsYr/gQ4zoOAtT1GQr0ZArhJQVfa1qf
-         ic4M9MM0YkOiS1o3DOym7EoDnnjy/ArKA5/p1lvD/yHqRL7wtGUWnlfVc++IX1lzTB
-         ObU82tAq+IRYLnaNuNj+Wa/2Y1M5M84YRxkc701E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 08/91] objtool: add kunit_try_catch_throw to the noreturn list
-Date:   Tue, 10 Dec 2019 17:29:12 -0500
-Message-Id: <20191210223035.14270-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 17:48:06 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34652 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfLJWsG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:48:06 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n13so600936pff.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:48:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=toKM2TKe1TxNJ1VaQDO7o0YM+C3yJr2QelcOjh015Rs=;
+        b=pbBYG0u1Bzy/q3jLJsNaX+L8CwYta1vgl3fEjO87Le/0PEWonsNYzt6cEeCGlEajq1
+         bIl6/U+tcxSCkHrWcKyTLeXXalBIFGyG9w2sJhFs3OJ6KbT2D1U0iJGg6WQX7p62sdrn
+         IaiR2v3HPq+C8uf2/lv40qFshPJmmHjgA7Yvv6gYUYhWLpcw4CCRE5LqyWDrQ+q5qYCj
+         MEgtOjQRDvHbbbBJiUWh9hJ58p48ldv1XgALOkDasSuzGGxejVOWazsEJayfrUzvwmgJ
+         i7nnd+dTecFfTmN26NzruoJQt1UXM08L1CxOsHzKENcOS6FGW/dCXq5fQ/BtIovotY8Y
+         iFWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=toKM2TKe1TxNJ1VaQDO7o0YM+C3yJr2QelcOjh015Rs=;
+        b=nEtD5FgZgCDxS/FEeAvEKd9JFQQQUA2fruwMnfwLwqYNgTJRL0APRFY+xrtrMw3LFz
+         DHYrCKzGIniC8G7TOEI8h1BX9eDV0DOJLqoaZvfc4rSQ73w8CSnatkUWOPm8MqBQv3d2
+         0jhoUbqyfcVeBuomem3TF4mre/0+VNciqdAd1lSOXXKsrxmONWyPlDmz/QmOl6GY0Wgx
+         kdnsaUj2QDDkGaIQ5gPMAsAV7PpVRlR9bloTxQXcoKNC1AndQhJ7QsmW4JmriMJ/33Jq
+         YOg1Z9nrPutXNyx+vEQT3nAbeudEIIR3oAA3LzWv2j+7XxYXCiLxrhvRmJfM7nZ7A7ro
+         h3vQ==
+X-Gm-Message-State: APjAAAXoctxkNhakhNaPKyUjQHLZpBBKFIksbD0F6W9Q9F0xYmZnUQox
+        UMw+k8ZYrs+GHStNMOYVH3g=
+X-Google-Smtp-Source: APXvYqxi6tFJUHXKBXlv1vak8CiEOd7IldDFLoyZgDsTkXUY3scwhN8cMzSzOjmvU1EMyiERf+uqHw==
+X-Received: by 2002:a63:3d4f:: with SMTP id k76mr564419pga.310.1576018085669;
+        Tue, 10 Dec 2019 14:48:05 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o10sm29746pgq.68.2019.12.10.14.48.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 14:48:04 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:48:03 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     devel@driverdev.osuosl.org,
+        Branden Bonaby <brandonbonaby94@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Giovanni Gherdovich <bobdc9664@seznam.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Sandro Volery <sandro@volery.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Valery Ivanov <ivalery111@gmail.com>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Subject: Re: [PATCH 1/2] staging: octeon: delete driver
+Message-ID: <20191210224803.GA3372@roeck-us.net>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <EFBFCF4B-745B-4B1B-A176-08CE8CADBFEA@volery.com>
+ <20191210120120.GA3779155@kroah.com>
+ <20191210194659.GC18225@darkstar.musicnaut.iki.fi>
+ <20191210201515.GA16912@roeck-us.net>
+ <20191210214848.GA5834@darkstar.musicnaut.iki.fi>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210214848.GA5834@darkstar.musicnaut.iki.fi>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+On Tue, Dec 10, 2019 at 11:48:49PM +0200, Aaro Koskinen wrote:
+> On Tue, Dec 10, 2019 at 12:15:15PM -0800, Guenter Roeck wrote:
+> > On Tue, Dec 10, 2019 at 09:46:59PM +0200, Aaro Koskinen wrote:
+> > > On Tue, Dec 10, 2019 at 01:01:20PM +0100, Greg Kroah-Hartman wrote:
+> > > > I have no idea :(
+> > > 
+> > > It's stated in the TODO file you are deleting (visible in your
+> > > patch): "This driver is functional and supports Ethernet on
+> > > OCTEON+/OCTEON2/OCTEON3 chips at least up to CN7030."
+> > > 
+> > > This includes e.g. some D-Link routers and Uniquiti EdgeRouters. You
+> > > can check from /proc/cpuinfo if you are running on this MIPS SoC.
+> > 
+> > It also results in "mips:allmodconfig" build failures in mainline
+> > and is for that reason being marked as BROKEN. Unfortunately,
+> > misguided attempts to clean it up had the opposite effect.
+> 
+> This was because of stubs hack added by someone - people who do not run
+> or care about the hardware can now break it for others with their
+> silly x86 "compile test"s.
+> 
 
-[ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
+Thast was the first breakage. The second was to replace typedefs with
+structures without considering that those typedefs are still used
+throughout the Cavium code, creating conflicts between "mystruct_t" and
+"struct mystruct" in various API calls. It may well be that this
+"improvement" was tested with x86_64:allmodconfig - if it was tested
+in the first place. It was most definitely not tested with
+cavium_octeon_defconfig, much less with real hardware.
 
-Fix the following warning seen on GCC 7.3:
-  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+Pretty much none of the changes made to the driver in the recent
+past have improved it. On the contrary, it is getting worse. With no
+one committed to get the driver out of staging, I don't think there
+is a reasonable alternative to removing it. For my part I am for sure
+not looking forward having to deal with it breaking over and over
+again and having to spend time tracking down the breakage.
 
-kunit_try_catch_throw is a function added in the following patch in this
-series; it allows KUnit, a unit testing framework for the kernel, to
-bail out of a broken test. As a consequence, it is a new __noreturn
-function that objtool thinks is broken (as seen above). So fix this
-warning by adding kunit_try_catch_throw to objtool's noreturn list.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 09782ff427d0d..64d48f2d85ccb 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -167,6 +167,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"fortify_panic",
- 		"machine_real_restart",
- 		"rewind_stack_do_exit",
-+		"kunit_try_catch_throw",
- 	};
- 
- 	if (func->bind == STB_WEAK)
--- 
-2.20.1
-
+Guenter
