@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BB8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB3E246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE2B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012221;
-	bh=fPVTs/fg7aQhDVEVKsn+kl9tgK6QXcIfCPo695DbGS8=;
+	s=default; t=1576012224;
+	bh=QLCQh0vfV7h/ZjC9RNBV9ppkij/a1m7fig8tN2/1+Dc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxC814pZ+I3pCymWu9U7xfRupG0mIWQmpI0Nen7RumgxKwtWbz0IM9IiauHkq04qB
-	 rT784Bk0XgTPkDNzWZl3E45DE//QHZX2c6NkTymZXYYMxxPpxQzESbhPgcwwujBI/e
-	 GjR/h0NybKYhPPsgAlJyEEkj2QhR4/Jo4h42vvWQ=
+	b=cQppLeIihVXimrcYOJHHGWkTJbIUIgu2bRwC/GYukQIACjh3wy9tvusKXu/J8QNid
+	 s90xz1THzaYHw50sNAXTUURYyrxjqxw8NnFf5LTELrg1+COMvG11Es+E6nzRz4oijt
+	 PgC3QUWah0Pew6Pm51RiwHGU/a596MP73vUnOwPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfLJVKT (ORCPT
+        id S1728471AbfLJVKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59758 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbfLJVKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:12 -0500
+        id S1728088AbfLJVKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22FE8246B8;
-        Tue, 10 Dec 2019 21:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78F1E246AD;
+        Tue, 10 Dec 2019 21:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012211;
-        bh=fPVTs/fg7aQhDVEVKsn+kl9tgK6QXcIfCPo695DbGS8=;
+        s=default; t=1576012220;
+        bh=QLCQh0vfV7h/ZjC9RNBV9ppkij/a1m7fig8tN2/1+Dc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTe/j59fGQwAwcruTCr1QG/cTeclCTGyAQ9ay6Ql9aJIwLpsKN1kwM3cTcZV3Z5VV
-         ZodC40zvjctW5J0NrzBxl7TVqeOwKI+NaCaFpFK0O0++OlqJ1x3UA5zFRcG8jfS1Yx
-         fSDoYUpDFfdYi4BcqqdEsjdIqZSSxvfZgnzVCLXY=
+        b=EB3oeAZHDppBQIVMS7t9sdZ/KMxxloRuZ6AJ5TpyRFjrIjfe9+v7F+cBNMRcREiiL
+         JXd/+VnS64mDU1QhA199ALrfoDncOmSShZXomajMKSj5cVLKahfFu3R3aT2vpqIM28
+         qFGlHUOrj96paTx2GRl8SrZSkjhYns2YP1qWyXKY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaroslaw Gawin <jaroslawx.gawin@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 163/350] i40e: Wrong 'Advertised FEC modes' after set FEC to AUTO
-Date:   Tue, 10 Dec 2019 16:04:28 -0500
-Message-Id: <20191210210735.9077-124-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 170/350] ALSA: hda - Fix pending unsol events at shutdown
+Date:   Tue, 10 Dec 2019 16:04:35 -0500
+Message-Id: <20191210210735.9077-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,116 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaroslaw Gawin <jaroslawx.gawin@intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e42b7e9cefca9dd008cbafffca97285cf264f72d ]
+[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
 
-Fix display of parameters "Configured FEC encodings:" and "Advertised
-FEC modes:" in ethtool.  Implemented by setting proper FEC bits in
-“advertising” bitmask of link_modes struct and “fec” bitmask in
-ethtool_fecparam struct. Without this patch wrong FEC settings
-can be shown.
+This is an alternative fix attemp for the issue reported in the commit
+caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
+reverted later due to regressions.  Instead of tweaking the hardware
+disablement order and the enforced irq flushing, do calling
+cancel_work_sync() of the unsol work early enough, and explicitly
+ignore the unsol events during the shutdown by checking the
+bus->shutdown flag.
 
-Signed-off-by: Jaroslaw Gawin <jaroslawx.gawin@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_common.c | 13 ++++++--
- .../net/ethernet/intel/i40e/i40e_ethtool.c    | 32 +++++++++----------
- 2 files changed, 26 insertions(+), 19 deletions(-)
+ sound/pci/hda/hda_bind.c  | 4 ++++
+ sound/pci/hda/hda_intel.c | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
-index 7560f06768e06..3160b5bbe6728 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_common.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
-@@ -2571,9 +2571,16 @@ noinline_for_stack i40e_status i40e_update_link_info(struct i40e_hw *hw)
- 		if (status)
- 			return status;
+diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
+index 8272b50b83493..6a85645663759 100644
+--- a/sound/pci/hda/hda_bind.c
++++ b/sound/pci/hda/hda_bind.c
+@@ -43,6 +43,10 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
+ {
+ 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
  
--		hw->phy.link_info.req_fec_info =
--			abilities.fec_cfg_curr_mod_ext_info &
--			(I40E_AQ_REQUEST_FEC_KR | I40E_AQ_REQUEST_FEC_RS);
-+		if (abilities.fec_cfg_curr_mod_ext_info &
-+		    I40E_AQ_ENABLE_FEC_AUTO)
-+			hw->phy.link_info.req_fec_info =
-+				(I40E_AQ_REQUEST_FEC_KR |
-+				 I40E_AQ_REQUEST_FEC_RS);
-+		else
-+			hw->phy.link_info.req_fec_info =
-+				abilities.fec_cfg_curr_mod_ext_info &
-+				(I40E_AQ_REQUEST_FEC_KR |
-+				 I40E_AQ_REQUEST_FEC_RS);
++	/* ignore unsol events during shutdown */
++	if (codec->bus->shutdown)
++		return;
++
+ 	if (codec->patch_ops.unsol_event)
+ 		codec->patch_ops.unsol_event(codec, ev);
+ }
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index c52419376c748..86a416cdeb296 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1382,8 +1382,11 @@ static int azx_free(struct azx *chip)
+ static int azx_dev_disconnect(struct snd_device *device)
+ {
+ 	struct azx *chip = device->device_data;
++	struct hdac_bus *bus = azx_bus(chip);
  
- 		memcpy(hw->phy.link_info.module_type, &abilities.module_type,
- 		       sizeof(hw->phy.link_info.module_type));
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index 41e1240acaea5..b577e6adf3bff 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -722,7 +722,14 @@ static void i40e_get_settings_link_up_fec(u8 req_fec_info,
- 	ethtool_link_ksettings_add_link_mode(ks, supported, FEC_RS);
- 	ethtool_link_ksettings_add_link_mode(ks, supported, FEC_BASER);
- 
--	if (I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) {
-+	if ((I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) &&
-+	    (I40E_AQ_SET_FEC_REQUEST_KR & req_fec_info)) {
-+		ethtool_link_ksettings_add_link_mode(ks, advertising,
-+						     FEC_NONE);
-+		ethtool_link_ksettings_add_link_mode(ks, advertising,
-+						     FEC_BASER);
-+		ethtool_link_ksettings_add_link_mode(ks, advertising, FEC_RS);
-+	} else if (I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) {
- 		ethtool_link_ksettings_add_link_mode(ks, advertising, FEC_RS);
- 	} else if (I40E_AQ_SET_FEC_REQUEST_KR & req_fec_info) {
- 		ethtool_link_ksettings_add_link_mode(ks, advertising,
-@@ -730,12 +737,6 @@ static void i40e_get_settings_link_up_fec(u8 req_fec_info,
- 	} else {
- 		ethtool_link_ksettings_add_link_mode(ks, advertising,
- 						     FEC_NONE);
--		if (I40E_AQ_SET_FEC_AUTO & req_fec_info) {
--			ethtool_link_ksettings_add_link_mode(ks, advertising,
--							     FEC_RS);
--			ethtool_link_ksettings_add_link_mode(ks, advertising,
--							     FEC_BASER);
--		}
- 	}
+ 	chip->bus.shutdown = 1;
++	cancel_work_sync(&bus->unsol_work);
++
+ 	return 0;
  }
  
-@@ -1437,6 +1438,7 @@ static int i40e_get_fec_param(struct net_device *netdev,
- 	struct i40e_hw *hw = &pf->hw;
- 	i40e_status status = 0;
- 	int err = 0;
-+	u8 fec_cfg;
- 
- 	/* Get the current phy config */
- 	memset(&abilities, 0, sizeof(abilities));
-@@ -1448,18 +1450,16 @@ static int i40e_get_fec_param(struct net_device *netdev,
- 	}
- 
- 	fecparam->fec = 0;
--	if (abilities.fec_cfg_curr_mod_ext_info & I40E_AQ_SET_FEC_AUTO)
-+	fec_cfg = abilities.fec_cfg_curr_mod_ext_info;
-+	if (fec_cfg & I40E_AQ_SET_FEC_AUTO)
- 		fecparam->fec |= ETHTOOL_FEC_AUTO;
--	if ((abilities.fec_cfg_curr_mod_ext_info &
--	     I40E_AQ_SET_FEC_REQUEST_RS) ||
--	    (abilities.fec_cfg_curr_mod_ext_info &
--	     I40E_AQ_SET_FEC_ABILITY_RS))
-+	else if (fec_cfg & (I40E_AQ_SET_FEC_REQUEST_RS |
-+		 I40E_AQ_SET_FEC_ABILITY_RS))
- 		fecparam->fec |= ETHTOOL_FEC_RS;
--	if ((abilities.fec_cfg_curr_mod_ext_info &
--	     I40E_AQ_SET_FEC_REQUEST_KR) ||
--	    (abilities.fec_cfg_curr_mod_ext_info & I40E_AQ_SET_FEC_ABILITY_KR))
-+	else if (fec_cfg & (I40E_AQ_SET_FEC_REQUEST_KR |
-+		 I40E_AQ_SET_FEC_ABILITY_KR))
- 		fecparam->fec |= ETHTOOL_FEC_BASER;
--	if (abilities.fec_cfg_curr_mod_ext_info == 0)
-+	if (fec_cfg == 0)
- 		fecparam->fec |= ETHTOOL_FEC_OFF;
- 
- 	if (hw->phy.link_info.fec_info & I40E_AQ_CONFIG_FEC_KR_ENA)
 -- 
 2.20.1
 
