@@ -2,114 +2,133 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8DFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EF42077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A029A2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="kBJPEpmE"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SwCeGizo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfLJAPt (ORCPT
+        id S1727415AbfLJATL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:15:49 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:57229 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfLJAPt (ORCPT
+        Mon, 9 Dec 2019 19:19:11 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38921 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfLJATL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:15:49 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8178C2304C;
-        Tue, 10 Dec 2019 01:15:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1575936947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wSUPiehHumsTgPhza1Uxhk4PKH7aRjIwy6oBQhIf3xI=;
-        b=kBJPEpmEMHRyIKAhEIzhJjZNk3ThFHeYyYTCnm+NH8t4JUj9kaCcJc/NkJgUVi1GtV0o/D
-        Xgx+q/Mi7yzMGI/NYd0XfyAcSNO1xW2O3H9CoWf3B5Rw2IvHN90IxV2XSki1E3SYEcyQ1g
-        Tz4NJN0wbam9mJW5UBo6IxdgNrVKuLM=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH net-next] enetc: add software timestamping
-Date:   Tue, 10 Dec 2019 01:15:37 +0100
-Message-Id: <20191210001537.25630-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Mon, 9 Dec 2019 19:19:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id s14so1204977wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:19:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7SQNMrH3FWLOHx8P5+nc/Y/vfFqnbuXwKn95w6eAgao=;
+        b=SwCeGizoute6aM8WBuWO5aqLXZvlBE9LQkiA01eogphBriUxjYU5BxsC+cYroUmZE8
+         tqi0jLBqvVR7I87fm/QGOxMkRFn8sICZntbBTvgffbv8ooc6M63WJ+CKxFd+/tP/SSSK
+         UQucOxuaOq96ykIy8qxsmP526hqGxid+/SVSw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7SQNMrH3FWLOHx8P5+nc/Y/vfFqnbuXwKn95w6eAgao=;
+        b=KVseuUtte+3rCinsZZNFVnhK6g32ZSGtGC5TLhyzaIzt/KKL2U656/2uRT+SvDIRSV
+         P0QmGDmIN0GkoeroiCd2Y99Bg+Q8PRoVGcoWueFxqQovz9I7tPbFxYsFC6IB6yoARKN6
+         /TcIicoy5h6mYZvk1Ie2tLBxemHmDjmf5VgHw0Ls4qEPpSkCV/QedQO42oQrNCBXChUj
+         a91usMWgPuTMJ8+O3c5SxrNNKJntjcgKd5Mvcw3hrBPJkJOViofXilFXdB4yH/hJ/X2X
+         rfhYokntB1OUxcuks2fDFYOAM6M6VfncIfxUIlEMCceU9MjA+pEL7zN5Qe8DmaGg76T5
+         yOkw==
+X-Gm-Message-State: APjAAAW9DHJUxGcV5zvly3C8LlzK4JVpwGk/m2l1pOo2n0kG0W01eJQO
+        k+xNUm4C1FFpivLBEUNUYEl4dCsdDYiN+g==
+X-Google-Smtp-Source: APXvYqxzOk0JdZlf+46jK9Xp8GhKR0K8LVhI3QZ5He8BwBXVH+OKWm/me7LNc/zlPupDn98PkoD4/Q==
+X-Received: by 2002:a1c:a750:: with SMTP id q77mr1645652wme.76.1575937149108;
+        Mon, 09 Dec 2019 16:19:09 -0800 (PST)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id b17sm1229259wrp.49.2019.12.09.16.19.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Dec 2019 16:19:07 -0800 (PST)
+Subject: Re: [PATCH 0/2] Add iProc IDM device support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191202233127.31160-1-ray.jui@broadcom.com>
+ <20191207173914.353f768d@why>
+ <bd90ba80-9aac-e406-9066-64e975e5b10b@broadcom.com>
+ <20191209183636.6d708bfd@why>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <69ff3b8a-e99e-7128-a02a-1cac1da3eb66@broadcom.com>
+Date:   Mon, 9 Dec 2019 16:19:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 8178C2304C
-X-Spamd-Result: default: False [4.90 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         RCPT_COUNT_FIVE(0.00)[5];
-         DKIM_SIGNED(0.00)[];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.657];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c::/31, country:DE]
+In-Reply-To: <20191209183636.6d708bfd@why>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a software TX timestamp and add it to the ethtool query
-interface.
 
-skb_tx_timestamp() is also needed if one would like to use PHY
-timestamping.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/ethernet/freescale/enetc/enetc.c         | 2 ++
- drivers/net/ethernet/freescale/enetc/enetc_ethtool.c | 1 +
- 2 files changed, 3 insertions(+)
+On 12/9/19 10:36 AM, Marc Zyngier wrote:
+> On Mon, 9 Dec 2019 10:02:53 -0800
+> Ray Jui <ray.jui@broadcom.com> wrote:
+> 
+>> On 12/7/19 9:39 AM, Marc Zyngier wrote:
+>>> On Mon,  2 Dec 2019 15:31:25 -0800
+>>> Ray Jui <ray.jui@broadcom.com> wrote:
+>>>    
+>>>> The Broadcom iProc IDM device allows control and monitoring of ASIC internal
+>>>> bus transactions. Most importantly, it can be configured to detect bus
+>>>> transaction timeout. In such case, critical information such as transaction
+>>>> address that caused the error, bus master ID of the transaction that caused
+>>>> the error, and etc., are made available from the IDM device.
+>>>
+>>> This seems to have many of the features of an EDAC device reporting
+>>> uncorrectable errors.
+>>>
+>>> Is there any reason why it is not implemented as such?
+>>>
+>>> Thanks,
+>>>
+>>> 	M.
+>>>    
+>>
+>> I thought EDAC errors (in fact, in our case, that's fatal rather than
+>> uncorrectable) are mostly for DDR. Is my understanding incorrect?
+> 
+> No, they are for HW errors in general. There is no real limitation of
+> scope, as far as I understand. Recently, the Annapurna guys came up
+> with a similar HW block, and were convinced to make it an EDAC device.
+> 
+> See [1] for details.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/linux-devicetree/1570707681-865-1-git-send-email-talel@amazon.com/
+> 
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index 17739906c966..2ee4a2cd4780 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -227,6 +227,8 @@ static int enetc_map_tx_buffs(struct enetc_bdr *tx_ring, struct sk_buff *skb,
- 	enetc_bdr_idx_inc(tx_ring, &i);
- 	tx_ring->next_to_use = i;
- 
-+	skb_tx_timestamp(skb);
-+
- 	/* let H/W know BD ring has been updated */
- 	enetc_wr_reg(tx_ring->tpir, i); /* includes wmb() */
- 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-index 880a8ed8bb47..301ee0dde02d 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-@@ -579,6 +579,7 @@ static int enetc_get_ts_info(struct net_device *ndev,
- 			   (1 << HWTSTAMP_FILTER_ALL);
- #else
- 	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-+				SOF_TIMESTAMPING_TX_SOFTWARE |
- 				SOF_TIMESTAMPING_SOFTWARE;
- #endif
- 	return 0;
--- 
-2.20.1
+Ah I see. It looks like memory controllers are the primary devices 
+supported by EDAC. In addition to that, EDAC also does seem to provide a 
+generic data structure to support other types of HW devices and error 
+events. I'll look into this and get back.
 
+Thanks,
+
+Ray
