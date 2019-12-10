@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22255C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F05D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD437206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013088;
-	bh=TaILOQjdQJF4e3ozYjxKmHMaISIlc5tWIgaU9YIpieE=;
+	s=default; t=1576013094;
+	bh=rwRuxKl4wtv89HyUaQghbveRZ1eF/vZ80lSEysd1yrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZ2oz/82ylXhnq767pXRzncpOhto7NEEXNULvKs+nkk87gbsr56Txt5mx17Myf+rU
-	 bUd5CTvn8Xr+B7VqRyT7vx3EOFnQosT5XnHuamj/6veK792IWCmBNS/jwJfCFUMcEN
-	 5qrDOMPJzJHGMt/puvmBJvVcbbmxKxYuLfaVIRMU=
+	b=FB+JkWTXvlgoNpFetA4WH/w0iQgcS6lmKaMYWAAfu3sx4AhnYonMsUY3s40/IJwV8
+	 W4UuQfNoBhjGaRhlZOemKiDUgE8yJsUo3KIn9YkE80YgnGdKmAs209iArNmSOOMUWa
+	 F2I1ndUZCdaHB91VL4t+BNuPU5R+GAp7B1Vuw8Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfLJVKs (ORCPT
+        id S1728769AbfLJVYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728561AbfLJVKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:40 -0500
+        id S1728282AbfLJVKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2804246B2;
-        Tue, 10 Dec 2019 21:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C691324680;
+        Tue, 10 Dec 2019 21:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012239;
-        bh=TaILOQjdQJF4e3ozYjxKmHMaISIlc5tWIgaU9YIpieE=;
+        s=default; t=1576012247;
+        bh=rwRuxKl4wtv89HyUaQghbveRZ1eF/vZ80lSEysd1yrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFE/xrpsRcxCwz/b9kXRh15UY6t9s5QS7qNvICkp0zr8Esp/O6p9cGaNlfFY58gJd
-         24hFNc9hKHBVenCxDllTmlYmrV6zetMjpQm9wZ6wLAyRsC/f6mYnEeVPMMuf8RxG+B
-         xwotyeWtHXjQXWo5+M88+YGiQC3enw/Z+Sogt5dY=
+        b=nyASVQNiWzYQc+Ng6KrcidsG7svF0H+iMDxF+pxT8UhWFzrkBjxZWYDGDXwjjKhbR
+         h03NvsvUdVPfHDqcAxNWIA2pqmb24ZibGjWZfbymA/uYQC27yfWQ8CTcx6WjQjqbq6
+         XasLOGciwaDyG14SjFtg23kCalV8DNtS7y8aslLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        linux-ide@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 188/350] ata: sata_mv, avoid trigerrable BUG_ON
-Date:   Tue, 10 Dec 2019 16:04:53 -0500
-Message-Id: <20191210210735.9077-149-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 195/350] ALSA: pcm: Fix missing check of the new non-cached buffer type
+Date:   Tue, 10 Dec 2019 16:05:00 -0500
+Message-Id: <20191210210735.9077-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,55 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
+[ Upstream commit 6111fd2370eecae9f11bfdc08ba097e0b51fcfd3 ]
 
-There are several reports that the BUG_ON on unsupported command in
-mv_qc_prep can be triggered under some circumstances:
-https://bugzilla.suse.com/show_bug.cgi?id=1110252
-https://serverfault.com/questions/888897/raid-problems-after-power-outage
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
-https://bugs.centos.org/view.php?id=14998
+The check for the mmap support via hw_support_mmap() function misses
+the case where the device is with SNDRV_DMA_TYPE_DEV_UC, which should
+have been treated equally as SNDRV_DMA_TYPE_DEV.  Let's fix it.
 
-Let sata_mv handle the failure gracefully: warn about that incl. the
-failed command number and return an AC_ERR_INVALID error. We can do that
-now thanks to the previous patch.
+Note that this bug doesn't hit any practical problem, because
+SNDRV_DMA_TYPE_DEV_UC is used only for x86-specific drivers
+(snd-hda-intel and snd-intel8x0) for the specific platforms that need
+the non-cached buffers.  And, on such platforms, hw_support_mmap()
+already returns true in anyway.  That's the reason I didn't put
+Cc-to-stable mark here.  This is only for any theoretical future
+extension.
 
-Remove also the long-standing FIXME.
-
-[v2] use %.2x as commands are defined as hexa.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-ide@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 425da159707b ("ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*")
+Fixes: 42e748a0b325 ("ALSA: memalloc: Add non-cached buffer type")
+Link: https://lore.kernel.org/r/20191104101115.27311-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/sata_mv.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ sound/core/pcm_native.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-index ad385a113391e..a2b56c882081e 100644
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -2098,12 +2098,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
- 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
- 		 * of which are defined/used by Linux.  If we get here, this
- 		 * driver needs work.
--		 *
--		 * FIXME: modify libata to give qc_prep a return value and
--		 * return error here.
- 		 */
--		BUG_ON(tf->command);
--		break;
-+		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
-+				tf->command);
-+		return AC_ERR_INVALID;
- 	}
- 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
- 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 91c6ad58729fe..c3a139436ac26 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -222,7 +222,8 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
+ 		return false;
+ 
+ 	if (substream->ops->mmap ||
+-	    substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV)
++	    (substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV &&
++	     substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV_UC))
+ 		return true;
+ 
+ 	return dma_can_mmap(substream->dma_buffer.dev.dev);
 -- 
 2.20.1
 
