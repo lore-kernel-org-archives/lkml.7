@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E490AC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354BAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DAA20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A77E2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015709;
-	bh=SCOD7Y8+kckcHiBEFj1WtBs0qD6FTzawym+LVOif+KA=;
+	s=default; t=1576015706;
+	bh=P2JgUGrer2yYD0WPqYpwYVQcjrDbWfI66tP4Kc5bkUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cU3KWhRThR+FFfTwHF2W01qDUkKQSMu/y1q+YNYHfprMAb8rMkudcgUK/wmuBn5q1
-	 1BiZWkZmx83gLc/lqMOX9sGy/rqogF9wQtbnCLCR4QnatiKn9k3l1IVU0ojAE6FSKF
-	 iWYjIU73/M+evxc5mK/txwMMDB8gV0vKAZItH4hk=
+	b=zkoSw4gOorkEjX32x4LRDbwrZ7qzmYiJHSOwvrtexWnphv32CbUGr75+/tK7Jbk7X
+	 18Q/9J71sl7TQwj9eMDCKECOFzWMqGDAwfxylPQfrR4CSeVJCzaNUeX1zi5Ew8kcUS
+	 h1xz57/QZMJSZMjn3wvIR1b87rPrWUEVLkyaRlAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbfLJWI2 (ORCPT
+        id S1728809AbfLJWEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729117AbfLJWEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 17:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727161AbfLJWEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8B2E20838;
-        Tue, 10 Dec 2019 22:04:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1081F20828;
+        Tue, 10 Dec 2019 22:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015483;
-        bh=SCOD7Y8+kckcHiBEFj1WtBs0qD6FTzawym+LVOif+KA=;
+        s=default; t=1576015476;
+        bh=P2JgUGrer2yYD0WPqYpwYVQcjrDbWfI66tP4Kc5bkUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1TOjXKVPwoXuS/LagILFe6u1YpEL7NnjX+PDkJnDsV3Yd6h4yW8oWfHLBszdaSu3
-         kFPo8WLrDPGq5Sn7VRWRCvKvvU89LbrV1bRJKacL7TCRm3fCEzK5YywPt4VjTGofbm
-         Qy7Kf7ekfMFo9toNOcqVL9XOcbJswvC+HkGpLSw0=
+        b=gpA0mMyb4Uv81yGawCBV1duoF3wXebgXmvWINQmssNBO5Yxy34EQ8N0MDQgCiALmm
+         C/39MWL5JJ6kU2AP+BkOsZly+r2GYZcRwN4ywnRBEgd1uXAr4meuBmJBiCROdh78c0
+         1gy4tY70e3z4cODPXFVOeObqAi7XWogpDYwJkKiU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 087/130] perf probe: Fix to show inlined function callsite without entry_pc
-Date:   Tue, 10 Dec 2019 17:02:18 -0500
-Message-Id: <20191210220301.13262-87-sashal@kernel.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 081/130] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
+Date:   Tue, 10 Dec 2019 17:02:12 -0500
+Message-Id: <20191210220301.13262-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,110 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
+[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
+Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
+single memory leak during probe:
 
-Without this:
+unreferenced object 0xec13ee40 (size 176):
+  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
+    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
+    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
+    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
+    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
+    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
+    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
+    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
+    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
+    [<ac5fcae4>] process_one_work+0x22c/0x564
+    [<f5e6d3b6>] worker_thread+0x44/0x5d8
+    [<82c7b073>] kthread+0x150/0x154
+    [<b43e1b7d>] ret_from_fork+0x14/0x2c
+    [<794dff30>] 0x0
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
+patch just frees the skb within the function to resolve memleak problem
+by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
+command packet for firmware via the function, applying this patch doesn't
+affect driver behavior.
 
-With this patch:
-
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
-  Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
-
-  [root@quaco ~]#
-
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
-
-Ok, Intel system here... :-)
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 21c2ed42ad6b7..0a5de865563cf 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -686,7 +686,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+index 530e80f0ef0b7..1ee7f796113bc 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+@@ -1556,6 +1556,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
+    * This is maybe necessary:
+    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
+    */
++	dev_kfree_skb(skb);
++
+ 	return true;
+ }
+ 
 -- 
 2.20.1
 
