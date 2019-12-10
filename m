@@ -2,98 +2,110 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA2BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E0FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEF524683
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="OjVkow0S"
+	by mail.kernel.org (Postfix) with ESMTP id D200224681
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576012059;
+	bh=6Ap/4dLrJtbhgDZjWBk601+fL/rDqhvc0pmlWurQAGU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TbnqLi/tiOa7dW1Vd9vVyBXN6gHGiFlhDfYtlkDregbIg1J9N8h8MCJH2TTMKSGQC
+	 ktsJMOnVwzPNmjhKwMl3oMmL0nIWP128nrCFoUB55To5xMDOGllJ9nEUZv+De8xDtt
+	 PW4mxTmZXj6FmUFqmbEtE21kpol2iMPqy4vQH3xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfLJVHI (ORCPT
+        id S1727070AbfLJVHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:07:08 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36523 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfLJVEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so21728043wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:04:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t5wRb0HVinMm6EfDaWAnO/a1Sj3+z3DX/7PLYloGfXc=;
-        b=OjVkow0SpbjcoF1OWjpltk1vI3YxAw2jQt8Cq6d1x/Btjj1F3u4QeDCqIVyZYELWWn
-         lXo4Q8crVZNDfrrurZiFUJUCwelB3pjClmCwC1fxlalGIcZiAwo5pMgLil3e2tONS9X5
-         v7g3C9cMkECg6NxNdXCychqgWcQNo1wWAF9mk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t5wRb0HVinMm6EfDaWAnO/a1Sj3+z3DX/7PLYloGfXc=;
-        b=IfyKaxxd54Gx9pkUQod1BbH1eUXpfoy8lq6X/oIvR0Fup29Q2VMXGaAMRFktxyWlxJ
-         3rcO/rmrWneHW5sk5PbrprUW71OiauiWl3IauaOIamqh6BansfT2tny7jtv+4WeJGjJn
-         fgMMw+SG4eTHLoRjGkmienOyf7wVX23QC4dRVWpgL78CPAAcoImwmFLlf0tKPVRd1+YI
-         pb37Zfew3xuU12ppzwAgKZtAor362v1UnKZUBjDMqj8a1AhgeRjk9jNptJopY3aloGsj
-         OXd9zrbk7bWYwhhMmtJp6rZ6b3wadg3kgyiO9VXxO8+20p0kMtzoxgwQLtk0GAhOQdtl
-         tzDg==
-X-Gm-Message-State: APjAAAW9cc5yiYv1hE+LlAQH25BSHjECyobYtmla0lR2hmD2u25fegWw
-        bDQX9Ev/9Zq1na6pNmYJcwdovTHhqLPUcQ==
-X-Google-Smtp-Source: APXvYqy79TBCNpPOmBCd880DGqLHwk7LRohDsnP9Y0U3hQ0Ejrk0NnEgnxTg3iGWHnZTuaLKKdJiTQ==
-X-Received: by 2002:a5d:50d2:: with SMTP id f18mr5456797wrt.366.1576011844881;
-        Tue, 10 Dec 2019 13:04:04 -0800 (PST)
-Received: from localhost ([89.32.122.5])
-        by smtp.gmail.com with ESMTPSA id p10sm4422433wmi.15.2019.12.10.13.04.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:04:04 -0800 (PST)
-Date:   Tue, 10 Dec 2019 21:04:03 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     chengkaitao <pilgrimtao@gmail.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        smuchun@gmail.com, Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v2] mm: cleanup some useless code
-Message-ID: <20191210210403.GA455280@chrisdown.name>
-References: <20191210160450.3395-1-pilgrimtao@gmail.com>
+        Tue, 10 Dec 2019 16:07:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfLJVHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE43D20652;
+        Tue, 10 Dec 2019 21:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012057;
+        bh=6Ap/4dLrJtbhgDZjWBk601+fL/rDqhvc0pmlWurQAGU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kdEHs/Bhl7rM1+9nc/zM8Ex/1+7zhPDMoiklTbPbcRuLmm/Pm2M06u0z+TLBmnEoc
+         TthxW+WqWq8URoo3YpQ2KoknCXTwwL16wgw6n99ppNGLfws8ODeiFQvPmrn9/6cqm4
+         rQfkKoUAHaUcUoxjE7n+euY6JYc/J8HP3FY6I5M8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 040/350] media: ov6650: Fix control handler not freed on init error
+Date:   Tue, 10 Dec 2019 16:02:25 -0500
+Message-Id: <20191210210735.9077-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191210160450.3395-1-pilgrimtao@gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-chengkaitao writes:
->Subject: Re: [PATCH v2] mm: cleanup some useless code
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-Can you please write a more descriptive commit title? Seeing this in the commit 
-history tells the reader nothing, "code" could mean anything from a state 
-machine to a boolean, and "cleanup" could mean anything from some complex 
-refactoring to something trivial like this, and right now I have to look and 
-see the individual commit. This patch is really just deduplication of effort.
+[ Upstream commit c404af950d14b71bfbf574a752b6c29d726baaba ]
 
-Perhaps:
+Since commit afd9690c72c3 ("[media] ov6650: convert to the control
+framework"), if an error occurs during initialization of a control
+handler, resources possibly allocated to the handler are not freed
+before device initialiaton is aborted.  Fix it.
 
-     mm, memcg: Don't check PageTransHuge before calling hpage_nr_pages
+Fixes: afd9690c72c3 ("[media] ov6650: convert to the control framework")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/ov6650.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
->It is much simpler to just use hpage_nr_pages for nr_pages and replace
->the local variable by PageTransHuge check directly
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 5b9af5e5b7f13..68776b0710f98 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -989,8 +989,10 @@ static int ov6650_probe(struct i2c_client *client,
+ 			V4L2_CID_GAMMA, 0, 0xff, 1, 0x12);
+ 
+ 	priv->subdev.ctrl_handler = &priv->hdl;
+-	if (priv->hdl.error)
+-		return priv->hdl.error;
++	if (priv->hdl.error) {
++		ret = priv->hdl.error;
++		goto ectlhdlfree;
++	}
+ 
+ 	v4l2_ctrl_auto_cluster(2, &priv->autogain, 0, true);
+ 	v4l2_ctrl_auto_cluster(3, &priv->autowb, 0, true);
+@@ -1008,8 +1010,10 @@ static int ov6650_probe(struct i2c_client *client,
+ 	priv->subdev.internal_ops = &ov6650_internal_ops;
+ 
+ 	ret = v4l2_async_register_subdev(&priv->subdev);
+-	if (ret)
+-		v4l2_ctrl_handler_free(&priv->hdl);
++	if (!ret)
++		return 0;
++ectlhdlfree:
++	v4l2_ctrl_handler_free(&priv->hdl);
+ 
+ 	return ret;
+ }
+-- 
+2.20.1
 
-Heh, calling it "much" simpler seems a bit excessive. I mean, the code is just 
-as readable in both cases, but if it's going to go in, then that's fine. Any 
-merge conflict should be trivial enough to fix.
-
->Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
->Acked-by: Michal Hocko <mhocko@suse.com>
-
-I'm indifferent to this patch, but after the title change:
-
-Acked-by: Chris Down <chris@chrisdown.name>
