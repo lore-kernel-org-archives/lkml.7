@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E05C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31681C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F02205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C31205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013065;
-	bh=u/TA5nCukRHIf1eZ2xTVzBsDtu7MZr78Wrzuy7Mx6ZQ=;
+	s=default; t=1576013072;
+	bh=dC6fjqGh654ZZLwYjdy87ftZ5dG/h1Xx9eEY+r9Uk6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1t6MxIcey6VuyOW9iM+ZSLU1EUHJWqprvWPL8O1aROPk0/yDxFtYLjwH1BKB1snBT
-	 6EJlpKvhvdFsLM0F+ID3sWrFjJv5LOx5Ehitx4UnzC5OP4Ql1YryXO61BsBm6Xr5nD
-	 gVk/UD2FES+xgO5ZCK+j+7SMxa+jJ23yHFh9Xl2I=
+	b=h/1rx6KnMTCaFNgx3DCLvM1h93eUIFDJzNm3sOpV9ONoCguA+jV/Qw7dJ/I8LNgN1
+	 T66pkDvjg8dF1jMPkZ3wCzDgN8tsUTROE0c21zEVJBax7PFbH28PE07B8/C0VzuDjC
+	 65FyHMeL947pMHBWM+iVzrRpECPN2kHYBPvwjVzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbfLJVYV (ORCPT
+        id S1728693AbfLJVYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32972 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbfLJVKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:53 -0500
+        id S1727506AbfLJVKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABDA24697;
-        Tue, 10 Dec 2019 21:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B3E246AF;
+        Tue, 10 Dec 2019 21:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012253;
-        bh=u/TA5nCukRHIf1eZ2xTVzBsDtu7MZr78Wrzuy7Mx6ZQ=;
+        s=default; t=1576012251;
+        bh=dC6fjqGh654ZZLwYjdy87ftZ5dG/h1Xx9eEY+r9Uk6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6uqnIoUhdo2MvC4LH/L9AsCV3ErqKjwIsodv5koxBrvRgkzZH+2ZUkgC/SOqiRhK
-         r1tB6Ncb6HY4WbN/3Ht9lTvTpdYtlqwJeQu36BtdNNt5m3zf/+BLsZGeDyNvYZ3xTT
-         nf+KytQfrBNa63JbUXRVj5kk86o7aEibkVXFo460=
+        b=1CmsVIdVGPBbLbliVtnUKOlLgY6ihmRnVqACPBbdMKv9P7yKDxieqet1UZ0tHniLU
+         SU+w8iLDYxIyWrv63iKU+VasR0zrBfD1ceyHSVCrTG1+MHYMvfV5nW+aJKNzVimm3I
+         yip71i/qS9alvx1+OrqDgxZgmKddLo8hwDLeYlrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 200/350] ixgbe: protect TX timestamping from API misuse
-Date:   Tue, 10 Dec 2019 16:05:05 -0500
-Message-Id: <20191210210735.9077-161-sashal@kernel.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 198/350] pinctrl: qcom: sc7180: Add missing tile info in SDC_QDSD_PINGROUP/UFS_RESET
+Date:   Tue, 10 Dec 2019 16:05:03 -0500
+Message-Id: <20191210210735.9077-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,44 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
+[ Upstream commit 81898a44f288607cb3b11a42aed6efb646891c19 ]
 
-HW timestamping can only be requested for a packet if the NIC is first
-setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
-driver still allowed TX packets to request HW timestamping. In this
-situation, we see 'clearing Tx Timestamp hang' noise in the log.
+The SDC_QDSD_PINGROUP/UFS_RESET macros are missing the .tile info needed to
+calculate the right register offsets. Adding them here and also
+adjusting the offsets accordingly.
 
-Fix this by checking that the NIC is configured for HW TX timestamping
-before accepting a HW TX timestamping request.
+Fixes: f2ae04c45b1a ("pinctrl: qcom: Add SC7180 pinctrl driver")
 
-Similar-to:
-   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
-   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
-
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Link: https://lore.kernel.org/r/20191021141507.24066-1-rnayak@codeaurora.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 91b3780ddb040..1a7203fede12c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -8639,7 +8639,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+index 6399c8a2bc22c..d6cfad7417b1c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+@@ -77,6 +77,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = pull,			\
+ 		.drv_bit = drv,				\
+@@ -102,6 +103,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = 3,				\
+ 		.drv_bit = 0,				\
+@@ -1087,14 +1089,14 @@ static const struct msm_pingroup sc7180_groups[] = {
+ 	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
+ 	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
+ 	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
+-	[119] = UFS_RESET(ufs_reset, 0x97f000),
+-	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x97a000, 15, 0),
+-	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x97a000, 13, 6),
+-	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x97a000, 11, 3),
+-	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x97a000, 9, 0),
+-	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x97b000, 14, 6),
+-	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x97b000, 11, 3),
+-	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
++	[119] = UFS_RESET(ufs_reset, 0x7f000),
++	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x7a000, 15, 0),
++	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x7a000, 13, 6),
++	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x7a000, 11, 3),
++	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x7a000, 9, 0),
++	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x7b000, 14, 6),
++	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x7b000, 11, 3),
++	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x7b000, 9, 0),
+ };
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	    adapter->ptp_clock) {
--		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
-+		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
-+		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
- 					   &adapter->state)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
+ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
 -- 
 2.20.1
 
