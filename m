@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BD1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2094BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521CE246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0562246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012280;
-	bh=kdDU8yli9xY4xyyuo2kzFexQmkcjRLj6DFPbtAN4pDU=;
+	s=default; t=1576012284;
+	bh=6IUHqtOId68VED+dBh6FQNdwiznKbRUy/0McKi+HpdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vb7F4z1VtSZLYZO0jsmUoW3ZeEkFyhXP5TQgiwqSv99VJF74FA1V6YWs4BgJ658D4
-	 lpP9imEZWPHQlhzXFdN3ay1P030DaNdsZS72B18abpmEckFHc8b3hf0tc/CAw+5548
-	 CRd2gyoSU0bNbXH6z4rGRHDqyEX8CSnWGKRZN64o=
+	b=pMXd4DmhZLFOhO9fXVC+0K78LDMqLSwdrhfuX0C0mNjuCZYgO2/hXs9mqmWUecRk5
+	 NiQ3bcQDTfd+lrUCbu/M5nGBylxwPxBllru/RNHfKMJZOBBaLvrbosAQ1SGNDjTOOh
+	 +DdtUngeZAzdhjo0GmWRDiuHyroi1v01UYl2vFyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfLJVLS (ORCPT
+        id S1728111AbfLJVLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfLJVLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:08 -0500
+        id S1728708AbfLJVLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A968246A4;
-        Tue, 10 Dec 2019 21:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD2424697;
+        Tue, 10 Dec 2019 21:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012267;
-        bh=kdDU8yli9xY4xyyuo2kzFexQmkcjRLj6DFPbtAN4pDU=;
+        s=default; t=1576012270;
+        bh=6IUHqtOId68VED+dBh6FQNdwiznKbRUy/0McKi+HpdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOmK6bpnyAmZsbpd5FP0DYD8xYALHHnl2Tlz+sJjzSLdbbGNNGpX5iabSKsW7e8HZ
-         yG0F7P+sq1ByIpojpkHpb2REhKM5ReEDfBd2AhbxzJDxixLXsc7JLsnnflfwxNVXU9
-         oS8z8iuMdRr4EgemqR8/nxEg7W6Ai267hYM7ow8Q=
+        b=MuLD4ui110tRoBgynjrLw2A7OHf8/osKuXcQtnQM3ix9n6e/NKPGIjUqqxP8E+cSY
+         VDSalQGC7xI3GLc02FinaOT2l/eUhIjQGolfumNHp82XD9wDPxl20kPaVpnHvuPvs7
+         jpNNTO9TB585VXQG3tEjXHgIfHFZnmd+0f97lZ6U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 212/350] bnx2x: Fix PF-VF communication over multi-cos queues.
-Date:   Tue, 10 Dec 2019 16:05:17 -0500
-Message-Id: <20191210210735.9077-173-sashal@kernel.org>
+Cc:     Kamal Heib <kamalheib1@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 215/350] RDMA/core: Fix return code when modify_port isn't supported
+Date:   Tue, 10 Dec 2019 16:05:20 -0500
+Message-Id: <20191210210735.9077-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,52 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Kamal Heib <kamalheib1@gmail.com>
 
-[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
+[ Upstream commit 55bfe905fa97633438c13fb029aed85371d85480 ]
 
-PF driver doesn't enable tx-switching for all cos queues/clients,
-which causes packets drop from PF to VF. Fix this by enabling
-tx-switching on all cos queues/clients.
+Improve return code from ib_modify_port() by doing the following:
+ - Use "-EOPNOTSUPP" instead "-ENOSYS" which is the proper return code
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ - Allow only fake IB_PORT_CM_SUP manipulation for RoCE providers that
+   didn't implement the modify_port callback, otherwise return
+   "-EOPNOTSUPP"
+
+Fixes: 61e0962d5221 ("IB: Avoid ib_modify_port() failure for RoCE devices")
+Link: https://lore.kernel.org/r/20191028155931.1114-2-kamalheib1@gmail.com
+Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/device.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index 0edbb0a768472..5097a44686b39 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -2397,15 +2397,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
- 	/* send the ramrod on all the queues of the PF */
- 	for_each_eth_queue(bp, i) {
- 		struct bnx2x_fastpath *fp = &bp->fp[i];
-+		int tx_idx;
- 
- 		/* Set the appropriate Queue object */
- 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
- 
--		/* Update the Queue state */
--		rc = bnx2x_queue_state_change(bp, &q_params);
--		if (rc) {
--			BNX2X_ERR("Failed to configure Tx switching\n");
--			return rc;
-+		for (tx_idx = FIRST_TX_COS_INDEX;
-+		     tx_idx < fp->max_cos; tx_idx++) {
-+			q_params.params.update.cid_index = tx_idx;
-+
-+			/* Update the Queue state */
-+			rc = bnx2x_queue_state_change(bp, &q_params);
-+			if (rc) {
-+				BNX2X_ERR("Failed to configure Tx switching\n");
-+				return rc;
-+			}
- 		}
- 	}
- 
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index e6327d8f5b79a..2b5bd7206fc6e 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -2409,8 +2409,12 @@ int ib_modify_port(struct ib_device *device,
+ 		rc = device->ops.modify_port(device, port_num,
+ 					     port_modify_mask,
+ 					     port_modify);
++	else if (rdma_protocol_roce(device, port_num) &&
++		 ((port_modify->set_port_cap_mask & ~IB_PORT_CM_SUP) == 0 ||
++		  (port_modify->clr_port_cap_mask & ~IB_PORT_CM_SUP) == 0))
++		rc = 0;
+ 	else
+-		rc = rdma_protocol_roce(device, port_num) ? 0 : -ENOSYS;
++		rc = -EOPNOTSUPP;
+ 	return rc;
+ }
+ EXPORT_SYMBOL(ib_modify_port);
 -- 
 2.20.1
 
