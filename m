@@ -2,132 +2,120 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA290C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FEAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C1B20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAEC20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RykeHNFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfLJJl7 (ORCPT
+        id S1727076AbfLJJnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:41:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33645 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJl7 (ORCPT
+        Tue, 10 Dec 2019 04:43:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25968 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:41:59 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iec1b-0006gj-AJ; Tue, 10 Dec 2019 10:41:47 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iec1Y-0003yz-IK; Tue, 10 Dec 2019 10:41:44 +0100
-Date:   Tue, 10 Dec 2019 10:41:44 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, joel@jms.id.au, andrew@aj.id.au,
-        lgirdwood@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
+        Tue, 10 Dec 2019 04:43:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575971003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x+9gHLFclc8eGt+cU05OJPVI/o5eh55h38LcdsgaD/w=;
+        b=RykeHNFVEsUhchl4Ei1Zyn3jMBZwLKUo/JS9C0vPevzh6KMJ9mzNUfsG4SWWLQieNqt5BC
+        /4365xqWqOJIDCFTWmjCTar0mynFOgt8lQR5Y0zNE5HDnGU6Xad4fh30MjTJcosCMiVlpO
+        G/p2NGPOXSJSkDosDtC5ekwEPKA+T00=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-SRu-jkZMPA6kkcPg2ysLbQ-1; Tue, 10 Dec 2019 04:43:21 -0500
+Received: by mail-wr1-f71.google.com with SMTP id j13so8698797wrr.20
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:43:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x+9gHLFclc8eGt+cU05OJPVI/o5eh55h38LcdsgaD/w=;
+        b=Ih1WRC1HfbQLp2QAjShh+uO17pkJyCTDaek54OY+YbzEMYOVpHWtR4rEZf/8W6HutW
+         ZgfGHMPkrNiw3qLm59R453biAniAgWz8fAYmWri29MEMYYW8njaVRq51dtAwW0t229Im
+         lvSN5kSQZqfyYgIMvIsvGfsdClCq8IhUsakogxg3mDo3hcfcHUn8/bZ2x1O1QfDv4ZVY
+         tTUVJVwdIJ16u4FW3tZ+hBEy6ujPN9pGV2cO3rx3esmG4HzU++PLlyKnrFifjTgkdGtY
+         zUjgPfFoSj0rEtZnkP/5euqiOF5NOO9oZaCZWw/s9umAl715Tlyjxhqy5ea4d99U3hEd
+         +/EA==
+X-Gm-Message-State: APjAAAVljO4hmVuKQyx+3j+BJv5smsqZeWG6LPtpDttDuU6ipyeRNGwE
+        RSwq6vJLW9eKwfUxNfyhFllQH2Z1K2qt+pP89/QJUST5oOwjwq+fA1OPeQw6eYzuVde6C3G/VEZ
+        Qs5KltwUkjsauQMuA+inyPEy1
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr3986775wmi.37.1575970999954;
+        Tue, 10 Dec 2019 01:43:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzeB/265O6c03O2Y44pel5nEJWfsWRBNWO+Wh+zKrzCGpUdazhsyNsnPr0e8H+FzTQolpxaYw==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr3986749wmi.37.1575970999761;
+        Tue, 10 Dec 2019 01:43:19 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id m3sm2619952wrs.53.2019.12.10.01.43.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 01:43:18 -0800 (PST)
+Subject: Re: [PATCH 0/2] ata: ahci: Add shutdown handler
+To:     Hanna Hawa <hhhawa@amazon.com>, axboe@kernel.dk
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        barakw@amazon.com
+References: <20191209163209.26284-1-hhhawa@amazon.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a6eb4bf8-547d-54de-1f25-fbe9c715cde5@redhat.com>
+Date:   Tue, 10 Dec 2019 10:43:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204134631.GT1998@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:09:56 up 25 days, 28 min, 32 users,  load average: 0.08, 0.04,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191209163209.26284-1-hhhawa@amazon.com>
+Content-Language: en-US
+X-MC-Unique: SRu-jkZMPA6kkcPg2ysLbQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+HI,
 
-On 19-12-04 13:46, Mark Brown wrote:
-> On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
+On 09-12-2019 17:32, Hanna Hawa wrote:
+> This series introduced AHCI shutdown handler for AHCI PCIe driver, to
+> disable host controller DMA and interrupts in order to avoid potentially
+> corrupting or otherwise interfering with a new kernel being started with
+> kexec.
 > 
-> > +  Optional regulator device-specific properties:
-> > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpose input,
-> > +    the datasheet calls it GPI. The regulator sense the input signal and select
-> > +    the active or suspend voltage settings. If the signal is active the
-> > +    active-settings are applied else the suspend-settings are applied.
-> > +    Attention: Sharing the same GPI for other purposes or across multiple
-> > +    regulators is possible but the polarity setting must equal.
-> 
-> I'm really confused by this.  As far as I understand it it seems
-> to be doing pinmuxing on the chip using the GPIO bindings which
-> is itself a bit odd and I don't see anything here that configures
-> whatever sets the state of the pins.  Don't we need another GPIO
-> to set the vsel-sense inputs on the PMIC?
+> Part of this patch move the common part between platform and pcie
+> drivers to libahci.c.
 
-Yes the PMIC is very configurable and it took a while till I understand
-it.. @Adam please correct me if I'm wrong.
+Series looks good to me:
 
-The PMIC regulators regardless of the type: ldo or buck can be
-simplified drawn as:
-
-
-
-da9062-gpio               da9062-regulator
-    
-  +-------------------------------------------------------
-  |                  PMIC
-  |    
-  > GPIO0            +--------------------------+
-  |                  |         REGULATOR-0      |
-  > GPIO1 -------+   |                          |
-  |              +-- > vsel-in    voltage-a-out <
-  > GPIO2        |   |                          |
-  |              |   > enable-in  voltage-b-out <
-  |              |   |                          |
-  |              |   +--------------------------+
-  |              |                              
-  |              |   +--------------------------+                          
-  |              |   |         REGULATOR-1      |                          
-  |              |   |                          |                          
-  |              +-- > vsel-in    voltage-a-out <                          
-  |                  |                          |                          
-  |                  > enable-in  voltage-b-out <
-  |                  |                          |
-  |                  +--------------------------+
-  |
-
-The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
-PMIC GPIOs which must be configured as input. If this is a pinmux in
-your opinion, then yes we need to do that. IMHO it isn't a pinmux
-because from the regulator point of view it is just a GPIO which comes
-from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
-I'm with you that this isn't the typical use-case.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
-  Marco 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Hans
+
+
+
+> 
+> Hanna Hawa (2):
+>    ata: libahci: move ahci platform shutdown function to libahci
+>    ata: ahci: Add shutdown handler
+> 
+>   drivers/ata/ahci.c             |  9 +++++++++
+>   drivers/ata/ahci.h             |  1 +
+>   drivers/ata/libahci.c          | 33 +++++++++++++++++++++++++++++++++
+>   drivers/ata/libahci_platform.c | 20 +-------------------
+>   4 files changed, 44 insertions(+), 19 deletions(-)
+> 
+
