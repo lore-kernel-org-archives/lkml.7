@@ -2,171 +2,785 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B735C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED66C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C672053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="CGiNp8RY";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="bj0GRcnv"
+	by mail.kernel.org (Postfix) with ESMTP id 459332073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLJKbT (ORCPT
+        id S1727238AbfLJKdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:31:19 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:13700 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727107AbfLJKbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:31:19 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAAU1px023958;
-        Tue, 10 Dec 2019 02:30:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=e3oL3iyM1feMduZa+VhOSzreuKNhqxoAGMCNUOQXB6M=;
- b=CGiNp8RYR8klGCCkwPFjJcNpvgn20MJO3fvs9d788QoakWfsPDGQ3ozN4frk1YQhvz9G
- v4kT5oRjj3MtTpOa8skOfCrrc+szw7IsC9Dyleq9aDIw4t2pTvbycl3dW+weRBen7KId
- wHIjbR5G3+LGHpdas7O5y+TbIhyV3jrYLQfbVUw2Jjwx0KVSaGsJFUU+mdOb2hby8z3l
- F+fSLIpO25UjRN7Jtbf33ukY9b5c1umrX0cNBAqtYkDTpK19AaAWI0ORgMX5vCCmlAdo
- Ti2oGR54DtWzPeZMz3k5cGP/hPWno9CLlekZBp6m6uOfePvxkQd6Z285FMDo2veBm+/x 6A== 
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2051.outbound.protection.outlook.com [104.47.45.51])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2wr9dfhekp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Dec 2019 02:30:09 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FPBzfeeN6oyo3KMZJmZbRLRUVMTFPsDDdbE+gMyRVwYPWJyu1r3VjyfSBEfvMQ6mQnF8/pe1eYGyU8gbKnWNngUuw931HQPB5y9jDSMURd5kTo/1zKih+l+/AX/kDJBfbydWIbSNtWt0oiT3GaqMhM41gYmwLwHYEOy3MIzRzt1qon64uKm+Ao8jNP4W0uJd8VdeKMl/cOoykcLwK2tdkk/1yiT+TA1m5/TUzy7ybucR0NfQSiruAexl/rOSPmldC7NndHuHCd8vHeaJjSNwa7nS99wwfQodAIO9kTvDyaqppLlZWf42Y9pGRSxqshQgNe/xndzD/ey6sa2P7IgJPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e3oL3iyM1feMduZa+VhOSzreuKNhqxoAGMCNUOQXB6M=;
- b=YSWqrqR7WDSG0BnACtDshr5FDpsrYOS4Ekxqyhhmb8d7/nC4SNBqgGtH/9L9mlwjoU+CMS31zyxr7sAJQjYhG1oIx7zGMlZnBftD11c57LNJpAmITYQo/kQtLHSMWlpgivy3Da4B7lNy9jA53JfAk5ppOHR7GuibDME+ayz/nuLVy2MRzIZe4Nu2qLWdpAKqNB98Cw1wrj8pI5QrJr3PC9bdBXJ8kuTig8KRYo0si8c+KUCS6Ls1DqlvXs70JX6zLiI3V/itumAa9HnZeDmymeoQt9XEDZB1FEZaXD34Uw2S7NaLwybt9gMpAoveUJQB2DGgPrcpQOSGv3TajGfyCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e3oL3iyM1feMduZa+VhOSzreuKNhqxoAGMCNUOQXB6M=;
- b=bj0GRcnvikTOU9RE7Ps+84HhSJLWX2aYJ2rLx1ibXF9D9ExbSi7xLfon14OxuSSMzJVSWoU5zdFedXO7XPUosD0QDuqQHzgu7ZgFGgSWVEXBq1KszJT2YQaIOG/n+HcMyBawL4/CBSRG5I3ExohE1WCjPwUQ/XnOM96FKn7hMfo=
-Received: from MN2PR07MB6288.namprd07.prod.outlook.com (20.179.86.160) by
- MN2PR07MB7118.namprd07.prod.outlook.com (52.132.169.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Tue, 10 Dec 2019 10:30:04 +0000
-Received: from MN2PR07MB6288.namprd07.prod.outlook.com
- ([fe80::f0d8:94b6:89b0:f07f]) by MN2PR07MB6288.namprd07.prod.outlook.com
- ([fe80::f0d8:94b6:89b0:f07f%3]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 10:30:04 +0000
-From:   Jayshri Dajiram Pawar <jpawar@cadence.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        "peter.chen@nxp.com" <peter.chen@nxp.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>
-Subject: RE: [RFC PATCH] usb:gadget: Fixed issue with config_ep_by_speed
- function.
-Thread-Topic: [RFC PATCH] usb:gadget: Fixed issue with config_ep_by_speed
- function.
-Thread-Index: AQHVqQDStZPebdwhrkmS7zb9xh9876ezNXSAgAAAuUA=
-Date:   Tue, 10 Dec 2019 10:30:04 +0000
-Message-ID: <MN2PR07MB628834A5F09437CF742977D9C15B0@MN2PR07MB6288.namprd07.prod.outlook.com>
-References: <1575284847-3388-1-git-send-email-jpawar@cadence.com>
- <20191210102231.GA3698263@kroah.com>
-In-Reply-To: <20191210102231.GA3698263@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcanBhd2FyXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMDU3MTcyMDktMWIzOC0xMWVhLTg0ZmMtMDRkM2IwMjc3MWJiXGFtZS10ZXN0XDA1NzE3MjBhLTFiMzgtMTFlYS04NGZjLTA0ZDNiMDI3NzFiYmJvZHkudHh0IiBzej0iMTM2NyIgdD0iMTMyMjA0NDc0MDIyNTQ4MzYxIiBoPSJEbXowaityTnVVUDUvc2N6ajE4Z2RRdnl5K009IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a169c679-8863-4577-bed5-08d77d5bebb2
-x-ms-traffictypediagnostic: MN2PR07MB7118:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR07MB71187405525987D640B7A2EAC15B0@MN2PR07MB7118.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(36092001)(199004)(189003)(13464003)(316002)(6506007)(8936002)(53546011)(33656002)(5660300002)(478600001)(7696005)(66446008)(6916009)(8676002)(81156014)(81166006)(186003)(26005)(4326008)(55236004)(55016002)(7416002)(9686003)(2906002)(107886003)(76116006)(52536014)(71200400001)(66946007)(66476007)(66556008)(64756008)(54906003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB7118;H:MN2PR07MB6288.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NCYnvhsjPAh+sWGRwrRRW28FfSQPSZEdrmDJ2X65peU2OK5OvVMRYck2MNSoD6oQ5zrgplXRDQqPktVtrMpPxELBA6K4SoRWDo7Br5EJ5mFHMCsKmTX/+e1JMoclCiv4yRM1ILKw4hnVh+BV7IAJnbHyy8vSkP7K5/RfULjlaQRhRQkMQeRLrJhXA15X8kfFasS+uf3nExj/Sq6PDAtH73AmLw/cHtmlKt8FDSbe/JkXWWwu8m6JN5vdHxXYx8DUkrjXIFj0Xh6vO5HmI2pfU2onI2mHoMoWeqpbZplqizSDvnoJp//LUPGJ4fWRlLLTW46aNOobCKjzSEFB44gyNQ+eA/gK4K5XoIvowYjhWmcEQfMl6kX0xpwH9PpvuyeMCBJFIkZTeDeYr2PjGHo5cAE95tcZugppm4ydtAX4dUV7T1AIeIWRaOQxDetlUY4mJZ1SPLMlJeg7fVLJbcx+QoxGqrqGTuIJDC8LfjSTDUUAvVoIPPG+gGgIWBQV8Qi8lJUA+ML8HgO4QE626xA45Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Dec 2019 05:33:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33014 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726574AbfLJKdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:33:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CEE0CB17A;
+        Tue, 10 Dec 2019 10:33:03 +0000 (UTC)
+Subject: Re: [PATCH RFC 2/8] drm/sprd: add Unisoc's drm kms master
+To:     Kevin Tang <kevin3.tang@gmail.com>, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     orsonzhai@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, zhang.lyra@gmail.com,
+        baolin.wang@linaro.org
+References: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
+ <1575966995-13757-3-git-send-email-kevin3.tang@gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <62c61dea-6297-1df2-0037-8c00fa36812b@suse.de>
+Date:   Tue, 10 Dec 2019 11:32:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a169c679-8863-4577-bed5-08d77d5bebb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 10:30:04.5530
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: U4+v9XquK4MQrx2lTwER3RB3wa+Htzil1Zw2is2IlktTA6dxiHYgCPtxbcqMrns5WUFl218y+GdTgFdUzP+ZNMVDWA/nG3alDJJItrC6+wI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB7118
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 mlxscore=0
- malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 spamscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100093
+In-Reply-To: <1575966995-13757-3-git-send-email-kevin3.tang@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="f6LkIm0BDEKlYzOCVTJtCjpyXO9IPppFJ"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--f6LkIm0BDEKlYzOCVTJtCjpyXO9IPppFJ
+Content-Type: multipart/mixed; boundary="rrPMwJ8ZNb3yioqpipyHsU5RB3yPIFL83";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Kevin Tang <kevin3.tang@gmail.com>, airlied@linux.ie, daniel@ffwll.ch
+Cc: orsonzhai@gmail.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, zhang.lyra@gmail.com, baolin.wang@linaro.org
+Message-ID: <62c61dea-6297-1df2-0037-8c00fa36812b@suse.de>
+Subject: Re: [PATCH RFC 2/8] drm/sprd: add Unisoc's drm kms master
+References: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
+ <1575966995-13757-3-git-send-email-kevin3.tang@gmail.com>
+In-Reply-To: <1575966995-13757-3-git-send-email-kevin3.tang@gmail.com>
+
+--rrPMwJ8ZNb3yioqpipyHsU5RB3yPIFL83
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi
+
+Am 10.12.19 um 09:36 schrieb Kevin Tang:
+> From: Kevin Tang <kevin.tang@unisoc.com>
+>=20
+> Adds drm support for the Unisoc's display subsystem.
+>=20
+> This is drm device and gem driver. This driver provides support for the=
+
+> Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+>=20
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
+> ---
+>  drivers/gpu/drm/Kconfig         |   2 +
+>  drivers/gpu/drm/Makefile        |   1 +
+>  drivers/gpu/drm/sprd/Kconfig    |  14 ++
+>  drivers/gpu/drm/sprd/Makefile   |   8 ++
+>  drivers/gpu/drm/sprd/sprd_drm.c | 287 ++++++++++++++++++++++++++++++++=
+++++++++
+>  drivers/gpu/drm/sprd/sprd_drm.h |  19 +++
+>  drivers/gpu/drm/sprd/sprd_gem.c | 178 +++++++++++++++++++++++++
+>  drivers/gpu/drm/sprd/sprd_gem.h |  30 +++++
+
+The GEM implementation looks like DRM's CMA helpers. Can you not use CMA
+helpers instead?
+
+>  8 files changed, 539 insertions(+)
+>  create mode 100644 drivers/gpu/drm/sprd/Kconfig
+>  create mode 100644 drivers/gpu/drm/sprd/Makefile
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.c
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_drm.h
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_gem.c
+>  create mode 100644 drivers/gpu/drm/sprd/sprd_gem.h
+>=20
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index bfdadc3..cead12c 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -387,6 +387,8 @@ source "drivers/gpu/drm/aspeed/Kconfig"
+> =20
+>  source "drivers/gpu/drm/mcde/Kconfig"
+> =20
+> +source "drivers/gpu/drm/sprd/Kconfig"
+> +
+>  # Keep legacy drivers last
+> =20
+>  menuconfig DRM_LEGACY
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 9f1c7c4..85ca211 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -122,3 +122,4 @@ obj-$(CONFIG_DRM_LIMA)  +=3D lima/
+>  obj-$(CONFIG_DRM_PANFROST) +=3D panfrost/
+>  obj-$(CONFIG_DRM_ASPEED_GFX) +=3D aspeed/
+>  obj-$(CONFIG_DRM_MCDE) +=3D mcde/
+> +obj-$(CONFIG_DRM_SPRD) +=3D sprd/
+> diff --git a/drivers/gpu/drm/sprd/Kconfig b/drivers/gpu/drm/sprd/Kconfi=
+g
+> new file mode 100644
+> index 0000000..79f286b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/Kconfig
+> @@ -0,0 +1,14 @@
+> +config DRM_SPRD
+> +	tristate "DRM Support for Unisoc SoCs Platform"
+> +	depends on ARCH_SPRD
+> +	depends on DRM && OF
+> +	select DRM_KMS_HELPER
+> +	select DRM_GEM_CMA_HELPER
+> +	select DRM_KMS_CMA_HELPER
+> +	select DRM_MIPI_DSI
+> +	select DRM_PANEL
+> +	select VIDEOMODE_HELPERS
+> +	select BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Choose this option if you have a Unisoc chipsets.
+> +	  If M is selected the module will be called sprd-drm.
+> \ No newline at end of file
+> diff --git a/drivers/gpu/drm/sprd/Makefile b/drivers/gpu/drm/sprd/Makef=
+ile
+> new file mode 100644
+> index 0000000..df0b316
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/Makefile
+> @@ -0,0 +1,8 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +ccflags-y +=3D -Iinclude/drm
+> +
+> +subdir-ccflags-y +=3D -I$(src)
+> +
+> +obj-y :=3D sprd_drm.o \
+> +	sprd_gem.o
+> \ No newline at end of file
+> diff --git a/drivers/gpu/drm/sprd/sprd_drm.c b/drivers/gpu/drm/sprd/spr=
+d_drm.c
+> new file mode 100644
+> index 0000000..ec16fee
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/sprd_drm.c
+> @@ -0,0 +1,287 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Unisoc Inc.
+> + */
+> +
+> +#include <linux/component.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/of_platform.h>
+> +
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_gem_cma_helper.h>
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_vblank.h>
+> +
+> +#include "sprd_drm.h"
+> +#include "sprd_gem.h"
+> +
+> +#define DRIVER_NAME	"sprd"
+> +#define DRIVER_DESC	"Spreadtrum SoCs' DRM Driver"
+> +#define DRIVER_DATE	"20180501"
+> +#define DRIVER_MAJOR	1
+> +#define DRIVER_MINOR	0
+> +
+> +static const struct drm_mode_config_helper_funcs sprd_drm_mode_config_=
+helper =3D {
+> +	.atomic_commit_tail =3D drm_atomic_helper_commit_tail_rpm,
+> +};
+> +
+> +static const struct drm_mode_config_funcs sprd_drm_mode_config_funcs =3D=
+ {
+> +	.fb_create =3D drm_gem_fb_create,
+> +	.atomic_check =3D drm_atomic_helper_check,
+> +	.atomic_commit =3D drm_atomic_helper_commit,
+> +};
+> +
+> +static void sprd_drm_mode_config_init(struct drm_device *drm)
+> +{
+> +	drm_mode_config_init(drm);
+> +
+> +	drm->mode_config.min_width =3D 0;
+> +	drm->mode_config.min_height =3D 0;
+> +	drm->mode_config.max_width =3D 8192;
+> +	drm->mode_config.max_height =3D 8192;
+> +	drm->mode_config.allow_fb_modifiers =3D true;
+> +
+> +	drm->mode_config.funcs =3D &sprd_drm_mode_config_funcs;
+> +	drm->mode_config.helper_private =3D &sprd_drm_mode_config_helper;
+> +}
+> +
+> +static const struct file_operations sprd_drm_fops =3D {
+> +	.owner		=3D THIS_MODULE,
+> +	.open		=3D drm_open,
+> +	.release	=3D drm_release,
+> +	.unlocked_ioctl	=3D drm_ioctl,
+> +	.compat_ioctl	=3D drm_compat_ioctl,
+> +	.poll		=3D drm_poll,
+> +	.read		=3D drm_read,
+> +	.llseek		=3D no_llseek,
+> +	.mmap		=3D sprd_gem_cma_mmap,
+> +};
+> +
+> +static struct drm_driver sprd_drm_drv =3D {
+> +	.driver_features	=3D DRIVER_GEM | DRIVER_MODESET |
+> +				  DRIVER_ATOMIC | DRIVER_HAVE_IRQ,
+> +	.fops			=3D &sprd_drm_fops,
+> +
+> +	.gem_vm_ops		=3D &drm_gem_cma_vm_ops,
+> +	.gem_free_object_unlocked	=3D sprd_gem_free_object,
+> +	.dumb_create		=3D sprd_gem_cma_dumb_create,
+> +
+> +	.prime_fd_to_handle	=3D drm_gem_prime_fd_to_handle,
+> +	.gem_prime_import	=3D drm_gem_prime_import,
+> +	.gem_prime_import_sg_table =3D sprd_gem_prime_import_sg_table,
+> +
+> +	.name			=3D DRIVER_NAME,
+> +	.desc			=3D DRIVER_DESC,
+> +	.date			=3D DRIVER_DATE,
+> +	.major			=3D DRIVER_MAJOR,
+> +	.minor			=3D DRIVER_MINOR,
+> +};
+> +
+> +static int sprd_drm_bind(struct device *dev)
+> +{
+> +	struct drm_device *drm;
+> +	struct sprd_drm *sprd;
+> +	int err;
+> +
+> +	drm =3D drm_dev_alloc(&sprd_drm_drv, dev);
+> +	if (IS_ERR(drm))
+> +		return PTR_ERR(drm);
+> +
+> +	dev_set_drvdata(dev, drm);
+> +
+> +	sprd =3D devm_kzalloc(drm->dev, sizeof(*sprd), GFP_KERNEL);
+> +	if (!sprd) {
+> +		err =3D -ENOMEM;
+> +		goto err_free_drm;
+> +	}
+> +	drm->dev_private =3D sprd;
+> +
+> +	sprd_drm_mode_config_init(drm);
+> +
+> +	/* bind and init sub drivers */
+> +	err =3D component_bind_all(drm->dev, drm);
+> +	if (err) {
+> +		DRM_ERROR("failed to bind all component.\n");
+> +		goto err_dc_cleanup;
+> +	}
+> +
+> +	/* vblank init */
+> +	err =3D drm_vblank_init(drm, drm->mode_config.num_crtc);
+> +	if (err) {
+> +		DRM_ERROR("failed to initialize vblank.\n");
+> +		goto err_unbind_all;
+> +	}
+> +	/* with irq_enabled =3D true, we can use the vblank feature. */
+> +	drm->irq_enabled =3D true;
+> +
+> +	/* reset all the states of crtc/plane/encoder/connector */
+> +	drm_mode_config_reset(drm);
+> +
+> +	/* init kms poll for handling hpd */
+> +	drm_kms_helper_poll_init(drm);
+> +
+> +	err =3D drm_dev_register(drm, 0);
+> +	if (err < 0)
+> +		goto err_kms_helper_poll_fini;
+> +
+> +	return 0;
+> +
+> +err_kms_helper_poll_fini:
+> +	drm_kms_helper_poll_fini(drm);
+> +err_unbind_all:
+> +	component_unbind_all(drm->dev, drm);
+> +err_dc_cleanup:
+> +	drm_mode_config_cleanup(drm);
+> +err_free_drm:
+> +	drm_dev_put(drm);
+> +	return err;
+> +}
+> +
+> +static void sprd_drm_unbind(struct device *dev)
+> +{
+> +	drm_put_dev(dev_get_drvdata(dev));
+> +}
+> +
+> +static const struct component_master_ops sprd_drm_component_ops =3D {
+> +	.bind =3D sprd_drm_bind,
+> +	.unbind =3D sprd_drm_unbind,
+> +};
+> +
+> +static int compare_of(struct device *dev, void *data)
+> +{
+> +	struct device_node *np =3D data;
+> +
+> +	DRM_DEBUG("compare %s\n", np->full_name);
+> +
+> +	return dev->of_node =3D=3D np;
+> +}
+> +
+> +static int sprd_drm_component_probe(struct device *dev,
+> +			   const struct component_master_ops *m_ops)
+> +{
+> +	struct device_node *ep, *port, *remote;
+> +	struct component_match *match =3D NULL;
+> +	int i;
+> +
+> +	if (!dev->of_node)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Bind the crtc's ports first, so that drm_of_find_possible_crtcs()
+> +	 * called from encoder's .bind callbacks works as expected
+> +	 */
+> +	for (i =3D 0; ; i++) {
+> +		port =3D of_parse_phandle(dev->of_node, "ports", i);
+> +		if (!port)
+> +			break;
+> +
+> +		if (!of_device_is_available(port->parent)) {
+> +			of_node_put(port);
+> +			continue;
+> +		}
+> +
+> +		component_match_add(dev, &match, compare_of, port->parent);
+> +		of_node_put(port);
+> +	}
+> +
+> +	if (i =3D=3D 0) {
+> +		dev_err(dev, "missing 'ports' property\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!match) {
+> +		dev_err(dev, "no available port\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/*
+> +	 * For bound crtcs, bind the encoders attached to their remote endpoi=
+nt
+> +	 */
+> +	for (i =3D 0; ; i++) {
+> +		port =3D of_parse_phandle(dev->of_node, "ports", i);
+> +		if (!port)
+> +			break;
+> +
+> +		if (!of_device_is_available(port->parent)) {
+> +			of_node_put(port);
+> +			continue;
+> +		}
+> +
+> +		for_each_child_of_node(port, ep) {
+> +			remote =3D of_graph_get_remote_port_parent(ep);
+> +			if (!remote || !of_device_is_available(remote)) {
+> +				of_node_put(remote);
+> +				continue;
+> +			} else if (!of_device_is_available(remote->parent)) {
+> +				dev_warn(dev, "parent device of %s is not available\n",
+> +					 remote->full_name);
+> +				of_node_put(remote);
+> +				continue;
+> +			}
+> +
+> +			component_match_add(dev, &match, compare_of, remote);
+> +			of_node_put(remote);
+> +		}
+> +		of_node_put(port);
+> +	}
+> +
+> +	return component_master_add_with_match(dev, m_ops, match);
+> +}
+> +
+> +static int sprd_drm_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret =3D dma_set_mask_and_coherent(&pdev->dev, ~0);
+> +	if (ret)
+> +		DRM_ERROR("dma_set_mask_and_coherent failed (%d)\n", ret);
+> +
+> +	return sprd_drm_component_probe(&pdev->dev, &sprd_drm_component_ops);=
+
+> +}
+> +
+> +static int sprd_drm_remove(struct platform_device *pdev)
+> +{
+> +	component_master_del(&pdev->dev, &sprd_drm_component_ops);
+> +	return 0;
+> +}
+> +
+> +static void sprd_drm_shutdown(struct platform_device *pdev)
+> +{
+> +	struct drm_device *drm =3D platform_get_drvdata(pdev);
+> +
+> +	if (!drm) {
+> +		DRM_WARN("drm device is not available, no shutdown\n");
+> +		return;
+> +	}
+> +
+> +	drm_atomic_helper_shutdown(drm);
+> +}
+> +
+> +static const struct of_device_id sprd_drm_match_table[] =3D {
+> +	{ .compatible =3D "sprd,display-subsystem",},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sprd_drm_match_table);
+> +
+> +static struct platform_driver sprd_drm_driver =3D {
+> +	.probe =3D sprd_drm_probe,
+> +	.remove =3D sprd_drm_remove,
+> +	.shutdown =3D sprd_drm_shutdown,
+> +	.driver =3D {
+> +		.name =3D "sprd-drm-drv",
+> +		.of_match_table =3D sprd_drm_match_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(sprd_drm_driver);
+> +
+> +MODULE_AUTHOR("Leon He <leon.he@unisoc.com>");
+> +MODULE_AUTHOR("Kevin Tang <kevin.tang@unisoc.com>");
+> +MODULE_DESCRIPTION("Unisoc DRM KMS Master Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/sprd/sprd_drm.h b/drivers/gpu/drm/sprd/spr=
+d_drm.h
+> new file mode 100644
+> index 0000000..e840e65
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/sprd_drm.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 Unisoc Inc.
+> + */
+> +
+> +#ifndef _SPRD_DRM_H_
+> +#define _SPRD_DRM_H_
+> +
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_print.h>
+> +
+> +struct sprd_drm {
+> +	struct drm_device *drm;
+> +	struct drm_atomic_state *state;
+> +	struct device *dpu_dev;
+> +	struct device *gsp_dev;
+> +};
+> +
+> +#endif /* _SPRD_DRM_H_ */
+> diff --git a/drivers/gpu/drm/sprd/sprd_gem.c b/drivers/gpu/drm/sprd/spr=
+d_gem.c
+> new file mode 100644
+> index 0000000..c617c8b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/sprd_gem.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 Unisoc Inc.
+> + */
+> +
+> +#include <linux/dma-buf.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include <drm/drm_prime.h>
+> +
+> +#include "sprd_drm.h"
+> +#include "sprd_gem.h"
+> +
+> +static struct sprd_gem_obj *sprd_gem_obj_create(struct drm_device *drm=
+,
+> +						unsigned long size)
+> +{
+> +	struct sprd_gem_obj *sprd_gem;
+> +	int ret;
+> +
+> +	sprd_gem =3D kzalloc(sizeof(*sprd_gem), GFP_KERNEL);
+> +	if (!sprd_gem)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret =3D drm_gem_object_init(drm, &sprd_gem->base, size);
+> +	if (ret < 0) {
+> +		DRM_ERROR("failed to initialize gem object\n");
+> +		goto error;
+> +	}
+> +
+> +	ret =3D drm_gem_create_mmap_offset(&sprd_gem->base);
+> +	if (ret) {
+> +		drm_gem_object_release(&sprd_gem->base);
+> +		goto error;
+> +	}
+> +
+> +	return sprd_gem;
+> +
+> +error:
+> +	kfree(sprd_gem);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +void sprd_gem_free_object(struct drm_gem_object *obj)
+> +{
+> +	struct sprd_gem_obj *sprd_gem =3D to_sprd_gem_obj(obj);
+> +
+> +	DRM_DEBUG("gem =3D %p\n", obj);
+> +
+> +	if (sprd_gem->vaddr)
+> +		dma_alloc_wc(obj->dev->dev, obj->size,
+
+dma_free_wc
+
+Best regards
+Thomas
+
+[1]
+https://cgit.freedesktop.org/drm/drm-tip/tree/drivers/gpu/drm/drm_gem_cma=
+_helper.c
 
 
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Tuesday, December 10, 2019 3:53 PM
-> To: Jayshri Dajiram Pawar <jpawar@cadence.com>
-> Cc: linux-usb@vger.kernel.org; felipe.balbi@linux.intel.com;
-> heikki.krogerus@linux.intel.com; rogerq@ti.com; linux-
-> kernel@vger.kernel.org; jbergsagel@ti.com; nsekhar@ti.com; nm@ti.com;
-> peter.chen@nxp.com; Rahul Kumar <kurahul@cadence.com>; Pawel
-> Laszczak <pawell@cadence.com>; Sanket Parmar <sparmar@cadence.com>
-> Subject: Re: [RFC PATCH] usb:gadget: Fixed issue with config_ep_by_speed
-> function.
+> +				      sprd_gem->vaddr, sprd_gem->dma_addr);
+> +	else if (sprd_gem->sgtb)
+> +		drm_prime_gem_destroy(obj, sprd_gem->sgtb);
+> +
+> +	drm_gem_object_release(obj);
+> +
+> +	kfree(sprd_gem);
+> +}
+> +
+> +int sprd_gem_cma_dumb_create(struct drm_file *file_priv, struct drm_de=
+vice *drm,
+> +			    struct drm_mode_create_dumb *args)
+> +{
+> +	struct sprd_gem_obj *sprd_gem;
+> +	int ret;
+> +
+> +	args->pitch =3D DIV_ROUND_UP(args->width * args->bpp, 8);
+> +	args->size =3D round_up(args->pitch * args->height, PAGE_SIZE);
+> +
+> +	sprd_gem =3D sprd_gem_obj_create(drm, args->size);
+> +	if (IS_ERR(sprd_gem))
+> +		return PTR_ERR(sprd_gem);
+> +
+> +	sprd_gem->vaddr =3D dma_alloc_wc(drm->dev, args->size,
+> +			&sprd_gem->dma_addr, GFP_KERNEL | __GFP_NOWARN | GFP_DMA);
+> +	if (!sprd_gem->vaddr) {
+> +		DRM_ERROR("failed to allocate buffer with size %llu\n",
+> +			  args->size);
+> +		ret =3D -ENOMEM;
+> +		goto error;
+> +	}
+> +
+> +	ret =3D drm_gem_handle_create(file_priv, &sprd_gem->base, &args->hand=
+le);
+> +	if (ret)
+> +		goto error;
+> +
+> +	drm_gem_object_put_unlocked(&sprd_gem->base);
+> +
+> +	return 0;
+> +
+> +error:
+> +	sprd_gem_free_object(&sprd_gem->base);
+> +	return ret;
+> +}
+> +
+> +static int sprd_gem_cma_object_mmap(struct drm_gem_object *obj,
+> +				   struct vm_area_struct *vma)
+> +
+> +{
+> +	int ret;
+> +	struct sprd_gem_obj *sprd_gem =3D to_sprd_gem_obj(obj);
+> +
+> +	vma->vm_flags &=3D ~VM_PFNMAP;
+> +	vma->vm_pgoff =3D 0;
+> +
+> +	ret =3D dma_mmap_wc(obj->dev->dev, vma,
+> +				    sprd_gem->vaddr, sprd_gem->dma_addr,
+> +				    vma->vm_end - vma->vm_start);
+> +	if (ret)
+> +		drm_gem_vm_close(vma);
+> +
+> +	return ret;
+> +}
+> +
+> +int sprd_gem_cma_mmap(struct file *filp, struct vm_area_struct *vma)
+> +{
+> +	struct drm_gem_object *obj;
+> +	int ret;
+> +
+> +	ret =3D drm_gem_mmap(filp, vma);
+> +	if (ret)
+> +		return ret;
+> +
+> +	obj =3D vma->vm_private_data;
+> +
+> +	return sprd_gem_cma_object_mmap(obj, vma);
+> +}
+> +
+> +int sprd_gem_cma_prime_mmap(struct drm_gem_object *obj,
+> +			    struct vm_area_struct *vma)
+> +{
+> +	int ret;
+> +
+> +	ret =3D drm_gem_mmap_obj(obj, obj->size, vma);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return sprd_gem_cma_object_mmap(obj, vma);
+> +}
+> +
+> +struct sg_table *sprd_gem_cma_prime_get_sg_table(struct drm_gem_object=
+ *obj)
+> +{
+> +	struct sprd_gem_obj *sprd_gem =3D to_sprd_gem_obj(obj);
+> +	struct sg_table *sgtb;
+> +	int ret;
+> +
+> +	sgtb =3D kzalloc(sizeof(*sgtb), GFP_KERNEL);
+> +	if (!sgtb)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ret =3D dma_get_sgtable(obj->dev->dev, sgtb, sprd_gem->vaddr,
+> +			      sprd_gem->dma_addr, obj->size);
+> +	if (ret) {
+> +		DRM_ERROR("failed to allocate sg_table, %d\n", ret);
+> +		kfree(sgtb);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	return sgtb;
+> +}
+> +
+> +struct drm_gem_object *sprd_gem_prime_import_sg_table(struct drm_devic=
+e *drm,
+> +		struct dma_buf_attachment *attach, struct sg_table *sgtb)
+> +{
+> +	struct sprd_gem_obj *sprd_gem;
+> +
+> +	sprd_gem =3D sprd_gem_obj_create(drm, attach->dmabuf->size);
+> +	if (IS_ERR(sprd_gem))
+> +		return ERR_CAST(sprd_gem);
+> +
+> +	DRM_DEBUG("gem =3D %p\n", &sprd_gem->base);
+> +
+> +	if (sgtb->nents =3D=3D 1)
+> +		sprd_gem->dma_addr =3D sg_dma_address(sgtb->sgl);
+> +
+> +	sprd_gem->sgtb =3D sgtb;
+> +
+> +	return &sprd_gem->base;
+> +}
+> diff --git a/drivers/gpu/drm/sprd/sprd_gem.h b/drivers/gpu/drm/sprd/spr=
+d_gem.h
+> new file mode 100644
+> index 0000000..4c10d8a
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sprd/sprd_gem.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 Unisoc Inc.
+> + */
+> +
+> +#ifndef _SPRD_GEM_H_
+> +#define _SPRD_GEM_H_
+> +
+> +#include <drm/drm_gem.h>
+> +
+> +struct sprd_gem_obj {
+> +	struct drm_gem_object	base;
+> +	dma_addr_t		dma_addr;
+> +	struct sg_table		*sgtb;
+> +	void			*vaddr;
+> +};
+> +
+> +#define to_sprd_gem_obj(x)	container_of(x, struct sprd_gem_obj, base)
+> +
+> +void sprd_gem_free_object(struct drm_gem_object *gem);
+> +int sprd_gem_cma_dumb_create(struct drm_file *file_priv, struct drm_de=
+vice *dev,
+> +			    struct drm_mode_create_dumb *args);
+> +int sprd_gem_cma_mmap(struct file *filp, struct vm_area_struct *vma);
+> +int sprd_gem_cma_prime_mmap(struct drm_gem_object *obj,
+> +			 struct vm_area_struct *vma);
+> +struct sg_table *sprd_gem_cma_prime_get_sg_table(struct drm_gem_object=
+ *obj);
+> +struct drm_gem_object *sprd_gem_prime_import_sg_table(struct drm_devic=
+e *dev,
+> +		struct dma_buf_attachment *attach, struct sg_table *sgtb);
+> +
+> +#endif
 >=20
-> EXTERNAL MAIL
->=20
->=20
-> On Mon, Dec 02, 2019 at 12:07:27PM +0100, Jayshri Pawar wrote:
-> >  /**
-> >   * config_ep_by_speed() - configures the given endpoint @@ -144,9
-> > +146,11 @@ next_ep_desc(struct usb_descriptor_header **t)
-> >   */
-> >  int config_ep_by_speed(struct usb_gadget *g,
-> >  			struct usb_function *f,
-> > -			struct usb_ep *_ep)
-> > +			struct usb_ep *_ep,
-> > +			unsigned alt)
->=20
-> Why did you not document this new parameter?  It does not make sense to
-> me, what does it do, and how is it supposed to be used?
-Hi Greg,
-New parameter is documented and updated in patch v2.
 
-Thanks,
-Jayshri
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
->=20
-> thanks,
->=20
-> greg k-h
+--rrPMwJ8ZNb3yioqpipyHsU5RB3yPIFL83--
+
+--f6LkIm0BDEKlYzOCVTJtCjpyXO9IPppFJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3vdFsACgkQaA3BHVML
+eiN4Vwf/VGCWj/EGe/3YlTFEca/oX2yAnytTMsFptM8ZSbqfnk2Ml4TtJjI6uwxT
+fDt78cItDKyg5tVy5UYzcV9yr9oxV7gnu+zP8swSnp2erXJrDA4FChWDpJ8QTl+B
+o9HtB+TEDNsmNwsk4tS4am1aM7Hkvh/OoIaxq233MxfF3YHA0X6/Kdo7ahQFYrkP
+csryfYYlkLa07kgCqzbEHdabFdC2AA0lCPKS3gap6C2DRKPPqpSIrluG79Uenhk2
+8axiQBH9OVXTTLCa9pZuZEdtVRv3wQ4+mJGAHv2p7R7Jnc9Pv8UUMJJ7DTrX5bu7
+IcPKJlxBcmYUSesXr6VKVWI+An4ytg==
+=gMeV
+-----END PGP SIGNATURE-----
+
+--f6LkIm0BDEKlYzOCVTJtCjpyXO9IPppFJ--
