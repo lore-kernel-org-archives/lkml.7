@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F016C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D348DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3902073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A083A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013896;
-	bh=ulJhlXXHYMcoZMdsOfGi4cFLx7QCJqnj2AGhY8vpYdI=;
+	s=default; t=1576013903;
+	bh=vACwuEckSbbcXg5RDmsmQNirCql0qClr/29nJu35mGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LdFTrvkXSqkculoVXk8Yswpq2dd5Xi9Yo5yenE3FMgruCOi6IgK0XzDBzSxBL97oU
-	 KSjZkNS6u9RZuHpygcGciWxd9XC8vT04QWlJRd98y++MRLqkz+IMC5k9imSj+mUniL
-	 Fnrd8YUcPzh/t5zj6e3fHIZbbz/Nnga8d5G9Rw+4=
+	b=dl1Lm36YHo0ihe4pNiuMtIto/Bq0bWBolQv4w1kci3VikbFI0xjlcnPZd3YPYHBL9
+	 sAMPo7x/JSWhgaAEHqRJwSVuwTOMnWGBUl0bhec0FB+JjFPgv+hda14fO7nM/flrfV
+	 Z93rkxszKB2zgAwmfqOoTbrRfEeFPMe5gofAQNJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfLJViO (ORCPT
+        id S1729276AbfLJViW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:38:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41074 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:38:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbfLJVfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:22 -0500
+        id S1730220AbfLJVfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22FB207FF;
-        Tue, 10 Dec 2019 21:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 120C4207FF;
+        Tue, 10 Dec 2019 21:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013721;
-        bh=ulJhlXXHYMcoZMdsOfGi4cFLx7QCJqnj2AGhY8vpYdI=;
+        s=default; t=1576013716;
+        bh=vACwuEckSbbcXg5RDmsmQNirCql0qClr/29nJu35mGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9vYdmR2bKaK5DHAuCKhadMDxn0U4bdA4iljr/4k9WaOWu3QD8g+HiLc2NLbKVrNN
-         kZuEpyvir38nDdQKZAmdQxAEIl6bRGeSu1+Dqci3eiF9If1CefxHgk/oznh14tnznW
-         NKz8uivkNpF559DUj+a7DlEvXfPdNTbLXhSAbOiI=
+        b=tJ2CPdVps4dXcDMAj1FQZQKNYS5LPPGiDQzU0NOT7rp5CAZUCrKKzJWk3BY6/KHT0
+         7aXmwKu1vsLhCSGWRZvuLoi844T8rEedCeBLcs5AYJOpQqGZr5MDk6Nqv0oklvpqwB
+         e7kUFeSZosqY8Xkq2u1h5PN5inwr+1WBJ86gfZ+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuming Han <yuming.han@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 147/177] tracing: use kvcalloc for tgid_map array allocation
-Date:   Tue, 10 Dec 2019 16:31:51 -0500
-Message-Id: <20191210213221.11921-147-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 144/177] cpufreq: Register drivers only after CPU devices have been registered
+Date:   Tue, 10 Dec 2019 16:31:48 -0500
+Message-Id: <20191210213221.11921-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,57 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuming Han <yuming.han@unisoc.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 6ee40511cb838f9ced002dff7131bca87e3ccbdd ]
+[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
 
-Fail to allocate memory for tgid_map, because it requires order-6 page.
-detail as:
+The cpufreq core heavily depends on the availability of the struct
+device for CPUs and if they aren't available at the time cpufreq driver
+is registered, we will never succeed in making cpufreq work.
 
-c3 sh: page allocation failure: order:6,
-   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
-c3 sh cpuset=/ mems_allowed=0
-c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
-c3 Hardware name: Generic DT based system
-c3 Backtrace:
-c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
-c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
-c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
-c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
-c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
-c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
-c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
-c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
-c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
-c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
-c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
-c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
+This happens due to following sequence of events:
 
-Switch to use kvcalloc to avoid unexpected allocation failures.
+- cpufreq_register_driver()
+  - subsys_interface_register()
+  - return 0; //successful registration of driver
 
-Link: http://lkml.kernel.org/r/1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com
+... at a later point of time
 
-Signed-off-by: Yuming Han <yuming.han@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+- register_cpu();
+  - device_register();
+    - bus_probe_device();
+      - sif->add_dev();
+	- cpufreq_add_dev();
+	  - get_cpu_device(); //FAILS
+  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
+  - return 0; //CPU registered successfully
+
+Because the per-cpu variable cpu_sys_devices is set only after the CPU
+device is regsitered, cpufreq will never be able to get it when
+cpufreq_add_dev() is called.
+
+This patch avoids this failure by making sure device structure of at
+least CPU0 is available when the cpufreq driver is registered, else
+return -EPROBE_DEFER.
+
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index bdd7f3d78724e..b6ff2f84df174 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4389,7 +4389,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 9d8d64f706e06..e35c397b1259f 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2480,6 +2480,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
  
- 	if (mask == TRACE_ITER_RECORD_TGID) {
- 		if (!tgid_map)
--			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
-+			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
- 					   sizeof(*tgid_map),
- 					   GFP_KERNEL);
- 		if (!tgid_map) {
++	/*
++	 * The cpufreq core depends heavily on the availability of device
++	 * structure, make sure they are available before proceeding further.
++	 */
++	if (!get_cpu_device(0))
++		return -EPROBE_DEFER;
++
+ 	if (!driver_data || !driver_data->verify || !driver_data->init ||
+ 	    !(driver_data->setpolicy || driver_data->target_index ||
+ 		    driver_data->target) ||
 -- 
 2.20.1
 
