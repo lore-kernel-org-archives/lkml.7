@@ -2,120 +2,108 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7D9C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9502077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GLA7OuE3";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OblpijPj"
+	by mail.kernel.org (Postfix) with ESMTP id ED4542073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfLJWX0 (ORCPT
+        id S1727166AbfLJW0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:23:26 -0500
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:59316
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726883AbfLJWX0 (ORCPT
+        Tue, 10 Dec 2019 17:26:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45695 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfLJW0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:23:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016605;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=5O6ko1wMdH3ZAe3za/gTc6jGmfe6ltuEFSuJCuFhaE4=;
-        b=GLA7OuE3q9Ckno+URVzFLhwwkaR1ZO0GcthJbP9hE3K5Iy3A/R+Y/IjweHZlbnqs
-        IU0rQ3Jjl18qRlEcZxQZBeGL0m4xLxCZIWxAwTbga+xv15hFfTqg5QhJi2oDYSsgpUI
-        CKC02DOEdc9qqI9xzxSx6p1/ZMkQXbdT/g3zgljE=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016605;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=5O6ko1wMdH3ZAe3za/gTc6jGmfe6ltuEFSuJCuFhaE4=;
-        b=OblpijPjBWaUnQ7iMx3O1+gAfDhdKUreQ2A/HCrikRbTsg2II3DukNQ/wKGgSqWG
-        rergx1m0csTGoWf/5M5hZUQVmUjj68p8DKzpzzQnhHyV1OHGYOYpI9pdeFMhBxaLPLA
-        /p4taTWJHMq2Gq9nR+kp23AYTMJxDAQ1LvTpYxWI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0090BC59948
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 10 Dec 2019 22:23:25 +0000
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 1/2] pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
-Message-ID: <0101016ef1e8f0a2-c8311e64-3d6a-4b66-9121-6fa4d0a604df-000000@us-west-2.amazonses.com>
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
- <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+        Tue, 10 Dec 2019 17:26:08 -0500
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1ienx8-0002Vk-Vd; Tue, 10 Dec 2019 22:25:59 +0000
+Date:   Tue, 10 Dec 2019 19:25:53 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Justin Forbes <jmforbes@linuxtx.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
+ recent binutils
+Message-ID: <20191210222553.GA4580@calabresa>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+ <87zhgbe0ix.fsf@mpe.ellerman.id.au>
+ <20191202093752.GA1535@localhost.localdomain>
+ <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
-X-SES-Outgoing: 2019.12.10-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
->GPIOs that can be configured as wakeup sources, have their
->interrupt lines routed to PDC interrupt controller.
->
->Provide the interrupt map of the GPIO to its wakeup capable
->interrupt parent.
->
->Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
+> On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> >
+> > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
+> > > Aurelien Jarno <aurelien@aurel32.net> writes:
+> > > > On powerpc with recent versions of binutils, readelf outputs an extra
+> > > > field when dumping the symbols of an object file. For example:
+> > > >
+> > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+> > > >
+> > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+> > > > be computed correctly and causes the checkabi target to fail.
+> > > >
+> > > > Fix that by looking for the symbol name in the last field instead of the
+> > > > 8th one. This way it should also cope with future extra fields.
+> > > >
+> > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> > > > ---
+> > > >  tools/lib/bpf/Makefile | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > Thanks for fixing that, it's been on my very long list of test failures
+> > > for a while.
+> > >
+> > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+> >
+> > Looks good & also continues to work on x86. Applied, thanks!
+> 
+> This actually seems to break horribly on PPC64le with binutils 2.33.1
+> resulting in:
+> Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
+> match with num of versioned symbols in libbpf.so (184). Please make
+> sure all LIBBPF_API symbols are versioned in libbpf.map.
+> 
+> This is the only arch that fails, with x86/arm/aarch64/s390 all
+> building fine.  Reverting this patch allows successful build across
+> all arches.
+> 
+> Justin
 
->---
-> drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++++++++++
-> 1 file changed, 18 insertions(+)
->
->diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
->index 6399c8a..8a2b97c 100644
->--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
->+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
->@@ -1097,6 +1097,22 @@ static const struct msm_pingroup sc7180_groups[] = {
-> 	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
-> };
->
->+static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
->+	{0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
->+	{10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
->+	{24, 61}, {26, 52}, {28, 36}, {30, 100}, {31, 33}, {32, 81},
->+	{33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
->+	{41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
->+	{52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
->+	{59, 37}, {62, 110}, {63, 111}, {64, 74}, {65, 44}, {66, 93},
->+	{67, 58}, {68, 112}, {69, 32}, {70, 54}, {72, 59}, {73, 64},
->+	{74, 71}, {78, 31}, {82, 30}, {85, 103}, {86, 38}, {87, 39},
->+	{88, 45}, {89, 46}, {90, 47}, {91, 48}, {92, 60}, {93, 49},
->+	{94, 84}, {95, 94}, {98, 65}, {101, 66}, {104, 67}, {109, 104},
->+	{110, 68}, {113, 69}, {114, 113}, {115, 108}, {116, 121},
->+	{117, 114}, {118, 119},
->+};
->+
-> static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-> 	.pins = sc7180_pins,
-> 	.npins = ARRAY_SIZE(sc7180_pins),
->@@ -1107,6 +1123,8 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-> 	.ngpios = 120,
-> 	.tiles = sc7180_tiles,
-> 	.ntiles = ARRAY_SIZE(sc7180_tiles),
->+	.wakeirq_map = sc7180_pdc_map,
->+	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
-> };
->
-> static int sc7180_pinctrl_probe(struct platform_device *pdev)
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+Well, I ended up debugging this same issue and had the same fix as Jarno's when
+I noticed his fix was already applied.
+
+I just installed a system with the latest binutils, 2.33.1, and it still breaks
+without such fix. Can you tell what is the output of the following command on
+your system?
+
+readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}' 
+
+Cascardo.
