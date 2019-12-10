@@ -2,139 +2,104 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC36C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E64C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929092053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575973718;
-	bh=IaLF+6C6rtCeO28wRs53cVjaoPZ2JIiz4oxX9ATcRyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gqTugqOdOIZTMbe1onL914PLll9klAGzlsMH2MHEbuekkFDydYnIwYxHPP6xX2dTZ
-	 V3PZhzxVFJsTOvzyHrZ5XnTORDNLZv4U25j8dVpxu3F3ATieoyaRFGb+gn/qKMpfwp
-	 K3TmXnB/I7HPj8M8nEUo2GA8HZV0jAdQmFS4ovd4=
+	by mail.kernel.org (Postfix) with ESMTP id B2E932053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:29:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c77gJqOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfLJK2h (ORCPT
+        id S1727495AbfLJK3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:28:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51914 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbfLJK2h (ORCPT
+        Tue, 10 Dec 2019 05:29:07 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37144 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727131AbfLJK3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:28:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g206so2533126wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:28:35 -0800 (PST)
+        Tue, 10 Dec 2019 05:29:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575973744;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iYRdhx94lZEfdmmjolViEp26vremOEQhwyKs35+L2rM=;
+        b=c77gJqOYUsQL1d9KSg+A03qtUipZ8AXGNTqjDnUbwLIINBTvVSahW8ANhm41V8tVWDl7pg
+        I/1K4yohJvhMRhSCytYEJroREsLotrp4OYCE5rQvfu9Esltz1SbO+XFM/UqNAU/7FLBpg0
+        0CAJ1TLIcjF4ZlzHpP2/rG0+mJUJGFQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-gPGThsl2MwaIk8TeNPMJOw-1; Tue, 10 Dec 2019 05:29:02 -0500
+Received: by mail-wm1-f70.google.com with SMTP id j203so845640wma.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:29:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fudI/aRGQE48dZnpXNXew2ZtUZnD2II/Xql7iFkccbY=;
-        b=g4LHcyKPNJ96bwG/fZbNzIH2amGh72gJneSIeu1H8MbshZ4lzJBZBw4YAw4kjX+nZS
-         7RceXh1hSeOAhEX4weIebYejdMcquP/CopsW+EfcXgUB8JbuZj4Bi2LdQe6w+MJ/14TM
-         SfcYb86nAj5SRdCrzkPkzm37CD8vkkMVvAZhC07bU3+p3RRx/XdxLmKnW6u4V4oeOF4B
-         /WRd8vmEyhiIFQRHatLCbAnxD1UaW5l+6RwmjKRJUKN7Ysz6GJuEXUxMw5rvc5EQwWxG
-         D5Bn7T//H1xA4c/6G3+3LykPvoaqgVpfLUfzMnp7vPZl6ibGumyiHWE2BoWdkRmBbuTe
-         ZNaQ==
-X-Gm-Message-State: APjAAAV3dVU/zz3R98dKv9hBOc7Fqa/5IgeMNJVVFqkDRjKn3azUYuWk
-        +lDYuHBxuVG5n5Sh4m9B3afaIAmv
-X-Google-Smtp-Source: APXvYqx/v6CfpInoUTQTQoZfdNAAhX+8sLPCZQs4TdYgIAyp3JgIU9yVpLdDIJsMWnTgvEF4Gz1LEg==
-X-Received: by 2002:a1c:4f:: with SMTP id 76mr4129259wma.69.1575973715127;
-        Tue, 10 Dec 2019 02:28:35 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id h127sm2634857wme.31.2019.12.10.02.28.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 02:28:34 -0800 (PST)
-Date:   Tue, 10 Dec 2019 11:28:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191210102834.GE10404@dhcp22.suse.cz>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <20191210072453.GI2984@MiWiFi-R3L-srv>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iYRdhx94lZEfdmmjolViEp26vremOEQhwyKs35+L2rM=;
+        b=UU7I8xVgKYQbEgMUWD2LguyjzA0nmMschnomhuDmyKy0MxYg+bYSPxZtC4RMVrxpEx
+         d25dvbLPJ8GKLaGOPWK/nDut18qdyo/PBUYPDdu+ZWnjxAEHUMwl1C6lPOzcMyokTKqO
+         BNV1tbWVrpj7acJSauyWZ/fZPOe6le/DcdcJ2MgUTjYJz/8Ucl41js4sk6St4/hpoIOs
+         zKEJ1PPz8cTGrzHS6WbD9a6jcSWqgn3R5smJN+DhMibBLgPmicWGChQiJH+ftxZMJ79+
+         MUSyKSTS+V/EBpyYu1emMfdqNp8tM/5CJMKlo0mfB8xnhi5FTr4dz/yoHjGLN6Y76/LU
+         oxmw==
+X-Gm-Message-State: APjAAAUEfLTnuXWkCd3L8s4Bv72PWWLNdGwvUbZygRmGVR+ZFfyvuKc4
+        +gWAjV1C+ZVqb2KM0QaZ4l+g6dJORk6SfCFgRYNmXV/dV/rbAVF3snc2oTEbPKp2MEH0/tsrahb
+        dkKMUccfGIsJoMajSWnDCEpY5
+X-Received: by 2002:a5d:6284:: with SMTP id k4mr2304027wru.398.1575973740920;
+        Tue, 10 Dec 2019 02:29:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzuMgkVYc+esWPIvGo0F5L891J0fK0Q3nskPFxv2CWHs5OO4BgCv23sK914Q45HzzW2+5D5HQ==
+X-Received: by 2002:a5d:6284:: with SMTP id k4mr2303997wru.398.1575973740718;
+        Tue, 10 Dec 2019 02:29:00 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
+        by smtp.gmail.com with ESMTPSA id f1sm2551482wml.11.2019.12.10.02.29.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 02:29:00 -0800 (PST)
+Subject: Re: [PATCH] KVM: x86: Add a WARN on TIF_NEED_FPU_LOAD in
+ kvm_load_guest_fpu()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191209200517.13382-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bf494125-1de6-dc41-1438-0ee5f802c229@redhat.com>
+Date:   Tue, 10 Dec 2019 11:29:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210072453.GI2984@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191209200517.13382-1-sean.j.christopherson@intel.com>
+Content-Language: en-US
+X-MC-Unique: gPGThsl2MwaIk8TeNPMJOw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 15:24:53, Baoquan He wrote:
-> On 12/09/19 at 11:07am, Michal Hocko wrote:
-> > On Fri 06-12-19 23:05:24, Baoquan He wrote:
-> > > In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
-> > > parameter") a global varialbe global max_mem_size is added to store
-> > > the value which is parsed from 'mem= '. This truly stops those
-> > > DIMM from being added into system memory during boot.
-> > > 
-> > > However, it also limits the later memory hotplug functionality. Any
-> > > memory board can't be hot added any more if its region is beyond the
-> > > max_mem_size. System will print error like below:
-> > > 
-> > > [  216.387164] acpi PNP0C80:02: add_memory failed
-> > > [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
-> > > [  216.392187] acpi PNP0C80:02: Enumeration failure
-> > > 
-> > > >From document of 'mem =' parameter, it should be a restriction during
-> > > boot, but not impact the system memory adding/removing after booting.
-> > > 
-> > >   mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
-> > > 
-> > > So fix it by also checking if it's during SYSTEM_BOOTING stage when
-> > > restrict memory adding. Otherwise, skip the restriction.
-> > 
-> > Could you be more specific about why the boot vs. later hotplug makes
-> > any difference? The documentation is explicit about the boot time but
-> > considering this seems to be like that since ever I strongly suspect
-> > that this is just an omission.
-> 
-> I think the 'mem=' updating in commit 357b4da50a62 will only affect
-> those hotplugable memory regions. When I tested it, there are three
-> memmory boards, one is the normal memory region with 4G memory, and the
-> other two are hotpluggable memory boards and recorded in ACPI tables,
-> each is 1GB. When put all them three onsite before boot, they will be
-> recognized by firmware and written into e820 table and/or EFI table, then
-> kernel can read them from e820 and them as system memory, we get 6G
-> memory. 
-> 
-> However, if add 'mem=', like 'mme=3G', w/o commit 357b4da50a62, in e820,
-> we will only get 3G memory. Later in acpi_init(), acpi scanning will
-> search those two memory regions, and try to add them into system call
-> because the two hotpluggable memory boards are power on and ready.
-> Then we will get 3G + 1G + 1G, 5G memory. the 1st 3G is from the normal
-> memory board, its last 1G is trimmed. Jurgen's patch is trying to fix this
-> because the adding happens during boot time, and conflicts with 'mem='. 
+On 09/12/19 21:05, Sean Christopherson wrote:
+> +	/*
+> +	 * Reloading userspace's FPU is handled by kvm_arch_vcpu_load(), both
+> +	 * for direct calls from userspace (via vcpu_load()) and if this task
+> +	 * is preempted (via kvm_arch_sched_in()) between vcpu_load() and now.
 
-Unless I misunderstand what you are saying this all is just expected.
-You have restricted the memory explicitly and the result is that not all
-the memory is visible.
+via kvm_sched_in (not the arch_ function).  Applied with that change.
 
-> But after system bootup, we should be able to hot add/remove any memory
-> board. This should not be restricted by a boot-time kernel parameter
-> 'mme='. This is what I am trying to fix.
+Paolo
 
-This is a simple statement without any actual explanation on why. Why is
-hotplug memory special? What is the usecase? Who would want to use mem
-parameter and later expect a memory above the restrected area to be
-hotplugable?
+> +	 */
+> +	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
+> +
 
-David has provided an actual usecase [1] but this needs to be documented
-somewhere so that we do not break that accidentally in the future.
-Ideally both in code which adds the boot restriction and the kernel
-command line documentation to be explicit about BOOT restriction.
-
-[1] http://lkml.kernel.org/r/429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com
--- 
-Michal Hocko
-SUSE Labs
