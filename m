@@ -2,149 +2,97 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D75BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748A9C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7705207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012671;
-	bh=vWM0ZHYxx9xYaIp06F5yfYDOCVuzQvi6mVO4xd9HxW4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQhvBGpVUJF1P1LxbG4K06XBYPnVzZOvdCCq2ria/YPCeKKVcL493ifzwMJLgqhEX
-	 x6SSH6838CFuNCQ8O2akRhQMeirfpUXQqfdNo+KU0oxrT3SpbzxgDkR3dOQZrj2mZE
-	 cwEzwhCxHMFdun50BljoaQqgh8BOlDYpLe4wkho4=
+	by mail.kernel.org (Postfix) with ESMTP id 497A92077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfLJVRt (ORCPT
+        id S1729364AbfLJVRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:17:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:17:54 -0500
+Received: from mga01.intel.com ([192.55.52.88]:58566 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbfLJVMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:49 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F332214AF;
-        Tue, 10 Dec 2019 21:12:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012368;
-        bh=vWM0ZHYxx9xYaIp06F5yfYDOCVuzQvi6mVO4xd9HxW4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7f+mtoHYhcyedw5Xys+fegSrNqx+riavx+Z5M61i4ON7n5NLWXijBEVCTWYra6cg
-         LjPdCgopYUqUJWWMFyDlgiScFL8PwZ8k5lo3+sRPopBRANxvwHDCYyRBRXjcWVI0SS
-         tAeYoHvlOEhOYp2BlHssu5fq2Qon3ofDEmmR64d8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petar Penkov <ppenkov@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 295/350] tun: fix data-race in gro_normal_list()
-Date:   Tue, 10 Dec 2019 16:06:40 -0500
-Message-Id: <20191210210735.9077-256-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        id S1727528AbfLJVRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:17:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 13:17:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
+   d="scan'208";a="210505395"
+Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Dec 2019 13:17:50 -0800
+Subject: [PATCH] tpm: fix WARNING: lock held when returning to user space
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     tadeusz.struk@intel.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org, jgg@ziepe.ca,
+        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
+        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
+Date:   Tue, 10 Dec 2019 13:17:51 -0800
+Message-ID: <157601267151.12904.7408818232910113434.stgit@tstruk-mobl1>
+In-Reply-To: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
+References: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petar Penkov <ppenkov@google.com>
+When an application sends TPM commands in NONBLOCKING mode
+the driver holds chip->tpm_mutex returning from write(),
+which triggers WARNING: lock held when returning to user space!
+To silence this warning the driver needs to release the mutex
+and acquire it again in tpm_dev_async_work() before sending
+the command.
 
-[ Upstream commit c39e342a050a4425348e6fe7f75827c0a1a7ebc5 ]
-
-There is a race in the TUN driver between napi_busy_loop and
-napi_gro_frags. This commit resolves the race by adding the NAPI struct
-via netif_tx_napi_add, instead of netif_napi_add, which disables polling
-for the NAPI struct.
-
-KCSAN reported:
-BUG: KCSAN: data-race in gro_normal_list.part.0 / napi_busy_loop
-
-write to 0xffff8880b5d474b0 of 4 bytes by task 11205 on cpu 0:
- gro_normal_list.part.0+0x77/0xb0 net/core/dev.c:5682
- gro_normal_list net/core/dev.c:5678 [inline]
- gro_normal_one net/core/dev.c:5692 [inline]
- napi_frags_finish net/core/dev.c:5705 [inline]
- napi_gro_frags+0x625/0x770 net/core/dev.c:5778
- tun_get_user+0x2150/0x26a0 drivers/net/tun.c:1976
- tun_chr_write_iter+0x79/0xd0 drivers/net/tun.c:2022
- call_write_iter include/linux/fs.h:1895 [inline]
- do_iter_readv_writev+0x487/0x5b0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x13b/0x3c0 fs/read_write.c:951
- vfs_writev+0x118/0x1c0 fs/read_write.c:1015
- do_writev+0xe3/0x250 fs/read_write.c:1058
- __do_sys_writev fs/read_write.c:1131 [inline]
- __se_sys_writev fs/read_write.c:1128 [inline]
- __x64_sys_writev+0x4e/0x60 fs/read_write.c:1128
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff8880b5d474b0 of 4 bytes by task 11168 on cpu 1:
- gro_normal_list net/core/dev.c:5678 [inline]
- napi_busy_loop+0xda/0x4f0 net/core/dev.c:6126
- sk_busy_loop include/net/busy_poll.h:108 [inline]
- __skb_recv_udp+0x4ad/0x560 net/ipv4/udp.c:1689
- udpv6_recvmsg+0x29e/0xe90 net/ipv6/udp.c:288
- inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
- sock_recvmsg_nosec net/socket.c:871 [inline]
- sock_recvmsg net/socket.c:889 [inline]
- sock_recvmsg+0x92/0xb0 net/socket.c:885
- sock_read_iter+0x15f/0x1e0 net/socket.c:967
- call_read_iter include/linux/fs.h:1889 [inline]
- new_sync_read+0x389/0x4f0 fs/read_write.c:414
- __vfs_read+0xb1/0xc0 fs/read_write.c:427
- vfs_read fs/read_write.c:461 [inline]
- vfs_read+0x143/0x2c0 fs/read_write.c:446
- ksys_read+0xd5/0x1b0 fs/read_write.c:587
- __do_sys_read fs/read_write.c:597 [inline]
- __se_sys_read fs/read_write.c:595 [inline]
- __x64_sys_read+0x4c/0x60 fs/read_write.c:595
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 11168 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 943170998b20 ("tun: enable NAPI for TUN/TAP driver")
-Signed-off-by: Petar Penkov <ppenkov@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 9e1b74a63f776 (tpm: add support for nonblocking operation)
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
 ---
- drivers/net/tun.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/tpm/tpm-dev-common.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index a8d3141582a53..16564ebcde500 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -313,8 +313,8 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
- 	tfile->napi_enabled = napi_en;
- 	tfile->napi_frags_enabled = napi_en && napi_frags;
- 	if (napi_en) {
--		netif_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
--			       NAPI_POLL_WEIGHT);
-+		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
-+				  NAPI_POLL_WEIGHT);
- 		napi_enable(&tfile->napi);
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 2ec47a69a2a6..b23b0b999232 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -61,6 +61,12 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 
+ 	mutex_lock(&priv->buffer_mutex);
+ 	priv->command_enqueued = false;
++	ret = tpm_try_get_ops(priv->chip);
++	if (ret) {
++		priv->response_length = ret;
++		goto out;
++	}
++
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
+@@ -68,6 +74,7 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 		priv->response_length = ret;
+ 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
  	}
++out:
+ 	mutex_unlock(&priv->buffer_mutex);
+ 	wake_up_interruptible(&priv->async_wait);
  }
--- 
-2.20.1
+@@ -204,6 +211,7 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
++		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
 
