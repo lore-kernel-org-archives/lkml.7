@@ -2,104 +2,101 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9898EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6AC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D95A207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015859;
-	bh=mN3wsluKVT5Rsnu1k6zRRJHpubasb33Quq6TKKfdouw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPTjP/6b5colaXC63S/jEd/UAswdpgOmhkreLXVK4PJeDFqHccG4SvJo+zaQEvQgy
-	 /kpJEsjyZUMWzigerk63j+SKPvqehwTh5LY/ZbYA+Ien68+wA5H2YpMxBXbZ5VccKM
-	 JVQJV1otAy6gwiIViXHLg2MF2ePX0gOj9BoXz/DM=
+	by mail.kernel.org (Postfix) with ESMTP id C76DA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="CeFET6SF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ipJwzUWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbfLJWK6 (ORCPT
+        id S1730357AbfLJWLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Dec 2019 17:11:01 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:58847 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728909AbfLJWK6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 17:10:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfLJWED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0830C208C3;
-        Tue, 10 Dec 2019 22:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015442;
-        bh=mN3wsluKVT5Rsnu1k6zRRJHpubasb33Quq6TKKfdouw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fuhUi8aSRBPf+LZep3Bm+u+d7l9BhMP4lYesXu6PaQiWPAbWtzdBImavPWn8L2rb/
-         Fc/vXlgTBZ2BxvhejZ+aR65Tdu5KUGHAdQrlBBCnkHCp3WbdEnq92cHfPFfd02S5W2
-         0JsuCE4SzcQuyb1bsBrnbJpt9pv65pdnX6N68644=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 051/130] Bluetooth: missed cpu_to_le16 conversion in hci_init4_req
-Date:   Tue, 10 Dec 2019 17:01:42 -0500
-Message-Id: <20191210220301.13262-51-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
-References: <20191210220301.13262-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 326DAF5A;
+        Tue, 10 Dec 2019 17:10:57 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 10 Dec 2019 17:10:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=iTzj/LXruarNxkB4mF+5qgnxYnni345
+        HnB4zzW+dtao=; b=CeFET6SFvvOE8YyX5U34URQmorm1Zg3iCfE5rXF71XrLsVG
+        giyMAGOcfVkLtVPHkfQNU1dCrua9wiUW9Np2OHESJiYHcc090vZyjEMIdEvkYxnn
+        ZuYcMc7hmSP611btvl7KumhtA5vrmJwWtoMfLZuGLvseUMVk9kL16OmKjxXcgtVN
+        MKmtwhlc6gP6P7hP3tNT1QNTg5quvUs6KpR466SRb51wv4XaEifDJJunVgPAgoZy
+        ZepqZRxvMqx5TNoWdLacjk3E7vp5TwJdIpsnS5NzbCDQUHRxCGAfrO9LMHAZ34q2
+        Y7MK+ct62tW0jBiaXpmVdDoWx7oRqQGydg8hLvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=iTzj/L
+        XruarNxkB4mF+5qgnxYnni345HnB4zzW+dtao=; b=ipJwzUWJtdhmKRNun/ZAsR
+        aMJ+C3uwPWPBTkCIeYbXdnP7phZ9WcW+P8DN8BVA1KwVrMQ23gTZkR2u//dwUCxe
+        YroByIKLA3BfeSthfMMDPhhiE9938ISPW03bEr+VUMke1hA8K47MZwwjS5qjNgwC
+        nZdTmoQIzW14j4XmYLjBHBky+x5jAkzDS1cMOWB+rRgQ4vfmemLCTZU/e0AJLNZ2
+        KFpmbFSDFxraP8nqzlPITpvd8EHvk+CLYO3fpGbP71hSHvtwbZ5ryeddofpZ42Uy
+        l3jzqHr0Vyg+x15g2PLwA+VNjsJO4BfQzCeKH1m/miWQiELGOZYdZ6fTK4JCKB0A
+        ==
+X-ME-Sender: <xms:7xfwXY-JogK4UnIVNCkzWFBVV5d4RmKSrOPzwzavIsixdDhUueZZtQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelfedgudehjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushht
+    vghrufhiiigvpedt
+X-ME-Proxy: <xmx:7xfwXcGiJxH3pF9WB_W9UqzemEHMu2DN__Qi5Gy42va_s7-oz1VoEw>
+    <xmx:7xfwXb42G6oXpxQpY6OyGru9RkoJqIsfN-WL3b2U-5cmfkiK9-W4SQ>
+    <xmx:7xfwXTmMCcNi4xGkFOcmkjHwUKL8BYE2o_l_yX-3sg2Wwm3pezufCA>
+    <xmx:8BfwXbFv2yYn4A5iNzu1Uzqg1LES15xXThOEbQtiJxOt934a-ItNAQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 78AE2E00A2; Tue, 10 Dec 2019 17:10:55 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
+Mime-Version: 1.0
+Message-Id: <f6a514d1-44cb-4577-af07-fd2f3fefc974@www.fastmail.com>
+In-Reply-To: <20191210202842.2546758-1-arnd@arndb.de>
+References: <20191210202842.2546758-1-arnd@arndb.de>
+Date:   Wed, 11 Dec 2019 08:42:35 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Arnd Bergmann" <arnd@arndb.de>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     "Hongwei Zhang" <hongweiz@ami.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: aspeed: avoid return type warning
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
 
-[ Upstream commit 727ea61a5028f8ac96f75ab34cb1b56e63fd9227 ]
 
-It looks like in hci_init4_req() the request is being
-initialised from cpu-endian data but the packet is specified
-to be little-endian. This causes an warning from sparse due
-to __le16 to u16 conversion.
+On Wed, 11 Dec 2019, at 06:58, Arnd Bergmann wrote:
+> gcc has a hard time tracking whether BUG_ON(1) ends
+> execution or not:
+> 
+> drivers/gpio/gpio-aspeed-sgpio.c: In function 'bank_reg':
+> drivers/gpio/gpio-aspeed-sgpio.c:112:1: error: control reaches end of 
+> non-void function [-Werror=return-type]
+> 
+> Use the simpler BUG() that gcc knows cannot continue.
+> 
+> Fixes: f8b410e3695a ("gpio: aspeed-sgpio: Rename and add Kconfig/Makefile")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Fix this by using cpu_to_le16() on the two fields in the packet.
-
-net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
-net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
-net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
-net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
-net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
-net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
-
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/hci_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 6bc679cd34818..d6d7364838f47 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -802,8 +802,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
- 	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
- 		struct hci_cp_le_write_def_data_len cp;
- 
--		cp.tx_len = hdev->le_max_tx_len;
--		cp.tx_time = hdev->le_max_tx_time;
-+		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
-+		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
- 		hci_req_add(req, HCI_OP_LE_WRITE_DEF_DATA_LEN, sizeof(cp), &cp);
- 	}
- 
--- 
-2.20.1
-
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
