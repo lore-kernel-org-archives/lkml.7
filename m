@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD34C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BC6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D2E20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FBF2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013959;
-	bh=nFxcgDnb6O25p6af5qRs7FXhfkUAYgJz96qP3fowiQA=;
+	s=default; t=1576013961;
+	bh=b/KjiDjETamHW9Y/8FNozm/dGxjife84uORnLJ/QAO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nlf0W+H7Kao4cnkiqcFwcIb93YC0HfNlO/dfa6JuCCEVHYBb7WsHz66Wwmwe4Hx4o
-	 DgEqnxktIA/he1eYlEWx4B9cMhcLnpoA0IhT6PZOaQ/Y7PSLapWc0qiGjHMotTDNwz
-	 79xbEcSq0kMtAKi34XqpYLpED+55L0INvkex7PcA=
+	b=bEpDT2OFldBavN50IpDN3eN6IvTLnNI6pjsDledcu8giKtaEd1MpP5AcodVTp0YbD
+	 DeSjUtSy/GTIrjI7BQ4w7Q1MGtfq+dz23CEnDxcTUc4ezo7O8V7qMKyXBm8IxxjIrX
+	 aWigpXPs/4jpBeDs4Q64gOoF3PnItKXVsI2wS/5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfLJVfC (ORCPT
+        id S1730150AbfLJVe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40202 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbfLJVes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:48 -0500
+        id S1730094AbfLJVer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13F412465C;
-        Tue, 10 Dec 2019 21:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B91207FF;
+        Tue, 10 Dec 2019 21:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013688;
-        bh=nFxcgDnb6O25p6af5qRs7FXhfkUAYgJz96qP3fowiQA=;
+        s=default; t=1576013686;
+        bh=b/KjiDjETamHW9Y/8FNozm/dGxjife84uORnLJ/QAO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MazmakwaiuCvyWxmx2PlB4w7Jak4st3DrrDIrv9vKm+54QoF/5PekZyxipIM02Rpq
-         JmpZskURjES1nrzfBUgXZikqFySGUiX67IGZerN63G3XnUHzBg4GFeiZYQfX7WDBr+
-         d6yOLDPDYvxnjCR/Wijsiwse5R7u9zPRpACujVnE=
+        b=u405EaP1BZTq8noYYF8BaS8zTwV42211rlTiRHlfmyEt2mUf8xd4eWv+y+w/Cf3hd
+         CRDqY441KJpIMNd4WLzpBIwtmBliv61QDz9a0V1OxFS7eEm6IVhr6jQKGUCWtyQAl8
+         mH9zNFSRfZs0xfcS8KGdVC/C6Q9yPMIzVMhoVc1c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 120/177] xen/gntdev: Use select for DMA_SHARED_BUFFER
-Date:   Tue, 10 Dec 2019 16:31:24 -0500
-Message-Id: <20191210213221.11921-120-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 119/177] drm/amdgpu: fix potential double drop fence reference
+Date:   Tue, 10 Dec 2019 16:31:23 -0500
+Message-Id: <20191210213221.11921-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,46 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit fa6614d8ef13c63aac52ad7c07c5e69ce4aba3dd ]
+[ Upstream commit 946ab8db6953535a3a88c957db8328beacdfed9d ]
 
-DMA_SHARED_BUFFER can not be enabled by the user (it represents a library
-set in the kernel). The kconfig convention is to use select for such
-symbols so they are turned on implicitly when the user enables a kconfig
-that needs them.
+The object fence is not set to NULL after its reference is dropped. As a
+result, its reference may be dropped again if error occurs after that,
+which may lead to a use after free bug. To avoid the issue, fence is
+explicitly set to NULL after dropping its reference.
 
-Otherwise the XEN_GNTDEV_DMABUF kconfig is overly difficult to enable.
-
-Fixes: 932d6562179e ("xen/gntdev: Add initial support for dma-buf UAPI")
-Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: xen-devel@lists.xenproject.org
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-index 90d387b50ab74..0505eeb593b5c 100644
---- a/drivers/xen/Kconfig
-+++ b/drivers/xen/Kconfig
-@@ -158,7 +158,8 @@ config XEN_GNTDEV
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
+index 8904e62dca7ae..41d3142ef3cf0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
+@@ -138,6 +138,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
+ 		}
  
- config XEN_GNTDEV_DMABUF
- 	bool "Add support for dma-buf grant access device driver extension"
--	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC && DMA_SHARED_BUFFER
-+	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC
-+	select DMA_SHARED_BUFFER
- 	help
- 	  Allows userspace processes and kernel modules to use Xen backed
- 	  dma-buf implementation. With this extension grant references to
+ 		dma_fence_put(fence);
++		fence = NULL;
+ 
+ 		r = amdgpu_bo_kmap(vram_obj, &vram_map);
+ 		if (r) {
+@@ -183,6 +184,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
+ 		}
+ 
+ 		dma_fence_put(fence);
++		fence = NULL;
+ 
+ 		r = amdgpu_bo_kmap(gtt_obj[i], &gtt_map);
+ 		if (r) {
 -- 
 2.20.1
 
