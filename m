@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D34C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DADFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6BF246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B29246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012196;
-	bh=p4Ouzi2dQxXDQpMa6jd+uJ+hILDlMBsHNOy9APzS59k=;
+	s=default; t=1576012199;
+	bh=Xs9azZUSBFSp7gdmcJkMreRRH1oyq6EQNLWJYKL6CiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtgRhi3K9+XhIzYVw6MaxlFzj6Ku5HHYZgl7g3+jEohcY2InscUWW35JIw0YNy4HK
-	 HK/q3Ee0AmoFqaYId/p9h/Q2jJbmc/Tlv/Y+M3FSUGOa+DsYVAUxInxW7m4GvTEHBB
-	 J2qY10XUHDr3gHYgDUaEM30hHNpOO2n/TiWTkJqk=
+	b=MltlYbInoaFmSKrm0OkbUbT5LnoST44SVbgY/yL1bAp1M4ZZzyw7VjXexRMHx4QZF
+	 4P8zLDhKNlmvPHWW3t3srJwg3M0Gu7fxD5UYw74qpQS1H4Rnz8gNAMTrjkZBKIJkEu
+	 +KQzmD8XGDrk8G/P2RQdM3E453qi+v4q4Tw3vx/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfLJVJz (ORCPT
+        id S1728328AbfLJVJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfLJVJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:50 -0500
+        id S1727482AbfLJVJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBCD3246AC;
-        Tue, 10 Dec 2019 21:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C4EB246AC;
+        Tue, 10 Dec 2019 21:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012189;
-        bh=p4Ouzi2dQxXDQpMa6jd+uJ+hILDlMBsHNOy9APzS59k=;
+        s=default; t=1576012195;
+        bh=Xs9azZUSBFSp7gdmcJkMreRRH1oyq6EQNLWJYKL6CiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHjbqSKYOiXcnpkoTKKJQU07CPOWVTvQCspubSXECTFO5SYGnDpbUOLfeQMCRq/id
-         FvlkODOPlH0IMpD9Kcn14aZJF5BECQ003XT04kr8czD/aOrC+ZnaMvzoObJsxhtLc/
-         RbjIDD55rXE2RgrjCscwJBCgLXTVjNxnQ0IJRpYA=
+        b=rD3lv8oVwNzV1+EAAbOpkjgbV1gq2N+z8bPWYM+lMkMxEqU4ipcitR14ZZaAL7cuL
+         JethQisTTEdaKzI9ycpNhDTywDeP1UoeUUaJ8ZoFmfxZ3HUrvMC2vlLPbwNOTeTEt7
+         PUj0flppHVIKD990v0rqyU9Vd5bci5Y+gDgoU9hA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
-        Eddie James <eajames@linux.ibm.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+Cc:     Benoit Parrot <bparrot@ti.com>, Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 145/350] media: aspeed: set hsync and vsync polarities to normal before starting mode detection
-Date:   Tue, 10 Dec 2019 16:04:10 -0500
-Message-Id: <20191210210735.9077-106-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 149/350] media: ov5640: Make 2592x1944 mode only available at 15 fps
+Date:   Tue, 10 Dec 2019 16:04:14 -0500
+Message-Id: <20191210210735.9077-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -63,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 5b3f3c41c5c791c1c22cd91655e7ef4b2a1dff7c ]
+[ Upstream commit 981e445454531c9d5ac5d3fa8c0f1bd55262d001 ]
 
-Sometimes it detects a weird resolution such as 1024x287 when the
-actual resolution is 1024x768. To resolve such an issue, this
-commit adds clearing for hsync and vsync polarity register bits
-at the beginning of the first mode detection. This is recommended
-in the datasheet.
+The sensor data sheet clearly state that 2592x1944 only works at 15 fps
+make sure we don't try to miss configure the pll out of acceptable
+range.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/ov5640.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index eb12f37930629..84e0650106f51 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -741,6 +741,8 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
- 		}
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 500d9bbff10b5..18dd2d717088b 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -1611,6 +1611,11 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
+ 	    !(mode->hact == 640 && mode->vact == 480))
+ 		return NULL;
  
- 		set_bit(VIDEO_RES_DETECT, &video->flags);
-+		aspeed_video_update(video, VE_CTRL,
-+				    VE_CTRL_VSYNC_POL | VE_CTRL_HSYNC_POL, 0);
- 		aspeed_video_enable_mode_detect(video);
++	/* 2592x1944 only works at 15fps max */
++	if ((mode->hact == 2592 && mode->vact == 1944) &&
++	    fr > OV5640_15_FPS)
++		return NULL;
++
+ 	return mode;
+ }
  
- 		rc = wait_event_interruptible_timeout(video->wait,
 -- 
 2.20.1
 
