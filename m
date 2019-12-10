@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7F8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32E0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B615E20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7821820726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ld5xGV6G"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="F/5oyS0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLJLMb (ORCPT
+        id S1727466AbfLJLMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:12:31 -0500
-Received: from mail-dm6nam10on2051.outbound.protection.outlook.com ([40.107.93.51]:57249
+        Tue, 10 Dec 2019 06:12:36 -0500
+Received: from mail-dm6nam10on2040.outbound.protection.outlook.com ([40.107.93.40]:6238
         "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726915AbfLJLM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:12:28 -0500
+        id S1727039AbfLJLMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:12:31 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oX5oWBRQpnR5i8e+FN0c7eJ/S7qOgbzBJL7Pt18Db3oxIFVj8L7T8E4ceMADZ5/OGYHAYdkZt+Fpxx9ci6C8nBXUeSFfzHDIY3j00CTFc6cu+u3oMvs1K9oas7gRSkT9x3ThbG3rq/vbE/cKFklbdvKdGnWdSpOhuKvYBmZRmoeiuuNd/7Ypou7PpH9SpqwLT8DadJ7eiJSzQWhJYlxhy6Guu+/cMOIuct4PW/roqFYpbk1ZgCiGY375PfUxJ0LaUdpxAXhRrYPY9SaTsWZ7VK+Q6tKJvX8yrGGkkl8rCi1vtEIXKcEIhglgdpBHPg/NMzzDWyk2lqFIO6EK1GINTw==
+ b=I+2opCtANSoc8kprSFZ533LKIgBcmC1VBoBF0QNuKjF2HvA6VRfpPpjLwOVZZ57bxw2rVZNsFNSZXPCTQJGWGnjEO/OJHdLCp0FskTJ7A/Sz3xKl0zsGMIQGnmFMSax5gqftJUp+tBkM25B5XuxMGxZQpyby8NyTzArQ7vE9ACd2esNmghJEUxZb2q5vSJeNhfvo0KUhQ4g7TkexXXkY+GwMBMX+z7JtQimXz3fvw2kHekISDV3pNi6vhPgW2bs5ElGi13dAy55sRsQNNKq88LmjnuKO+Vw9raVYeb/cxoKZRXrGUx/VaNOnYOlkMtlrplzzvvCIaM2z+wp+4+Nnxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yyZnI0HbL8bdpVO5C50UB7u9//b3VEqrqOf+EFqI6YY=;
- b=Onctk9s6dx2GR+iAHSA6bPxZaLy/XHNUaVakITGRV+XP3ujBtM0KSzwxtYj5G1n40Jh3/1b/Fwgp8czT0w0jtfdXC6tD9I/0ouuhMnoELip/3xnIoxrfvT1hHe8saawdk1P4Fp3qusR/QwMcCxSd/Iuyi/4PjmmeoHhhw4vVPnmKncP0KmYvif7Twf3k+FeAVXdwjfEXeGtiNyuKEf5XqS+38GQ7rWp18ziRatEU8rRTc1TfpEccBQv8qIx0PuRyy45Ld6EjXkWLwm1xMv189J3wZPJCM8H53lxe2vknXczFVy5+xFtsx5SvKAJj+g85BuSapkNaC2gpgbkJ0XJwMg==
+ bh=Hn6YCoYCYA7GW3tXGIgknALyVvFhDXEMfvZIbFjHj5k=;
+ b=nYIZXa+oQczylW8F8xK7O1V0TF0LdayGdcbJspQSATyQVsOqz1i43X33d0CAfSSAUk+2SecyLuU+NwvZTlpv3qy4yuOZ2vRUXZAO3T8yFzaTXcesq7EKm3n4/6FWPoJfcGdgr+aMweoeJxYGqFAvPXC1Dpt5WdQsqDiU58w3lQZBYYQdzp2ZlC4M8eMOBRj2ca5MWDUMm4to4p4qXID5t/6L0wTw5Q875rYjOSW9ZwMTWPgp9lhWznquRX7bcefMm/1MM0D+kpZ9yw3MFgTzRJWLlANTCtGZgFHQAMfTAWpzIIeHFGz4kUZeLuS/FBIQNFhG9iE90ELSJZgCB3HXww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
  dkim=pass header.d=sifive.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yyZnI0HbL8bdpVO5C50UB7u9//b3VEqrqOf+EFqI6YY=;
- b=Ld5xGV6G2Yu+FzKGnYQIfMoQ7IMfkpxug0v7mULXYmzxwM0DVN55fhYYX4gyoaqmHppErdGsAFYC6m4vfa9X1lNxhSjRj6iA5OmFKi239+yxKQNJoba13GNmQyLW9pLAI+vb8V71bTU7Yc0/Cb5Oc6ve7+kLbfaPLdu2gyyA2D4=
+ bh=Hn6YCoYCYA7GW3tXGIgknALyVvFhDXEMfvZIbFjHj5k=;
+ b=F/5oyS0bTN9YU6LEiQ4KL5dq4cvaWwJW8jREl9MVpnHDuFknHRRzVZLvGxbQl6IvBm6lBBRR0ZRQ79xikKAf51kEH27ghDVONNWjw48cWiLqoZsU9OJK+uxpp6rWU4mCd+N5Md9kgpWQpG/kEz5rK22wr5XSiroClJCLIcc0kDM=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=yash.shah@sifive.com; 
 Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
  CH2PR13MB3656.namprd13.prod.outlook.com (20.180.4.204) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.14; Tue, 10 Dec 2019 11:12:17 +0000
+ 15.20.2538.14; Tue, 10 Dec 2019 11:11:51 +0000
 Received: from CH2PR13MB3368.namprd13.prod.outlook.com
  ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
  ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2538.012; Tue, 10 Dec 2019
- 11:12:17 +0000
+ 11:11:51 +0000
 From:   Yash Shah <yash.shah@sifive.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
@@ -58,9 +58,9 @@ Cc:     aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net,
         devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
         Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v4 6/6] riscv: dts: Add DT support for SiFive FU540 GPIO driver
-Date:   Tue, 10 Dec 2019 16:41:14 +0530
-Message-Id: <1575976274-13487-7-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH v4 2/6] irqchip: nvic: Use irq_domain_translate_onecell instead of custom func
+Date:   Tue, 10 Dec 2019 16:41:10 +0530
+Message-Id: <1575976274-13487-3-git-send-email-yash.shah@sifive.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
 References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
@@ -69,83 +69,85 @@ X-ClientProxiedBy: PN1PR0101CA0028.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:c00:c::14) To CH2PR13MB3368.namprd13.prod.outlook.com
  (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by PN1PR0101CA0028.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::14) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Tue, 10 Dec 2019 11:12:11 +0000
+Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by PN1PR0101CA0028.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:c::14) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Tue, 10 Dec 2019 11:11:45 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [114.143.65.226]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 22aa622c-3155-4a56-0a67-08d77d61d0f5
+X-MS-Office365-Filtering-Correlation-Id: cd1308c9-7003-4a3d-bb5d-08d77d61c171
 X-MS-TrafficTypeDiagnostic: CH2PR13MB3656:
 X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB3656E79A536FBFC54B076CB38C5B0@CH2PR13MB3656.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Microsoft-Antispam-PRVS: <CH2PR13MB3656D1D7C7E3EC25111825E88C5B0@CH2PR13MB3656.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:376;
 X-Forefront-PRVS: 02475B2A01
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(396003)(39850400004)(366004)(136003)(346002)(376002)(199004)(189003)(36756003)(66476007)(1006002)(107886003)(52116002)(66946007)(6506007)(26005)(956004)(316002)(2616005)(81166006)(8936002)(81156014)(16526019)(186003)(8676002)(44832011)(6636002)(5660300002)(86362001)(6486002)(7416002)(66556008)(6512007)(4326008)(478600001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3656;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(366004)(136003)(346002)(376002)(199004)(189003)(36756003)(66476007)(1006002)(107886003)(52116002)(6666004)(66946007)(6506007)(26005)(956004)(316002)(2616005)(81166006)(8936002)(81156014)(16526019)(186003)(8676002)(44832011)(6636002)(5660300002)(86362001)(6486002)(7416002)(66556008)(6512007)(4326008)(478600001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3656;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: sifive.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ms664EI6kxaJhYNcol2aZYmG/RvlGMIKO2go+e9ZVThW/C9bcG1BOP/FjGNErz3Re2ArGnmB0gEeq6f/wXFbUOK53uAZ6+HdrXZlAeKjNwQo6K+fTlo8kf3FRwMzNwe8xPe3y3nlGHftUXpyuCA0q8G/hbT7hpZJ15F24Wn2nGTfzGADhWEk/mH9lMGHDJe72+IGVVdbQYei257u3H49uWL17pkq5enG3X+QSLzqA7d7Effzxpi9slbvG/UdxD42/cZ4ukYr6ONzPfK6J4VCgYQpihAb2/HeW12EuKV7vpS9dSwggqDGW2J2fxArD0E4niZJKBTZj8DjBS4H+vbEyHeJ3lDPm4V+5xwSw/uHfX+Bo0wuN64UkI9FBPMd/B1zLye+y7ViEgwnztbFheWz6BZJXP4z5W0UA8HEhYPgGgYsYFvtElLCh5cu5szD+h9Z
+X-Microsoft-Antispam-Message-Info: Gn0Pg3+5miRH+oWVWcR/qUVKxqPoWyuEKqdpcyAoHmbxOH70emsTd3MB3DHbdID9kQ9sBcUbM3yC04uVyVQYj8q0Y4ab+hiohhYE13PrSiyqFiZJkXvq3rVZRgeXyzWcGya0Twwb01z5jOZ+qAopZ4sdV9ocYOaWbriGfTRn4BzyyXEjqiKbyugCThpATNAzPKhEhcaD0Wwct7iCXqGtxo4JZOKTullznv3Qa0bRqnyYazLw0vyOn/vqG4WgiHIjVyMNurjuXodZaFVGawdvZjtweKu2ar8PTTM46WSAySVpTGQQmLKz3Y5ck7mO45kJ4UWaBwu2MebIge4/x+K4HRmtzZQ+8cDvTVdhmmCIv4IGWCE7bc3gZurVhbVEiQPBu60ju7UhM7ief+m9qG/B7XJVbmw4BpwfgT/pBMH6HoIQO7fp+C85QCk7k5h+ZYj7
 X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22aa622c-3155-4a56-0a67-08d77d61d0f5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 11:12:16.9712
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd1308c9-7003-4a3d-bb5d-08d77d61c171
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 11:11:50.9778
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iT4tjzfzPl2q5H7otacZfUtcbShKHvIMyBNpASgzCsacsBL2iU+b9zWMP61bIcKnsomapYdIcpOzHwPYwdiSsw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 795WsnLWmXViWasT+OpUm88sRKYQ/WAeh630NBEbifHp/teK3ub5GE0+bpjK33nmthY+NJjExCMyb35vgMIvJA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the gpio DT node in SiFive FU540 soc-specific DT file.
-Enable the gpio node in HiFive Unleashed board-specific DT file.
+Make use of newly introduced irq_domain_translate_onecell() instead of
+custom made function.
 
 Signed-off-by: Yash Shah <yash.shah@sifive.com>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 15 ++++++++++++++-
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  4 ++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-nvic.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index afa43c7..96dca93 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -246,6 +246,19 @@
- 			#pwm-cells = <3>;
- 			status = "disabled";
- 		};
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index a166d30..f747e22 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -45,17 +45,6 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ 	handle_IRQ(irq, regs);
+ }
+ 
+-static int nvic_irq_domain_translate(struct irq_domain *d,
+-				     struct irq_fwspec *fwspec,
+-				     unsigned long *hwirq, unsigned int *type)
+-{
+-	if (WARN_ON(fwspec->param_count < 1))
+-		return -EINVAL;
+-	*hwirq = fwspec->param[0];
+-	*type = IRQ_TYPE_NONE;
+-	return 0;
+-}
 -
-+		gpio: gpio@10060000 {
-+			compatible = "sifive,fu540-c000-gpio", "sifive,gpio0";
-+			interrupt-parent = <&plic0>;
-+			interrupts = <7>, <8>, <9>, <10>, <11>, <12>, <13>,
-+				     <14>, <15>, <16>, <17>, <18>, <19>, <20>,
-+				     <21>, <22>;
-+			reg = <0x0 0x10060000 0x0 0x1000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&prci PRCI_CLK_TLCLK>;
-+			status = "disabled";
-+		};
- 	};
+ static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 				unsigned int nr_irqs, void *arg)
+ {
+@@ -64,7 +53,7 @@ static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 	unsigned int type = IRQ_TYPE_NONE;
+ 	struct irq_fwspec *fwspec = arg;
+ 
+-	ret = nvic_irq_domain_translate(domain, fwspec, &hwirq, &type);
++	ret = irq_domain_translate_onecell(domain, fwspec, &hwirq, &type);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -75,7 +64,7 @@ static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ }
+ 
+ static const struct irq_domain_ops nvic_irq_domain_ops = {
+-	.translate = nvic_irq_domain_translate,
++	.translate = irq_domain_translate_onecell,
+ 	.alloc = nvic_irq_domain_alloc,
+ 	.free = irq_domain_free_irqs_top,
  };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 88cfcb9..609198c 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -94,3 +94,7 @@
- &pwm1 {
- 	status = "okay";
- };
-+
-+&gpio {
-+	status = "okay";
-+};
 -- 
 2.7.4
 
