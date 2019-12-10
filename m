@@ -2,180 +2,371 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E038CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A447C2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13D22073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BEtGQbxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfLJLkq (ORCPT
+        id S1727539AbfLJLkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:40:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48065 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727227AbfLJLkj (ORCPT
+        Tue, 10 Dec 2019 06:40:51 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44517 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfLJLkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 06:40:39 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1iedsZ-000829-BF; Tue, 10 Dec 2019 12:40:35 +0100
-Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 46AF748CB65;
-        Tue, 10 Dec 2019 11:40:34 +0000 (UTC)
-Subject: Re: [PATCH 0/2] can: fix USB altsetting bugs
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191210113231.3797-1-johan@kernel.org>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1244df5c-27e4-2558-3a88-5be6a7c2bfea@pengutronix.de>
-Date:   Tue, 10 Dec 2019 12:40:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191210113231.3797-1-johan@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191210114037euoutp0122d67fe3858b22f26f46c7c84310fffe~e-6y_rrnw1619916199euoutp01D
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:40:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191210114037euoutp0122d67fe3858b22f26f46c7c84310fffe~e-6y_rrnw1619916199euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575978037;
+        bh=aiVnQzPbPozJNU83F/hiDg/No+tUDZ/IodGWUQHWRto=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BEtGQbxThmIa6H2Zp9ul8AD0rVON4VzjyJruk4oO8i8jHhpMAdiZ86I+BHUbrfLg0
+         HW2xZFYrgEKc8cwqGAolK73NBXkOlMDT5sh6YHcs2ap9lrUHwlX04GLp2Nr1JCtQAL
+         dtJgJt8PWApfdsSNIRJEU4/d/ATQOolA39zVcIEA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191210114036eucas1p22c80daa0215fa2fa06ca3dcf4bc44873~e-6yvGlTN2407724077eucas1p2l;
+        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 23.87.60698.4348FED5; Tue, 10
+        Dec 2019 11:40:36 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210114036eucas1p2b0205a5dcdf1f26485235a232a5cbf20~e-6yaR9L52393723937eucas1p2m;
+        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191210114036eusmtrp1652822c7a907e6a1f0ee8ed7724132f3~e-6yZj4jt2588725887eusmtrp1S;
+        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-a0-5def8434f9ce
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F3.BF.08375.4348FED5; Tue, 10
+        Dec 2019 11:40:36 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191210114035eusmtip100b278fd846293c6cfe242055958815b~e-6x2cvR22043220432eusmtip1f;
+        Tue, 10 Dec 2019 11:40:35 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Andreas Faerber <afaerber@suse.de>,
+        Arjun K V <arjun.kv@samsung.com>
+Subject: [PATCH 1/2] ARM: dts: exynos: Add initial data for coupled
+ regulators for Exynos5422/5800
+Date:   Tue, 10 Dec 2019 12:40:26 +0100
+Message-Id: <20191210114027.14910-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191210114027.14910-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduzneV2TlvexBief61g0byq2WL5yF4vF
+        xhnrWS2uf3nOanF22UE2iwWfZrBanD+/gd3i8q45bBafe48wWsw4v4/JYu2Ru+wO3B6zGy6y
+        eGxa1cnm0bdlFaPH5tPVHp83yQWwRnHZpKTmZJalFunbJXBlfLq9j7HguG3F5kkWDYwNBl2M
+        nBwSAiYS1+cuYexi5OIQEljBKLHoyE02COcLo8TfmxeZQKqEBD4zSuzudYPpeDepG6pjOaPE
+        2o2/WeE6Vh77ywpSxSZgKNH1tosNxBYRiJd41H+XBaSIWeASk8SSxu/sIAlhgRSJjifzwBpY
+        BFQlXt24CBbnFbCVOLu9gwlinbzE6g0HmEFsTgE7iUlv+plABkkINLNL/Jp9jgWiyEWi6/hV
+        NghbWOLV8S3sELaMxOnJPSxQDYwSD8+tZYdwehglLjfNYISospY4fPwi0BkcQPdpSqzfpQ8R
+        dpRY03aQDSQsIcAnceOtIEiYGcictG06M0SYV6KjTQiiWk1i1vF1cGsPXrjEDGF7SLw9fQYa
+        phMZJfY9uMk4gVF+FsKyBYyMqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQJTyel/x7/u
+        YNz3J+kQowAHoxIP7wKHd7FCrIllxZW5hxglOJiVRHiPtwGFeFMSK6tSi/Lji0pzUosPMUpz
+        sCiJ8xovehkrJJCeWJKanZpakFoEk2Xi4JRqYNy1SzBv76GsB9uOn4u89EF7ftyvgxveVHw9
+        deCtlYZ/Hee8ZbPsP3+YeFxdVNcnQohrfcKFHpOH8oIv9jywNTXYa75nCoP//j7RN97eZdJv
+        pQ0ZT/zImyK558rS6Rlmt+un1lecW6I1p1YphfXu9+nfJEpt/TTTg5NWfEibf8HmxqP1i/Z1
+        SXkosRRnJBpqMRcVJwIAeYD5CiEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsVy+t/xu7omLe9jDS79ELRo3lRssXzlLhaL
+        jTPWs1pc//Kc1eLssoNsFgs+zWC1OH9+A7vF5V1z2Cw+9x5htJhxfh+Txdojd9kduD1mN1xk
+        8di0qpPNo2/LKkaPzaerPT5vkgtgjdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1
+        MjJV0rezSUnNySxLLdK3S9DL+HR7H2PBcduKzZMsGhgbDLoYOTkkBEwk3k3qZuxi5OIQEljK
+        KNHyYwoTREJG4uS0BlYIW1jiz7UuNoiiT4wSS5vOsYMk2AQMJbregiQ4OUQEEiVmf5wNVsQs
+        cINJ4tLbOWCThAWSJPrnzwebxCKgKvHqxkWwZl4BW4mz2zugtslLrN5wgBnE5hSwk5j0ph8s
+        LgRUs2XpFOYJjHwLGBlWMYqklhbnpucWG+oVJ+YWl+al6yXn525iBAb2tmM/N+9gvLQx+BCj
+        AAejEg/vAod3sUKsiWXFlbmHGCU4mJVEeI+3AYV4UxIrq1KL8uOLSnNSiw8xmgIdNZFZSjQ5
+        Hxh1eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGPsnrU85ahWQ
+        zDIjoD1SrXGx2k7RDRK5TJ/faQRs2t91wWvjNYP5R6WYbP3Tn08KvSw1K0wxZ2cK16QKa637
+        lmeTZZI9NkVMTrwhV25+NkrZx/JI95yAJ0aLEjZ/k5oy5c5UnclBq9ROc82WnbSJa2nuesYp
+        C3lZfn58eMQkuutLreUPg/q8u0osxRmJhlrMRcWJABf6z1aCAgAA
+X-CMS-MailID: 20191210114036eucas1p2b0205a5dcdf1f26485235a232a5cbf20
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191210114036eucas1p2b0205a5dcdf1f26485235a232a5cbf20
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191210114036eucas1p2b0205a5dcdf1f26485235a232a5cbf20
+References: <20191210114027.14910-1-m.szyprowski@samsung.com>
+        <CGME20191210114036eucas1p2b0205a5dcdf1f26485235a232a5cbf20@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F
-Content-Type: multipart/mixed; boundary="4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Johan Hovold <johan@kernel.org>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <1244df5c-27e4-2558-3a88-5be6a7c2bfea@pengutronix.de>
-Subject: Re: [PATCH 0/2] can: fix USB altsetting bugs
-References: <20191210113231.3797-1-johan@kernel.org>
-In-Reply-To: <20191210113231.3797-1-johan@kernel.org>
+Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
+bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
+be in 300mV range.
 
---4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[k.konieczny: add missing patch description]
+Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+This patch is the same as https://patchwork.kernel.org/patch/11172427/
+which has been dropped due to the other issues in the regulator framework.
+Those issues has been resolved now, so it is safe to apply it.
+---
+ arch/arm/boot/dts/exynos5420.dtsi             | 34 +++++++++----------
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  4 +++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts     |  4 +++
+ arch/arm/boot/dts/exynos5800.dtsi             | 32 ++++++++---------
+ 4 files changed, 41 insertions(+), 33 deletions(-)
 
-On 12/10/19 12:32 PM, Johan Hovold wrote:
-> We had quite a few driver using the first alternate setting instead of
-> the current one when doing descriptor sanity checks. This is mostly an
-> issue on kernels with panic_on_warn set due to a WARN() in
-> usb_submit_urn(). Since we've started backporting such fixes (e.g. as
-> reported by syzbot), I've marked these for stable as well.
->=20
-> The second patch here is a related cleanup to prevent future issues.
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index d39907a41f78..1ae5211f7d79 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -48,62 +48,62 @@
+ 
+ 		opp-1800000000 {
+ 			opp-hz = /bits/ 64 <1800000000>;
+-			opp-microvolt = <1250000>;
++			opp-microvolt = <1250000 1250000 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1700000000 {
+ 			opp-hz = /bits/ 64 <1700000000>;
+-			opp-microvolt = <1212500>;
++			opp-microvolt = <1212500 1212500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1600000000 {
+ 			opp-hz = /bits/ 64 <1600000000>;
+-			opp-microvolt = <1175000>;
++			opp-microvolt = <1175000 1175000 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1500000000 {
+ 			opp-hz = /bits/ 64 <1500000000>;
+-			opp-microvolt = <1137500>;
++			opp-microvolt = <1137500 1137500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1400000000 {
+ 			opp-hz = /bits/ 64 <1400000000>;
+-			opp-microvolt = <1112500>;
++			opp-microvolt = <1112500 1112500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+-			opp-microvolt = <1062500>;
++			opp-microvolt = <1062500 1062500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+-			opp-microvolt = <1037500>;
++			opp-microvolt = <1037500 1037500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+-			opp-microvolt = <1012500>;
++			opp-microvolt = <1012500 1012500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+-			opp-microvolt = < 987500>;
++			opp-microvolt = < 987500 987500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-900000000 {
+ 			opp-hz = /bits/ 64 <900000000>;
+-			opp-microvolt = < 962500>;
++			opp-microvolt = < 962500 962500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-800000000 {
+ 			opp-hz = /bits/ 64 <800000000>;
+-			opp-microvolt = < 937500>;
++			opp-microvolt = < 937500 937500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 		opp-700000000 {
+ 			opp-hz = /bits/ 64 <700000000>;
+-			opp-microvolt = < 912500>;
++			opp-microvolt = < 912500 912500 1500000>;
+ 			clock-latency-ns = <140000>;
+ 		};
+ 	};
+@@ -1171,23 +1171,23 @@
+ 
+ 			opp00 {
+ 				opp-hz = /bits/ 64 <84000000>;
+-				opp-microvolt = <925000>;
++				opp-microvolt = <925000 925000 1400000>;
+ 			};
+ 			opp01 {
+ 				opp-hz = /bits/ 64 <111000000>;
+-				opp-microvolt = <950000>;
++				opp-microvolt = <950000 950000 1400000>;
+ 			};
+ 			opp02 {
+ 				opp-hz = /bits/ 64 <222000000>;
+-				opp-microvolt = <950000>;
++				opp-microvolt = <950000 950000 1400000>;
+ 			};
+ 			opp03 {
+ 				opp-hz = /bits/ 64 <333000000>;
+-				opp-microvolt = <950000>;
++				opp-microvolt = <950000 950000 1400000>;
+ 			};
+ 			opp04 {
+ 				opp-hz = /bits/ 64 <400000000>;
+-				opp-microvolt = <987500>;
++				opp-microvolt = <987500 987500 1400000>;
+ 			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 059fa32d1a8f..8a34a861c191 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -601,6 +601,8 @@
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-coupled-with = <&buck3_reg>;
++				regulator-coupled-max-spread = <300000>;
+ 
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+@@ -613,6 +615,8 @@
+ 				regulator-max-microvolt = <1400000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
++				regulator-coupled-with = <&buck2_reg>;
++				regulator-coupled-max-spread = <300000>;
+ 
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 60ca3d685247..c1e38139ce4f 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -257,6 +257,8 @@
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-ramp-delay = <12500>;
++				regulator-coupled-with = <&buck3_reg>;
++				regulator-coupled-max-spread = <300000>;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+@@ -269,6 +271,8 @@
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-ramp-delay = <12500>;
++				regulator-coupled-with = <&buck2_reg>;
++				regulator-coupled-max-spread = <300000>;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
+index 16177d815ee4..1be7eb60439a 100644
+--- a/arch/arm/boot/dts/exynos5800.dtsi
++++ b/arch/arm/boot/dts/exynos5800.dtsi
+@@ -22,61 +22,61 @@
+ 
+ &cluster_a15_opp_table {
+ 	opp-1700000000 {
+-		opp-microvolt = <1250000>;
++		opp-microvolt = <1250000 1250000 1500000>;
+ 	};
+ 	opp-1600000000 {
+-		opp-microvolt = <1250000>;
++		opp-microvolt = <1250000 1250000 1500000>;
+ 	};
+ 	opp-1500000000 {
+-		opp-microvolt = <1100000>;
++		opp-microvolt = <1100000 1100000 1500000>;
+ 	};
+ 	opp-1400000000 {
+-		opp-microvolt = <1100000>;
++		opp-microvolt = <1100000 1100000 1500000>;
+ 	};
+ 	opp-1300000000 {
+-		opp-microvolt = <1100000>;
++		opp-microvolt = <1100000 1100000 1500000>;
+ 	};
+ 	opp-1200000000 {
+-		opp-microvolt = <1000000>;
++		opp-microvolt = <1000000 1000000 1500000>;
+ 	};
+ 	opp-1100000000 {
+-		opp-microvolt = <1000000>;
++		opp-microvolt = <1000000 1000000 1500000>;
+ 	};
+ 	opp-1000000000 {
+-		opp-microvolt = <1000000>;
++		opp-microvolt = <1000000 1000000 1500000>;
+ 	};
+ 	opp-900000000 {
+-		opp-microvolt = <1000000>;
++		opp-microvolt = <1000000 1000000 1500000>;
+ 	};
+ 	opp-800000000 {
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 	};
+ 	opp-700000000 {
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 	};
+ 	opp-600000000 {
+ 		opp-hz = /bits/ 64 <600000000>;
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 		clock-latency-ns = <140000>;
+ 	};
+ 	opp-500000000 {
+ 		opp-hz = /bits/ 64 <500000000>;
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 		clock-latency-ns = <140000>;
+ 	};
+ 	opp-400000000 {
+ 		opp-hz = /bits/ 64 <400000000>;
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 		clock-latency-ns = <140000>;
+ 	};
+ 	opp-300000000 {
+ 		opp-hz = /bits/ 64 <300000000>;
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 		clock-latency-ns = <140000>;
+ 	};
+ 	opp-200000000 {
+ 		opp-hz = /bits/ 64 <200000000>;
+-		opp-microvolt = <900000>;
++		opp-microvolt = <900000 900000 1500000>;
+ 		clock-latency-ns = <140000>;
+ 	};
+ };
+-- 
+2.17.1
 
-Applied both to linux-can.
-
-Tnx,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V--
-
---PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3vhC4ACgkQWsYho5Hk
-nSD2aQgAs5lFAaX+514YmdXepheaxkuir4ylLzDPIatvpPcC20tLVL7dGefACkyl
-46nNfNaGzduZI/UwIbkflwthsNqVUJvMpm9Lzho2CKpIqunUt/QDBKo+9ZxhtwI7
-UJY8uhR3CMQBNn5c4cxAFTlqM4S+wvJTn/5QrCRRxwJysfBGRifkUPV7iqTGR3yK
-/04uPq4EVVRixbQ2Te5XNdnKhv5qyDmPUll8ZPiNgrF7SuemJ0iAZmBA47elxD/j
-0iPo2BREX5akTkghbLsOHav42jREllGklBsMo3+d5M410MkliWfQH4Aou2Gx0LbM
-JnTfQqgPH3IlNXWHHqGowMmpR1bXuA==
-=Ow7r
------END PGP SIGNATURE-----
-
---PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F--
