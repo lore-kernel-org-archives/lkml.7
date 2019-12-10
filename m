@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CF0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001DDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD82924681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B905D24683
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012015;
-	bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
+	s=default; t=1576012017;
+	bh=d1/7Kds7v+ai1CEyfO3dNe/acNmNrUZKjnSwFaYm9G0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEAIvvkJmhrzmPQ9dyKsqXMP6F71nOx3R26gHeJYYRqotT0SS0LMtYhL+VHnUfr/l
-	 nXIVpywkQFoYHjx3WcFr2cZiuI967uSZ4vCQTOgFs8uRAnH2OpzEe79KLekNsL1ogj
-	 T4lUEqiZIZYV/NlHIiGLcw43YygpU69UGjZsFrd0=
+	b=lspfxR3fbLZ+XO/K2JDmb3DBOv4g8Vt/BrsLE26nXgG/YJ9jz79CjJ6mswOyvUfGe
+	 eshu6vzH9/toq6acpUZkut3k6lNdAX9C99245b4eF7jiVpYh75jjoiaMA1Qx4dTdqR
+	 Rdsjsnony9j4M+uJgFfBlKhsJhJM+P+5Fb/SdXxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfLJVGx (ORCPT
+        id S1727048AbfLJVEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:06:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbfLJVEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:15 -0500
+        id S1726953AbfLJVEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C20214D8;
-        Tue, 10 Dec 2019 21:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5605121556;
+        Tue, 10 Dec 2019 21:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011855;
-        bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
+        s=default; t=1576011847;
+        bh=d1/7Kds7v+ai1CEyfO3dNe/acNmNrUZKjnSwFaYm9G0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eT+4zNgWmPO4baFXnuqgUBG0Ybfi+7B6RFfl5hxs9knxOqFx6DGnrcny3FbtGugad
-         TJwkSpPZtS6QTFCkrNTyy8QWpwzgnGb74dcU3dBPiP0kajpjAnsLTF/ahtHpj1RsAi
-         UfkdEgvSLedMaufT2I86Gt865gseaiRU6G9sqED8=
+        b=El+nUov5hUp5pNedX2Mfb5oOpo+u60kAV4k4gyCEq41/PPocwW/ZMvFAsWhGgSMO1
+         4j1fTlgLK8mlm7rgZpsxLnUHUYZk4hkkM7LFpbbIcigTnfDIqaXhVC/XC+IHfOo1gQ
+         pKlOJNBudJaWbe8gtSnAZsgdMXNADxacW1MDR/ts=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 009/350] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
-Date:   Tue, 10 Dec 2019 15:58:21 -0500
-Message-Id: <20191210210402.8367-9-sashal@kernel.org>
+Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 003/350] drm: mst: Fix query_payload ack reply struct
+Date:   Tue, 10 Dec 2019 15:58:15 -0500
+Message-Id: <20191210210402.8367-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -61,48 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Sean Paul <seanpaul@chromium.org>
 
-[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
+[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
 
-Silence two warning messages that occur due to -EPROBE_DEFER errors to
-help cleanup the system boot log.
+Spec says[1] Allocated_PBN is 16 bits
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Todd Previte <tprevite@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/drm/drm_dp_mst_helper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index 3c7cc5af735ce..56df07cdab68f 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -715,7 +715,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
- 	/* 1.0V digital core power regulator  */
- 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
- 	if (IS_ERR(pdata->dvdd10)) {
--		DRM_ERROR("DVDD10 regulator not found\n");
-+		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
-+			DRM_ERROR("DVDD10 regulator not found\n");
-+
- 		return PTR_ERR(pdata->dvdd10);
- 	}
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index 2ba6253ea6d3f..fc349204a71bd 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -334,7 +334,7 @@ struct drm_dp_resource_status_notify {
  
-@@ -1332,7 +1334,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ struct drm_dp_query_payload_ack_reply {
+ 	u8 port_number;
+-	u8 allocated_pbn;
++	u16 allocated_pbn;
+ };
  
- 	err = anx78xx_init_pdata(anx78xx);
- 	if (err) {
--		DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+
- 		return err;
- 	}
- 
+ struct drm_dp_sideband_msg_req_body {
 -- 
 2.20.1
 
