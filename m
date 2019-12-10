@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E0CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2F2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D179207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C16207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015887;
-	bh=7Lwsdk8FMDxQADLZXYHrz6IWTdOq72axp5dI/yhXioY=;
+	s=default; t=1576015889;
+	bh=SGz8r9eKX9gBJ68+HikN3ji8vq9hVDcvAiYpnhVEZjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXN5U3QqI0wxQRta75V7XL/4CiEasJAts+NQv7gc96QAuM7oKc46fvnJ+sWjFJ9BI
-	 zIa60OdvXALUShJ9/axo1EMpHfw6I9SvMsLJKGwM54KCaNrNS44EGU+HVJoyl42d2L
-	 YUYl7sEfHwugezWVyhoUqIpyMj+qcXvFkVTxnAY8=
+	b=aw5OSlmRV+4TYGqi4Y+EdSId6qYp+5i033zUsnugiq/9gbnx1UPJKLsu3w+MwZTOj
+	 AO0M2NsVodIHRrXLC6wehVWdSYAvPj4HGsJCa8dEKLU84e4QsOxa6/EzmmqawUur/d
+	 0cLBfz/SAHB2ZN4Xs3WzbNTguQiAAyo9jEFamDUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfLJWLZ (ORCPT
+        id S1728365AbfLJWD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:11:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbfLJWEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:01 -0500
+        id S1728165AbfLJWDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFB8420838;
-        Tue, 10 Dec 2019 22:03:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E3AF214AF;
+        Tue, 10 Dec 2019 22:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015440;
-        bh=7Lwsdk8FMDxQADLZXYHrz6IWTdOq72axp5dI/yhXioY=;
+        s=default; t=1576015429;
+        bh=SGz8r9eKX9gBJ68+HikN3ji8vq9hVDcvAiYpnhVEZjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPEONqC0HhlOBnncs3tQ6s8pJBPna50Qde5tsy6EMGKUAY3uuLVrZNM1pLWz0vxr2
-         DwN2HK9P8t/sm3K3AiD+AyhShnIiI7lcUhPEnR4EobJdc0PLJ/0fjFkMhk1YSP+ynJ
-         tD/R6VGAO63xSgSf01/bvKw7OCirv9ip4GJWQx8I=
+        b=yIY4Xr4IKiZFaO8AYc7dyPYIOSM4IYM599z7OCBRJCPGhmXKN4lXsMuJplOpYnHAd
+         PRigRA90Q5r/oqMpdCY6OPkAIrL2RsKz0X0jmvACeU9BGodaj04C1PiPp9FELrLwY9
+         1nq1iZbtC4KCuUgIUqCng9xbpxlmP1sWQ7VPKmzI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/130] iio: adc: max1027: Reset the device at probe time
-Date:   Tue, 10 Dec 2019 17:01:40 -0500
-Message-Id: <20191210220301.13262-49-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 040/130] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date:   Tue, 10 Dec 2019 17:01:31 -0500
+Message-Id: <20191210220301.13262-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,40 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit 0bac73adea4df8d34048b38f6ff24dc3e73e90b6 ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+v4l2-compliance fails with this message:
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
+   test VIDIOC_TRY_FMT: FAIL
+
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
+
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index ebc715927e63b..03af02769370b 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -462,6 +462,14 @@ static int max1027_probe(struct spi_device *spi)
- 		goto fail_dev_register;
- 	}
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index 7e611501c2916..f29074c849155 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -60,6 +60,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 7af66fe95a542..2e8970c7e22da 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1702,6 +1702,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
+ 
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
 +
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
+ 
 -- 
 2.20.1
 
