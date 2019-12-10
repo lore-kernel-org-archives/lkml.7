@@ -2,125 +2,144 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E9EC2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DB2C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB76720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FFF20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Rg4oy4ov"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmJF6Qvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfLJBkx (ORCPT
+        id S1727137AbfLJBk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:40:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:45923 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726538AbfLJBkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:40:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47X2nt15tyz9sP6;
-        Tue, 10 Dec 2019 12:40:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1575942050;
-        bh=hgjHvy4Ae3ms7mEPzhcFq4Rw2OI7SLTCUs/b1A0iVXA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rg4oy4ov/5mgR1sNgZ5hmnrslrSFHRf5Mw366DI+m72/231L5rAK8euVeXp/0/FQb
-         2VjFu7n6lK4XUevWfYIo5YB8bckrQRHa/Q0gg2s2DKW3Jwt62IGDiYENiNTEIHJI/n
-         XWtHgUSzdFughXoHDz6Ndpgml6L45hcMZiB7h7FI4eLDK2gtO4lV9G8SMkcMPY4Jhm
-         j4oPYwcwmJNUt5SlMYopR9Rk2b1Lq19a8HOn8X96oasX2eaXt8LITSBPRkPqtIOFYN
-         3WrX9PLOw822l5n9/W7shTXXAzY+mXRX0o+4oSuFHJIpF4J8fwfgO7k8v6w8/JHwPy
-         PCxRm3p16wLDw==
-Date:   Tue, 10 Dec 2019 12:40:47 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jamorris@linux.microsoft.com>
-Subject: linux-next: build failure after merge of the selinux tree
-Message-ID: <20191210124047.40852ade@canb.auug.org.au>
+        Mon, 9 Dec 2019 20:40:59 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39866 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfLJBk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 20:40:59 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e10so17915288ljj.6;
+        Mon, 09 Dec 2019 17:40:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vlZI4rEGeiq9jWtOY0aFxUeSEkD9VPU1bYTxW9kWFdQ=;
+        b=BmJF6QvuU9k+gicud6GQqh3PEAWQm7BMYysarKVmqLASdkf9Y2zuA2/X2c5UPAqrBq
+         5mt5MzpfDukUo5XlzsMHZp0F6wE+pX+BbqLCZm6TEB1VZoO4azosLsQlSNz5ohVmskmj
+         ofagIgmQ/nDydCKMIWjkDlHfEzb7L8sczSGADD4+vb8yE48LLcvdooCU0y86FL/HANB2
+         MrerD/9WjyqPPX3ggAw51HsaMZadtv6CN6NwZQc5bDRT6O6Yp9ZTz8+YjLDy7DcYIGCD
+         YfcWFZNUAB7DLa3YiqNQHpf5twwfAdxPCimo6doMmWi7emJuc5KK/wkQtxcPlaQ00Vn7
+         lNOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vlZI4rEGeiq9jWtOY0aFxUeSEkD9VPU1bYTxW9kWFdQ=;
+        b=a/NWDOy0x6j6279sDqva/SeQLCN4hd/7oMXEVuFptQt8srOYuabapS79gtTbaxpLD9
+         w8DqA7olQonq8OH2YhzCMAVfkwkn7ZR645pMpbu0F2cZlPCHkotiHHmG7L+VnkhWohOx
+         1qO2i3AMYQIhj9aAqNAM2IjL7aA6thsC52sYf8fNNGL3gKtJTuOZZphwwmgWYJgQqpCF
+         4qiYIxkMGD5xnuDZoXk5Z46lmRVXJneX/X5kDsJe6cLv5Wc6sFh/qZzXYnZuzv95gm30
+         82hzc4Uf8iYhuytmrIDTls1QofPmC2i5Za2rBKqjLHHPXY9b7kQ6ZLLqePJ75K4YxuHg
+         sRDg==
+X-Gm-Message-State: APjAAAUCObs5gkvzSCtchGqYp2eoHPwhy3VVyHcy8BKG4jy2a9/Y+j1h
+        xYGOomT8BHTvSx1hZgO0vyF5SEdW
+X-Google-Smtp-Source: APXvYqwq8U1I4QevksCt7+Ui2gdfuQtFkkgMtrKqkyij2iotR9ysDAJHihyh7B9qC1ZNBOAMNUsYEA==
+X-Received: by 2002:a2e:144b:: with SMTP id 11mr18625869lju.216.1575942056544;
+        Mon, 09 Dec 2019 17:40:56 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id r125sm522813lff.70.2019.12.09.17.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 17:40:56 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+Date:   Tue, 10 Dec 2019 04:40:11 +0300
+Message-Id: <20191210014011.21987-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4KdyygbuAPY_UD+vZ/0ZA04";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4KdyygbuAPY_UD+vZ/0ZA04
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+In a result high-speed mode isn't enabled for the WiFi card and this
+results in a malfunctioning SDIO communication.
 
-Hi all,
+ brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+ brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
 
-After merging the selinux tree, today's linux-next build (powerpc
-pseries_le_defconfig) failed like this:
+Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+the problem, let's do the same in upstream.
 
-ld: security/lsm_audit.o:(.toc+0x0): undefined reference to `lockdown_reaso=
-ns'
+The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+which overrides card's info for the TI wl1251 WiFi.
 
-Caused by commit
-
-  59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-
-CONFIG_SECURITY is not set for this build, but CONFIG_AUDIT is set.
-
-I applied the following hack for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 10 Dec 2019 12:28:16 +1100
-Subject: [PATCH] security,lockdown,selinux: hack for !CONFIG_SECURITY
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- security/lsm_audit.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/sdhci-tegra.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-index 2d2bf49016f4..f97a3337f307 100644
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -427,8 +427,10 @@ static void dump_common_audit_data(struct audit_buffer=
- *ab,
- 				 a->u.ibendport->port);
- 		break;
- 	case LSM_AUDIT_DATA_LOCKDOWN:
-+#ifdef CONFIG_SECURITY
- 		audit_log_format(ab, " lockdown_reason=3D");
- 		audit_log_string(ab, lockdown_reasons[a->u.reason]);
-+#endif
- 		break;
- 	} /* switch (a->type) */
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 7bc950520fd9..2ad87da98f2c 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1501,6 +1501,32 @@ static int sdhci_tegra_add_host(struct sdhci_host *host)
+ 	return ret;
  }
---=20
+ 
++static void sdhci_tegra_init_card(struct mmc_host *mmc, struct mmc_card *card)
++{
++	if (card->type == MMC_TYPE_SDIO) {
++		struct device_node *np = mmc_dev(mmc)->of_node;
++
++		np = of_get_compatible_child(np, "brcm,bcm4329-fmac");
++		if (np) {
++			dev_info(mmc_dev(mmc), "found bcm4329\n");
++
++			/*
++			 * All Tegra20 boards that have embedded BCM4329
++			 * chip need to enable high speed for SDIO, otherwise
++			 * further communication with the card doesn't work
++			 * well.
++			 *
++			 * Later BCM43xx chips do not need this workaround,
++			 * but there is no good way to differentiate chip's
++			 * version at this stage and it doesn't cause any
++			 * harm for the later chips.
++			 */
++			card->cccr.high_speed = 1;
++			of_node_put(np);
++		}
++	}
++}
++
+ static int sdhci_tegra_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+@@ -1545,6 +1571,8 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+ 		host->mmc_host_ops.execute_tuning =
+ 				tegra_sdhci_execute_hw_tuning;
+ 
++	host->mmc_host_ops.init_card = sdhci_tegra_init_card;
++
+ 	rc = mmc_of_parse(host->mmc);
+ 	if (rc)
+ 		goto err_parse_dt;
+-- 
 2.24.0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4KdyygbuAPY_UD+vZ/0ZA04
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3u958ACgkQAVBC80lX
-0GyE4Af+P2Eq+f2xOuGBi79YrS0wlV079AWuAL4gGHOX2Vpd4tRL0lq7Gwrm2VkE
-Jcsl8Z+79kbeO9gm2dDbxNkR5OtxsSsb8vZz0qQqHSL8ixfAFXX8p7p/hph6tZSg
-KmJDkOvwDN3M3vsDG8q706VW4/Bn7qqAeJ+s9nOfIgNDapML26cGR5lm+LhggApP
-jUH4N56BsVMMyM9yOZQ+gmIVgD9JEMy56VRBb7CblQ43JOPG3ibUEvvVhwORGL/B
-3T2liP16we5KbZjIZJ6BWABs+qdxseNU/hFK3mNd5kZC3Bv2mMFbiuv77QlzrqqE
-Z7jSonEO2++cE+VFCXGr7HN/x8zIyw==
-=Ivuw
------END PGP SIGNATURE-----
-
---Sig_/4KdyygbuAPY_UD+vZ/0ZA04--
