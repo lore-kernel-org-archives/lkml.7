@@ -2,124 +2,168 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1394CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9D2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD7C9207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ax41RgSa"
+	by mail.kernel.org (Postfix) with ESMTP id AC7E120836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfLJSNU (ORCPT
+        id S1727747AbfLJSOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:13:20 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:45968 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbfLJSNU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:13:20 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so7697672pjp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:13:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=4lLGRmsliIpZ0UpKU0IEWW602jVUv7+6lHITbij3O5Y=;
-        b=Ax41RgSauchkK4JBfY5KiQhx0ZqAGsHlTIabiht9+ufmYPy0A/k6fzpIOehD7/e1BZ
-         rVNN9fQqcCTUysbKXiB+vDRvErr1DyzQPtKiTYcJqj2GHjmATSk3qucVeOLVRCkOhEIu
-         K5dAVffJQTTNp4WTUL3ki2V3LvaaviZN1KCbOON0El12ZWTLGoM+UwftSpRs5Plgaxb3
-         JVbzGapJbO730NFVsQnawfZ+KVkgcjfTaxggwi194/nxW0zjNi9K7TZVjJ07vcCzE4r5
-         L/qmEmEiYuVsMLunBZzzlhPYONXzzXDmajP/VEpXPY6582YOziMrl931APa+/HAqnF5W
-         wXGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=4lLGRmsliIpZ0UpKU0IEWW602jVUv7+6lHITbij3O5Y=;
-        b=dNBH5Uijm4WPGjQEhta3aMKUPUHRFVqkOtVqZnsFyhxeW8ElZRrmK8N1OXT82xqGnH
-         YOmn71fiWn7uflFYiA47HYHb+whO6PY8IxJ82GetmkBAU4H9EokasnKr/6KMvHaRXpEH
-         U70qvpXVNUT8NtczAXUfy6gmJuGddOtXCUOgiJF4nzKa3ltIU8z6lZYl5njB6vTSRM3X
-         g4P7U72rHBNJbGSsM3ayf+KlzgQRRj6+GGHxBCW/1AtSV4W6PmxUUZHWCI+iWI0D4QEU
-         GQvBMhsuBvuSimMZ+Ue2G8H/X5FLEzaaVZUkw0G1uTwydHr6jtKHAXM6XPPhlHA3hQTj
-         plBg==
-X-Gm-Message-State: APjAAAWhGf9tFTNkGU6LNHJDzDc4/icGsewBZMUBjTpyTT1kUKe4tmaY
-        iW/uW9VC26VYOVHPFd0n5SGvRA==
-X-Google-Smtp-Source: APXvYqxJRm4sHGA5uWrmJ+2D9cTFf8Qb8j2tRTkfuT9957FR3ONic55nbNNuLrP58IxTnaW0jHeS9g==
-X-Received: by 2002:a17:902:b611:: with SMTP id b17mr22648668pls.210.1576001599750;
-        Tue, 10 Dec 2019 10:13:19 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id u123sm1382107pfb.109.2019.12.10.10.13.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 10:13:18 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
-In-Reply-To: <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
-References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com> <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
-Date:   Tue, 10 Dec 2019 10:13:18 -0800
-Message-ID: <7hfthsqcap.fsf@baylibre.com>
+        Tue, 10 Dec 2019 13:14:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:52834 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727349AbfLJSOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 13:14:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E79181FB;
+        Tue, 10 Dec 2019 10:14:48 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 795A93F6CF;
+        Tue, 10 Dec 2019 10:14:48 -0800 (PST)
+Subject: Re: [PATCH 03/15] firmware: arm_scmi: Skip protocol initialisation
+ for additional devices
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191210145345.11616-1-sudeep.holla@arm.com>
+ <20191210145345.11616-4-sudeep.holla@arm.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <944a2d76-a3d3-9238-1960-63c3f29bea05@arm.com>
+Date:   Tue, 10 Dec 2019 18:14:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191210145345.11616-4-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anand Moon <linux.amoon@gmail.com> writes:
+On 10/12/2019 14:53, Sudeep Holla wrote:
+> The scmi bus now supports adding multiple devices per protocol,
+> and since scmi_protocol_init is called for each scmi device created,
+> we must avoid allocating protocol private data and initialising the
+> protocol itself if it is already initialised.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
 
-> Hi Neil / Kevin,
->
-> On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 09/12/2019 23:12, Kevin Hilman wrote:
->> > Anand Moon <linux.amoon@gmail.com> writes:
->> >
->> >> Some how this patch got lost, so resend this again.
->> >>
->> >> [0] https://patchwork.kernel.org/patch/11136545/
->> >>
->> >> This patch enable DVFS on GXBB Odroid C2.
->> >>
->> >> DVFS has been tested by running the arm64 cpuburn
->> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
->> >> PM-QA testing
->> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
->> >>
->> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
->> >
->> > Have you tested with the Harkernel u-boot?
->> >
->> > Last I remember, enabling CPUfreq will cause system hangs with the
->> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
->> > terribly inclined to merge this patch.
->
-> HK u-boot have many issue with loading the kernel, with load address
-> *it's really hard to build the kernel for HK u-boot*,
-> to get the configuration correctly.
->
-> Well I have tested with mainline u-boot with latest ATF .
-> I would prefer mainline u-boot for all the Amlogic SBC, since
-> they sync with latest driver changes.
+Wouldn't be better to add some kind of per-protocol 'initialized' flag somewhere
+in the bus abstraction so that the protocol_id itself could be marked as initialized
+once bus::scmi_protocol_init() completes successfully so that we could just skip the
+invocation itself of bus::scmi_protocol_init() for all the protocols already detected
+as initialized ?
 
-Yes, we would all prefer mainline u-boot, but the mainline kernel needs
-to support the vendor u-boot that is shipping with the boards.  So
-until Hardkernel (and other vendors) switch to mainline u-boot we do not
-want to have upstream kernel defaults that will not boot with the vendor
-u-boot.
+Or, if not a flag, maybe deactivating the registered protocol init function itself
+once it has been successfully called once .....something along the lines of:
 
-We can always support these features, but they just cannot be enabled
-by default.
+diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
+index 7a30952b463d..a551a00586c6 100644
+--- a/drivers/firmware/arm_scmi/bus.c
++++ b/drivers/firmware/arm_scmi/bus.c
+@@ -73,6 +73,8 @@ static int scmi_dev_probe(struct device *dev)
+        ret = scmi_protocol_init(scmi_dev->protocol_id, scmi_dev->handle);
+        if (ret)
+                return ret;
++       idr_replace(&scmi_protocols, dummy_return_0_callback,
++                       scmi_dev->protocol_id);
+ 
+        return scmi_drv->probe(scmi_dev);
 
-Kevin
+[not really tested eh ... :D]
+
+This way we can drop this patch as a whole and avoid any future needs to remember
+to add this same sort of logic in the next XYZ protocol implementation.
+
+Cheers
+
+Cristian
+
+>  drivers/firmware/arm_scmi/clock.c   | 3 +++
+>  drivers/firmware/arm_scmi/perf.c    | 3 +++
+>  drivers/firmware/arm_scmi/power.c   | 3 +++
+>  drivers/firmware/arm_scmi/reset.c   | 3 +++
+>  drivers/firmware/arm_scmi/sensors.c | 3 +++
+>  5 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+> index 32526a793f3a..922b22aaaf84 100644
+> --- a/drivers/firmware/arm_scmi/clock.c
+> +++ b/drivers/firmware/arm_scmi/clock.c
+> @@ -316,6 +316,9 @@ static int scmi_clock_protocol_init(struct scmi_handle *handle)
+>  	int clkid, ret;
+>  	struct clock_info *cinfo;
+> 
+> +	if (handle->clk_ops && handle->clk_priv)
+> +		return 0; /* initialised already for the first device */
+> +
+>  	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
+> 
+>  	dev_dbg(handle->dev, "Clock Version %d.%d\n",
+> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+> index 601af4edad5e..55c2a4c21ccb 100644
+> --- a/drivers/firmware/arm_scmi/perf.c
+> +++ b/drivers/firmware/arm_scmi/perf.c
+> @@ -710,6 +710,9 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+>  	u32 version;
+>  	struct scmi_perf_info *pinfo;
+> 
+> +	if (handle->perf_ops && handle->perf_priv)
+> +		return 0; /* initialised already for the first device */
+> +
+>  	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
+> 
+>  	dev_dbg(handle->dev, "Performance Version %d.%d\n",
+> diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+> index 5abef7079c0a..9a7593238b8f 100644
+> --- a/drivers/firmware/arm_scmi/power.c
+> +++ b/drivers/firmware/arm_scmi/power.c
+> @@ -185,6 +185,9 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
+>  	u32 version;
+>  	struct scmi_power_info *pinfo;
+> 
+> +	if (handle->power_ops && handle->power_priv)
+> +		return 0; /* initialised already for the first device */
+> +
+>  	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
+> 
+>  	dev_dbg(handle->dev, "Power Version %d.%d\n",
+> diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+> index ab42c21c5517..809dc8faee1e 100644
+> --- a/drivers/firmware/arm_scmi/reset.c
+> +++ b/drivers/firmware/arm_scmi/reset.c
+> @@ -195,6 +195,9 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+>  	u32 version;
+>  	struct scmi_reset_info *pinfo;
+> 
+> +	if (handle->reset_ops && handle->reset_priv)
+> +		return 0; /* initialised already for the first device */
+> +
+>  	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
+> 
+>  	dev_dbg(handle->dev, "Reset Version %d.%d\n",
+> diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+> index a400ea805fc2..b7f92c37c8a4 100644
+> --- a/drivers/firmware/arm_scmi/sensors.c
+> +++ b/drivers/firmware/arm_scmi/sensors.c
+> @@ -276,6 +276,9 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+>  	u32 version;
+>  	struct sensors_info *sinfo;
+> 
+> +	if (handle->sensor_ops && handle->sensor_priv)
+> +		return 0; /* initialised already for the first device */
+> +
+>  	scmi_version_get(handle, SCMI_PROTOCOL_SENSOR, &version);
+> 
+>  	dev_dbg(handle->dev, "Sensor Version %d.%d\n",
+> --
+> 2.17.1
+> 
+
