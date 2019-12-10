@@ -2,120 +2,262 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FEAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAEC20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF0820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RykeHNFV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M3jycdht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfLJJnZ (ORCPT
+        id S1727207AbfLJJoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:43:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25968 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJnY (ORCPT
+        Tue, 10 Dec 2019 04:44:02 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37976 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbfLJJoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:43:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575971003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=x+9gHLFclc8eGt+cU05OJPVI/o5eh55h38LcdsgaD/w=;
-        b=RykeHNFVEsUhchl4Ei1Zyn3jMBZwLKUo/JS9C0vPevzh6KMJ9mzNUfsG4SWWLQieNqt5BC
-        /4365xqWqOJIDCFTWmjCTar0mynFOgt8lQR5Y0zNE5HDnGU6Xad4fh30MjTJcosCMiVlpO
-        G/p2NGPOXSJSkDosDtC5ekwEPKA+T00=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-SRu-jkZMPA6kkcPg2ysLbQ-1; Tue, 10 Dec 2019 04:43:21 -0500
-Received: by mail-wr1-f71.google.com with SMTP id j13so8698797wrr.20
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:43:20 -0800 (PST)
+        Tue, 10 Dec 2019 04:44:01 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so13163369lfm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eVprmkX04/ZA2Ox8rlDXhtYrH8Cdrulho+SeNeN/8to=;
+        b=M3jycdhtLFPex3L2spBWypQ+mK6nzf31bl4Gqd6sV7LltjwgcUk+7tKuPRbipf0QT8
+         DUdNjLvxx+OlIZd/SEXYZwssHKB/+1igQw9UrcPIS1qNYoNdnTC+BuYqHJpWChzAQPu2
+         C1lwwQpvn1z208nDPbeiFhqGpcYTxdwZuFeQbx3A85Shke5cSZsT35JEHWBc7zFn4Ibt
+         whbcBTPlXYZk+JQ0IbTt8BzAU7SLpAM8BLQ0piJQrYs2FT7c7kwKHBRxtvCggR22S/Os
+         ToNBOf5X7zXI3Vd3I/zKmsH6MavzavFu3q2pyJV1DXQk5Mr3cQ7XG3N4IBT5bAIqTTH5
+         u78g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x+9gHLFclc8eGt+cU05OJPVI/o5eh55h38LcdsgaD/w=;
-        b=Ih1WRC1HfbQLp2QAjShh+uO17pkJyCTDaek54OY+YbzEMYOVpHWtR4rEZf/8W6HutW
-         ZgfGHMPkrNiw3qLm59R453biAniAgWz8fAYmWri29MEMYYW8njaVRq51dtAwW0t229Im
-         lvSN5kSQZqfyYgIMvIsvGfsdClCq8IhUsakogxg3mDo3hcfcHUn8/bZ2x1O1QfDv4ZVY
-         tTUVJVwdIJ16u4FW3tZ+hBEy6ujPN9pGV2cO3rx3esmG4HzU++PLlyKnrFifjTgkdGtY
-         zUjgPfFoSj0rEtZnkP/5euqiOF5NOO9oZaCZWw/s9umAl715Tlyjxhqy5ea4d99U3hEd
-         +/EA==
-X-Gm-Message-State: APjAAAVljO4hmVuKQyx+3j+BJv5smsqZeWG6LPtpDttDuU6ipyeRNGwE
-        RSwq6vJLW9eKwfUxNfyhFllQH2Z1K2qt+pP89/QJUST5oOwjwq+fA1OPeQw6eYzuVde6C3G/VEZ
-        Qs5KltwUkjsauQMuA+inyPEy1
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr3986775wmi.37.1575970999954;
-        Tue, 10 Dec 2019 01:43:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzeB/265O6c03O2Y44pel5nEJWfsWRBNWO+Wh+zKrzCGpUdazhsyNsnPr0e8H+FzTQolpxaYw==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr3986749wmi.37.1575970999761;
-        Tue, 10 Dec 2019 01:43:19 -0800 (PST)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id m3sm2619952wrs.53.2019.12.10.01.43.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:43:18 -0800 (PST)
-Subject: Re: [PATCH 0/2] ata: ahci: Add shutdown handler
-To:     Hanna Hawa <hhhawa@amazon.com>, axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
-        barakw@amazon.com
-References: <20191209163209.26284-1-hhhawa@amazon.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a6eb4bf8-547d-54de-1f25-fbe9c715cde5@redhat.com>
-Date:   Tue, 10 Dec 2019 10:43:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eVprmkX04/ZA2Ox8rlDXhtYrH8Cdrulho+SeNeN/8to=;
+        b=B+cvUspnlc2ZJrpSXe5+w4gOVFQNT6vnnyd2JcRTCGMpw+wToMbMRypNQLQ+hIfSYO
+         v60Zo9jCYjSXAbSs4wjxYhcapF2kvvKqlABODNERMYdRg9Lb6RygoDug8Isiqa4wMc0f
+         i+D7xVmmXKhrKl315aOn8Qj9vSmiVcz/tnOs4LUh8kzd4n0fQlW6qEQ7eYSJyJJlHK+M
+         6rvkMSCsZ6wFRtaPZvT2s7bsU4DCr3j3iTB6AXEnDzMLRCKoul04PQD2NV9woaJ3p4MO
+         b8DW1CaqdWGz5rz06hPLR0MAHsiOIQf708FiO6fo4t2ojVT3c17k1TcT2UnqHThU9Fkh
+         SQCQ==
+X-Gm-Message-State: APjAAAVyaT3V0mSwo3mMfl+p6LpxpQLkkgJA8YWqVsvyzNpK6P+qTF6F
+        dddfsZSbwIOzmjOtTiSPAvNOPFUVn6vNArSigo086Q==
+X-Google-Smtp-Source: APXvYqwU6TvB7JcE/3RASUPFThxDiWpcs5rUTJFNuWlv+3cPwgOkF4im9S52I4IaK/gV84FJf6KuxUd7LyOYLmW+s08=
+X-Received: by 2002:a19:6b0e:: with SMTP id d14mr10053401lfa.151.1575971038660;
+ Tue, 10 Dec 2019 01:43:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191209163209.26284-1-hhhawa@amazon.com>
-Content-Language: en-US
-X-MC-Unique: SRu-jkZMPA6kkcPg2ysLbQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20191115045634.GN4614@dread.disaster.area> <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area> <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area> <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb> <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com> <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+In-Reply-To: <20191210054330.GF27253@linux.vnet.ibm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 10 Dec 2019 10:43:46 +0100
+Message-ID: <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound kthread
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI,
+On Tue, 10 Dec 2019 at 06:43, Srikar Dronamraju
+<srikar@linux.vnet.ibm.com> wrote:
+>
+> A running task can wake-up a per CPU bound kthread on the same CPU.
+> If the current running task doesn't yield the CPU before the next load
+> balance operation, the scheduler would detect load imbalance and try to
+> balance the load. However this load balance would fail as the waiting
+> task is CPU bound, while the running task cannot be moved by the regular
+> load balancer. Finally the active load balancer would kick in and move
+> the task to a different CPU/Core. Moving the task to a different
+> CPU/core can lead to loss in cache affinity leading to poor performance.
+>
+> This is more prone to happen if the current running task is CPU
+> intensive and the sched_wake_up_granularity is set to larger value.
+> When the sched_wake_up_granularity was relatively small, it was observed
+> that the bound thread would complete before the load balancer would have
+> chosen to move the cache hot task to a different CPU.
+>
+> To deal with this situation, the current running task would yield to a
+> per CPU bound kthread, provided kthread is not CPU intensive.
+>
+> /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+>
+> (With sched_wake_up_granularity set to 15ms)
 
-On 09-12-2019 17:32, Hanna Hawa wrote:
-> This series introduced AHCI shutdown handler for AHCI PCIe driver, to
-> disable host controller DMA and interrupts in order to avoid potentially
-> corrupting or otherwise interfering with a new kernel being started with
-> kexec.
-> 
-> Part of this patch move the common part between platform and pcie
-> drivers to libahci.c.
+So you increase sched_wake_up_granularity to a high level to ensure
+that current is no preempted by waking thread but then you add a way
+to finally preempt it which is somewhat weird IMO
 
-Series looks good to me:
+Have you tried to increase the priority of workqueue thread  (decrease
+nice priority) ? This is the right way to reduce the impact of the
+sched_wake_up_granularity on the wakeup of your specific kthread.
+Because what you want at the end is keeping a low wakeup granularity
+for these io workqueues
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> 
-> Hanna Hawa (2):
->    ata: libahci: move ahci platform shutdown function to libahci
->    ata: ahci: Add shutdown handler
-> 
->   drivers/ata/ahci.c             |  9 +++++++++
->   drivers/ata/ahci.h             |  1 +
->   drivers/ata/libahci.c          | 33 +++++++++++++++++++++++++++++++++
->   drivers/ata/libahci_platform.c | 20 +-------------------
->   4 files changed, 44 insertions(+), 19 deletions(-)
-> 
-
+>
+> Performance counter stats for 'system wide' (5 runs):
+> event                                        v5.4                               v5.4 + patch(v2)
+> probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                   5  ( +- 12.56% )
+> sched:sched_waking                     441,535  ( +-  0.17% )             901,174  ( +-  0.25% )
+> sched:sched_wakeup                     441,533  ( +-  0.17% )             901,172  ( +-  0.25% )
+> sched:sched_wakeup_new                   2,436  ( +-  8.08% )                 525  ( +-  2.57% )
+> sched:sched_switch                     797,007  ( +-  0.26% )           1,458,463  ( +-  0.24% )
+> sched:sched_migrate_task                20,998  ( +-  1.04% )               2,279  ( +-  3.47% )
+> sched:sched_process_free                 2,436  ( +-  7.90% )                 527  ( +-  2.30% )
+> sched:sched_process_exit                 2,451  ( +-  7.85% )                 542  ( +-  2.24% )
+> sched:sched_wait_task                        7  ( +- 21.20% )                   1  ( +- 77.46% )
+> sched:sched_process_wait                 3,951  ( +-  9.14% )                 816  ( +-  3.52% )
+> sched:sched_process_fork                 2,435  ( +-  8.09% )                 524  ( +-  2.58% )
+> sched:sched_process_exec                 1,023  ( +- 12.21% )                 198  ( +-  3.23% )
+> sched:sched_wake_idle_without_ipi      187,794  ( +-  1.14% )             348,565  ( +-  0.34% )
+>
+> Elasped time in seconds          289.43 +- 1.42 ( +-  0.49% )    72.6013 +- 0.0417 ( +-  0.06% )
+> Throughput results
+>
+> v5.4
+> Trigger time:................... 0.842679 s   (Throughput:     6075.86 MB/s)
+> Asynchronous submit time:.......   1.0184 s   (Throughput:     5027.49 MB/s)
+> Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
+> I/O time:.......................   263.17 s   (Throughput:      19.455 MB/s)
+> Ratio trigger time to I/O time:.0.00320202
+>
+> v5.4 + patch(v2)
+> Trigger time:................... 0.853973 s   (Throughput:      5995.5 MB/s)
+> Asynchronous submit time:....... 0.768092 s   (Throughput:     6665.86 MB/s)
+> Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
+> I/O time:.......................  44.0267 s   (Throughput:     116.292 MB/s)
+> Ratio trigger time to I/O time:.0.0193966
+>
+> (With sched_wake_up_granularity set to 4ms)
+>
+> Performance counter stats for 'system wide' (5 runs):
+> event                                         v5.4                              v5.4 + patch(v2)
+> probe:active_load_balance_cpu_stop               6  ( +-  6.03% )                   5  ( +- 23.20% )
+> sched:sched_waking                         899,880  ( +-  0.38% )             899,737  ( +-  0.41% )
+> sched:sched_wakeup                         899,878  ( +-  0.38% )             899,736  ( +-  0.41% )
+> sched:sched_wakeup_new                         622  ( +- 11.95% )                 499  ( +-  1.08% )
+> sched:sched_switch                       1,458,214  ( +-  0.40% )           1,451,374  ( +-  0.32% )
+> sched:sched_migrate_task                     3,120  ( +- 10.00% )               2,500  ( +- 10.86% )
+> sched:sched_process_free                       608  ( +- 12.18% )                 484  ( +-  1.19% )
+> sched:sched_process_exit                       623  ( +- 11.91% )                 499  ( +-  1.15% )
+> sched:sched_wait_task                            1  ( +- 31.18% )                   1  ( +- 31.18% )
+> sched:sched_process_wait                       998  ( +- 13.22% )                 765  ( +-  0.16% )
+> sched:sched_process_fork                       622  ( +- 11.95% )                 498  ( +-  1.08% )
+> sched:sched_process_exec                       242  ( +- 13.81% )                 183  ( +-  0.48% )
+> sched:sched_wake_idle_without_ipi          349,165  ( +-  0.35% )             347,773  ( +-  0.43% )
+>
+> Elasped time in seconds           72.8560 +- 0.0768 ( +-  0.11% )     72.4327 +- 0.0797 ( +-  0.11% )
+>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v1 : http://lore.kernel.org/lkml/20191209165122.GA27229@linux.vnet.ibm.com
+> v1->v2: Pass the the right params to try_to_wake_up as correctly pointed out
+> by Dave Chinner
+>
+>
+>  kernel/sched/core.c  |  7 ++++++-
+>  kernel/sched/fair.c  | 23 ++++++++++++++++++++++-
+>  kernel/sched/sched.h |  3 ++-
+>  3 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 44123b4d14e8..82126cbf62cd 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2664,7 +2664,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   */
+>  int wake_up_process(struct task_struct *p)
+>  {
+> -       return try_to_wake_up(p, TASK_NORMAL, 0);
+> +       int wake_flags = 0;
+> +
+> +       if (is_per_cpu_kthread(p))
+> +               wake_flags = WF_KTHREAD;
+> +
+> +       return try_to_wake_up(p, TASK_NORMAL, wake_flags);
+>  }
+>  EXPORT_SYMBOL(wake_up_process);
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 69a81a5709ff..36486f71e59f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6660,6 +6660,27 @@ static void set_skip_buddy(struct sched_entity *se)
+>                 cfs_rq_of(se)->skip = se;
+>  }
+>
+> +static int kthread_wakeup_preempt(struct rq *rq, struct task_struct *p, int wake_flags)
+> +{
+> +       struct task_struct *curr = rq->curr;
+> +       struct cfs_rq *cfs_rq = task_cfs_rq(curr);
+> +
+> +       if (!(wake_flags & WF_KTHREAD))
+> +               return 0;
+> +
+> +       if (p->nr_cpus_allowed != 1 || curr->nr_cpus_allowed == 1)
+> +               return 0;
+> +
+> +       if (cfs_rq->nr_running > 2)
+> +               return 0;
+> +
+> +       /*
+> +        * Don't preempt, if the waking kthread is more CPU intensive than
+> +        * the current thread.
+> +        */
+> +       return p->nvcsw * curr->nivcsw >= p->nivcsw * curr->nvcsw;
+> +}
+> +
+>  /*
+>   * Preempt the current task with a newly woken task if needed:
+>   */
+> @@ -6716,7 +6737,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+>         find_matching_se(&se, &pse);
+>         update_curr(cfs_rq_of(se));
+>         BUG_ON(!pse);
+> -       if (wakeup_preempt_entity(se, pse) == 1) {
+> +       if (wakeup_preempt_entity(se, pse) == 1 || kthread_wakeup_preempt(rq, p, wake_flags)) {
+>                 /*
+>                  * Bias pick_next to pick the sched entity that is
+>                  * triggering this preemption.
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index c8870c5bd7df..23d4284ad1e3 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1643,7 +1643,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
+>   */
+>  #define WF_SYNC                        0x01            /* Waker goes to sleep after wakeup */
+>  #define WF_FORK                        0x02            /* Child wakeup after fork */
+> -#define WF_MIGRATED            0x4             /* Internal use, task got migrated */
+> +#define WF_MIGRATED            0x04            /* Internal use, task got migrated */
+> +#define WF_KTHREAD             0x08            /* Per CPU Kthread*/
+>
+>  /*
+>   * To aid in avoiding the subversion of "niceness" due to uneven distribution
+> --
+> 2.18.1
+>
