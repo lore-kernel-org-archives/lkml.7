@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6DAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B7EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901942073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0276E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013040;
-	bh=PuHL7faz8DEVq0QsM4cBqyQnkrewJSkeXBTOVopSeb4=;
+	s=default; t=1576013044;
+	bh=S13FeBSZPT7/Oj8p8PgiFWgFs3YS3U63TWxg6lY1ldY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SyOcWOXKSowfQ78ePVOB3GdxgcrbX93uaOnN+tlS55Nv67rhE8IgD51Tfnp4RtQ31
-	 g+XGgq2kgl8Qx0VOrUql1dyo3r+zJDZ8BdXGoAjCjPsuEPDx89PJ6UGDlL7HKrAmNi
-	 pL29xO95N7/t7sw6gE0oibV3NWt7H4PmbtsG5Aic=
+	b=AyVjN4Qm4naOLveASFfUlUT5IsxgIhgma3sflxAi7PKjxHl9hgD47t3u8v8H+zZFJ
+	 JFZoUu6uSypeort1k4CFf5pVjUj0oTBHdceAsEQmlXD0xVSVJD0RecBGU5cJ0Q7BxQ
+	 5OKnZ/XEpxllC1SmjMIu32tkaFl08ag9tg4GlcXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfLJVX7 (ORCPT
+        id S1729049AbfLJVYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728658AbfLJVLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:02 -0500
+        id S1728649AbfLJVLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00B2246A4;
-        Tue, 10 Dec 2019 21:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D763824680;
+        Tue, 10 Dec 2019 21:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012261;
-        bh=PuHL7faz8DEVq0QsM4cBqyQnkrewJSkeXBTOVopSeb4=;
+        s=default; t=1576012260;
+        bh=S13FeBSZPT7/Oj8p8PgiFWgFs3YS3U63TWxg6lY1ldY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFEB1xy91jCSKqTN3zyPbZBWNrk1dA9OHa4gZ4jEPJBAE9LXbOj+aqxTVZY5CF0JC
-         EsGwsYMmHLOSSFHOx5q190KjS9wxez3O9ROkTtkkPPmuHpDkpgqqzLtVMMPpO+ynpP
-         6S+S/Kg6aRplOZ5f4P7c6q75Jy250wHbxmQyto6Y=
+        b=tyJKiTF4/qpu8glRwESoLINBjNqOmVEkR7mwfph+r7Rwqx/a+NZMEajhsuLPPkAq/
+         xWeI3HCbh3RJYXQ3TgvQSh5xEysTC50JdqacViGtDjViHBR1j4Zjk8v2f8NlUpSMq/
+         n33imH+61jUeyAkIGx9TzJrASFx2PyuYqGyrhHjo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        kbuild test robot <lkp@intel.com>,
-        Han Nandor <nandor.han@vaisala.com>,
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 207/350] nvmem: core: fix nvmem_cell_write inline function
-Date:   Tue, 10 Dec 2019 16:05:12 -0500
-Message-Id: <20191210210735.9077-168-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 206/350] nvmem: imx-ocotp: reset error status on probe
+Date:   Tue, 10 Dec 2019 16:05:11 -0500
+Message-Id: <20191210210735.9077-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,44 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 9b8303fc6efa724bd6a90656434fbde2cc6ceb2c ]
+[ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
 
-nvmem_cell_write's buf argument uses different types based on
-the configuration of CONFIG_NVMEM. The function prototype for
-enabled NVMEM uses 'void *' type, but the static dummy function
-for disabled NVMEM uses 'const char *' instead. Fix the different
-behaviour by always expecting a 'void *' typed buf argument.
+If software running before the OCOTP driver is loaded left the
+controller with the error status pending, the driver will never
+be able to complete the read timing setup. Reset the error status
+on probe to make sure the controller is in usable state.
 
-Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Han Nandor <nandor.han@vaisala.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-By: Han Nandor <nandor.han@vaisala.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191029114240.14905-2-srinivas.kandagatla@linaro.org
+Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/nvmem-consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/imx-ocotp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b000602..5c17cb7332241 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
- }
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index dff2f3c357f56..fc40555ca4cdd 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -521,6 +521,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->clk))
+ 		return PTR_ERR(priv->clk);
  
- static inline int nvmem_cell_write(struct nvmem_cell *cell,
--				    const char *buf, size_t len)
-+				   void *buf, size_t len)
- {
- 	return -EOPNOTSUPP;
- }
++	clk_prepare_enable(priv->clk);
++	imx_ocotp_clr_err_if_set(priv->base);
++	clk_disable_unprepare(priv->clk);
++
+ 	priv->params = of_device_get_match_data(&pdev->dev);
+ 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
+ 	imx_ocotp_nvmem_config.dev = dev;
 -- 
 2.20.1
 
