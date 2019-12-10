@@ -2,128 +2,105 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF19C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBB9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4336120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Yx7lpr0T"
+	by mail.kernel.org (Postfix) with ESMTP id E55A320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfLJL1Y (ORCPT
+        id S1727421AbfLJL2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:27:24 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:49366 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfLJL1X (ORCPT
+        Tue, 10 Dec 2019 06:28:13 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:57272 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfLJL2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:27:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575977242;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=tUC4eA5Nyboawm85fT747hHsr0DL/gSfovcFMbk7+pE=;
-  b=Yx7lpr0TmsveSmYLdoffvjZkQO5il2JxqvcZW22c+MAr56T+IpnxaN8t
-   YMRSb+3rTZQXplzlgJE4dKOeYGSr2oipnUSLezbIxXy8H0ZCRMeWRSoUg
-   3wqpQsODTEv/NeETQHXPdwuyVGNcagpOxzDfc4DthVN7GRy/DwS3iOG5q
-   8=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: nXOcsY0Pt+xf/qTuGVWNFNsbaqaEwdl4FNa1UmNjQiZPJPNQ+9rjkuFmNla+vXxbcWAGKepql8
- c8bHGkoYm2zn/1XwINWxljwPUkfL+VS17uRdYc+GRJJDNw5BD0TEpb1EllXJW74c2gUmL5EKqU
- MicjIW3cxXWeMEXgdy+Iytiez1hVGck06p7bWVqhxyDohPZ3eOn5aOKcAvr+04oC+A5PNj8KGX
- skek1oJ3rDyBq0Nlu6BVyQjB81FOyrztBfIM78TlTkcIAqQsjPBWV1RBPtGDl5jVWAZGTp+bHh
- qr8=
-X-SBRS: 2.7
-X-MesageID: 9805719
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,299,1571716800"; 
-   d="scan'208";a="9805719"
-Date:   Tue, 10 Dec 2019 12:27:14 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-CC:     Nathan Chancellor <natechancellor@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Stefano Stabellini <stefano.stabellini@eu.citrix.com>,
-        <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] xen/blkfront: Adjust indentation in xlvbd_alloc_gendisk
-Message-ID: <20191210112714.GH980@Air-de-Roger>
-References: <20191209201444.33243-1-natechancellor@gmail.com>
- <bf13410c-b62e-d82f-6351-ee49d7964fe7@suse.com>
+        Tue, 10 Dec 2019 06:28:12 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47XHqY5VslzQl9M;
+        Tue, 10 Dec 2019 12:28:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id ORbApr3hLJrD; Tue, 10 Dec 2019 12:28:05 +0100 (CET)
+Date:   Tue, 10 Dec 2019 22:27:50 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] selftests: fix spelling mistake "chainged" ->
+ "chained"
+Message-ID: <20191210112750.5rfck3gnmobabhak@yavin.dot.cyphar.com>
+References: <20191210112455.171482-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l7rai3c6jadzkxag"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bf13410c-b62e-d82f-6351-ee49d7964fe7@suse.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+In-Reply-To: <20191210112455.171482-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:15:22AM +0100, Jürgen Groß wrote:
-> On 09.12.19 21:14, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > ../drivers/block/xen-blkfront.c:1117:4: warning: misleading indentation;
-> > statement is not part of the previous 'if' [-Wmisleading-indentation]
-> >                  nr_parts = PARTS_PER_DISK;
-> >                  ^
-> > ../drivers/block/xen-blkfront.c:1115:3: note: previous statement is here
-> >                  if (err)
-> >                  ^
-> > 
-> > This is because there is a space at the beginning of this line; remove
-> > it so that the indentation is consistent according to the Linux kernel
-> > coding style and clang no longer warns.
-> > 
-> > While we are here, the previous line has some trailing whitespace; clean
-> > that up as well.
-> > 
-> > Fixes: c80a420995e7 ("xen-blkfront: handle Xen major numbers other than XENVBD")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/791
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
 
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+--l7rai3c6jadzkxag
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.
+On 2019-12-10, Colin King <colin.king@canonical.com> wrote:
+> There is a spelling mistake in a literal string, fix it.
+
+Yup, makes sense.
+
+Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  tools/testing/selftests/openat2/resolve_test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testi=
+ng/selftests/openat2/resolve_test.c
+> index 7a94b1da8e7b..bbafad440893 100644
+> --- a/tools/testing/selftests/openat2/resolve_test.c
+> +++ b/tools/testing/selftests/openat2/resolve_test.c
+> @@ -230,7 +230,7 @@ void test_openat2_opath_tests(void)
+>  		{ .name =3D "[in_root] garbage link to /root",
+>  		  .path =3D "cheeky/garbageself",	.how.resolve =3D RESOLVE_IN_ROOT,
+>  		  .out.path =3D "root",		.pass =3D true },
+> -		{ .name =3D "[in_root] chainged garbage links to /root",
+> +		{ .name =3D "[in_root] chained garbage links to /root",
+>  		  .path =3D "abscheeky/garbageself", .how.resolve =3D RESOLVE_IN_ROOT,
+>  		  .out.path =3D "root",		.pass =3D true },
+>  		{ .name =3D "[in_root] relative path to 'root'",
+> --=20
+> 2.24.0
+>=20
+
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--l7rai3c6jadzkxag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXe+BLwAKCRCdlLljIbnQ
+EubTAP9OptH6VWy5DMeb7HaGfXTnyuPkThnwOMh7lvkzgNvH4AEAtBUbCf5wSGnb
+yzCFDvF52CMUSP7Tzg5KEduILkkf+A4=
+=9MTh
+-----END PGP SIGNATURE-----
+
+--l7rai3c6jadzkxag--
