@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B93DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A463C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D221E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404AE20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017905;
-	bh=tZzZRAgdTGj0L9tAF36eOBqT3CBQMMRdkVJj31EFvuM=;
+	s=default; t=1576017909;
+	bh=mqw6PVPrz8aX7WywNznPus2DoQhmJUuGlFdhOu5qNBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U+Y5E1Nt851RF3tf5SxWnXW+xGubac9CbIFf5xfRDcUiTSMPAJkIe+NA67vTkz2JN
-	 boTyyKQ/TioTk7NM8UjoKsvWzANnD1xTizoYRsZYW58aE4WE8M6O9UXS4nxUySLHWo
-	 X19HZkhpA83f9PDl6HfcthtlNBJQPJmhPUUmMnQE=
+	b=n8ffqgW5hQTJ0fEx2xS05pNQNWuANbLGb9Uj82we2J+Ser3XfNJ2qIl/TnM1+ujmU
+	 9zYd+t/YWcrY0NCkZT7Bsrb3lNPC6S7v/wONjgqhyJXJYo8dQjbP7C/9tr/kAYWMAn
+	 g9pLhiLjGiEsWdFE69OlDOISXoK0VnowEvza63VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbfLJWas (ORCPT
+        id S1727906AbfLJWpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50234 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:45:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfLJWaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:39 -0500
+        id S1726841AbfLJWar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D5D20836;
-        Tue, 10 Dec 2019 22:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407AC2077B;
+        Tue, 10 Dec 2019 22:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017039;
-        bh=tZzZRAgdTGj0L9tAF36eOBqT3CBQMMRdkVJj31EFvuM=;
+        s=default; t=1576017047;
+        bh=mqw6PVPrz8aX7WywNznPus2DoQhmJUuGlFdhOu5qNBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4+Bj2HLK6871+jrbMvbcPaXfL/e1XO+cOB+IG/09Xh9Wm4VTMlNhNNfotOeF/Btp
-         r2DGbCg8lwkY3ouj/GX2u0JyNOWzvk7eHl9JV1AC8A9Y6yWEPUS9Jwy+AYiJQdoftf
-         Okt0TwHOdjCX0B5PsbGrS7+Jyrs0a6g2pxNYWpmY=
+        b=0phECtdvk9z1ympaCRw6VDGMJGZg4UumL5fWyPKfbXji5lgTneLKklk2FZRw1T2sd
+         PPTU/qJolJk2jAzVdWYtSHNKkVVUH3Nd33MSSSRtasdJ4LFUPeAogHsm71ykK4AbkV
+         af2zE3Ssy3m7mMOsXSup0t72dTFNlAhehqQhU3z0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 02/91] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
-Date:   Tue, 10 Dec 2019 17:29:06 -0500
-Message-Id: <20191210223035.14270-2-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/91] rtlwifi: prevent memory leak in rtl_usb_probe
+Date:   Tue, 10 Dec 2019 17:29:13 -0500
+Message-Id: <20191210223035.14270-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,48 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
+[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
 
-Silence two warning messages that occur due to -EPROBE_DEFER errors to
-help cleanup the system boot log.
+In rtl_usb_probe if allocation for usb_data fails the allocated hw
+should be released. In addition the allocated rtlpriv->usb_data should
+be released on error handling path.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index a2a82366a7714..eb97e88a103ca 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -725,7 +725,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
- 	/* 1.0V digital core power regulator  */
- 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
- 	if (IS_ERR(pdata->dvdd10)) {
--		DRM_ERROR("DVDD10 regulator not found\n");
-+		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
-+			DRM_ERROR("DVDD10 regulator not found\n");
-+
- 		return PTR_ERR(pdata->dvdd10);
- 	}
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index ae0c48f3c2bc0..1f02461de261c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1088,8 +1088,10 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->hw = hw;
+ 	rtlpriv->usb_data = kzalloc(RTL_USB_MAX_RX_COUNT * sizeof(u32),
+ 				    GFP_KERNEL);
+-	if (!rtlpriv->usb_data)
++	if (!rtlpriv->usb_data) {
++		ieee80211_free_hw(hw);
+ 		return -ENOMEM;
++	}
  
-@@ -1344,7 +1346,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
- 
- 	err = anx78xx_init_pdata(anx78xx);
- 	if (err) {
--		DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+
- 		return err;
- 	}
- 
+ 	/* this spin lock must be initialized early */
+ 	spin_lock_init(&rtlpriv->locks.usb_lock);
+@@ -1152,6 +1154,7 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	_rtl_usb_io_handler_release(hw);
+ 	usb_put_dev(udev);
+ 	complete(&rtlpriv->firmware_loading_complete);
++	kfree(rtlpriv->usb_data);
+ 	return -ENODEV;
+ }
+ EXPORT_SYMBOL(rtl_usb_probe);
 -- 
 2.20.1
 
