@@ -2,130 +2,160 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C33C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CA7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983B4207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815F42077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfLJBOy (ORCPT
+        id S1727742AbfLJBSd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:14:54 -0500
-Received: from mga05.intel.com ([192.55.52.43]:54998 "EHLO mga05.intel.com"
+        Mon, 9 Dec 2019 20:18:33 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:52602 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbfLJBOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:14:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 17:14:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,297,1571727600"; 
-   d="scan'208";a="224979988"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 09 Dec 2019 17:14:50 -0800
-Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v5 0/8] VT-d Native Shared virtual memory cleanup and
- fixes
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1575316709-54903-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <20191209091415.0a733af6@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <8a437e65-f380-d5c8-6615-a4d9d3ef1c56@linux.intel.com>
-Date:   Tue, 10 Dec 2019 09:14:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1727524AbfLJBSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 20:18:32 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ieUAT-00042d-A7; Tue, 10 Dec 2019 02:18:25 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Soeren Moch <smoch@web.de>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
+Date:   Tue, 10 Dec 2019 02:18:24 +0100
+Message-ID: <6162240.GiEx4hqPFh@diego>
+In-Reply-To: <2cf70216-8d98-4122-4f4e-b8254089a017@web.de>
+References: <20191209223822.27236-1-smoch@web.de> <2668270.pdtvSLGib8@diego> <2cf70216-8d98-4122-4f4e-b8254089a017@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20191209091415.0a733af6@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+Hi Soeren,
 
-This has been queued for internal test. I will forward it to Joerg if
-everything goes well (probably around rc4).
+Am Dienstag, 10. Dezember 2019, 00:29:21 CET schrieb Soeren Moch:
+> On 10.12.19 00:08, Heiko Stübner wrote:
+> > Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
+> >> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
+> >> The BCM4359/9 wifi controller in this module is connected to sdio0,
+> >> enable this interface.
+> >>
+> >> Signed-off-by: Soeren Moch <smoch@web.de>
+> >> ---
+> >> Not sure where to place exactly the sdio0 node in the dts because
+> >> existing sd nodes are not sorted alphabetically.
+> >>
+> >> This last patch in this brcmfmac patch series probably should be picked
+> >> up by Heiko independently of the rest of this series. It was sent together
+> >> to show how this brcmfmac extension for 4359-sdio support with RSDB is
+> >> used and tested.
+> > node placement looks good so I can apply it, just a general questions
+> > I only got patch 8/8 are patches 1-7 relevant for this one and what are they?
+> Patches 1-7 are the patches to support the BCM4359 chipset with SDIO
+> interface in the linux brcmfmac net-wireless driver, see [1].
+> 
+> So this patch series has 2 parts:
+> patches 1-7: add support for the wifi chipset in the wireless driver,
+> this has to go through net-wireless
+> patch 8: enable the wifi module with this chipset on RockPro64, this patch
 
-Best regards,
--baolu
+Thanks for the clarification :-) .
 
-On 12/10/19 1:14 AM, Jacob Pan wrote:
-> Hi Joerg and Baolu,
+As patch 8 "only" does the core sdio node, it doesn't really depend on the
+earlier ones and you can submit any uart-hooks for bluetooth once the
+other patches land I guess.
+
+
+> If this was confusing, what would be the ideal way to post such series?
+
+I think every maintainer has some slightly different perspective on this,
+but personally I like getting the whole series to follow the discussion but
+also to just see when the driver-side changes get merged, as the dts-parts
+need to wait for that in a lot of cases.
+
+Heiko
+
+
+> [1] https://patchwork.kernel.org/project/linux-wireless/list/?series=213951
+> >
+> > Thanks
+> > Heiko
+> >
+> >
+> >> Cc: Heiko Stuebner <heiko@sntech.de>
+> >> Cc: Kalle Valo <kvalo@codeaurora.org>
+> >> Cc: linux-wireless@vger.kernel.org
+> >> Cc: brcm80211-dev-list.pdl@broadcom.com
+> >> Cc: brcm80211-dev-list@cypress.com
+> >> Cc: netdev@vger.kernel.org
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-rockchip@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> ---
+> >>  .../boot/dts/rockchip/rk3399-rockpro64.dts    | 21 ++++++++++++-------
+> >>  1 file changed, 14 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> >> index 7f4b2eba31d4..9fa92790d6e0 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> >> @@ -71,13 +71,6 @@
+> >>  		clock-names = "ext_clock";
+> >>  		pinctrl-names = "default";
+> >>  		pinctrl-0 = <&wifi_enable_h>;
+> >> -
+> >> -		/*
+> >> -		 * On the module itself this is one of these (depending
+> >> -		 * on the actual card populated):
+> >> -		 * - SDIO_RESET_L_WL_REG_ON
+> >> -		 * - PDN (power down when low)
+> >> -		 */
+> >>  		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+> >>  	};
+> >>
+> >> @@ -650,6 +643,20 @@
+> >>  	status = "okay";
+> >>  };
+> >>
+> >> +&sdio0 {
+> >> +	bus-width = <4>;
+> >> +	cap-sd-highspeed;
+> >> +	cap-sdio-irq;
+> >> +	disable-wp;
+> >> +	keep-power-in-suspend;
+> >> +	mmc-pwrseq = <&sdio_pwrseq>;
+> >> +	non-removable;
+> >> +	pinctrl-names = "default";
+> >> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+> >> +	sd-uhs-sdr104;
+> >> +	status = "okay";
+> >> +};
+> >> +
+> >>  &sdmmc {
+> >>  	bus-width = <4>;
+> >>  	cap-sd-highspeed;
+> >> --
+> >> 2.17.1
+> >>
+> >
+> >
+> >
 > 
-> Any more comments on this series? I rebased it on v5.5-rc1 without
-> changes.
 > 
-> 
-> Thanks,
-> 
-> Jacob
-> 
-> On Mon,  2 Dec 2019 11:58:21 -0800
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> 
->> Mostly extracted from nested SVA/SVM series based on review comments
->> of v7. https://lkml.org/lkml/2019/10/24/852
->>
->> This series also adds a few important fixes for native use of SVA.
->> Nested SVA new code will be submitted separately as a smaller set.
->> Based on the core branch of IOMMU tree staged for v5.5, where common
->> APIs for vSVA were applied.
->> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git core
->>
->> Changelog:
->> v5	- Regrouped patch 6 and 8, added comments suggested by Joe
->> Perches v4	- Commit message fix
->>
->> V3
->> 	- Squashed 1/10 & 2/10
->> 	- Deleted "8/10 Fix PASID cache flush" from this series
->> 	- Addressed reviews from Eric Auger and Baolu
->> V2
->> 	- Coding style fixes based on Baolu's input, no functional
->> change
->> 	- Added Acked-by tags.
->>
->> Thanks,
->>
->> Jacob
->>
->>
->> *** BLURB HERE ***
->>
->> Jacob Pan (8):
->>    iommu/vt-d: Fix CPU and IOMMU SVM feature matching checks
->>    iommu/vt-d: Match CPU and IOMMU paging mode
->>    iommu/vt-d: Reject SVM bind for failed capability check
->>    iommu/vt-d: Avoid duplicated code for PASID setup
->>    iommu/vt-d: Fix off-by-one in PASID allocation
->>    iommu/vt-d: Replace Intel specific PASID allocator with IOASID
->>    iommu/vt-d: Avoid sending invalid page response
->>    iommu/vt-d: Misc macro clean up for SVM
->>
->>   drivers/iommu/Kconfig       |   1 +
->>   drivers/iommu/intel-iommu.c |  23 +++----
->>   drivers/iommu/intel-pasid.c |  96 ++++++++------------------
->>   drivers/iommu/intel-svm.c   | 163
->> +++++++++++++++++++++++++-------------------
->> include/linux/intel-iommu.h |   5 +- 5 files changed, 135
->> insertions(+), 153 deletions(-)
->>
-> 
-> [Jacob Pan]
-> 
+
+
+
+
