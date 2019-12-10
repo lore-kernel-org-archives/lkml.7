@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E301205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6625205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012921;
-	bh=6huB0GmQLu2UIu+i2albAF+hKRZyDMAeivdXf4U6FNA=;
+	s=default; t=1576012925;
+	bh=SQNqfs3xX6Ay9KHY/sTpJriYHrOPjc5jnhEYVXUUXV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bardpvnq05/hKihoNGvXM4npuoojjbrB6Q3eIl5IiyONGxgdVCTdbP7Ym78Uqs3bh
-	 p5dMNP6z9eNxsBN0J2cnFFHeJelKeRUskVEaE24/tjc3hekbIYYtqKxqT1vWQqGevp
-	 hFzul1W7/1NgPZjTDP1R7crwRVgshH5uXSpoROc8=
+	b=sJJxYYmZEklefQtrzDGEmMCNDNLLGyluILrY9JYeEQbBfZN+dlgXV8wWq2tFJo2Dz
+	 GUW7pc6KnN8bhTu6mtgGesxfI1BCYdsRcXQLg3/+wm940SUbKKwcQKlGSf2E5AhvrO
+	 r3UFtd32jz75bpiV9nB+rUvHt3sg6RzCp/aDCWfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfLJVWA (ORCPT
+        id S1728788AbfLJVLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:22:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34668 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbfLJVLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:40 -0500
+        id S1727131AbfLJVLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37F4246A8;
-        Tue, 10 Dec 2019 21:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F8324697;
+        Tue, 10 Dec 2019 21:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012299;
-        bh=6huB0GmQLu2UIu+i2albAF+hKRZyDMAeivdXf4U6FNA=;
+        s=default; t=1576012284;
+        bh=SQNqfs3xX6Ay9KHY/sTpJriYHrOPjc5jnhEYVXUUXV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRKASeI+JVbgx97LJ4wtoEjHfVOSNjTokael1E1VMjmkCo+ve0BRyUg8gjnGP5+2m
-         mdQv3MVdldLKpbafcIoZgc9c3aTsywoUngh/wSZD2ocdA/W6f8SFHgD/WtQg9hZ6oQ
-         hU8JwywxJGfWfpU8VnhbE0CIBqt0KZI4OghlkZfs=
+        b=xVKS9pJzoTA+Tqfz53pEx5MGX27EchLPnUQv5Lob+du7PQ+6vUf0t+Ffom/6bFtN9
+         9X1kIC0GnAPKqec12sRWB/C4XSaEh2GkxGC8W6bTnilSB97zmqi93qEEOYo/pKo4Xd
+         wDglGNR7LfDR8oe/f5T2lz/vMl6SJXv1shEyxlqs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+Cc:     James Clark <James.Clark@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 236/350] perf probe: Skip overlapped location on searching variables
-Date:   Tue, 10 Dec 2019 16:05:41 -0500
-Message-Id: <20191210210735.9077-197-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 226/350] libsubcmd: Use -O0 with DEBUG=1
+Date:   Tue, 10 Dec 2019 16:05:31 -0500
+Message-Id: <20191210210735.9077-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,102 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: James Clark <James.Clark@arm.com>
 
-[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
+[ Upstream commit 22bd8f1b5a1dd168ba4eba27cb17643a11012f5d ]
 
-Since debuginfo__find_probes() callback function can be called with  the
-location which already passed, the callback function must filter out
-such overlapped locations.
+When a 'make DEBUG=1' build is done, the command parser is still built
+with -O6 and is hard to step through, fix it making it use -O0 in that
+case.
 
-add_probe_trace_event() has already done it by commit 1a375ae7659a
-("perf probe: Skip same probe address for a given line"), but
-add_available_vars() doesn't. Thus perf probe -v shows same address
-repeatedly as below:
-
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-
-With this fix, perf probe -V shows it correctly:
-
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-
-Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/lib/subcmd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 4079ed617f53c..e4ef8f4935b2a 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1425,6 +1425,18 @@ static int collect_variables_cb(Dwarf_Die *die_mem, void *data)
- 	return DIE_FIND_CB_END;
- }
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e58df09..5dbb0dde208c4 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -28,7 +28,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
-+static bool available_var_finder_overlap(struct available_var_finder *af)
-+{
-+	int i;
-+
-+	for (i = 0; i < af->nvls; i++) {
-+		if (af->pf.addr == af->vls[i].point.address)
-+			return true;
-+	}
-+	return false;
-+
-+}
-+
- /* Add a found vars into available variables list */
- static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- {
-@@ -1435,6 +1447,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	Dwarf_Die die_mem;
- 	int ret;
- 
-+	/*
-+	 * For some reason (e.g. different column assigned to same address),
-+	 * this callback can be called with the address which already passed.
-+	 * Ignore it first.
-+	 */
-+	if (available_var_finder_overlap(af))
-+		return 0;
-+
- 	/* Check number of tevs */
- 	if (af->nvls == af->max_vls) {
- 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS += -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
+ else
+   CFLAGS += -O6
 -- 
 2.20.1
 
