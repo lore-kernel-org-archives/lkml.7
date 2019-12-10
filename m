@@ -2,97 +2,86 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A540AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28965C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A83D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017854;
-	bh=9ayxFiiRo/5juvAvRN+DLnoDZxTnce77doeiWpqr+8E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iq4GihaTqh/RfkTxSvFnU1cXhHb2YwxD/rmL2CihROdcnX+y8faBHBQxoU+9ptp5a
-	 /FQHXEJ4KapON+chYpUFt9+P5iLt/o2myDdgqt+EkS9E5DiDDN9S/y58oSZFHiM3Eo
-	 XbXeJiSsBIWkg8OkBTD4WowcQxybU1Dr/mZpsjiE=
+	by mail.kernel.org (Postfix) with ESMTP id EEA4F2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfLJWoN (ORCPT
+        id S1729859AbfLJWoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:44:23 -0500
+Received: from mga09.intel.com ([134.134.136.24]:9123 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727170AbfLJWav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:51 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9279207FF;
-        Tue, 10 Dec 2019 22:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017050;
-        bh=9ayxFiiRo/5juvAvRN+DLnoDZxTnce77doeiWpqr+8E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U53+gAq+nschF5peaBcm7PP1HNflK3Y+LMkKGOh2WJZ/DkJBasSYGZgxwYJ1tkoxw
-         eO3+M6QpBQTmYyuFV+uzYF6HmEIJL/yqMoQzpUFC4mFicaH6Lq833xwQeotTXAx4nv
-         7qiOikXF9KQlIqEICRHoPUKRcBCzgEVuumQ9KcGw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/91] media: am437x-vpfe: Setting STD to current value is not an error
-Date:   Tue, 10 Dec 2019 17:29:16 -0500
-Message-Id: <20191210223035.14270-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
+        id S1727170AbfLJWoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:44:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 14:44:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="413279324"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Dec 2019 14:44:18 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jun Nakajima <jun.nakajima@intel.com>
+Subject: [PATCH 0/4] KVM: x86: Add checks on host-reserved cr4 bits
+Date:   Tue, 10 Dec 2019 14:44:12 -0800
+Message-Id: <20191210224416.10757-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+KVM currently doesn't incorporate the platform's capabilities in its cr4
+reserved bit checks and instead checks only whether KVM is aware of the
+feature in general and whether or not userspace has advertised the feature
+to the guest.
 
-[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
+Lack of checking allows userspace/guest to set unsupported bits in cr4.
+For the most part, setting unsupported bits will simply cause VM-Enter to
+fail.  The one existing exception is OSXSAVE, which is conditioned on host
+support as checking only guest_cpuid_has() would result in KVM attempting
+XSAVE, leading to faults and WARNs.
 
-VIDIOC_S_STD should not return an error if the value is identical
-to the current one.
-This error was highlighted by the v4l2-compliance test.
+57-bit virtual addressing has introduced another case where setting an
+unsupported bit (cr4.LA57) can induce a fault in the host.  In the LA57
+case, userspace can set the guest's cr4.LA57 by advertising LA57 support
+via CPUID and abuse the bogus cr4.LA57 to effectively bypass KVM's
+non-canonical address check, ultimately causing a #GP when VMX writes
+the guest's bogus address to MSR_KERNEL_GS_BASE during VM-Enter.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Given that the best case scenario is a failed VM-Enter, there's no sane
+reason to allow setting unsupported bits in cr4.  Fix the LA57 bug by not
+allowing userspace or the guest to set cr4 bits that are not supported
+by the platform.
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 05489a401c5c1..bd500f12d0f79 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
- 
-+	/* if trying to set the same std then nothing to do */
-+	if (vpfe_standards[vpfe->std_index].std_id == std_id)
-+		return 0;
-+
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
+Sean Christopherson (4):
+  KVM: x86: Don't let userspace set host-reserved cr4 bits
+  KVM: x86: Ensure all logical CPUs have consistent reserved cr4 bits
+  KVM: x86: Drop special XSAVE handling from guest_cpuid_has()
+  KVM: x86: Add macro to ensure reserved cr4 bits checks stay in sync
+
+ arch/x86/kvm/cpuid.h   |  4 ---
+ arch/x86/kvm/svm.c     |  1 +
+ arch/x86/kvm/vmx/vmx.c |  1 +
+ arch/x86/kvm/x86.c     | 65 +++++++++++++++++++++++++++++-------------
+ 4 files changed, 47 insertions(+), 24 deletions(-)
+
 -- 
-2.20.1
+2.24.0
 
