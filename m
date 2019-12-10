@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48BBC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7825C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0A20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83D72077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfLJMNi (ORCPT
+        id S1727633AbfLJMNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:13:38 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57785 "EHLO
+        Tue, 10 Dec 2019 07:13:40 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52996 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfLJMNd (ORCPT
+        with ESMTP id S1727557AbfLJMNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:13:33 -0500
+        Tue, 10 Dec 2019 07:13:36 -0500
 Received: from 79.184.255.117.ipv4.supernova.orange.pl (79.184.255.117) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 13df9256bad9aa3c; Tue, 10 Dec 2019 13:13:30 +0100
+ id 616de29a2a835439; Tue, 10 Dec 2019 13:13:32 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -30,9 +30,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Len Brown <len.brown@intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Len Brown <lenb@kernel.org>
-Subject: [RFC v2][PATCH 5/9] intel_idle: Refactor intel_idle_cpuidle_driver_init()
-Date:   Tue, 10 Dec 2019 13:03:01 +0100
-Message-ID: <12822878.tX331RTXvW@kreacher>
+Subject: [RFC v2][PATCH 2/9] ACPI: processor: Introduce acpi_processor_evaluate_cst()
+Date:   Tue, 10 Dec 2019 13:02:12 +0100
+Message-ID: <16599294.5T63LaqZPT@kreacher>
 In-Reply-To: <35821518.IbFVMVmUy3@kreacher>
 References: <35821518.IbFVMVmUy3@kreacher>
 MIME-Version: 1.0
@@ -45,13 +45,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Move the C-state verification and checks from
-intel_idle_cpuidle_driver_init() to a separate function,
-intel_idle_verify_cstate(), and make the former call it after
-checking the CPUIDLE_FLAG_UNUSABLE state flag.
-
-Also combine the drv->states[] updates with the incrementation of
-drv->state_count.
+In order to separate the ACPI _CST evaluation from checks
+specific to the ACPI processor driver, move the majority of
+the acpi_processor_get_power_info_cst() function body to a new
+function, acpi_processor_evaluate_cst(), that will extract
+the C-states information from _CST output, and redefine
+acpi_processor_get_power_info_cst() as a wrapper around it.
 
 No intentional functional impact.
 
@@ -61,91 +60,113 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 No changes from the previous version.
 
 ---
- drivers/idle/intel_idle.c |   49 +++++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 24 deletions(-)
+ drivers/acpi/processor_idle.c |   52 +++++++++++++++++++++++++-----------------
+ 1 file changed, 32 insertions(+), 20 deletions(-)
 
-Index: linux-pm/drivers/idle/intel_idle.c
+Index: linux-pm/drivers/acpi/processor_idle.c
 ===================================================================
---- linux-pm.orig/drivers/idle/intel_idle.c
-+++ linux-pm/drivers/idle/intel_idle.c
-@@ -944,6 +944,22 @@ static void intel_idle_s2idle(struct cpu
- 	mwait_idle_with_hints(eax, ecx);
+--- linux-pm.orig/drivers/acpi/processor_idle.c
++++ linux-pm/drivers/acpi/processor_idle.c
+@@ -297,21 +297,17 @@ static int acpi_processor_get_power_info
+ 	return 0;
  }
  
-+static bool intel_idle_verify_cstate(unsigned int mwait_hint)
-+{
-+	unsigned int mwait_cstate = MWAIT_HINT2CSTATE(mwait_hint) + 1;
-+	unsigned int num_substates = (mwait_substates >> mwait_cstate * 4) &
-+					MWAIT_SUBSTATE_MASK;
-+
-+	/* Ignore the C-state if there are NO sub-states in CPUID for it. */
-+	if (num_substates == 0)
-+		return false;
-+
-+	if (mwait_cstate > 2 && !boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
-+		mark_tsc_unstable("TSC halts in idle states deeper than C2");
-+
-+	return true;
-+}
-+
- static void __setup_broadcast_timer(bool on)
+-static int acpi_processor_get_power_info_cst(struct acpi_processor *pr)
++static int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
++				       struct acpi_processor_power *info)
  {
- 	if (on)
-@@ -1332,10 +1348,10 @@ static void __init intel_idle_cpuidle_dr
- 	drv->state_count = 1;
- 
- 	for (cstate = 0; cstate < CPUIDLE_STATE_MAX; ++cstate) {
--		int num_substates, mwait_hint, mwait_cstate;
-+		unsigned int mwait_hint;
- 
--		if ((cpuidle_state_table[cstate].enter == NULL) &&
--		    (cpuidle_state_table[cstate].enter_s2idle == NULL))
-+		if (!cpuidle_state_table[cstate].enter &&
-+		    !cpuidle_state_table[cstate].enter_s2idle)
- 			break;
- 
- 		if (cstate + 1 > max_cstate) {
-@@ -1343,34 +1359,19 @@ static void __init intel_idle_cpuidle_dr
- 			break;
- 		}
- 
--		mwait_hint = flg2MWAIT(cpuidle_state_table[cstate].flags);
--		mwait_cstate = MWAIT_HINT2CSTATE(mwait_hint);
++	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *cst;
+ 	acpi_status status;
+ 	u64 count;
+-	int current_count;
++	int current_count = 0;
+ 	int i, ret = 0;
+-	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *cst;
 -
--		/* number of sub-states for this state in CPUID.MWAIT */
--		num_substates = (mwait_substates >> ((mwait_cstate + 1) * 4))
--					& MWAIT_SUBSTATE_MASK;
+-	if (nocst)
+-		return -ENODEV;
 -
--		/* if NO sub-states for this state in CPUID, skip it */
--		if (num_substates == 0)
--			continue;
--
--		/* if state marked as disabled, skip it */
-+		/* If marked as unusable, skip this state. */
- 		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
- 			pr_debug("state %s is disabled\n",
- 				 cpuidle_state_table[cstate].name);
- 			continue;
- 		}
+-	current_count = 0;
  
-+		mwait_hint = flg2MWAIT(cpuidle_state_table[cstate].flags);
-+		if (!intel_idle_verify_cstate(mwait_hint))
-+			continue;
- 
--		if (((mwait_cstate + 1) > 2) &&
--			!boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
--			mark_tsc_unstable("TSC halts in idle"
--					" states deeper than C2");
--
--		drv->states[drv->state_count] =	/* structure copy */
--			cpuidle_state_table[cstate];
--
--		drv->state_count += 1;
-+		/* Structure copy. */
-+		drv->states[drv->state_count++] = cpuidle_state_table[cstate];
+-	status = acpi_evaluate_object(pr->handle, "_CST", NULL, &buffer);
++	status = acpi_evaluate_object(handle, "_CST", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+ 		ACPI_DEBUG_PRINT((ACPI_DB_INFO, "No _CST, giving up\n"));
+ 		return -ENODEV;
+@@ -335,9 +331,6 @@ static int acpi_processor_get_power_info
+ 		goto end;
  	}
  
- 	if (icpu->byt_auto_demotion_disable_flag) {
+-	/* Tell driver that at least _CST is supported. */
+-	pr->flags.has_cst = 1;
+-
+ 	for (i = 1; i <= count; i++) {
+ 		union acpi_object *element;
+ 		union acpi_object *obj;
+@@ -383,7 +376,7 @@ static int acpi_processor_get_power_info
+ 		cx.entry_method = ACPI_CSTATE_SYSTEMIO;
+ 		if (reg->space_id == ACPI_ADR_SPACE_FIXED_HARDWARE) {
+ 			if (acpi_processor_ffh_cstate_probe
+-					(pr->id, &cx, reg) == 0) {
++					(cpu, &cx, reg) == 0) {
+ 				cx.entry_method = ACPI_CSTATE_FFH;
+ 			} else if (cx.type == ACPI_STATE_C1) {
+ 				/*
+@@ -432,7 +425,7 @@ static int acpi_processor_get_power_info
+ 			continue;
+ 
+ 		current_count++;
+-		memcpy(&(pr->power.states[current_count]), &cx, sizeof(cx));
++		memcpy(&info->states[current_count], &cx, sizeof(cx));
+ 
+ 		/*
+ 		 * We support total ACPI_PROCESSOR_MAX_POWER - 1
+@@ -446,12 +439,9 @@ static int acpi_processor_get_power_info
+ 		}
+ 	}
+ 
+-	ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Found %d power states\n",
+-			  current_count));
++	acpi_handle_info(handle, "Found %d idle states\n", current_count);
+ 
+-	/* Validate number of power states discovered */
+-	if (current_count < 2)
+-		ret = -EFAULT;
++	info->count = current_count;
+ 
+       end:
+ 	kfree(buffer.pointer);
+@@ -459,6 +449,28 @@ static int acpi_processor_get_power_info
+ 	return ret;
+ }
+ 
++static int acpi_processor_get_power_info_cst(struct acpi_processor *pr)
++{
++	int ret;
++
++	if (nocst)
++		return -ENODEV;
++
++	ret = acpi_processor_evaluate_cst(pr->handle, pr->id, &pr->power);
++	if (ret)
++		return ret;
++
++	/*
++	 * It is expected that there will be at least 2 states, C1 and
++	 * something else (C2 or C3), so fail if that is not the case.
++	 */
++	if (pr->power.count < 2)
++		return -EFAULT;
++
++	pr->flags.has_cst = 1;
++	return 0;
++}
++
+ static void acpi_processor_power_verify_c3(struct acpi_processor *pr,
+ 					   struct acpi_processor_cx *cx)
+ {
 
 
 
