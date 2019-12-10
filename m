@@ -2,157 +2,143 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE26C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8AC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA4F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575971615;
-	bh=kQ4Yqn5rZEIEiY/c0Ohg3wcxPWdObo1pmjuNVLFurVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UIQ+fTqpw2OQH7adDP51aVrcpy79+/1aR6VbxThx4YvllU/IS9mEhe+tpcORamdxF
-	 ejn4N/7BNmLxB8uEHLdTL8/CB6tPaKlXLqGdeeL0QhXQt9MOFvjUUhmxfXxFddb9Zf
-	 aeWbKHerBVOv4aJ9DT+Di2d+xT//ij5foSZUqOeU=
+	by mail.kernel.org (Postfix) with ESMTP id 2198D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LGd2eC5l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfLJJxd (ORCPT
+        id S1727522AbfLJJv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbfLJJxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:53:33 -0500
-Received: from localhost (unknown [106.201.45.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF9B2073B;
-        Tue, 10 Dec 2019 09:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575971612;
-        bh=kQ4Yqn5rZEIEiY/c0Ohg3wcxPWdObo1pmjuNVLFurVo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IYE5RDL/pEvqabyAgmoMjF675Qqla4hiQ+3Gjypdu823XOYNXXj/Nm8GA7A3kW8QU
-         hrGAEGOOKxsdqwmi9tJQ5KVqzh51+lFK4vx1IsMJluFx1mHWin5OO/Hi5xUZdl7q47
-         zkwGKpxKTN9SbhBRaYh+d25p6g81ORoXp0BvZC08=
-Date:   Tue, 10 Dec 2019 15:23:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-Message-ID: <20191210095327.GA2536@vkoul-mobl>
-References: <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl>
- <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
- <20191122052010.GO82508@vkoul-mobl>
- <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
- <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com>
- <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
- <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
- <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
+        Tue, 10 Dec 2019 04:51:26 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:34654 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfLJJvY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:51:24 -0500
+Received: by mail-vk1-f195.google.com with SMTP id w67so1696608vkf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i53YOPIF4tZH71cdZd3N/wfk/VGV4lMlcYM4QZMIJfo=;
+        b=LGd2eC5lkimkmaZ3Njofp0kB/S8H0Wm9blwDIUXk+fSx60a/IysurK9R509dQNx75L
+         3ObbamEzRKIneBG/3e6kK09eD6M2Xjzp9K/ttwArqlEEZT/mnrZDnp0Zb/Rf93Wkgb43
+         asezSds8ySbKZxuyFt0Z6RA8liimQK7jgut6nQnarr9ChA7MWD58yvhdUEXtkrwzeClM
+         Iv44zwEJgd4HJuTuihMbyT7O/fM9TzBF4NVCRmIbTyJR1rXtGskOFUHEbYFeHnT1pi0R
+         j3wPfbEZ9HAoFj+r5+D3glWIVQNGFqGMBh9T3zE0S6+v99QRaz9o6BkDAb3QaNkokKGi
+         aQ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i53YOPIF4tZH71cdZd3N/wfk/VGV4lMlcYM4QZMIJfo=;
+        b=eujbnugK8YpRwPOlHtIWZsVXt7XZ3v5wV+0Ye5a2Q4FP3HxiVgMXRWi4bjPZtxQ7yX
+         hHtCbI4psW6A1Vm9v0EdvG8+8uawJ8nTVlY1XKsAWKAckOZmBPfeUhLolJD+s+yTGxGr
+         p/x1uY6E90duQfBj5W6QxXHwlr8WfNGO33GHTM0MnFoZO1obVqK026ctLp+3EFrxdVO6
+         R24/ppOaJCsk1ziD3pEJWYOcwVb7cuanU4HHUPz+L6ZcQgdfOPM45KqU6lmhAbyAi95F
+         RwgZyRLa3o6ldIGP1BLS9hsKnJtzqE+v4lVWx09ynRRoThrfszhIg7TRhaLrVXeQXzi6
+         Q7nw==
+X-Gm-Message-State: APjAAAXR1Ev4JLMAf9xINRFBFqc8pNphyPaiIroENn+lbwBYuI5HpFdi
+        wjNO3Fe/SYT1boNjKoRTwZLc4plxs03/DJ3uB5WcnQ==
+X-Google-Smtp-Source: APXvYqwGViwBl874UU2PS2zg+6cNGxu0DAuVbaL/ZJ6A8w922cBIox0P2HENEKQLpaVxO7zmetO8tUwJQdTAEqPuVu8=
+X-Received: by 2002:a05:6122:5b:: with SMTP id q27mr27979454vkn.43.1575971483143;
+ Tue, 10 Dec 2019 01:51:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
+References: <20191128074522.69706-1-ludovic.desroches@microchip.com>
+In-Reply-To: <20191128074522.69706-1-ludovic.desroches@microchip.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 10:50:46 +0100
+Message-ID: <CAPDyKFpCcOxh1+ZniZvxMR=bMCY0S6bk0FAzX2D=GMxMYea_bg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: sdhci-of-at91: new compatible string
+ and update properties
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        claudiu.beznea@microchip.com, Eugen.Hristev@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-11-19, 14:42, Dave Jiang wrote:
-> 
-> 
-> On 11/22/19 2:01 PM, Dan Williams wrote:
-> > On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
-> > > 
-> > > 
-> > > 
-> > > On 2019-11-22 1:50 p.m., Dan Williams wrote:
-> > > > On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > On 11/21/19 10:20 PM, Vinod Koul wrote:
-> > > > > > On 14-11-19, 10:03, Logan Gunthorpe wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > On 2019-11-13 9:55 p.m., Vinod Koul wrote:
-> > > > > > > > > But that's the problem. We can't expect our users to be "nice" and not
-> > > > > > > > > unbind when the driver is in use. Killing the kernel if the user
-> > > > > > > > > unexpectedly unbinds is not acceptable.
-> > > > > > > > 
-> > > > > > > > And that is why we review the code and ensure this does not happen and
-> > > > > > > > behaviour is as expected
-> > > > > > > 
-> > > > > > > Yes, but the current code can kill the kernel when the driver is unbound.
-> > > > > > > 
-> > > > > > > > > > > I suspect this is less of an issue for most devices as they wouldn't
-> > > > > > > > > > > normally be unbound while in use (for example there's really no reason
-> > > > > > > > > > > to ever unbind IOAT seeing it's built into the system). Though, the fact
-> > > > > > > > > > > is, the user could unbind these devices at anytime and we don't want to
-> > > > > > > > > > > panic if they do.
-> > > > > > > > > > 
-> > > > > > > > > > There are many drivers which do modules so yes I am expecting unbind and
-> > > > > > > > > > even a bind following that to work
-> > > > > > > > > 
-> > > > > > > > > Except they will panic if they unbind while in use, so that's a
-> > > > > > > > > questionable definition of "work".
-> > > > > > > > 
-> > > > > > > > dmaengine core has module reference so while they are being used they
-> > > > > > > > won't be removed (unless I complete misread the driver core behaviour)
-> > > > > > > 
-> > > > > > > Yes, as I mentioned in my other email, holding a module reference does
-> > > > > > > not prevent the driver from being unbound. Any driver can be unbound by
-> > > > > > > the user at any time without the module being removed.
-> > > > > > 
-> > > > > > That sounds okay then.
-> > > > > 
-> > > > > I'm actually glad Logan is putting some work in addressing this. I also
-> > > > > ran into the same issue as well dealing with unbinds on my new driver.
-> > > > 
-> > > > This was an original mistake of the dmaengine implementation that
-> > > > Vinod inherited. Module pinning is distinct from preventing device
-> > > > unbind which ultimately can't be prevented. Longer term I think we
-> > > > need to audit dmaengine consumers to make sure they are prepared for
-> > > > the driver to be removed similar to how other request based drivers
-> > > > can gracefully return an error status when the device goes away rather
-> > > > than crashing.
+On Thu, 28 Nov 2019 at 08:45, Ludovic Desroches
+<ludovic.desroches@microchip.com> wrote:
+>
+> There is a new compatible string for the SAM9X60 sdhci device. It involves
+> an update of the properties about the clocks stuff.
+>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Right finally wrapping my head of static dmaengine devices! we can
-indeed have devices going away, but me wondering why this should be
-handled in subsystems! Should the driver core not be doing this instead?
-Would it be not a safe behaviour for unplug to unload the driver and
-thus give a chance to unbind from subsystems too...
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
-> > > Yes, but that will be a big project because there are a lot of drivers.
-> > 
-> > Oh yes, in fact I think it's something that can only reasonably be
-> > considered for new consumers.
-> > 
-> > > But I think the dmaengine common code needs to support removal properly,
-> > > which essentially means changing how all the drivers allocate and free
-> > > their structures, among other things.
-> > > 
-> > > The one saving grace is that most of the drivers are for SOCs which
-> > > can't be physically removed and there's really no use-case for the user
-> > > to call unbind.
-
-yeah only a small set of drivers would need this for now!
-
-> > Yes, the SOC case is not so much my concern as the generic offload use
-> > cases, especially if those offloads are in a similar hotplug domain as
-> > a cpu.
-> 
-> It becomes a bigger issue when "channels" can be reconfigured and can come
-> and go in a hot plug fashion.
-
--- 
-~Vinod
+> ---
+>
+> Changes:
+> - v3: rebase due to conflict with Nicolas' patch
+> - v2: remove the extra example and fix node label
+>
+>  .../devicetree/bindings/mmc/sdhci-atmel.txt         | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> index 503c6dbac1b2..69edfd4d3922 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-atmel.txt
+> @@ -5,11 +5,16 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties used by the
+>  sdhci-of-at91 driver.
+>
+>  Required properties:
+> -- compatible:          Must be "atmel,sama5d2-sdhci".
+> +- compatible:          Must be "atmel,sama5d2-sdhci" or "microchip,sam9x60-sdhci".
+>  - clocks:              Phandlers to the clocks.
+> -- clock-names:         Must be "hclock", "multclk", "baseclk";
+> +- clock-names:         Must be "hclock", "multclk", "baseclk" for
+> +                       "atmel,sama5d2-sdhci".
+> +                       Must be "hclock", "multclk" for "microchip,sam9x60-sdhci".
+>
+>  Optional properties:
+> +- assigned-clocks:     The same with "multclk".
+> +- assigned-clock-rates The rate of "multclk" in order to not rely on the
+> +                       gck configuration set by previous components.
+>  - microchip,sdcal-inverted: when present, polarity on the SDCAL SoC pin is
+>    inverted. The default polarity for this signal is described in the datasheet.
+>    For instance on SAMA5D2, the pin is usually tied to the GND with a resistor
+> @@ -17,10 +22,12 @@ Optional properties:
+>
+>  Example:
+>
+> -sdmmc0: sdio-host@a0000000 {
+> +mmc0: sdio-host@a0000000 {
+>         compatible = "atmel,sama5d2-sdhci";
+>         reg = <0xa0000000 0x300>;
+>         interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
+>         clocks = <&sdmmc0_hclk>, <&sdmmc0_gclk>, <&main>;
+>         clock-names = "hclock", "multclk", "baseclk";
+> +       assigned-clocks = <&sdmmc0_gclk>;
+> +       assigned-clock-rates = <480000000>;
+>  };
+> --
+> 2.24.0
+>
