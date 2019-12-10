@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4811C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7CC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818F9207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635F32053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015950;
-	bh=p7iUVenM+yNQ++dCCN//VeOqt5C6ZTQcLd/gzMH7Sns=;
+	s=default; t=1576015956;
+	bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYO2nZsiwg5zHQn2RFCcWlMCWxAaaK93yAATBrEfjfZ8dUQ/GFrbdubjF7DTbwkyO
-	 jucnywBYYkYiqMoSLPIAYC9l4QiT8ZUSN2/59TTsw4HzrZJuOeY2+2xI6L2dBuSFTG
-	 aBW60vVhCq7LGgqWpLWZt0l3/mw29WqsY0SGQFs0=
+	b=jslWpix6MYsblK/8EneLUI5/+Bqk289lKUY4324Bi2WCoOWjQvHjBor+3Ra4Z3Eq7
+	 +5RQ8Kr7WOIs1RasY5q4zSrffeUekv55iOVcm830oTTz9tCw37v1bYcMo6ZBU1JGTG
+	 ycN6TqMM5DuHzYOX554DelQo2nV8ZGfbBF1PEm3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfLJWDg (ORCPT
+        id S1728353AbfLJWMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:12:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727565AbfLJWD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:26 -0500
+        id S1727938AbfLJWDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C502053B;
-        Tue, 10 Dec 2019 22:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B730924656;
+        Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015405;
-        bh=p7iUVenM+yNQ++dCCN//VeOqt5C6ZTQcLd/gzMH7Sns=;
+        s=default; t=1576015416;
+        bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNofXOAfhVK/Q8by02fxvb0SXE2yoZ4NyldexpKTpEa698qCj7nZNL+S3kd7ey4OV
-         d7ou/fvdgC4l5ryUrUCYcZrt2WfBL0j6ktr5h+LfyHlFGCdQZZ74c3zrYN1Jh7FF3C
-         rRi6SM9Ishy7LQLU+Nt5QmPfCG9sqMW1jEUGz2Z4=
+        b=odwSSbibh44UqmSM7LDhB+xuejV4XGCfBaH2qpRsxYZisrGEwwGFeh7DjapwdE5g0
+         p279bl2bQGXyf53YCdxM2zSZJd0Rv5Hn//2E6FpI6ZDp+vWBQtKHO/CU4kGPx62+Yi
+         FzvqemG0qEJ7Lg14enDwJ98049CZXQJrkf7nJVCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Greear <greearb@candelatech.com>,
-        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 020/130] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
-Date:   Tue, 10 Dec 2019 17:01:11 -0500
-Message-Id: <20191210220301.13262-20-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 029/130] samples: pktgen: fix proc_cmd command result check logic
+Date:   Tue, 10 Dec 2019 17:01:20 -0500
+Message-Id: <20191210220301.13262-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,118 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
+[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
 
-Offchannel management frames were failing:
+Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
+'pg_set'. proc_cmd is designed to check command result with grep the
+"Result:", but this might fail since this string is only shown in
+'pg_thread' and 'pg_set'.
 
-[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
-[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+This commit fixes this logic by grep-ing the "Result:" string only when
+the command is not for 'pg_ctrl'.
 
-This bug appears to have been added between 4.0 (which works for us),
-and 4.4, which does not work.
+For clarity of an execution flow, 'errexit' flag has been set.
 
-I think this is because the tx-offchannel logic gets in a loop when
-ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
-sent to the firmware for transmit.
+To cleanup pktgen on exit, trap has been added for EXIT signal.
 
-This patch fixes the problem on 4.9 for me, and now HS20 clients
-can work again with my firmware.
-
-Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
-
-Signed-off-by: Ben Greear <greearb@candelatech.com>
-Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
-[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ samples/pktgen/functions.sh | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index dff34448588f0..ea47ad4b2343b 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3627,7 +3627,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 			 struct ieee80211_vif *vif,
- 			 enum ath10k_hw_txrx_mode txmode,
- 			 enum ath10k_mac_tx_path txpath,
--			 struct sk_buff *skb)
-+			 struct sk_buff *skb, bool noque_offchan)
- {
- 	struct ieee80211_hw *hw = ar->hw;
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-@@ -3655,10 +3655,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 		}
- 	}
+diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
+index 205e4cde46012..065a7e296ee31 100644
+--- a/samples/pktgen/functions.sh
++++ b/samples/pktgen/functions.sh
+@@ -5,6 +5,8 @@
+ # Author: Jesper Dangaaard Brouer
+ # License: GPL
  
--	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
-+	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
- 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
--			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
--				   skb);
-+			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
-+				   skb, skb->len);
++set -o errexit
++
+ ## -- General shell logging cmds --
+ function err() {
+     local exitcode=$1
+@@ -58,6 +60,7 @@ function pg_set() {
+ function proc_cmd() {
+     local result
+     local proc_file=$1
++    local status=0
+     # after shift, the remaining args are contained in $@
+     shift
+     local proc_ctrl=${PROC_DIR}/$proc_file
+@@ -73,13 +76,13 @@ function proc_cmd() {
+ 	echo "cmd: $@ > $proc_ctrl"
+     fi
+     # Quoting of "$@" is important for space expansion
+-    echo "$@" > "$proc_ctrl"
+-    local status=$?
++    echo "$@" > "$proc_ctrl" || status=$?
  
- 			skb_queue_tail(&ar->offchan_tx_queue, skb);
- 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
-@@ -3720,8 +3720,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+-    result=$(grep "Result: OK:" $proc_ctrl)
+-    # Due to pgctrl, cannot use exit code $? from grep
+-    if [[ "$result" == "" ]]; then
+-	grep "Result:" $proc_ctrl >&2
++    if [[ "$proc_file" != "pgctrl" ]]; then
++        result=$(grep "Result: OK:" $proc_ctrl) || true
++        if [[ "$result" == "" ]]; then
++            grep "Result:" $proc_ctrl >&2
++        fi
+     fi
+     if (( $status != 0 )); then
+ 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
+@@ -105,6 +108,8 @@ function pgset() {
+     fi
+ }
  
- 		mutex_lock(&ar->conf_mutex);
++[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
++
+ ## -- General shell tricks --
  
--		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
--			   skb);
-+		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
-+			   skb, skb->len);
- 
- 		hdr = (struct ieee80211_hdr *)skb->data;
- 		peer_addr = ieee80211_get_DA(hdr);
-@@ -3767,7 +3767,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
- 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
- 
--		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
- 		if (ret) {
- 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
- 				    ret);
-@@ -3777,8 +3777,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		time_left =
- 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
- 		if (time_left == 0)
--			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
--				    skb);
-+			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
-+				    skb, skb->len);
- 
- 		if (!peer && tmp_peer_created) {
- 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
-@@ -3957,7 +3957,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (unlikely(ret)) {
- 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
- 
-@@ -4239,7 +4239,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
- 		if (is_htt) {
+ function root_check_run_with_sudo() {
 -- 
 2.20.1
 
