@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C784DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B27C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9074E2465C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25EB2465C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011900;
-	bh=6Ap/4dLrJtbhgDZjWBk601+fL/rDqhvc0pmlWurQAGU=;
+	s=default; t=1576011903;
+	bh=OnbJqA0+frurLx+b+snX4US2vZhw+RxCrJhg7CIcF2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RBiGEnuNs+R6heJcp3swMLqOda7Iz7kWMLz79Lb6Jc1LXbJukiVBG4+u4qHJDCWXN
-	 FJkPAly14BJB8acYQa3LKsR7a0qzg03d+EkKkrrsEXd8PmPySVSU72HVoet9BNW2UM
-	 Q0GVF8TQYwJdMA8kwdxL2n7ed+2OHWYlXqpH2t+s=
+	b=kzlcGfk/dI2ua0wj/2wJlhxlJ7ki8+iR8T1DiGaHb+Cyt/Ip/LgsxztsiFrKz0P+b
+	 OkcPI78zp80L9jQazVB3PEd+Y/RbPnAocQgzNM0gd4EkKEki0NyYAaNsDP9j7iZp1v
+	 +rcmBrB5X5KKdXdypx+pa45mlVNnrb4SnE5QbMYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfLJVE7 (ORCPT
+        id S1727591AbfLJVEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfLJVEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:50 -0500
+        id S1727499AbfLJVEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E48D24681;
-        Tue, 10 Dec 2019 21:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29532468A;
+        Tue, 10 Dec 2019 21:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011890;
-        bh=6Ap/4dLrJtbhgDZjWBk601+fL/rDqhvc0pmlWurQAGU=;
+        s=default; t=1576011884;
+        bh=OnbJqA0+frurLx+b+snX4US2vZhw+RxCrJhg7CIcF2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOyS89ElagNQGSu42plTzFStjAoaqFVNSjnWNgzXnsPrT1ZHR+zvLcAuU6A3Ppywu
-         iIgXX+HEtO42QoKbf2UuAlZPKUvetg5pUKOr1jRPdUmtX7S6kMxcmD32OT5Zi7VP/0
-         J6GoeS5emywo8MLFNXJAd6KwVoYZEAdSAhA9rPuc=
+        b=YGH0r0roU+BMV17w7ah5yIiDmRVV9xNK+w4oijGgHq7Y8mHrArMTa/0Lhu8jmBS7q
+         SGewc1MyO3+uEK3fxY+IZT427yjDOW4lOTB9a792FrytVhe6FcKPJQNK4WiK1lDnwh
+         0GgLWl9kNpuFudWxd8M9lx2tenggMJskmi8Y43qs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 040/350] media: ov6650: Fix control handler not freed on init error
-Date:   Tue, 10 Dec 2019 15:58:52 -0500
-Message-Id: <20191210210402.8367-40-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 035/350] media: cedrus: fill in bus_info for media device
+Date:   Tue, 10 Dec 2019 15:58:47 -0500
+Message-Id: <20191210210402.8367-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -60,54 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit c404af950d14b71bfbf574a752b6c29d726baaba ]
+[ Upstream commit ae0688f659adb17ae6ae5710c886b20b5406e5c4 ]
 
-Since commit afd9690c72c3 ("[media] ov6650: convert to the control
-framework"), if an error occurs during initialization of a control
-handler, resources possibly allocated to the handler are not freed
-before device initialiaton is aborted.  Fix it.
+Fixes this compliance warning:
 
-Fixes: afd9690c72c3 ("[media] ov6650: convert to the control framework")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+$ v4l2-compliance -m0
+v4l2-compliance SHA: b514d615166bdc0901a4c71261b87db31e89f464, 32 bits
+
+Compliance test for cedrus device /dev/media0:
+
+Media Driver Info:
+        Driver name      : cedrus
+        Model            : cedrus
+        Serial           :
+        Bus info         :
+        Media version    : 5.3.0
+        Hardware revision: 0x00000000 (0)
+        Driver version   : 5.3.0
+
+Required ioctls:
+                warn: v4l2-test-media.cpp(51): empty bus_info
+        test MEDIA_IOC_DEVICE_INFO: OK
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 5b9af5e5b7f13..68776b0710f98 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -989,8 +989,10 @@ static int ov6650_probe(struct i2c_client *client,
- 			V4L2_CID_GAMMA, 0, 0xff, 1, 0x12);
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index 2d3ea8b74dfdc..3439f6ad63380 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -357,6 +357,8 @@ static int cedrus_probe(struct platform_device *pdev)
  
- 	priv->subdev.ctrl_handler = &priv->hdl;
--	if (priv->hdl.error)
--		return priv->hdl.error;
-+	if (priv->hdl.error) {
-+		ret = priv->hdl.error;
-+		goto ectlhdlfree;
-+	}
+ 	dev->mdev.dev = &pdev->dev;
+ 	strscpy(dev->mdev.model, CEDRUS_NAME, sizeof(dev->mdev.model));
++	strscpy(dev->mdev.bus_info, "platform:" CEDRUS_NAME,
++		sizeof(dev->mdev.bus_info));
  
- 	v4l2_ctrl_auto_cluster(2, &priv->autogain, 0, true);
- 	v4l2_ctrl_auto_cluster(3, &priv->autowb, 0, true);
-@@ -1008,8 +1010,10 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->subdev.internal_ops = &ov6650_internal_ops;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
--	if (ret)
--		v4l2_ctrl_handler_free(&priv->hdl);
-+	if (!ret)
-+		return 0;
-+ectlhdlfree:
-+	v4l2_ctrl_handler_free(&priv->hdl);
- 
- 	return ret;
- }
+ 	media_device_init(&dev->mdev);
+ 	dev->mdev.ops = &cedrus_m2m_media_ops;
 -- 
 2.20.1
 
