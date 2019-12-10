@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6A7C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46226C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A3C24653
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1502A20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013948;
-	bh=xEAc7HLdWgO+KvK1nIaZqJ+Be08WFhN2JT1q4Rv+86U=;
+	s=default; t=1576013953;
+	bh=W+MCgi8gWmKuX1hkzI5Fp8rT7VdolDvphHPJra1QdFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WP1oedSAkvQc9ZFZZM6WHScfJq0yUQODJA2q5wCd9XDOwN35c577DXFKS4UeJHL9L
-	 cXi/DsTVQKovLsFNTo+/pMGkPRycTVHJrLUkd0II2nwh0OXV3/tIZktkdyY+locPD9
-	 EahsvFPA6vFeruksz6fKabRQc+ueWCZn9IbCQoOs=
+	b=AmzsYix0/4O3AgesIXPNyNK7DTQCAWOA8DbRlO5/C2nA2aCxLjDeHHGoBz7vptR2x
+	 7rFAUkJXQrVorGtbF7gkkkiM9HTGkZN5DDxxC5Ll5eKJhqYdtii1iJc74DrkWQqMG7
+	 hxXsKKhotmnk66rqhdoqtUfreAx7/iTyilB95sfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfLJVfH (ORCPT
+        id S1728460AbfLJVjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40320 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:39:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730116AbfLJVew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:52 -0500
+        id S1727970AbfLJVfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9F57207FF;
-        Tue, 10 Dec 2019 21:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E95F3214AF;
+        Tue, 10 Dec 2019 21:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013691;
-        bh=xEAc7HLdWgO+KvK1nIaZqJ+Be08WFhN2JT1q4Rv+86U=;
+        s=default; t=1576013705;
+        bh=W+MCgi8gWmKuX1hkzI5Fp8rT7VdolDvphHPJra1QdFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgwVtC8msPQA2DjZx1o9cJchpskjj9oGjHXtNFEhXnnPARqsPkzk1HO/1pcExqnOe
-         NSvedfxqTdAj+punWWb+oJdXXDcuklabFcYxgueEwBLm8SiSto7ZVzc6zsOB51buPR
-         rOlUBu1CAriMhoLAKdpM8WrfPiCgY0rPiXC8ONVc=
+        b=kfEUqvaTUGxVKgZRHhv/JYyPhliOqh7WVTvD4gIdwp1ldkp3RLH1xpdlxJ06/1LXy
+         klL1b42Nj/1d820Ip8DjxyOMWaMZlHSh8Eo9DOl3q7WHEWfJsIykGZHfB9gnVEVxVe
+         CMFn7pJyoDXDk+s33JXSPm9k4xATdbzmzUF/UWoA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 122/177] perf probe: Skip overlapped location on searching variables
-Date:   Tue, 10 Dec 2019 16:31:26 -0500
-Message-Id: <20191210213221.11921-122-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 134/177] EDAC/ghes: Fix grain calculation
+Date:   Tue, 10 Dec 2019 16:31:38 -0500
+Message-Id: <20191210213221.11921-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,102 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
+[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
 
-Since debuginfo__find_probes() callback function can be called with  the
-location which already passed, the callback function must filter out
-such overlapped locations.
+The current code to convert a physical address mask to a grain
+(defined as granularity in bytes) is:
 
-add_probe_trace_event() has already done it by commit 1a375ae7659a
-("perf probe: Skip same probe address for a given line"), but
-add_available_vars() doesn't. Thus perf probe -v shows same address
-repeatedly as below:
+	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
 
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
+This is broken in several ways:
 
-With this fix, perf probe -V shows it correctly:
+1) It calculates to wrong grain values. E.g., a physical address mask
+of ~0xfff should give a grain of 0x1000. Without considering
+PAGE_MASK, there is an off-by-one. Things are worse when also
+filtering it with ~PAGE_MASK. This will calculate to a grain with the
+upper bits set. In the example it even calculates to ~0.
 
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
+2) The grain does not depend on and is unrelated to the kernel's
+page-size. The page-size only matters when unmapping memory in
+memory_failure(). Smaller grains are wrongly rounded up to the
+page-size, on architectures with a configurable page-size (e.g. arm64)
+this could round up to the even bigger page-size of the hypervisor.
 
-Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fix this with:
+
+	e->grain = ~mem_err->physical_addr_mask + 1;
+
+The grain_bits are defined as:
+
+	grain = 1 << grain_bits;
+
+Change also the grain_bits calculation accordingly, it is the same
+formula as in edac_mc.c now and the code can be unified.
+
+The value in ->physical_addr_mask coming from firmware is assumed to
+be contiguous, but this is not sanity-checked. However, in case the
+mask is non-contiguous, a conversion to grain_bits effectively
+converts the grain bit mask to a power of 2 by rounding it up.
+
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/edac/ghes_edac.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 64d4837c8f821..946b027b45e8a 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1414,6 +1414,18 @@ static int collect_variables_cb(Dwarf_Die *die_mem, void *data)
- 	return DIE_FIND_CB_END;
- }
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 574bce603337f..78c339da19b56 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -210,6 +210,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	/* Cleans the error report buffer */
+ 	memset(e, 0, sizeof (*e));
+ 	e->error_count = 1;
++	e->grain = 1;
+ 	strcpy(e->label, "unknown label");
+ 	e->msg = pvt->msg;
+ 	e->other_detail = pvt->other_detail;
+@@ -305,7 +306,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
  
-+static bool available_var_finder_overlap(struct available_var_finder *af)
-+{
-+	int i;
-+
-+	for (i = 0; i < af->nvls; i++) {
-+		if (af->pf.addr == af->vls[i].point.address)
-+			return true;
-+	}
-+	return false;
-+
-+}
-+
- /* Add a found vars into available variables list */
- static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- {
-@@ -1424,6 +1436,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	Dwarf_Die die_mem;
- 	int ret;
+ 	/* Error grain */
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+-		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
++		e->grain = ~mem_err->physical_addr_mask + 1;
  
-+	/*
-+	 * For some reason (e.g. different column assigned to same address),
-+	 * this callback can be called with the address which already passed.
-+	 * Ignore it first.
-+	 */
-+	if (available_var_finder_overlap(af))
-+		return 0;
+ 	/* Memory error location, mapped on e->location */
+ 	p = e->location;
+@@ -412,8 +413,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) = '\0';
+ 
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
 +
- 	/* Check number of tevs */
- 	if (af->nvls == af->max_vls) {
- 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
++	grain_bits = fls_long(e->grain - 1);
++
+ 	/* Generate the trace event */
+-	grain_bits = fls_long(e->grain);
+ 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+ 		 "APEI location: %s %s", e->location, e->other_detail);
+ 	trace_mc_event(type, e->msg, e->label, e->error_count,
 -- 
 2.20.1
 
