@@ -2,155 +2,93 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCD6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA2AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EDB20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5092073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfLJCwh (ORCPT
+        id S1726841AbfLJCxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:52:37 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23954 "EHLO mga18.intel.com"
+        Mon, 9 Dec 2019 21:53:10 -0500
+Received: from mga07.intel.com ([134.134.136.100]:58345 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbfLJCwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:52:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726683AbfLJCxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:53:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 18:52:36 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 18:53:09 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,297,1571727600"; 
-   d="scan'208";a="244684538"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 18:52:34 -0800
-Date:   Mon, 9 Dec 2019 21:44:23 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [RFC PATCH 1/9] vfio/pci: introduce mediate ops to intercept
- vfio-pci ops
-Message-ID: <20191210024422.GA27331@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20191205032419.29606-1-yan.y.zhao@intel.com>
- <20191205032536.29653-1-yan.y.zhao@intel.com>
- <20191205165519.106bd210@x1.home>
- <20191206075655.GG31791@joy-OptiPlex-7040>
- <20191206142226.2698a2be@x1.home>
- <20191209034225.GK31791@joy-OptiPlex-7040>
- <20191209170339.2cb3d06e@x1.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209170339.2cb3d06e@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+   d="scan'208";a="203045358"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga007.jf.intel.com with ESMTP; 09 Dec 2019 18:53:06 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v7 0/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date:   Tue, 10 Dec 2019 10:52:59 +0800
+Message-Id: <20191210025301.29551-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > Currently, yes, i40e has build dependency on vfio-pci.
-> > > > It's like this, if i40e decides to support SRIOV and compiles in vf
-> > > > related code who depends on vfio-pci, it will also have build dependency
-> > > > on vfio-pci. isn't it natural?  
-> > > 
-> > > No, this is not natural.  There are certainly i40e VF use cases that
-> > > have no interest in vfio and having dependencies between the two
-> > > modules is unacceptable.  I think you probably want to modularize the
-> > > i40e vfio support code and then perhaps register a table in vfio-pci
-> > > that the vfio-pci code can perform a module request when using a
-> > > compatible device.  Just and idea, there might be better options.  I
-> > > will not accept a solution that requires unloading the i40e driver in
-> > > order to unload the vfio-pci driver.  It's inconvenient with just one
-> > > NIC driver, imagine how poorly that scales.
-> > >   
-> > what about this way:
-> > mediate driver registers a module notifier and every time when
-> > vfio_pci is loaded, register to vfio_pci its mediate ops?
-> > (Just like in below sample code)
-> > This way vfio-pci is free to unload and this registering only gives
-> > vfio-pci a name of what module to request.
-> > After that,
-> > in vfio_pci_open(), vfio-pci requests the mediate driver. (or puts
-> > the mediate driver when mediate driver does not support mediating the
-> > device)
-> > in vfio_pci_release(), vfio-pci puts the mediate driver.
-> > 
-> > static void register_mediate_ops(void)
-> > {
-> >         int (*func)(struct vfio_pci_mediate_ops *ops) = NULL;
-> > 
-> >         func = symbol_get(vfio_pci_register_mediate_ops);
-> > 
-> >         if (func) {
-> >                 func(&igd_dt_ops);
-> >                 symbol_put(vfio_pci_register_mediate_ops);
-> >         }
-> > }
-> > 
-> > static int igd_module_notify(struct notifier_block *self,
-> >                               unsigned long val, void *data)
-> > {
-> >         struct module *mod = data;
-> >         int ret = 0;
-> > 
-> >         switch (val) {
-> >         case MODULE_STATE_LIVE:
-> >                 if (!strcmp(mod->name, "vfio_pci"))
-> >                         register_mediate_ops();
-> >                 break;
-> >         case MODULE_STATE_GOING:
-> >                 break;
-> >         default:
-> >                 break;
-> >         }
-> >         return ret;
-> > }
-> > 
-> > static struct notifier_block igd_module_nb = {
-> >         .notifier_call = igd_module_notify,
-> >         .priority = 0,
-> > };
-> > 
-> > 
-> > 
-> > static int __init igd_dt_init(void)
-> > {
-> > 	...
-> > 	register_mediate_ops();
-> > 	register_module_notifier(&igd_module_nb);
-> > 	...
-> > 	return 0;
-> > }
-> 
-> 
-> No, this is bad.  Please look at MODULE_ALIAS() and request_module() as
-> used in the vfio-platform for loading reset driver modules.  I think
-> the correct approach is that vfio-pci should perform a request_module()
-> based on the device being probed.  Having the mediation provider
-> listening for vfio-pci and registering itself regardless of whether we
-> intend to use it assumes that we will want to use it and assumes that
-> the mediation provider module is already loaded.  We should be able to
-> support demand loading of modules that may serve no other purpose than
-> providing this mediation.  Thanks,
-hi Alex
-Thanks for this message.
-So is it good to create a separate module as mediation provider driver,
-and alias its module name to "vfio-pci-mediate-vid-did".
-Then when vfio-pci probes the device, it requests module of that name ?
+Add eMMC-PHY support for Intel LGM SoC
 
-Thanks
-Yan
+changes in v7:
+ Rebased to maintainer kernel tree phy-tag-5.5
+
+changes in v6:
+   - cobined comaptible strings
+   - added as contiguous and can be a single entry for reg properties
+changes in v5:
+   - earlier Review-by tag given by Rob
+   - rework done with syscon parent node.
+
+ changes in v4:
+   - As per Rob's review: validate 5.2 and 5.3
+   - drop unrelated items.
+
+ changes in v3:
+   - resolve 'make dt_binding_check' warnings
+
+ changes in v2:
+   As per Rob Herring review comments, the following updates
+  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+  - filename is the compatible string plus .yaml
+  - LGM: Lightning Mountain
+  - update maintainer
+  - add intel,syscon under property list
+  - keep one example instead of two
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+  phy: intel-lgm-emmc: Add support for eMMC PHY
+
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           |  62 +++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/intel/Kconfig                          |   9 +
+ drivers/phy/intel/Makefile                         |   2 +
+ drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+ 6 files changed, 358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/Kconfig
+ create mode 100644 drivers/phy/intel/Makefile
+ create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+
+-- 
+2.11.0
+
