@@ -2,104 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92519C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C622EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5930A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575984100;
-	bh=8P87T1yHgfauLuw8yUb0MnPXfIUFnN3hoj5S+HXjXIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wVz+CpbSYfIu69zl/m3/vcmno75JTfBh49Iik3wb/p4UrW+G05IUEzDnD9L0ZjaC4
-	 UbgoFBMArWOQ0pleeKKsXUXaujPI7ZtfUL2gQ2mxDsqn8NDL5DD7yzh9SETJXEzDfp
-	 +U03aCC1/EbmGgm/WUnNcz9DbDgwIweM69Q3LOVU=
+	by mail.kernel.org (Postfix) with ESMTP id 983022073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6zlGdOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfLJNVj (ORCPT
+        id S1727345AbfLJNX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:21:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:43912 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbfLJNVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:21:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 378ED328;
-        Tue, 10 Dec 2019 05:21:38 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB59F3F52E;
-        Tue, 10 Dec 2019 05:21:37 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:21:36 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] regulator: max77650: add of_match table
-Message-ID: <20191210132136.GG6110@sirena.org.uk>
-References: <20191210100725.11005-1-brgl@bgdev.pl>
- <20191210121227.GB6110@sirena.org.uk>
- <CAMRc=MftOnQVAUjOz=UGV-S2HKPpiucQp98xYTdxgt7d8obCMg@mail.gmail.com>
- <20191210130244.GE6110@sirena.org.uk>
- <CAMRc=MenTgffszv4NsbCKRhH0TcRPSTLbeP3BttW9fmFBjLdCA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QWpDgw58+k1mSFBj"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MenTgffszv4NsbCKRhH0TcRPSTLbeP3BttW9fmFBjLdCA@mail.gmail.com>
-X-Cookie: We have ears, earther...FOUR OF THEM!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Dec 2019 08:23:27 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37086 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfLJNX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:23:27 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so20165112wru.4;
+        Tue, 10 Dec 2019 05:23:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cBnDmOd1oyAwvS/dO5tRG/7xWRMnlpmBTWuorHo1pdg=;
+        b=S6zlGdOf2taVM7tSfma9ybnx61nuzOAp7XkqvWLHCdLaJBnwwh/xBFqv/dJLT2b286
+         dqAaJj7OTDZHfBJmnAXED9wMc2a5Q86Lau/qG6OAb38OPkgKAuDfmQ86j0cCTZ6XQQgt
+         iz2ZkJSeGLBRXbJkueaNlHreuiLIq36eq6erjWu2iax4mAyINQo9/Wn5/XXtCAOrDWsE
+         Pl+POaPn5FFf7+7jbxvieygirsduRn5HR8iOl7xl+7D41Y5Hq1kxEZkAeBi5Brb2VvLz
+         KEJdIE0npUn8ltDsO7IDNZKOpKeGyeJUh2C5bNJHYBRl8Lbm/Mxa2YYUZZ8s93FxX4+N
+         Fl3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cBnDmOd1oyAwvS/dO5tRG/7xWRMnlpmBTWuorHo1pdg=;
+        b=KZmaLUs5ZiJkRvuOx1VUcDbLzXnnYolgYcUpHjgh+YLs4SCAFXBoLDNfRZsDo2ugqC
+         D4dCWTekBa6qW6Urc1zpbVq9dMI9zpVE1FeX8sfapBbDFLytI6WXB8TNAf9sXKIB7XCl
+         ctTVx6H4M4SNdcE8tNI4U12itf8d8F8ANuAKmTlL44lh2iLNjjywzq+kugaVceH/8DvE
+         OIcWn1Z8fRau2htFcJTKIv1qEyLl/XActv1a2mlbwXd/jtohASnGvP0lfKYYgbFQgNba
+         cIAygq0bWYj8J8VA+tptQ1TFBpt5kys7OlPo6aEs2xh7GAo7ptVfXVIFpXkuDKdzDJ5e
+         u/kw==
+X-Gm-Message-State: APjAAAXU0ZrF0tCIL/L4FE8FaoEzh3ZHqjsZRf6BpsN1iFT+ESmxTxgO
+        E9S9xCopdjMeIoDEUfz48tZxrMyVMQ8=
+X-Google-Smtp-Source: APXvYqzK2JasnRBelbXspNc6ewhYIQKQQzH4s2L6GUsgHLkz3gIP7kiOBBpxBAXF2wVXbsdxtQ32uQ==
+X-Received: by 2002:a5d:558d:: with SMTP id i13mr189956wrv.364.1575984204569;
+        Tue, 10 Dec 2019 05:23:24 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id s82sm3101680wms.28.2019.12.10.05.23.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 05:23:24 -0800 (PST)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v3 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
+Date:   Tue, 10 Dec 2019 08:21:19 -0500
+Message-Id: <20191210132132.41509-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset contains various updates to the Broadcom STB USB Driver.
+The updates include:
+- Add support for 7216 and 7211 Broadcom SoCs which use the new
+  Synopsis USB Controller.
+- Add support for USB Wake
+- Add various bug fixes.
 
---QWpDgw58+k1mSFBj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v3 - Rebase to v5.5-rc1
 
-On Tue, Dec 10, 2019 at 02:10:15PM +0100, Bartosz Golaszewski wrote:
-> wt., 10 gru 2019 o 14:02 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+v2 - Changes based on review feedback
+- Add vendor prefix to DT property "syscon-piarbctl"
+- Use standard "wakeup" instead of "wake" for DT "interrupt-names"
 
-> > This seems to work fine for other drivers and the platform bus has to be
-> > usable on systems that don't use DT so that doesn't sound right.  Which
-> > MODULE_ALIAS() are you using exactly?
+Al Cooper (13):
+  phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+  phy: usb: Get all drivers that use USB clks using correct
+    enable/disable
+  phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
+  phy: usb: Add "wake on" functionality
+  phy: usb: Restructure in preparation for adding 7216 USB support
+  dt-bindings: Add Broadcom STB USB PHY binding document
+  phy: usb: Add support for new Synopsis USB controller on the 7216
+  phy: usb: Add support for new Synopsis USB controller on the 7211b0
+  phy: usb: fix driver to defer on clk_get defer
+  phy: usb: PHY's MDIO registers not accessible without device installed
+  phy: usb: bdc: Fix occasional failure with BDC on 7211
+  phy: usb: USB driver is crashing during S3 resume on 7216
+  phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
 
-> MODULE_ALIAS("platform:max77650-regulator");
+ .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
+ drivers/phy/broadcom/Makefile                 |   2 +-
+ .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 414 ++++++++++++++++++
+ drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
+ drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
+ drivers/phy/broadcom/phy-brcm-usb.c           | 269 ++++++++++--
+ 6 files changed, 943 insertions(+), 185 deletions(-)
+ create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
 
-Huh, that should work...  I wonder if adding a compatible to the DT has
-messed it up, does it work without the compatible in the .dts (and with
-the of_compatible removed from the MFD driver I guess)?
+-- 
+2.17.1
 
-> > > Besides: the DT bindings define the compatible for sub-nodes already.
-> > > We should probably conform to that.
-
-> > I would say that's a mistake and should be fixed, this particular way of
-> > loading the regulators is a Linux implementation detail.
-
-> Fixed by removing this from the bindings?
-
-Yeah.  Though it may be too late, shame I didn't catch this when it was
-merged :(
-
---QWpDgw58+k1mSFBj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vm98ACgkQJNaLcl1U
-h9Cafwf/a3oxPbhu5Pta4vakVb1PxMAJdTKejo/JdqsYMWi/ZQTBNNH/FfInbp7T
-D2zcDVZP/TNsmiEfpU2jPdKWjViPodD7lMFRqt+poeHmGDIqKBfO+MfQY8nZI5MH
-N5WA+PCYhePQeF0imK/9MnPfFigZwIPNWmyrY+S4hzqdmO4sMl0aSJ2YrR/o64sa
-Nu1qE8ALJ6S8anzLHm4X1iO3HGbpNHfEceZ4Ddr3UwWra4YpLNWLwoPGKX8XwN+V
-QqU6wPmbBsXhtlVSWBzoNhy0m6/1ZXswhnTE36MGLER5OtZg4/XTngVn3CrAZyDi
-MLjacZOLe5NREbuFhWuB0cgRlbFI+g==
-=nIJk
------END PGP SIGNATURE-----
-
---QWpDgw58+k1mSFBj--
