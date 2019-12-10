@@ -2,97 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8755C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757E7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BAE2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575984727;
-	bh=5Kp7u4wjBjYIMAOigXKp0rSdPdVZYCQGCYAOXxbS8k0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X5FSwOl2IFmu/HaRr4n5u052i2+Zyf/4LirQB/TcEp5/gCydxAxkTc0Oi6ZaXjQTw
-	 LAC0lyN0zO6PsbouASYEILOcbgF26swTJ5SxIkrECHW6NRJOb12BQq89e7EqMbimRa
-	 nAnJNvhesck6zUcYI30LvGef9dU++CL/ElULM6H8=
+	by mail.kernel.org (Postfix) with ESMTP id 527292073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfLJNcG (ORCPT
+        id S1727426AbfLJNdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:32:06 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35973 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727359AbfLJNcG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:32:06 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so3220850wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:32:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sLGCAePB0WCD0CcHo22bI6VRtDcHK5yA0M15WiUs63E=;
-        b=NyLnWC7FEv3JAPTALUQHMnedFYNjVlqfxqiHSMdW24njP5oqfqd35r87kKscIYq6db
-         30C6H/1QzqZ6brnYOuo06U0fzm6/J2EuOinv+uQSbNXlyrRupJ7UkmAwFxA7qpbXgW7z
-         OPlvEOxwRyYfNs2d3GZx2nhkCHhwihz64gL8rYYHQ/MUWHyVY/xjn2s4shOTEhX9eWez
-         KKkMfFmWYuewovGLw6kEkSHR1ZV/6jtYlWuITjD0KMMSS++35Jbts2mAziNITlLFw/gn
-         2TNej7dtYZOtXKDRM7Lzd8YTv45VJmRuM4JjdlJ7Y1NXWIGIGAx8ZvK2GZ6UjxbMYWRK
-         sAaQ==
-X-Gm-Message-State: APjAAAUxWdZL6IAsup7pKOD+EuBqfbzOQHVLd/gR/YlMEWY6nKm8rMJ6
-        l7mMpXQw1XWRhkUdxmZf5fo=
-X-Google-Smtp-Source: APXvYqxxfs6esQxTNXX9Wje3aNo9nzgksPCuQs0crWNfohnjc19G+i78e4E90onkNlPTlF5uX75Rmg==
-X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr5137202wme.124.1575984724418;
-        Tue, 10 Dec 2019 05:32:04 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id n1sm3264821wrw.52.2019.12.10.05.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 05:32:03 -0800 (PST)
-Date:   Tue, 10 Dec 2019 14:32:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191210133202.GJ10404@dhcp22.suse.cz>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <20191210072453.GI2984@MiWiFi-R3L-srv>
- <20191210102834.GE10404@dhcp22.suse.cz>
- <20191210104303.GN2984@MiWiFi-R3L-srv>
- <20191210113341.GG10404@dhcp22.suse.cz>
- <20191210125557.GA28917@MiWiFi-R3L-srv>
+        Tue, 10 Dec 2019 08:33:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34860 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727159AbfLJNdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:33:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2B2D2B1C2;
+        Tue, 10 Dec 2019 13:33:08 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     Will Deacon <will@kernel.org>
+Cc:     Felix Schnizlein <fschnizlein@suse.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
+Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
+Date:   Tue, 10 Dec 2019 14:33:07 +0100
+Message-ID: <11195456.EmMzWPVPDU@skinner.arch.suse.de>
+In-Reply-To: <20191209173804.GD7489@willie-the-truck>
+References: <20191206162421.15050-1-trenn@suse.de> <25032400.G9DUGnJgnc@skinner.arch.suse.de> <20191209173804.GD7489@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210125557.GA28917@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 20:55:57, Baoquan He wrote:
-[...]
-> Btw, as you said at above, I am confused by the '[KNL,BOOT]', what does
-> the 'BOOT' mean in the documentation of 'mem='? I checked all parameters
-> with 'BOOT', still don't get it clearly.
+On Monday, December 9, 2019 6:38:05 PM CET Will Deacon wrote:
+> On Mon, Dec 09, 2019 at 12:28:44PM +0100, Thomas Renninger wrote:
+> > On Monday, December 9, 2019 11:31:11 AM CET Will Deacon wrote:
+> > > On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
+> > > > From: Felix Schnizlein <fschnizlein@suse.de>
+> > > > 
+> > > > Export all information from /proc/cpuinfo to sysfs:
+> > > > implementer, architecture, variant, part, revision,
+> > > > bogomips and flags are exported.
+> > > > 
+> > > > Example:
+> > > > /sys/devices/system/cpu/cpu1/info/:[0]# head *
+> > 
+> > ...
+> > 
+> > > > ==> flags <==
+> > > > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
+> > 
+> > ...
+> > 
+> > > I don't understand why we need this on arm64
 
-This is a good question indeed. I have checked closer and this is what
-documentation says
-Documentation/admin-guide/kernel-parameters.rst
-"
-        BOOT    Is a boot loader parameter.
+Again: proc is moving to sys.
+You probably export feature flags in /proc/cpuinfo for a good reason.
+So where in sysfs should this show up?
 
-Parameters denoted with BOOT are actually interpreted by the boot
-loader, and have no meaning to the kernel directly.
-"
+> Even if we exposed them via sysfs, existing
+> software will continue to grep them out of /proc/cpuinfo because it's more
+> reliable and new software would still be encouraged to use either the HWCAPs
+> directly or, even better, our CPUID (MRS) emulation.
 
-and that really doesn't fit, right? So I went to check the full history
-git tree just to get to 2.4.0-test5 and no explanation whatsoever.
-Fun, isn't it? ;)
--- 
-Michal Hocko
-SUSE Labs
+Ok, so /proc/cpuinfo
+Features:
+
+is deprecated on arm64. Is that correct?
+Then it would indeed not make sense to port it/anything to sys.
+ 
+It is this comment you are referring to:
+
+arch/arm64/kernel/cpuinfo.c
+                 * Dump out the common processor features in a single line.
+                 * Userspace should read the hwcaps with getauxval(AT_HWCAP)
+                 * rather than attempting to parse this, but there's a body of
+                 * software which does already (at least for 32-bit).
+
+Then let's shorten this.
+Sorry for keep digging/asking.
+
+Felix made this up rather neat, so that other archs can implement to expose 
+sysfs CPU info easy and consistent.
+While x86 also ported parts of cpuinfo, e.g. microcode version, most general
+info is still missing in sysfs.
+
+If I find the time, I may check for other archs like ppc64le or s390x to find
+data which still should show up in sysfs and could then be put in the same
+directory/file structure.
+
+ARM people may still want to make use of this at some point of time, if 
+appropriate. I'll drop patch 3/3.
+
+Thanks for explaining me the ARM details,
+
+   Thomas
+
+
