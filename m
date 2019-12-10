@@ -2,95 +2,62 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53729C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D66207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OHQtieOK"
+	by mail.kernel.org (Postfix) with ESMTP id 28297207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLJTaS (ORCPT
+        id S1726685AbfLJTbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:30:18 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45134 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfLJTaR (ORCPT
+        Tue, 10 Dec 2019 14:31:39 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47510 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfLJTbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:30:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Tw2JPIMYDsfgukvM8WXHM1nu5JQP5vubIup8mX2xa3Y=; b=OHQtieOKJ3KsSxH0XLa2EtTsh
-        XAnLaFDGOgNiQCq63QIcZzsCqoyHH0w0ataQ3lJhpbatDvRxXkLrFwL/6ycEWDG1V5dUNk1p+rbBx
-        RsHnzwKVc/XXESf1jD+CW2exZ3u5t3U5A/mxjfmN+ZM/GMa8zYBIN1oLTXlW+pHEY2ykRHxACV1G+
-        bfpGOMKesC5bHP/dr8uU4QVWUPHfvlSja7190Ge7YmC/iJJNGu3mM7KMSLwIe4Ezpz8mU8kvPgaFf
-        X/YQHWctWfaPlrTclyGn4vRJTXPbKpNacgsXe7mGLBIn5pyzi368hMnchEhtTcf+Qq4DZZFKsuE3e
-        Ud3Unr15g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ielD3-0002k5-Kt; Tue, 10 Dec 2019 19:30:14 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CC80F980D21; Tue, 10 Dec 2019 20:30:11 +0100 (CET)
-Date:   Tue, 10 Dec 2019 20:30:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-afs@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH] rxrpc: Mutexes are unusable from softirq context, so use
- rwsem instead
-Message-ID: <20191210193011.GA11802@worktop.programming.kicks-ass.net>
-References: <157599917879.6327.69195741890962065.stgit@warthog.procyon.org.uk>
- <20191210191009.GA11457@worktop.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210191009.GA11457@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Dec 2019 14:31:38 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 988E7146E9458;
+        Tue, 10 Dec 2019 11:31:37 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:31:37 -0800 (PST)
+Message-Id: <20191210.113137.707618060141184181.davem@davemloft.net>
+To:     mst@redhat.com
+Cc:     linux-kernel@vger.kernel.org, jcfaracco@gmail.com,
+        netdev@vger.kernel.org, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
+        hkallweit1@gmail.com, jakub.kicinski@netronome.com,
+        snelson@pensando.io, mhabets@solarflare.com
+Subject: Re: [PATCH net-next v10 1/3] netdev: pass the stuck queue to the
+ timeout handler
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191210130014.47179-2-mst@redhat.com>
+References: <20191210130014.47179-1-mst@redhat.com>
+        <20191210130014.47179-2-mst@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 11:31:38 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:10:09PM +0100, Peter Zijlstra wrote:
-> On Tue, Dec 10, 2019 at 05:32:58PM +0000, David Howells wrote:
-> > rxrpc_call::user_mutex is of type struct mutex, but it's required to start
-> > off locked on an incoming call as it is being set up in softirq context to
-> > prevent sendmsg and recvmsg interfering with it until it is ready.  It is
-> > then unlocked in rxrpc_input_packet() to make the call live.
-> > 
-> > Unfortunately, commit a0855d24fc22d49cdc25664fb224caee16998683
-> > ("locking/mutex: Complain upon mutex API misuse in IRQ contexts") causes
-> > big warnings to be splashed in dmesg for each a new call that comes in from
-> > the server.
-> > 
-> > It *seems* like it should be okay, since the accept path trylocks the mutex
-> > when no one else can see it and drops the mutex before it leaves softirq
-> > context.
-> > 
-> > Fix this by switching to using an rw_semaphore instead as that is permitted
-> > to be used in softirq context.
-> 
-> This really has the very same problem. It just avoids the WARN. We do PI
-> boosting for rwsem write side identical to what we do for mutexes.
-> 
-> I would rather we revert David's patch for now and more carefully
-> consider what to do about this.
 
-To clarify (I only just reliazed David is a bit ambiguous here), take
-this patch out for now:
+Michael, please provide a proper introductory posting for your patch series
+just like everyone else does.
 
-  a0855d24fc22 ("locking/mutex: Complain upon mutex API misuse in IRQ contexts")
+Not only does it help people understand at a high level what the patch
+series is doing, how it is doing it, and why it is doing it that way.  It
+also gives me a single email to reply to when I apply your patch series.
 
-The RXRPC code has been there for a while... and like I wrote, both
-mutex and rwsem have the exact same issue, the rwsem code just doesn't
-have a WARN on it.
+Therefore, please respin this properly.
+
+Thank you.
