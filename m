@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAD8C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C643205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730692464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013585;
-	bh=gzsRijTBLbGffTkr/3RSSwqpOYqXsGL36XWokYSnePQ=;
+	s=default; t=1576013587;
+	bh=PQnaO16yEfIOBCWFcGEaFc+ZV6bUgyC5DyPZ8fTgcfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7E5kL4EAOSWddMhG/3iIYG6cQpftdXmg+atE9bR/0sHQKrIj4+VIXZcwO9aUIDxi
-	 F6yAqt9DYT+9J0+xCgWaIPY9n/vBQdAWoQSQ+maHmIcVkcPrOCwKFv01l8ak6Vucen
-	 ejbCMSs/RrczN9pxaev2iETjE1Km9vJAJtw5pBvs=
+	b=qliJ4IU+TLdLsnCtSVByDkqYRN3C4FGfCEE9SIC+b03O392h7HUfsTeJZIuPMh6XP
+	 KTTf7dkK3Ex/sENYi8PkoD6LMEeFJ9EymQ6Y/DW9cD3o1Jr42moekE13ScDGfOyb7y
+	 xjD7KdozziLWtRswLfjN42jWyGymZ8LyweoIfV/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbfLJVdE (ORCPT
+        id S1729632AbfLJVdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:33:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:33:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfLJVc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:59 -0500
+        id S1729602AbfLJVdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B9E2464B;
-        Tue, 10 Dec 2019 21:32:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A05B22464;
+        Tue, 10 Dec 2019 21:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013579;
-        bh=gzsRijTBLbGffTkr/3RSSwqpOYqXsGL36XWokYSnePQ=;
+        s=default; t=1576013580;
+        bh=PQnaO16yEfIOBCWFcGEaFc+ZV6bUgyC5DyPZ8fTgcfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2CwiXpEi86yr9b+rRzh9i3okMyLIdog3J5LT830ma9aMsM7xuozg4mE0ZqjDH6Vzy
-         OnhtxYLbnKp9W+lmFUoOD2ufBXF+MkIJASw2lUTpv8LXaoc4GNrF6/9Rc5x4aSnZ7c
-         fkAwszoph/FPrgMUzP7nUm+Zjho63atC5zhwA/VM=
+        b=AbsD6pITO+xtsV8lol6CmPms4b9bUmbhjfW1u84fPRJDyuh6AF8DnvZSXHB341SYK
+         1nCAn8xW1/ffMHqFEu1EOylgu/KH+w524eC5msd7lnjOxwSBTLQTB/3vcYyAlLmnwo
+         9GmEz6kPjDraMO++f1gUVO/2si0924VU2yJ/AMcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        Sean Young <sean@mess.org>,
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 031/177] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
-Date:   Tue, 10 Dec 2019 16:29:55 -0500
-Message-Id: <20191210213221.11921-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 032/177] media: cec-funcs.h: add status_req checks
+Date:   Tue, 10 Dec 2019 16:29:56 -0500
+Message-Id: <20191210213221.11921-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,44 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
+[ Upstream commit 9b211f9c5a0b67afc435b86f75d78273b97db1c5 ]
 
-If usb_set_interface() failed, iface->cur_altsetting will
-not be assigned and it will be used in flexcop_usb_transfer_init()
-It may lead a NULL pointer dereference.
+The CEC_MSG_GIVE_DECK_STATUS and CEC_MSG_GIVE_TUNER_DEVICE_STATUS commands
+both have a status_req argument: ON, OFF, ONCE. If ON or ONCE, then the
+follower will reply with a STATUS message. Either once or whenever the
+status changes (status_req == ON).
 
-Check usb_set_interface() return value in flexcop_usb_init()
-and return failed to avoid using this NULL pointer.
+If status_req == OFF, then it will stop sending continuous status updates,
+but the follower will *not* send a STATUS message in that case.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Sean Young <sean@mess.org>
+This means that if status_req == OFF, then msg->reply should be 0 as well
+since no reply is expected in that case.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ include/uapi/linux/cec-funcs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
-index ac4fddfd0a43f..f1807c16438dd 100644
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -503,7 +503,13 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
- static int flexcop_usb_init(struct flexcop_usb *fc_usb)
- {
- 	/* use the alternate setting with the larges buffer */
--	usb_set_interface(fc_usb->udev,0,1);
-+	int ret = usb_set_interface(fc_usb->udev, 0, 1);
-+
-+	if (ret) {
-+		err("set interface failed.");
-+		return ret;
-+	}
-+
- 	switch (fc_usb->udev->speed) {
- 	case USB_SPEED_LOW:
- 		err("cannot handle USB speed because it is too slow.");
+diff --git a/include/uapi/linux/cec-funcs.h b/include/uapi/linux/cec-funcs.h
+index 8997d5068c085..4511b85c84dfc 100644
+--- a/include/uapi/linux/cec-funcs.h
++++ b/include/uapi/linux/cec-funcs.h
+@@ -923,7 +923,8 @@ static inline void cec_msg_give_deck_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_DECK_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_DECK_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_DECK_STATUS : 0;
+ }
+ 
+ static inline void cec_ops_give_deck_status(const struct cec_msg *msg,
+@@ -1027,7 +1028,8 @@ static inline void cec_msg_give_tuner_device_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_TUNER_DEVICE_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_TUNER_DEVICE_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_TUNER_DEVICE_STATUS : 0;
+ }
+ 
+ static inline void cec_ops_give_tuner_device_status(const struct cec_msg *msg,
 -- 
 2.20.1
 
