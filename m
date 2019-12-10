@@ -2,138 +2,143 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D5BC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DF4C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E2E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017810;
-	bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imIGaQUbGyEy+5fF5ukFIrSkl8D+T9+7PQQIMzPjVUbYO8jzFHP5SWa+SMkyszNGX
-	 sJcYW6tXubd5AePg/WygEtBWwVbTppuFs5oeQCNH0xM9aQDif8h/QXttnf6ME40rSe
-	 AkATHqsST0uUA8TFtZ0oCZcJF0NafbvQ8uabFrjc=
+	by mail.kernel.org (Postfix) with ESMTP id CF0BA2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfLJWbG (ORCPT
+        id S1729173AbfLJWnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbfLJWbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:02 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B58520836;
-        Tue, 10 Dec 2019 22:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017062;
-        bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MA5DD2uXW2FbhLPJ+IxjD8C/jUHmWPN6tkf1KLWiozOoTjir/AapGdFlxF4DgxVZ2
-         k8G7tNU+2/eIjKO2Rpa1tDX4qdCZAWfUNWDxeq6pwdHbdVqkFXdQoDgqzqKZ7bJMJN
-         7zB0WL9QnfodgPdVOtYrPrG3Kx17KqrAASUz+JEQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 22/91] samples: pktgen: fix proc_cmd command result check logic
-Date:   Tue, 10 Dec 2019 17:29:26 -0500
-Message-Id: <20191210223035.14270-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 17:43:37 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39800 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728691AbfLJWnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:43:35 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbace020939
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:34 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtfbwk7da-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:34 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 10 Dec 2019 22:43:31 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 22:43:28 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMhRWD44826810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 22:43:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26DD24C06F;
+        Tue, 10 Dec 2019 22:43:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E7D94C066;
+        Tue, 10 Dec 2019 22:43:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.214.111])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Dec 2019 22:43:25 +0000 (GMT)
+Subject: Re: [PATCH v10 5/6] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Tue, 10 Dec 2019 17:43:25 -0500
+In-Reply-To: <20191204224131.3384-6-nramas@linux.microsoft.com>
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+         <20191204224131.3384-6-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121022-0008-0000-0000-0000033F9B18
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121022-0009-0000-0000-00004A5ECDF0
+Message-Id: <1576017805.4579.44.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 1525a28fd705..5db990c8b02d 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -356,6 +357,51 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+>  	return NOTIFY_OK;
+>  }
+>  
+> +/**
+> + * ima_match_keyring - determine whether the keyring matches the measure rule
+> + * @rule: a pointer to a rule
+> + * @keyring: name of the keyring to match against the measure rule
+> + * @cred: a pointer to a credentials structure for user validation
+> + *
+> + * Returns true if keyring matches one in the rule, false otherwise.
+> + */
+> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+> +			      const char *keyring, const struct cred *cred)
+> +{
+> +	char *keyrings, *next_keyring, *keyrings_ptr;
+> +	bool matched = false;
+> +
+> +	/* If "keyrings=" is not specified all keys are measured. */
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+With the addiitonal "uid" support this isn't necessarily true any
+more.
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+Mimi
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
-
-For clarity of an execution flow, 'errexit' flag has been set.
-
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index 205e4cde46012..065a7e296ee31 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
- 
-+set -o errexit
-+
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
- 
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
- 
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
-+
- ## -- General shell tricks --
- 
- function root_check_run_with_sudo() {
--- 
-2.20.1
+> +	if (!rule->keyrings)
+> +		return true;
+> +
+> +	if (!keyring)
+> +		return false;
+> +
+> +	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
+> +		return false;
+> +
+> +	keyrings = kstrdup(rule->keyrings, GFP_KERNEL);
+> +	if (!keyrings)
+> +		return false;
+> +
+> +	/*
+> +	 * "keyrings=" is specified in the policy in the format below:
+> +	 * keyrings=.builtin_trusted_keys|.ima|.evm
+> +	 */
+> +	keyrings_ptr = keyrings;
+> +	while ((next_keyring = strsep(&keyrings_ptr, "|")) != NULL) {
+> +		if (!strcmp(next_keyring, keyring)) {
+> +			matched = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	kfree(keyrings);
+> +
+> +	return matched;
+> +}
+> +
 
