@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE66C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6462820838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D77222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015409;
-	bh=uBeKrTh12ypekGU746QAp3NU+4SENXWC93Ns4MRKafE=;
+	s=default; t=1576015412;
+	bh=NvJ0w1npQFSuUb/ujRWcNHg1Z74Zo0uTyOuuTQy93ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJgPPC1utcW+/9znWvN8S1LK+64LUGFqOzp5fI4RfbG2uS1Throymy7iiN4/toNJb
-	 Po/2ShD4pMNZPv3PFQgMuEi8cRv0XjwSD9ILLCtVVpcTiM3ryGzUN2a4gAq6Cnd02R
-	 mFeuxhcZqtryBfM/n1rrXHy40dSgIxjoU6tOvElA=
+	b=A7lY/+MpkvjYsgT723SXtYeruyF8QqoetUxrldEf6gLLyF2jqXQCxRKgqHEMgGtHS
+	 mCeDcmosxhVk8LgFv1bX3JEGEk/4cDo6D2GVT4CnpyoK2L2l0WGwowcvnwSSb4OKac
+	 etFF0ny4wwoMpnZdFqPcLqlbMfXlfGhKzrczu4Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfLJWD1 (ORCPT
+        id S1727812AbfLJWDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33448 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727606AbfLJWDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727113AbfLJWDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 17:03:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE2120838;
-        Tue, 10 Dec 2019 22:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74AB92053B;
+        Tue, 10 Dec 2019 22:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015402;
-        bh=uBeKrTh12ypekGU746QAp3NU+4SENXWC93Ns4MRKafE=;
+        s=default; t=1576015401;
+        bh=NvJ0w1npQFSuUb/ujRWcNHg1Z74Zo0uTyOuuTQy93ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eYd9KIfK16gOSgDQMqhW54jazjGM6l59z6cv8I/iV7ci8LK9bOCG//UtEW22kh2V/
-         d6iaO3Ta1ugKBjQR4/LIBuNj1vh/vUJ5UjBxC3/XYRa3xNrXNcVDJV8Wo/RIx2GVrR
-         FdUg0T0su8Ovo2BefngQCgdexm6K8exP2cNBZ/pA=
+        b=mVEOMCDxwbl4ynWS6MxhbakLUD9iJ5TFbAPgRLkEJ0jShAeSGlqvNQxSPg6fq6rL3
+         Irrxl4g5OpFvaDDg9ATV/1vDWqwb7WncIdXeqfONzcoHz89Cc6sAaqG/o43zqxEdPj
+         132opKcLD6E6yjOVKpAvQGV0+8CB81M0e7+VNeBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 017/130] media: ov6650: Fix stored crop rectangle not in sync with hardware
-Date:   Tue, 10 Dec 2019 17:01:08 -0500
-Message-Id: <20191210220301.13262-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 016/130] media: ov6650: Fix stored frame format not in sync with hardware
+Date:   Tue, 10 Dec 2019 17:01:07 -0500
+Message-Id: <20191210220301.13262-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,24 +62,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 1463b371aff0682c70141f7521db13cc4bbf3016 ]
+[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
 
-The driver stores crop rectangle settings supposed to be in line with
+The driver stores frame format settings supposed to be in line with
 hardware state in a device private structure.  Since the driver initial
-submission, crop rectangle width and height settings are not updated
-correctly when rectangle offset settings are applied on hardware.  If
-an error occurs while the device is updated, the stored settings my no
-longer reflect hardware state and consecutive calls to .get_selection()
-as well as .get/set_fmt() may return incorrect information.  That in
-turn may affect ability of a bridge device to use correct DMA transfer
-settings if such incorrect informamtion on active frame format returned
-by .get/set_fmt() is used.
+submission, those settings are updated before they are actually applied
+on hardware.  If an error occurs on device update, the stored settings
+my not reflect hardware state anymore and consecutive calls to
+.get_fmt() may return incorrect information.  That in turn may affect
+ability of a bridge device to use correct DMA transfer settings if such
+incorrect informmation on active frame format returned by .get_fmt() is
+used.
 
-Assuming a failed update of the device means its actual settings haven't
-changed, update crop rectangle width and height settings stored in the
-device private structure correctly while the rectangle offset is
-successfully applied on hardware so the stored values always reflect
-actual hardware state to the extent possible.
+Assuming a failed device update means its state hasn't changed, update
+frame format related settings stored in the device private structure
+only after they are successfully applied so the stored values always
+reflect hardware state as closely as possible.
 
 Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
@@ -87,29 +85,44 @@ Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/ov6650.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 81fa21ed25992..348296be49258 100644
+index 98080d4204445..81fa21ed25992 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -485,6 +485,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 
- 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
- 	if (!ret) {
-+		priv->rect.width += priv->rect.left - sel->r.left;
- 		priv->rect.left = sel->r.left;
- 		ret = ov6650_reg_write(client, REG_HSTOP,
- 				       (sel->r.left + sel->r.width) >> 1);
-@@ -494,6 +495,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+@@ -613,7 +613,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+ 		return -EINVAL;
  	}
+-	priv->code = code;
+ 
+ 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
+ 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
+@@ -639,7 +638,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_dbg(&client->dev, "max resolution: CIF\n");
+ 		coma_mask |= COMA_QCIF;
+ 	}
+-	priv->half_scale = half_scale;
+ 
+ 	clkrc = CLKRC_12MHz;
+ 	mclk = 12000000;
+@@ -657,8 +655,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
+ 	if (!ret)
+ 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+-	if (!ret)
++	if (!ret) {
++		priv->half_scale = half_scale;
++
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
++	}
++	if (!ret)
++		priv->code = code;
+ 
  	if (!ret) {
-+		priv->rect.height += priv->rect.top - sel->r.top;
- 		priv->rect.top = sel->r.top;
- 		ret = ov6650_reg_write(client, REG_VSTOP,
- 				       (sel->r.top + sel->r.height) >> 1);
+ 		mf->colorspace	= priv->colorspace;
 -- 
 2.20.1
 
