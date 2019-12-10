@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185C1C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94BCC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58A320828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B243520836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017294;
-	bh=4nmSszgup869i+Cy9FnGcifZ8Phu2EmSABXl2wPWDXs=;
+	s=default; t=1576017309;
+	bh=QsV8U8qwTMqNA+mAFhcYDJs81JqiREYZbKCLRDI00TA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myiPr3XX/DpF01XW2T4HQYthUtwOVjziNJsoUptPf7FqTOFiwssQpZlsng4jaC0tG
-	 4Sj3OTC4mdovO+qJ2dhdblNqF7mhQWUOPe1HG0h7utCx+WTHhy9nLvB19r51mtvR2j
-	 t9WHGZVOmLpeIEX4aA9Fw7bcwOypPZKqp8vfTSso=
+	b=XnUQsv63Rg3Qaw6U2E0C9VQ364BkGIglV2fGwJz9bXa974a8/HVUov4gHPZZtbBCJ
+	 WI6EAKZEvdZWQ8AG6yzqS0A7mrJMD7db0vgzpZQcUyQE3n20OgnshRHJt4+mo5OpuT
+	 GvnlGaAqbTyd4eyPPoBMP+2migSACCsuL5Si4fUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfLJWew (ORCPT
+        id S1730498AbfLJWfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56346 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:35:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbfLJWem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:42 -0500
+        id S1730441AbfLJWel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEE112077B;
-        Tue, 10 Dec 2019 22:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B230621556;
+        Tue, 10 Dec 2019 22:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017281;
-        bh=4nmSszgup869i+Cy9FnGcifZ8Phu2EmSABXl2wPWDXs=;
+        s=default; t=1576017280;
+        bh=QsV8U8qwTMqNA+mAFhcYDJs81JqiREYZbKCLRDI00TA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ae9DLoEHdxp+6yZaTcDC0+swiSiSGQaUemJvryOVArxHitz//0miN9kXND2y4Q6h2
-         gai4GUjOJikjEBhMedwjw5hnaWIe6MqTDzpV3l1T5EGV12Xg9qat7L1JgBIEiJg1UT
-         GWT/rpJhKx0pnWlLEAUA9hw926X9SCaDXopQngM4=
+        b=ExjbpuKbVO19nflmfHoOqRwBOLpXJk0/8HApUOp6PSF50APw/mlU7d7Rf/JuS5a72
+         f6Nn9z+3XK8T1s9UMYtBpZjD5Lzb3a0bPGbyaxIjkjD7vT5MMRtagjNuPan71Ps54z
+         QF5itds6ty/w2BnpBUScDPg9VkeutE3jQ3gVoYK8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 71/71] net: phy: initialise phydev speed and duplex sanely
-Date:   Tue, 10 Dec 2019 17:33:16 -0500
-Message-Id: <20191210223316.14988-71-sashal@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 70/71] perf intel-bts: Does not support AUX area sampling
+Date:   Tue, 10 Dec 2019 17:33:15 -0500
+Message-Id: <20191210223316.14988-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,44 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
+[ Upstream commit 32a1ece4bdbde24734ab16484bad7316f03fc42d ]
 
-When a phydev is created, the speed and duplex are set to zero and
--1 respectively, rather than using the predefined SPEED_UNKNOWN and
-DUPLEX_UNKNOWN constants.
+Add an error message because Intel BTS does not support AUX area
+sampling.
 
-There is a window at initialisation time where we may report link
-down using the 0/-1 values.  Tidy this up and use the predefined
-constants, so debug doesn't complain with:
-
-"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
-
-when the speed and duplex settings are printed.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191115124225.5247-16-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/util/auxtrace.c  | 2 ++
+ tools/perf/arch/x86/util/intel-bts.c | 5 +++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index c6a87834723d1..b15eceb8b4425 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -161,8 +161,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index 7a7805583e3fe..ab641cfc8c2bb 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -35,6 +35,8 @@ struct auxtrace_record *auxtrace_record__init_intel(struct perf_evlist *evlist,
  
- 	dev->dev.release = phy_device_release;
+ 	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+ 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
++	if (intel_bts_pmu)
++		intel_bts_pmu->auxtrace = true;
  
--	dev->speed = 0;
--	dev->duplex = -1;
-+	dev->speed = SPEED_UNKNOWN;
-+	dev->duplex = DUPLEX_UNKNOWN;
- 	dev->pause = 0;
- 	dev->asym_pause = 0;
- 	dev->link = 1;
+ 	if (evlist) {
+ 		evlist__for_each(evlist, evsel) {
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 9b94ce5209170..9d83a7f3496cb 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -119,6 +119,11 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+ 	const struct cpu_map *cpus = evlist->cpus;
+ 	bool privileged = geteuid() == 0 || perf_event_paranoid() < 0;
+ 
++	if (opts->auxtrace_sample_mode) {
++		pr_err("Intel BTS does not support AUX area sampling\n");
++		return -EINVAL;
++	}
++
+ 	btsr->evlist = evlist;
+ 	btsr->snapshot_mode = opts->auxtrace_snapshot_mode;
+ 
 -- 
 2.20.1
 
