@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70355C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C67C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4175320637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E1F20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014383;
-	bh=IcOno1mqnFSoa4NxvV+ES7nTKiGmjKuk/TyPFW6PQyo=;
+	s=default; t=1576014387;
+	bh=3gDGzaKlOnL6s0iVohZmjRBLjJCVh5j/TZpCYp5eJ/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nu6bKSxH5U2FKes2eZdvVOPniADcmk+k83VAFCXPmlJ1Sv6lzj9SsTnskkFjXl6Qr
-	 uEQdx7a5wYrDTou8H7yRb6+IToq+0uXJgbqKcAGrudc+AwpmWeUehXzkSFRhmpw7RN
-	 1cBMy8O3bp95CjbJLexhhFeSzTFuRmHrNHQrLFNs=
+	b=UQBfBJkJrHXWj/KO+IZs4UZW+N+AhqoICm9bYWSHR2E1n+1RkM3ye0CDYeAgIbgQj
+	 jo8ab/izfpTrEOUXWdOuG65SnBu+P9/JGOmcv4jaVEBXbOTTj4Ye9mpMap2UZG9PEH
+	 oYduQrX6OJuP580rFmsWzs/HD/XCNO63rNG4uMd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfLJVcn (ORCPT
+        id S1729941AbfLJVq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:46:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbfLJVci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:38 -0500
+        id S1727484AbfLJVco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFE1B214AF;
-        Tue, 10 Dec 2019 21:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF99207FF;
+        Tue, 10 Dec 2019 21:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013557;
-        bh=IcOno1mqnFSoa4NxvV+ES7nTKiGmjKuk/TyPFW6PQyo=;
+        s=default; t=1576013564;
+        bh=3gDGzaKlOnL6s0iVohZmjRBLjJCVh5j/TZpCYp5eJ/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTEqePgAuF8YrUhvv7877BOqocP7sXnBEBCukKboLcvhoVbEkWfw9WZP1wooLCuV0
-         Z5296jc7ydHiWQbEkmjBCC8faM7khlQqOAhAAi/UvOoVUaWjUn2DIrALif28mBIrsz
-         ZzgOoVgn435crdsGvvDn3Vo9QTg4P5eCu5yoPkoU=
+        b=Ld/9ovqB+7CooOSc+hRcSvY+m9MZaDnXmc35WdcaFVGPzyn44RlKWAiAKCLzjuxWb
+         bdOHhkizVBr+ifeJFhRuqQ552jgEJ0jiQSolczsK7XGuFkOBrClAQjuTAzyeHoW0qM
+         hbwnjTm/ILGQKLtULx5+Y5B6m5RpHT7K5JWftqpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/177] ath10k: fix backtrace on coredump
-Date:   Tue, 10 Dec 2019 16:29:37 -0500
-Message-Id: <20191210213221.11921-13-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 019/177] media: ov6650: Fix stored frame format not in sync with hardware
+Date:   Tue, 10 Dec 2019 16:29:43 -0500
+Message-Id: <20191210213221.11921-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,72 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anilkumar Kolli <akolli@codeaurora.org>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit d98ddae85a4a57124f87960047b1b6419312147f ]
+[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
 
-In a multiradio board with one QCA9984 and one AR9987
-after enabling the crashdump with module parameter
-coredump_mask=7, below backtrace is seen.
+The driver stores frame format settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, those settings are updated before they are actually applied
+on hardware.  If an error occurs on device update, the stored settings
+my not reflect hardware state anymore and consecutive calls to
+.get_fmt() may return incorrect information.  That in turn may affect
+ability of a bridge device to use correct DMA transfer settings if such
+incorrect informmation on active frame format returned by .get_fmt() is
+used.
 
-vmalloc: allocation failure: 0 bytes
- kworker/u4:0: page allocation failure: order:0, mode:0x80d2
- CPU: 0 PID: 6 Comm: kworker/u4:0 Not tainted 3.14.77 #130
- Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
- (unwind_backtrace) from [<c021abf8>] (show_stack+0x10/0x14)
- (dump_stack+0x80/0xa0)
- (warn_alloc_failed+0xd0/0xfc)
- (__vmalloc_node_range+0x1b4/0x1d8)
- (__vmalloc_node+0x34/0x40)
- (vzalloc+0x24/0x30)
- (ath10k_coredump_register+0x6c/0x88 [ath10k_core])
- (ath10k_core_register_work+0x350/0xb34 [ath10k_core])
- (process_one_work+0x20c/0x32c)
- (worker_thread+0x228/0x360)
+Assuming a failed device update means its state hasn't changed, update
+frame format related settings stored in the device private structure
+only after they are successfully applied so the stored values always
+reflect hardware state as closely as possible.
 
-This is due to ath10k_hw_mem_layout is not defined for AR9987.
-For coredump undefined hw ramdump_size is 0.
-Check for the ramdump_size before allocation memory.
-
-Tested on: AR9987, QCA9984
-FW version: 10.4-3.9.0.2-00044
-
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/coredump.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov6650.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/coredump.c b/drivers/net/wireless/ath/ath10k/coredump.c
-index 4d28063052fec..385b84f24322d 100644
---- a/drivers/net/wireless/ath/ath10k/coredump.c
-+++ b/drivers/net/wireless/ath/ath10k/coredump.c
-@@ -1105,9 +1105,11 @@ static struct ath10k_dump_file_data *ath10k_coredump_build(struct ath10k *ar)
- 		dump_tlv = (struct ath10k_tlv_dump_data *)(buf + sofar);
- 		dump_tlv->type = cpu_to_le32(ATH10K_FW_CRASH_DUMP_RAM_DATA);
- 		dump_tlv->tlv_len = cpu_to_le32(crash_data->ramdump_buf_len);
--		memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
--		       crash_data->ramdump_buf_len);
--		sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		if (crash_data->ramdump_buf_len) {
-+			memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
-+			       crash_data->ramdump_buf_len);
-+			sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		}
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index e3433a4fc4738..60109442a0729 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -613,7 +613,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+ 		return -EINVAL;
  	}
+-	priv->code = code;
  
- 	spin_unlock_bh(&ar->data_lock);
-@@ -1154,6 +1156,9 @@ int ath10k_coredump_register(struct ath10k *ar)
- 	if (test_bit(ATH10K_FW_CRASH_DUMP_RAM_DATA, &ath10k_coredump_mask)) {
- 		crash_data->ramdump_buf_len = ath10k_coredump_get_ramdump_size(ar);
+ 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
+ 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
+@@ -639,7 +638,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		dev_dbg(&client->dev, "max resolution: CIF\n");
+ 		coma_mask |= COMA_QCIF;
+ 	}
+-	priv->half_scale = half_scale;
  
-+		if (!crash_data->ramdump_buf_len)
-+			return 0;
+ 	clkrc = CLKRC_12MHz;
+ 	mclk = 12000000;
+@@ -657,8 +655,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
+ 	if (!ret)
+ 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+-	if (!ret)
++	if (!ret) {
++		priv->half_scale = half_scale;
 +
- 		crash_data->ramdump_buf = vzalloc(crash_data->ramdump_buf_len);
- 		if (!crash_data->ramdump_buf)
- 			return -ENOMEM;
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
++	}
++	if (!ret)
++		priv->code = code;
+ 
+ 	if (!ret) {
+ 		mf->colorspace	= priv->colorspace;
 -- 
 2.20.1
 
