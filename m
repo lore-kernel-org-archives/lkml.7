@@ -2,189 +2,87 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779ADC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9B420726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UfJNLvLK"
+	by mail.kernel.org (Postfix) with ESMTP id 4899120726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575970861;
+	bh=rXiWjC0C2pFz1m1mewguEYBdET4p356PjzRIiT7GIUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q6EigKjZgM0cartwVzaINFyN9uWDCsJPI50bdq16oh+o0XH8fxdGpxmQ3Ab88dHV+
+	 x4Z0MqY9zrygw9JZwwUntI4VE6j219z/DvURx0tRh3MJWfl0aJIH3AgTEz4dxm1oFZ
+	 2EGEZY2FNBl4F2FnXK0Db+SHVC5sFtNGVLMjGCEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfLJJjU (ORCPT
+        id S1727114AbfLJJlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:39:20 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52062 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbfLJJjT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:39:19 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191210093917euoutp01eab2dee474da00f2bfc27640aae5b5d7~e_Q3F7Mtp0982709827euoutp01e
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:39:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191210093917euoutp01eab2dee474da00f2bfc27640aae5b5d7~e_Q3F7Mtp0982709827euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575970757;
-        bh=F0z+QAlm0CEiQ1aizr+w2Zw8aUWhjedLWNcx+ym5BWo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=UfJNLvLKtJytLRbG4R7z2/jqqh2RH+CyqeYWh4D1zpNneEhLaH+4HfuGcvpHwC5eV
-         Pkv290qBp4wqGaigpLHqxHfhafm5Tqdix3cPe1hcvrxRC39CINEKiMaFYCWdCu1s2V
-         4noNrNGPPkFxcAYfH+IWq4S+wtOZySPlQnD+U3t0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191210093916eucas1p2373b150fa34a77df18406dc23fe8af50~e_Q2y9wFw1754517545eucas1p2C;
-        Tue, 10 Dec 2019 09:39:16 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9E.46.61286.4C76FED5; Tue, 10
-        Dec 2019 09:39:16 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191210093916eucas1p189d01ac35e2c93731f9d6a446cf777bd~e_Q2eweYV2385123851eucas1p1Z;
-        Tue, 10 Dec 2019 09:39:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191210093916eusmtrp1a0604489d600515da443f6124c0be1e6~e_Q2eK0rx2000920009eusmtrp1v;
-        Tue, 10 Dec 2019 09:39:16 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-71-5def67c483af
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id BF.DC.08375.4C76FED5; Tue, 10
-        Dec 2019 09:39:16 +0000 (GMT)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191210093916eusmtip1b5817b00398b8129dfb354eee82b01d2~e_Q2C7sL31723417234eusmtip1w;
-        Tue, 10 Dec 2019 09:39:16 +0000 (GMT)
-Subject: Re: [PATCH 3/4] PM / devfreq: Kconfig: add DEVFREQ_DELAYED_TIMER
- option
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <4c998511-e825-f2da-cfce-7242cdb63902@samsung.com>
-Date:   Tue, 10 Dec 2019 10:39:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Tue, 10 Dec 2019 04:41:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfLJJlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:41:00 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17C0C20663;
+        Tue, 10 Dec 2019 09:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575970859;
+        bh=rXiWjC0C2pFz1m1mewguEYBdET4p356PjzRIiT7GIUg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TDP1G8eLXvPf0sI3iSZYCxkxoqJvjl2n3kbJn7lyM0D5dRe1+clfrVAWUPiaav6WF
+         Ls6hYNAVCMMjMifHG+8zCjYmu214bWZiezN+ADSJtrRcDH3h9B6lFzhli4aUcduplT
+         uzmlvvhstSKU/wIJENKW+HHFzmaqY604Fj8Ofhk4=
+Date:   Tue, 10 Dec 2019 10:40:57 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] arm64: dts: allwiner: Fix typo in dual licensed
+ SPDX identifier
+Message-ID: <20191210094057.ojenu74cmjcuaq73@gilmour.lan>
+References: <20191209182024.20509-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191209193432.GQ228856@google.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7pH0t/HGvx+Y2SxccZ6VovrX56z
-        Wpw/v4Hd4mzTG3aLy7vmsFl87j3CaLH2yF12i88bHjNa3G5cwebA6TG74SKLx6ZVnWwefVtW
-        MXp83iQXwBLFZZOSmpNZllqkb5fAlTHt7UymgpkCFT+6tzM3MH7i6WLk5JAQMJHYsuIXWxcj
-        F4eQwApGib5Fi5ghnC+MEs23nrFDOJ8ZJbZcb2SFabm9dCkTRGI5o8SVH3egnLeMEpfWfmUC
-        qRIWCJJ49+UzG4gtIqAh8eT3eUaQImaBY0wSuw79BRvFJqAvcfDsSRYQm1fATuLb5v1gcRYB
-        VYneh3OBmjk4RAUiJE5/TYQoEZQ4OfMJC0iYU8BQ4sE5K5Aws4C4xK0n85kgbHmJ7W/ngL0g
-        IbCPXWLyz9fsEFe7SEw62c0CYQtLvDq+BSouI3F6cg9UvFzi6cI+dojmFkaJB+0foRLWEoeP
-        X2QFWcwsoCmxfpc+RNhR4uCO1WBnSgjwSdx4KwhxA5/EpG3TmSHCvBIdbUIQ1aoSz0/1MEHY
-        0hJd/9exTmBUmoXksVlIvpmF5JtZCHsXMLKsYhRPLS3OTU8tNsxLLdcrTswtLs1L10vOz93E
-        CExGp/8d/7SD8eulpEOMAhyMSjy8CxzexQqxJpYVV+YeYpTgYFYS4T3eBhTiTUmsrEotyo8v
-        Ks1JLT7EKM3BoiTOa7zoZayQQHpiSWp2ampBahFMlomDU6qBMe33l1TGxwJPPmV+vlfClbWW
-        7YP0DIbC9pN/kiocHjtu1sxax7zTYGO4yI/kPvscTkXzOqYmHZfEsAVSqzt+Wy7Y+cjJ0LxO
-        XmHBkeJZKk1nH561drj09/YTz5w/SzUyndcsTGm79jjQprH0rPISC90Kvh0/eUq/KH9mPaV8
-        4hd/9p9MlzJnJZbijERDLeai4kQAZwaM3UIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7pH0t/HGqw7K2uxccZ6VovrX56z
-        Wpw/v4Hd4mzTG3aLy7vmsFl87j3CaLH2yF12i88bHjNa3G5cwebA6TG74SKLx6ZVnWwefVtW
-        MXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
-        b5eglzHt7UymgpkCFT+6tzM3MH7i6WLk5JAQMJG4vXQpUxcjF4eQwFJGiQUPpzJCJKQlGk+v
-        ZoKwhSX+XOtigyh6zShxc8VEZpCEsECQxLsvn9lAbBEBDYknv88zghQxCxxjkniw6CUzRMcr
-        RokN176BdbAJ6EscPHuSBcTmFbCT+LZ5PyuIzSKgKtH7cC7YJFGBCInn228wQtQISpyc+QSo
-        noODU8BQ4sE5K5Aws4C6xJ95l5ghbHGJW0/mM0HY8hLb385hnsAoNAtJ9ywkLbOQtMxC0rKA
-        kWUVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYARuO/Zz8w7GSxuDDzEKcDAq8fAucHgXK8Sa
-        WFZcmXuIUYKDWUmE93gbUIg3JbGyKrUoP76oNCe1+BCjKdBvE5mlRJPzgckhryTe0NTQ3MLS
-        0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDY+e/4HvK/p5vGJYs2LTzdZSzrsEm
-        402F5e4CS50uTGhc071vZURw9ZIv9pbXRLuW/7HLWJIvKjrBZM6a+vSqGZe05JVWsLg+W+jg
-        K9Kh+rVFMuRIU/li5u32r6Mbph8t0/yXFHJh5WPb+XN2PQn8GsubWvTp35cH0frdHG7iZgw5
-        O6zW5IglK7EUZyQaajEXFScCAHDjVirWAgAA
-X-CMS-MailID: 20191210093916eucas1p189d01ac35e2c93731f9d6a446cf777bd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91
-References: <20191209144425.13321-1-k.konieczny@samsung.com>
-        <CGME20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91@eucas1p1.samsung.com>
-        <20191209144425.13321-4-k.konieczny@samsung.com>
-        <20191209193432.GQ228856@google.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q5d4baoofanzj4pg"
+Content-Disposition: inline
+In-Reply-To: <20191209182024.20509-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 09.12.2019 20:34, Matthias Kaehlcke wrote:
-> On Mon, Dec 09, 2019 at 03:44:24PM +0100, Kamil Konieczny wrote:
->> Add Kconfig option DEVFREQ_DELAYED_TIMER. If set, devfreq workqueue
->> will use delayed timer from its start.
-> 
-> s/from its start/by default/
-> 
+--q5d4baoofanzj4pg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thank you for review, I will correct this
+On Mon, Dec 09, 2019 at 07:20:22PM +0100, Cl=E9ment P=E9ron wrote:
+> With dual licensed SPDX identifier the "OR" should
+> be uppercase.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
->>
->> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->> ---
->>  drivers/devfreq/Kconfig | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index 38a94df749a2..c799917c34c9 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -74,6 +74,18 @@ config DEVFREQ_GOV_PASSIVE
->>  	  through sysfs entries. The passive governor recommends that
->>  	  devfreq device uses the OPP table to get the frequency/voltage.
->>  
->> +comment "DEVFREQ Options"
->> +
->> +config DEVFREQ_DELAYED_TIMER
->> +	bool "Use delayed timer in Simple Ondemand Governor"
-> 
-> Is the use really limited to the Simple Ondemand Governor? I don't think
-> so, at least the Tegra devfreq driver also does monitoring and others
-> might follow.
+Applied, thanks!
+Maxime
 
-There are currently:
+--q5d4baoofanzj4pg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-simple_ondemand
-performance
-powersave
-userspace
-passive
+-----BEGIN PGP SIGNATURE-----
 
-From them perfomance, powersave and userspace are fixed max, min or user provided,
-so only left simple_ondemand and passive which could benefit from change.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXe9oKQAKCRDj7w1vZxhR
+xX4DAPwNlr4EMNiMHoyTLLO0bo5xLU9WWV6hkoT9iI+1hdNtCQEA9dm44ukjGX+g
+sTQyp0ZoJFLctSwVzyuLipTN/0glfAw=
+=G1aM
+-----END PGP SIGNATURE-----
 
->> +	default false
->> +	help
->> +	  Simple Ondemand Governor uses polling for reading buses counters.
->> +	  A default timer used is deferred, which saves power, but can
->> +	  miss increased demand for higher bus frequency if timer was
->> +	  assigned to idle cpu. If you want to change this to delayed
->> +	  timer at the cost of more power used, say Yes here.
->> +
->>  comment "DEVFREQ Drivers"
->>  
->>  config ARM_EXYNOS_BUS_DEVFREQ
-> 
-> 
-> This patch on it's own does nothing. Squash it with '[4/4] PM / devfreq:
-> use delayed work if DEVFREQ_DELAYED_TIMER set'.
-> 
-> 
-
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
-
+--q5d4baoofanzj4pg--
