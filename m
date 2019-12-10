@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD6DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8720DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0FA20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF8F20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013860;
-	bh=/vREOKb9jodj8o9mPrlJrZrDr+M2BGghOsruvxTRfek=;
+	s=default; t=1576013869;
+	bh=i3d+Mr7rCrKOrMGOgnBR7oNXe8BKKYWyKMgjuthYFnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVgaZS29ZUlcQtMdjuO+iFMEz+3yaWLwC6WpiiYk6RmDgqtgNPTlB42/tNjIkBf4p
-	 zzUAZFtKKGVuV6kQtU2gwLhw1ZiPvzs4xDqvHaqVSHku0Txmxm986pNS8A5lTHuYyC
-	 Q6BAKPW4W4cQMqy4vloolUoYwYfjxmrYVKiPOm/k=
+	b=y5iD5mzxekHC7Zh+6OKs9sh5XVRaNqEDlk0Qv8mtPy5gFlwkiIQbvwls3UaKab6vg
+	 R7w6ZJFXU9yqxvIhurfctpvMJZfbMBJzlHpVaGlg6gVGnRQy/VkI/a5hQBKTguK932
+	 KjfKU81AIfXRO/qvsfoG5G32hHqQwV0/BU8Oexss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfLJVfa (ORCPT
+        id S1730461AbfLJVhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:37:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbfLJVfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:15 -0500
+        id S1730252AbfLJVf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C56207FF;
-        Tue, 10 Dec 2019 21:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 107A32467C;
+        Tue, 10 Dec 2019 21:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013714;
-        bh=/vREOKb9jodj8o9mPrlJrZrDr+M2BGghOsruvxTRfek=;
+        s=default; t=1576013725;
+        bh=i3d+Mr7rCrKOrMGOgnBR7oNXe8BKKYWyKMgjuthYFnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=al+WA6VsAc55c+1mOYzhnNC4TZUOptrU+ODXQOAlxnaDQkr8qE8c/NaK2pwcewW5r
-         t/l8dNPV3Axs0bbU8YkfEm/2IYSZS6yn42UlYzK4y1m8Q/XTYF7BIMUQw/sUi6DR8K
-         aMv9uDgN8Q2yF0zKJhWkNp9qN40k0TIf+u9Gkq7Q=
+        b=YnvQNwCToURXhFUJUnUdVgER5FqGyv+Z5ExRWrCXNwPGcq8ctG051nVqBg1XGxA3f
+         0sL8tb0pRtiHl0LVFGS8Wvk8eOWTF1glmmXYo0+DSgAiVpKQDGEeTijp9WF69h7bT2
+         +Ys7N91r4yebSyK7Kn3TFczynT8MMygyKfWnZEMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 142/177] parport: load lowlevel driver if ports not found
-Date:   Tue, 10 Dec 2019 16:31:46 -0500
-Message-Id: <20191210213221.11921-142-sashal@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 151/177] ASoC: wm8904: fix regcache handling
+Date:   Tue, 10 Dec 2019 16:31:55 -0500
+Message-Id: <20191210213221.11921-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,70 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Michael Walle <michael@walle.cc>
 
-[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
+[ Upstream commit e9149b8c00d25dbaef1aa174fc604bed207e576d ]
 
-Usually all the distro will load the parport low level driver as part
-of their initialization. But we can get into a situation where all the
-parallel port drivers are built as module and we unload all the modules
-at a later time. Then if we just do "modprobe parport" it will only
-load the parport module and will not load the low level driver which
-will actually register the ports. So, check the bus if there is any
-parport registered, if not, load the low level driver.
+The current code assumes that the power is turned off in
+SND_SOC_BIAS_OFF. If there are no actual regulator the codec isn't
+turned off and the registers are not reset to their default values but
+the regcache is still marked as dirty. Thus a value might not be written
+to the hardware if it is set to the default value. Do a software reset
+before turning off the power to make sure the registers are always reset
+to their default states.
 
-We can get into the above situation with all distro but only Suse has
-setup the alias for "parport_lowlevel" and so it only works in Suse.
-Users of Debian based distro will need to load the lowlevel module
-manually.
-
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20191112223629.21867-1-michael@walle.cc
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ sound/soc/codecs/wm8904.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 7b4ee33c19354..15c81cffd2de2 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -230,6 +230,18 @@ static int port_check(struct device *dev, void *dev_drv)
- 	return 0;
- }
+diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
+index 1965635ec07c7..d14e851b91605 100644
+--- a/sound/soc/codecs/wm8904.c
++++ b/sound/soc/codecs/wm8904.c
+@@ -1902,6 +1902,7 @@ static int wm8904_set_bias_level(struct snd_soc_component *component,
+ 		snd_soc_component_update_bits(component, WM8904_BIAS_CONTROL_0,
+ 				    WM8904_BIAS_ENA, 0);
  
-+/*
-+ * Iterates through all the devices connected to the bus and return 1
-+ * if the device is a parallel port.
-+ */
-+
-+static int port_detect(struct device *dev, void *dev_drv)
-+{
-+	if (is_parport(dev))
-+		return 1;
-+	return 0;
-+}
-+
- /**
-  *	parport_register_driver - register a parallel port device driver
-  *	@drv: structure describing the driver
-@@ -282,6 +294,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
- 		if (ret)
- 			return ret;
++		snd_soc_component_write(component, WM8904_SW_RESET_AND_ID, 0);
+ 		regcache_cache_only(wm8904->regmap, true);
+ 		regcache_mark_dirty(wm8904->regmap);
  
-+		/*
-+		 * check if bus has any parallel port registered, if
-+		 * none is found then load the lowlevel driver.
-+		 */
-+		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-+				       port_detect);
-+		if (!ret)
-+			get_lowlevel_driver();
-+
- 		mutex_lock(&registration_lock);
- 		if (drv->match_port)
- 			bus_for_each_dev(&parport_bus_type, NULL, drv,
 -- 
 2.20.1
 
