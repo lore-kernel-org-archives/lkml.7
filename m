@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA1FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0917BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8146B24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D365C24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012166;
-	bh=ExJa1uzw4YsyFUsIJI3vUUtRkYWOhea+6RzTG0beOdU=;
+	s=default; t=1576012170;
+	bh=g4bCn+xYFLaXqyDO1JtEXbFTEVIZV6mXkDG/EmNFlH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WqEDBtTWVD1PmRS9RHltDZptBJMv7GFbJ4KH7cwIrSxZ/CyOBjPMK5io6IG4r2acy
-	 j6RFKaBN/Cub4LunmRT1Kwt8yXBUE9wGeoKNPdu2Tl5h4j3xc+iyycCb+GuJsYss+Q
-	 9bp0UurtsPsetzDdMoaFRD0vPKMhLgL5spa7y2j0=
+	b=DcCikjzNoSrRN9Yn1sW2ls1ONe9AvGYv6AXQ1i8+hZdbPZcBtJ54eWQQ4cv1gj0Cf
+	 iQvxHPCcOr1QyjOButrVIFGcIF+j9Yq/XwORnxeIBgZ/ZFc71aBk0PXbI63OBa++NQ
+	 ksk9/+wbDNse6nlCyKRwnJ5yUwkNUkKN0OHnvJdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfLJVJZ (ORCPT
+        id S1728182AbfLJVJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57736 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbfLJVJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:20 -0500
+        id S1728157AbfLJVJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E6F9246B4;
-        Tue, 10 Dec 2019 21:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23E67246A9;
+        Tue, 10 Dec 2019 21:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012160;
-        bh=ExJa1uzw4YsyFUsIJI3vUUtRkYWOhea+6RzTG0beOdU=;
+        s=default; t=1576012166;
+        bh=g4bCn+xYFLaXqyDO1JtEXbFTEVIZV6mXkDG/EmNFlH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jF6NNBn4OL3L6PQzPZfPPeiR/Pgv5/7jqJvlgokoIULJhQGFaNE5rXDvJ/3/WKM/
-         7XigXE06yimGUYHuZsRvAJxZPgXehGtnNCFMTyxRas2zLqoVPkQiHJ32ikM+RfukBt
-         Bun9OH9RB9zI9lTJnaJS21+6Sue7aUnPdK3qokRk=
+        b=2ZnHv878HS79+Zy+2Cesskbxim/UGqcwBIIg8ZAYwwdwOmqWQPJ/OCMyBiJ3tIXfA
+         tSjn4OzLjBT+DSlUqDWgQTESN3nhltObKm3LzOiLWoP/ToOIzMF9AczsgEZsasRzj4
+         tw+DfPxNMMN4rTH7IU/ONcgkTY6H9z+Gzt0CQpmg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Tim Bird <Tim.Bird@sony.com>, Tim Bird <tim.bird@sony.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 122/350] selftests: Fix O= and KBUILD_OUTPUT handling for relative paths
-Date:   Tue, 10 Dec 2019 16:03:47 -0500
-Message-Id: <20191210210735.9077-83-sashal@kernel.org>
+Cc:     joseph gravenor <joseph.gravenor@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 126/350] drm/amd/display: fix header for RN clk mgr
+Date:   Tue, 10 Dec 2019 16:03:51 -0500
+Message-Id: <20191210210735.9077-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,72 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: joseph gravenor <joseph.gravenor@amd.com>
 
-[ Upstream commit 303e6218ecec475d5bc3e5922dec770ee5baf107 ]
+[ Upstream commit cd83fa1ea9b9431cf1d57ac4179a11bc4393a5b6 ]
 
-Fix O= and KBUILD_OUTPUT handling for relative paths.
+[why]
+Should always MP0_BASE for any register definition from MP per-IP header files.
+I belive the reason the linux version of MP1_BASE works is The 0th element of the 0th table
+of that is identical to the corrisponding value of MP0_BASE in the renoir offset header file.
+The reason we should only use MP0_BASE is There is only one set of per-IP headers MP
+that includes all register definitions related to SMU IP block. This IP includes MP0, MP1, MP2
+and  an ecryption engine that can be used only by MP0. As a result all register definitions from
+MP file should be based only on MP0_BASE data.
 
-export KBUILD_OUTPUT=../kselftest_size
-make TARGETS=size kselftest-all
+[How]
+Change MP1_BASE to MP0_BASE
 
-or
-
-make O=../kselftest_size TARGETS=size kselftest-all
-
-In both of these cases, targets get built in ../kselftest_size which is
-a one level up from the size test directory.
-
-make[1]: Entering directory '/mnt/data/lkml/kselftest_size'
-make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
-        ARCH=x86 -C ../../.. headers_install
-  INSTALL ../kselftest_size/usr/include
-gcc -static -ffreestanding -nostartfiles -s    get_size.c  -o ../kselftest_size/size/get_size
-/usr/bin/ld: cannot open output file ../kselftest_size/size/get_size: No such file or directory
-collect2: error: ld returned 1 exit status
-make[3]: *** [../lib.mk:138: ../kselftest_size/size/get_size] Error 1
-make[2]: *** [Makefile:143: all] Error 2
-make[1]: *** [/mnt/data/lkml/linux_5.4/Makefile:1221: kselftest-all] Error 2
-make[1]: Leaving directory '/mnt/data/lkml/kselftest_size'
-make: *** [Makefile:179: sub-make] Error 2
-
-Use abs_objtree exported by the main Makefile.
-
-Reported-by: Tim Bird <Tim.Bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Tested-by: Tim Bird <tim.bird@sony.com>
-Acked-by: Tim Bird <tim.bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: joseph gravenor <joseph.gravenor@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Reviewed-by: Roman Li <Roman.Li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 4cdbae6f4e61b..3405aa26a655a 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -86,10 +86,10 @@ override LDFLAGS =
- endif
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+index 50984c1811bb2..468c6bb0e3119 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
+@@ -33,7 +33,7 @@
+ #include "mp/mp_12_0_0_sh_mask.h"
  
- ifneq ($(O),)
--	BUILD := $(O)
-+	BUILD := $(abs_objtree)
- else
- 	ifneq ($(KBUILD_OUTPUT),)
--		BUILD := $(KBUILD_OUTPUT)/kselftest
-+		BUILD := $(abs_objtree)/kselftest
- 	else
- 		BUILD := $(shell pwd)
- 		DEFAULT_INSTALL_HDR_PATH := 1
-@@ -102,6 +102,7 @@ include $(top_srcdir)/scripts/subarch.include
- ARCH           ?= $(SUBARCH)
- export KSFT_KHDR_INSTALL_DONE := 1
- export BUILD
-+#$(info abd_objtree = $(abs_objtree) BUILD = $(BUILD))
+ #define REG(reg_name) \
+-	(MP1_BASE.instance[0].segment[mm ## reg_name ## _BASE_IDX] + mm ## reg_name)
++	(MP0_BASE.instance[0].segment[mm ## reg_name ## _BASE_IDX] + mm ## reg_name)
  
- # build and run gpio when output directory is the src dir.
- # gpio has dependency on tools/gpio and builds tools/gpio
+ #define FN(reg_name, field) \
+ 	FD(reg_name##__##field)
 -- 
 2.20.1
 
