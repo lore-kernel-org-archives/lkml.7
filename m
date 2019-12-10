@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E8DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110C5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFD2208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D778520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015386;
-	bh=ZfBmlXo3vN9jtE9PM4yjP2v5WtY9rXLaxQLCYP9rM/I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rrnf+xMLfCAyGXGbuSdPbuVLoOEySLEzmwUu2rfgFU7nvNBfIeG9yj9IayzfJf07A
-	 AofSr1P/OZA03MwMd1Hxzv4bqf5L9U+bV1xVhmlGRfLhHFINs5JHGjXZD/8iDOwdAi
-	 n5LMC7q8QwKcHERZemF1ypE53zCI/o87W/DPHjjI=
+	s=default; t=1576015391;
+	bh=abgahavQ5SwoxyCcLIir3wWNWk56AQB8IQ+J/HqMmSY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c6CP+5prdFz7nNEhILcG5PBlxaoX1MNdLF4pA6Xn8GDHcPRItDnBgCYS83bKkWDqw
+	 ypxJSd94hbzD8MRWen6NhCc04Md5gqOstLdm8+yT7X3piRQXgUJezJCKSVt9d61h83
+	 JhIJEJpaLmAx8RtrCoQPyZh8Uo0XFf38CvzlY82g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfLJWDF (ORCPT
+        id S1726860AbfLJWDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfLJWDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:04 -0500
+        id S1727197AbfLJWDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D300F20637;
-        Tue, 10 Dec 2019 22:03:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C147021D7D;
+        Tue, 10 Dec 2019 22:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015384;
-        bh=ZfBmlXo3vN9jtE9PM4yjP2v5WtY9rXLaxQLCYP9rM/I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aMQthjis+J/NCwE1fsE8FX1VJUOSU2S2+MBC4kfgmzFdwYJWsHIVtyLR5rFOZlTA7
-         N6/hWhwHM0COp05DytwGGNdR0tBtqWSKWhB7gabQl/i/cXJVZXn25GwLH1LLPulhAy
-         I6kvD4eR/89+aFDY5oajknjPZ9nKaXypS/HwdA8I=
+        s=default; t=1576015387;
+        bh=abgahavQ5SwoxyCcLIir3wWNWk56AQB8IQ+J/HqMmSY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rqFCNi01xJuad20ND+kVJ9z0MCZ5ZXY9BiKio2/ni8CSQnDIGLqK/fbPXjW5FWXil
+         6OurkAn0vaILGgFk5H2pfNV8dchvWATexRqiVLTflVjtlnhEdoxa59eiE0VX3o7Bd2
+         Nc/ynwOFleWpLpBLcfNXvmNmksBfJPC1EnJ3MjWQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
-        Todd Previte <tprevite@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 001/130] drm: mst: Fix query_payload ack reply struct
-Date:   Tue, 10 Dec 2019 17:00:52 -0500
-Message-Id: <20191210220301.13262-1-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 004/130] iio: tcs3414: fix iio_triggered_buffer_{pre,post}enable positions
+Date:   Tue, 10 Dec 2019 17:00:55 -0500
+Message-Id: <20191210220301.13262-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
+References: <20191210220301.13262-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,45 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
+[ Upstream commit 0fe2f2b789190661df24bb8bf62294145729a1fe ]
 
-Spec says[1] Allocated_PBN is 16 bits
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Todd Previte <tprevite@gmail.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+The driver was slightly reworked. The preenable hook was moved to the
+postenable, to add some symmetry to the postenable/predisable part.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_dp_mst_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/light/tcs3414.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index d55abb75f29ae..eec6cba204ea8 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -313,7 +313,7 @@ struct drm_dp_resource_status_notify {
- 
- struct drm_dp_query_payload_ack_reply {
- 	u8 port_number;
--	u8 allocated_pbn;
-+	u16 allocated_pbn;
+diff --git a/drivers/iio/light/tcs3414.c b/drivers/iio/light/tcs3414.c
+index a795afb7667bd..b5a35c7b6b7f4 100644
+--- a/drivers/iio/light/tcs3414.c
++++ b/drivers/iio/light/tcs3414.c
+@@ -244,32 +244,42 @@ static const struct iio_info tcs3414_info = {
+ 	.driver_module = THIS_MODULE,
  };
  
- struct drm_dp_sideband_msg_req_body {
+-static int tcs3414_buffer_preenable(struct iio_dev *indio_dev)
++static int tcs3414_buffer_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct tcs3414_data *data = iio_priv(indio_dev);
++	int ret;
++
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
+ 
+ 	data->control |= TCS3414_CONTROL_ADC_EN;
+-	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
++	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+ 		data->control);
++	if (ret)
++		iio_triggered_buffer_predisable(indio_dev);
++
++	return ret;
+ }
+ 
+ static int tcs3414_buffer_predisable(struct iio_dev *indio_dev)
+ {
+ 	struct tcs3414_data *data = iio_priv(indio_dev);
+-	int ret;
+-
+-	ret = iio_triggered_buffer_predisable(indio_dev);
+-	if (ret < 0)
+-		return ret;
++	int ret, ret2;
+ 
+ 	data->control &= ~TCS3414_CONTROL_ADC_EN;
+-	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
++	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
+ 		data->control);
++
++	ret2 = iio_triggered_buffer_predisable(indio_dev);
++	if (!ret)
++		ret = ret2;
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops tcs3414_buffer_setup_ops = {
+-	.preenable = tcs3414_buffer_preenable,
+-	.postenable = &iio_triggered_buffer_postenable,
++	.postenable = tcs3414_buffer_postenable,
+ 	.predisable = tcs3414_buffer_predisable,
+ };
+ 
 -- 
 2.20.1
 
