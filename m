@@ -2,309 +2,330 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13F2C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A52DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D358206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C407D20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="5fr9elvz";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="5fr9elvz"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XWqsAuwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfLJItF (ORCPT
+        id S1726987AbfLJIue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:49:05 -0500
-Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:43492
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726843AbfLJItF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:49:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
- b=5fr9elvzsr6sOvugAnOl+cXEweumTZsh7X7/S18GhfUu8H7oFfgJ0UZzjAZoIHeMPe6a3OHIaLXJDmvHNl4RbzCSSFx23kzCvFeP9huHiuegcZY/T8mUHgbH1QpMu56Ku76Ne4Q0CmydYM0aJcpHjLe24VpnBDwbPLQaz1ANkWo=
-Received: from VI1PR08CA0268.eurprd08.prod.outlook.com (2603:10a6:803:dc::41)
- by DB6PR08MB2789.eurprd08.prod.outlook.com (2603:10a6:6:20::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.17; Tue, 10 Dec
- 2019 08:48:58 +0000
-Received: from VE1EUR03FT025.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::206) by VI1PR08CA0268.outlook.office365.com
- (2603:10a6:803:dc::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
- Transport; Tue, 10 Dec 2019 08:48:58 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT025.mail.protection.outlook.com (10.152.18.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18 via Frontend Transport; Tue, 10 Dec 2019 08:48:58 +0000
-Received: ("Tessian outbound 25173d5f5683:v37"); Tue, 10 Dec 2019 08:48:58 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: c62a380993af5820
-X-CR-MTA-TID: 64aa7808
-Received: from 4d760b48d4b6.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DDF5CBD7-AD5D-469C-A1D9-9F1818DB3B99.1;
-        Tue, 10 Dec 2019 08:48:52 +0000
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4d760b48d4b6.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 10 Dec 2019 08:48:52 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GMjBRjUxL37PhaKD4mkQGrT3qp/2foFMP5yM1IbqAqLavNHbLnCOSwGpikhaFT4GYUH2gphuN2l1J2vgcqrSYxXgiW2JCCPwVTnMyQsdIjeZ1qRTLhgzaQ7nEyvevgzGIMFH7t+shwYoOSjmQJzcF0nXGRCKbYcFH1VhKqY5XyRklLMkLx+8jiZHhhSE/vKWKINuduMz9+CInMxIhrsJlmDDYrgwZeljAYM64Nbq5iLvmNIOiBUIRwMuxYBSzKMzN6ACYYe6X6ec9QDKHB2ZJMdAD7SzecQq7Ooe22Vt5Qp/G1xN67D7Y9P4MsrwG9nm1HCIM8Zz4Fs9Oj7wlL+vTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
- b=EhGm9iAfIusqC5/g0wuECrSKKcTyH+UiI1APW2EVyVHClQK5r+PR4HZ0AQ7t5OSVSqhvxHEZQ0T/mqlNb6aKZ1Yo4MiyaOb9qZ0rTpGWuw+VhBCHAV85o7XQbWuIyni0T65k+LeBZGj1KQTmwJmJ7EHMJGZSWN/R+JDo5dHK5VzuyFxh42CaWFOC42A1rI8ZrlyxCUiYenFS/lPkQBtsCKS9gbqUz2QvcxvKFp61t3Dgr/JmhHrSbmro9KMJQlvDORWB5BPwDjRPv3lWItYauEhYagaRRs4jPWhhaYzQaTUmUB0vk5BKRw5w+4nQ2ScjzxmG2Bwg5GgpAHQWSBtHWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZYmCw/H9HAJXv2dndC52ixrEWr9aWZfqlU0dti+9oas=;
- b=5fr9elvzsr6sOvugAnOl+cXEweumTZsh7X7/S18GhfUu8H7oFfgJ0UZzjAZoIHeMPe6a3OHIaLXJDmvHNl4RbzCSSFx23kzCvFeP9huHiuegcZY/T8mUHgbH1QpMu56Ku76Ne4Q0CmydYM0aJcpHjLe24VpnBDwbPLQaz1ANkWo=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5182.eurprd08.prod.outlook.com (20.179.31.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Tue, 10 Dec 2019 08:48:51 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::f984:b0c7:bce9:144e]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::f984:b0c7:bce9:144e%2]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 08:48:51 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v3 2/2] drm/komeda: Enable new product D32 support
-Thread-Topic: [PATCH v3 2/2] drm/komeda: Enable new product D32 support
-Thread-Index: AQHVrzaleAtsmVu8OkaYqJLyku2PnQ==
-Date:   Tue, 10 Dec 2019 08:48:51 +0000
-Message-ID: <20191210084828.19664-3-james.qian.wang@arm.com>
-References: <20191210084828.19664-1-james.qian.wang@arm.com>
-In-Reply-To: <20191210084828.19664-1-james.qian.wang@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: LO2P265CA0283.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::31) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: edce7f9e-bd1f-4cb3-ddc5-08d77d4dcc05
-X-MS-TrafficTypeDiagnostic: VE1PR08MB5182:|VE1PR08MB5182:|DB6PR08MB2789:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR08MB2789EA036287FA0642BFD4D6B35B0@DB6PR08MB2789.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:8273;
-x-forefront-prvs: 02475B2A01
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(189003)(199004)(54906003)(4326008)(66446008)(26005)(1076003)(103116003)(66556008)(37006003)(186003)(66946007)(64756008)(8676002)(66476007)(36756003)(6862004)(305945005)(2616005)(2906002)(71200400001)(6486002)(86362001)(478600001)(6512007)(6636002)(316002)(71190400001)(5660300002)(55236004)(81156014)(81166006)(8936002)(52116002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5182;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: KsSO07UuusPkwFdrCldGUD1EEVXP4ugytbcJ5GNYeLC8/4LsqBlfsegvpYXNMXmuvaqCF7pi4+QgCxrVOKkXl6qE9gXYm8sK0J2F8zmJGZBL0/Yra8E3lwLIGAwaGc9N2YdfK+DzNkJd3QpXYpF2qiJE0vIgX+tMHC4OpR5KKdvLDFqjWmfWoN4g+TLMFcJLvs858bVs2S8f8M6hBKRjpQ3pjX69mTePRLOtFttwjl7ZrvKNLyMLVgnry4XtWNxJd9mAyBO1BX2VUH1uOvGZQxf4mJlQprBIvsNv07BRml5g5r9TmYtDoBR/q2c9T65I1I3iOfTMI7kMbtyp27TfVn5rRxbpapwYdMoH/f7tfA3d0JR1cg19Q2grWy68NWhb+Leb+Fgkyh3ASSKYCP6vlmChnej3rqt/Pkar7ZNKaJhC+hS/sx5avtF7pQCdZAwy
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Dec 2019 03:50:34 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43632 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfLJIud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 03:50:33 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so18995841wre.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 00:50:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XoiChuWD676fT3mQ0MiyG596c7hrhdW6ECLzg/Poy44=;
+        b=XWqsAuwm65TtSrcuqU6s0Bu5EZxv6c39lYAOEyygnZ8tQY5tCnsWP0yuSTWp9LK9X9
+         CJE8ZdibxDClXu6pIV7S/0WnBKxsBI5/dhN4ZgDv6PFwGFUlgi1A2t8wleC0Ktgj9jmg
+         dP9TcedBtEJkHWnaULO707kY4vD4in/w14PhgbWSgU4x2GD2rpewTg76OlWGZYryYmWZ
+         ADKI3wvVudo5MsuU4ypsCIM7pJiDCumSYfcbRFgYFfoenCCL74UcCcwZkQ+Qe+FB738l
+         5O7LceFaKxmontMIeZMe5Z9yDDtVOLDbpLrZcB8r5aE3A3dmd/qzSdyL/tpQMBwnue0b
+         bvmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XoiChuWD676fT3mQ0MiyG596c7hrhdW6ECLzg/Poy44=;
+        b=Hf00ZMqVLB+WcbIDYNijoIfP8HHnozCEMqr/I9W1mQZspxg2yncYpA430adbCfJvOv
+         9Ut5O8ZLa/StWGcCmMFXebIi2aCuL4GXZgo4Vn7HrNU4ACqE4BCNVkNfcLKwIzIqMbBe
+         5V9EHJVr37C7x6xhvJR8aEpaSDww4ivWlyyfmO6darusDkEotAMAN9naT0Y7EdPJrRSk
+         vlJrjwMFkZDfuuO08y3ifuMVm6qwBPgiVxq+q819f67FTDR0hre6i1cDu3D3DsqGS40Q
+         CtSh4jziZrUhtzPLNkBl1rrBuN0pVG1is4AK0nr834lMNQmpYuFVU24WGUsWGulE5lxY
+         jzdA==
+X-Gm-Message-State: APjAAAVpvjiUmOL7O6LYK1TC5fK+TlEL93P4HyMdECf1EyhEA0nRJ/fv
+        Q4d+BJE9N48LW4BD99Q42lsszKyPv8g=
+X-Google-Smtp-Source: APXvYqzKnD6uOtLyMPudPxb1tdQCwwApIN11HanV47FswY+JtMlcfFRxIXHlqtfoQH9OxWTiMuJM2A==
+X-Received: by 2002:adf:dfc1:: with SMTP id q1mr1792127wrn.155.1575967829195;
+        Tue, 10 Dec 2019 00:50:29 -0800 (PST)
+Received: from [10.2.4.229] (lfbn-1-7161-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
+        by smtp.gmail.com with ESMTPSA id z8sm2485142wrq.22.2019.12.10.00.50.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 00:50:28 -0800 (PST)
+Subject: Re: [PATCH v3 0/4] media: meson: vdec: Add compliant H264 support
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191209122028.13714-1-narmstrong@baylibre.com>
+ <89908b9f9ae974b23f7ba05ff658c3860bfbba88.camel@ndufresne.ca>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <8031700e-d3f7-9e82-0835-2c3ab3c21ade@baylibre.com>
+Date:   Tue, 10 Dec 2019 09:50:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5182
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT025.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(376002)(396003)(189003)(199004)(70206006)(2616005)(26005)(36756003)(6862004)(8936002)(6506007)(70586007)(103116003)(6512007)(4326008)(336012)(26826003)(86362001)(305945005)(37006003)(54906003)(81156014)(356004)(478600001)(81166006)(8676002)(316002)(76130400001)(6636002)(36906005)(1076003)(6486002)(5660300002)(186003)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR08MB2789;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 6f5184c5-d7d7-47ae-3c7b-08d77d4dc783
-NoDisclaimer: True
-X-Forefront-PRVS: 02475B2A01
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GgEcmBhs7RtbbKyD4V7QzCd6olsVniaFz2Mw/4bONE8DsBjEResKV47+wtK5X7xvuVLWve+KVGVMDk6TaInSHq4r1pB1wpSPsli1m3jDrnhh2gn/chSioLWljrn2FcXJ6xReUdwJtpCuBjj62aiPVzNSuqkWYbAXk/O3PWfmVIISbW72Mo8u8pnEExqZnHAVzPpPzmfZiIofm7J8Nj2Iibtbq3qEA6eVi45u9Fq08itzAS5wUlQa9cwcWVZQ1fPAbwsJNwxTjiFj5WB8DhX8QaK7qg9DLOv82QaHnJAaeYrPiDkYE0gCXglkhn7x+gYqUV0S4e3fm7LJZgsQRkZ0eOrg8Vz2eWiXv8P864PMSjw22KbEV4IyvQm8t6px/viunkhW+ydhyMbC+Ii8VZPAZHjtGKfXmbNa4Q5MLwtSJef2UI/A2dbIHQzQQXacn7QH
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 08:48:58.3977
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: edce7f9e-bd1f-4cb3-ddc5-08d77d4dcc05
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2789
+In-Reply-To: <89908b9f9ae974b23f7ba05ff658c3860bfbba88.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-D32 is simple version of D71, the difference is:
-- Only has one pipeline
-- Drop the periph block and merge it to GCU
+Hi,
 
-v2: Rebase.
-v3: Isolate the block counting fix to a new patch
+On 10/12/2019 04:42, Nicolas Dufresne wrote:
+> Hi,
+> 
+> Le lundi 09 décembre 2019 à 13:20 +0100, Neil Armstrong a écrit :
+>> Hello,
+>>
+>> This patch series aims to bring H.264 support as well as compliance update
+>> to the amlogic stateful video decoder driver.
+> 
+> I have started testing this patchset on S905X. I'm not very far into it
+> yet, but noticed this spam in the kernel logs:
+> 
+> [  192.230935] meson-vdec c8820000.video-codec: VIFIFO usage (16777858) > VIFIFO size (16777216)
+> 
+> So far it seems to be printed once per frame while decoding
+> bbb_sunflower_1080p_30fps_normal.mp4 from blender fondation. I'm don't
+> think I have ever seen that one before.
 
-Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
-com>
----
- .../drm/arm/display/include/malidp_product.h  |  3 +-
- .../arm/display/komeda/d71/d71_component.c    |  2 +-
- .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 39 ++++++++++++-------
- .../gpu/drm/arm/display/komeda/d71/d71_regs.h | 13 +++++++
- .../gpu/drm/arm/display/komeda/komeda_drv.c   |  1 +
- 5 files changed, 42 insertions(+), 16 deletions(-)
+Will check.
 
-diff --git a/drivers/gpu/drm/arm/display/include/malidp_product.h b/drivers=
-/gpu/drm/arm/display/include/malidp_product.h
-index 1053b11352eb..16a8a2c22c42 100644
---- a/drivers/gpu/drm/arm/display/include/malidp_product.h
-+++ b/drivers/gpu/drm/arm/display/include/malidp_product.h
-@@ -18,7 +18,8 @@
- #define MALIDP_CORE_ID_STATUS(__core_id)     (((__u32)(__core_id)) & 0xFF)
-=20
- /* Mali-display product IDs */
--#define MALIDP_D71_PRODUCT_ID   0x0071
-+#define MALIDP_D71_PRODUCT_ID	0x0071
-+#define MALIDP_D32_PRODUCT_ID	0x0032
-=20
- union komeda_config_id {
- 	struct {
-diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/drive=
-rs/gpu/drm/arm/display/komeda/d71/d71_component.c
-index b6517c46e670..8a02ade369db 100644
---- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-+++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-@@ -1270,7 +1270,7 @@ static int d71_timing_ctrlr_init(struct d71_dev *d71,
-=20
- 	ctrlr =3D to_ctrlr(c);
-=20
--	ctrlr->supports_dual_link =3D true;
-+	ctrlr->supports_dual_link =3D d71->supports_dual_link;
-=20
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/gpu=
-/drm/arm/display/komeda/d71/d71_dev.c
-index 7e79c2e88421..dd1ecf4276d3 100644
---- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-@@ -371,23 +371,33 @@ static int d71_enum_resources(struct komeda_dev *mdev=
-)
- 		goto err_cleanup;
- 	}
-=20
--	/* probe PERIPH */
-+	/* Only the legacy HW has the periph block, the newer merges the periph
-+	 * into GCU
-+	 */
- 	value =3D malidp_read32(d71->periph_addr, BLK_BLOCK_INFO);
--	if (BLOCK_INFO_BLK_TYPE(value) !=3D D71_BLK_TYPE_PERIPH) {
--		DRM_ERROR("access blk periph but got blk: %d.\n",
--			  BLOCK_INFO_BLK_TYPE(value));
--		err =3D -EINVAL;
--		goto err_cleanup;
-+	if (BLOCK_INFO_BLK_TYPE(value) !=3D D71_BLK_TYPE_PERIPH)
-+		d71->periph_addr =3D NULL;
-+
-+	if (d71->periph_addr) {
-+		/* probe PERIPHERAL in legacy HW */
-+		value =3D malidp_read32(d71->periph_addr, PERIPH_CONFIGURATION_ID);
-+
-+		d71->max_line_size	=3D value & PERIPH_MAX_LINE_SIZE ? 4096 : 2048;
-+		d71->max_vsize		=3D 4096;
-+		d71->num_rich_layers	=3D value & PERIPH_NUM_RICH_LAYERS ? 2 : 1;
-+		d71->supports_dual_link	=3D !!(value & PERIPH_SPLIT_EN);
-+		d71->integrates_tbu	=3D !!(value & PERIPH_TBU_EN);
-+	} else {
-+		value =3D malidp_read32(d71->gcu_addr, GCU_CONFIGURATION_ID0);
-+		d71->max_line_size	=3D GCU_MAX_LINE_SIZE(value);
-+		d71->max_vsize		=3D GCU_MAX_NUM_LINES(value);
-+
-+		value =3D malidp_read32(d71->gcu_addr, GCU_CONFIGURATION_ID1);
-+		d71->num_rich_layers	=3D GCU_NUM_RICH_LAYERS(value);
-+		d71->supports_dual_link	=3D GCU_DISPLAY_SPLIT_EN(value);
-+		d71->integrates_tbu	=3D GCU_DISPLAY_TBU_EN(value);
- 	}
-=20
--	value =3D malidp_read32(d71->periph_addr, PERIPH_CONFIGURATION_ID);
--
--	d71->max_line_size	=3D value & PERIPH_MAX_LINE_SIZE ? 4096 : 2048;
--	d71->max_vsize		=3D 4096;
--	d71->num_rich_layers	=3D value & PERIPH_NUM_RICH_LAYERS ? 2 : 1;
--	d71->supports_dual_link	=3D value & PERIPH_SPLIT_EN ? true : false;
--	d71->integrates_tbu	=3D value & PERIPH_TBU_EN ? true : false;
--
- 	for (i =3D 0; i < d71->num_pipelines; i++) {
- 		pipe =3D komeda_pipeline_add(mdev, sizeof(struct d71_pipeline),
- 					   &d71_pipeline_funcs);
-@@ -606,6 +616,7 @@ d71_identify(u32 __iomem *reg_base, struct komeda_chip_=
-info *chip)
-=20
- 	switch (product_id) {
- 	case MALIDP_D71_PRODUCT_ID:
-+	case MALIDP_D32_PRODUCT_ID:
- 		funcs =3D &d71_chip_funcs;
- 		break;
- 	default:
-diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h b/drivers/gp=
-u/drm/arm/display/komeda/d71/d71_regs.h
-index 1727dc993909..81de6a23e7f3 100644
---- a/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
-+++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_regs.h
-@@ -72,6 +72,19 @@
- #define GCU_CONTROL_MODE(x)	((x) & 0x7)
- #define GCU_CONTROL_SRST	BIT(16)
-=20
-+/* GCU_CONFIGURATION registers */
-+#define GCU_CONFIGURATION_ID0	0x100
-+#define GCU_CONFIGURATION_ID1	0x104
-+
-+/* GCU configuration */
-+#define GCU_MAX_LINE_SIZE(x)	((x) & 0xFFFF)
-+#define GCU_MAX_NUM_LINES(x)	((x) >> 16)
-+#define GCU_NUM_RICH_LAYERS(x)	((x) & 0x7)
-+#define GCU_NUM_PIPELINES(x)	(((x) >> 3) & 0x7)
-+#define GCU_NUM_SCALERS(x)	(((x) >> 6) & 0x7)
-+#define GCU_DISPLAY_SPLIT_EN(x)	(((x) >> 16) & 0x1)
-+#define GCU_DISPLAY_TBU_EN(x)	(((x) >> 17) & 0x1)
-+
- /* GCU opmode */
- #define INACTIVE_MODE		0
- #define TBU_CONNECT_MODE	1
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/=
-drm/arm/display/komeda/komeda_drv.c
-index b7a1097c45c4..ad38bbc7431e 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
-@@ -125,6 +125,7 @@ static int komeda_platform_remove(struct platform_devic=
-e *pdev)
-=20
- static const struct of_device_id komeda_of_match[] =3D {
- 	{ .compatible =3D "arm,mali-d71", .data =3D d71_identify, },
-+	{ .compatible =3D "arm,mali-d32", .data =3D d71_identify, },
- 	{},
- };
-=20
---=20
-2.20.1
+Neil
+
+> 
+>>
+>> The issue in the V1 patchset at [1] is solved by patch #1 following comments
+>> and requirements from hans. It moves the full draining & stopped state tracking
+>> and handling from vicodec to core v4l2-mem2mem.
+>>
+>> With this, it passes v4l2-compliance with streaming on Amlogic G12A and
+>> Amlogic SM1 SoCs successfully.
+>>
+>> This patchset depends on G12A and SM1 enablement series at [2] and [3].
+>>
+>> The compliance log is:
+>> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s
+>> v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
+>>
+>> Compliance test for vicodec device /dev/video0:
+>>
+>> Driver Info:
+>> 	Driver name      : vicodec
+>> 	Card type        : vicodec
+>> 	Bus info         : platform:vicodec
+>> 	Driver version   : 5.5.0
+>> 	Capabilities     : 0x84208000
+>> 		Video Memory-to-Memory
+>> 		Streaming
+>> 		Extended Pix Format
+>> 		Device Capabilities
+>> 	Device Caps      : 0x04208000
+>> 		Video Memory-to-Memory
+>> 		Streaming
+>> 		Extended Pix Format
+>> 	Detected Stateful Encoder
+>> Media Driver Info:
+>> 	Driver name      : vicodec
+>> 	Model            : vicodec
+>> 	Serial           : 
+>> 	Bus info         : platform:vicodec
+>> 	Media version    : 5.5.0
+>> 	Hardware revision: 0x00000000 (0)
+>> 	Driver version   : 5.5.0
+>> Interface Info:
+>> 	ID               : 0x0300000c
+>> 	Type             : V4L Video
+>> Entity Info:
+>> 	ID               : 0x00000001 (1)
+>> 	Name             : stateful-encoder-source
+>> 	Function         : V4L2 I/O
+>> 	Pad 0x01000002   : 0: Source
+>> 	  Link 0x02000008: to remote pad 0x1000005 of entity 'stateful-encoder-proc': Data, Enabled, Immutable
+>>
+>> Required ioctls:
+>> 	test MC information (see 'Media Driver Info' above): OK
+>> 	test VIDIOC_QUERYCAP: OK
+>>
+>> Allow for multiple opens:
+>> 	test second /dev/video0 open: OK
+>> 	test VIDIOC_QUERYCAP: OK
+>> 	test VIDIOC_G/S_PRIORITY: OK
+>> 	test for unlimited opens: OK
+>>
+>> Debug ioctls:
+>> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+>>
+>> Input ioctls:
+>> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+>>
+>> Output ioctls:
+>> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+>>
+>> Input/Output configuration ioctls:
+>> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+>>
+>> Control ioctls:
+>> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+>> 	test VIDIOC_QUERYCTRL: OK
+>> 	test VIDIOC_G/S_CTRL: OK
+>> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+>> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+>> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>> 	Standard Controls: 6 Private Controls: 0
+>>
+>> Format ioctls:
+>> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>> 	test VIDIOC_G/S_PARM: OK (Not Supported)
+>> 	test VIDIOC_G_FBUF: OK (Not Supported)
+>> 	test VIDIOC_G_FMT: OK
+>> 	test VIDIOC_TRY_FMT: OK
+>> 	test VIDIOC_S_FMT: OK
+>> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>> 	test Cropping: OK
+>> 	test Composing: OK (Not Supported)
+>> 	test Scaling: OK (Not Supported)
+>>
+>> Codec ioctls:
+>> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
+>> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>>
+>> Buffer ioctls:
+>> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>> 	test VIDIOC_EXPBUF: OK
+>> 	test Requests: OK (Not Supported)
+>>
+>> Test input 0:
+>>
+>> Streaming ioctls:
+>> 	test read/write: OK (Not Supported)
+>> 	test blocking wait: OK
+>> 	Video Capture: Captured 60 buffers                
+>> 	test MMAP (select): OK
+>> 	Video Capture: Captured 60 buffers                
+>> 	test MMAP (epoll): OK
+>> 	Video Capture: Captured 60 buffers                
+>> 	test USERPTR (select): OK
+>> 	test DMABUF: Cannot test, specify --expbuf-device
+>>
+>> Total for vicodec device /dev/video0: 50, Succeeded: 50, Failed: 0, Warnings: 0
+>>
+>> Changes since v2 at [4]:
+>> - Move full draining & stopped state tracking into core v4l2-mem2mem
+>> - Adapt vicodec to use the core v4l2-mem2mem draining & stopped state tracking
+>>
+>> Changes since v1 at [1]:
+>> - fixed output_size is never used reported by hans
+>> - rebased on G12A and SM1 patches
+>> - added handling of qbuf after STREAMON and STOP before enought buffer queued
+>>
+>> [1] https://lore.kernel.org/linux-media/20191007145909.29979-1-mjourdan@baylibre.com
+>> [2] https://lore.kernel.org/linux-media/20191205153408.26500-1-narmstrong@baylibre.com
+>> [3] https://lore.kernel.org/linux-media/20191121101429.23831-1-narmstrong@baylibre.com
+>> [4] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmstrong@baylibre.com
+>>
+>> Maxime Jourdan (2):
+>>   media: meson: vdec: bring up to compliance
+>>   media: meson: vdec: add H.264 decoding support
+>>
+>> Neil Armstrong (2):
+>>   media: v4l2-mem2mem: handle draining, stopped and next-buf-is-last
+>>     states
+>>   media: vicodec: use v4l2-mem2mem draining, stopped and
+>>     next-buf-is-last states handling
+>>
+>>  drivers/media/platform/vicodec/vicodec-core.c | 154 ++----
+>>  drivers/media/v4l2-core/v4l2-mem2mem.c        | 174 ++++++-
+>>  drivers/staging/media/meson/vdec/Makefile     |   2 +-
+>>  drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
+>>  drivers/staging/media/meson/vdec/codec_h264.h |  14 +
+>>  drivers/staging/media/meson/vdec/esparser.c   |  58 +--
+>>  drivers/staging/media/meson/vdec/vdec.c       |  92 ++--
+>>  drivers/staging/media/meson/vdec/vdec.h       |  14 +-
+>>  .../staging/media/meson/vdec/vdec_helpers.c   |  85 ++-
+>>  .../staging/media/meson/vdec/vdec_helpers.h   |   6 +-
+>>  .../staging/media/meson/vdec/vdec_platform.c  |  71 +++
+>>  include/media/v4l2-mem2mem.h                  |  87 ++++
+>>  12 files changed, 1009 insertions(+), 230 deletions(-)
+>>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
+>>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
+>>
+> 
 
