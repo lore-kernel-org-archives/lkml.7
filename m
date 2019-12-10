@@ -2,216 +2,202 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890DCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F934C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C6E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A7F2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="uh3mhyY9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7V07Whf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfLJMvy (ORCPT
+        id S1727520AbfLJMwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:51:54 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44065 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbfLJMvx (ORCPT
+        Tue, 10 Dec 2019 07:52:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40472 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfLJMwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:51:53 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so19940983wrm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:51:52 -0800 (PST)
+        Tue, 10 Dec 2019 07:52:15 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so19941724wrn.7;
+        Tue, 10 Dec 2019 04:52:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=OLrkMP1SU9o9YBr7j7LFNOgjptF6dJnR5stNA5yE+Q8=;
-        b=uh3mhyY9uLO+mp2uiWazSJDcsnD5XfkpEOOcw1HNtcmytJFF5tu1V1nPwA6UbdH+2h
-         /yxK3KCWNiZGyuFUODO1SVEoY4YmwIbJJJDLzCTFvsoc4Y3lx6RG55Wv0RhOI+Ld68F1
-         MmTZZ84eonn/IAbK3vNCAYisSE4+wUk1qgGm4WGHokRJ5AV0cywIJGLKWA1egaIQv5Nf
-         KdXxvktEn0ICLFcYXa263fjycY3/1jjakB53NOo+xMp66+udx5bOKyfOFp6cMX/sXGQ7
-         GN+E2np2vMaWS1W5L9vO0alDheKQrwusY8FOV/qYloYWj78QTllHyxx5E02P8FWc8+bb
-         uxXw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eP+biOEoPLLzGzoIDWqyl2DL6smvH4qJE/Q2QegbMVs=;
+        b=h7V07WhfzAKAE9G9y+Q+ZXDJVQ7r3ubI3/9KFgnD7+JpLLkhJU+UsYYDPigaZFqjg1
+         ad90wDKcE1pQGqbJctp9HPu6YFwAiYZEJKItJvhAwXeh1X+ROapFF3jA8WmS8kKFf4Mt
+         wk8EbwJkUghl9ilZcPQpamIYrjTImAgB3bGMeSMtyGRvwlsM6lC3zjOjXrmZa/yido03
+         64LlXuadoD1rT+NPcXhpqUsRPYBEICjhjRVDGxLzaroyfap9rX7eTV05iPm3mUTSfFrS
+         BLrXwrGAj82O3DRqCjEA6OeFKdPKqfN2Gn9WmO3WGQm8oarIrImSCT3wywEVeuGAbYPs
+         qSPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=OLrkMP1SU9o9YBr7j7LFNOgjptF6dJnR5stNA5yE+Q8=;
-        b=NC2HIH9jK2XyeVxpTcXKgXlJYRbhTPmqn20A33znKv9lY+pEvTU+gCoVSym+6YpgcO
-         KsliOajdL92CzC4ILddHEfx5Ne6+NzEKF/M46F3oKhy5UFS8kKMJ1xRfzNv/q5x3Q0Uv
-         tQpfuW1hFlQrR1mqFkKZXZLLtH209wyNBubiH0lmbLmo1AaRDxjZiHADXwanE1rg6SLe
-         nZEg9yDRxKogONS/tl797/Q/z/rOXncEW1K+wc6PdIqL4zgJlafpWQxP6V0/7LqKkoGO
-         3/mSYqGuN3JfdKg1RI7yJV93pkNyhJpDSL0Qpu3buhre0ZVjZ76gVG3eNup3MsLirJhq
-         0DOQ==
-X-Gm-Message-State: APjAAAUf1fhqifF4ZePNvAPX8REpycQXD8NVud4+qZzXYtkT3hK+C4eh
-        MeHEf45BBqFiwTGs6rwrB7XqDw==
-X-Google-Smtp-Source: APXvYqxUkysahHkOiervGkOZJnvReIh3BHdOH5U6VcuWUyHem/WdlgN/yXqsOWyR+BN1yZhWfyRLnQ==
-X-Received: by 2002:a05:6000:cb:: with SMTP id q11mr3039832wrx.14.1575982312182;
-        Tue, 10 Dec 2019 04:51:52 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d186sm3013991wmf.7.2019.12.10.04.51.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eP+biOEoPLLzGzoIDWqyl2DL6smvH4qJE/Q2QegbMVs=;
+        b=HSirKafVLqgdVrDei06+FxwaYgPPqo5t/8coElmdSZl6IODUQmEXZ5WvHiI2+s+Qfq
+         IfDcg622q0wvfHeFmgfx3grIXRTKK89qaXgZWjLJmocFNHLtV05qA+cjqS2ThJsaoZe4
+         WeKin8OAh7LGaHEg7vYv+RPm2zaxYz7zWb9Td1PiUCCx5crZKvRC1j/l7O+5uF1r7ZtS
+         633LmJoIGicGAtPPeuy/xd+KXaDX2W0nPxRwdtrywP+aMPhLh3/UKzlxvdxuwMkidM9X
+         9StUAg8t+FIOtuGdKglda6R3TkZXPaFjG4w10FlpnKUQnEurno7ri/vSbKsGPApvsM9U
+         tdjA==
+X-Gm-Message-State: APjAAAUsC6a5c8Y2W/gdD8XNl/epUqbdHF7hh0tRUB9Eu6awUm4aUS+e
+        wqa+MqVeZoPTnALexRp7mvg=
+X-Google-Smtp-Source: APXvYqxItXYjICBNePYjyaPa8NX4kDtRSRvG7S+SO2ZAkjnxV70FvYFFJei5TlQ50iJb3Vwk+gk3LQ==
+X-Received: by 2002:a5d:480f:: with SMTP id l15mr3117484wrq.305.1575982332070;
+        Tue, 10 Dec 2019 04:52:12 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id m3sm3172993wrs.53.2019.12.10.04.52.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 04:51:51 -0800 (PST)
-Message-ID: <5def94e7.1c69fb81.2751f.190a@mx.google.com>
-Date:   Tue, 10 Dec 2019 04:51:51 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 10 Dec 2019 04:52:10 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:52:08 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+Message-ID: <20191210125208.GD2703785@ulmo>
+References: <20191210014011.21987-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.5-rc1-46-g3778790e1d13
-X-Kernelci-Tree: broonie-sound
-X-Kernelci-Branch: for-next
-X-Kernelci-Lab-Name: lab-collabora
-Subject: broonie-sound/for-next bisection: boot on rk3399-gru-kevin
-To:     Olivier Moysan <olivier.moysan@st.com>, mgalka@collabora.com,
-        Mark Brown <broonie@kernel.org>, enric.balletbo@collabora.com,
-        khilman@baylibre.com, tomeu.vizoso@collabora.com,
-        broonie@kernel.org, guillaume.tucker@collabora.com
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Brian Austin <brian.austin@cirrus.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Paul Handrigan <Paul.Handrigan@cirrus.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="AkbCVLjbJ9qUtAXD"
+Content-Disposition: inline
+In-Reply-To: <20191210014011.21987-1-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-broonie-sound/for-next bisection: boot on rk3399-gru-kevin
+--AkbCVLjbJ9qUtAXD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Summary:
-  Start:      3778790e1d13 Merge branch 'asoc-5.6' into asoc-next
-  Details:    https://kernelci.org/boot/id/5deef68acb72c66093960f08
-  Plain log:  https://storage.kernelci.org//broonie-sound/for-next/v5.5-rc1=
--46-g3778790e1d13/arm64/defconfig/gcc-8/lab-collabora/boot-rk3399-gru-kevin=
-.txt
-  HTML log:   https://storage.kernelci.org//broonie-sound/for-next/v5.5-rc1=
--46-g3778790e1d13/arm64/defconfig/gcc-8/lab-collabora/boot-rk3399-gru-kevin=
-.html
-  Result:     abe3b6727b65 ASoC: cs42l51: add dac mux widget in codec routes
+On Tue, Dec 10, 2019 at 04:40:11AM +0300, Dmitry Osipenko wrote:
+> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+> In a result high-speed mode isn't enabled for the WiFi card and this
+> results in a malfunctioning SDIO communication.
+>=20
+>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -=
+84
+>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>=20
+> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+> the problem, let's do the same in upstream.
+>=20
+> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+> which overrides card's info for the TI wl1251 WiFi.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+This seems like the wrong place to do this. If this is specific to this
+WiFi SDIO chip this should be handled at the SDIO card or function
+level. It seems like the SDIO infrastructure doesn't currently allow
+this because the OF nodes are attached to the card after
+mmc_sdio_init_card(), whereas it seems like the quirk is already needed
+during mmc_sdio_init_card().
 
-Parameters:
-  Tree:       broonie-sound
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound=
-.git
-  Branch:     for-next
-  Target:     rk3399-gru-kevin
-  CPU arch:   arm64
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     defconfig
-  Test suite: boot
+That said, I think we could have some common code that's executed as
+part of mmc_attach_sdio() (and before mmc_sdio_init_card()).
 
-Breaking commit found:
+Actually, it looks like we already have something like that.
+mmc_sdio_init_card() calls mmc_fixup_device() with sdio_fixup_methods
+after doing some very basic initialization. Do you know if things start
+to go wrong before or after that point? It might be worth looking at
+that SDIO fixup array and add something that would override the CCCR
+support. That would fix things in a more generic way rather than
+requiring every host controller driver to duplicate this quirk.
 
----------------------------------------------------------------------------=
-----
-commit abe3b6727b653307c27870a2d4ecbf9de4e914a5
-Author: Olivier Moysan <olivier.moysan@st.com>
-Date:   Tue Dec 3 15:16:27 2019 +0100
+Thierry
 
-    ASoC: cs42l51: add dac mux widget in codec routes
-    =
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegr=
+a.c
+> index 7bc950520fd9..2ad87da98f2c 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -1501,6 +1501,32 @@ static int sdhci_tegra_add_host(struct sdhci_host =
+*host)
+>  	return ret;
+>  }
+> =20
+> +static void sdhci_tegra_init_card(struct mmc_host *mmc, struct mmc_card =
+*card)
+> +{
+> +	if (card->type =3D=3D MMC_TYPE_SDIO) {
+> +		struct device_node *np =3D mmc_dev(mmc)->of_node;
+> +
+> +		np =3D of_get_compatible_child(np, "brcm,bcm4329-fmac");
+> +		if (np) {
+> +			dev_info(mmc_dev(mmc), "found bcm4329\n");
+> +
+> +			/*
+> +			 * All Tegra20 boards that have embedded BCM4329
+> +			 * chip need to enable high speed for SDIO, otherwise
+> +			 * further communication with the card doesn't work
+> +			 * well.
+> +			 *
+> +			 * Later BCM43xx chips do not need this workaround,
+> +			 * but there is no good way to differentiate chip's
+> +			 * version at this stage and it doesn't cause any
+> +			 * harm for the later chips.
+> +			 */
+> +			card->cccr.high_speed =3D 1;
+> +			of_node_put(np);
+> +		}
+> +	}
+> +}
+> +
+>  static int sdhci_tegra_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *match;
+> @@ -1545,6 +1571,8 @@ static int sdhci_tegra_probe(struct platform_device=
+ *pdev)
+>  		host->mmc_host_ops.execute_tuning =3D
+>  				tegra_sdhci_execute_hw_tuning;
+> =20
+> +	host->mmc_host_ops.init_card =3D sdhci_tegra_init_card;
+> +
+>  	rc =3D mmc_of_parse(host->mmc);
+>  	if (rc)
+>  		goto err_parse_dt;
+> --=20
+> 2.24.0
+>=20
 
-    Add "DAC mux" DAPM widget in CS42l51 audio codec routes,
-    to support DAC mux control and to remove error trace
-    "DAC Mux has no paths" at widget creation.
-    Note: ADC path of DAC mux is not routed in this patch.
-    =
+--AkbCVLjbJ9qUtAXD
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-    Link: https://lore.kernel.org/r/20191203141627.29471-1-olivier.moysan@s=
-t.com
-    Signed-off-by: Mark Brown <broonie@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index 55408c8fcb4e..e47758e4fb36 100644
---- a/sound/soc/codecs/cs42l51.c
-+++ b/sound/soc/codecs/cs42l51.c
-@@ -214,12 +214,10 @@ static const struct snd_soc_dapm_widget cs42l51_dapm_=
-widgets[] =3D {
- 	SND_SOC_DAPM_ADC_E("Right ADC", "Right HiFi Capture",
- 		CS42L51_POWER_CTL1, 2, 1,
- 		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
--	SND_SOC_DAPM_DAC_E("Left DAC", "Left HiFi Playback",
--		CS42L51_POWER_CTL1, 5, 1,
--		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
--	SND_SOC_DAPM_DAC_E("Right DAC", "Right HiFi Playback",
--		CS42L51_POWER_CTL1, 6, 1,
--		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
-+	SND_SOC_DAPM_DAC_E("Left DAC", NULL, CS42L51_POWER_CTL1, 5, 1,
-+			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
-+	SND_SOC_DAPM_DAC_E("Right DAC", NULL, CS42L51_POWER_CTL1, 6, 1,
-+			   cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
- =
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3vlPYACgkQ3SOs138+
+s6EEig/9G0UHUk7Bmvo/1xi3zh1yjTsm5ZG90FSCRQnrnd1QEHZ7beKfoyHh1ZyX
+YQLtTtZN0f5d6kAr69+1HTqUR22+AsM5XY5zWjWyUsySiPKwbx/hKcPl+PeHGPlS
+oUjEI3R9oq6XRlaOFYdFKO1l4JfUbO6SvPvCDLnf/SbiQm6qx9mfc21sYj9eyoA2
+XNlcJVthp5S/E3VcyNMx4YArblHPtrKRaZW4KnfboauU7PJwfwgCCn14FD/muF+M
+kKusUMsYKNWGvu9VofWyr2kg0Ms76nvzKbQJfgZNJejm+BzwcsJvqGasyGOI9mSp
+h0+ldVUl1mgGa+90iY9cpEE7AarfX0lfvX2ZFBOkmQP+LiG7/kMaxkNFTyKl+Nz8
+3+VUhEq3BIc64lv4k1/yiVcI6kdozo+Aa4gREaR23VpiXzRhT+q1uVoHxVg5MoEN
+YtN/LXuBXczfZHUnpmb1/pZKYGhF4DPrzLWqxS/xaKlWdw6Sjb/WPpYj9DOhLysG
+eVtYN7o8f1E22dEPOcV8PCa7X6SLMG6eY2PRS+QFQJdz/gbYEJDNsrE6n9zqcd5r
+Izun4caxrjgCZGszzsnavN61vRkxmJu9cFyl4s9knv8vnj6P3IN5bDpW5wOo9hVu
+PiwVybFkXCqO3mt0Zu4r4xkzlcbKRi7IxYLrdCceWI78zLvP128=
+=3qZu
+-----END PGP SIGNATURE-----
 
- 	/* analog/mic */
- 	SND_SOC_DAPM_INPUT("AIN1L"),
-@@ -255,6 +253,12 @@ static const struct snd_soc_dapm_route cs42l51_routes[=
-] =3D {
- 	{"HPL", NULL, "Left DAC"},
- 	{"HPR", NULL, "Right DAC"},
- =
-
-+	{"Right DAC", NULL, "DAC Mux"},
-+	{"Left DAC", NULL, "DAC Mux"},
-+
-+	{"DAC Mux", "Direct PCM", "Playback"},
-+	{"DAC Mux", "DSP PCM", "Playback"},
-+
- 	{"Left ADC", NULL, "Left PGA"},
- 	{"Right ADC", NULL, "Right PGA"},
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [e42617b825f8073569da76dc4510bfa019b1c35a] Linux 5.5-rc1
-git bisect good e42617b825f8073569da76dc4510bfa019b1c35a
-# bad: [3778790e1d1329223601c63602286ad1d73c480f] Merge branch 'asoc-5.6' i=
-nto asoc-next
-git bisect bad 3778790e1d1329223601c63602286ad1d73c480f
-# bad: [3e62579436c6a7fc35de7318e6c5f495b8d0046c] ASoC: SOF: core: modify t=
-he signature for snd_sof_create_page_table
-git bisect bad 3e62579436c6a7fc35de7318e6c5f495b8d0046c
-# good: [62d5ae4cafb7ffeeec6ba2dd1814cafeeea7dd8f] ASoC: max98090: save and=
- restore SHDN when changing sensitive registers
-git bisect good 62d5ae4cafb7ffeeec6ba2dd1814cafeeea7dd8f
-# bad: [bc9a665581b3c6c82c9220a47f6573b49ce2df0b] ASoC: fix soc-core.c kern=
-el-doc warning
-git bisect bad bc9a665581b3c6c82c9220a47f6573b49ce2df0b
-# bad: [abe3b6727b653307c27870a2d4ecbf9de4e914a5] ASoC: cs42l51: add dac mu=
-x widget in codec routes
-git bisect bad abe3b6727b653307c27870a2d4ecbf9de4e914a5
-# good: [49df1e3925824cf44e590daac635974270185841] ASoC: rsnd: Calculate DA=
-LIGN inversion at run-time
-git bisect good 49df1e3925824cf44e590daac635974270185841
-# first bad commit: [abe3b6727b653307c27870a2d4ecbf9de4e914a5] ASoC: cs42l5=
-1: add dac mux widget in codec routes
----------------------------------------------------------------------------=
-----
+--AkbCVLjbJ9qUtAXD--
