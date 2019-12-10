@@ -2,127 +2,197 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557DCC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B144C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DD5206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36660206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sp74goIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfLJXfx (ORCPT
+        id S1727208AbfLJXgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:35:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42155 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbfLJXfw (ORCPT
+        Tue, 10 Dec 2019 18:36:14 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44100 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLJXgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:35:52 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iep2S-0007Qa-6r; Wed, 11 Dec 2019 00:35:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6BA721C047B;
-        Wed, 11 Dec 2019 00:35:31 +0100 (CET)
-Date:   Tue, 10 Dec 2019 23:35:30 -0000
-From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] Revert "locking/mutex: Complain upon mutex API
- misuse in IRQ contexts"
-Cc:     Davidlohr Bueso <dbueso@suse.de>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        will@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191210220523.28540-1-dave@stgolabs.net>
-References: <20191210220523.28540-1-dave@stgolabs.net>
+        Tue, 10 Dec 2019 18:36:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d199so692930pfd.11;
+        Tue, 10 Dec 2019 15:36:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=tMFsoiQ1JTdEjW5nt4kb9CZsuPmur1i5swl5XGfNWeY=;
+        b=sp74goInBTBfTcbH0vLZAwSCtJ56DLPWfReGLpiKGB3Jpidrwusb1uTOlah0vlFG7P
+         iiMfeVV3ZnLflfMASfTwvgJLfi4oe18CiJThdCp3LQTMB+Uqq7YU6tuKOQQC2OtD2eeK
+         E4vIMgmRLO48yCOh3xFQNkVD2BES6kd8SUZwwzmdAUjy5alfxzzj7quz8ylT/mbsVCkk
+         U80UboAGBt/zh1N9lsvgEh/K+T44f7sj9IkngsBzlC+Go3T+pM7rdpJZbIVi5dtyAThN
+         xWyJEVOq07L41aBuyRc9/OsSb9Vp5fzlVFwMtFnzqnhtohMk5eoiz7shZ/tGpqoHE5l/
+         Ia/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=tMFsoiQ1JTdEjW5nt4kb9CZsuPmur1i5swl5XGfNWeY=;
+        b=raLZ64yFGHdvKfJq4ZGXO8NFaxZeDR7nxRnJC2XJoO3jOuoKRMcdnT5gRw24HKXaD4
+         yVEzwikJnZOpcL/0BDK3qI35a6QimER2hUlIfRvUpuyeWFCkwCKwde5NTVl87NmW5Vfg
+         hXoRxi0Yr9iNfoJaKVb6uqZYb9GP2bdWaFLaDWmDeUcfdMOFj0Sex5jcjDnbnNoOsCKL
+         jsLqvd1joY0a/CAbvy+GOwmzFJOibGocY4TJy/SYrOvE5EKrkJO78zjkmnQD1jscDNnM
+         LfWvBWPhgfAVjsTS+86myhrn3ZAiQIJ14yon3VFok1mP0g1nIkt7lQjnMOAwvpQ1anQ8
+         OUNw==
+X-Gm-Message-State: APjAAAVPYOoBEdzOMMMCYjW1rNERd95wSgkm0L/cCLq1vsrsY4vQIg0k
+        JApVz4O4EIVGvhItCKDX+sE=
+X-Google-Smtp-Source: APXvYqxvy9S6VzhXvVGLJSoj3Hh+to8+tYICGolfMw0db5XfVda3a5TkrjHCP5cqKugIKy1hvShRjA==
+X-Received: by 2002:a62:7683:: with SMTP id r125mr535411pfc.132.1576020972280;
+        Tue, 10 Dec 2019 15:36:12 -0800 (PST)
+Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id x4sm127947pff.143.2019.12.10.15.36.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 15:36:11 -0800 (PST)
+Date:   Wed, 11 Dec 2019 07:36:05 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Message-ID: <20191210233605.GA4640@sol>
+References: <20191210021525.13455-1-warthog618@gmail.com>
+ <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+ <20191210145515.GB3509@sol>
+ <CAMRc=MemKDFDHpEdq2OKvEduBTdi2c3oQmgeYF8qX1rcc-rk8A@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <157602093075.30329.6269791000248748517.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MemKDFDHpEdq2OKvEduBTdi2c3oQmgeYF8qX1rcc-rk8A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/urgent branch of tip:
+On Tue, Dec 10, 2019 at 04:34:21PM +0100, Bartosz Golaszewski wrote:
+> wt., 10 gru 2019 o 15:55 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
+> > > wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > >
+> > > > Restore the external behavior of gpio-mockup to what it was prior to the
+> > > > change to using GPIO_LINE_DIRECTION.
+> > > >
+> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > ---
+> > > >
+> > > > Fix a regression introduced in v5.5-rc1.
+> > > >
+> > > > The change to GPIO_LINE_DIRECTION reversed the polarity of the
+> > > > dir field within gpio-mockup.c, but overlooked inverting the value on
+> > > > initialization and when returned by gpio_mockup_get_direction.
+> > > > The latter is a bug.
+> > > > The former is a problem for tests which assume initial conditions,
+> > > > specifically the mockup used to initialize chips with all lines as inputs.
+> > > > That superficially appeared to be the case after the previous patch due
+> > > > to the bug in gpio_mockup_get_direction.
+> > > >
+> > > >  drivers/gpio/gpio-mockup.c | 7 +++++--
+> > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > > > index 56d647a30e3e..c4fdc192ea4e 100644
+> > > > --- a/drivers/gpio/gpio-mockup.c
+> > > > +++ b/drivers/gpio/gpio-mockup.c
+> > > > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > > >         int direction;
+> > > >
+> > > >         mutex_lock(&chip->lock);
+> > > > -       direction = !chip->lines[offset].dir;
+> > > > +       direction = chip->lines[offset].dir;
+> > > >         mutex_unlock(&chip->lock);
+> > > >
+> > > >         return direction;
+> > > > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > > >         struct gpio_chip *gc;
+> > > >         struct device *dev;
+> > > >         const char *name;
+> > > > -       int rv, base;
+> > > > +       int rv, base, i;
+> > > >         u16 ngpio;
+> > > >
+> > > >         dev = &pdev->dev;
+> > > > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > > >         if (!chip->lines)
+> > > >                 return -ENOMEM;
+> > > >
+> > > > +       for (i = 0; i < gc->ngpio; i++)
+> > > > +               chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
+> > > > +
+> > > >         if (device_property_read_bool(dev, "named-gpio-lines")) {
+> > > >                 rv = gpio_mockup_name_lines(dev, chip);
+> > > >                 if (rv)
+> > > > --
+> > > > 2.24.0
+> > > >
+> > >
+> > > Hi Kent,
+> > >
+> > > I was applying and testing your libgpiod series and noticed that the
+> > > gpio-tools tests fail after applying patches 16 & 17 (with linux
+> > > v5.5-rc1). Is this fix related to this?
+> > >
+> >
+> > I don't think so.  I've only been able to trip this problem with a
+> > couple of corner cases in my Go uapi test suite.
+> > I have been unable to reproduce it with the tools as it requires
+> > multiple requests with the same chip fd, including an as-is, to trip.
+> >
+> > And running the libgpiod tests against v5.5-rc1 works for me.
+> > Can you provide more details as to the errors you are seeing?
+> >
+> 
+> Hmm whatever that was, it's gone now. Must have been some leftovers
+> from previous builds. All works now.
+> 
+> > Btw, I was writing tests for your LINEINFO_WATCH patch v2, which I was
+> > applying to v5.5-rc1, when I ran across this.  That works ok if I
+> > __packed the changed struct.
+> 
+> These things can still change, so don't spend too much time on it yet. :)
+> 
 
-Commit-ID:     c571b72e2b845ca0519670cb7c4b5fe5f56498a5
-Gitweb:        https://git.kernel.org/tip/c571b72e2b845ca0519670cb7c4b5fe5f56498a5
-Author:        Davidlohr Bueso <dave@stgolabs.net>
-AuthorDate:    Tue, 10 Dec 2019 14:05:23 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 11 Dec 2019 00:27:43 +01:00
+Absolutely.  But as this is an ABI addition I wanted to have something
+to give it a decent workout before it gets applied.
+So far the only problems I've found are the alignment and isolation
+issues already mentioned.
 
-Revert "locking/mutex: Complain upon mutex API misuse in IRQ contexts"
+> Since the lineinfo struct is not __packed, I'd prefer to not use it
+> for any struct embedding it. I'll just add appropriate padding for
+> 64-bit alignment.
+> 
 
-This ended up causing some noise in places such as rxrpc running in softirq.
+Explicit padding for 64-bit alignment makes sense to me.
 
-The warning is misleading in this case as the mutex trylock and unlock
-operations are done within the same context; and therefore we need not
-worry about the PI-boosting issues that comes along with no single-owner
-lock guarantees.
+> > And I can confirm that patch v2 doesn't isolate watches on different
+> > chip fds.
+> >
+> 
+> Yeah, I'll fix this.
 
-While we don't want to support this in mutexes, there is no way out of
-this yet; so lets get rid of the WARNs for now, as it is only fair to
-code that has historically relied on non-preemptible softirq guarantees.
-In addition, changing the lock type is also unviable: exclusive rwsems
-have the same issue (just not the WARN_ON) and counting semaphores
-would introduce a performance hit as mutexes are a lot more optimized.
+One more thing - since it is possible to lose change events due to fifo
+overflow, how about adding a seqnum?  And if you do end up doing a v2 of
+the event ABI to fix its alignment, adding one there as well.
 
-This reverts:
+Kent.
 
-    a0855d24fc22: ("locking/mutex: Complain upon mutex API misuse in IRQ contexts")
-
-Fixes: a0855d24fc22: ("locking/mutex: Complain upon mutex API misuse in IRQ contexts")
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-Tested-by: David Howells <dhowells@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-afs@lists.infradead.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: will@kernel.org
-Link: https://lkml.kernel.org/r/20191210220523.28540-1-dave@stgolabs.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/mutex.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 54cc5f9..5352ce5 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -733,9 +733,6 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
-  */
- void __sched mutex_unlock(struct mutex *lock)
- {
--#ifdef CONFIG_DEBUG_MUTEXES
--	WARN_ON(in_interrupt());
--#endif
- #ifndef CONFIG_DEBUG_LOCK_ALLOC
- 	if (__mutex_unlock_fast(lock))
- 		return;
-@@ -1416,7 +1413,6 @@ int __sched mutex_trylock(struct mutex *lock)
- 
- #ifdef CONFIG_DEBUG_MUTEXES
- 	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
--	WARN_ON(in_interrupt());
- #endif
- 
- 	locked = __mutex_trylock(lock);
