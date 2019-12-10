@@ -2,153 +2,201 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E765C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F01C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2206F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575982148;
-	bh=hUT2jtwORm5+GKr0gw3ZYWzdb2gXCbLCj9MRwm9xywY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ixakvHr5MhKC4gLyMc06YxFFlKJVC4D0D5Ni2eNvvGmEaGBof/2VfSljmrlDv91rS
-	 gKlMKyBKCm/KfuQeteCfiN8BtjP0BCOveTPHavvc7bzycUuNcVpHbNKHquyooWxbsv
-	 n3bDF49v4rxjHJrOL2hQa/aE+L1yZ7MQg2XNzGwo=
+	by mail.kernel.org (Postfix) with ESMTP id 680CC2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfLJMtH (ORCPT
+        id S1727483AbfLJMuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727131AbfLJMtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:49:06 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5572073B;
-        Tue, 10 Dec 2019 12:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575982144;
-        bh=hUT2jtwORm5+GKr0gw3ZYWzdb2gXCbLCj9MRwm9xywY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ydFIaQevf5K0X+XeD5O7r0t/O44xcJ+NlGDeEHcWvGuZ4jqYr36DDabMh+Ie3YZ8Q
-         PdOijCVaVRF8OL00eedxv1LCKJaDh0bYdVBBkKU/i+SNuJmnOYLi+ZgDlOtRz9X88R
-         5ioca5VQWr+IdJssC5BQ9h4EV47nGnU0Z7kQjD9c=
-Date:   Tue, 10 Dec 2019 13:49:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Simon Geis <simon.geis@fau.de>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Adam Zerella <adam.zerella@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Lukas Panzer <lukas.panzer@fau.de>
-Subject: Re: [PATCH v2 01/10] PCMCIA/i82092: use dev_<level> instead of printk
-Message-ID: <20191210124902.GA3810481@kroah.com>
-References: <20191210114333.12239-1-simon.geis@fau.de>
- <20191210114333.12239-2-simon.geis@fau.de>
+        Tue, 10 Dec 2019 07:50:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37718 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727131AbfLJMuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:50:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E26C9AF76;
+        Tue, 10 Dec 2019 12:49:59 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 84F101E0B23; Tue, 10 Dec 2019 13:49:57 +0100 (CET)
+Date:   Tue, 10 Dec 2019 13:49:57 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v8 23/26] mm/gup: pass flags arg to __gup_device_*
+ functions
+Message-ID: <20191210124957.GG1551@quack2.suse.cz>
+References: <20191209225344.99740-1-jhubbard@nvidia.com>
+ <20191209225344.99740-24-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191210114333.12239-2-simon.geis@fau.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209225344.99740-24-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:43:26PM +0100, Simon Geis wrote:
-> Improve the log output by using the
-> device-aware dev_err()/dev_info() functions. While at it, update one
-> remaining printk(KERN_ERR ...) call to the preferred pr_err() call.
+On Mon 09-12-19 14:53:41, John Hubbard wrote:
+> A subsequent patch requires access to gup flags, so pass the flags
+> argument through to the __gup_device_* functions.
 > 
-> Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
-> Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
-> Signed-off-by: Simon Geis <simon.geis@fau.de>
+> Also placate checkpatch.pl by shortening a nearby line.
 > 
+> TODO: Christoph Hellwig requested folding this into the patch the uses
+> the gup flags arguments.
+
+You should probably implement this TODO? :)
+
+								Honza
+
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > ---
->  drivers/pcmcia/i82092.c | 79 ++++++++++++++++++++++++++++++-----------
->  1 file changed, 58 insertions(+), 21 deletions(-)
+>  mm/gup.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
-> index aad8a46605be..ba33293b1a34 100644
-> --- a/drivers/pcmcia/i82092.c
-> +++ b/drivers/pcmcia/i82092.c
-> @@ -92,11 +92,13 @@ static int i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *i
->  			break;
->  			
->  		default:
-> -			printk(KERN_ERR "i82092aa: Oops, you did something we didn't think of.\n");
-> +			dev_err(&dev->dev,
-> +				"i82092aa: Oops, you did something we didn't think of.\n");
-
-You already know the device and driver type (it comes built-into the
-dev_err() message), so there's no need to keep the i82092aa everywhere
-here, right?
-
-> @@ -417,7 +422,9 @@ static int i82092aa_init(struct pcmcia_socket *sock)
->                                                                                                                                                                                                                                                
->  static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value)
->  {
-> -	unsigned int sock = container_of(socket, struct socket_info, socket)->number;
-> +	struct socket_info *sock_info = container_of(socket, struct socket_info,
-> +						     socket);
-> +	unsigned int sock = sock_info->number;
-
-
-This does not look like a printk cleanup :(
-
->  	unsigned int status;
->  	
->  	enter("i82092aa_get_status");
-> @@ -458,7 +465,9 @@ static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value)
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 73aedcefa4bd..687d48506f04 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1957,7 +1957,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
 >  
->  static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *state) 
+>  #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+>  static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+> -		unsigned long end, struct page **pages, int *nr)
+> +			     unsigned long end, unsigned int flags,
+> +			     struct page **pages, int *nr)
 >  {
-> -	unsigned int sock = container_of(socket, struct socket_info, socket)->number;
-> +	struct socket_info *sock_info = container_of(socket, struct socket_info,
-> +						     socket);
-> +	unsigned int sock = sock_info->number;
-
-Nor does this :(
-
-
-> -/*	printk("set_io_map: Setting range to %x - %x \n",io->start,io->stop);  */
-> +/*	dev_info(&sock_info->dev->dev,
-> + *		 "set_io_map: Setting range to %x - %x\n",
-> + *		 io->start, io->stop);
-> + */
-
-Just delete commented out lines.
-
-> -/* 	printk("set_mem_map: Setting map %i range to %x - %x on socket %i, speed is %i, active = %i \n",map, region.start,region.end,sock,mem->speed,mem->flags & MAP_ACTIVE);  */
-> +/*	dev_info(&sock_info->dev->dev,
-> + *		 "set_mem_map: Setting map %i range to %x - %x on socket %i, "
-> + *		 "speed is %i, active = %i\n", map,
-> + *		 region.start, region.end, sock,mem->speed,
-> + *		 mem->flags & MAP_ACTIVE);
-> + */
-
-same here.
-
->  	/* write the start address */
->  	base = I365_MEM(map);
-> @@ -669,10 +700,16 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_
->  	if (mem->flags & MAP_WRPROT)
->  		i |= I365_MEM_WRPROT;
->  	if (mem->flags & MAP_ATTRIB) {
-> -/*		printk("requesting attribute memory for socket %i\n",sock);*/
-> +/*		dev_info(&sock_info->dev->dev,
-> + *			 "requesting attribute memory for socket %i\n",
-> + *			 sock);
-> + */
-
-And here and elsewhere. They were just debugging lines.
-
-thanks,
-
-greg k-h
+>  	int nr_start = *nr;
+>  	struct dev_pagemap *pgmap = NULL;
+> @@ -1983,13 +1984,14 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+>  }
+>  
+>  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> -		unsigned long end, struct page **pages, int *nr)
+> +				 unsigned long end, unsigned int flags,
+> +				 struct page **pages, int *nr)
+>  {
+>  	unsigned long fault_pfn;
+>  	int nr_start = *nr;
+>  
+>  	fault_pfn = pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> -	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
+> +	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+>  		return 0;
+>  
+>  	if (unlikely(pmd_val(orig) != pmd_val(*pmdp))) {
+> @@ -2000,13 +2002,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  }
+>  
+>  static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> -		unsigned long end, struct page **pages, int *nr)
+> +				 unsigned long end, unsigned int flags,
+> +				 struct page **pages, int *nr)
+>  {
+>  	unsigned long fault_pfn;
+>  	int nr_start = *nr;
+>  
+>  	fault_pfn = pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> -	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
+> +	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+>  		return 0;
+>  
+>  	if (unlikely(pud_val(orig) != pud_val(*pudp))) {
+> @@ -2017,14 +2020,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  }
+>  #else
+>  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> -		unsigned long end, struct page **pages, int *nr)
+> +				 unsigned long end, unsigned int flags,
+> +				 struct page **pages, int *nr)
+>  {
+>  	BUILD_BUG();
+>  	return 0;
+>  }
+>  
+>  static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long addr,
+> -		unsigned long end, struct page **pages, int *nr)
+> +				 unsigned long end, unsigned int flags,
+> +				 struct page **pages, int *nr)
+>  {
+>  	BUILD_BUG();
+>  	return 0;
+> @@ -2136,7 +2141,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  	if (pmd_devmap(orig)) {
+>  		if (unlikely(flags & FOLL_LONGTERM))
+>  			return 0;
+> -		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
+> +		return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
+> +					     pages, nr);
+>  	}
+>  
+>  	page = pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+> @@ -2157,7 +2163,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+>  }
+>  
+>  static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> -		unsigned long end, unsigned int flags, struct page **pages, int *nr)
+> +			unsigned long end, unsigned int flags,
+> +			struct page **pages, int *nr)
+>  {
+>  	struct page *head, *page;
+>  	int refs;
+> @@ -2168,7 +2175,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+>  	if (pud_devmap(orig)) {
+>  		if (unlikely(flags & FOLL_LONGTERM))
+>  			return 0;
+> -		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
+> +		return __gup_device_huge_pud(orig, pudp, addr, end, flags,
+> +					     pages, nr);
+>  	}
+>  
+>  	page = pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+> -- 
+> 2.24.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
