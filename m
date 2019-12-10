@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037DCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47277C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD86320838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D723205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013459;
-	bh=ExUDjvtm01aCy1m6j1T8rrhTrcy9sZWU0k3WFEOT2v8=;
+	s=default; t=1576013465;
+	bh=RjW3nAfjJen7ymY+pr2pcyJdsQqV3ckNW602UmKrxCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UA0QGdBSwwLdHQ7Pje5+0QfJWFuJ2ukVA+AYhcjb30NjLXkNXPKfYGnGVxYF2OT7c
-	 lzCmyx1cI8UEOzrNeSXhLm+BQznFceDTGz9aRELZHp9QDCrENeNmxWWWtMVkC3u6eH
-	 2pakb7dG2p0YSVoffb8hgGcsd/Z0Jxfe0NDKDTiE=
+	b=MbnUENvwkhVvxWI3nWN97c5K1iVe+iAQP6aWajJmOSrA7Wy7l1+4J8YtNvDK8+cpK
+	 J8xFDkWvcjti6ZYhPIGHZ008KjPV7L56rca3Po09IHt7iPllTfqwSZh0S4rz57bzAC
+	 vvwfYmYT+u4gt/EiaScnct/RyW/rQtcGGMXdFSQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfLJVay (ORCPT
+        id S1727573AbfLJVbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:30:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58548 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:31:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbfLJVJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:41 -0500
+        id S1728247AbfLJVJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15D06246A7;
-        Tue, 10 Dec 2019 21:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD5A24696;
+        Tue, 10 Dec 2019 21:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012180;
-        bh=ExUDjvtm01aCy1m6j1T8rrhTrcy9sZWU0k3WFEOT2v8=;
+        s=default; t=1576012178;
+        bh=RjW3nAfjJen7ymY+pr2pcyJdsQqV3ckNW602UmKrxCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEJmvFdh7D3Faqw/zNynkcPmUu4kDNzD1pCTBwaaNoU3a53QyXtuS7pejAqMSXtrq
-         gLHUtguuNCKI0lsIcZVtXCtizjzeX5Sop+wKfnBxi/KmgApiCUY8WEbTwQHTAj17Yy
-         queCkgydcRpcmEda5zXdkJ8M9uesDCMg1scM2YVs=
+        b=pIDXTCk2hUED0aRBXT+nw9GZuzeishEMZROwO7p3LxkRd/192pgQ7UxrclSnkT9QI
+         wU7NX2xclnxRrBdaQ9uaJmtCYs0qR+pHXF2OYp/V8IozWuw/DfaFR3ul/Tk1fUNfn2
+         63M81QABE4SPcYrpokAWvT0mfOp7GtwSLLMBzzhk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 138/350] ASoC: soc-pcm: fixup dpcm_prune_paths() loop continue
-Date:   Tue, 10 Dec 2019 16:04:03 -0500
-Message-Id: <20191210210735.9077-99-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 136/350] drm/gma500: fix memory disclosures due to uninitialized bytes
+Date:   Tue, 10 Dec 2019 16:04:01 -0500
+Message-Id: <20191210210735.9077-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,75 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit bed646dc3f7bcec91178c278deaf969cce0700a8 ]
+[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
 
-dpcm_prune_paths() is checking widget at 2 parts.
-(A) is for CPU, (B) is for Codec.
-If we focus to (A) part, continue at (a) is for (1) loop. But,
-if we focus to (B) part, continue at (b) is for (2) loop, not for (1).
-This is bug.
-This patch fixup this issue.
+"clock" may be copied to "best_clock". Initializing best_clock
+is not sufficient. The fix initializes clock as well to avoid
+memory disclosures and informaiton leaks.
 
-	static int dpcm_prune_paths(...)
-	{
-		...
-   (1)		for_each_dpcm_be(fe, stream, dpcm) {
-			...
-
- ^			widget = dai_get_widget(...);
- |
-(A)			if (widget && widget_in_list(...))
- | (a)				continue;
- v
- ^ (2)			for_each_rtd_codec_dai(...) {
- |				widget = dai_get_widget(...);
-(B)
- |				if (widget && widget_in_list(...))
- v (b)					continue;
-			}
-			...
-
-Fixes: 2e5894d73789 ("ASoC: pcm: Add support for DAI multicodec")
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/87blui64mf.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index b600d3eaaf5cd..cdce96a3051bf 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1385,6 +1385,7 @@ static int dpcm_prune_paths(struct snd_soc_pcm_runtime *fe, int stream,
- 	struct snd_soc_dapm_widget *widget;
- 	struct snd_soc_dai *dai;
- 	int prune = 0;
-+	int do_prune;
+diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+index 167c10767dd42..900e5499249d5 100644
+--- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
++++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
+@@ -129,6 +129,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
+ 	s32 freq_error, min_error = 100000;
  
- 	/* Destroy any old FE <--> BE connections */
- 	for_each_dpcm_be(fe, stream, dpcm) {
-@@ -1398,13 +1399,16 @@ static int dpcm_prune_paths(struct snd_soc_pcm_runtime *fe, int stream,
- 			continue;
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
  
- 		/* is there a valid CODEC DAI widget for this BE */
-+		do_prune = 1;
- 		for_each_rtd_codec_dai(dpcm->be, i, dai) {
- 			widget = dai_get_widget(dai, stream);
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
+@@ -185,6 +186,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
+ 	int err = target;
  
- 			/* prune the BE if it's no longer in our active list */
- 			if (widget && widget_in_list(list, widget))
--				continue;
-+				do_prune = 0;
- 		}
-+		if (!do_prune)
-+			continue;
+ 	memset(best_clock, 0, sizeof(*best_clock));
++	memset(&clock, 0, sizeof(clock));
  
- 		dev_dbg(fe->dev, "ASoC: pruning %s BE %s for %s\n",
- 			stream ? "capture" : "playback",
+ 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
+ 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
 -- 
 2.20.1
 
