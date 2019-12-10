@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FD3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D759B206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A20206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013023;
-	bh=li3AXOeVeqlc3Mu6jNuhxf5fIXOLBal++8saYuL420A=;
+	s=default; t=1576013027;
+	bh=O+ShWLda6d+UTjYF4L4NDPbM6P7Zibhn1erEIHuUVjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Sl1BDblfAT+JqucNIMoarevrm6hweK+4UCc87UW5XWBsUoX1g5vx89Ijgxs6Xlxh
-	 z9wsXeK4pmUmvmx3UtvTa+LIBMA9p5UJ3n+dFNjP5AXgdacpFBJePcbKWcNodBD06s
-	 IfAzgNzmY5KIXTSNE3dR6oIgwMatZDPAB/8Xe3JI=
+	b=zPNJffZs12IHS/wNns2srVd9HoCZocMuB9Efu/UxL/goT8ucn5vJNxwnZOk/4s5hZ
+	 KBIH5oIIYZFdvTeBXNe65EAZSq2NZ9GcxRUDGdYOQIOLysfyw7WXEBzN3pDuRmVrv/
+	 Q3DtkYzNn05rc5hOXHPscJCl2M2rKPDeSpdR2SmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfLJVXl (ORCPT
+        id S1728687AbfLJVLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:23:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33518 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728695AbfLJVLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:08 -0500
+        id S1727441AbfLJVK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8221D246AA;
-        Tue, 10 Dec 2019 21:11:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D465F246AF;
+        Tue, 10 Dec 2019 21:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012268;
-        bh=li3AXOeVeqlc3Mu6jNuhxf5fIXOLBal++8saYuL420A=;
+        s=default; t=1576012255;
+        bh=O+ShWLda6d+UTjYF4L4NDPbM6P7Zibhn1erEIHuUVjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypvaqbR7xqerglIGe3qGdGJt5rHzijUprk8Q6mFqZhISkDt9JwMo4a0Aof8autJtS
-         B5V1snjUpxtC2tZ9OIUaMBXCyz3cqXxNwWlzCNe3IDQ06k7XW3vzx5VbKvVyDwFBXx
-         YrYVWLXETuJF+XsierHEerueZcQEpsTHwdSFsmKM=
+        b=gSStA3FKgX1hOF3+eB21CDDUgO/6bHPTivUnOCzN8ic2qkDfNVF2xfVWWCB+sGcgw
+         xdrihmn9hpc2hZfO7XG5xXdAthKGeK+UN28sZqKjlO6r1BnDEGFFxVyOFFH2e+QnoA
+         /WBPLvsQ4Z98Tf/cA7uBUYtZ81mudS3whf57kOis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 213/350] spi: img-spfi: fix potential double release
-Date:   Tue, 10 Dec 2019 16:05:18 -0500
-Message-Id: <20191210210735.9077-174-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 202/350] media: rcar_drif: fix a memory disclosure
+Date:   Tue, 10 Dec 2019 16:05:07 -0500
+Message-Id: <20191210210735.9077-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -58,37 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit e9a8ba9769a0e354341bc6cc01b98aadcea1dfe9 ]
+[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
 
-The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
-are released. As a result, they will be released again, either on the
-error handling branch in the same function or in the corresponding
-remove function, i.e. img_spfi_remove(). This patch fixes the bug by
-setting the two members to NULL.
+"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
+like msi2500 and airspy do, the fix initializes it to avoid
+memory disclosures.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Link: https://lore.kernel.org/r/1573007769-20131-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-img-spfi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/rcar_drif.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
-index 439b01e4a2c8d..f4a8f470aecc2 100644
---- a/drivers/spi/spi-img-spfi.c
-+++ b/drivers/spi/spi-img-spfi.c
-@@ -673,6 +673,8 @@ static int img_spfi_probe(struct platform_device *pdev)
- 			dma_release_channel(spfi->tx_ch);
- 		if (spfi->rx_ch)
- 			dma_release_channel(spfi->rx_ch);
-+		spfi->tx_ch = NULL;
-+		spfi->rx_ch = NULL;
- 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
- 	} else {
- 		master->dma_tx = spfi->tx_ch;
+diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
+index 608e5217ccd50..0f267a237b424 100644
+--- a/drivers/media/platform/rcar_drif.c
++++ b/drivers/media/platform/rcar_drif.c
+@@ -912,6 +912,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
+ {
+ 	struct rcar_drif_sdr *sdr = video_drvdata(file);
+ 
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
+ 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
+ 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
+ 
 -- 
 2.20.1
 
