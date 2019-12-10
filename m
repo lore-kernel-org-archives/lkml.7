@@ -3,224 +3,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9387C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244A8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F6520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F6220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Nkz1AUX3";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="WUg8zSGm"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="pAvWc+I5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfLJSFd (ORCPT
+        id S1727693AbfLJSFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:05:33 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53594 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727611AbfLJSFc (ORCPT
+        Tue, 10 Dec 2019 13:05:42 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34637 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727663AbfLJSFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:05:32 -0500
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAHvV4V005108;
-        Tue, 10 Dec 2019 10:05:23 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=RS4SopCQ9K3oetGmqP/HWkwFKeW3+Okvmbwutm2eSyI=;
- b=Nkz1AUX3ueE9j5bFDOWY0gQyFY90Bs/a/9HaZAF5y0AX+wzNbVI6MeDUHabKfQzBJHUe
- K7eZFFND0+9XOQPTg4C1Rh67ea3HkxQdut+x02j8llY9MFCcZC1lkGydteqn0lscRmlZ
- aBMw9PRzRHUtSGssiTGj3lNN2+BrWcIbtlQ= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wteq4gkb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 10 Dec 2019 10:05:23 -0800
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Dec 2019 10:05:22 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 10 Dec 2019 10:05:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PV/l3sLHtbXSNZQw2AkpWnekgRzVpoykLqzcDUrxlTwfaTNmW3oZuIUjb+ZN9B9Y2ba/nIOlbvHiRfGlvF0h9Wakabj4zBPSvDX39BLEKR3QqgNLIe1M1rJWBHsRUpl8Uu2Grn8N4S1Udjjt9U7e8oIF0EAuui/TmWegbTTpWJyXhiI7xCTnEvLwIO1ZKVgWVxzBcREGPP4GlPJlf6HyDA995p6MpM8kyfI8ubodG7Fmb+NHwp9T2+ER3DzzkYnGK5zDeqgsE3kX7C9EkSqlBq+X0qDI04BLlh6zJQ7jJyC/doiZoYEVSM1KWSklu79cwdA6HfXgcjWyhl7/lGVc1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RS4SopCQ9K3oetGmqP/HWkwFKeW3+Okvmbwutm2eSyI=;
- b=USIQn0rnU+En+H1LVWaIRvAJjZrJWgQwWBjT9jM+yPkUCuF2BXS70lFf7x+kTPnsVe1J0wzKJiuhyk3hzi6XpVAyJcP92rcIm7SNBAnfWlt0YkF0i3eS1NGt8TD03DfdkGYYjOqfP+pdhVuX2U2r535O2HXSBrrf6YjVrosYnXr1QGBqg4/3f0BzS04UkYOVFya3pFiqO0AAAUjDr59JcAu4EY35e8Icx2zV01yw/lRg87hNVcjsIp/NlNhtHXXRHpr17jI6DOmg16NjfzC3YJL2qkGyrixyCUn/EcQvGFSafSkZJVJBhlAEsqf2WqjZdcrXfgeXS1BBVB9EREGmqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RS4SopCQ9K3oetGmqP/HWkwFKeW3+Okvmbwutm2eSyI=;
- b=WUg8zSGmcc2wHXd4A9Ywgs8wT9obgCXqnJzuFsd5h9gtqrQVw/ykSQSyaPiJIKR6iDoU7AzbyXinWP9kyBZ6NroMlW+HtgKPkT+UatxPLtrzxhU8zAfJy4gJM70hp8SnMorECLdAzzSqnW4Hgik6tIBd6Ncn+2PpZ3VVWebhD6c=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB2503.namprd15.prod.outlook.com (52.135.196.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.18; Tue, 10 Dec 2019 18:05:20 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::8cc8:bdb1:a9c7:7f60]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::8cc8:bdb1:a9c7:7f60%3]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 18:05:20 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Bharata B Rao <bharata@linux.ibm.com>
-CC:     "mhocko@kernel.org" <mhocko@kernel.org>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "longman@redhat.com" <longman@redhat.com>
-Subject: Re: [PATCH 00/16] The new slab memory controller
-Thread-Topic: [PATCH 00/16] The new slab memory controller
-Thread-Index: AQHVrnGR5S0BeZVm/Uu7NV5uFsOBDKexspaAgABmrQCAAM5tAIAAxC0A
-Date:   Tue, 10 Dec 2019 18:05:20 +0000
-Message-ID: <20191210180516.GA23940@localhost.localdomain>
-References: <20190905214553.1643060-1-guro@fb.com>
- <20191209091746.GA16989@in.ibm.com> <20191209115649.GA17552@in.ibm.com>
- <20191209180418.GA15797@localhost.localdomain>
- <20191210062308.GC17552@in.ibm.com>
-In-Reply-To: <20191210062308.GC17552@in.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0041.namprd14.prod.outlook.com
- (2603:10b6:300:12b::27) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:150::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::af3f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee3e54f1-7859-48a5-bf8a-08d77d9b84f4
-x-ms-traffictypediagnostic: BYAPR15MB2503:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2503B19479A965D2A2880B10BE5B0@BYAPR15MB2503.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39860400002)(396003)(199004)(189003)(66476007)(66556008)(86362001)(64756008)(1076003)(66946007)(33656002)(478600001)(66446008)(52116002)(316002)(2906002)(6486002)(6916009)(71200400001)(54906003)(81156014)(9686003)(81166006)(6506007)(5660300002)(4326008)(186003)(8936002)(8676002)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2503;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KKuG6hbdc4ef03X2LrwOzjGhL7aZ4O1R9Axu1NGXn9vgt3SEyfMZEwMVJno8zmxpKm/moSJUY9KYDO8TDi4m57iZmXXfxJlqwlFRG6K5sRoZGmFLFka90jBjyOcZ1oYFYKiBdrw3hYIeH1iPOH1U9LKTDFvEsLJHlStMX/NrXXGYAwY0vxy+5z9Rj1BXgg3SuUD+PsJ0931eznKpLQ9zuvzp6m+DeOHJemhtgyaZ6oQkqFVjKs8u8yM8PLl/+KfT7Cci711Qr+Y49PJractg4YIqti4HHsT0GNvJfzg51k0+87B7nXDWs4YwkNe0N0s9QO5shveAw5GrwdTmCovOj4uaiGTrzC1WQL67qca5NrACLqmKWhP9WvZOQXKI8GSDZjHeWrPbXEnPTmD3h0QUbS/u+G1bPoRQS+ZDacv8VbO8TYNV0bcPmg06W6a+3JX4
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A3AAF8326F825A4DAEB041AAC17808A8@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Dec 2019 13:05:42 -0500
+Received: by mail-pl1-f194.google.com with SMTP id x17so182295pln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=p250SP6LYYK/01N51GqevSzgn/NOjQ88ERfazogiGtc=;
+        b=pAvWc+I5V+HG3QHjPEZN9FO75Z7VXMrY61CNOcY4yRGVAZrItKsNiFDBQ4rOLirN3q
+         diGwW+ozhY2J6C4UNCFMhdy9bJTdOjP1NWkVtOiH7KdFQXiFGfyTIfVqloPAp9DPjOeV
+         XJ4KbfTgHP0bv3QuIAFaNbkEzof9GzzB/EGrFNc7efRsoX3jVLwSREs5MIN3huRiUdkU
+         Hdtnoj36J5m0V5Yi1wWcDRCu8RKqXJ5/R5AEOkVD0YR8/LPDJs5vkbvRyHy3frzmfSe7
+         dBl0HaKsG4ltLGxNdojP3Ag+pt6MWd4lPPWFLPwhgHsWUW19XRreetlB/lqEzGkjOh/i
+         1gEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=p250SP6LYYK/01N51GqevSzgn/NOjQ88ERfazogiGtc=;
+        b=tw/hp8PLZPtjmvFAb2kfDuR/UOLuPku2ipVKBL8xSUNoyKHgmGg/vGimokhMeTCLj1
+         csJbHr/UkOr1pTc/v3slL6j3UZIMgk8Lc1sSx+WgEUzguqTXpo9EAWp2weOJQW893Nyf
+         YgL3aPaHB144KEPx3SggnaW38COCxjnRULgcAIrwa55uRfhZ5DBPHYOZs2GOIxibmR5w
+         Lh0XDDT72XtIfv6HptxQ5PZTDJxpJsWNGkIbUhB66FwLxdLAO/A7B7tPC9wiLBBJvBfc
+         q7Psnwclr79ZPLOm6uiY9Y8CBbvqSiTh/avbWDoJ7OoyvA8F8m+fRt0TpuXTThDkyvIv
+         mtfw==
+X-Gm-Message-State: APjAAAUvab3TEIqMVTtdjIIPaYbZpOOT6gxhkDakwG4kv6oNsImgEcJ5
+        B1zBkKIz6RBeBJZ3FJeDiv7hpg==
+X-Google-Smtp-Source: APXvYqyZRXka/z8RR1tKDIEA0XaCqYLuoBjycoYsD7UW/Xfi6vYmVk1cUnYXmJB0mIbHHraF934jZA==
+X-Received: by 2002:a17:902:d696:: with SMTP id v22mr36021185ply.66.1576001141079;
+        Tue, 10 Dec 2019 10:05:41 -0800 (PST)
+Received: from cakuba.netronome.com ([2601:646:8e00:e18::3])
+        by smtp.gmail.com with ESMTPSA id o184sm3982442pgo.62.2019.12.10.10.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 10:05:40 -0800 (PST)
+Date:   Tue, 10 Dec 2019 10:05:36 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191210100536.7a57d5e1@cakuba.netronome.com>
+In-Reply-To: <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
+References: <20191210011438.4182911-1-andriin@fb.com>
+        <20191210011438.4182911-12-andriin@fb.com>
+        <20191209175745.2d96a1f0@cakuba.netronome.com>
+        <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee3e54f1-7859-48a5-bf8a-08d77d9b84f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 18:05:20.2438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GSxFMgkv0WtAASuu+9YvqlbGZYsixpqBbJM3w2Boi3rryTFUamd/C43gyK9F38+F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2503
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_05:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0
- phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100152
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:53:08AM +0530, Bharata B Rao wrote:
-> On Mon, Dec 09, 2019 at 06:04:22PM +0000, Roman Gushchin wrote:
-> > On Mon, Dec 09, 2019 at 05:26:49PM +0530, Bharata B Rao wrote:
-> > > On Mon, Dec 09, 2019 at 02:47:52PM +0530, Bharata B Rao wrote:
-> > Hello, Bharata!
-> >=20
-> > Thank you very much for the report and the patch, it's a good catch,
-> > and the code looks good to me. I'll include the fix into the next
-> > version of the patchset (I can't keep it as a separate fix due to massi=
-ve
-> > renamings/rewrites).
->=20
-> Sure, but please note that I did post only the core change without
-> the associated header includes etc, where I took some short cuts.
+On Tue, 10 Dec 2019 09:11:31 -0800, Andrii Nakryiko wrote:
+> On Mon, Dec 9, 2019 at 5:57 PM Jakub Kicinski wrote:
+> > On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:  
+> > > struct <object-name> {
+> > >       /* used by libbpf's skeleton API */
+> > >       struct bpf_object_skeleton *skeleton;
+> > >       /* bpf_object for libbpf APIs */
+> > >       struct bpf_object *obj;
+> > >       struct {
+> > >               /* for every defined map in BPF object: */
+> > >               struct bpf_map *<map-name>;
+> > >       } maps;
+> > >       struct {
+> > >               /* for every program in BPF object: */
+> > >               struct bpf_program *<program-name>;
+> > >       } progs;
+> > >       struct {
+> > >               /* for every program in BPF object: */
+> > >               struct bpf_link *<program-name>;
+> > >       } links;
+> > >       /* for every present global data section: */
+> > >       struct <object-name>__<one of bss, data, or rodata> {
+> > >               /* memory layout of corresponding data section,
+> > >                * with every defined variable represented as a struct field
+> > >                * with exactly the same type, but without const/volatile
+> > >                * modifiers, e.g.:
+> > >                */
+> > >                int *my_var_1;
+> > >                ...
+> > >       } *<one of bss, data, or rodata>;
+> > > };  
+> >
+> > I think I understand how this is useful, but perhaps the problem here
+> > is that we're using C for everything, and simple programs for which
+> > loading the ELF is majority of the code would be better of being
+> > written in a dynamic language like python?  Would it perhaps be a
+> > better idea to work on some high-level language bindings than spend
+> > time writing code gens and working around limitations of C?  
+> 
+> None of this work prevents Python bindings and other improvements, is
+> it? Patches, as always, are greatly appreciated ;)
 
-Sure, I'll adopt the code to the next version.
+This "do it yourself" shit is not really funny :/
 
->=20
-> >=20
-> > >=20
-> > > But that still doesn't explain why we don't hit this problem on x86.
-> >=20
-> > On x86 (and arm64) we're using vmap-based stacks, so the underlying mem=
-ory is
-> > allocated directly by the page allocator, bypassing the slab allocator.
-> > It depends on CONFIG_VMAP_STACK.
->=20
-> I turned off CONFIG_VMAP_STACK on x86, but still don't hit any
-> problems.
+I'll stop providing feedback on BPF patches if you guy keep saying 
+that :/ Maybe that's what you want.
 
-If you'll look at kernel/fork.c (~ :184), there are two ORed conditions
-to bypass the slab allocator:
-1) THREAD_SIZE >=3D PAGE_SIZE
-2) CONFIG_VMAP_STACK
+> This skeleton stuff is not just to save code, but in general to
+> simplify and streamline working with BPF program from userspace side.
+> Fortunately or not, but there are a lot of real-world applications
+> written in C and C++ that could benefit from this, so this is still
+> immensely useful. selftests/bpf themselves benefit a lot from this
+> work, see few of the last patches in this series.
 
-I guess the first one is what saves x86 in your case, while on ppc you migh=
-t
-have 64k pages (hard to say without looking at your config).
+Maybe those applications are written in C and C++ _because_ there 
+are no bindings for high level languages. I just wish BPF programming
+was less weird and adding some funky codegen is not getting us closer
+to that goal.
 
->=20
-> $ grep VMAP .config
-> CONFIG_HAVE_ARCH_HUGE_VMAP=3Dy
-> CONFIG_HAVE_ARCH_VMAP_STACK=3Dy
-> # CONFIG_VMAP_STACK is not set
->=20
-> May be something else prevents this particular crash on x86?
+In my experience code gen is nothing more than a hack to work around
+bad APIs, but experiences differ so that's not a solid argument.
 
-I'm pretty sure it will crash, have stack been allocated using
-the slab allocator. I bet everybody are using vmap-based stacks.
+> > > This provides great usability improvements:
+> > > - no need to look up maps and programs by name, instead just
+> > >   my_obj->maps.my_map or my_obj->progs.my_prog would give necessary
+> > >   bpf_map/bpf_program pointers, which user can pass to existing libbpf APIs;
+> > > - pre-defined places for bpf_links, which will be automatically populated for
+> > >   program types that libbpf knows how to attach automatically (currently
+> > >   tracepoints, kprobe/kretprobe, raw tracepoint and tracing programs). On
+> > >   tearing down skeleton, all active bpf_links will be destroyed (meaning BPF
+> > >   programs will be detached, if they are attached). For cases in which libbpf
+> > >   doesn't know how to auto-attach BPF program, user can manually create link
+> > >   after loading skeleton and they will be auto-detached on skeleton
+> > >   destruction:
+> > >
+> > >       my_obj->links.my_fancy_prog = bpf_program__attach_cgroup_whatever(
+> > >               my_obj->progs.my_fancy_prog, <whatever extra param);
+> > >
+> > > - it's extremely easy and convenient to work with global data from userspace
+> > >   now. Both for read-only and read/write variables, it's possible to
+> > >   pre-initialize them before skeleton is loaded:
+> > >
+> > >       skel = my_obj__open(raw_embed_data);
+> > >       my_obj->rodata->my_var = 123;
+> > >       my_obj__load(skel); /* 123 will be initialization value for my_var */
+> > >
+> > >   After load, if kernel supports mmap() for BPF arrays, user can still read
+> > >   (and write for .bss and .data) variables values, but at that point it will
+> > >   be directly mmap()-ed to BPF array, backing global variables. This allows to
+> > >   seamlessly exchange data with BPF side. From userspace program's POV, all
+> > >   the pointers and memory contents stay the same, but mapped kernel memory
+> > >   changes to point to created map.
+> > >   If kernel doesn't yet support mmap() for BPF arrays, it's still possible to
+> > >   use those data section structs to pre-initialize .bss, .data, and .rodata,
+> > >   but after load their pointers will be reset to NULL, allowing user code to
+> > >   gracefully handle this condition, if necessary.
+> > >
+> > > Given a big surface area, skeleton is kept as an experimental non-public
+> > > API for now, until more feedback and real-world experience is collected.  
+> >
+> > That makes no sense to me. bpftool has the same backward compat
+> > requirements as libbpf. You're just pushing the requirements from
+> > one component to the other. Feedback and real-world use cases have
+> > to be exercised before code is merged to any project with backward
+> > compatibility requirements :(  
+> 
+> To get this feedback we need to have this functionality adopted. To
+> have it adopted, we need it available in tool users already know,
+> have, and use. 
 
->=20
-> >=20
-> > Btw, thank you for looking into the patchset and trying it on powerpc.
-> > Would you mind to share some results?
->=20
-> Sure, I will get back with more results, but initial numbers when running
-> a small alpine docker image look promising.
->=20
-> With slab patches
-> # docker stats --no-stream
-> CONTAINER ID        NAME                CPU %               MEM USAGE / L=
-IMIT   MEM %               NET I/O             BLOCK I/O           PIDS
-> 24bc99d94d91        sleek               0.00%               1MiB / 25MiB =
-       4.00%               1.81kB / 0B         0B / 0B             0
->=20
-> Without slab patches
-> # docker stats --no-stream
-> CONTAINER ID        NAME                CPU %               MEM USAGE / L=
-IMIT   MEM %               NET I/O             BLOCK I/O           PIDS
-> 52382f8aaa13        sleek               0.00%               8.688MiB / 25=
-MiB    34.75%              1.53kB / 0B         0B / 0B             0
->=20
-> So that's an improvement of MEM USAGE from 8.688MiB to 1MiB. Note that th=
-is
-> docker container isn't doing anything useful and hence the numbers
-> aren't representative of any workload.
+Well you claim you have users for it, just talk to them now. I don't
+understand how this is not obvious. It's like saying "we can't test
+this unless it's in the tree"..!?
 
-Cool, that's great!
+> If you feel that "experimental" disclaimer is not enough, I guess we
+> can add extra flag to bpftool itself to enable experimental
+> functionality, something like:
+> 
+> bpftool --experimental gen skeleton <bla>
 
-Small containers is where the relative win is the biggest. Of course, it wi=
-ll
-decrease with the size of containers, but it's expected.
+Yeah, world doesn't really work like that. Users start depending on 
+a feature, it will break people's scripts/Makefiles if it disappears.
+This codegen thing is made to be hard coded in Makefiles.. how do you
+expect people not to immediately become dependent on it.
 
-If you'll get any additional numbers, please, share them. It's really
-interesting, especially if you have larger-than-4k pages.
+> > Also please run checkpatch on your patches, and fix reverse xmas tree.
+> > This is bpftool, not libbpf. Creating a separate tool for this codegen
+> > stuff is also an option IMHO.  
+> 
+> Sure, will fix few small things checkpatch detected.
 
-Thank you!
+Running checkpatch should be part of your upstreaming routine, you're
+wasting people's time. So stop with the amused tone.
 
-Roman
+> Will reverse christmas-ize all the variables, of course :)
+> 
+> As for separate tool just for this, you are not serious, right? If
+> bpftool is not right tool for this, I don't know which one is.
+
+I am serious. There absolutely nothing this tool needs from BPF, no
+JSON needed, no bpffs etc. It can be a separate tool like
+libbpf-skel-gen or libbpf-c-skel or something, distributed with libbpf.
+That way you can actually soften the backward compat. In case people
+become dependent on it they can carry that little tool on their own.
