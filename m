@@ -2,109 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81214C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FAEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5947D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEC620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014026;
+	bh=xEwulXtgKZtq5Yje9ToiQGVlsp7RdAtDn1NZ9VNAytU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fov8pSWYtJ+oEZEYqxlEWiGGctBI5FEFcM319cImpufAt++iUlJAH+GjWDOcJARx7
+	 KNUeSueAb04k3I+aqBdSfFhRWoVbANlSDjgJZEZsREOk0gyjnNPe0QrcXOAKJ4QBUC
+	 a2RYTupms1I+tNxJKvaOwKclPLM1EYpgtObP1PAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730129AbfLJVkW (ORCPT
+        id S1728919AbfLJVkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:40:22 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:49723 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfLJVkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:40:18 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MbSXf-1i8DVp0nqj-00bv4d for <linux-kernel@vger.kernel.org>; Tue, 10 Dec
- 2019 22:40:16 +0100
-Received: by mail-qk1-f175.google.com with SMTP id z14so7481495qkg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:40:16 -0800 (PST)
-X-Gm-Message-State: APjAAAU3wQe1kzExBy9X5IIjCdrYzJKjlKi7kam84Jfl16lcNTMLVdLS
-        p/CNyJ7sHFbeTIAFS+VSJFaCf6A8zEowzXHm/Oc=
-X-Google-Smtp-Source: APXvYqxUoC6H/HWZMBtDiTF2+IJfRax40MKZBHGh8CU2NKudSB89mZzzFUDhBYEjsX0QO0qaYD1duiXIHE3h8N56nz0=
-X-Received: by 2002:a37:4e4e:: with SMTP id c75mr13322344qkb.3.1576014015095;
- Tue, 10 Dec 2019 13:40:15 -0800 (PST)
+        Tue, 10 Dec 2019 16:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730053AbfLJVed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:33 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C439F2465C;
+        Tue, 10 Dec 2019 21:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576013672;
+        bh=xEwulXtgKZtq5Yje9ToiQGVlsp7RdAtDn1NZ9VNAytU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D0iwtWPB73uR83pFi9gisJqQzIfwrTE4r26bj0yZLa24pbW+yxWlLp+WytX8+Tg1Z
+         B8NRXHF8O/eyuYr63Xzg49sTSXBemKIspdxeX6RqCcMzoP16SeOGLty5+n1c9iBYnQ
+         tpTnK3L5ZQNEivRo+4m0sFGGycZuSvRW5OHdEE0Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 109/177] perf probe: Fix to list probe event with correct line number
+Date:   Tue, 10 Dec 2019 16:31:13 -0500
+Message-Id: <20191210213221.11921-109-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191210203101.2663341-1-arnd@arndb.de> <DM6PR12MB34665D3A13E23D8AA7E2E7919E5B0@DM6PR12MB3466.namprd12.prod.outlook.com>
- <b552de20-dca5-b5d1-e5e8-4c09bc3fdcb5@amd.com>
-In-Reply-To: <b552de20-dca5-b5d1-e5e8-4c09bc3fdcb5@amd.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 10 Dec 2019 22:39:59 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2qM2Vi9qH5b+REBWp2tpb96CpxjmeGSbc63XfGwD6ozg@mail.gmail.com>
-Message-ID: <CAK8P3a2qM2Vi9qH5b+REBWp2tpb96CpxjmeGSbc63XfGwD6ozg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: fix undefined struct member reference
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Cc:     "Liu, Zhan" <Zhan.Liu@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Liu, Charlene" <Charlene.Liu@amd.com>,
-        "Yang, Eric" <Eric.Yang2@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Cornij, Nikola" <Nikola.Cornij@amd.com>,
-        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Lei, Jun" <Jun.Lei@amd.com>,
-        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:IX8poFHkhmWDMtT05CyGRNNlyICIfre20x86D5UgS/CzaHTuJED
- ZSkbMjlym3LobiOUkDBHJC7of/LSmA2SZqFZU/lnUMKA1rtjcAJLLYHkHdtwRJ+FIPJkXO/
- RXVqdNm3SLbjkzhKza3y7NAEFeSbQ/oSmoStH4eUEo9DsQwEJEd0rBmYOfD4gdo7Wt6be1J
- 31A0jjhgPmqP9IPFO9v9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y0bKYy13xqM=:K5+KBmK6Pe1eeq0vlqvmUq
- pPqGAviGh1Zo4SCGhf6I1H2RLJwd62AdNHOdjMP4aWxxq0Pvozrz3ylSrE1YJpN+kxgjZD/4n
- KfcRW+gSRO8NXSXH7DXtOfP0vyo1imFET6FC1Ak6SeoVau1i3qkq3Kf7mJMN2OhsuxdvQ7RDT
- 4sTexFuAVkdbXRNlQsYB/QvZX+AqMD3MRBO5VU/8DsPSOOULAlABlMqd/36sJXTsvRPVoUmIA
- wldqOS1XlCHsYGoz6raTMBLv+Wh19vFyNbkqjIfKoJGRc7UorDdEUE0KwSi0wN1FWCaiHrJbe
- rGh7a5AenYKZNYIVGN5wYPTRrVMtGI72c701REYkDFIOPUiQhBBuWEYG5hy+QX7eV8ZOzW0xt
- EzhOWRFuwA7C+oqRAc5hMm22EJ3Autjhbvx+YKPdGAKQt2OQeFNvZpVUmnOhcP58OBRy2AnD3
- dHbakyB7P+H/dEgZX/UJLqDYDJiskr8L3TQJgJVoMWKb3BpLL7dvZXwXiXT+EAyaoSFfuyNsx
- 5pHEAZo/xGyRa1J85sVZ6wT5UnEuPyUHvSKp1gS6ZsskdtFnTiFL7I9u6iPlvZXxocvJ8SSMN
- QSDaH6pGHKL4MsMe+FH1BjNrHyqPuOOn01yHk0oXA8+XgafHPAJyOyA2cm0J2QiF7asLkJVtn
- BDC0+wEFJ1Al0AYP+hbcIjFQ9khsHlBnlEYdmPuFISTdRqCQyg7gKLyqQrA3nnHTSo1Fhilcr
- bBf2OyHNkcjNG439K1BJmmrxDpCvxd7v7GtjVHKerF5RGWUnZ0aDJ0D20UYHge8hFx3RwvXqT
- CXTlNrRgGD6YOTGShqYOFXkyezHlhbhSyDTG/GnTK6mKHFvqlmbW7srhBFiHJCSyJxPgoRd5b
- eB3e3wvIUvu94fqJVBLA==
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:56 PM Kazlauskas, Nicholas
-<nicholas.kazlauskas@amd.com> wrote:
-> On 2019-12-10 3:54 p.m., Liu, Zhan wrote:
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-> >>
-> >> Fixes: c3d03c5a196f ("drm/amd/display: Include num_vmid and num_dsc
-> >> within NV14's resource caps")
-> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Thank you for catching that On my side I kept that flag enabled all the time, so I didn't realize there was a warning hidden here.
-> >
-> > Reviewed-by: Zhan Liu <zhan.liu@amd.com>
->
-> What tree is this reported on?
+[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
 
-This is plain linux-5.5-rc1.
+Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
+entry address of the function on which a probe is, it will fail when the
+function DIE has only ranges attribute.
 
-> We dropped this flag whenever building DCN. Sounds like we're missing a
-> patch if you're getting this.
->
-> So this is a NAK from me for going into amd-staging-drm-next at least.
+To fix this issue, use die_entrypc() instead of dwarf_entrypc().
 
-Fair enough, please revert c3d03c5a196f ("drm/amd/display: Include
-num_vmid and num_dsc within NV14's resource caps") for 5.5-rc2 then.
+Without this fix, perf probe -l shows incorrect offset:
 
-      Arnd
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
+
+With this:
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/probe-finder.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c37fbef1711dd..c4fe0678e3228 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1567,7 +1567,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+ 		if (!func ||
+-		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
++		    die_entrypc(&spdie, &baseaddr) != 0 ||
+ 		    dwarf_decl_line(&spdie, &baseline) != 0) {
+ 			lineno = 0;
+ 			goto post;
+@@ -1584,7 +1584,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
+ 						&indie)) {
+ 			/* There is an inline function */
+-			if (dwarf_entrypc(&indie, &_addr) == 0 &&
++			if (die_entrypc(&indie, &_addr) == 0 &&
+ 			    _addr == addr) {
+ 				/*
+ 				 * addr is at an inline function entry.
+-- 
+2.20.1
+
