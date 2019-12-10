@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EFFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019EC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E800720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7142207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017769;
-	bh=liTrcPA/gmUVmqbPhhMcuFvRir8+iX6pr/GE8YldxqQ=;
+	s=default; t=1576017783;
+	bh=TwpJsn+VWHD6/a00zAejKGYPYa89KcNwRWbQTMR1IVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZXNawT/VP3t7P3XZUTNNiuuyU+plcNoIjydTkkaITzUKSLK5KfVxsaTsVhbsqScIJ
-	 8GZftmQK3uWzaztSVPLFuvNjyc3EuYQGDbqhBnZs/E3pb9fcZlalckk2yRGZccx74q
-	 4e5ikYuJ01tkRX7iIUxbU+uYdFZSnFg9X1o3WDMg=
+	b=RBcauOLFyrioDvuR7ElPAxSsRX0eVEXrBv0QHxZ3y2yCYGGXzBc5GRkjFT1fv1xLW
+	 DDnFs9EFrLQ+s2nVbSmW+OkGtbz68lNHVp673g9SMchblmrEaC2zFhr84HVaSrL8Qt
+	 iaETI1uuaCmASXu+M7QpH0BD8xFnZYBTarW4scyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfLJWbU (ORCPT
+        id S1728074AbfLJWbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51250 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbfLJWbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:17 -0500
+        id S1727913AbfLJWbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2C12073D;
-        Tue, 10 Dec 2019 22:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B787E207FF;
+        Tue, 10 Dec 2019 22:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017076;
-        bh=liTrcPA/gmUVmqbPhhMcuFvRir8+iX6pr/GE8YldxqQ=;
+        s=default; t=1576017065;
+        bh=TwpJsn+VWHD6/a00zAejKGYPYa89KcNwRWbQTMR1IVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0HTML7Qqye+wqI4KUobwAJHIBVX9OU8mpWXslwZLzTZSBVaU+qKtcgBUzfg5uKaRf
-         WpdA49VwO6qVqaLewLA2m7R9yVZbrADZ9l1PkMCK6VoNWC+Jmnhg/rJzg1sfOKR/Rm
-         UGemYoqHZnLaNz3MNdNlC3FU9coZOOPKohCeXiYY=
+        b=P3jUTg3NI7UKDdggR0pJ0WP28+U+55kkf01cYerHDjGP1CFAOsO30n+aXYxbkhyh3
+         T3Mi7m8UfvD6jFPJA0tysb9JbZJeBRQaGrQjFZvLnqP4Kvp1m8/E83DQlnJuelBsd9
+         A4NdTE7af/uny9P4iuOGCvhVmuhRAQEXqrOn9iiw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 34/91] iio: adc: max1027: Reset the device at probe time
-Date:   Tue, 10 Dec 2019 17:29:38 -0500
-Message-Id: <20191210223035.14270-34-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 25/91] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Tue, 10 Dec 2019 17:29:29 -0500
+Message-Id: <20191210223035.14270-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,40 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+v4l2-compliance warns with this message:
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
+
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 712fbd2b1f162..ec3f7bc70b75e 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -471,6 +471,14 @@ static int max1027_probe(struct spi_device *spi)
- 		goto fail_dev_register;
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 0189f7f7cb03f..da308fa6561fc 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -330,20 +330,25 @@ enum {
+ };
+ 
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
+ 
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
  	}
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
+ 	return NULL;
+ }
+ 
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
 +
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1433,9 +1438,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	int i, depth, depth_bytes;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE)
 -- 
 2.20.1
 
