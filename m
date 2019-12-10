@@ -2,187 +2,98 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08814C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA2BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC56024683
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012024;
-	bh=ceSWH49Z1fn5M+WPTJEUWplL1sTDSb98CQd+itGpjPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2bnjyurSBb6hQBYkgrPWBBXI2RJ8LJmleAck2tLP9/ZOTI6+8g5OBNC3XrhZ3jQU
-	 /0l+RHyDQ9cAl9Zg5LU06tSE3xOSy4IU9BeIJiSQNQw25Qs2wI3fNMj+6E2bVFOe60
-	 DwHH+fdPypuw9ugKpscTvAUupm4Wk+6cZvlbqN8w=
+	by mail.kernel.org (Postfix) with ESMTP id 1AEF524683
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="OjVkow0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLJVHD (ORCPT
+        id S1727571AbfLJVHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfLJVEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:12 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCAB24653;
-        Tue, 10 Dec 2019 21:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011850;
-        bh=ceSWH49Z1fn5M+WPTJEUWplL1sTDSb98CQd+itGpjPg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agBOGRizH/AKsUvFqUmZ7sqt8iwDVhKFq+iBBRfRC5mqImcD8YjYl44yjrSRKF+08
-         SKeu7mAu+GiAgA6zMbPIZnD1df1bKKDAoXZ8LPFjT3Lmsk7n1mmAjWqzXnn543ledc
-         r06OXxwzVAIg/gCn0CbdXqwO6nX/PqBeeK6yjySI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 006/350] drm: exynos: exynos_hdmi: use cec_notifier_conn_(un)register
-Date:   Tue, 10 Dec 2019 15:58:18 -0500
-Message-Id: <20191210210402.8367-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
-References: <20191210210402.8367-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:07:08 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36523 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbfLJVEH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so21728043wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:04:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=t5wRb0HVinMm6EfDaWAnO/a1Sj3+z3DX/7PLYloGfXc=;
+        b=OjVkow0SpbjcoF1OWjpltk1vI3YxAw2jQt8Cq6d1x/Btjj1F3u4QeDCqIVyZYELWWn
+         lXo4Q8crVZNDfrrurZiFUJUCwelB3pjClmCwC1fxlalGIcZiAwo5pMgLil3e2tONS9X5
+         v7g3C9cMkECg6NxNdXCychqgWcQNo1wWAF9mk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t5wRb0HVinMm6EfDaWAnO/a1Sj3+z3DX/7PLYloGfXc=;
+        b=IfyKaxxd54Gx9pkUQod1BbH1eUXpfoy8lq6X/oIvR0Fup29Q2VMXGaAMRFktxyWlxJ
+         3rcO/rmrWneHW5sk5PbrprUW71OiauiWl3IauaOIamqh6BansfT2tny7jtv+4WeJGjJn
+         fgMMw+SG4eTHLoRjGkmienOyf7wVX23QC4dRVWpgL78CPAAcoImwmFLlf0tKPVRd1+YI
+         pb37Zfew3xuU12ppzwAgKZtAor362v1UnKZUBjDMqj8a1AhgeRjk9jNptJopY3aloGsj
+         OXd9zrbk7bWYwhhMmtJp6rZ6b3wadg3kgyiO9VXxO8+20p0kMtzoxgwQLtk0GAhOQdtl
+         tzDg==
+X-Gm-Message-State: APjAAAW9cc5yiYv1hE+LlAQH25BSHjECyobYtmla0lR2hmD2u25fegWw
+        bDQX9Ev/9Zq1na6pNmYJcwdovTHhqLPUcQ==
+X-Google-Smtp-Source: APXvYqy79TBCNpPOmBCd880DGqLHwk7LRohDsnP9Y0U3hQ0Ejrk0NnEgnxTg3iGWHnZTuaLKKdJiTQ==
+X-Received: by 2002:a5d:50d2:: with SMTP id f18mr5456797wrt.366.1576011844881;
+        Tue, 10 Dec 2019 13:04:04 -0800 (PST)
+Received: from localhost ([89.32.122.5])
+        by smtp.gmail.com with ESMTPSA id p10sm4422433wmi.15.2019.12.10.13.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 13:04:04 -0800 (PST)
+Date:   Tue, 10 Dec 2019 21:04:03 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     chengkaitao <pilgrimtao@gmail.com>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        smuchun@gmail.com, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2] mm: cleanup some useless code
+Message-ID: <20191210210403.GA455280@chrisdown.name>
+References: <20191210160450.3395-1-pilgrimtao@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191210160450.3395-1-pilgrimtao@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+chengkaitao writes:
+>Subject: Re: [PATCH v2] mm: cleanup some useless code
 
-[ Upstream commit 71137bfd98973efb7b762ba168df077b87b34311 ]
+Can you please write a more descriptive commit title? Seeing this in the commit 
+history tells the reader nothing, "code" could mean anything from a state 
+machine to a boolean, and "cleanup" could mean anything from some complex 
+refactoring to something trivial like this, and right now I have to look and 
+see the individual commit. This patch is really just deduplication of effort.
 
-Use the new cec_notifier_conn_(un)register() functions to
-(un)register the notifier for the HDMI connector, and fill in
-the cec_connector_info.
+Perhaps:
 
-Changes since v7:
-	- err_runtime_disable -> err_rpm_disable
-Changes since v2:
-	- removed unnecessary call to invalidate phys address before
-	deregistering the notifier,
-	- use cec_notifier_phys_addr_invalidate instead of setting
-	invalid address on a notifier.
+     mm, memcg: Don't check PageTransHuge before calling hpage_nr_pages
 
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-[hverkuil-cisco@xs4all.nl: use 'if (!hdata->notifier)' instead of '== NULL']
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190828123415.139441-1-darekm@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/exynos/exynos_hdmi.c | 31 ++++++++++++++++------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+>It is much simpler to just use hpage_nr_pages for nr_pages and replace
+>the local variable by PageTransHuge check directly
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index bc1565f1822ab..09aa73c0f2add 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -852,6 +852,10 @@ static enum drm_connector_status hdmi_detect(struct drm_connector *connector,
- 
- static void hdmi_connector_destroy(struct drm_connector *connector)
- {
-+	struct hdmi_context *hdata = connector_to_hdmi(connector);
-+
-+	cec_notifier_conn_unregister(hdata->notifier);
-+
- 	drm_connector_unregister(connector);
- 	drm_connector_cleanup(connector);
- }
-@@ -935,6 +939,7 @@ static int hdmi_create_connector(struct drm_encoder *encoder)
- {
- 	struct hdmi_context *hdata = encoder_to_hdmi(encoder);
- 	struct drm_connector *connector = &hdata->connector;
-+	struct cec_connector_info conn_info;
- 	int ret;
- 
- 	connector->interlace_allowed = true;
-@@ -957,6 +962,15 @@ static int hdmi_create_connector(struct drm_encoder *encoder)
- 			DRM_DEV_ERROR(hdata->dev, "Failed to attach bridge\n");
- 	}
- 
-+	cec_fill_conn_info_from_drm(&conn_info, connector);
-+
-+	hdata->notifier = cec_notifier_conn_register(hdata->dev, NULL,
-+						     &conn_info);
-+	if (!hdata->notifier) {
-+		ret = -ENOMEM;
-+		DRM_DEV_ERROR(hdata->dev, "Failed to allocate CEC notifier\n");
-+	}
-+
- 	return ret;
- }
- 
-@@ -1528,8 +1542,8 @@ static void hdmi_disable(struct drm_encoder *encoder)
- 		 */
- 		mutex_unlock(&hdata->mutex);
- 		cancel_delayed_work(&hdata->hotplug_work);
--		cec_notifier_set_phys_addr(hdata->notifier,
--					   CEC_PHYS_ADDR_INVALID);
-+		if (hdata->notifier)
-+			cec_notifier_phys_addr_invalidate(hdata->notifier);
- 		return;
- 	}
- 
-@@ -2006,12 +2020,6 @@ static int hdmi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	hdata->notifier = cec_notifier_get(&pdev->dev);
--	if (hdata->notifier == NULL) {
--		ret = -ENOMEM;
--		goto err_hdmiphy;
--	}
--
- 	pm_runtime_enable(dev);
- 
- 	audio_infoframe = &hdata->audio.infoframe;
-@@ -2023,7 +2031,7 @@ static int hdmi_probe(struct platform_device *pdev)
- 
- 	ret = hdmi_register_audio_device(hdata);
- 	if (ret)
--		goto err_notifier_put;
-+		goto err_rpm_disable;
- 
- 	ret = component_add(&pdev->dev, &hdmi_component_ops);
- 	if (ret)
-@@ -2034,8 +2042,7 @@ static int hdmi_probe(struct platform_device *pdev)
- err_unregister_audio:
- 	platform_device_unregister(hdata->audio.pdev);
- 
--err_notifier_put:
--	cec_notifier_put(hdata->notifier);
-+err_rpm_disable:
- 	pm_runtime_disable(dev);
- 
- err_hdmiphy:
-@@ -2054,12 +2061,10 @@ static int hdmi_remove(struct platform_device *pdev)
- 	struct hdmi_context *hdata = platform_get_drvdata(pdev);
- 
- 	cancel_delayed_work_sync(&hdata->hotplug_work);
--	cec_notifier_set_phys_addr(hdata->notifier, CEC_PHYS_ADDR_INVALID);
- 
- 	component_del(&pdev->dev, &hdmi_component_ops);
- 	platform_device_unregister(hdata->audio.pdev);
- 
--	cec_notifier_put(hdata->notifier);
- 	pm_runtime_disable(&pdev->dev);
- 
- 	if (!IS_ERR(hdata->reg_hdmi_en))
--- 
-2.20.1
+Heh, calling it "much" simpler seems a bit excessive. I mean, the code is just 
+as readable in both cases, but if it's going to go in, then that's fine. Any 
+merge conflict should be trivial enough to fix.
 
+>Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+>Acked-by: Michal Hocko <mhocko@suse.com>
+
+I'm indifferent to this patch, but after the title change:
+
+Acked-by: Chris Down <chris@chrisdown.name>
