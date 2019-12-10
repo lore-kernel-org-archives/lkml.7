@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5DFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E826C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8A420838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE67920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015396;
-	bh=KyTVx21sbG85p0XwRDesop70533ODNvOXCR6/Zzl7Zo=;
+	s=default; t=1576015401;
+	bh=mUD4W3Tq67ujXQHClMBqvBDuxNP3dbUk+hPXASdErHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rK2qAgAWoyhi8IBqp7vFv3Wo/cK00xz76qcc7wEdmfXbMu0sldzq6pNTqX9t0IPMQ
-	 1zLjJ2jb+bnjGIHBoW7PQYYBbKxy4Hi5mC8dNT5FfpH9bZfNm63UgWaPJLTuikZgbm
-	 Y6sRuYKnupqPb7rpShJtLmSYvFsHg3cEqLQqJJZo=
+	b=vCg7c97jjcCyrZTVxzFMuYFN6v/vE3lBbMZIfodW1knrsN1+tXU/bPfn79GioYJDX
+	 IGzBoOq9gOXqQHKqz5vnoQwE1pPxbOua7AQBwjoZA623vrqO1U9CJFmh7iLIYddgUY
+	 gBdxtICmWPMdtVNkb6Ri5Bnv9fvKfgwqDOfZDTHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfLJWDP (ORCPT
+        id S1727569AbfLJWDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfLJWDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:12 -0500
+        id S1727425AbfLJWDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46ADC2077B;
-        Tue, 10 Dec 2019 22:03:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E3320637;
+        Tue, 10 Dec 2019 22:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015392;
-        bh=KyTVx21sbG85p0XwRDesop70533ODNvOXCR6/Zzl7Zo=;
+        s=default; t=1576015394;
+        bh=mUD4W3Tq67ujXQHClMBqvBDuxNP3dbUk+hPXASdErHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FVIeMempV1ifeAq9JdWMwGXagRcla40BJiei64PpGSUu8ujFV28evwzn71/DGE7Lw
-         tYybOBh+tFWHoogZ6yp1vp4pZjmVtgkpZP+bRFiEpwiG8lXQ9Pt78peNa3XN6ab+pH
-         EItZjJl4nxGVzLWxk62d84QOaTcQnfpkZJeeCp6M=
+        b=Lmxe9W3cgDZQaX2n3hnW69veS9hBQm1BdVwOLqE9hqNETu+7bWlmPWAPc30C2vMO8
+         2Go1L2t/TRmtQMHGm6fCMFcZZI/aFYvpfHSBVbgmRZsgA/hzuVcxJb+lYmjCuTU68I
+         vxgrmfmbBsCDzccA6U74Z0TCbtJK6G3rYMS7RAK4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 008/130] objtool: add kunit_try_catch_throw to the noreturn list
-Date:   Tue, 10 Dec 2019 17:00:59 -0500
-Message-Id: <20191210220301.13262-8-sashal@kernel.org>
+Cc:     Allen Pais <allen.pais@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 010/130] libertas: fix a potential NULL pointer dereference
+Date:   Tue, 10 Dec 2019 17:01:01 -0500
+Message-Id: <20191210220301.13262-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,42 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Allen Pais <allen.pais@oracle.com>
 
-[ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
+[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
 
-Fix the following warning seen on GCC 7.3:
-  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-kunit_try_catch_throw is a function added in the following patch in this
-series; it allows KUnit, a unit testing framework for the kernel, to
-bail out of a broken test. As a consequence, it is a new __noreturn
-function that objtool thinks is broken (as seen above). So fix this
-warning by adding kunit_try_catch_throw to objtool's noreturn list.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5422543faff85..daf178bc46446 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -167,6 +167,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"fortify_panic",
- 		"machine_real_restart",
- 		"rewind_stack_do_exit",
-+		"kunit_try_catch_throw",
- 	};
+diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
+index 39bf85d0ade0e..c7f8a29d2606b 100644
+--- a/drivers/net/wireless/marvell/libertas/if_sdio.c
++++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
+@@ -1183,6 +1183,10 @@ static int if_sdio_probe(struct sdio_func *func,
  
- 	if (func->bind == STB_WEAK)
+ 	spin_lock_init(&card->lock);
+ 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
++	if (unlikely(!card->workqueue)) {
++		ret = -ENOMEM;
++		goto err_queue;
++	}
+ 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
+ 	init_waitqueue_head(&card->pwron_waitq);
+ 
+@@ -1234,6 +1238,7 @@ static int if_sdio_probe(struct sdio_func *func,
+ 	lbs_remove_card(priv);
+ free:
+ 	destroy_workqueue(card->workqueue);
++err_queue:
+ 	while (card->packets) {
+ 		packet = card->packets;
+ 		card->packets = card->packets->next;
 -- 
 2.20.1
 
