@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC72207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FB42073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013558;
-	bh=bEyk+gtjrnXarnY2DI1X7CsKCXjRltX/mgvzMBW2EJM=;
+	s=default; t=1576013563;
+	bh=cYhdYbZ2C62QFsCV3vUPORDRy2TMMCi6obS4+mAyaXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vzBcLnBRYdHWvQb2LhOsmN/6gGKrHyFm0nERTKYk6+SRMc4LUy7dcIod+xNp07eDg
-	 xXLvoSTyCikNQfc6UGYk9DrC/3KIAHZm4aGIzgVPHnawZSthFQDLDkBUuS6UC/eXS1
-	 8Myg+fCdhaHNQLB+5WoFRZ3xS33WA9GeYebhWWv0=
+	b=zcDnDeFkVZETLq8XIfYQEWqprRUvFgqT6DRY0Oipe+Mjd0F0feYom10udSqrxexQi
+	 WVG6DaroZgr0auLQ7VgyE6JPNbANahj5EfT/KWpTMGSze9BHRamDNtauZ7T/wwDt2K
+	 gyFBKBy/4CqUDqw6e/r991OiNV/NjOcBF45jDdjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfLJVch (ORCPT
+        id S1729270AbfLJVck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36122 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfLJVcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:32 -0500
+        id S1727865AbfLJVcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 380A720836;
-        Tue, 10 Dec 2019 21:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854FA207FF;
+        Tue, 10 Dec 2019 21:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013551;
-        bh=bEyk+gtjrnXarnY2DI1X7CsKCXjRltX/mgvzMBW2EJM=;
+        s=default; t=1576013555;
+        bh=cYhdYbZ2C62QFsCV3vUPORDRy2TMMCi6obS4+mAyaXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrnG9igblVksqkP9NkRczd7myvC8Mejfbur+r9bsj9EZOhtTw1/oPUKZcg88U8x94
-         CFXX1BTyC0DKj6OE7sQ/E2iIaHtV4vb1m/VdvGUrZyjZEU65qk7lzDYZDTAacaxKcZ
-         HwP55VsqHbaBMgXHQrUbV+meQ36ezwdEmnWt9hVg=
+        b=X6Uxk2m6LE3ARTcRyUIGE/JDp7McbXwd7MnfgwWoFFqeDWJRviSn9ZtciPO/16kQX
+         WN7q9P/gFTU6SqSD+Nd82IVNXJVygEb3zYGOTH+JGD15jVy9m3gSuchQ4+DbnCigod
+         6d0MZYZeosom3ZvQoO+3bk2T80iPrjPAvyycZByo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 008/177] staging: rtl8192u: fix multiple memory leaks on error path
-Date:   Tue, 10 Dec 2019 16:29:32 -0500
-Message-Id: <20191210213221.11921-8-sashal@kernel.org>
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 011/177] rtlwifi: prevent memory leak in rtl_usb_probe
+Date:   Tue, 10 Dec 2019 16:29:35 -0500
+Message-Id: <20191210213221.11921-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,68 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit ca312438cf176a16d4b89350cade8789ba8d7133 ]
+[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
 
-In rtl8192_tx on error handling path allocated urbs and also skb should
-be released.
+In rtl_usb_probe if allocation for usb_data fails the allocated hw
+should be released. In addition the allocated rtlpriv->usb_data should
+be released on error handling path.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20190920025137.29407-1-navid.emamdoost@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-index e218b5c20642d..2066a1d9bc84e 100644
---- a/drivers/staging/rtl8192u/r8192U_core.c
-+++ b/drivers/staging/rtl8192u/r8192U_core.c
-@@ -1467,7 +1467,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 		(struct tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
- 	struct usb_device *udev = priv->udev;
- 	int pend;
--	int status;
-+	int status, rt = -1;
- 	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
- 	unsigned int idx_pipe;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 5adb939afee88..1181b725f5033 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1050,8 +1050,10 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->hw = hw;
+ 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
+ 				    GFP_KERNEL);
+-	if (!rtlpriv->usb_data)
++	if (!rtlpriv->usb_data) {
++		ieee80211_free_hw(hw);
+ 		return -ENOMEM;
++	}
  
-@@ -1611,8 +1611,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 		}
- 		if (bSend0Byte) {
- 			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
--			if (!tx_urb_zero)
--				return -ENOMEM;
-+			if (!tx_urb_zero) {
-+				rt = -ENOMEM;
-+				goto error;
-+			}
- 			usb_fill_bulk_urb(tx_urb_zero, udev,
- 					  usb_sndbulkpipe(udev, idx_pipe),
- 					  &zero, 0, tx_zero_isr, dev);
-@@ -1622,7 +1624,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 					 "Error TX URB for zero byte %d, error %d",
- 					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
- 					 status);
--				return -1;
-+				goto error;
- 			}
- 		}
- 		netif_trans_update(dev);
-@@ -1633,7 +1635,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
- 	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
- 		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
- 		 status);
--	return -1;
-+
-+error:
-+	dev_kfree_skb_any(skb);
-+	usb_free_urb(tx_urb);
-+	usb_free_urb(tx_urb_zero);
-+	return rt;
+ 	/* this spin lock must be initialized early */
+ 	spin_lock_init(&rtlpriv->locks.usb_lock);
+@@ -1112,6 +1114,7 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	_rtl_usb_io_handler_release(hw);
+ 	usb_put_dev(udev);
+ 	complete(&rtlpriv->firmware_loading_complete);
++	kfree(rtlpriv->usb_data);
+ 	return -ENODEV;
  }
- 
- static short rtl8192_usb_initendpoints(struct net_device *dev)
+ EXPORT_SYMBOL(rtl_usb_probe);
 -- 
 2.20.1
 
