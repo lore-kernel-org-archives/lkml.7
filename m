@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D9BC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEB5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CFD2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6462820838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015404;
-	bh=ZUlJGIDI5VNbIPTVi9gHwZ0Ezq8GX+d8+q+KM1qcd6o=;
+	s=default; t=1576015409;
+	bh=uBeKrTh12ypekGU746QAp3NU+4SENXWC93Ns4MRKafE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0tCTc6h6S6cM7/rOHhx2j3tRUadCI0cQRpasUsC2vh2XXJZwMw3uQL4lSxXWBzd3k
-	 yJ2cEMQH8ITyrm3RBd7AFXOoOsXy+L6w2IERS8NBKl48gVFEdCuQRcXJcHAFs0emsZ
-	 m6KQLCtYAS6ZMXaQm4xWcWUm2yj2XrJrJFK+m94I=
+	b=VJgPPC1utcW+/9znWvN8S1LK+64LUGFqOzp5fI4RfbG2uS1Throymy7iiN4/toNJb
+	 Po/2ShD4pMNZPv3PFQgMuEi8cRv0XjwSD9ILLCtVVpcTiM3ryGzUN2a4gAq6Cnd02R
+	 mFeuxhcZqtryBfM/n1rrXHy40dSgIxjoU6tOvElA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfLJWDX (ORCPT
+        id S1727774AbfLJWD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbfLJWDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:13 -0500
+        id S1727606AbfLJWDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7720020828;
-        Tue, 10 Dec 2019 22:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE2120838;
+        Tue, 10 Dec 2019 22:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015393;
-        bh=ZUlJGIDI5VNbIPTVi9gHwZ0Ezq8GX+d8+q+KM1qcd6o=;
+        s=default; t=1576015402;
+        bh=uBeKrTh12ypekGU746QAp3NU+4SENXWC93Ns4MRKafE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uPZsGf1oJYHp0y/grUIwXHpfDaOpuIj5Ibd0rSWOxCjHO7khU/B0nQmnmLvFvYl+x
-         7pvm2u26yqpiMjsNUgvlDDJLt3IRBCg/9KkNVEXKyjAT7b3dv1cUYCCuxeVditxBOd
-         GEpBfhp3oPE8YJXSDKazSdQoJILD+cjeGe9tQNrk=
+        b=eYd9KIfK16gOSgDQMqhW54jazjGM6l59z6cv8I/iV7ci8LK9bOCG//UtEW22kh2V/
+         d6iaO3Ta1ugKBjQR4/LIBuNj1vh/vUJ5UjBxC3/XYRa3xNrXNcVDJV8Wo/RIx2GVrR
+         FdUg0T0su8Ovo2BefngQCgdexm6K8exP2cNBZ/pA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 009/130] rtlwifi: prevent memory leak in rtl_usb_probe
-Date:   Tue, 10 Dec 2019 17:01:00 -0500
-Message-Id: <20191210220301.13262-9-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 017/130] media: ov6650: Fix stored crop rectangle not in sync with hardware
+Date:   Tue, 10 Dec 2019 17:01:08 -0500
+Message-Id: <20191210220301.13262-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,45 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
+[ Upstream commit 1463b371aff0682c70141f7521db13cc4bbf3016 ]
 
-In rtl_usb_probe if allocation for usb_data fails the allocated hw
-should be released. In addition the allocated rtlpriv->usb_data should
-be released on error handling path.
+The driver stores crop rectangle settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, crop rectangle width and height settings are not updated
+correctly when rectangle offset settings are applied on hardware.  If
+an error occurs while the device is updated, the stored settings my no
+longer reflect hardware state and consecutive calls to .get_selection()
+as well as .get/set_fmt() may return incorrect information.  That in
+turn may affect ability of a bridge device to use correct DMA transfer
+settings if such incorrect informamtion on active frame format returned
+by .get/set_fmt() is used.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Assuming a failed update of the device means its actual settings haven't
+changed, update crop rectangle width and height settings stored in the
+device private structure correctly while the rectangle offset is
+successfully applied on hardware so the stored values always reflect
+actual hardware state to the extent possible.
+
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov6650.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 2401c8bdb211e..93eda23f01239 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -1068,8 +1068,10 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	rtlpriv->hw = hw;
- 	rtlpriv->usb_data = kzalloc(RTL_USB_MAX_RX_COUNT * sizeof(u32),
- 				    GFP_KERNEL);
--	if (!rtlpriv->usb_data)
-+	if (!rtlpriv->usb_data) {
-+		ieee80211_free_hw(hw);
- 		return -ENOMEM;
-+	}
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 81fa21ed25992..348296be49258 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -485,6 +485,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
  
- 	/* this spin lock must be initialized early */
- 	spin_lock_init(&rtlpriv->locks.usb_lock);
-@@ -1130,6 +1132,7 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	_rtl_usb_io_handler_release(hw);
- 	usb_put_dev(udev);
- 	complete(&rtlpriv->firmware_loading_complete);
-+	kfree(rtlpriv->usb_data);
- 	return -ENODEV;
- }
- EXPORT_SYMBOL(rtl_usb_probe);
+ 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
++		priv->rect.width += priv->rect.left - sel->r.left;
+ 		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+ 				       (sel->r.left + sel->r.width) >> 1);
+@@ -494,6 +495,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
++		priv->rect.height += priv->rect.top - sel->r.top;
+ 		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+ 				       (sel->r.top + sel->r.height) >> 1);
 -- 
 2.20.1
 
