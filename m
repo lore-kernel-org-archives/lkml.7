@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FABC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4811C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C15B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818F9207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015948;
-	bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+	s=default; t=1576015950;
+	bh=p7iUVenM+yNQ++dCCN//VeOqt5C6ZTQcLd/gzMH7Sns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/jsIqLVes6sFOpnNQwbRR9fBsm+J7v3cP2ApQZdz9y7fBgk4jBCsT7BskFnKOb5c
-	 pWcv6mNkpSUMsOHliZr1Pcv03OIQyKEi+s+r7u9WafMZ9H1oGIhtawDtyTc23o64ML
-	 KeYTRe1qRR7nV+Nu+SXQ83ZbLz1W2HshiVmxlYvw=
+	b=QYO2nZsiwg5zHQn2RFCcWlMCWxAaaK93yAATBrEfjfZ8dUQ/GFrbdubjF7DTbwkyO
+	 jucnywBYYkYiqMoSLPIAYC9l4QiT8ZUSN2/59TTsw4HzrZJuOeY2+2xI6L2dBuSFTG
+	 aBW60vVhCq7LGgqWpLWZt0l3/mw29WqsY0SGQFs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfLJWM0 (ORCPT
+        id S1727939AbfLJWDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:12:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727954AbfLJWDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:38 -0500
+        id S1727565AbfLJWD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B3122464;
-        Tue, 10 Dec 2019 22:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04C502053B;
+        Tue, 10 Dec 2019 22:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015417;
-        bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+        s=default; t=1576015405;
+        bh=p7iUVenM+yNQ++dCCN//VeOqt5C6ZTQcLd/gzMH7Sns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICJA+q5bAG5fejghY2prg7S9sZHC5gXo2LRLTixdhVNWCHxrMij23arVdjKiWzTxb
-         1BglhNMEYPySFLfjqYggS/o+LyWzMWrlLrl9j8AmzAm3tP1jqMBF0JD3USUEw1c+Up
-         aOVxyZF2lSSVrCzG55v8OokYC3xR1Nd3ZKfmP9D0=
+        b=pNofXOAfhVK/Q8by02fxvb0SXE2yoZ4NyldexpKTpEa698qCj7nZNL+S3kd7ey4OV
+         d7ou/fvdgC4l5ryUrUCYcZrt2WfBL0j6ktr5h+LfyHlFGCdQZZ74c3zrYN1Jh7FF3C
+         rRi6SM9Ishy7LQLU+Nt5QmPfCG9sqMW1jEUGz2Z4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 030/130] block: Fix writeback throttling W=1 compiler warnings
-Date:   Tue, 10 Dec 2019 17:01:21 -0500
-Message-Id: <20191210220301.13262-30-sashal@kernel.org>
+Cc:     Ben Greear <greearb@candelatech.com>,
+        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 020/130] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
+Date:   Tue, 10 Dec 2019 17:01:11 -0500
+Message-Id: <20191210220301.13262-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,126 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Ben Greear <greearb@candelatech.com>
 
-[ Upstream commit 1d200e9d6f635ae894993a7d0f1b9e0b6e522e3b ]
+[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
 
-Fix the following compiler warnings:
+Offchannel management frames were failing:
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:21,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:38,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/mm.h:10,
-                 from ./include/linux/bvec.h:13,
-                 from ./include/linux/blk_types.h:10,
-                 from block/blk-wbt.c:23:
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
+[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
+[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This bug appears to have been added between 4.0 (which works for us),
+and 4.4, which does not work.
+
+I think this is because the tx-offchannel logic gets in a loop when
+ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
+sent to the firmware for transmit.
+
+This patch fixes the problem on 4.9 for me, and now HS20 clients
+can work again with my firmware.
+
+Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
+
+Signed-off-by: Ben Greear <greearb@candelatech.com>
+Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
+[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/wbt.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index b048694070e2c..37342a13c9cb9 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,8 @@ TRACE_EVENT(wbt_stat,
- 	),
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index dff34448588f0..ea47ad4b2343b 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3627,7 +3627,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
+ 			 struct ieee80211_vif *vif,
+ 			 enum ath10k_hw_txrx_mode txmode,
+ 			 enum ath10k_mac_tx_path txpath,
+-			 struct sk_buff *skb)
++			 struct sk_buff *skb, bool noque_offchan)
+ {
+ 	struct ieee80211_hw *hw = ar->hw;
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+@@ -3655,10 +3655,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
+ 		}
+ 	}
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
- 		__entry->rmax		= stat[0].max;
-@@ -67,7 +68,8 @@ TRACE_EVENT(wbt_lat,
- 	),
+-	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
++	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
+ 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
+-			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
+-				   skb);
++			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
++				   skb, skb->len);
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
+ 			skb_queue_tail(&ar->offchan_tx_queue, skb);
+ 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
+@@ -3720,8 +3720,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
  
-@@ -103,7 +105,8 @@ TRACE_EVENT(wbt_step,
- 	),
+ 		mutex_lock(&ar->conf_mutex);
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
- 		__entry->window	= div_u64(window, 1000);
-@@ -138,7 +141,8 @@ TRACE_EVENT(wbt_timer,
- 	),
+-		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
+-			   skb);
++		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
++			   skb, skb->len);
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
- 		__entry->inflight	= inflight;
+ 		hdr = (struct ieee80211_hdr *)skb->data;
+ 		peer_addr = ieee80211_get_DA(hdr);
+@@ -3767,7 +3767,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+ 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
+ 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
+ 
+-		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
+ 		if (ret) {
+ 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
+ 				    ret);
+@@ -3777,8 +3777,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+ 		time_left =
+ 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
+ 		if (time_left == 0)
+-			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
+-				    skb);
++			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
++				    skb, skb->len);
+ 
+ 		if (!peer && tmp_peer_created) {
+ 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
+@@ -3957,7 +3957,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
+ 		spin_unlock_bh(&ar->htt.tx_lock);
+ 	}
+ 
+-	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+ 	if (unlikely(ret)) {
+ 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
+ 
+@@ -4239,7 +4239,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
+ 		spin_unlock_bh(&ar->htt.tx_lock);
+ 	}
+ 
+-	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
+ 		if (is_htt) {
 -- 
 2.20.1
 
