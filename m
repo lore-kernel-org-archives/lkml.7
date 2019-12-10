@@ -2,142 +2,196 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5202DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF32C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2695E207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93952073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pD2UzuXZ"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="NHNem7yj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLJOLY (ORCPT
+        id S1727518AbfLJOL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:11:24 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:39657 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJOLY (ORCPT
+        Tue, 10 Dec 2019 09:11:29 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32240 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727145AbfLJOL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:11:24 -0500
-Received: by mail-il1-f195.google.com with SMTP id n1so1690239ilm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:11:23 -0800 (PST)
+        Tue, 10 Dec 2019 09:11:28 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAE0dAH013029;
+        Tue, 10 Dec 2019 09:11:12 -0500
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2047.outbound.protection.outlook.com [104.47.66.47])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wraq3h2gd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Dec 2019 09:11:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fII2uZkmkmyCfBpjHdxwNwjnfugQaem9joE4tGuOuUICixzGVc7Os8sAaGSk8RSn4uhiCcDThXUf7jG6o4k36xL/x4M0S2cIcjxBdNGwj4Ka/i1KNbXcod+wpRm2Fo9zfk1Lr+l8M7I6dVyc0cZF5s0k2IkgI6cix/7VRC3GSW2F158twjUgUvj3oYWJ5Qh1eKPLSI2IgjcHoXBkGsSF0fJdL+oL+xIZLt5WzdcL29wWhsbV8rSIH5H9qVU7J7BCBJMYp8SalLg7OD2oZXzg32YG972q67LRzr3fHwRMuXgKbzmJvCoZkcHzcKqQaNrvTvG7bX1hiwtfXCVcJgOWOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWWK5rKPuY2v1fSDcpuzUN4e4ZK64CY6kcAI4YYNRDc=;
+ b=Kjx00ooUT0MfMGoBSklc6oBFv6ALoTvWlG0cPeeqDxOrmIj8ZbQBv4Z3v2qSJqCK2fYuEzcFBA93vNWLjQ+eDY9XALm8UDS0hFTP1l2Sy5XcBrcYU0kQ2hTLcuEhmYld/UWKMUMqB29kmrILhOGU8uWpRUHx6G+U5uaet/RxlB4TuipQE4tUNb/c0dHWecHe2Y7wm5NMGpzhYLe5HFK4B1jIODiRgzA3BIAQsbYk7TZJdKzoNXwjwa7x2kxrtAHr21hiFitssWEC7OTuuX8IGBGUdfhsT7mMn2gZXiOAFFXiAJ4ZiQkS+7igUxXn+n8SROqCGTtELxTPhoefdHBI2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=B2D3Qyl+CwEJ45ada86WIyLvrr4ccx3M8jqZypSwAH4=;
-        b=pD2UzuXZbkpf0sMWJFiX6bgUR5KEaxD9P2Yt1cXm4D0vXt+bVxawCksIZu7jsPCOYn
-         qx7TsRGaq8G9OrHx/dYkHvnen0oKgHN85Q9QH1uydQ5ODdNZmTiW1rNLjgjDwzyGyojr
-         XpI7BqXabgC4zw5xpi4Vw1Yaf8I8kGMZgI995YCY9dzEieBRe7jJ4SYqE+LnAk92UzNg
-         xO2v0IWBY2kxI3RXX1Ma7znE5R5aUHW/ZiIJGJXcDOZLt1z/OeKW1Bpwb4/dPUNgli73
-         yaXAWmM2e1I8VHxY/9UN9l3JJtxn/IIKnxjU/wCcSfb0MZKiZqQQt5KfCVFPVJqYGj0N
-         9RAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B2D3Qyl+CwEJ45ada86WIyLvrr4ccx3M8jqZypSwAH4=;
-        b=nXyCIZiRaRYUYwoo4ejCBScWUYLrACPOxgihLes+u8dx5uNfjaXcL3qlIJ3SJUPgJl
-         yWdise4ou6oXnudZKH3g++XA2p8saiotMlKuwYT8BHjuet4J05PpFF18VwnLOEysaewN
-         PmnB8n+jxxhZYhARU7Bl9Qe8YWUy2DeDQuDv6B7SUwS9E50z9tAtlKggErjnYFQm/NFe
-         mV2ygK9VVrpaS7AX2khrgNVLBVnGN7FCjdfV70VyRoEaje9IqoKkjp+tggUlSWIEmBU1
-         bVur24r106XNdE0w74myIlQXXNKf9w1Z6FhuR6C2GHO83TEv3aoafgPYAlpzgnIzuqex
-         ILQw==
-X-Gm-Message-State: APjAAAVbdN41XoWhmygdzBZO5FsZCGz+cicXagKADhEtcnKdRIfz+y1/
-        BA/r4r2Vz1QCdIKKTgjBeQLM50pasecBiVc2cJ/lBg==
-X-Google-Smtp-Source: APXvYqz77/tNrfDrJzKlU1Z8nBr6FZXWg9w2drB9REe0e0/oWbhzgPRAk7Tql+RF8fA3qEobiSrZ/r5PcuLUof3Nr40=
-X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr34653892ils.287.1575987083100;
- Tue, 10 Dec 2019 06:11:23 -0800 (PST)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWWK5rKPuY2v1fSDcpuzUN4e4ZK64CY6kcAI4YYNRDc=;
+ b=NHNem7yj18Pplmxz9AgTI4MO403Dc4kXhAiZAfoJTIw+PZosQICzwpEmrfhLaL3U7zWWI7YiR/KA0lgNPWWVo0MW+CCBagr4OONCyosZajXvGjwm7FDb1YitYdUsS22wTE3YMvRBu9AaiYr10nZ1PoQtKgiwmcs2ims3lFifLUw=
+Received: from BN8PR03CA0019.namprd03.prod.outlook.com (2603:10b6:408:94::32)
+ by MN2PR03MB5278.namprd03.prod.outlook.com (2603:10b6:208:1eb::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Tue, 10 Dec
+ 2019 14:11:10 +0000
+Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by BN8PR03CA0019.outlook.office365.com
+ (2603:10b6:408:94::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15 via Frontend
+ Transport; Tue, 10 Dec 2019 14:11:10 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Tue, 10 Dec 2019 14:11:10 +0000
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBAEB9kE026165
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 10 Dec 2019 06:11:09 -0800
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 10 Dec
+ 2019 09:11:08 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 10 Dec 2019 09:11:08 -0500
+Received: from saturn.ad.analog.com ([10.48.65.121])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBAEB4Wa010212;
+        Tue, 10 Dec 2019 09:11:05 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <dmitry.torokhov@gmail.com>, <info@metux.net>,
+        <tglx@linutronix.de>, <m.felsch@pengutronix.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] Input: ads7846: use new `delay` structure for SPI transfer delays
+Date:   Tue, 10 Dec 2019 16:11:03 +0200
+Message-ID: <20191210141103.15910-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191210021525.13455-1-warthog618@gmail.com>
-In-Reply-To: <20191210021525.13455-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 10 Dec 2019 15:11:12 +0100
-Message-ID: <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(346002)(396003)(199004)(189003)(478600001)(7636002)(2616005)(70206006)(246002)(8936002)(336012)(186003)(86362001)(26005)(8676002)(426003)(5660300002)(316002)(36756003)(2906002)(44832011)(7696005)(1076003)(356004)(70586007)(110136005)(107886003)(54906003)(4326008)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5278;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3165ce8d-3454-49f6-ea42-08d77d7acea5
+X-MS-TrafficTypeDiagnostic: MN2PR03MB5278:
+X-Microsoft-Antispam-PRVS: <MN2PR03MB527877A836897C64B65EBE92F95B0@MN2PR03MB5278.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:826;
+X-Forefront-PRVS: 02475B2A01
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gWlCN34nroZekYSJvqQvzq8dRVyd/9oSJkXD076RPraRQKdwT8vSdpk7H71MBzIOfC2dv+QuQP7Q5wjIWQsUAnWZMQu3eWZaFH+qvehXrTv562VP0KP6GuXI0MrcXEddqMry0joTqKnijXvYv2UApNxAFY57OIytxgz8MgwXihKg32zwjVYNuJD3SdgzWhKwhlMYXAPTzN8M7lLzrrJKkgOmHKEzFQ0hY3TAOc+JlKS+uIEidNls4X4Dqs0tOJ3yfY/jnrieqZRX5stMfYvb3XkJQPL5iwUZipVIW+9SFtYHxiKQFP+Z5x643REFeevMaw+v7IF4Q8lu/n82AH0HOyW5SJf6sc9T265W85hOIdwxNpdFAUnFNPmaafce6fN28jglvG0gekuDgA+gzpqWzGJstCrM4stAJbDHv/u2tSf3dBGH3Z4UHDalRF2bC4phudfMGtrqzqL9j5cCV37PmxvO9lBcyDr5c3lx9wli5qk=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 14:11:10.1265
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3165ce8d-3454-49f6-ea42-08d77d7acea5
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5278
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_03:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxscore=0 clxscore=1011 mlxlogscore=999 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
->
-> Restore the external behavior of gpio-mockup to what it was prior to the
-> change to using GPIO_LINE_DIRECTION.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> Fix a regression introduced in v5.5-rc1.
->
-> The change to GPIO_LINE_DIRECTION reversed the polarity of the
-> dir field within gpio-mockup.c, but overlooked inverting the value on
-> initialization and when returned by gpio_mockup_get_direction.
-> The latter is a bug.
-> The former is a problem for tests which assume initial conditions,
-> specifically the mockup used to initialize chips with all lines as inputs=
-.
-> That superficially appeared to be the case after the previous patch due
-> to the bug in gpio_mockup_get_direction.
->
->  drivers/gpio/gpio-mockup.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 56d647a30e3e..c4fdc192ea4e 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip=
- *gc, unsigned int offset)
->         int direction;
->
->         mutex_lock(&chip->lock);
-> -       direction =3D !chip->lines[offset].dir;
-> +       direction =3D chip->lines[offset].dir;
->         mutex_unlock(&chip->lock);
->
->         return direction;
-> @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *=
-pdev)
->         struct gpio_chip *gc;
->         struct device *dev;
->         const char *name;
-> -       int rv, base;
-> +       int rv, base, i;
->         u16 ngpio;
->
->         dev =3D &pdev->dev;
-> @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *=
-pdev)
->         if (!chip->lines)
->                 return -ENOMEM;
->
-> +       for (i =3D 0; i < gc->ngpio; i++)
-> +               chip->lines[i].dir =3D GPIO_LINE_DIRECTION_IN;
-> +
->         if (device_property_read_bool(dev, "named-gpio-lines")) {
->                 rv =3D gpio_mockup_name_lines(dev, chip);
->                 if (rv)
-> --
-> 2.24.0
->
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current `delay_usecs`
+with `delay` for this driver.
 
-Hi Kent,
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-I was applying and testing your libgpiod series and noticed that the
-gpio-tools tests fail after applying patches 16 & 17 (with linux
-v5.5-rc1). Is this fix related to this?
+[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-Bart
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/input/touchscreen/ads7846.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+index 51ddb204ca1b..8fd7fc39c4fd 100644
+--- a/drivers/input/touchscreen/ads7846.c
++++ b/drivers/input/touchscreen/ads7846.c
+@@ -333,7 +333,8 @@ static int ads7846_read12_ser(struct device *dev, unsigned command)
+ 		req->xfer[1].len = 2;
+ 
+ 		/* for 1uF, settle for 800 usec; no cap, 100 usec.  */
+-		req->xfer[1].delay_usecs = ts->vref_delay_usecs;
++		req->xfer[1].delay.value = ts->vref_delay_usecs;
++		req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
+ 		spi_message_add_tail(&req->xfer[1], &req->msg);
+ 
+ 		/* Enable reference voltage */
+@@ -1018,7 +1019,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+ 	 * have had enough time to stabilize.
+ 	 */
+ 	if (pdata->settle_delay_usecs) {
+-		x->delay_usecs = pdata->settle_delay_usecs;
++		x->delay.value = pdata->settle_delay_usecs;
++		x->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 		x++;
+ 		x->tx_buf = &packet->read_y;
+@@ -1061,7 +1063,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+ 
+ 	/* ... maybe discard first sample ... */
+ 	if (pdata->settle_delay_usecs) {
+-		x->delay_usecs = pdata->settle_delay_usecs;
++		x->delay.value = pdata->settle_delay_usecs;
++		x->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 		x++;
+ 		x->tx_buf = &packet->read_x;
+@@ -1094,7 +1097,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+ 
+ 		/* ... maybe discard first sample ... */
+ 		if (pdata->settle_delay_usecs) {
+-			x->delay_usecs = pdata->settle_delay_usecs;
++			x->delay.value = pdata->settle_delay_usecs;
++			x->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 			x++;
+ 			x->tx_buf = &packet->read_z1;
+@@ -1125,7 +1129,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+ 
+ 		/* ... maybe discard first sample ... */
+ 		if (pdata->settle_delay_usecs) {
+-			x->delay_usecs = pdata->settle_delay_usecs;
++			x->delay.value = pdata->settle_delay_usecs;
++			x->delay.unit = SPI_DELAY_UNIT_USECS;
+ 
+ 			x++;
+ 			x->tx_buf = &packet->read_z2;
+-- 
+2.20.1
+
