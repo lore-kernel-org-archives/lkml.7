@@ -2,78 +2,120 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9283C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82546C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58DA20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5466E2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a8gPgtAj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0FEADOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfLJNro (ORCPT
+        id S1727386AbfLJNtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:47:44 -0500
-Received: from mail-qk1-f178.google.com ([209.85.222.178]:35671 "EHLO
-        mail-qk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJNro (ORCPT
+        Tue, 10 Dec 2019 08:49:32 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45148 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfLJNtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:47:44 -0500
-Received: by mail-qk1-f178.google.com with SMTP id v23so16478016qkg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:47:43 -0800 (PST)
+        Tue, 10 Dec 2019 08:49:31 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so9068267pfg.12;
+        Tue, 10 Dec 2019 05:49:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=ypBmAsfUoUInQlseX4GRC4daQUk6vx9GabpQwlhGCEA=;
-        b=a8gPgtAjO9OdwKYPlhfjZhi8UVq5c2SGXad3PVQyNEIEUASD0XsKwN5u9NDhmxtNo6
-         VwYqTTz1SbRwFVVDQWGusH7HhaeFAZ4GXsEcs6lQ/Qr86CDdzEx1v3JrHo31F8zx/ik3
-         R9dwKrC7CdXY+rQ0uFFfFQZ0dWve59hZeaBMFbj8eer+Ru9UKsfj2VoKfcQ8HGZfnJ+M
-         esYyriEoQ2JVmPtfCU32DFuW33wO73NE9SWIzMcZvT9Y34psn6oHusAD4uRYCmixdfUK
-         JVLvxuUP2tqqZd4uW3idqaJL6t+rUyG9c+M4m+M5X68m5EU5sueozZaJLqEkRTBFcGqL
-         e97w==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2GTyISog1VX8yYAJFI+c/tQ5PL+DROiS/ITcUOlh5Cs=;
+        b=c0FEADODck6cpIJJgtjKYAmemgt9mpnPLYw9O4bu5TW3TNCwI8b5q6ij8BkpCd0nYy
+         6WxeFlUsOR7ofa8ZCWHs2hL8pJhGd7QjnStKiCJQkdx9MmdUCP2gGFzs4F8ZOLi1AUq1
+         XYKwagD4yz/ZaQSs00mW5W5UC8JxZU1zLoHRSeDLI20r60Mw+pFb95bJtmHUs87j3z6U
+         7vq+E8Gwe5pO9Zd2/h8+yHu/llz8RZR6RilV1lzKEupKwljmIfGEce8rCkKB5Zg3RVrw
+         eXHGyM0pFtCiBBgQELyAUveIWL7Dc/o9mCkNnlBczw5Oejrclpe54hMvdzAAl5QZ6XTQ
+         nJtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=ypBmAsfUoUInQlseX4GRC4daQUk6vx9GabpQwlhGCEA=;
-        b=dQMbW+kg822m1nsp+LCfSdZghW1AUszYOoXtAD14jI0LLHSY2uVooDuKVlXyK0rm6b
-         qNRcNCD/6GrZWbKRrAo9ZM6KIM1BTdYJ5HIYp5pf26Js0VbUxt1w+fKc5GVcca7m6mCi
-         Nu1Pks3TdhmzRr8ILGiJC2ol0uyuFqLMjIusbNy4xDoDK96HWeEsVBNrj1QuSguRF5eo
-         az5OqoTNDGCSicp9UoQtJCLmlQSKm8Z1/gCsD3fxnDNggrby7wAfLe5l3lzFe9TFlvl6
-         J4IgP0X1UtzsgcORKmeVAYKDM20elj6KlKJoB2rqDrw+2dL0WXG/the8W0akPV+4QFR/
-         D0QQ==
-X-Gm-Message-State: APjAAAVKd1241tmK7f6y6Ot7knd34cd2uuu9axA60BAtuv5e4cot77x5
-        1+IEoKzVhJ2jgUEtjRreVm+N31ksRN/LRn82dFP+gg==
-X-Google-Smtp-Source: APXvYqw9Yf52alvxvgAPKFrcHHUhUAXaa3Bpk9aTjYBUZPp5Q03DHGOR2QzXKtRBhAYbkYZTVlvPh3c+RKH3v5TQniE=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr26848551qki.250.1575985662613;
- Tue, 10 Dec 2019 05:47:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2GTyISog1VX8yYAJFI+c/tQ5PL+DROiS/ITcUOlh5Cs=;
+        b=AjF4JMdL0nM5yroqGRAs5Oi5WQKtioKacRnKhSDoFAf/yGL4CXSOglyQZUIQEcLZz+
+         00BXHVJ7jcfSw4CAI2psYdNuK6WjjLUVC7IShdqVDlGcjzp/Q8atoDIT8pg8v/Q/Uv5N
+         MMfGtsP8Wa1vay9B/ATxWR7kI8OBBYhGRM1wlVq8f6amWrM12dX3lseRwEcvj2MAqxAA
+         1EOOREJOR9ZLnBV8V4qedqjnlcGTwGVnl7LUwI6TPSD89W7Roz6skjVPqEsV5Fr+cb5R
+         IiuzAx25z8yaTPQXynzh2WnfSzX+r+bN3iUL7+UzHGg+MwctD6ssHL+3SgQz9zLITBF7
+         5dMg==
+X-Gm-Message-State: APjAAAVtX2iMh/UlxW5FmHBRoWS7oiHmJ7S4yXIhvkWf20S1p6mhr73T
+        zgO+lfKPz8nlZU5POrYqSFg=
+X-Google-Smtp-Source: APXvYqxoaZy5Ti1fGla4GQWKDnsoGwY+cdTdssY1GiH1lkSDhD5BlL6T7Wn5kwVpaMDI1nuvLkzdVA==
+X-Received: by 2002:a62:486:: with SMTP id 128mr35359892pfe.236.1575985770887;
+        Tue, 10 Dec 2019 05:49:30 -0800 (PST)
+Received: from localhost.localdomain ([2408:8025:ad:7e20:84d1:c490:3936:fab0])
+        by smtp.gmail.com with ESMTPSA id t137sm3520602pgb.40.2019.12.10.05.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 05:49:30 -0800 (PST)
+From:   chengkaitao <pilgrimtao@gmail.com>
+To:     hannes@cmpxchg.org
+Cc:     mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        smuchun@gmail.com, Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: [PATCH] mm: cleanup some useless code
+Date:   Tue, 10 Dec 2019 05:49:10 -0800
+Message-Id: <20191210134911.2570-1-pilgrimtao@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 10 Dec 2019 14:47:29 +0100
-Message-ID: <CACT4Y+YcCW=xwys6tvhOLXiND=2Cwe-NFkn0MDKHi=8HdGWppg@mail.gmail.com>
-Subject: get_maintainer.pl produces non-deterministic results
-To:     Joe Perches <joe@perches.com>,
-        Vegard Nossum <vegard.nossum@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-scripts/get_maintainer.pl fs/proc/task_mmu.c
-non-deterministically gives me from 13 to 16 results, different number
-every time (on upstream 6794862a). Perl v5.28.1. Michael confirmed
-this with v5.28.2.
-Vergard suggested to check PERL_HASH_SEED=0. Indeed it fixes
-non-determinism. But I guess it's not the right solution, there should
-be some logical problem.
-My perl-fo is weak, I appreciate if somebody with proper perl-fo takes a look.
+There is a duplicate PageTransHuge, because hpage_nr_pages have
+the same one.
 
-Thanks
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+---
+ mm/memcontrol.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index bc01423277c5..870284d3ee9d 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6678,7 +6678,6 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ {
+ 	struct mem_cgroup *memcg;
+ 	unsigned int nr_pages;
+-	bool compound;
+ 	unsigned long flags;
+ 
+ 	VM_BUG_ON_PAGE(!PageLocked(oldpage), oldpage);
+@@ -6700,8 +6699,7 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 		return;
+ 
+ 	/* Force-charge the new page. The old one will be freed soon */
+-	compound = PageTransHuge(newpage);
+-	nr_pages = compound ? hpage_nr_pages(newpage) : 1;
++	nr_pages = hpage_nr_pages(newpage);
+ 
+ 	page_counter_charge(&memcg->memory, nr_pages);
+ 	if (do_memsw_account())
+@@ -6711,7 +6709,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	commit_charge(newpage, memcg, false);
+ 
+ 	local_irq_save(flags);
+-	mem_cgroup_charge_statistics(memcg, newpage, compound, nr_pages);
++	mem_cgroup_charge_statistics(memcg, newpage, PageTransHuge(newpage),
++			nr_pages);
+ 	memcg_check_events(memcg, newpage);
+ 	local_irq_restore(flags);
+ }
+-- 
+2.20.1
+
