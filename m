@@ -2,106 +2,76 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F13C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00A6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA3920838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575996508;
-	bh=R33HTSexU1kbb824ncW7/1smobUzWfbTBjTiOaZwbr4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NYTZGqBbUOA4kD0mfn1Q2Zniih5UHtjNgVZsiI83ylDVRcwmkIY+hKnUcCoq/9t3L
-	 MQjEMMeEf19dhgc7SpJUHfj207cFhsVXgp3sYnb5VOnB9vbXCdc6jMEXStWskhRNNb
-	 farHfQwP5vwghQzeFF3fpb6lefx5bmWn4kZnlARI=
+	by mail.kernel.org (Postfix) with ESMTP id C41422073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IIdANMqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfLJQs1 (ORCPT
+        id S1727667AbfLJQtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:48:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33318 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 11:49:00 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45122 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfLJQs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:48:27 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24F4C214D8;
-        Tue, 10 Dec 2019 16:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575996506;
-        bh=R33HTSexU1kbb824ncW7/1smobUzWfbTBjTiOaZwbr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xMD67H81d0rp4JlhSYv1MoGQjhVBvSBRrcQrfvMaUV/rshK9dgLMGQgqo5z4NjcdK
-         jxWfkYEMimmj7J965YbYsbYVsynwmdBWIm+UgMowjc1wUvpOwajun7sSYs3nvp7Zwx
-         eDKMLOXpXw1a8WZl44k8KAsREU20jmY7ev/JU1Ek=
-Received: by mail-qk1-f172.google.com with SMTP id m188so16993121qkc.4;
-        Tue, 10 Dec 2019 08:48:26 -0800 (PST)
-X-Gm-Message-State: APjAAAXcAIGYFvIz5lYG3Pc72HeoTNaOnwvRXFbUPoCA+CASBy09DC6z
-        0KWXhsgBf0kb6wESpgfnIhYJGM+CSHiEqINA/Q==
-X-Google-Smtp-Source: APXvYqx9dzG7yP7Wuz5at60Qc6xU1g9ebTuNbbK6+p8S0ZoNXrD/Xdz8GC+/TsRt7j+zA0yyIQg0bEtIgkzleZIfQv8=
-X-Received: by 2002:a37:a70b:: with SMTP id q11mr13613735qke.393.1575996505147;
- Tue, 10 Dec 2019 08:48:25 -0800 (PST)
+        id S1727527AbfLJQtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:49:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=iOz/6/0r92zuFKGcrFy7F2rvroSXU33rpP0w5fe4E3U=; b=IIdANMqMHtcM+54gM190UsDtPk
+        SUHzsAqkxb4XGBvxmuA1c515zloQfMWEiXz+Oj3/kwS8lswkNGoCf6E1PKE7C/RqA1LItg1GwPRMc
+        lff4LzwcffjJCBLQcQUCjNA+XiU05arpHnchX8RWm1i6ANWPAspUmaGSYpdmNIGBx4JA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ieigx-0005Pm-P1; Tue, 10 Dec 2019 17:48:55 +0100
+Date:   Tue, 10 Dec 2019 17:48:55 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
+ switch
+Message-ID: <20191210164855.GE27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-References: <20191119175319.16561-1-peron.clem@gmail.com> <20191121072408.GE4345@gilmour.lan>
-In-Reply-To: <20191121072408.GE4345@gilmour.lan>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 10 Dec 2019 10:48:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJevcG2qv+BYKTnP=out0jPxuEcdYuLq7idxK04Q05fag@mail.gmail.com>
-Message-ID: <CAL_JsqJevcG2qv+BYKTnP=out0jPxuEcdYuLq7idxK04Q05fag@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] Add support for H6 PWM
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:24 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Nov 19, 2019 at 06:53:11PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > This is a rework of Jernej's previous work[1] taking account all the
-> > previous remarks.
-> >
-> > Bindings is still strict but probe in the driver are now optionnals.
-> >
-> > If someone could confirm that the PWM is not broken, as my board
-> > doesn't output it.
-> >
-> > I didn't add the acked-tags as there are big changes.
->
-> Applied 1 and 7 for 5.6, thanks!
+> +static int mt7531_setup(struct dsa_switch *ds)
+> +{
+> +	/* Enable PHY power, since phy_device has not yet been created
+> +	 * provided for phy_[read,write]_mmd_indirect is called, we provide
+> +	 * our own mt7531_ind_mmd_phy_[read,write] to complete this
+> +	 * function.
+> +	 */
+> +	val = mt7531_ind_mmd_phy_read(priv, 0, PHY_DEV1F,
+> +				      MT7531_PHY_DEV1F_REG_403);
+> +	val |= MT7531_PHY_EN_BYPASS_MODE;
+> +	val &= ~MT7531_PHY_POWER_OFF;
+> +	mt7531_ind_mmd_phy_write(priv, 0, PHY_DEV1F,
+> +				 MT7531_PHY_DEV1F_REG_403, val);
+> +
 
-I believe patch 7 breaks linux-next:
+Is this power to all the PHYs? Or just one?
 
-Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.exampl=
-e.dts:35.37-38
-syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
-.example.dt.yaml]
-Error 1
-
-Usually that's due to a missing include.
-
-Rob
+   Andrew
