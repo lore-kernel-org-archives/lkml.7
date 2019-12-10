@@ -2,81 +2,110 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD44C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30350C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608CD20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0FD20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ivCMbiiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfLJUXd (ORCPT
+        id S1726841AbfLJUYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:23:33 -0500
-Received: from s3.sipsolutions.net ([144.76.43.62]:53396 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfLJUXd (ORCPT
+        Tue, 10 Dec 2019 15:24:43 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44113 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfLJUYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:23:33 -0500
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.92.3)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1iem2Y-001zWG-EY; Tue, 10 Dec 2019 21:23:26 +0100
-Message-ID: <0c9148be76615b3b77a3e730df75f311b1001b9f.camel@sipsolutions.net>
-Subject: Re: [PATCH net-next v2 1/5] rtnetlink: provide permanent hardware
- address in RTM_NEWLINK
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 10 Dec 2019 21:23:24 +0100
-In-Reply-To: <acd3947857e5be5340239cd49c8e2a51c283b884.camel@sipsolutions.net>
-References: <cover.1575982069.git.mkubecek@suse.cz>
-         <7c28b1aa87436515de39e04206db36f6f374dc2f.1575982069.git.mkubecek@suse.cz>
-         <20191210095105.1f0008f5@cakuba.netronome.com>
-         (sfid-20191210_185112_099545_A11C9C5D) <acd3947857e5be5340239cd49c8e2a51c283b884.camel@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Tue, 10 Dec 2019 15:24:42 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C61B4886BF;
+        Wed, 11 Dec 2019 09:24:38 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1576009478;
+        bh=cCJ4IOUErdRXpS39JIAoWUSB/QOu2X0QuS4VhmhhzYk=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=ivCMbiiPoyvBkAbJvQMZus7eq8oDUJHfmIBM1N7NGCtQqpKVHsA/ajVC3uOdTstzz
+         jgn0EURerQBdDjnuUlyfyJtmjN599ppzwyI+I1IIVOCHaHl35SNN+Xe7RvWvCPmihJ
+         AWYNw3dF0IARL5nL4XIWO9B0skzGA6/6ArtZQIjr0QLx7fwcnCwgihTX12HbDhRefy
+         o8nuxg4JEPB2pFG5s541HgcoxEN20nwiWNOgxwK3kRXwn/oRaMWSMDsfgJ5hKXIrvH
+         +CUX1Ap9W9ZY8ZYldbOP+/jRD8eNuG/IKy63zPYFayK47MMCA9YmuA11o3yufWD3wQ
+         Yv9kAOoM8yP9g==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5defff050000>; Wed, 11 Dec 2019 09:24:37 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 11 Dec 2019 09:24:33 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 11 Dec 2019 09:24:33 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "arnd@arndb.de" <arnd@arndb.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+CC:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] gpio: xgs-iproc: remove __exit annotation for
+ iproc_gpio_remove
+Thread-Topic: [PATCH] gpio: xgs-iproc: remove __exit annotation for
+ iproc_gpio_remove
+Thread-Index: AQHVr5OrBiJXFgirdU+/MD3yYsX4TKey9pWA
+Date:   Tue, 10 Dec 2019 20:24:33 +0000
+Message-ID: <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
+References: <20191210195414.705239-1-arnd@arndb.de>
+In-Reply-To: <20191210195414.705239-1-arnd@arndb.de>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:8c06:5a00:1627:6912]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E290714BFDB0144FA4F4989701784D39@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-10 at 21:22 +0100, Johannes Berg wrote:
-> On Tue, 2019-12-10 at 09:51 -0800, Jakub Kicinski wrote:
-> > On Tue, 10 Dec 2019 14:07:53 +0100 (CET), Michal Kubecek wrote:
-> > > @@ -1822,6 +1826,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
-> > >  	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
-> > >  	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
-> > >  				    .len = ALTIFNAMSIZ - 1 },
-> > > +	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
-> > >  };
-> > >  
-> > >  static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
-> > 
-> > Jiri, I just noticed ifla_policy didn't get strict_start_type set when
-> > ALT_IFNAME was added, should we add it in net? 🤔
-> 
-> Does it need one? It shouldn't be used with
-> nla_parse_nested_deprecated(), and if it's used with nla_parse_nested()
-> then it doesn't matter?
-
-No, wait. I misread, you said "when ALT_IFNAME was added" but somehow I
-managed to read "when it was added"...
-
-So yeah, it should have one. Dunno about net, your call. I'd probably
-not bother for an NLA_REJECT attribute, there's little use including it
-anyway.
-
-johannes
-
+T24gVHVlLCAyMDE5LTEyLTEwIGF0IDIwOjU0ICswMTAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
+PiBXaGVuIGJ1aWx0IGludG8gdGhlIGtlcm5lbCwgdGhlIGRyaXZlciBjYXVzZXMgYSBsaW5rIHBy
+b2JsZW06DQo+IA0KPiBgaXByb2NfZ3Bpb19yZW1vdmUnIHJlZmVyZW5jZWQgaW4gc2VjdGlvbiBg
+LmRhdGEnIG9mIGRyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5vOiBkZWZpbmVkIGluIGRpc2Nh
+cmRlZCBzZWN0aW9uIGAuZXhpdC50ZXh0JyBvZiBkcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXByb2Mu
+bw0KPiANCj4gUmVtb3ZlIHRoZSBpbmNvcnJlY3QgYW5ub3RhdGlvbi4NCj4gDQo+IEZpeGVzOiA2
+YTQxYjZjNWZjMjAgKCJncGlvOiBBZGQgeGdzLWlwcm9jIGRyaXZlciIpDQo+IFNpZ25lZC1vZmYt
+Ynk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQoNClJldmlld2VkLWJ5OiBDaHJpcyBQ
+YWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQoNCldoYXQncyB0aGUg
+Y3VycmVudCBiZXN0IHByYWN0aWNlIHcuci50Ll9faW5pdCBhbmQgX19leGl0PyBJIHNlZW0gdG8N
+CmhhdmUgbWVzc2VkIHRoaXMgdXAgb24gbXVsdGlwbGUgZnJvbnRzLg0KDQo+IC0tLQ0KPiAgZHJp
+dmVycy9ncGlvL2dwaW8teGdzLWlwcm9jLmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+aW8vZ3Bpby14Z3MtaXByb2MuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5jDQo+IGlu
+ZGV4IDc3M2U1YzI0MzA5ZS4uYjIxYzJlNDM2YjYxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
+aW8vZ3Bpby14Z3MtaXByb2MuYw0KPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXByb2Mu
+Yw0KPiBAQCAtMjgwLDcgKzI4MCw3IEBAIHN0YXRpYyBpbnQgaXByb2NfZ3Bpb19wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAgDQo+IC1z
+dGF0aWMgaW50IF9fZXhpdCBpcHJvY19ncGlvX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQ0KPiArc3RhdGljIGludCBpcHJvY19ncGlvX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAgCXN0cnVjdCBpcHJvY19ncGlvX2NoaXAgKmNoaXA7DQo+
+ICANCg==
