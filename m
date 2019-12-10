@@ -2,123 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93F5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71C1C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3C1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5WDsrWQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7BE922073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013522;
+	bh=xJ6cWECGTI87+zeHdc7ft6/oh7NfheN/H4B2YxWsVek=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EeVHAkym824CqTrsrhcx9Tr2lKzOAMgBExhwVXZW8/2Qc6ujPzH5K8Skhc+NLBH9C
+	 YG8KDImTIUs7Kr9ulFAPe4wAaIX8Y+989W/DpGTIb9nlTySp6FfeU6b1sk54qT13p/
+	 8HeZoonbU1HDXeN7SeoqabgUfLOMSH6W+lEGsLyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfLJVb7 (ORCPT
+        id S1728339AbfLJVcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:31:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43573 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfLJVbx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:31:53 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b1so9482506pgq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:31:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GwuPpgMwTPZEM+EqzujwY/bjr0hgFF4x3/rgCEqS8Mc=;
-        b=f5WDsrWQ6ZRIQ/PxW73IwPJ17T1V0msim69wBlYUK+6b9M5fCKCNhn4N1DwWjk6bZ9
-         LN84wH5MPyKwryNyUEjUyNs8d6mFs7KJ+1OIHdzWDQh4c/8/vMyWJqZTcScNH+Y7eSfF
-         4FbDdrjVgmMk2Rp8xodWm7AOtyvz5sWiB/jsWttl39tyCosQcQJ+byG2mBBdoIw9UZF0
-         waRRmF6h2lRTwMrBzjsb5lZ4kf0GdrVAT+eJzN6WY/Z2LAoO4htHd0JAWNn6B4x2oHrg
-         mqV7BibZMhUAQx/BjgYgofyqs+GwBItobtMroXkJ8VotH30Hd/8TEkMNJZYyF3rHSewm
-         Jtyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GwuPpgMwTPZEM+EqzujwY/bjr0hgFF4x3/rgCEqS8Mc=;
-        b=eBkGwSjUwjuN1mm3bRB8guFGcMv29hZuZrK2A+SWU3L8F3+9cKgaog77t2JDwFot67
-         0YH0efTkqJh5QrjDl28j76tLumkM21rBWTBJaA2cXMXNQ/4aAf/ou4MRVRQfOM2JRzSQ
-         8GiZZmNlRkBj6LzCvAZA28Wp0jt85tSm1MD/E7ju8WXZp3/fzniZ99bWf5W+M6qGKWdQ
-         t11O628g4y4SYv4+Ipth0/gozInn6kV6pw8cs3qu4OQnnkT+y/KicCW9lcO92aU4YUoI
-         i9pzjzdZzmkrZxDtMTVmhdXGZF6wf53O//9qkPPw8JfYgj+HyiyA5NlQusqYxATOHEsK
-         schQ==
-X-Gm-Message-State: APjAAAUOxZhFkQHVr4bHIXMBW4qQQOpRkoCRVj4GWsmmE5Dk91GBTXyL
-        GTVM+aI3e5XjJwn58IXntmFN49bEhZdfCZBRwxxdng==
-X-Google-Smtp-Source: APXvYqzs9zHaXPpx5/fRmcbjTOsxQRvvH9Qr9I2jE5nXoJrZnej1b37eMSlm1mwwOPgmBS9e5vTq7NGxMlNDfngPnYg=
-X-Received: by 2002:a63:597:: with SMTP id 145mr209239pgf.384.1576013512117;
- Tue, 10 Dec 2019 13:31:52 -0800 (PST)
+        Tue, 10 Dec 2019 16:32:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728095AbfLJVJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584E2246A3;
+        Tue, 10 Dec 2019 21:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012158;
+        bh=xJ6cWECGTI87+zeHdc7ft6/oh7NfheN/H4B2YxWsVek=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jLX/qN5veZDCVw16P/qZkev7aXInRj2LBV+zCBrciFXq1vliKCewh+gWhr5ceSau/
+         3DWItK6ZFVInsaczV8dGebJe+giixihrvirVfkg37DqbjStzOZr8BnQZAcbLD9ZYcT
+         2cMAh6ji3ai6llIQFyHnexbFGpw28SaMWYZ2gslY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Szymon Janc <szymon.janc@codecoup.pl>,
+        =?UTF-8?q?S=C3=B6ren=20Beye?= <linux@hypfer.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 120/350] Bluetooth: Workaround directed advertising bug in Broadcom controllers
+Date:   Tue, 10 Dec 2019 16:03:45 -0500
+Message-Id: <20191210210735.9077-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191210212511.11392-1-sashal@kernel.org> <20191210212511.11392-19-sashal@kernel.org>
-In-Reply-To: <20191210212511.11392-19-sashal@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 10 Dec 2019 13:31:40 -0800
-Message-ID: <CAFd5g46bujW0XZeTwd1y2O1E2aeK_DayrES8zw_0zBF4Se0HpQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.3 019/292] objtool: add kunit_try_catch_throw to
- the noreturn list
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 1:25 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Brendan Higgins <brendanhiggins@google.com>
->
-> [ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
->
-> Fix the following warning seen on GCC 7.3:
->   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
->
-> kunit_try_catch_throw is a function added in the following patch in this
-> series; it allows KUnit, a unit testing framework for the kernel, to
-> bail out of a broken test. As a consequence, it is a new __noreturn
-> function that objtool thinks is broken (as seen above). So fix this
-> warning by adding kunit_try_catch_throw to objtool's noreturn list.
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+From: Szymon Janc <szymon.janc@codecoup.pl>
 
-I don't think this change should be backported. This patch is to
-ignore an erroneous warning introduced by KUnit; it serves no purpose
-prior to the KUnit patches being merged.
+[ Upstream commit 4c371bb95cf06ded80df0e6139fdd77cee1d9a94 ]
 
-Note: I have the same complaint for this rebase here:
+It appears that some Broadcom controllers (eg BCM20702A0) reject LE Set
+Advertising Parameters command if advertising intervals provided are not
+within range for undirected and low duty directed advertising.
 
-https://lore.kernel.org/stable/CAFd5g45s-cGXp6at4kv+=8v3cuxfbXLPEOKGUfvJ6E+u1caHcA@mail.gmail.com/
+Workaround this bug by populating min and max intervals with 'valid'
+values.
 
-> ---
->  tools/objtool/check.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 176f2f0840609..0c8e17f946cda 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -145,6 +145,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
->                 "usercopy_abort",
->                 "machine_real_restart",
->                 "rewind_stack_do_exit",
-> +               "kunit_try_catch_throw",
->         };
->
->         if (!func)
-> --
-> 2.20.1
->
+< HCI Command: LE Set Advertising Parameters (0x08|0x0006) plen 15
+        Min advertising interval: 0.000 msec (0x0000)
+        Max advertising interval: 0.000 msec (0x0000)
+        Type: Connectable directed - ADV_DIRECT_IND (high duty cycle) (0x01)
+        Own address type: Public (0x00)
+        Direct address type: Random (0x01)
+        Direct address: E2:F0:7B:9F:DC:F4 (Static)
+        Channel map: 37, 38, 39 (0x07)
+        Filter policy: Allow Scan Request from Any, Allow Connect Request from Any (0x00)
+> HCI Event: Command Complete (0x0e) plen 4
+      LE Set Advertising Parameters (0x08|0x0006) ncmd 1
+        Status: Invalid HCI Command Parameters (0x12)
+
+Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
+Tested-by: Sören Beye <linux@hypfer.de>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/bluetooth/hci_conn.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index ad5b0ac1f9cef..7ff92dd4c53cd 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -934,6 +934,14 @@ static void hci_req_directed_advertising(struct hci_request *req,
+ 			return;
+ 
+ 		memset(&cp, 0, sizeof(cp));
++
++		/* Some controllers might reject command if intervals are not
++		 * within range for undirected advertising.
++		 * BCM20702A0 is known to be affected by this.
++		 */
++		cp.min_interval = cpu_to_le16(0x0020);
++		cp.max_interval = cpu_to_le16(0x0020);
++
+ 		cp.type = LE_ADV_DIRECT_IND;
+ 		cp.own_address_type = own_addr_type;
+ 		cp.direct_addr_type = conn->dst_type;
+-- 
+2.20.1
+
