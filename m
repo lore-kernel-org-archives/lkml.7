@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6202DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D38D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6410207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013375;
-	bh=jTpiUlKsyB/ccCAr0py+oekD/sHAUrfYfWldZKhQytQ=;
+	s=default; t=1576013376;
+	bh=AWW6DfJe2TmspADEsjJm5au/PDX+u4zNhCZjAAL+qBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x92E9V8pq7OVlTOX1rEdYnGjEGqaA38cW4kh5UCIyPE2EqQIDpBFluSPtftaXhrYl
-	 MkJRigQlgpn399tcL5LnPuasGo6w8MI4VWI0U9fNqTdgOpKtrWazKoGAOB/ztgi52a
-	 BguOok3pzxMCbagJp/Co7YQejR9JIaOpGB3N3szk=
+	b=YYV5jyVt3HFKb5O2kwrTw+s5i5rKPClwSgTuk79kpKyxVDWOXkqDR7w/OdI0TEjtr
+	 vRtHXmXmTGnVX1x4l5JiC5lRDEAQMM9OeUcp21NCPQjRiyogacuOKJROmfrO3y7op7
+	 8OqUWVuw0ia//0aLbfFfUUFAmiusWxWp4fVD0x8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfLJVKL (ORCPT
+        id S1728373AbfLJVKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728351AbfLJVKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:03 -0500
+        id S1728337AbfLJVKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72327246A4;
-        Tue, 10 Dec 2019 21:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 694C1246C3;
+        Tue, 10 Dec 2019 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012202;
-        bh=jTpiUlKsyB/ccCAr0py+oekD/sHAUrfYfWldZKhQytQ=;
+        s=default; t=1576012200;
+        bh=AWW6DfJe2TmspADEsjJm5au/PDX+u4zNhCZjAAL+qBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5S6Vkbrfe3foMZUaOFNqxo9GIRqiEZ5yUoqdjT7hADF4BXuQtRzo5xohxd7+PQR9
-         K4bALqV3/3ERnXl8+g4jbZuFjGq6YgWMGTih+Vp+8Z606ey0sRV4+ahkmBdqx7lMQy
-         +jnCDpqEovf/grBGJ8Osl3hquoA+Njx+tNjBdoC8=
+        b=QLmNa3yTi5G8A7EcGKdQ6HZ/8ie8XDcjZZR6ZSHjoncEO0Ks0vbP7HBAfCi1DULFY
+         t6e2b+wRWQG0JSIdQfJ2nutBKAxx5b/NeC00b4oV52A0XZ4o7nokY4eVG+amObojHF
+         KXGR3wSh3Kuh1hr3Do34b9PQmOw/d9dv3cPYwwSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 155/350] staging: wilc1000: potential corruption in wilc_parse_join_bss_param()
-Date:   Tue, 10 Dec 2019 16:04:20 -0500
-Message-Id: <20191210210735.9077-116-sashal@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 153/350] media: smiapp: Register sensor after enabling runtime PM on the device
+Date:   Tue, 10 Dec 2019 16:04:18 -0500
+Message-Id: <20191210210735.9077-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,36 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit d59dc92f1bccd5acde793aebdbb4f7121cf3f9af ]
+[ Upstream commit 90c9e4a4dba9f4de331372e745fb1991c1faa598 ]
 
-The "rates_len" value needs to be capped so that the memcpy() doesn't
-copy beyond the end of the array.
+Earlier it was possible that the parts of the driver that assumed runtime
+PM was enabled were being called before runtime PM was enabled in the
+driver's probe function. So enable runtime PM before registering the
+sub-device.
 
-Fixes: c5c77ba18ea6 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Adham Abozaeid <adham.abozaeid@microchip.com>
-Link: https://lore.kernel.org/r/20191017091832.GB31278@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wilc_hif.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/smiapp/smiapp-core.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_hif.c b/drivers/staging/wilc1000/wilc_hif.c
-index d3d9ea284816a..77d0732f451be 100644
---- a/drivers/staging/wilc1000/wilc_hif.c
-+++ b/drivers/staging/wilc1000/wilc_hif.c
-@@ -473,6 +473,8 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies->data, ies->len);
- 	if (rates_ie) {
- 		rates_len = rates_ie[1];
-+		if (rates_len > WILC_MAX_RATES_SUPPORTED)
-+			rates_len = WILC_MAX_RATES_SUPPORTED;
- 		param->supp_rates[0] = rates_len;
- 		memcpy(&param->supp_rates[1], rates_ie + 2, rates_len);
- 	}
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 9adf8e034e7d6..42805dfbffeb9 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -3101,19 +3101,23 @@ static int smiapp_probe(struct i2c_client *client)
+ 	if (rval < 0)
+ 		goto out_media_entity_cleanup;
+ 
+-	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
+-	if (rval < 0)
+-		goto out_media_entity_cleanup;
+-
+ 	pm_runtime_set_active(&client->dev);
+ 	pm_runtime_get_noresume(&client->dev);
+ 	pm_runtime_enable(&client->dev);
++
++	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
++	if (rval < 0)
++		goto out_disable_runtime_pm;
++
+ 	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
+ 	pm_runtime_use_autosuspend(&client->dev);
+ 	pm_runtime_put_autosuspend(&client->dev);
+ 
+ 	return 0;
+ 
++out_disable_runtime_pm:
++	pm_runtime_disable(&client->dev);
++
+ out_media_entity_cleanup:
+ 	media_entity_cleanup(&sensor->src->sd.entity);
+ 
 -- 
 2.20.1
 
