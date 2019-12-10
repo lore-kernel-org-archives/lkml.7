@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D886C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EED6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020BF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013C1205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013052;
-	bh=cQMKOX25Wq8pLkfNAErys6KzFr9M5KO/PQFYg5AOy9M=;
+	s=default; t=1576013058;
+	bh=iKHzYfg2mi5+rXn4bwwSLeTeA/Prirx9XvsHR+GrqNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4s9SJRSoeaERVgW7/4Qrvxnx4RACO7eQ0mwpAGmybf9GsxNv6yVCfrg2atJ7YZGm
-	 FPg4c3oarZ/5PTKLVqvyGaiTji9ji22SoQYuGqLmGWrPA1SkieOa7pKAnhdwvCkmXF
-	 8FVNHf0gu6aLsGh7mwdVvsCO6yv3LFoqoNOAM0zM=
+	b=JEuf2f8oEorfxHg2r+hvbA+KPsjmhTzfBfxSMfx27PqSBQgk6zOK3RKRgmdVUaMUz
+	 E7DRhw4nNkP8mqyMEFvbdHJzPCL3B2jKzn18Ar6qslhtHRS9P1aj5xG8hud7CTl0ZO
+	 0X4euQUWVWgpstcmYcGBQwiTxmYFcCgH21NApX/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfLJVYK (ORCPT
+        id S1728963AbfLJVYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbfLJVK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:57 -0500
+        id S1727500AbfLJVKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30428246B9;
-        Tue, 10 Dec 2019 21:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D51246AE;
+        Tue, 10 Dec 2019 21:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012256;
-        bh=cQMKOX25Wq8pLkfNAErys6KzFr9M5KO/PQFYg5AOy9M=;
+        s=default; t=1576012254;
+        bh=iKHzYfg2mi5+rXn4bwwSLeTeA/Prirx9XvsHR+GrqNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jzm8RQRkrqSvDmbWk3k53v5PtoRgzNcPrtyJZLmEqsjJjC4VlSq30OiYaGCKLJLE7
-         KRgqoZSywTLr0WnyVRkFRr0vmvkoqxcwnZZtVWKQRHRcUB25t1GxYw3eGg4nBtU+Uf
-         w2xKN0W+iCXR+9/qabBu31C8F+qQ+jOUJVIjLKTw=
+        b=B4sagRIvW9990KfUKB6onyejIIjyx/Xi3LNSViu1NLzmTPHrslZQizeYb0lUdOc7E
+         bsvtQgtwhOsn2x5VF/JTf8zDKhVt8gJTFplzgB1bbshq+qaXxyeuS1EblgP/lvJsn/
+         K5kWwtJF77fnLA3YCVIsTcBbUE66aaJCyjNp8uQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 203/350] media: v4l2-core: fix touch support in v4l_g_fmt
-Date:   Tue, 10 Dec 2019 16:05:08 -0500
-Message-Id: <20191210210735.9077-164-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 201/350] cpufreq: sun50i: Fix CPU speed bin detection
+Date:   Tue, 10 Dec 2019 16:05:06 -0500
+Message-Id: <20191210210735.9077-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,85 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
+[ Upstream commit c23734487fb44ee16c1b007ba72d793c085e4ec4 ]
 
-v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
-the v4l2_pix_format structure to default values.This was
-missing in v4l_g_fmt, which would lead to failures in
-v4l2-compliance tests.
+I have observed failures to boot on Orange Pi 3, because this driver
+determined that my SoC is from the normal bin, but my SoC only works
+reliably with the OPP values for the slowest bin.
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+By querying H6 owners, it was found that e-fuse values found in the wild
+are in the range of 1-3, value of 7 was not reported, yet. From this and
+from unused defines in BSP code, it can be assumed that meaning of efuse
+values on H6 actually is:
+
+- 1 = slowest bin
+- 2 = normal bin
+- 3 = fastest bin
+
+Vendor code actually treats 0 and 2 as invalid efuse values, but later
+treats all invalid values as a normal bin. This looks like a mistake in
+bin detection code, that was plastered over by a hack in cpufreq code,
+so let's not repeat it here. It probably only works because there are no
+SoCs in the wild with efuse value of 0, and fast bin SoCs are made to
+use normal bin OPP tables, which is also safe.
+
+Let's play it safe and interpret 0 as the slowest bin, but fix detection
+of other bins to match this research. More research will be done before
+actual OPP tables are merged.
+
+Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 51b912743f0f4..21bb96ce4cd65 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1466,10 +1466,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
- 	return ret;
- }
+diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+index eca32e443716c..9907a165135b7 100644
+--- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
++++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+@@ -25,7 +25,7 @@
+ static struct platform_device *cpufreq_dt_pdev, *sun50i_cpufreq_pdev;
  
-+static void v4l_pix_format_touch(struct v4l2_pix_format *p)
-+{
+ /**
+- * sun50i_cpufreq_get_efuse() - Parse and return efuse value present on SoC
++ * sun50i_cpufreq_get_efuse() - Determine speed grade from efuse value
+  * @versions: Set to the value parsed from efuse
+  *
+  * Returns 0 if success.
+@@ -69,21 +69,16 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
+ 		return PTR_ERR(speedbin);
+ 
+ 	efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
+-	switch (efuse_value) {
+-	case 0b0001:
+-		*versions = 1;
+-		break;
+-	case 0b0011:
+-		*versions = 2;
+-		break;
+-	default:
+-		/*
+-		 * For other situations, we treat it as bin0.
+-		 * This vf table can be run for any good cpu.
+-		 */
++
 +	/*
-+	 * The v4l2_pix_format structure contains fields that make no sense for
-+	 * touch. Set them to default values in this case.
++	 * We treat unexpected efuse values as if the SoC was from
++	 * the slowest bin. Expected efuse values are 1-3, slowest
++	 * to fastest.
 +	 */
-+
-+	p->field = V4L2_FIELD_NONE;
-+	p->colorspace = V4L2_COLORSPACE_RAW;
-+	p->flags = 0;
-+	p->ycbcr_enc = 0;
-+	p->quantization = 0;
-+	p->xfer_func = 0;
-+}
-+
- static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 				struct file *file, void *fh, void *arg)
- {
- 	struct v4l2_format *p = arg;
-+	struct video_device *vfd = video_devdata(file);
- 	int ret = check_fmt(file, p->type);
++	if (efuse_value >= 1 && efuse_value <= 3)
++		*versions = efuse_value - 1;
++	else
+ 		*versions = 0;
+-		break;
+-	}
  
- 	if (ret)
-@@ -1507,6 +1523,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
- 		/* just in case the driver zeroed it again */
- 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
-+		if (vfd->vfl_type == VFL_TYPE_TOUCH)
-+			v4l_pix_format_touch(&p->fmt.pix);
- 		return ret;
- 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
- 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
-@@ -1544,21 +1562,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 	return -EINVAL;
- }
- 
--static void v4l_pix_format_touch(struct v4l2_pix_format *p)
--{
--	/*
--	 * The v4l2_pix_format structure contains fields that make no sense for
--	 * touch. Set them to default values in this case.
--	 */
--
--	p->field = V4L2_FIELD_NONE;
--	p->colorspace = V4L2_COLORSPACE_RAW;
--	p->flags = 0;
--	p->ycbcr_enc = 0;
--	p->quantization = 0;
--	p->xfer_func = 0;
--}
--
- static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
- 				struct file *file, void *fh, void *arg)
- {
+ 	kfree(speedbin);
+ 	return 0;
 -- 
 2.20.1
 
