@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F2FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B8FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645F0206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A97B205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013308;
-	bh=pDb99hDHnLaIQT5+IsVMp+MuY1aORJ5mKqZBYwYdPOI=;
+	s=default; t=1576013322;
+	bh=+3+DcNCmeecA0awtD4KHhH6/OrTIbugSArTDpBZiXKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDOvLvZCWrcdAqKLrOVluVALAbYWMRHQHfvThzN35SgPCDhuItfbna1JV0CGK1/5j
-	 j85OV80ZMOh/LqCyIhwpKzxJb91IaDzwsBenc73vonlqF4oGvJEaclKeJvAUiTGyl/
-	 AVxazZ4xxV4DG2ahKTtGDpB5QFcSYJ12hMRKGA98=
+	b=hFum6GDhPaSJysQqbMgZuy/Wvws/gpmGLMGH57FPhDmjvazJbe4Eh9Cgye655JVNP
+	 fGodK9U9oyRe3tOdux5akjayH23Ug4M1a+IDqvlMtJeRgmtBlqHqCx5Pvez7mOLbcd
+	 PEgEKyFFML+4LZSKxLj8PyMBC6wf5Vt2XqYhMerk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfLJV21 (ORCPT
+        id S1729034AbfLJV2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:28:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbfLJVK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:26 -0500
+        id S1728448AbfLJVKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B60172077B;
-        Tue, 10 Dec 2019 21:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F738246A2;
+        Tue, 10 Dec 2019 21:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012225;
-        bh=pDb99hDHnLaIQT5+IsVMp+MuY1aORJ5mKqZBYwYdPOI=;
+        s=default; t=1576012219;
+        bh=+3+DcNCmeecA0awtD4KHhH6/OrTIbugSArTDpBZiXKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tK+H1tzd2f6QJYRM10FV0BQOWxIdCa7PcB1bzzSFEpmYwTSfc6axC4OM95bUezzQK
-         fyqFwGIfavKx+e9C2OIFh0IPoL50INauhb3uCtmI2q3YapMpZm6NUQmmKl5iE4D8Ya
-         zEpCDpthwRU/np4F62og/ObXsb4at2Q2WGC9egA0=
+        b=0hhgNchk2u08P/ah/8TYCbrgLg8uA9HPJ3/Blf2CmNjE6Ns+Smt8wRMYs+CiLADCW
+         NKb3yNt3y5ENXM9QDj12vlpAYk1eseO5BFvYH/GjO8o91k2t8gWGRZ5lZ95RJM/giK
+         Q3ebuyHvOnaN+RCg6viBCgpepvoPuOwSkmJ7ta0A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 175/350] staging: wilc1000: check if device is initialzied before changing vif
-Date:   Tue, 10 Dec 2019 16:04:40 -0500
-Message-Id: <20191210210735.9077-136-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 169/350] ACPI: button: Add DMI quirk for Medion Akoya E2215T
+Date:   Tue, 10 Dec 2019 16:04:34 -0500
+Message-Id: <20191210210735.9077-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,66 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adham Abozaeid <adham.abozaeid@microchip.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 6df6f3849bb8f317bf2d52711aacea4292237ede ]
+[ Upstream commit 932e1ba486117de2fcea3df27ad8218ad6c11470 ]
 
-When killing hostapd, the interface is closed which deinitializes the
-device, then change virtual interface is called.
-This change checks if the device is initialized before sending the
-interface change command to the device
+The Medion Akoya E2215T's ACPI _LID implementation is quite broken:
 
-Signed-off-by: Adham Abozaeid <adham.abozaeid@microchip.com>
-Link: https://lore.kernel.org/r/20191028184019.31194-1-adham.abozaeid@microchip.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ 1. For notifications it uses an ActiveLow Edge GpioInt, rather then
+    an ActiveBoth one, meaning that the device is only notified when the
+    lid is closed, not when it is opened.
+
+2. Matching with this its _LID method simply always returns 0 (closed)
+
+  In order for the Linux LID code to work properly with this implementation,
+  the lid_init_state selection needs to be set to ACPI_BUTTON_LID_INIT_OPEN.
+
+This commit adds a DMI quirk for this.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/wilc1000/wilc_wfi_cfgoperations.c  | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/acpi/button.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-index 22f21831649bd..c3cd6f389a989 100644
---- a/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-+++ b/drivers/staging/wilc1000/wilc_wfi_cfgoperations.c
-@@ -1419,8 +1419,10 @@ static int change_virtual_intf(struct wiphy *wiphy, struct net_device *dev,
- 		if (vif->iftype == WILC_AP_MODE || vif->iftype == WILC_GO_MODE)
- 			wilc_wfi_deinit_mon_interface(wl, true);
- 		vif->iftype = WILC_STATION_MODE;
--		wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
--					WILC_STATION_MODE, vif->idx);
-+
-+		if (wl->initialized)
-+			wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
-+						WILC_STATION_MODE, vif->idx);
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 4a2cde2c536a2..ce93a355bd1c8 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -78,6 +78,17 @@ static const struct dmi_system_id lid_blacklst[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "BYT70A.YNCHENG.WIN.007"),
+ 		},
+ 	},
++	{
++		/*
++		 * Medion Akoya E2215T, notification of the LID device only
++		 * happens on close, not on open and _LID always returns closed.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MEDION"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "E2215T MD60198"),
++		},
++		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
++	},
+ 	{}
+ };
  
- 		memset(priv->assoc_stainfo.sta_associated_bss, 0,
- 		       WILC_MAX_NUM_STA * ETH_ALEN);
-@@ -1432,8 +1434,10 @@ static int change_virtual_intf(struct wiphy *wiphy, struct net_device *dev,
- 		priv->wdev.iftype = type;
- 		vif->monitor_flag = 0;
- 		vif->iftype = WILC_CLIENT_MODE;
--		wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
--					WILC_STATION_MODE, vif->idx);
-+
-+		if (wl->initialized)
-+			wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
-+						WILC_STATION_MODE, vif->idx);
- 		break;
- 
- 	case NL80211_IFTYPE_AP:
-@@ -1450,8 +1454,10 @@ static int change_virtual_intf(struct wiphy *wiphy, struct net_device *dev,
- 		dev->ieee80211_ptr->iftype = type;
- 		priv->wdev.iftype = type;
- 		vif->iftype = WILC_GO_MODE;
--		wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
--					WILC_AP_MODE, vif->idx);
-+
-+		if (wl->initialized)
-+			wilc_set_operation_mode(vif, wilc_get_vif_idx(vif),
-+						WILC_AP_MODE, vif->idx);
- 		break;
- 
- 	default:
 -- 
 2.20.1
 
