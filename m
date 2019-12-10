@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A239C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA89C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C489F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9C22077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012770;
-	bh=q+Y2FqgyC5P4xznxyYbyo57Frv7m6bD/d91ky37bn4I=;
+	s=default; t=1576012778;
+	bh=zWTvVjzz0vxgQQ+pb8yWW2h7B279AAATV2L93ZXW/6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUu4dHsBJNjnYWyJV8XXWefkWBemSgoxiK0LGTIVu47r8rM8pxuTvB2oBmC/zZWuZ
-	 r4JbLk1RvAa7Wut5W9B8v7b3w9Zc20GEJC0EFDMCqwIKU+8rQkkKQGhYMACeg5Z2dB
-	 uUu/exfH0svjw//ihMY8snG7VIJT3MmLoJN8CNeU=
+	b=B+lC4VPyigceLcWFwhdzycQ+NR+SOeXYMpXLJ+c3NRFBXRY//Bbs95ST+w0nNTBd4
+	 YPW8PtSxCKs5l1ozuRFqF9S3955g4v/CflPu6fdnEp2kSY3SoF3FxnyY6thSEVQeUR
+	 k2sSzv9qOWwq/Tjg8AzguUBxSVLawS5rlu1ZpZns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfLJVT3 (ORCPT
+        id S1729061AbfLJVTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:19:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36354 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:19:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbfLJVM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:26 -0500
+        id S1728951AbfLJVMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBD82077B;
-        Tue, 10 Dec 2019 21:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCC07206EC;
+        Tue, 10 Dec 2019 21:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012345;
-        bh=q+Y2FqgyC5P4xznxyYbyo57Frv7m6bD/d91ky37bn4I=;
+        s=default; t=1576012344;
+        bh=zWTvVjzz0vxgQQ+pb8yWW2h7B279AAATV2L93ZXW/6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uANCwYjYJdLZQrchXZdtqx+1HzeYrcxCT4k9nwk6PvUjNEBYe6sfoJQQ7VVmScQyA
-         ecSyRAyVxUdHy6QlCaUwMvGGuwO1GZvLdV5XJPi9j50HylvfchARP0hXJu2t027ZD1
-         hIpHrnA+u0C/L6GNbxVZMERGEwcU+YckqFKbPVUY=
+        b=aJdTFu4mN1bWvVuwIKkZG2+0xFtdjiqAwdqbbghM+6XE6c6e0I09aq0mqWZ3Q7K5M
+         52pyBLyhzuo1hCNiAclqbTYTcNliA+ORhb2s6wzPD5eWeStIdwA2QVQrS/XmKzgG4W
+         yTxCePE8DIy5YCBx+7sTTfwzaJ6tKA5wClF6xlMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 276/350] net: bcmgenet: Add RGMII_RXID support
-Date:   Tue, 10 Dec 2019 16:06:21 -0500
-Message-Id: <20191210210735.9077-237-sashal@kernel.org>
+Cc:     Eduard Hasenleithner <eduard@hasenleithner.at>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 275/350] nvme: Discard workaround for non-conformant devices
+Date:   Tue, 10 Dec 2019 16:06:20 -0500
+Message-Id: <20191210210735.9077-236-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,37 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Eduard Hasenleithner <eduard@hasenleithner.at>
 
-[ Upstream commit da38802211cc3fd294211a642932edb09e3af632 ]
+[ Upstream commit 530436c45ef2e446c12538a400e465929a0b3ade ]
 
-This adds the missing support for the PHY mode RGMII_RXID.
-It's necessary for the Raspberry Pi 4.
+Users observe IOMMU related errors when performing discard on nvme from
+non-compliant nvme devices reading beyond the end of the DMA mapped
+ranges to discard.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Two different variants of this behavior have been observed: SM22XX
+controllers round up the read size to a multiple of 512 bytes, and Phison
+E12 unconditionally reads the maximum discard size allowed by the spec
+(256 segments or 4kB).
+
+Make nvme_setup_discard unconditionally allocate the maximum DSM buffer
+so the driver DMA maps a memory range that will always succeed.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202665 many
+Signed-off-by: Eduard Hasenleithner <eduard@hasenleithner.at>
+[changelog, use existing define, kernel coding style]
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmmii.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/nvme/host/core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index dbe18cdf6c1b8..04a2a2d171136 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -281,6 +281,11 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
- 		bcmgenet_sys_writel(priv,
- 				    PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
- 		break;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 393913e2fb233..154ce69ae2941 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -611,8 +611,14 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 	struct nvme_dsm_range *range;
+ 	struct bio *bio;
+ 
+-	range = kmalloc_array(segments, sizeof(*range),
+-				GFP_ATOMIC | __GFP_NOWARN);
++	/*
++	 * Some devices do not consider the DSM 'Number of Ranges' field when
++	 * determining how much data to DMA. Always allocate memory for maximum
++	 * number of segments to prevent device reading beyond end of buffer.
++	 */
++	static const size_t alloc_size = sizeof(*range) * NVME_DSM_MAX_RANGES;
 +
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		phy_name = "external RGMII (RX delay)";
-+		port_ctrl = PORT_MODE_EXT_GPHY;
-+		break;
- 	default:
- 		dev_err(kdev, "unknown phy mode: %d\n", priv->phy_interface);
- 		return -EINVAL;
++	range = kzalloc(alloc_size, GFP_ATOMIC | __GFP_NOWARN);
+ 	if (!range) {
+ 		/*
+ 		 * If we fail allocation our range, fallback to the controller
+@@ -652,7 +658,7 @@ static blk_status_t nvme_setup_discard(struct nvme_ns *ns, struct request *req,
+ 
+ 	req->special_vec.bv_page = virt_to_page(range);
+ 	req->special_vec.bv_offset = offset_in_page(range);
+-	req->special_vec.bv_len = sizeof(*range) * segments;
++	req->special_vec.bv_len = alloc_size;
+ 	req->rq_flags |= RQF_SPECIAL_PAYLOAD;
+ 
+ 	return BLK_STS_OK;
 -- 
 2.20.1
 
