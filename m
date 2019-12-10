@@ -7,56 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D02C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494D1C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322D5214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB562073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017061;
-	bh=wcFbWOkMfUYvWT1xFdFjskMwASESJIhFheQC/bZDhyg=;
+	s=default; t=1576017064;
+	bh=7yAdFeAARDJpG2jDWe2tPjifPkOJrct+bsnHlvoz40g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hm/VJC2Z3HDSpnlbhaNwJVejzjJBOObVBifLiqQB/m98oeIoT4xZE33pSPnmF6+bu
-	 ZvNgRxxdq8eEttMO1MsuSQ4CjB4tnY3+99qwupAsywUW+xvN3JUaykpxO7MHHna8BO
-	 Csbr7JcXTuiVabBqFdEEPEMLEtJkQSCOXTBI1Y04=
+	b=w3MJ72XfSD4dGRV+0kgTXq164zw8ETAhlfkYb3XyXUvDPcL1YBeKEB7W6OgPaKCGk
+	 gZUdMHHcef2i8W+Cz+R4GUEBLrhxDBXiMAt7SamWgW++YdxOt17A+mqafBXLEWYa7r
+	 dpaxt7fgJX2oS6z/v+8rpLV/kapFb5M6BNLa7KpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfLJWbA (ORCPT
+        id S1727832AbfLJWbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50802 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfLJWa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:59 -0500
+        id S1727678AbfLJWbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D41332077B;
-        Tue, 10 Dec 2019 22:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5363C214D8;
+        Tue, 10 Dec 2019 22:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017057;
-        bh=wcFbWOkMfUYvWT1xFdFjskMwASESJIhFheQC/bZDhyg=;
+        s=default; t=1576017060;
+        bh=7yAdFeAARDJpG2jDWe2tPjifPkOJrct+bsnHlvoz40g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLJcDqU8tUALT5iBIWbXM5GBYuBnhUeOnGrIFNnWshh6E9zRaeUqopYGmVLXnGXy4
-         Ik4WFrjZ4qJyMnHfQS8OxG442hutNCxOhNgF9UpvzRnPltKtJvVWBcLe2ll/oY9xC8
-         IkeBeW2tWMXB8Fd7Z2bG9XNEskDwHxOP3SX5dCK0=
+        b=viuzsW/iGblDgmwxpeQe76BKm49iCSOMbTg49yZ+//O8FpbGCVoGY7baoDIlaTN2t
+         fQO2yFi8X2eb4CyIU7fM1UGNn8FJvCSXMTtJ9r/3K3FbBB838N+eTV8zuD3siO/5j+
+         c4fWdEAhNkDUmaMTBl5Il5WrJR0Go+0eqLAsj2iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/91] hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not idled
-Date:   Tue, 10 Dec 2019 17:29:22 -0500
-Message-Id: <20191210223035.14270-18-sashal@kernel.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 20/91] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Tue, 10 Dec 2019 17:29:24 -0500
+Message-Id: <20191210223035.14270-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,44 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit eaecce12f5f0d2c35d278e41e1bc4522393861ab ]
+[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 
-When unloading omap3-rom-rng, we'll get the following:
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
-WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-This is because the clock may be already disabled by omap3_rom_rng_idle().
-Let's fix the issue by checking for rng_idle on exit.
-
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
-index 37a58d78aab31..3324a7f4bee37 100644
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -114,7 +114,8 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index 1fc3c8d7dd9b8..2594d6a7393fa 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -504,7 +504,13 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
  {
- 	cancel_delayed_work_sync(&idle_work);
- 	hwrng_unregister(&omap3_rom_rng_ops);
--	clk_disable_unprepare(rng_clk);
-+	if (!rng_idle)
-+		clk_disable_unprepare(rng_clk);
- 	return 0;
- }
- 
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
++
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
++
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
 -- 
 2.20.1
 
