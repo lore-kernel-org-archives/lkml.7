@@ -2,104 +2,179 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FB1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AC9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NfH2O+lr"
+	by mail.kernel.org (Postfix) with ESMTP id 70A48205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576012904;
+	bh=vHe9YybCc9NW9vfn4rdAnJX5T0yXtpht4emVEMbcQao=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e3tgmjaDx0TKjSz7jgkeK65PBF4aG2cqxB5aHEIsfVkp13ROOVsIHNzzTM/6ahOFB
+	 NlYONBNBXHDF4CkhP4A2NNggp8MmGbvzL/3bm8VsLHLBouKroil1us/bzkKJV2St4D
+	 oSEOVlwk/fr4fdQN0ycjZA5Fic03FJ24R6y/C0Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfLJVVh (ORCPT
+        id S1728992AbfLJVVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:21:37 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:40373 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLJVVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:21:35 -0500
-Received: by mail-pj1-f74.google.com with SMTP id x16so10445284pjq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:21:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=lYWJU9mvbN8ZZQpV5vaQjJWA70IiddBps1EyTVgkqkw=;
-        b=NfH2O+lryCV2AegD49JGcu6PkPoGlRhKASnh0FYIZV8uRkL7ubtmdT+H8B5kdISW0i
-         15kPrDgWYFbv2pVFrkCR6iEYgJ6ggyFR6I74zpZ00YE1JkZYw5TUN7nT12CKzKpUkbu1
-         Z9H1VaO+v28ZJH4Q5NsiYvWwwrN7UHm0oF7KvptbH/DNMDYLme3MhPBB/DF1vFYyOxDO
-         PbXpjlPOngLIafacL67+0yc9eAHPcQlMzgNsPh5segouTJOFE60sEK+wyZH3t8vhKe4p
-         Teo0fUTgeXBZMMqpBklZryfrVj02Dv/YBmWlCCTNEFrQcOvDwrzWwXVKMiNrF1QoOEuD
-         z3zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=lYWJU9mvbN8ZZQpV5vaQjJWA70IiddBps1EyTVgkqkw=;
-        b=ktpIwri5Ri4xhJ5X6kaalVlBO/sARSXoWDzNdG24in+GPtv7G+7YFsn7OK6qH2hnes
-         Bjk/YCcpI3HylbBIhzb7xdOTH4IEK8wJMyhQ7bNHjIcBLFA0fzNvgtVCMgrquwyGJRhE
-         WqkLMqmKwVPhSQjMKPX1LKGPJS52WEdvPUQL+J3T54eLrPJqIEXWRC0br+9Dd4A2iKxr
-         Q9a3oj2LwQJGyKABdv7qpcdiiV787VfyXRe0nZgMLsDEB32W9znTcH9SebWU1YOQz4az
-         CuRO4kLjlxazynn2JEXlTnc2Dfa1cw91D0GuCI7FjTgIrfnw1Qtt2wkLHOZmWSNEMUIv
-         pKgA==
-X-Gm-Message-State: APjAAAVWsWJfmIF2M8sL7JfxdMHvnNGl89tUUM2jUxHxWA7s3XOhQtJd
-        bm6bCVfeD3gNFA/EFpYA5sfqVDffWva/7Xsh2rsEXw==
-X-Google-Smtp-Source: APXvYqxvcAlmugwFUoHQj5y95SwQMNbPwznXe1OSMy95bIkfqfMmVov6bZ97VOQQ0xZzCtGkz7j6YZCmoaxW0K4PakU7yQ==
-X-Received: by 2002:a63:fd43:: with SMTP id m3mr192307pgj.164.1576012894761;
- Tue, 10 Dec 2019 13:21:34 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:21:08 -0800
-Message-Id: <20191210212108.222514-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-Subject: [PATCH v1] uml: make CONFIG_STATIC_LINK actually static
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
-Cc:     johannes.berg@intel.com, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, davidgow@google.com,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Dec 2019 16:21:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726685AbfLJVLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:43 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE6A246A8;
+        Tue, 10 Dec 2019 21:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012303;
+        bh=vHe9YybCc9NW9vfn4rdAnJX5T0yXtpht4emVEMbcQao=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DWiFI1jZUbxaLKvHAh0SZNHea+EuvtnYHDp5BdysXKj8bQBv61v4L5FtXOmQ3Jey9
+         ewEJZOSnARvQwM4QAOy4V+rdH/jROQDI8XW0NfddullARKyspvWU0KBX0boJGzwhBn
+         Vtwtiyj7czr96rosSERB63yCcUVXizt9q8nqelx8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 239/350] perf probe: Fix to show calling lines of inlined functions
+Date:   Tue, 10 Dec 2019 16:05:44 -0500
+Message-Id: <20191210210735.9077-200-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
-be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
-UML_NET_PCAP; this is because glibc tries to load NSS which does not
-support being statically linked. So make CONFIG_STATIC_LINK depend on
-!UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+[ Upstream commit 86c0bf8539e7f46d91bd105e55eda96e0064caef ]
+
+Fix to show calling lines of inlined functions (where an inline function
+is called).
+
+die_walk_lines() filtered out the lines inside inlined functions based
+on the address. However this also filtered out the lines which call
+those inlined functions from the target function.
+
+To solve this issue, check the call_file and call_line attributes and do
+not filter out if it matches to the line information.
+
+Without this fix, perf probe -L doesn't show some lines correctly.
+(don't see the lines after 17)
+
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
+
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
+
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+                                  fsnotify_access(file);
+                                  add_rchar(current, ret);
+                          }
+
+With this fix:
+
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
+
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
+
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+       17                         fsnotify_access(file);
+       18                         add_rchar(current, ret);
+                          }
+       20                 inc_syscr(current);
+                  }
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/util/dwarf-aux.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 2a6d04fcb3e91..1ddc8745123f2 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -63,6 +63,7 @@ source "arch/$(HEADER_ARCH)/um/Kconfig"
- 
- config STATIC_LINK
- 	bool "Force a static link"
-+	depends on !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP
- 	default n
- 	help
- 	  This option gives you the ability to force a static link of UML.
-@@ -72,6 +73,9 @@ config STATIC_LINK
- 	  Additionally, this option enables using higher memory spaces (up to
- 	  2.75G) for UML.
- 
-+	  NOTE: This option is incompatible with some networking features which
-+	  depend on features that require being dynamically loaded (like NSS).
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 08aba015e0725..2b718cfd62d93 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -755,7 +755,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	Dwarf_Lines *lines;
+ 	Dwarf_Line *line;
+ 	Dwarf_Addr addr;
+-	const char *fname, *decf = NULL;
++	const char *fname, *decf = NULL, *inf = NULL;
+ 	int lineno, ret = 0;
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+@@ -799,13 +799,21 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 			 */
+ 			if (!dwarf_haspc(rt_die, addr))
+ 				continue;
 +
- config LD_SCRIPT_STATIC
- 	bool
- 	default y
+ 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
++				/* Call-site check */
++				inf = die_get_call_file(&die_mem);
++				if ((inf && !strcmp(inf, decf)) &&
++				    die_get_call_lineno(&die_mem) == lineno)
++					goto found;
++
+ 				dwarf_decl_line(&die_mem, &inl);
+ 				if (inl != decl ||
+ 				    decf != dwarf_decl_file(&die_mem))
+ 					continue;
+ 			}
+ 		}
++found:
+ 		/* Get source line */
+ 		fname = dwarf_linesrc(line, NULL, NULL);
+ 
 -- 
-2.24.0.525.g8f36a354ae-goog
+2.20.1
 
