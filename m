@@ -2,109 +2,102 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF330C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF3CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E08B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="xSLCrrxP"
+	by mail.kernel.org (Postfix) with ESMTP id 0629C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014408;
+	bh=mUD4W3Tq67ujXQHClMBqvBDuxNP3dbUk+hPXASdErHY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0G1iY+YJko70DX5Yo5Ds8ejUepuS+xAwTDKMhtNs7s3vt1MImEZI0d0ZXWqhr8LuE
+	 lU398c7e6wPpN/9M7sa2ecO+lH24BoFNHTLUuTo+Qp18kKv5NmGahjEbSEIT4T3u4P
+	 Jovb43v7J18Ca84hsVFaPhTFiFSNnH5AbcfKN5kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfLJVcj (ORCPT
+        id S1729959AbfLJVqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:39 -0500
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:41953 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbfLJVce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:34 -0500
-Received: by mail-ed1-f53.google.com with SMTP id c26so17331045eds.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=4Ja+Cy4lz3d7/9D3E5SJdSwFwUmUfYYIZtw7SRnmxMQ=;
-        b=xSLCrrxPejnE0kdt17030quLJkQSeBjnB1vQJo4e7EaofNY9vrZMLRjLWjTUAcCSCT
-         yuxr7DHf+2HvLYOySwaOiOuJZYvB0oesOytWvM4DmGl/IhueidOi+nYm0/KXxlf2GwEa
-         eXFXrese8dp5z5H0DwYhE+Ts7EObyeM8Pthks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=4Ja+Cy4lz3d7/9D3E5SJdSwFwUmUfYYIZtw7SRnmxMQ=;
-        b=DRW3KqHccQe0VCCoxNaE2HprD5CP75KI9hWRczg4RVj9EduH2F34+Euk2aUsb0gvc2
-         gHo9Z81gVL7gSP3DHHDiyC7OED+L1V7Rgh1rvpA53HBhPtVzBU/dxH6OtWVhliuTyi+T
-         5OXeJC7vPsf76ZYEhHUUU4CvAZzTwtwRpWD9jUeRs6LaG9vwaW9MsJb4zBaeZp4MXY+L
-         vGuwwDgXYVL7j0ItHaj5Dm6itPeoobAbyEFlvYdIJ5Y0dBbEFWojwH+wk1AuudQ8h+w4
-         e2TDy2IZmswLANkdzdNP3+z05WU6HRwMWIfNTlWB3e0pdz74G8R5Vy2ql3rJdMqZ4asG
-         S4tQ==
-X-Gm-Message-State: APjAAAUQb1N/7lCBBnosf6IhzPKiK1a7lsWSESkmIYYfFt39LyQXC1mZ
-        f6PQG/kqVHYfWDHiJ7NUZlYTYA34cWxTouhJ8mRHT/778vGxMw==
-X-Google-Smtp-Source: APXvYqy8VOTXuAbKw0j1c3O8zCSGmAQsSkjj1KkDXdHcwLguds5DtEdZJNT8Hy/+moiMk2YEf22e7OKRLAhqNqpl30A=
-X-Received: by 2002:a17:906:2e47:: with SMTP id r7mr6151354eji.215.1576013552064;
- Tue, 10 Dec 2019 13:32:32 -0800 (PST)
+        Tue, 10 Dec 2019 16:46:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728974AbfLJVch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:37 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DAA6206D5;
+        Tue, 10 Dec 2019 21:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576013556;
+        bh=mUD4W3Tq67ujXQHClMBqvBDuxNP3dbUk+hPXASdErHY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n8Wgi46xjBPhEKggpX6tHL4Efa1R8ZpY9iw+NxU1xRbncKCL0QF1Jvhl15pOx4Qn/
+         KLZ0Q//UIgqoovUZzXCdnfHBNEc9D+vlYJ9LTKfUvqr0DQ1DwwJJV0345f+x1xm2cn
+         ghbC95r0o+y8buIXpliIcMixVaHjIiYBRVXXiI+0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Allen Pais <allen.pais@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 012/177] libertas: fix a potential NULL pointer dereference
+Date:   Tue, 10 Dec 2019 16:29:36 -0500
+Message-Id: <20191210213221.11921-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Tue, 10 Dec 2019 13:32:21 -0800
-Message-ID: <CABWYdi2GG3qi6ucxtyk3=Bu1eXi0N9Dow42F4gzi9DUUc3XhLw@mail.gmail.com>
-Subject: Lock contention around unix_gc_lock
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>, hare@suse.com,
-        axboe@kernel.dk, allison@lohutok.net, tglx@linutronix.de,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Allen Pais <allen.pais@oracle.com>
 
-We're seeing very high contention on unix_gc_lock when a bug in an
-application makes it stop reading incoming messages with inflight unix
-sockets. In our system we churn through a lot of unix sockets and we
-have 96 logical CPUs in the system, so spinlock gets very hot.
+[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
 
-I was able to halve overall system throughput with 1024 inflight unix
-sockets, which is the default RLIMIT_NOFILE. This doesn't sound too
-good for isolation, one user should not be able to affect the system
-as much. One might even consider this as DoS vector.
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-There's a lot of time is spent in _raw_spin_unlock_irqrestore, which
-is triggered by wait_for_unix_gc, which in turn is unconditionally
-called from unix_stream_sendmsg:
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-ffffffff9f64f3ea _raw_spin_unlock_irqrestore+0xa
-ffffffff9eea6ab0 prepare_to_wait_event+0x70
-ffffffff9f5a4ac6 wait_for_unix_gc+0x76
-ffffffff9f5a182c unix_stream_sendmsg+0x3c
-ffffffff9f4bb7f9 sock_sendmsg+0x39
+diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
+index 39bf85d0ade0e..c7f8a29d2606b 100644
+--- a/drivers/net/wireless/marvell/libertas/if_sdio.c
++++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
+@@ -1183,6 +1183,10 @@ static int if_sdio_probe(struct sdio_func *func,
+ 
+ 	spin_lock_init(&card->lock);
+ 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
++	if (unlikely(!card->workqueue)) {
++		ret = -ENOMEM;
++		goto err_queue;
++	}
+ 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
+ 	init_waitqueue_head(&card->pwron_waitq);
+ 
+@@ -1234,6 +1238,7 @@ static int if_sdio_probe(struct sdio_func *func,
+ 	lbs_remove_card(priv);
+ free:
+ 	destroy_workqueue(card->workqueue);
++err_queue:
+ 	while (card->packets) {
+ 		packet = card->packets;
+ 		card->packets = card->packets->next;
+-- 
+2.20.1
 
-* https://elixir.bootlin.com/linux/v4.19.80/source/net/unix/af_unix.c#L1849
-
-Even more time is spent in waiting on spinlock because of call to
-unix_gc from unix_release_sock, where condition is having any inflight
-sockets whatsoever:
-
-ffffffff9eeb1758 queued_spin_lock_slowpath+0x158
-ffffffff9f5a4718 unix_gc+0x38
-ffffffff9f5a28f3 unix_release_sock+0x2b3
-ffffffff9f5a2929 unix_release+0x19
-ffffffff9f4b902d __sock_release+0x3d
-ffffffff9f4b90a1 sock_close+0x11
-
-* https://elixir.bootlin.com/linux/v4.19.80/source/net/unix/af_unix.c#L586
-
-Should this condition take the number of inflight sockets into
-account, just like unix_stream_sendmsg does via wait_for_unix_gc?
-
-Static number of inflight sockets that trigger a GC from
-wait_for_unix_gc may also be something that is scaled with system
-size, rather than be a hardcoded value.
-
-I know that our case is a pathological one, but it sounds like
-scalability of garbage collection can be better, especially on systems
-with large number of CPUs.
