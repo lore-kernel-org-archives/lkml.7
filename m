@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4DBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5C7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5E320637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CEBE20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014516;
-	bh=fDlCz48UzNqMTToEOtxJXxL6opyU7MqwTF3ydeStP4E=;
+	s=default; t=1576014522;
+	bh=CrsqgKqbDpPyk4bGfqt2NNt8XHhWn1MqKD1zltXJMvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x23aUrCnCgMXd5x4Td+6o75ehi2WpprJQhQGvu/NVvvJ/5B5o30HxAE9HRpyuAkPZ
-	 nMMIsBVM6jSNUDrUDtpV7caM10s5dgyQkN4xzfG2gfgoLmfwC4dMjnxr0nufK/FpDX
-	 dpPqA5vbHBfmr06S/PdzNE+5Vdk98A8ckSNJomEI=
+	b=G+KIGTWoyzHe/LrRYes271lmipffDks/RjiGYE9L8eiXrEwGg3NZXRJVEshac1uG4
+	 /FENTx8bb2wDfVl+Pf4wWB/8ZwcJUmBkCASKmu3a1E+sUjpYuxqXJO/aGpXtdL33hc
+	 GDq6iXeiL2oW5PQcVmMWWo2D0hez053KNhu9Fdyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfLJVse (ORCPT
+        id S1729905AbfLJVsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:48:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56640 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:48:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbfLJVIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:53 -0500
+        id S1727969AbfLJVIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26C124681;
-        Tue, 10 Dec 2019 21:08:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 173CA2469E;
+        Tue, 10 Dec 2019 21:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012132;
-        bh=fDlCz48UzNqMTToEOtxJXxL6opyU7MqwTF3ydeStP4E=;
+        s=default; t=1576012131;
+        bh=CrsqgKqbDpPyk4bGfqt2NNt8XHhWn1MqKD1zltXJMvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3/nxT3fD2dJCd9ZTn0ZJAvMBdfSiLsweYiMpQuSZl62BedSFkJn9L1ybXqux/vaL
-         IZ0bDtf5llnQRbQjiKE9STS/QFyuf0LTSKPmwMAjgJpSnN93fZGPzEYk5l6WxozJ9s
-         TBTodpBGf4ettpkbcqwAR5EGAKxD1VQD/Na8ci8s=
+        b=zsWLL12EKsh7N77OQYNek0I7ktOt/j2Spp/RQ8nA8ujWhGm8sAc2rtbIc+k1AV6vg
+         vSpy9aTWcDTi09pHXSDn2zflZdWowAgP0lprntMMkN1f2YuVtrfe0OPKxjXjzkeeQy
+         REx6AE52MD1gEzGJWu6UFhXEDNTfvLNLlu1l81M8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Galiffi <david.galiffi@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 100/350] drm/amd/display: Fix dongle_caps containing stale information.
-Date:   Tue, 10 Dec 2019 16:03:25 -0500
-Message-Id: <20191210210735.9077-61-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 099/350] syscalls/x86: Use the correct function type in SYSCALL_DEFINE0
+Date:   Tue, 10 Dec 2019 16:03:24 -0500
+Message-Id: <20191210210735.9077-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,63 +65,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Galiffi <david.galiffi@amd.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit dd998291dbe92106d8c4a7581c409b356928d711 ]
+[ Upstream commit 8661d769ab77c675b5eb6c3351a372b9fbc1bf40 ]
 
-[WHY]
+Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
+parameters, use the correct function type to avoid type mismatches
+with Control-Flow Integrity (CFI) checking.
 
-During detection:
-function: get_active_converter_info populates link->dpcd_caps.dongle_caps
-only when dpcd_rev >= DPCD_REV_11 and DWN_STRM_PORTX_TYPE is
-DOWN_STREAM_DETAILED_HDMI or DOWN_STREAM_DETAILED_DP_PLUS_PLUS.
-Otherwise, it is not cleared, and stale information remains.
-
-During mode validation:
-function: dp_active_dongle_validate_timing reads
-link->dpcd_caps.dongle_caps->dongle_type to determine the maximum
-pixel clock to support. This information is now stale and no longer
-valid.
-
-[HOW]
-dp_active_dongle_validate_timing should be using
-link->dpcd_caps->dongle_type instead.
-
-Signed-off-by: David Galiffi <david.galiffi@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008224049.115427-2-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    | 2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/syscall_wrapper.h | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index de1b61595ffbf..efc1d30544bb6 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2219,7 +2219,7 @@ static bool dp_active_dongle_validate_timing(
- 		break;
- 	}
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index e046a405743d8..90eb70df0b18d 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -48,12 +48,13 @@
+  * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
+  * named __ia32_sys_*()
+  */
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __x64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
+-	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);	\
+-	asmlinkage long __x64_sys_##sname(void)
++
++#define SYSCALL_DEFINE0(sname)						\
++	SYSCALL_METADATA(_##sname, 0);					\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
++	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
++	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
  
--	if (dongle_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
-+	if (dpcd_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
- 		dongle_caps->extendedCapValid == false)
- 		return true;
+ #define COND_SYSCALL(name)						\
+ 	cond_syscall(__x64_sys_##name);					\
+@@ -181,11 +182,11 @@
+  * macros to work correctly.
+  */
+ #ifndef SYSCALL_DEFINE0
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __x64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
+-	asmlinkage long __x64_sys_##sname(void)
++#define SYSCALL_DEFINE0(sname)						\
++	SYSCALL_METADATA(_##sname, 0);					\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
++	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+ #endif
  
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 9e261dbf2e493..5a583707d198a 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2545,6 +2545,7 @@ static void get_active_converter_info(
- 	uint8_t data, struct dc_link *link)
- {
- 	union dp_downstream_port_present ds_port = { .byte = data };
-+	memset(&link->dpcd_caps.dongle_caps, 0, sizeof(link->dpcd_caps.dongle_caps));
- 
- 	/* decode converter info*/
- 	if (!ds_port.fields.PORT_PRESENT) {
+ #ifndef COND_SYSCALL
 -- 
 2.20.1
 
