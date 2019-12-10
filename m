@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A44C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C63C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DFE206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393F9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012878;
-	bh=ATa9QuIVN2+F0fqsudF0PnVInf1lvpTGDJ9Gp+lnndc=;
+	s=default; t=1576012881;
+	bh=/n3znUFVStoGH15a8iQLoWjDEAPrJbOBMX6nuOmKlqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIxPRO3d1rbtMIbwTPhNVmToKMyhn+VxrG//VIXx8fJHfogFrKO4FxBxwnvae3Xy/
-	 NRxNWe6SOS1nZnSCKGRG44lJsDAVz2kPCtBKceKZRDITrLudymvPHsbqj7rynWvDBI
-	 BEDSYSWEOcbi1JENkHHXCiE+PJP/zibGjEze9Oyw=
+	b=b1uPyJPTcQeSYIlatmfMbOv5MEqg9NxRRiLjj/0boeA3dZUp0cB9uXzgMsaUzwJe3
+	 eBQ4eFEyg4xF6l4ld+pFN+gfS5xghK6fTc3vMSiv5CbXmCeuxHhiqZoz+2+IDOvJz5
+	 /Y5U1zMkpr0UC8PhWVKxN9aaoIFf/VvwJXVY2FYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfLJVVR (ORCPT
+        id S1728296AbfLJVLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbfLJVLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:51 -0500
+        id S1726883AbfLJVLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D486246AE;
-        Tue, 10 Dec 2019 21:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B3B24697;
+        Tue, 10 Dec 2019 21:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012311;
-        bh=ATa9QuIVN2+F0fqsudF0PnVInf1lvpTGDJ9Gp+lnndc=;
+        s=default; t=1576012304;
+        bh=/n3znUFVStoGH15a8iQLoWjDEAPrJbOBMX6nuOmKlqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jL72VLSvctj16S9fCbfy6xbG/r6Cs3mUNzgn7LcdAKMvLyuTUhBn23+2NSK4YEbmV
-         zbCBubjQlQAW1H96i5YU90rM/mqx5EbhkSKrc+76KWoXjExQAdO4xOxO/b9wGhpbCQ
-         zj3ZEm0KM81PnvnBTuSk2e+B1X6WbOVdwpfQWPFs=
+        b=frp8dVhypsNUTcLFMZvZvnhRrgcfkB175JZ84Xu1BdIIW8HZgaZ93FXYlLj58QJIC
+         9ZbSFWercU5KCsMQwh3cd7nl6brZA9z6dQKq7lgwP2VtU2+emwUYMEq5RQpS3t29ru
+         7GVtkx3QELK7ZJcjZM4Zq9ykmk42D5AtfTE4o8b4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 246/350] drm/amdgpu: Avoid accidental thread reactivation.
-Date:   Tue, 10 Dec 2019 16:05:51 -0500
-Message-Id: <20191210210735.9077-207-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 240/350] perf probe: Skip end-of-sequence and non statement lines
+Date:   Tue, 10 Dec 2019 16:05:45 -0500
+Message-Id: <20191210210735.9077-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,70 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit a28fda312a9fabdf0e5f5652449d6197c9fb0a90 ]
+[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
 
-Problem:
-During GPU reset we call the GPU scheduler to suspend it's
-thread, those two functions in amdgpu also suspend and resume
-the sceduler for their needs but this can collide with GPU
-reset in progress and accidently restart a suspended thread
-before time.
+Skip end-of-sequence and non-statement lines while walking through lines
+list.
 
-Fix:
-Serialize with GPU reset.
+The "end-of-sequence" line information means:
 
-Signed-off-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+ "the current address is that of the first byte after the
+  end of a sequence of target machine instructions."
+ (DWARF version 4 spec 6.2.2)
+
+This actually means out of scope and we can not probe on it.
+
+On the other hand, the statement lines (is_stmt) means:
+
+ "the current instruction is a recommended breakpoint location.
+  A recommended breakpoint location is intended to “represent”
+  a line, a statement and/or a semantically distinct subpart
+  of a statement."
+
+ (DWARF version 4 spec 6.2.2)
+
+So, non-statement line info also should be skipped.
+
+These can reduce unneeded probe points and also avoid an error.
+
+E.g. without this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
+
+  #
+
+This puts 5 probes on one line, but acutally it's not inlined function.
+This is because there are many non statement instructions at the
+function prologue.
+
+With this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  #
+
+Now perf-probe skips unneeded addresses.
+
+Committer testing:
+
+Slightly different results, but similar:
+
+Before:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
+
+  #
+
+After:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  #
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/util/dwarf-aux.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index 5652cc72ed3a9..81842ba8cd757 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -859,6 +859,9 @@ static int amdgpu_debugfs_test_ib(struct seq_file *m, void *data)
- 	struct amdgpu_device *adev = dev->dev_private;
- 	int r = 0, i;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 2b718cfd62d93..0b604f8ab7c88 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -760,6 +760,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+ 	size_t nlines, i;
++	bool flag;
  
-+	/* Avoid accidently unparking the sched thread during GPU reset */
-+	mutex_lock(&adev->lock_reset);
-+
- 	/* hold on the scheduler */
- 	for (i = 0; i < AMDGPU_MAX_RINGS; i++) {
- 		struct amdgpu_ring *ring = adev->rings[i];
-@@ -884,6 +887,8 @@ static int amdgpu_debugfs_test_ib(struct seq_file *m, void *data)
- 		kthread_unpark(ring->sched.thread);
- 	}
- 
-+	mutex_unlock(&adev->lock_reset);
-+
- 	return 0;
- }
- 
-@@ -1036,6 +1041,9 @@ static int amdgpu_debugfs_ib_preempt(void *data, u64 val)
- 	if (!fences)
- 		return -ENOMEM;
- 
-+	/* Avoid accidently unparking the sched thread during GPU reset */
-+	mutex_lock(&adev->lock_reset);
-+
- 	/* stop the scheduler */
- 	kthread_park(ring->sched.thread);
- 
-@@ -1075,6 +1083,8 @@ static int amdgpu_debugfs_ib_preempt(void *data, u64 val)
- 	/* restart the scheduler */
- 	kthread_unpark(ring->sched.thread);
- 
-+	mutex_unlock(&adev->lock_reset);
-+
- 	ttm_bo_unlock_delayed_workqueue(&adev->mman.bdev, resched);
- 
- 	if (fences)
+ 	/* Get the CU die */
+ 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
+@@ -790,6 +791,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 				  "Possible error in debuginfo.\n");
+ 			continue;
+ 		}
++		/* Skip end-of-sequence */
++		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
++			continue;
++		/* Skip Non statement line-info */
++		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
++			continue;
+ 		/* Filter lines based on address */
+ 		if (rt_die != cu_die) {
+ 			/*
 -- 
 2.20.1
 
