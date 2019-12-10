@@ -2,102 +2,251 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B83C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F319C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F6020838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="U9hq47q1"
+	by mail.kernel.org (Postfix) with ESMTP id 064582077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLJTz0 (ORCPT
+        id S1726708AbfLJT4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:55:26 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:45198 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbfLJTzB (ORCPT
+        Tue, 10 Dec 2019 14:56:46 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:34351 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJT4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:55:01 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A6479C0BAE;
-        Tue, 10 Dec 2019 19:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576007700; bh=hNPVGvX287G7j1Ei3yz/c7/UqEe5MnMoip2YipLhq5U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=U9hq47q1iMdEyMX+3VnklyHCIXlIgvWug9GktDJSFvNJNsC+qQ0wR2CqAfhF81A2/
-         kjMvMSZ3hOasUNBQWU7rCM5FVag4ZonIFq8gB6A+0yostVFV/0DymsnRDptvaQhpOe
-         ea/zXLgrAvTg3nizaJQv+LzIz8Qk4xkN/+nM7aG1aG5ooE4iPWLkA1nfyUinOkk+tO
-         151YiC1ft2NygPLCtjc0sjGKw/+MH7S0DHtsqiM5qojzv1POlbyv3XohxXbSEOWrPx
-         iX3GYjdTIKt2z3+wTnOOJ/gXCH7SVfwfZOVRm66+WXnfq4zcE3vAvO2OPC/BV6DPV8
-         GC4ANFcVGBaxQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 518D4A00A4;
-        Tue, 10 Dec 2019 19:54:58 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 4/4] net: stmmac: Always use TX coalesce timer value when rescheduling
-Date:   Tue, 10 Dec 2019 20:54:44 +0100
-Message-Id: <23c0ff1feddcc690ee66adebefdc3b10031afe1b.1576007149.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1576007149.git.Jose.Abreu@synopsys.com>
-References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1576007149.git.Jose.Abreu@synopsys.com>
-References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
+        Tue, 10 Dec 2019 14:56:45 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MmUYD-1hwKB739ZR-00iX84; Tue, 10 Dec 2019 20:56:16 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>, Pavel Machek <pavel@ucw.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cpu/SMT: fix x86 link error without CONFIG_SYSFS
+Date:   Tue, 10 Dec 2019 20:56:04 +0100
+Message-Id: <20191210195614.786555-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Lhgy+TLPrpKC+p8I+nsIjWlONz8OSO3TvN92ptxLdXyz9obROae
+ ByqClpbAdmQNpjwA2Pr1tCObgRX1Pp1Rd9CKU5LQOr4PXmSNN6A3DhLMJ3IQFcUS9yQCFFa
+ TPhTYkLm5/bxaOUTAnT4fnhkVC4lK/B7v7WFhAOnMYA266yWgzoxqC+cG4RjUg5YpD8PQT+
+ HosTCOJg7UsTXHD8BT1rA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HcbRH5zs0c0=:6E1UYLaT8aHUO/MrY2mlNx
+ 0NzoaNqqIgVPdltQDBVOKxqwvWl3ZkUX+jd6iMoCkveqKKCVZ5ssLkNamQ8nvW3ssPb9racW5
+ EHg8DGRz6Q5V0VvC28fq80TNsIdwfRpkQDFVii7oiL8TOV3LDiG6GPhtwiQmSWwL8bVD9Ks2n
+ 4DvDh2fSJE7Xf1bhHBPYkDj5ENho+OwjwYI7dkqsgHbqiK0ELDlwmsptLyw8Tr2v/N4phS9gH
+ PUsRSKYWRHoMVpGQLTcpC1hMA3kMzomYjytbXzqATr91X2jKqyuypmQuKjEkdlvnvEWr9GvHe
+ aWW6B0mt1OUDQ8/2Bm0HGNpWwXUnZggr/jUZeodD73QvzbFtQfQ8GVqW+V1MSwzx6lQnpr7X3
+ ApRtu9erBouYCoP2+CbMD3r+wN/LnTVD9DyfbQ5fzhhM9rjIQ14oj+JNFcW5P9LRGHkfzKp7N
+ 5OzWM0XrfcSLUR+peOt0IjRUNrPiTSieMMFmxfr1l3sAhcnOu0sf6MkCXO/RPYrrRE+O3/XCh
+ Mrm620NkO98c3TeidlTOhe9AoYHwUo3p+706klPrINHxE7L49Y0tTBDt8cCVIl1qZV2GcBxEb
+ 3aVdok5TsG+ndH3lo70xRWJQAulSwLgpbufwwYPQsOyZB0q1oFkANMAL6UOSX7bI6gHt1BlfB
+ Ajdi/XHvj5MNMwjdae4HrL03mfRvt4NKdr23VUlsUz+czMGaDey/u4IQcae64qMoNM2WHZthe
+ p7BcmpL6fq0GVydEy5qjkAg/c9WkJ3z0rFnsD4toqNGOxaLNkiY3Xmy2NLvZOfKWZ1MgfbFAB
+ ssWgElNrObgMlNb1zzpuIOUQ4LqhVAhqoixNaGgEGFjJc6X8KgSY5eHYYeIMPyYj7M2cTdhlU
+ +EBE07nlNt9NhVGHKHxA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we have pending packets we re-arm the TX timer with a magic value.
-Change this from the hardcoded value to the pre-defined TX coalesce
-timer value.
+When CONFIG_SYSFS is disabled, but CONFIG_HOTPLUG_SMT is enabled,
+the kernel fails to link:
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+arch/x86/power/cpu.o: In function `hibernate_resume_nonboot_cpu_disable':
+(.text+0x38d): undefined reference to `cpuhp_smt_enable'
+arch/x86/power/hibernate.o: In function `arch_resume_nosmt':
+hibernate.c:(.text+0x291): undefined reference to `cpuhp_smt_enable'
+hibernate.c:(.text+0x29c): undefined reference to `cpuhp_smt_disable'
 
+Move the exported functions out of the #ifdef section into its
+own with the correct conditions.
+
+The patch that caused this is marked for stable backports, so
+this one may need to be backported as well.
+
+Fixes: ec527c318036 ("x86/power: Fix 'nosmt' vs hibernation triple fault during resume")
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cpu.c | 143 ++++++++++++++++++++++++++-------------------------
+ 1 file changed, 72 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index f61780ae30ac..726a17d9cc35 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1975,7 +1975,7 @@ static int stmmac_tx_clean(struct stmmac_priv *priv, int budget, u32 queue)
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index a59cc980adad..4dc279ed3b2d 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1909,6 +1909,78 @@ void __cpuhp_remove_state(enum cpuhp_state state, bool invoke)
+ }
+ EXPORT_SYMBOL(__cpuhp_remove_state);
  
- 	/* We still have pending packets, let's call for a new scheduling */
- 	if (tx_q->dirty_tx != tx_q->cur_tx)
--		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(10));
-+		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(priv->tx_coal_timer));
++#ifdef CONFIG_HOTPLUG_SMT
++static void cpuhp_offline_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = true;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
++}
++
++static void cpuhp_online_cpu_device(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
++
++	dev->offline = false;
++	/* Tell user space about the state change */
++	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
++}
++
++int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	for_each_online_cpu(cpu) {
++		if (topology_is_primary_thread(cpu))
++			continue;
++		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
++		if (ret)
++			break;
++		/*
++		 * As this needs to hold the cpu maps lock it's impossible
++		 * to call device_offline() because that ends up calling
++		 * cpu_down() which takes cpu maps lock. cpu maps lock
++		 * needs to be held as this might race against in kernel
++		 * abusers of the hotplug machinery (thermal management).
++		 *
++		 * So nothing would update device:offline state. That would
++		 * leave the sysfs entry stale and prevent onlining after
++		 * smt control has been changed to 'off' again. This is
++		 * called under the sysfs hotplug lock, so it is properly
++		 * serialized against the regular offline usage.
++		 */
++		cpuhp_offline_cpu_device(cpu);
++	}
++	if (!ret)
++		cpu_smt_control = ctrlval;
++	cpu_maps_update_done();
++	return ret;
++}
++
++int cpuhp_smt_enable(void)
++{
++	int cpu, ret = 0;
++
++	cpu_maps_update_begin();
++	cpu_smt_control = CPU_SMT_ENABLED;
++	for_each_present_cpu(cpu) {
++		/* Skip online CPUs and CPUs on offline nodes */
++		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
++			continue;
++		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
++		if (ret)
++			break;
++		/* See comment in cpuhp_smt_disable() */
++		cpuhp_online_cpu_device(cpu);
++	}
++	cpu_maps_update_done();
++	return ret;
++}
++#endif
++
+ #if defined(CONFIG_SYSFS) && defined(CONFIG_HOTPLUG_CPU)
+ static ssize_t show_cpuhp_state(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+@@ -2063,77 +2135,6 @@ static const struct attribute_group cpuhp_cpu_root_attr_group = {
  
- 	__netif_tx_unlock_bh(netdev_get_tx_queue(priv->dev, queue));
+ #ifdef CONFIG_HOTPLUG_SMT
  
+-static void cpuhp_offline_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = true;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
+-}
+-
+-static void cpuhp_online_cpu_device(unsigned int cpu)
+-{
+-	struct device *dev = get_cpu_device(cpu);
+-
+-	dev->offline = false;
+-	/* Tell user space about the state change */
+-	kobject_uevent(&dev->kobj, KOBJ_ONLINE);
+-}
+-
+-int cpuhp_smt_disable(enum cpuhp_smt_control ctrlval)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	for_each_online_cpu(cpu) {
+-		if (topology_is_primary_thread(cpu))
+-			continue;
+-		ret = cpu_down_maps_locked(cpu, CPUHP_OFFLINE);
+-		if (ret)
+-			break;
+-		/*
+-		 * As this needs to hold the cpu maps lock it's impossible
+-		 * to call device_offline() because that ends up calling
+-		 * cpu_down() which takes cpu maps lock. cpu maps lock
+-		 * needs to be held as this might race against in kernel
+-		 * abusers of the hotplug machinery (thermal management).
+-		 *
+-		 * So nothing would update device:offline state. That would
+-		 * leave the sysfs entry stale and prevent onlining after
+-		 * smt control has been changed to 'off' again. This is
+-		 * called under the sysfs hotplug lock, so it is properly
+-		 * serialized against the regular offline usage.
+-		 */
+-		cpuhp_offline_cpu_device(cpu);
+-	}
+-	if (!ret)
+-		cpu_smt_control = ctrlval;
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-int cpuhp_smt_enable(void)
+-{
+-	int cpu, ret = 0;
+-
+-	cpu_maps_update_begin();
+-	cpu_smt_control = CPU_SMT_ENABLED;
+-	for_each_present_cpu(cpu) {
+-		/* Skip online CPUs and CPUs on offline nodes */
+-		if (cpu_online(cpu) || !node_online(cpu_to_node(cpu)))
+-			continue;
+-		ret = _cpu_up(cpu, 0, CPUHP_ONLINE);
+-		if (ret)
+-			break;
+-		/* See comment in cpuhp_smt_disable() */
+-		cpuhp_online_cpu_device(cpu);
+-	}
+-	cpu_maps_update_done();
+-	return ret;
+-}
+-
+-
+ static ssize_t
+ __store_smt_control(struct device *dev, struct device_attribute *attr,
+ 		    const char *buf, size_t count)
 -- 
-2.7.4
+2.20.0
 
