@@ -2,160 +2,124 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CA7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F0C04E30
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815F42077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F63C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfLJBSd convert rfc822-to-8bit (ORCPT
+        id S1727613AbfLJBUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:18:33 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:52602 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbfLJBSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:18:32 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ieUAT-00042d-A7; Tue, 10 Dec 2019 02:18:25 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Soeren Moch <smoch@web.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-Date:   Tue, 10 Dec 2019 02:18:24 +0100
-Message-ID: <6162240.GiEx4hqPFh@diego>
-In-Reply-To: <2cf70216-8d98-4122-4f4e-b8254089a017@web.de>
-References: <20191209223822.27236-1-smoch@web.de> <2668270.pdtvSLGib8@diego> <2cf70216-8d98-4122-4f4e-b8254089a017@web.de>
+        Mon, 9 Dec 2019 20:20:52 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:57265 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727059AbfLJBUw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 20:20:52 -0500
+Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 67CED7EA394;
+        Tue, 10 Dec 2019 12:20:37 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ieUCa-0006iz-IA; Tue, 10 Dec 2019 12:20:36 +1100
+Date:   Tue, 10 Dec 2019 12:20:36 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] mm: fix hanging shrinker management on long
+ do_shrink_slab
+Message-ID: <20191210012036.GB19213@dread.disaster.area>
+References: <20191129214541.3110-1-ptikhomirov@virtuozzo.com>
+ <4e2d959a-0b0e-30aa-59b4-8e37728e9793@virtuozzo.com>
+ <20191206020953.GS2695@dread.disaster.area>
+ <CALvZod4YrnLLbaqTrZR92Y45rd4G+UzcqrkwAptJGJ2Kc8i6Og@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod4YrnLLbaqTrZR92Y45rd4G+UzcqrkwAptJGJ2Kc8i6Og@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=7-415B0cAAAA:8 a=x8hb-4BqU8MrIrHTnBsA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Soeren,
-
-Am Dienstag, 10. Dezember 2019, 00:29:21 CET schrieb Soeren Moch:
-> On 10.12.19 00:08, Heiko Stübner wrote:
-> > Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
-> >> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
-> >> The BCM4359/9 wifi controller in this module is connected to sdio0,
-> >> enable this interface.
-> >>
-> >> Signed-off-by: Soeren Moch <smoch@web.de>
-> >> ---
-> >> Not sure where to place exactly the sdio0 node in the dts because
-> >> existing sd nodes are not sorted alphabetically.
-> >>
-> >> This last patch in this brcmfmac patch series probably should be picked
-> >> up by Heiko independently of the rest of this series. It was sent together
-> >> to show how this brcmfmac extension for 4359-sdio support with RSDB is
-> >> used and tested.
-> > node placement looks good so I can apply it, just a general questions
-> > I only got patch 8/8 are patches 1-7 relevant for this one and what are they?
-> Patches 1-7 are the patches to support the BCM4359 chipset with SDIO
-> interface in the linux brcmfmac net-wireless driver, see [1].
-> 
-> So this patch series has 2 parts:
-> patches 1-7: add support for the wifi chipset in the wireless driver,
-> this has to go through net-wireless
-> patch 8: enable the wifi module with this chipset on RockPro64, this patch
-
-Thanks for the clarification :-) .
-
-As patch 8 "only" does the core sdio node, it doesn't really depend on the
-earlier ones and you can submit any uart-hooks for bluetooth once the
-other patches land I guess.
-
-
-> If this was confusing, what would be the ideal way to post such series?
-
-I think every maintainer has some slightly different perspective on this,
-but personally I like getting the whole series to follow the discussion but
-also to just see when the driver-side changes get merged, as the dts-parts
-need to wait for that in a lot of cases.
-
-Heiko
-
-
-> [1] https://patchwork.kernel.org/project/linux-wireless/list/?series=213951
-> >
-> > Thanks
-> > Heiko
-> >
-> >
-> >> Cc: Heiko Stuebner <heiko@sntech.de>
-> >> Cc: Kalle Valo <kvalo@codeaurora.org>
-> >> Cc: linux-wireless@vger.kernel.org
-> >> Cc: brcm80211-dev-list.pdl@broadcom.com
-> >> Cc: brcm80211-dev-list@cypress.com
-> >> Cc: netdev@vger.kernel.org
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> Cc: linux-rockchip@lists.infradead.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> ---
-> >>  .../boot/dts/rockchip/rk3399-rockpro64.dts    | 21 ++++++++++++-------
-> >>  1 file changed, 14 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> >> index 7f4b2eba31d4..9fa92790d6e0 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> >> @@ -71,13 +71,6 @@
-> >>  		clock-names = "ext_clock";
-> >>  		pinctrl-names = "default";
-> >>  		pinctrl-0 = <&wifi_enable_h>;
-> >> -
-> >> -		/*
-> >> -		 * On the module itself this is one of these (depending
-> >> -		 * on the actual card populated):
-> >> -		 * - SDIO_RESET_L_WL_REG_ON
-> >> -		 * - PDN (power down when low)
-> >> -		 */
-> >>  		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
-> >>  	};
-> >>
-> >> @@ -650,6 +643,20 @@
-> >>  	status = "okay";
-> >>  };
-> >>
-> >> +&sdio0 {
-> >> +	bus-width = <4>;
-> >> +	cap-sd-highspeed;
-> >> +	cap-sdio-irq;
-> >> +	disable-wp;
-> >> +	keep-power-in-suspend;
-> >> +	mmc-pwrseq = <&sdio_pwrseq>;
-> >> +	non-removable;
-> >> +	pinctrl-names = "default";
-> >> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-> >> +	sd-uhs-sdr104;
-> >> +	status = "okay";
-> >> +};
-> >> +
-> >>  &sdmmc {
-> >>  	bus-width = <4>;
-> >>  	cap-sd-highspeed;
-> >> --
-> >> 2.17.1
-> >>
-> >
-> >
+On Fri, Dec 06, 2019 at 09:11:25AM -0800, Shakeel Butt wrote:
+> On Thu, Dec 5, 2019 at 6:10 PM Dave Chinner <david@fromorbit.com> wrote:
+> > If a shrinker is blocking for a long time, then we need to
+> > work to fix the shrinker implementation because blocking is a much
+> > bigger problem than just register/unregister.
 > >
 > 
+> Yes, we should be fixing the implementations of all shrinkers and yes
+> it is bigger issue but we can also fix register/unregister isolation
+> issue in parallel. Fixing all shrinkers would a tedious and long task
+> and we should not block fixing isolation issue on it.
+
+"fixing all shrinkers" is a bit of hyperbole - you've identified
+only one instance where blocking is causing you problems. Indeed,
+most shrinkers are already non-blocking and won't cause you any
+problems at all.
+
+> > IOWs, we already know that cycling a global rwsem on every
+> > individual shrinker invocation is going to cause noticable
+> > scalability problems. Hence I don't think that this sort of "cycle
+> > the global rwsem faster to reduce [un]register latency" solution is
+> > going to fly because of the runtime performance regressions it will
+> > introduce....
+> >
 > 
+> I agree with your scalability concern (though others would argue to
+> first demonstrate the issue before adding more sophisticated scalable
+> code).
 
+Look at the git history. We *know* this is a problem, so anyone
+arguing that we have to prove it can go take a long walk of a short
+plank....
 
+> Most memory reclaim code is written without the performance or
+> scalability concern, maybe we should switch our thinking.
 
+I think there's a lot of core mm and other developers that would
+disagree with you there. With respect to shrinkers, we've been
+directly concerned about performance and scalability of the
+individual instances as well as the infrastructure for at least the
+last decade....
 
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
