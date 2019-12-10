@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105F8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4181C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1A424653
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8CF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013743;
-	bh=7SJmmptH9ryxz4J734QpJaZe7NT4xjsueknmu5HRufk=;
+	s=default; t=1576013745;
+	bh=63LUu6LyMFY3U2I+028HHw3AyRetmSe2Ru2XoijVS+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A6Nz+4VUEI5RAgTeK0bK2yHuMoOo/TFtuzO/ZEVFx04wFcgUzQXSW9S6WB8nP3Aup
-	 TeqLmEA04Pq5NNgoNKCS+dKUBtwVBsWNg6LTA3JHNyzWFaPyJedei/8mOAor9YEawy
-	 Lxym+ikO9dilrZHd2iL5XGZwxMj5/IrT1IoMESew=
+	b=UfOmdixTY0hf1P5m7txZFutqKnT3mDuEnOAe+4WTLBhasYx3R/oU0d+b5Ja7rLuNu
+	 6TFWHr1mpCclsn8eWPCTQ0N14rfPEsymvkFRNg0LXdT56hB+SZ9Vy8t65hQ6QhjXxd
+	 UU2d1Ppbw2LpH+DAsYjOlRmS1HTtKuLq3IKW+r/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbfLJVfn (ORCPT
+        id S1730360AbfLJVfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41438 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730298AbfLJVfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:34 -0500
+        id S1730320AbfLJVfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88FE92467A;
-        Tue, 10 Dec 2019 21:35:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC3B52465C;
+        Tue, 10 Dec 2019 21:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013734;
-        bh=7SJmmptH9ryxz4J734QpJaZe7NT4xjsueknmu5HRufk=;
+        s=default; t=1576013737;
+        bh=63LUu6LyMFY3U2I+028HHw3AyRetmSe2Ru2XoijVS+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMRo29YyYXnlLjc0uQncvd/jwslimcI++UTO0ROpSCTG9V+Fxk0CJS7nXTASbLp10
-         itn48sWwCPsMOzgoetDBg95osSCRIw7yAwK5j2YaLxbkKPUOa/kPs4EqCHS4/Y1VH1
-         4DQSbWiqryARNb9bN6nNXRppdKDLrQ+HR6dD5bKk=
+        b=aTYmBaHMxyvt8secSJR0/sEfKSwW+k3xN2v4Lsx34MtLxZrr9KOIXlB0npPzlb1wB
+         R3E7GbRI+5N0czQ5+0V8iXPGVKiNKsca8h48hsTUiKmgXmBZUwr1vAQiF0uBi5sASH
+         DxETa19pLAJa11k/UiXC32BjlJ8gqfgtjlgU72WQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 158/177] ASoC: wm2200: add missed operations in remove and probe failure
-Date:   Tue, 10 Dec 2019 16:32:02 -0500
-Message-Id: <20191210213221.11921-158-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 161/177] ASoC: Intel: bytcr_rt5640: Update quirk for Acer Switch 10 SW5-012 2-in-1
+Date:   Tue, 10 Dec 2019 16:32:05 -0500
+Message-Id: <20191210213221.11921-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,51 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 2dab09be49a1e7a4dd13cb47d3a1441a2ef33a87 ]
+[ Upstream commit 0bb887709eb16bdc4b5baddd8337abf3de72917f ]
 
-This driver misses calls to pm_runtime_disable and regulator_bulk_disable
-in remove and a call to free_irq in probe failure.
-Add the calls to fix it.
+When the Acer Switch 10 SW5-012 quirk was added we did not have
+jack-detection support yet; and the builtin microphone selection of
+the original quirk is wrong too.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118073633.28237-1-hslester96@gmail.com
+Fix the microphone-input quirk and add jack-detection info so that the
+internal-microphone and headphone/set jack on the Switch 10 work properly.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191119145138.59162-1-hdegoede@redhat.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm2200.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/intel/boards/bytcr_rt5640.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/wm2200.c b/sound/soc/codecs/wm2200.c
-index deff651615042..0a3b746fb909b 100644
---- a/sound/soc/codecs/wm2200.c
-+++ b/sound/soc/codecs/wm2200.c
-@@ -2413,6 +2413,8 @@ static int wm2200_i2c_probe(struct i2c_client *i2c,
- 
- err_pm_runtime:
- 	pm_runtime_disable(&i2c->dev);
-+	if (i2c->irq)
-+		free_irq(i2c->irq, wm2200);
- err_reset:
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
-@@ -2429,12 +2431,15 @@ static int wm2200_i2c_remove(struct i2c_client *i2c)
- {
- 	struct wm2200_priv *wm2200 = i2c_get_clientdata(i2c);
- 
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm2200);
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
- 	if (wm2200->pdata.ldo_ena)
- 		gpio_set_value_cansleep(wm2200->pdata.ldo_ena, 0);
-+	regulator_bulk_disable(ARRAY_SIZE(wm2200->core_supplies),
-+			       wm2200->core_supplies);
- 
- 	return 0;
- }
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index b6dc524830b21..6acd5dd599dc4 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -414,10 +414,12 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire SW5-012"),
+ 		},
+-		.driver_data = (void *)(BYT_RT5640_IN1_MAP |
+-						 BYT_RT5640_MCLK_EN |
+-						 BYT_RT5640_SSP0_AIF1),
+-
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD2_IN4N |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
+ 	},
+ 	{
+ 		.matches = {
 -- 
 2.20.1
 
