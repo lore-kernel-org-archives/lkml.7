@@ -2,110 +2,150 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B3C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEDFC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A572077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4D92465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cy5BJsHX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBiVzNjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfLJJgQ (ORCPT
+        id S1727437AbfLJJgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:36:16 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45254 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfLJJgP (ORCPT
+        Tue, 10 Dec 2019 04:36:35 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45078 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfLJJge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:36:15 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9aCG4130984;
-        Tue, 10 Dec 2019 03:36:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575970572;
-        bh=WGtf1IKDe8ENBK+5xcPhUCNaggU+OnMoFiPYYV9HOwg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cy5BJsHXeyVzi7MYSE4OakI/GqWb15wr0Ov94TLB8vvbrvqe/ox0y75fFCIA1WEB6
-         HY6itZpz6VA7moWHJvTNC6P0D0Vhx6JGtn55Nj81PdJAZnpuuhXsRK5mWvJTXg2g2R
-         OQgxsTPZPFbYPId+LeHCUqFxh1TTH40CG6jw2ENc=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9aCAi124687
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 03:36:12 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 03:36:11 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 03:36:11 -0600
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9a9qj023647;
-        Tue, 10 Dec 2019 03:36:10 -0600
-Subject: Re: [PATCH] mmc: sdhci: Update the tuning failed messages to pr_debug
- level
-To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>
-References: <20191206114326.15856-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <9199c781-399b-8b7e-8454-6d67f41f48bb@ti.com>
-Date:   Tue, 10 Dec 2019 15:07:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 04:36:34 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d20so19029130ljc.12;
+        Tue, 10 Dec 2019 01:36:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=gXjxkm88DEjZBFBOVgYS/nXq7WpsnAwIahBe1LGrB6M=;
+        b=UBiVzNjP9aLMEiA7IC7YrACjXTaPDc9hQMibmR6mvQ2w5h2mcCTC9EkN995AN07C3h
+         dbarlfB4UYV1kmfgjxkEetgiW/0lmCFZPD1RV2yf7SMmHbmt5kWl3v8fKQ2C/Tom/sZc
+         1A5J74odxics4FORavwIVtIBailZYZvoG6ESd6ppFoWRQ/b6ORBJ5uCeCcEYX6Qdmc5x
+         x/g7FCVHEhjHGf7+XfjwozXLtrf0kaajg/vIYnqw9H71l4SuFOrtDO/lztKSviCuXmNj
+         2OR9+EoTAXh63GHszKYj1+zJxtYsT8ForpsjXGRBO4gxper4nFuzQ3A5G53npQ/hCq+g
+         H1zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gXjxkm88DEjZBFBOVgYS/nXq7WpsnAwIahBe1LGrB6M=;
+        b=GxDVNASQ8o/xhHSDc0B/OyXRa96/XUbCEuac2Z69R2UjfVqhoVL9cF5QDcQhYRiLjZ
+         arPfRIJUFwDonMQyOsqeSrrcxju8UlI11goC2PqjzfdyHCKwXuvTBMpTSlTMNmmgHjW1
+         3vPhpl+aTVpnvZAa7J/X7gjRPZrevCNxIHpg1oVhj7uoci+F0dEPSuARH8qo6ArhpLCP
+         7+/whB0sUGTbUPoLfBlMEuTPRGrXgX6cEsuG57kQTHoD9DXzTw29/g5TKSJCgtqoJ00n
+         Ik1pRSyMSA30jjEwEOEcyHpNKamROmva4wqMZ0jU6h4MPZth0QFAsV2Fd46R7K7rt5EE
+         8Law==
+X-Gm-Message-State: APjAAAUmTJMdG2SoBzvjN1GvtaB7s/Vb6b6tRb+ZWE9txjQ57gfuEhjK
+        s8LVTd+heZ0jx+hVCDrd1y8=
+X-Google-Smtp-Source: APXvYqzgHWnb8WU25vCn8dceHQNUvqh7F9YCfgdEcTPnY24QYOgLeeWBuTndcT1N2jJAkfd3EaJ+zA==
+X-Received: by 2002:a2e:9015:: with SMTP id h21mr3537646ljg.69.1575970592330;
+        Tue, 10 Dec 2019 01:36:32 -0800 (PST)
+Received: from [192.168.68.106] ([193.119.54.228])
+        by smtp.gmail.com with ESMTPSA id m21sm1186222lfh.53.2019.12.10.01.36.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 01:36:31 -0800 (PST)
+Subject: Re: [PATCH v2 2/4] kasan: use MAX_PTRS_PER_* for early shadow
+To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
+        aneesh.kumar@linux.ibm.com
+References: <20191210044714.27265-1-dja@axtens.net>
+ <20191210044714.27265-3-dja@axtens.net>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
+Date:   Tue, 10 Dec 2019 20:36:24 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191206114326.15856-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191210044714.27265-3-dja@axtens.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 06/12/19 5:13 pm, Faiz Abbas wrote:
-> Tuning support in DDR50 speed mode was added in SD Specifications Part1
-> Physical Layer Specification v3.01. Its not possible to distinguish
-> between v3.00 and v3.01 from the SCR and that is why since
-> commit 4324f6de6d2e ("mmc: core: enable CMD19 tuning for DDR50 mode")
-> tuning failures are ignored in DDR50 speed mode.
+
+On 10/12/19 3:47 pm, Daniel Axtens wrote:
+> This helps with powerpc support, and should have no effect on
+> anything else.
 > 
-> Cards compatible with v3.00 don't respond to CMD19 in DDR50 and this
-> error gets printed during enumeration and also if retune is triggered at
-> any time during operation. Update the printk level to pr_debug so that
-> these errors don't lead to false error reports.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Daniel Axtens <dja@axtens.net>
+
+If you follow the recommendations by Christophe and I, you don't need this patch
+
+Balbir Singh.
+
 > ---
->  drivers/mmc/host/sdhci.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/linux/kasan.h | 6 +++---
+>  mm/kasan/init.c       | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 296d955ede59..42a9c8179da7 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2417,8 +2417,8 @@ static int __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
->  		sdhci_send_tuning(host, opcode);
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index e18fe54969e9..d2f2a4ffcb12 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -15,9 +15,9 @@ struct task_struct;
+>  #include <asm/pgtable.h>
 >  
->  		if (!host->tuning_done) {
-> -			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> -				mmc_hostname(host->mmc));
-> +			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> +				 mmc_hostname(host->mmc));
->  			sdhci_abort_tuning(host, opcode);
->  			return -ETIMEDOUT;
->  		}
+>  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+> -extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+> -extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+> -extern pud_t kasan_early_shadow_pud[PTRS_PER_PUD];
+> +extern pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE];
+> +extern pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD];
+> +extern pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD];
+>  extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+>  
+>  int kasan_populate_early_shadow(const void *shadow_start,
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index ce45c491ebcd..8b54a96d3b3e 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -46,7 +46,7 @@ static inline bool kasan_p4d_table(pgd_t pgd)
+>  }
+>  #endif
+>  #if CONFIG_PGTABLE_LEVELS > 3
+> -pud_t kasan_early_shadow_pud[PTRS_PER_PUD] __page_aligned_bss;
+> +pud_t kasan_early_shadow_pud[MAX_PTRS_PER_PUD] __page_aligned_bss;
+>  static inline bool kasan_pud_table(p4d_t p4d)
+>  {
+>  	return p4d_page(p4d) == virt_to_page(lm_alias(kasan_early_shadow_pud));
+> @@ -58,7 +58,7 @@ static inline bool kasan_pud_table(p4d_t p4d)
+>  }
+>  #endif
+>  #if CONFIG_PGTABLE_LEVELS > 2
+> -pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> +pmd_t kasan_early_shadow_pmd[MAX_PTRS_PER_PMD] __page_aligned_bss;
+>  static inline bool kasan_pmd_table(pud_t pud)
+>  {
+>  	return pud_page(pud) == virt_to_page(lm_alias(kasan_early_shadow_pmd));
+> @@ -69,7 +69,7 @@ static inline bool kasan_pmd_table(pud_t pud)
+>  	return false;
+>  }
+>  #endif
+> -pte_t kasan_early_shadow_pte[PTRS_PER_PTE] __page_aligned_bss;
+> +pte_t kasan_early_shadow_pte[MAX_PTRS_PER_PTE] __page_aligned_bss;
+>  
+>  static inline bool kasan_pte_table(pmd_t pmd)
+>  {
 > 
-
-Gentle ping.
-
-Thanks,
-Faiz
