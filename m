@@ -2,114 +2,120 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CCDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698C720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9502077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iS3GKONz"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GLA7OuE3";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OblpijPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfLJWTt (ORCPT
+        id S1727440AbfLJWX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:19:49 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:56372 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfLJWTs (ORCPT
+        Tue, 10 Dec 2019 17:23:26 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:59316
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726883AbfLJWX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:19:48 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAME8aK137834;
-        Tue, 10 Dec 2019 22:19:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=V7NOZM87Hjo3aH85Tq0UMYJwfwxR0GULXsdxgUGpUIg=;
- b=iS3GKONzKGMUa3EaM0O0NhvcAW/iG7hEk43Pi/ciGvg5J2j6uemEbhNIYdyZcCUV6Gnl
- IF1zKbNQ+cW9QoyaOp4Bj+Mh3gv87Zdzbi599PzAXTQ5sCuGtrCSm0CqsZkqAJY/dTF4
- 8T01Nh/C9dbkCkqZBAGZMagCMrkjM+TZ/XLAVw+odnDtoKOOLNdTNElSduSGasvTQTXy
- +lIHRrXiRwBTOM6/TG4DajAGjnKLetFKXe4JaygKnhbxSN+TQXvyiO030SMahQgViKsO
- 5GOLZcNtEQL5Fyt+uO+L1TIIc8B8GiNiRsksrHXf6bv+U5SoK2igY+vOMjpy3i2Hh7vT Mw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wrw4n5y9p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 22:19:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAMJ8g3075501;
-        Tue, 10 Dec 2019 22:19:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wte9asq7m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 22:19:29 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBAMI5ZW018162;
-        Tue, 10 Dec 2019 22:18:05 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Dec 2019 14:18:04 -0800
-Date:   Tue, 10 Dec 2019 17:18:14 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Bob Picco <bob.picco@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 1/3] mm: fix uninitialized memmaps on a partially
- populated last section
-Message-ID: <20191210221814.bdgd4rw55paowhpv@ca-dmjordan1.us.oracle.com>
-References: <20191209174836.11063-1-david@redhat.com>
- <20191209174836.11063-2-david@redhat.com>
- <20191209211502.zhbvzv2qwbvcperm@ca-dmjordan1.us.oracle.com>
- <c0733e11-bf06-8813-11de-019cdbddef34@redhat.com>
+        Tue, 10 Dec 2019 17:23:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016605;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=5O6ko1wMdH3ZAe3za/gTc6jGmfe6ltuEFSuJCuFhaE4=;
+        b=GLA7OuE3q9Ckno+URVzFLhwwkaR1ZO0GcthJbP9hE3K5Iy3A/R+Y/IjweHZlbnqs
+        IU0rQ3Jjl18qRlEcZxQZBeGL0m4xLxCZIWxAwTbga+xv15hFfTqg5QhJi2oDYSsgpUI
+        CKC02DOEdc9qqI9xzxSx6p1/ZMkQXbdT/g3zgljE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016605;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=5O6ko1wMdH3ZAe3za/gTc6jGmfe6ltuEFSuJCuFhaE4=;
+        b=OblpijPjBWaUnQ7iMx3O1+gAfDhdKUreQ2A/HCrikRbTsg2II3DukNQ/wKGgSqWG
+        rergx1m0csTGoWf/5M5hZUQVmUjj68p8DKzpzzQnhHyV1OHGYOYpI9pdeFMhBxaLPLA
+        /p4taTWJHMq2Gq9nR+kp23AYTMJxDAQ1LvTpYxWI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0090BC59948
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 10 Dec 2019 22:23:25 +0000
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
+        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org
+Subject: Re: [PATCH 1/2] pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
+Message-ID: <0101016ef1e8f0a2-c8311e64-3d6a-4b66-9121-6fa4d0a604df-000000@us-west-2.amazonses.com>
+References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
+ <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <c0733e11-bf06-8813-11de-019cdbddef34@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912100183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912100183
+In-Reply-To: <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-SES-Outgoing: 2019.12.10-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:11:03AM +0100, David Hildenbrand wrote:
-> Some things that might be relevant from my config.
-> 
-> # CONFIG_PAGE_POISONING is not set
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT=y
-> CONFIG_SPARSEMEM_EXTREME=y
-> CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
-> CONFIG_SPARSEMEM_VMEMMAP=y
-> CONFIG_HAVE_MEMBLOCK_NODE_MAP=y
-> CONFIG_MEMORY_HOTPLUG=y
-> CONFIG_MEMORY_HOTPLUG_SPARSE=y
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=y
+On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
+>GPIOs that can be configured as wakeup sources, have their
+>interrupt lines routed to PDC interrupt controller.
+>
+>Provide the interrupt map of the GPIO to its wakeup capable
+>interrupt parent.
+>
+>Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
 
-Thanks for all that.  After some poking around, turns out enabling DEBUG_VM
-with its page poisoning let me hit it right away, which makes me wonder how
-often someone would see this without it.
-
-Anyway, fix looks good to me.
-
-Tested-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+>---
+> drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++++++++++
+> 1 file changed, 18 insertions(+)
+>
+>diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>index 6399c8a..8a2b97c 100644
+>--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+>@@ -1097,6 +1097,22 @@ static const struct msm_pingroup sc7180_groups[] = {
+> 	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
+> };
+>
+>+static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
+>+	{0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
+>+	{10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
+>+	{24, 61}, {26, 52}, {28, 36}, {30, 100}, {31, 33}, {32, 81},
+>+	{33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
+>+	{41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
+>+	{52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
+>+	{59, 37}, {62, 110}, {63, 111}, {64, 74}, {65, 44}, {66, 93},
+>+	{67, 58}, {68, 112}, {69, 32}, {70, 54}, {72, 59}, {73, 64},
+>+	{74, 71}, {78, 31}, {82, 30}, {85, 103}, {86, 38}, {87, 39},
+>+	{88, 45}, {89, 46}, {90, 47}, {91, 48}, {92, 60}, {93, 49},
+>+	{94, 84}, {95, 94}, {98, 65}, {101, 66}, {104, 67}, {109, 104},
+>+	{110, 68}, {113, 69}, {114, 113}, {115, 108}, {116, 121},
+>+	{117, 114}, {118, 119},
+>+};
+>+
+> static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+> 	.pins = sc7180_pins,
+> 	.npins = ARRAY_SIZE(sc7180_pins),
+>@@ -1107,6 +1123,8 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+> 	.ngpios = 120,
+> 	.tiles = sc7180_tiles,
+> 	.ntiles = ARRAY_SIZE(sc7180_tiles),
+>+	.wakeirq_map = sc7180_pdc_map,
+>+	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
+> };
+>
+> static int sc7180_pinctrl_probe(struct platform_device *pdev)
+>-- 
+>QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>of Code Aurora Forum, hosted by The Linux Foundation
+>
