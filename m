@@ -2,134 +2,162 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4A0C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9407BC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAE22073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575987339;
-	bh=zoKHBYFK7ibeRR/odpe1m4xweRuBfc5NFuh1Z7lmORU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Off9vBJr+RsDVjoHW5p3ZseR0HoIM7k1TZ2OKkOQYa4sQxano6kT0t6jPg5cQ2PWS
-	 HaPPVpaOKM0WF4gUPo0wJ3e7UD8xXrp/QJTwd4aFxT64WtYWSxhvi4oaA7OPnCQvGY
-	 Szdl7plkFXmihwBt5s1kSLi52sEAkeIlO+kU7ol0=
+	by mail.kernel.org (Postfix) with ESMTP id 6909E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:16:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="laoAr8Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfLJOPi (ORCPT
+        id S1727587AbfLJOQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:15:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbfLJOPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:15:38 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12884207FF;
-        Tue, 10 Dec 2019 14:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575987337;
-        bh=zoKHBYFK7ibeRR/odpe1m4xweRuBfc5NFuh1Z7lmORU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zh7mvxVg1ozMiDGwvPAJorU8QV2ffv9xlj8iZaEZsiLracEhwJt5OGyGIIEhIk2c3
-         d61ELYXUXkQOU0hWo9Z1JG4/cenfPNhG5hKsS0sWso0CXPWbYe8wNGgQJ8CiXezD9w
-         hzaWrcudL13UcQwWEdgEj9m2xo7rhVLPJfbX6/Zs=
-Date:   Tue, 10 Dec 2019 23:15:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 01/22] bootconfig: Add Extra Boot Config support
-Message-Id: <20191210231528.853ac9e7f84f2166fd4c4047@kernel.org>
-In-Reply-To: <20191209105403.788f492a@gandalf.local.home>
-References: <157528159833.22451.14878731055438721716.stgit@devnote2>
-        <157528160980.22451.2034344493364709160.stgit@devnote2>
-        <02b132dd-6f50-cf1d-6cc1-ff6bbbcf79cd@infradead.org>
-        <20191209145009.502ece2e58ffab5e31430a0e@kernel.org>
-        <20191209105403.788f492a@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Dec 2019 09:16:02 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41259 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbfLJOQC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:16:02 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so20044950ljc.8;
+        Tue, 10 Dec 2019 06:16:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jD+WtoffrchcEdWN7/kMz52aEW8U9ECt9MIhf+NIRt8=;
+        b=laoAr8CsHFTCAMbrW53NWJOiRysmj/Tw3iUdtbteH/C1jXBWCqxzLqBqZop+YNW0xn
+         ngJTfifBTbUxg3TdRFG6SXG4wIxijNGunKGJp8crNWtA+Eq6WZjuyLFIkGGoEFtpwaVO
+         WsNIyitIXpOlZNt8sRajfUQg6QCJm45rBpMUOU8ENx47puUbTwvZXJQ1oTw812UKeIOn
+         R5y7x34rZzRdBdahDx9y9FrRMtihTLp9HZxUqfUWtmwXwnuooHkGaydEfrw9IYkJHYuz
+         aq0cUMDj7XvDuAv4/Df+MqVT5zM3lNPR5UYcZxhRZNkHd7vFAunbZ7fM6SXZ272s8+CV
+         vC7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jD+WtoffrchcEdWN7/kMz52aEW8U9ECt9MIhf+NIRt8=;
+        b=CtElbGrrXuuVP25K16xfoWGewVmDp+Df3QtzhOouSqOqTrHApZukZlJXVQBzTg89Pg
+         ooI3Cw/pTRXwAtR9P8MtV1Oe2wwFwllRg+2HrC/XdfaVRu0LpGWyUJMbdmhuABY9++M7
+         kH+h+c4pWdEcvaxRgGZmnZ3WWUtNy6YSe+bGaCEzsuhsfQXG2V2ESf3bhVAYDixOocST
+         ECBBR3tCmwTWcdg7PbZVMw/Qmqyt5728Ca3bPRNS46PeTq1nkFlD62h8NTzZhZgIPHTD
+         soQC2pyGnFS9TUDZBjrtQp49gRQCGvyMK276a4w+XZ1XMLThE2hgRGhjvNf49RrgjAlT
+         e7pw==
+X-Gm-Message-State: APjAAAXLtMXRWDYParB/utPNQNO61Li+vc3B0PjqqxQahGlEFk9dplmO
+        ZMcA7DR/F46KIqyf+uuh00Q0qJWn
+X-Google-Smtp-Source: APXvYqzuJICIEMYqEq4hgKpvqtsHTLgg/v7d6kKGG3DNPNP6pIxTUHhXp04kW61Z/4BccLTl5EsbtA==
+X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr20347892ljm.53.1575987359949;
+        Tue, 10 Dec 2019 06:15:59 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c23sm1819382ljj.78.2019.12.10.06.15.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 06:15:59 -0800 (PST)
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>, linux-mmc@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191210014011.21987-1-digetx@gmail.com>
+ <20191210125208.GD2703785@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <61b7a865-6a6f-5edf-7463-cfdd6b20f687@gmail.com>
+Date:   Tue, 10 Dec 2019 17:15:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191210125208.GD2703785@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 10:54:03 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > > > +config BOOT_CONFIG
-> > > > +	bool "Boot config support"
-> > > > +	select LIBXBC
-> > > > +	default y  
-> > > 
-> > > questionable "default y".
-> > > That needs lots of justification.  
-> > 
-> > OK, I can make it 'n' by default.
-> > 
-> > I thought that was OK because most of the memories for the
-> > bootconfig support were released after initialization.
-> > If user doesn't pass the bootconfig, only the code for
-> > /proc/bootconfig remains on runtime memory.
+10.12.2019 15:52, Thierry Reding пишет:
+> On Tue, Dec 10, 2019 at 04:40:11AM +0300, Dmitry Osipenko wrote:
+>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+>> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+>> In a result high-speed mode isn't enabled for the WiFi card and this
+>> results in a malfunctioning SDIO communication.
+>>
+>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>>
+>> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+>> the problem, let's do the same in upstream.
+>>
+>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+>> which overrides card's info for the TI wl1251 WiFi.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/mmc/host/sdhci-tegra.c | 28 ++++++++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
 > 
-> As 'n' is usually the default, I will argue this should be 'y'!
+> This seems like the wrong place to do this. If this is specific to this
+> WiFi SDIO chip this should be handled at the SDIO card or function
+> level. It seems like the SDIO infrastructure doesn't currently allow
+> this because the OF nodes are attached to the card after
+> mmc_sdio_init_card(), whereas it seems like the quirk is already needed
+> during mmc_sdio_init_card().
 > 
-> This is not some new fancy feature, or device that Linus
-> complains about "my X is important!". I will say this X *is* important!
-> This will (I hope) become standard in all kernel configs. One could even
-> argue that there shouldn't even be a config for this at all (forced
-> 'y'). This would hurt more not to have than to have. I would hate to
-> try to load special options only to find out that the kernel was
-> compiled with default configs and this wasn't enabled.
+> That said, I think we could have some common code that's executed as
+> part of mmc_attach_sdio() (and before mmc_sdio_init_card()).
 > 
-> This is extended boot config support that can be useful for most
-> developers. The only ones that should say 'n' are those that are
-> working to get a "tiny" kernel at boot up. As Masami said, the memory
-> is freed after init, thus this should not be an issue for 99.9% of
-> kernel users.
+> Actually, it looks like we already have something like that.
+> mmc_sdio_init_card() calls mmc_fixup_device() with sdio_fixup_methods
+> after doing some very basic initialization. Do you know if things start
+> to go wrong before or after that point? It might be worth looking at
+> that SDIO fixup array and add something that would override the CCCR
+> support. That would fix things in a more generic way rather than
+> requiring every host controller driver to duplicate this quirk.
 
-Thanks Steve!
+Hello Thierry,
 
-Yes, for the users point of view, it is hard to notice that their kernel
-can accept the boot config or not before boot.
-To provide consistent system usability, I think it is better to be enabled
-by default. Anyway, if there is no boot config, almost all buffers and
-code are released after init (except for /proc/bootconfig entry point,
-which will return an empty buffer).
+Thank you very much for the suggestion, looks like indeed it is possible
+to make workaround in a generic way.
 
-It will increase the binary image size, but it must be small.
-FYI, here is an example of vmlinux (non compressed image)
+Ulf / Adrian, will something like this be acceptable:
 
-   text	   data	    bss	    dec	    hex	filename
-16178353	5843418	13324364	35346135	21b56d7	vmlinux
-16183993	5855858	13316172	35356023	21b7d77	vmlinux.xbc
-16187248	5855870	13307980	35351098	21b6a3a	vmlinux.xbc.btt
+diff --git a/drivers/mmc/core/card.h b/drivers/mmc/core/card.h
+index 7bd392d55cfa..a6001f210b9e 100644
+--- a/drivers/mmc/core/card.h
++++ b/drivers/mmc/core/card.h
+@@ -150,6 +150,12 @@ static inline void __maybe_unused
+add_limit_rate_quirk(struct mmc_card *card,
+ 	card->quirk_max_rate = data;
+ }
 
-So, for the extra boot config support, it will increase ~6KB code and
-12KB data, the boot time tracing increase ~3KB code and 12bytes data
-in binary file. 
++static inline void __maybe_unused add_high_speed_quirk(struct mmc_card
+*card,
++						       int data)
++{
++	card->cccr.high_speed = data;
++}
++
+ /*
+  * Quirk add/remove for MMC products.
+  */
+diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
+index 3dba15bccce2..a824c0caa7fb 100644
+--- a/drivers/mmc/core/quirks.h
++++ b/drivers/mmc/core/quirks.h
+@@ -142,6 +142,9 @@ static const struct mmc_fixup sdio_fixup_methods[] = {
+ 	SDIO_FIXUP(SDIO_VENDOR_ID_MARVELL, SDIO_DEVICE_ID_MARVELL_8887WLAN,
+ 		   add_limit_rate_quirk, 150000000),
 
-Thank you,
++	SDIO_FIXUP(SDIO_VENDOR_ID_BROADCOM, SDIO_DEVICE_ID_BROADCOM_4329,
++		   add_high_speed_quirk, 1),
++
+ 	END_FIXUP
+ };
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+[snip]
