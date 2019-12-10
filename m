@@ -2,111 +2,159 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA74C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBE1C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7C320726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB8F20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:26:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAWTnfs/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="du4OR0Lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfLJJZF (ORCPT
+        id S1727145AbfLJJ0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:25:05 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33059 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJZF (ORCPT
+        Tue, 10 Dec 2019 04:26:10 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42676 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJ0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:25:05 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so13166852lfl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bwAtdmxvGyrCILPXFQvJnltIvhpI4gs5tXgbrhs6Bw8=;
-        b=AAWTnfs/Eo6Hj9n5OB6phmWbD1m15J5X8zumgD18FNQPA7cz27EvX1/21ZhNTbTPUY
-         XGkSjBCWioOl7cC9OShUkrEKjWSkJX+5pVSLHJxNAGJsts66j+RkjZKoV9kGHo5xR9kH
-         GwHXNIfkPO4sCcaUllxE+QKhWrY0ySSM3eYgYneiUTqBcR+CyGtTLgsL3KPyQtKw0Ib8
-         aeR8A4Smt36NwUgCjEfjt5srHlEM9A5By9QYXtSzyR661zdeCMX9O2ejs05kko8w2PCp
-         m3RoIKrDuiJa7+GEH9hm00BQcZc0Ry7JEYWvvyK1tkUZw3KKqEB/bG3BzdJmvRp1O2aD
-         B1IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bwAtdmxvGyrCILPXFQvJnltIvhpI4gs5tXgbrhs6Bw8=;
-        b=JHhrnbMU40gFWxsvk6VpeJl5MrE0vjOvB0cLXxgOixBNTy3Oh1u4cQA6mdPtNJG1mH
-         /3I+EWYF2yu7ZJm6sGEbBfEG4+6eXnJ2SZii0AngTPQMiQ8XPB9eYXQDg72fpxmnC9SL
-         KUyA5LMpSwivOmCddQd391qbk94i2BkB+ThEJqiAJNGSHK23eS9KQGirDqpZ6tKbUkLB
-         fSBuNJYWhahmqQ/WNppUw8WNLquMbJcaJjqMxBoIUuehww6HcTfe49ODe8PYPPvOJsMb
-         KgHVbK08Fh+bMgb0jyG7w4hYkjnkLku3DkURJiUym8XzFmC8CRoFmTbpn2R+LZMgXvn6
-         NHmg==
-X-Gm-Message-State: APjAAAVQJFo5b/KRQLRfIPOHGIIRpB8QLSgcpMW+cZAhcgKvFE7iPVBK
-        K2+WcM7lDCl607BKi54VPSARJynKA4g=
-X-Google-Smtp-Source: APXvYqzm65bVkxT4Df63k0Cw7qZ6HRx7A1/BYXwyrUoXItP8lfD75xLlEPsY+Fw6rS+ESQMXguWwjA==
-X-Received: by 2002:a19:c1c1:: with SMTP id r184mr4402876lff.128.1575969902911;
-        Tue, 10 Dec 2019 01:25:02 -0800 (PST)
-Received: from [192.168.68.106] ([193.119.54.228])
-        by smtp.gmail.com with ESMTPSA id 22sm1689626ljw.9.2019.12.10.01.24.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:25:02 -0800 (PST)
-Subject: Re: [Patch v2] mm/hotplug: Only respect mem= parameter during boot
- stage
-To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, mhocko@kernel.org, david@redhat.com,
-        jgross@suse.com, akpm@linux-foundation.org
-References: <20191210084413.21957-1-bhe@redhat.com>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <75188d0f-c609-5417-aa2e-354e76b7ba6e@gmail.com>
-Date:   Tue, 10 Dec 2019 20:24:55 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 04:26:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HnoPtgDyyEf84ZWb/qymyd1fNl04iBZY3/x7YWhBuy8=; b=du4OR0LwfqnYS24MzA+8qk22K
+        ww7jdnZ7F5lymBuvVfjwdS4X/9q1flzgkvLLm0Qw1m/yMZ8RY93MaWAmixCw9xhyNHSq/uKjRLlJT
+        PPuVM/mHsbLpkzniD0IAth0h+2hP0iulbN7HBZMPMeg/YxuMfw1w4dBPZe+lAc/eQKRV2afp8XYr2
+        hT24hxLfBGdN9pq2oahlKlkcRYq9VKn7XgIAhESiiCBZdwF6wy7AH2NpbE1l6v3CcGliN3sXSluRS
+        vHI0Ju0Elox8AjwmMO1rY7YwAlMTfmLMtx9EssBvX/YaTmFDLCoORALz3wQS6wOdX7yY9t1ILaKgN
+        fwzpq7K1g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iebmN-0002pk-NM; Tue, 10 Dec 2019 09:26:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7096300596;
+        Tue, 10 Dec 2019 10:24:41 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1E45D2010F142; Tue, 10 Dec 2019 10:26:01 +0100 (CET)
+Date:   Tue, 10 Dec 2019 10:26:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
+ kthread
+Message-ID: <20191210092601.GK2844@hirez.programming.kicks-ass.net>
+References: <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210084413.21957-1-bhe@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210054330.GF27253@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 10, 2019 at 11:13:30AM +0530, Srikar Dronamraju wrote:
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 44123b4d14e8..82126cbf62cd 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2664,7 +2664,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   */
+>  int wake_up_process(struct task_struct *p)
+>  {
+> -	return try_to_wake_up(p, TASK_NORMAL, 0);
+> +	int wake_flags = 0;
+> +
+> +	if (is_per_cpu_kthread(p))
+> +		wake_flags = WF_KTHREAD;
+> +
+> +	return try_to_wake_up(p, TASK_NORMAL, wake_flags);
+>  }
+>  EXPORT_SYMBOL(wake_up_process);
 
+Why wake_up_process() and not try_to_wake_up() ? This way
+wake_up_state(.state = TASK_NORMAL() is no longer the same as
+wake_up_process(), and that's weird!
 
-On 10/12/19 7:44 pm, Baoquan He wrote:
-> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
-> parameter") a global varialbe global max_mem_size is added to store
-                  typo ^^^
-> the value parsed from 'mem= ', then checked when memory region is
-> added. This truly stops those DIMM from being added into system memory
-> during boot-time.
-> 
-> However, it also limits the later memory hotplug functionality. Any
-> memory board can't be hot added any more if its region is beyond the
-> max_mem_size. System will print error like below:
-> 
-> [  216.387164] acpi PNP0C80:02: add_memory failed
-> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
-> [  216.392187] acpi PNP0C80:02: Enumeration failure
-> 
-> From document of 'mem= ' parameter, it should be a restriction during
-> boot, but not impact the system memory adding/removing after booting.
-> 
->   mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
-> 	          ...
-> 
-> So fix it by also checking if it's during boot-time when restrict memory
-> adding. Otherwise, skip the restriction.
-> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 69a81a5709ff..36486f71e59f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6660,6 +6660,27 @@ static void set_skip_buddy(struct sched_entity *se)
+>  		cfs_rq_of(se)->skip = se;
+>  }
+>  
+> +static int kthread_wakeup_preempt(struct rq *rq, struct task_struct *p, int wake_flags)
+> +{
+> +	struct task_struct *curr = rq->curr;
+> +	struct cfs_rq *cfs_rq = task_cfs_rq(curr);
+> +
+> +	if (!(wake_flags & WF_KTHREAD))
+> +		return 0;
+> +
+> +	if (p->nr_cpus_allowed != 1 || curr->nr_cpus_allowed == 1)
+> +		return 0;
 
-The fix looks reasonable, but I don't get the use case. Booting with mem= is
-generally a debug option, is this for debugging memory hotplug + limited memory?
+Per the above, WF_KTHREAD already implies p->nr_cpus_allowed == 1.
 
-Balbir
+> +	if (cfs_rq->nr_running > 2)
+> +		return 0;
+> +
+> +	/*
+> +	 * Don't preempt, if the waking kthread is more CPU intensive than
+> +	 * the current thread.
+> +	 */
+> +	return p->nvcsw * curr->nivcsw >= p->nivcsw * curr->nvcsw;
+
+Both these conditions seem somewhat arbitrary. The number of context
+switch does not correspond to CPU usage _at_all_.
+
+vtime OTOH does reflect exactly that, if it runs a lot, it will be ahead
+in the tree.
+
+> +}
+> +
+>  /*
+>   * Preempt the current task with a newly woken task if needed:
+>   */
+> @@ -6716,7 +6737,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+>  	find_matching_se(&se, &pse);
+>  	update_curr(cfs_rq_of(se));
+>  	BUG_ON(!pse);
+> -	if (wakeup_preempt_entity(se, pse) == 1) {
+> +	if (wakeup_preempt_entity(se, pse) == 1 || kthread_wakeup_preempt(rq, p, wake_flags)) {
+>  		/*
+>  		 * Bias pick_next to pick the sched entity that is
+>  		 * triggering this preemption.
+
+How about something like:
+
+	if (wakeup_preempt_entity(se, pse) >= 1-!!(wake_flags & WF_KTHREAD))
+
+instead? Then we allow kthreads a little more preemption room.
