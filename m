@@ -2,52 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70355C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8752820637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4175320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014375;
-	bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
+	s=default; t=1576014383;
+	bh=IcOno1mqnFSoa4NxvV+ES7nTKiGmjKuk/TyPFW6PQyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hR2tZTjuGM+/VRCc1oonS45X/JxpfduNk+HBPL9okjrN1BwewYA7Py1fw5HPi7f0X
-	 RxO1QkdlbD6YriQiaO3nO75dvejV42EKHAPsPsWiAwlc0Zy0j/vPDpWFBW7kI4+BhZ
-	 xM+yIDHtCF7rhrU4UyKjerAgPOuEUVbji9F7AoWI=
+	b=Nu6bKSxH5U2FKes2eZdvVOPniADcmk+k83VAFCXPmlJ1Sv6lzj9SsTnskkFjXl6Qr
+	 uEQdx7a5wYrDTou8H7yRb6+IToq+0uXJgbqKcAGrudc+AwpmWeUehXzkSFRhmpw7RN
+	 1cBMy8O3bp95CjbJLexhhFeSzTFuRmHrNHQrLFNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfLJVqO (ORCPT
+        id S1729356AbfLJVcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:46:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36502 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfLJVcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:47 -0500
+        id S1729103AbfLJVci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27FC52073B;
-        Tue, 10 Dec 2019 21:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFE1B214AF;
+        Tue, 10 Dec 2019 21:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013566;
-        bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
+        s=default; t=1576013557;
+        bh=IcOno1mqnFSoa4NxvV+ES7nTKiGmjKuk/TyPFW6PQyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u57OUPSnZcLEvlWh3eJc9zP0NM8lSnXnYSvGUfzaKOnJ9TXRJXCV2ckDwGXZGV92C
-         GpZOnzdwrQodlDXMFTyHsjEibWqLTkuj7FCLmCcbPm0ih3SYRXDRfToCM5EUIQrkuF
-         NjH1RAiaK4ZoYdlV5mZ7IDYK1kMlp+xBSO8HQGcs=
+        b=uTEqePgAuF8YrUhvv7877BOqocP7sXnBEBCukKboLcvhoVbEkWfw9WZP1wooLCuV0
+         Z5296jc7ydHiWQbEkmjBCC8faM7khlQqOAhAAi/UvOoVUaWjUn2DIrALif28mBIrsz
+         ZzgOoVgn435crdsGvvDn3Vo9QTg4P5eCu5yoPkoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 021/177] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
-Date:   Tue, 10 Dec 2019 16:29:45 -0500
-Message-Id: <20191210213221.11921-21-sashal@kernel.org>
+Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 013/177] ath10k: fix backtrace on coredump
+Date:   Tue, 10 Dec 2019 16:29:37 -0500
+Message-Id: <20191210213221.11921-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,61 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Anilkumar Kolli <akolli@codeaurora.org>
 
-[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
+[ Upstream commit d98ddae85a4a57124f87960047b1b6419312147f ]
 
-When building cpupower with clang, the following warning appears:
+In a multiradio board with one QCA9984 and one AR9987
+after enabling the crashdump with module parameter
+coredump_mask=7, below backtrace is seen.
 
- utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
- prior initialization of this subobject [-Winitializer-overrides]
-                 .desc                   = N_("Processor Package C2"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                              ^~~~~~
- utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
- is here
-                 .desc                   = N_("Processor Package C9"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                             ^~~~~~
- 1 warning generated.
+vmalloc: allocation failure: 0 bytes
+ kworker/u4:0: page allocation failure: order:0, mode:0x80d2
+ CPU: 0 PID: 6 Comm: kworker/u4:0 Not tainted 3.14.77 #130
+ Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
+ (unwind_backtrace) from [<c021abf8>] (show_stack+0x10/0x14)
+ (dump_stack+0x80/0xa0)
+ (warn_alloc_failed+0xd0/0xfc)
+ (__vmalloc_node_range+0x1b4/0x1d8)
+ (__vmalloc_node+0x34/0x40)
+ (vzalloc+0x24/0x30)
+ (ath10k_coredump_register+0x6c/0x88 [ath10k_core])
+ (ath10k_core_register_work+0x350/0xb34 [ath10k_core])
+ (process_one_work+0x20c/0x32c)
+ (worker_thread+0x228/0x360)
 
-This appears to be a copy and paste or merge mistake because the name
-and id fields both have PC9 in them, not PC2. Remove the second
-assignment to fix the warning.
+This is due to ath10k_hw_mem_layout is not defined for AR9987.
+For coredump undefined hw ramdump_size is 0.
+Check for the ramdump_size before allocation memory.
 
-Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
-Link: https://github.com/ClangBuiltLinux/linux/issues/718
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Tested on: AR9987, QCA9984
+FW version: 10.4-3.9.0.2-00044
+
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/coredump.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-index f794d6bbb7e9f..3e4ff4a1cdf4b 100644
---- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
- 	{
- 		.name			= "PC9",
- 		.desc			= N_("Processor Package C9"),
--		.desc			= N_("Processor Package C2"),
- 		.id			= PC9,
- 		.range			= RANGE_PACKAGE,
- 		.get_count_percent	= hsw_ext_get_count_percent,
+diff --git a/drivers/net/wireless/ath/ath10k/coredump.c b/drivers/net/wireless/ath/ath10k/coredump.c
+index 4d28063052fec..385b84f24322d 100644
+--- a/drivers/net/wireless/ath/ath10k/coredump.c
++++ b/drivers/net/wireless/ath/ath10k/coredump.c
+@@ -1105,9 +1105,11 @@ static struct ath10k_dump_file_data *ath10k_coredump_build(struct ath10k *ar)
+ 		dump_tlv = (struct ath10k_tlv_dump_data *)(buf + sofar);
+ 		dump_tlv->type = cpu_to_le32(ATH10K_FW_CRASH_DUMP_RAM_DATA);
+ 		dump_tlv->tlv_len = cpu_to_le32(crash_data->ramdump_buf_len);
+-		memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
+-		       crash_data->ramdump_buf_len);
+-		sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
++		if (crash_data->ramdump_buf_len) {
++			memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
++			       crash_data->ramdump_buf_len);
++			sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
++		}
+ 	}
+ 
+ 	spin_unlock_bh(&ar->data_lock);
+@@ -1154,6 +1156,9 @@ int ath10k_coredump_register(struct ath10k *ar)
+ 	if (test_bit(ATH10K_FW_CRASH_DUMP_RAM_DATA, &ath10k_coredump_mask)) {
+ 		crash_data->ramdump_buf_len = ath10k_coredump_get_ramdump_size(ar);
+ 
++		if (!crash_data->ramdump_buf_len)
++			return 0;
++
+ 		crash_data->ramdump_buf = vzalloc(crash_data->ramdump_buf_len);
+ 		if (!crash_data->ramdump_buf)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
