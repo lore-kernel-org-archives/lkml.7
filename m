@@ -2,112 +2,97 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E87C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8755C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191C8207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLyQlMLO"
+	by mail.kernel.org (Postfix) with ESMTP id 94BAE2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575984727;
+	bh=5Kp7u4wjBjYIMAOigXKp0rSdPdVZYCQGCYAOXxbS8k0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X5FSwOl2IFmu/HaRr4n5u052i2+Zyf/4LirQB/TcEp5/gCydxAxkTc0Oi6ZaXjQTw
+	 LAC0lyN0zO6PsbouASYEILOcbgF26swTJ5SxIkrECHW6NRJOb12BQq89e7EqMbimRa
+	 nAnJNvhesck6zUcYI30LvGef9dU++CL/ElULM6H8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfLJNcA (ORCPT
+        id S1727494AbfLJNcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:32:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26913 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727061AbfLJNcA (ORCPT
+        Tue, 10 Dec 2019 08:32:06 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35973 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfLJNcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:32:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575984718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+zG80mYfBd3fViyzCn3KpotJdNxDgZHe7SOcelUNx0g=;
-        b=QLyQlMLOQ9mhnS3zQ6DEwvRoxNPlYGGOpN/a2Yps2ffB/PFshe0ce2GJLrlq5u3aET6d/Q
-        L90limQULW64MD4+6BXbZ9QVHIhtR7M1/o42tTC3E7REv2IpgJj/BgZM/qepZ+V38xZTHj
-        ST9VpGHnTwnd4TNzvJGBVW6SHkFkoNY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-4PL6x97iPfiz1xzNriYr1Q-1; Tue, 10 Dec 2019 08:31:57 -0500
-Received: by mail-wr1-f70.google.com with SMTP id c6so8906538wrm.18
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:31:57 -0800 (PST)
+        Tue, 10 Dec 2019 08:32:06 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so3220850wma.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:32:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+zG80mYfBd3fViyzCn3KpotJdNxDgZHe7SOcelUNx0g=;
-        b=Yemhr9RkANzMRgzXwtB8WTPcwmqExfYRDTGqk/XFWXkJEbdovCH6vBi9SG7cck44uB
-         Q48cyt5c8s581MRBOxiGEVZ6fR5JKfer24pTfkrSxyV5gX5J9wp5Tnm2NmN908coLI4m
-         1kouiWGJdNPnGNlongfVtL+qoU8BUx3fZG5SKT6V9Ufc0aw1X02ZEROslTjdUSe6GvnY
-         gPf+QHsIhcXrgz3NYeJiD1BdTzw2xOtjsoBUrNVH75iWDRFfd1OLDgrjjNRdTOEbx9Gr
-         AHsZ8gTCNwNcE6vr9MclARABNkhCnXGxPKBmgbsog/ePBtcIEFE5pD5nXLf5MgYElne+
-         9Xcg==
-X-Gm-Message-State: APjAAAUbPIAE58iea4me+9lP8XM2ovycFjZlwoUX+SXvTJFpF6aKfJHu
-        7Y9MVJad44dJtEPnmSfefurNPH+oi80lLPoHZFxIXHv0lq452u6DPvBTV//h58lIZzJ7lN7aGmS
-        kMyhFTiEBmInEUruwiqKMD5dj
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr3153938wrw.373.1575984716150;
-        Tue, 10 Dec 2019 05:31:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwfhzGVbFt8ye1oZ0Fqx1K1/PNOqob3EdPQ1TOnXC1rqknFM0Gg4Ty4IHcOaPiNjQiXQIi79Q==
-X-Received: by 2002:a5d:53c1:: with SMTP id a1mr3153914wrw.373.1575984715928;
-        Tue, 10 Dec 2019 05:31:55 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id z6sm3476706wrw.36.2019.12.10.05.31.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 05:31:55 -0800 (PST)
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, Peter Xu <peterx@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
- <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
- <20191210081958-mutt-send-email-mst@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8843d1c8-1c87-e789-9930-77e052bf72f9@redhat.com>
-Date:   Tue, 10 Dec 2019 14:31:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sLGCAePB0WCD0CcHo22bI6VRtDcHK5yA0M15WiUs63E=;
+        b=NyLnWC7FEv3JAPTALUQHMnedFYNjVlqfxqiHSMdW24njP5oqfqd35r87kKscIYq6db
+         30C6H/1QzqZ6brnYOuo06U0fzm6/J2EuOinv+uQSbNXlyrRupJ7UkmAwFxA7qpbXgW7z
+         OPlvEOxwRyYfNs2d3GZx2nhkCHhwihz64gL8rYYHQ/MUWHyVY/xjn2s4shOTEhX9eWez
+         KKkMfFmWYuewovGLw6kEkSHR1ZV/6jtYlWuITjD0KMMSS++35Jbts2mAziNITlLFw/gn
+         2TNej7dtYZOtXKDRM7Lzd8YTv45VJmRuM4JjdlJ7Y1NXWIGIGAx8ZvK2GZ6UjxbMYWRK
+         sAaQ==
+X-Gm-Message-State: APjAAAUxWdZL6IAsup7pKOD+EuBqfbzOQHVLd/gR/YlMEWY6nKm8rMJ6
+        l7mMpXQw1XWRhkUdxmZf5fo=
+X-Google-Smtp-Source: APXvYqxxfs6esQxTNXX9Wje3aNo9nzgksPCuQs0crWNfohnjc19G+i78e4E90onkNlPTlF5uX75Rmg==
+X-Received: by 2002:a05:600c:218f:: with SMTP id e15mr5137202wme.124.1575984724418;
+        Tue, 10 Dec 2019 05:32:04 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id n1sm3264821wrw.52.2019.12.10.05.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 05:32:03 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:32:02 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Message-ID: <20191210133202.GJ10404@dhcp22.suse.cz>
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <20191210072453.GI2984@MiWiFi-R3L-srv>
+ <20191210102834.GE10404@dhcp22.suse.cz>
+ <20191210104303.GN2984@MiWiFi-R3L-srv>
+ <20191210113341.GG10404@dhcp22.suse.cz>
+ <20191210125557.GA28917@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <20191210081958-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-X-MC-Unique: 4PL6x97iPfiz1xzNriYr1Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210125557.GA28917@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 14:25, Michael S. Tsirkin wrote:
->> There is no new infrastructure to track the dirty pages---it's just a
->> different way to pass them to userspace.
-> Did you guys consider using one of the virtio ring formats?
-> Maybe reusing vhost code?
+On Tue 10-12-19 20:55:57, Baoquan He wrote:
+[...]
+> Btw, as you said at above, I am confused by the '[KNL,BOOT]', what does
+> the 'BOOT' mean in the documentation of 'mem='? I checked all parameters
+> with 'BOOT', still don't get it clearly.
 
-There are no used/available entries here, it's unidirectional
-(kernel->user).
+This is a good question indeed. I have checked closer and this is what
+documentation says
+Documentation/admin-guide/kernel-parameters.rst
+"
+        BOOT    Is a boot loader parameter.
 
-> If you did and it's not a good fit, this is something good to mention
-> in the commit log.
-> 
-> I also wonder about performance numbers - any data here?
+Parameters denoted with BOOT are actually interpreted by the boot
+loader, and have no meaning to the kernel directly.
+"
 
-Yes some numbers would be useful.  Note however that the improvement is
-asymptotical, O(#dirtied pages) vs O(#total pages) so it may differ
-depending on the workload.
-
-Paolo
-
+and that really doesn't fit, right? So I went to check the full history
+git tree just to get to 2.4.0-test5 and no explanation whatsoever.
+Fun, isn't it? ;)
+-- 
+Michal Hocko
+SUSE Labs
