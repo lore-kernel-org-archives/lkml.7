@@ -2,196 +2,154 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF32C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E94CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93952073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97472073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="NHNem7yj"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="M2Synzj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfLJOL3 (ORCPT
+        id S1727528AbfLJOLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:11:29 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32240 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727145AbfLJOL2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:11:28 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAE0dAH013029;
-        Tue, 10 Dec 2019 09:11:12 -0500
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2047.outbound.protection.outlook.com [104.47.66.47])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2wraq3h2gd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Dec 2019 09:11:11 -0500
+        Tue, 10 Dec 2019 09:11:46 -0500
+Received: from mail-eopbgr10093.outbound.protection.outlook.com ([40.107.1.93]:16359
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727145AbfLJOLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:11:46 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fII2uZkmkmyCfBpjHdxwNwjnfugQaem9joE4tGuOuUICixzGVc7Os8sAaGSk8RSn4uhiCcDThXUf7jG6o4k36xL/x4M0S2cIcjxBdNGwj4Ka/i1KNbXcod+wpRm2Fo9zfk1Lr+l8M7I6dVyc0cZF5s0k2IkgI6cix/7VRC3GSW2F158twjUgUvj3oYWJ5Qh1eKPLSI2IgjcHoXBkGsSF0fJdL+oL+xIZLt5WzdcL29wWhsbV8rSIH5H9qVU7J7BCBJMYp8SalLg7OD2oZXzg32YG972q67LRzr3fHwRMuXgKbzmJvCoZkcHzcKqQaNrvTvG7bX1hiwtfXCVcJgOWOA==
+ b=H/gb4A0x5jrXXvFU7/2iRyVL0b+h0DBHJNLNUhH5bDJ3U0yFgoNeuQfpJ8h+/N9ZplyHAN0MxPi86esVfClCSfmh/jx7fHmKmtCMwqrdLz2nwSOLJKu/l+C7mDemyPyNKzPESYdXkmMqOHYaU9z2Hv/vlY1hJnchzRLAiy9+rAysqheoiOd3QrPBB89TFq60dJwcgKDiTnUzji5vHBiSXRvZCKUoy8N4ZZePcdCuDGHxglsrsOAikPPCM5jU5zJRxdRQSfUrsUwLYUpectrUK/B/8sd2PZfMQ0d0lOKyiB8givVPC39+3LnJtcc44qithFQEDUUuf6PTXHu2d/rM/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWWK5rKPuY2v1fSDcpuzUN4e4ZK64CY6kcAI4YYNRDc=;
- b=Kjx00ooUT0MfMGoBSklc6oBFv6ALoTvWlG0cPeeqDxOrmIj8ZbQBv4Z3v2qSJqCK2fYuEzcFBA93vNWLjQ+eDY9XALm8UDS0hFTP1l2Sy5XcBrcYU0kQ2hTLcuEhmYld/UWKMUMqB29kmrILhOGU8uWpRUHx6G+U5uaet/RxlB4TuipQE4tUNb/c0dHWecHe2Y7wm5NMGpzhYLe5HFK4B1jIODiRgzA3BIAQsbYk7TZJdKzoNXwjwa7x2kxrtAHr21hiFitssWEC7OTuuX8IGBGUdfhsT7mMn2gZXiOAFFXiAJ4ZiQkS+7igUxXn+n8SROqCGTtELxTPhoefdHBI2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ bh=Qvrvq8CaDXNQ9H+KopgVoVi5iINM1NaNrife4f9usCg=;
+ b=MbmjK9FkTcjjT7JMN3zplyOHA/tP9jpWLdhLSDHfgKzV45xMTvcIyv3zvmm547rw+A0v6xrTyXBtB93Qih6Fom3HkJQ5lqeC3gol/40dDgR4MD1aIZkEEbhzw0SuIFuYcIWCnm9e/9QxUemxpT6u3JviY3mnVddrgpkf17iTDJ/w7dVls/9DEM+BvlcbJKKbq++Gl1t2dLx/Y3IS8u1igJ0tVmWMsqb4OtZ1+f+Jw1Zd2ie4qgp1edSgMHonQVs7lqrlJxzymr7kiVmPxT31vgLjPwVU0Ond3vniEqxKQ++5ZKgxUehoi3mA0/GQoD/HwMSfkolbSHRXzojA2Sguyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWWK5rKPuY2v1fSDcpuzUN4e4ZK64CY6kcAI4YYNRDc=;
- b=NHNem7yj18Pplmxz9AgTI4MO403Dc4kXhAiZAfoJTIw+PZosQICzwpEmrfhLaL3U7zWWI7YiR/KA0lgNPWWVo0MW+CCBagr4OONCyosZajXvGjwm7FDb1YitYdUsS22wTE3YMvRBu9AaiYr10nZ1PoQtKgiwmcs2ims3lFifLUw=
-Received: from BN8PR03CA0019.namprd03.prod.outlook.com (2603:10b6:408:94::32)
- by MN2PR03MB5278.namprd03.prod.outlook.com (2603:10b6:208:1eb::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.12; Tue, 10 Dec
- 2019 14:11:10 +0000
-Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::200) by BN8PR03CA0019.outlook.office365.com
- (2603:10b6:408:94::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15 via Frontend
- Transport; Tue, 10 Dec 2019 14:11:10 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
- via Frontend Transport; Tue, 10 Dec 2019 14:11:10 +0000
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBAEB9kE026165
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 06:11:09 -0800
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 10 Dec
- 2019 09:11:08 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 10 Dec 2019 09:11:08 -0500
-Received: from saturn.ad.analog.com ([10.48.65.121])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBAEB4Wa010212;
-        Tue, 10 Dec 2019 09:11:05 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, <info@metux.net>,
-        <tglx@linutronix.de>, <m.felsch@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] Input: ads7846: use new `delay` structure for SPI transfer delays
-Date:   Tue, 10 Dec 2019 16:11:03 +0200
-Message-ID: <20191210141103.15910-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+ bh=Qvrvq8CaDXNQ9H+KopgVoVi5iINM1NaNrife4f9usCg=;
+ b=M2Synzj9fviy4cdNQtbHPsIsH5Ps9/Ou+uhHuAnHfUklim6uOvdh/CZ/BdvtCOd5XqR2ElqDwX/nd7pRyuOGMS+dfV+IEF6ceZkLuQRISVzxFlZAyvzenLlP9UpTSgHlfmpfUzpqMmLEnlMR6GORy2aPilMvpiB8XQgliqcSYmw=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3308.eurprd02.prod.outlook.com (52.134.66.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Tue, 10 Dec 2019 14:11:40 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::446e:c4f8:7e59:1c6d]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::446e:c4f8:7e59:1c6d%7]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
+ 14:11:40 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] Revert "drm/atmel-hlcdc: allow selecting a higher
+ pixel-clock than requested"
+Thread-Topic: [PATCH 4/5] Revert "drm/atmel-hlcdc: allow selecting a higher
+ pixel-clock than requested"
+Thread-Index: AQHVr11DyxIz9S+dLEWyrkArJlSyg6ezaL2A
+Date:   Tue, 10 Dec 2019 14:11:40 +0000
+Message-ID: <4c3ffc48-7aa5-1e48-b0e9-a50c4eea7c38@axentia.se>
+References: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
+ <1575984287-26787-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1575984287-26787-5-git-send-email-claudiu.beznea@microchip.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR05CA0270.eurprd05.prod.outlook.com
+ (2603:10a6:3:fc::22) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3e50c755-22b3-45c4-74b8-08d77d7ae08a
+x-ms-traffictypediagnostic: DB3PR0202MB3308:
+x-microsoft-antispam-prvs: <DB3PR0202MB3308F4AE247A89CE60F74E17BC5B0@DB3PR0202MB3308.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(376002)(39830400003)(396003)(366004)(189003)(199004)(4326008)(81166006)(31686004)(81156014)(8676002)(6512007)(7416002)(6486002)(2906002)(64756008)(66446008)(36756003)(8936002)(186003)(66476007)(26005)(66946007)(5660300002)(66556008)(31696002)(53546011)(6506007)(86362001)(110136005)(508600001)(316002)(4001150100001)(2616005)(52116002)(54906003)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3308;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q4EvAuHaAQdvD6ziEE3XbKAt8mT4satyB9J1v7FnuVcKwoG+XHt2fUSvLdNMoIwk3BUpMKVIKpTvTV2CBPCNMyJFLzDXyRzsorlfrndXeE4SsCIxpEYtr28R9NkDzycyNsVqIKHBRkCJOy9h1sjX88HIHdzQ8U3YHa1orX8zuT+74rzbphxy/CUjnD6T/+4ZV3DgSJKlRg6K5lZa0NKX28jybLvAevI+S+egmJiHBH+cQHCerGaQ0z/LCNT3KCO8JFDQSsWpVqyvnlga8cfwbFmUTAMpsC2rwQ+rQIVXNDmHJ3p6xXdgWuLRhrJXadpfigX6UXH7k1snYz5GBDa38kcY0R1VWaitjCurAQcl3nJrM3e19px4Um633kmomfRkDS27ojF94LTaEVhvtFUdKAVdliuCy55gT4Qwv+toEzy6BFk5Mx4bpizsrnLYOMgk
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <432D8DF437FB454DBA44BABA59C50F33@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(346002)(396003)(199004)(189003)(478600001)(7636002)(2616005)(70206006)(246002)(8936002)(336012)(186003)(86362001)(26005)(8676002)(426003)(5660300002)(316002)(36756003)(2906002)(44832011)(7696005)(1076003)(356004)(70586007)(110136005)(107886003)(54906003)(4326008)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5278;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3165ce8d-3454-49f6-ea42-08d77d7acea5
-X-MS-TrafficTypeDiagnostic: MN2PR03MB5278:
-X-Microsoft-Antispam-PRVS: <MN2PR03MB527877A836897C64B65EBE92F95B0@MN2PR03MB5278.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:826;
-X-Forefront-PRVS: 02475B2A01
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gWlCN34nroZekYSJvqQvzq8dRVyd/9oSJkXD076RPraRQKdwT8vSdpk7H71MBzIOfC2dv+QuQP7Q5wjIWQsUAnWZMQu3eWZaFH+qvehXrTv562VP0KP6GuXI0MrcXEddqMry0joTqKnijXvYv2UApNxAFY57OIytxgz8MgwXihKg32zwjVYNuJD3SdgzWhKwhlMYXAPTzN8M7lLzrrJKkgOmHKEzFQ0hY3TAOc+JlKS+uIEidNls4X4Dqs0tOJ3yfY/jnrieqZRX5stMfYvb3XkJQPL5iwUZipVIW+9SFtYHxiKQFP+Z5x643REFeevMaw+v7IF4Q8lu/n82AH0HOyW5SJf6sc9T265W85hOIdwxNpdFAUnFNPmaafce6fN28jglvG0gekuDgA+gzpqWzGJstCrM4stAJbDHv/u2tSf3dBGH3Z4UHDalRF2bC4phudfMGtrqzqL9j5cCV37PmxvO9lBcyDr5c3lx9wli5qk=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 14:11:10.1265
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e50c755-22b3-45c4-74b8-08d77d7ae08a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 14:11:40.4695
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3165ce8d-3454-49f6-ea42-08d77d7acea5
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5278
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_03:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
- impostorscore=0 mlxscore=0 clxscore=1011 mlxlogscore=999 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100122
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 32cSkY93M5SVwRzmoy+/2P6MBw12UNBPZq+16FWrHVdU6yPStdDObjOwTGWK6HRJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3308
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent change to the SPI subsystem [1], a new `delay` struct was added
-to replace the `delay_usecs`. This change replaces the current `delay_usecs`
-with `delay` for this driver.
-
-The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-that both `delay_usecs` & `delay` are used (in this order to preserve
-backwards compatibility).
-
-[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-`spi_transfer` + spi_transfer_delay_exec()")
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/input/touchscreen/ads7846.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-index 51ddb204ca1b..8fd7fc39c4fd 100644
---- a/drivers/input/touchscreen/ads7846.c
-+++ b/drivers/input/touchscreen/ads7846.c
-@@ -333,7 +333,8 @@ static int ads7846_read12_ser(struct device *dev, unsigned command)
- 		req->xfer[1].len = 2;
- 
- 		/* for 1uF, settle for 800 usec; no cap, 100 usec.  */
--		req->xfer[1].delay_usecs = ts->vref_delay_usecs;
-+		req->xfer[1].delay.value = ts->vref_delay_usecs;
-+		req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
- 		spi_message_add_tail(&req->xfer[1], &req->msg);
- 
- 		/* Enable reference voltage */
-@@ -1018,7 +1019,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
- 	 * have had enough time to stabilize.
- 	 */
- 	if (pdata->settle_delay_usecs) {
--		x->delay_usecs = pdata->settle_delay_usecs;
-+		x->delay.value = pdata->settle_delay_usecs;
-+		x->delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 		x++;
- 		x->tx_buf = &packet->read_y;
-@@ -1061,7 +1063,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
- 
- 	/* ... maybe discard first sample ... */
- 	if (pdata->settle_delay_usecs) {
--		x->delay_usecs = pdata->settle_delay_usecs;
-+		x->delay.value = pdata->settle_delay_usecs;
-+		x->delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 		x++;
- 		x->tx_buf = &packet->read_x;
-@@ -1094,7 +1097,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
- 
- 		/* ... maybe discard first sample ... */
- 		if (pdata->settle_delay_usecs) {
--			x->delay_usecs = pdata->settle_delay_usecs;
-+			x->delay.value = pdata->settle_delay_usecs;
-+			x->delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 			x++;
- 			x->tx_buf = &packet->read_z1;
-@@ -1125,7 +1129,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
- 
- 		/* ... maybe discard first sample ... */
- 		if (pdata->settle_delay_usecs) {
--			x->delay_usecs = pdata->settle_delay_usecs;
-+			x->delay.value = pdata->settle_delay_usecs;
-+			x->delay.unit = SPI_DELAY_UNIT_USECS;
- 
- 			x++;
- 			x->tx_buf = &packet->read_z2;
--- 
-2.20.1
-
+T24gMjAxOS0xMi0xMCAxNDoyNCwgQ2xhdWRpdSBCZXpuZWEgd3JvdGU6DQo+IFRoaXMgcmV2ZXJ0
+cyBjb21taXQgZjZmN2FkMzIzNDYxM2Y2ZjdmMjdjMjUwMzZhYWYwNzhkZTA3ZTliMC4NCj4gKCJk
+cm0vYXRtZWwtaGxjZGM6IGFsbG93IHNlbGVjdGluZyBhIGhpZ2hlciBwaXhlbC1jbG9jayB0aGFu
+IHJlcXVlc3RlZCIpDQo+IGJlY2F1c2UgYWxsb3dpbmcgc2VsZWN0aW5nIGEgaGlnaGVyIHBpeGVs
+IGNsb2NrIG1heSBvdmVyY2xvY2sNCj4gTENEIGRldmljZXMsIG5vdCBhbGwgb2YgdGhlbSBiZWlu
+ZyBjYXBhYmxlIG9mIHRoaXMuDQoNCldpdGhvdXQgdGhpcyBwYXRjaCwgdGhlcmUgYXJlIHBhbmVs
+cyB0aGF0IGFyZSAqc2V2ZXJseSogdW5kZXJjbG9ja2VkIChvbiB0aGUNCm1hZ25pdHVkZSBvZiA0
+ME1IeiBpbnN0ZWFkIG9mIDY1TUh6IG9yIHNvbWV0aGluZyBsaWtlIHRoYXQsIEkgZG9uJ3QgcmVt
+ZW1iZXINCnRoZSBleGFjdCBmaWd1cmVzKS4gQW5kIHRoZXkgYXJlIG9mIGNvdXJzZSBub3QgY2Fw
+YWJsZSBvZiB0aGF0LiBBbGwgcGFuZWxzDQpoYXZlICpzb21lKiBzbGFjayBhcyB0byB3aGF0IGZy
+ZXF1ZW5jaWVzIGFyZSBzdXBwb3J0ZWQsIGFuZCB0aGUgcGF0Y2ggd2FzDQp3cml0dGVuIHVuZGVy
+IHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIHByZWZlcnJlZCBmcmVxdWVuY3kgb2YgdGhlIHBhbmVs
+IHdhcw0KcmVxdWVzdGVkLCB3aGljaCBzaG91bGQgbGVhdmUgYXQgbGVhc3QgYSAqbGl0dGxlKiBo
+ZWFkcm9vbS4NCg0KU28sIEknbSBjdXJpb3VzIGFzIHRvIHdoYXQgcGFuZWwgcmVncmVzc2VkLiBP
+ciByYXRoZXIsIHdoYXQgcGl4ZWwtY2xvY2sgaXQgbmVlZHMNCmFuZCB3aGF0IGl0IGdldHMgd2l0
+aC93aXRob3V0IHRoZSBwYXRjaD8NCg0KT3IgaXMgdGhlIHJldmVydCBiYXNlZCBvbiBzb21lIHRo
+ZW9yeSBvZiBhIHBlcmNlaXZlZCByaXNrIG9mIHRvYXN0aW5nIGEgcGFuZWw/DQoNCkluIHNob3J0
+LCB0aGlzIHJldmVydCByZWdyZXNzZXMgbXkgdXNlIGNhc2UgYW5kIEkgd291bGQgbGlrZSBhdCBs
+ZWFzdCBhIGhvb2sgdG8NCnJlLWVuYWJsZSB0aGUgcmVtb3ZlZCBsb2dpYy4NCg0KQ2hlZXJzLA0K
+UGV0ZXINCg0KPiBDYzogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4NCj4gU2lnbmVkLW9m
+Zi1ieTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+IC0t
+LQ0KPiAgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYyB8IDEy
+IC0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGRlbGV0aW9ucygtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19jcnRj
+LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0Yy5jDQo+IGlu
+ZGV4IDcyMWZhODhiZjcxZC4uMWE3MGRmZjFhNDE3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0Yy5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19jcnRjLmMNCj4gQEAgLTExNywxOCArMTE3LDYg
+QEAgc3RhdGljIHZvaWQgYXRtZWxfaGxjZGNfY3J0Y19tb2RlX3NldF9ub2ZiKHN0cnVjdCBkcm1f
+Y3J0YyAqYykNCj4gIAkJZGl2ID0gRElWX1JPVU5EX1VQKHByYXRlLCBtb2RlX3JhdGUpOw0KPiAg
+CQlpZiAoQVRNRUxfSExDRENfQ0xLRElWKGRpdikgJiB+QVRNRUxfSExDRENfQ0xLRElWX01BU0sp
+DQo+ICAJCQlkaXYgPSBBVE1FTF9ITENEQ19DTEtESVZfTUFTSzsNCj4gLQl9IGVsc2Ugew0KPiAt
+CQlpbnQgZGl2X2xvdyA9IHByYXRlIC8gbW9kZV9yYXRlOw0KPiAtDQo+IC0JCWlmIChkaXZfbG93
+ID49IDIgJiYNCj4gLQkJICAgICgocHJhdGUgLyBkaXZfbG93IC0gbW9kZV9yYXRlKSA8DQo+IC0J
+CSAgICAgMTAgKiAobW9kZV9yYXRlIC0gcHJhdGUgLyBkaXYpKSkNCj4gLQkJCS8qDQo+IC0JCQkg
+KiBBdCBsZWFzdCAxMCB0aW1lcyBiZXR0ZXIgd2hlbiB1c2luZyBhIGhpZ2hlcg0KPiAtCQkJICog
+ZnJlcXVlbmN5IHRoYW4gcmVxdWVzdGVkLCBpbnN0ZWFkIG9mIGEgbG93ZXIuDQo+IC0JCQkgKiBT
+bywgZ28gd2l0aCB0aGF0Lg0KPiAtCQkJICovDQo+IC0JCQlkaXYgPSBkaXZfbG93Ow0KPiAgCX0N
+Cj4gIA0KPiAgCWNmZyB8PSBBVE1FTF9ITENEQ19DTEtESVYoZGl2KTsNCj4gDQoNCg==
