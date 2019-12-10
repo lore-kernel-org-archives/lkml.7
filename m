@@ -2,177 +2,71 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CC4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFB6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AC1206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DB120726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfLJJWP (ORCPT
+        id S1727053AbfLJJXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:22:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40477 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJWN (ORCPT
+        Tue, 10 Dec 2019 04:23:40 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:51668 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:22:13 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iebiV-0005Wh-IH; Tue, 10 Dec 2019 10:22:03 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 32E291C281A;
-        Tue, 10 Dec 2019 10:22:03 +0100 (CET)
-Date:   Tue, 10 Dec 2019 09:22:02 -0000
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/setup: Enhance the comments
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
+        Tue, 10 Dec 2019 04:23:40 -0500
+Received: from [79.140.114.95] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iebjS-0006yf-Jx; Tue, 10 Dec 2019 09:23:02 +0000
+Date:   Tue, 10 Dec 2019 10:23:01 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>,
+        acme@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        bp@alien8.de, bp@suse.de, christian@brauner.io, cyphar@cyphar.com,
+        dhowells@redhat.com, dvyukov@google.com, ebiederm@xmission.com,
+        frederic@kernel.org, gustavo@embeddedor.com, hpa@zytor.com,
+        jannh@google.com, jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mark.rutland@arm.com, mhiramat@kernel.org,
+        mingo@kernel.org, mingo@redhat.com, mtk.manpages@gmail.com,
+        namhyung@kernel.org, oleg@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        x86@kernel.org
+Subject: Re: WARNING in arch_install_hw_breakpoint
+Message-ID: <20191210092300.kigvxforfirpqitc@wittgenstein>
+References: <000000000000639f6a0584d11b82@google.com>
+ <0000000000007f8bf6059932fe10@google.com>
+ <201912091608.1DA5B7865F@keescook>
 MIME-Version: 1.0
-Message-ID: <157596972292.29619.10068918068668240468.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201912091608.1DA5B7865F@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Mon, Dec 09, 2019 at 04:10:13PM -0800, Kees Cook wrote:
+> On Sun, Dec 08, 2019 at 07:33:00AM -0800, syzbot wrote:
+> > syzbot suspects this bug was fixed by commit:
+> > 
+> > commit b3e5838252665ee4cfa76b82bdf1198dca81e5be
+> > Author: Christian Brauner <christian@brauner.io>
+> > Date:   Wed Mar 27 12:04:15 2019 +0000
+> > 
+> >     clone: add CLONE_PIDFD
+> 
+> That seems ... unlikely? I suspect this WARN should just be pr_err or
 
-Commit-ID:     360db4ace3117ac1d9936d529f59c653e337b0f5
-Gitweb:        https://git.kernel.org/tip/360db4ace3117ac1d9936d529f59c653e337b0f5
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 18 Nov 2019 16:03:39 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 10 Dec 2019 09:59:38 +01:00
+Very much so. :)
 
-x86/setup: Enhance the comments
-
-Update various comments, fix outright mistakes and meaningless descriptions.
-
-Also harmonize the style across the file, both in form and in language.
-
-Cc: linux-kernel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/setup.c | 41 ++++++++++++++++++++++++----------------
- 1 file changed, 25 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 7778ee0..b5ac993 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -43,11 +43,11 @@
- #include <asm/vsyscall.h>
- 
- /*
-- * max_low_pfn_mapped: highest direct mapped pfn under 4GB
-- * max_pfn_mapped:     highest direct mapped pfn over 4GB
-+ * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
-+ * max_pfn_mapped:     highest directly mapped pfn > 4 GB
-  *
-  * The direct mapping only covers E820_TYPE_RAM regions, so the ranges and gaps are
-- * represented by pfn_mapped
-+ * represented by pfn_mapped[].
-  */
- unsigned long max_low_pfn_mapped;
- unsigned long max_pfn_mapped;
-@@ -57,14 +57,23 @@ RESERVE_BRK(dmi_alloc, 65536);
- #endif
- 
- 
--static __initdata unsigned long _brk_start = (unsigned long)__brk_base;
--unsigned long _brk_end = (unsigned long)__brk_base;
-+/*
-+ * Range of the BSS area. The size of the BSS area is determined
-+ * at link time, with RESERVE_BRK*() facility reserving additional
-+ * chunks.
-+ */
-+static __initdata
-+unsigned long _brk_start = (unsigned long)__brk_base;
-+unsigned long _brk_end   = (unsigned long)__brk_base;
- 
- struct boot_params boot_params;
- 
- /*
-- * Machine setup..
-+ * These are the four main kernel memory regions, we put them into
-+ * the resource tree so that kdump tools and other debugging tools
-+ * recover it:
-  */
-+
- static struct resource rodata_resource = {
- 	.name	= "Kernel rodata",
- 	.start	= 0,
-@@ -95,16 +104,16 @@ static struct resource bss_resource = {
- 
- 
- #ifdef CONFIG_X86_32
--/* cpu data as detected by the assembly code in head_32.S */
-+/* CPU data as detected by the assembly code in head_32.S */
- struct cpuinfo_x86 new_cpu_data;
- 
--/* common cpu data for all cpus */
-+/* Common CPU data for all CPUs */
- struct cpuinfo_x86 boot_cpu_data __read_mostly;
- EXPORT_SYMBOL(boot_cpu_data);
- 
- unsigned int def_to_bigsmp;
- 
--/* for MCA, but anyone else can use it if they want */
-+/* For MCA, but anyone else can use it if they want */
- unsigned int machine_id;
- unsigned int machine_submodel_id;
- unsigned int BIOS_revision;
-@@ -390,15 +399,15 @@ static void __init memblock_x86_reserve_range_setup_data(void)
- /*
-  * Keep the crash kernel below this limit.
-  *
-- * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
-+ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
-  * due to mapping restrictions.
-  *
-- * On 64bit, kdump kernel need be restricted to be under 64TB, which is
-+ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
-  * the upper limit of system RAM in 4-level paging mode. Since the kdump
-- * jumping could be from 5-level to 4-level, the jumping will fail if
-- * kernel is put above 64TB, and there's no way to detect the paging mode
-- * of the kernel which will be loaded for dumping during the 1st kernel
-- * bootup.
-+ * jump could be from 5-level paging to 4-level paging, the jump will fail if
-+ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
-+ * no good way to detect the paging mode of the target kernel which will be
-+ * loaded for dumping.
-  */
- #ifdef CONFIG_X86_32
- # define CRASH_ADDR_LOW_MAX	SZ_512M
-@@ -809,7 +818,7 @@ void __init setup_arch(char **cmdline_p)
- 	/*
- 	 * Note: Quark X1000 CPUs advertise PGE incorrectly and require
- 	 * a cr3 based tlb flush, so the following __flush_tlb_all()
--	 * will not flush anything because the cpu quirk which clears
-+	 * will not flush anything because the CPU quirk which clears
- 	 * X86_FEATURE_PGE has not been invoked yet. Though due to the
- 	 * load_cr3() above the TLB has been flushed already. The
- 	 * quirk is invoked before subsequent calls to __flush_tlb_all()
+Christian
