@@ -2,127 +2,193 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B5AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1E4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545C520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A066A20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4Vp1W98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfLJMFY (ORCPT
+        id S1727370AbfLJMIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:05:24 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2170 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727224AbfLJMFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:05:23 -0500
-Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id C2BBDA83A5038B61B74C;
-        Tue, 10 Dec 2019 12:05:21 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 10 Dec 2019 12:05:21 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
- 2019 12:05:21 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
-        <chenxiang66@hisilicon.com>, <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <hare@suse.com>, <hch@lst.de>,
-        <axboe@kernel.dk>, <bvanassche@acm.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
- <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
- <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
- <6e513d25d8b0c6b95d37a64df0c27b78@www.loen.fr>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <06d1e2ff-9ec7-2262-25a0-4503cb204b0b@huawei.com>
-Date:   Tue, 10 Dec 2019 12:05:20 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <6e513d25d8b0c6b95d37a64df0c27b78@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Tue, 10 Dec 2019 07:08:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34812 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfLJMIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:08:15 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so1980804pln.1;
+        Tue, 10 Dec 2019 04:08:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l5uHiV+Yi1b/Weaw8ObG18hI7s+mQL2W7TckPvD0Lmw=;
+        b=i4Vp1W98Nl1Bui3BDaWfwjqHavE+84yuA5Oq/NNngoDymHqy40lpX0wJWRF15laQ3H
+         RK8TOdxrCq4G/QeARICf2XgwZof7eTk1qmGv7X9T40sSWaDdIYBFm60zecRsPFFbXCKT
+         +hNlW/WYxHPKhZFf+N3HsnpbTlkrLmQ8DpTB9b2Aa+VGMvCvvr+B7kNBkx17bmB8nYtx
+         7tmApRoh8ZzY8VIiDzw6wyJOfFVCYELv6VeMJwjrHPNe2hiMgUfoNRAV18a/Y86mIuUF
+         xQust9GBGsSVyXNjUqu0yU0aB6E8D+XaNme3V++1hR5w2Ipz0qRLJZPF7fVnFZpqMWxp
+         xU2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l5uHiV+Yi1b/Weaw8ObG18hI7s+mQL2W7TckPvD0Lmw=;
+        b=KYJygE0nYzym2qy9Z9jLEYLFwFZi1LVdApKq6bWNmp3xwsb8ALoeguEogc0qd7FHTq
+         ZkNe+GPA0UkhRSIf9bsDK6zWc0kqw1W6R/oP5v/hKLUqxJq+yPGA5dwmpMOOQPadZiUh
+         lROd9dxcAFRlwt8vmz+YkdVUiwGMVcl0YA8/2FD/CHTDEYNcxv25UjuTIqRw8gEE5PTw
+         SiQc9eKFmPMGKc46iIT0smKZMnh+4Kmj2J5B0Gu6W+AnJhXFoNdh2bAaChzhXa74KKUU
+         nuvvPmu7qh8rjG3UGGsXeRVbhXF1csvpoxDLAMe9/Gx3MeOpgm0lQG9ueG+odT4Nkd3d
+         F7gA==
+X-Gm-Message-State: APjAAAUPKNu6+Shm7Wmc3J8+ZLmF/lHUVJKU26fm7WLd2jG2IYJAX82+
+        +mkLf2pHB9LqTkoga3G2brM=
+X-Google-Smtp-Source: APXvYqzMbUr5xi4SJjUYbbZL+R0wEZ6fVbQcFoDtmRRcltk45AuEjKcpMO2nVrmYiwGmXZkR4VhLGg==
+X-Received: by 2002:a17:90a:8903:: with SMTP id u3mr4968272pjn.137.1575979694925;
+        Tue, 10 Dec 2019 04:08:14 -0800 (PST)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id r193sm3440295pfr.100.2019.12.10.04.08.09
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 10 Dec 2019 04:08:13 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org,
+        baolin.wang7@gmail.com, freeman.liu@unisoc.com,
+        zhang.lyra@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum thermal documentation
+Date:   Tue, 10 Dec 2019 20:07:17 +0800
+Message-Id: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 11:36, Marc Zyngier wrote:
-> On 2019-12-10 10:59, John Garry wrote:
->>>>
->>>> There is no lockup, just a potential performance boost in this change.
->>>>
->>>> My colleague Xiang Chen can provide specifics of the test, as he is
->>>> the one running it.
->>>>
->>>> But one key bit of info - which I did not think most relevant before
->>>> - that is we have 2x SAS controllers running the throughput test on
->>>> the same host.
->>>>
->>>> As such, the completion queue interrupts would be spread identically
->>>> over the CPUs for each controller. I notice that ARM GICv3 ITS
->>>> interrupt controller (which we use) does not use the generic irq
->>>> matrix allocator, which I think would really help with this.
->>>>
->>>> Hi Marc,
->>>>
->>>> Is there any reason for which we couldn't utilise of the generic irq
->>>> matrix allocator for GICv3?
->>>
->>
->> Hi Marc,
->>
->>> For a start, the ITS code predates the matrix allocator by about three
->>> years. Also, my understanding of this allocator is that it allows
->>> x86 to cope with a very small number of possible interrupt vectors
->>> per CPU. The ITS doesn't have such issue, as:
->>> 1) the namespace is global, and not per CPU
->>> 2) the namespace is *huge*
->>> Now, what property of the matrix allocator is the ITS code missing?
->>> I'd be more than happy to improve it.
->>
->> I think specifically the property that the matrix allocator will try
->> to find a CPU for irq affinity which "has the lowest number of managed
->> IRQs allocated" - I'm quoting the comment on 
->> matrix_find_best_cpu_managed().
-> 
-> But that decision is due to allocation constraints. You can have at most
-> 256 interrupts per CPU, so the allocator tries to balance it.
-> 
-> On the contrary, the ITS does care about how many interrupt target any
-> given CPU. The whole 2^24 interrupt namespace can be thrown at a single
-> CPU.
-> 
->> The ITS code will make the lowest online CPU in the affinity mask the
->> target CPU for the interrupt, which may result in some CPUs handling
->> so many interrupts.
-> 
-> If what you want is for the *default* affinity to be spread around,
-> that should be achieved pretty easily. Let me have a think about how
-> to do that.
+From: Baolin Wang <baolin.wang@unisoc.com>
 
-Cool, I anticipate that it should help my case.
+Add the Spreadtrum thermal documentation.
 
-I can also seek out some NVMe cards to see how it would help a more 
-"generic" scenario.
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+Changes from v1:
+ - Change to yaml format.
+---
+ .../devicetree/bindings/thermal/sprd-thermal.yaml  |   97 ++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
 
-Cheers,
-John
+diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+new file mode 100644
+index 0000000..92d208a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/sprd-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Spreadtrum thermal sensor controller bindings
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    const: sprd,ums512-thermal
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  nvmem-cells:
++    maxItems: 2
++    description:
++      Reference to nvmem nodes for the calibration data.
++
++  nvmem-cells-names:
++    maxItems: 2
++    items:
++      - const: thm_sign_cal
++      - const: thm_ratio_cal
++
++  "#thermal-sensor-cells":
++    const: 1
++
++  child-node:
++    description: Represent one thermal sensor.
++
++    properties:
++      reg:
++        description: Specify the sensor id.
++        maxItems: 1
++
++      nvmem-cells:
++        maxItems: 1
++        description:
++          Reference to an nvmem node for the calibration data.
++
++      nvmem-cells-names:
++        maxItems: 1
++        items:
++          - const: sen_delta_cal
++
++    required:
++      - reg
++      - nvmem-cells
++      - nvmem-cells-names
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - nvmem-cells
++  - nvmem-cells-names
++  - "#thermal-sensor-cells"
++
++examples:
++  - |
++        ap_thm0: thermal@32200000 {
++                compatible = "sprd,ums512-thermal";
++                reg = <0 0x32200000 0 0x10000>;
++                clock-names = "enable";
++                clocks = <&aonapb_gate 32>;
++                #thermal-sensor-cells = <1>;
++                nvmem-cells = <&thm0_sign>, <&thm0_ratio>;
++                nvmem-cell-names = "thm_sign_cal", "thm_ratio_cal";
++
++                prometheus0-sensor@0 {
++                        reg = <0>;
++                        nvmem-cells = <&thm0_sen0>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
++
++                ank1-sensor@1 {
++                        reg = <1>;
++                        nvmem-cells = <&thm0_sen1>;
++                        nvmem-cell-names = "sen_delta_cal";
++                };
++        };
++...
+-- 
+1.7.9.5
+
