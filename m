@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD96C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB587C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F168F2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC3B20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017245;
-	bh=GI466eaFq8/XIs0M1Zy1iGa8Bm7REhY6rlR8sEXAIbw=;
+	s=default; t=1576017249;
+	bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CclNi6bIHUeacpvjlS3xGCqONZuDc/ZM5ZioD+0swZLakMDhlAGy0yQzOt0nwYzKS
-	 yrRrouxqW27EphjwT/a/U/iVAIiIn3iTfz5JVppPYf8n0uIscA/uotoVnTnk4Ff+6j
-	 +d4da8rOdJh1UYN9w1NdnBPuDxutmr4CF0PI4HYc=
+	b=CuiBfjs3VJ59IInk0STEgCP8Ss5+RQdeKXPrOO9CZ4DmFt6hV3zp/Jm8ql6WWWkvK
+	 1C+xyP7rkQW5mtxKwMcJNjWYHJAbs19U5DOfqjz8mp8em3bjBN/g+QXzJiXO+GI7ik
+	 G0zsPyyD9oopkuXZ4Y6+GCXz6YFgwNfAfIO7ElQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfLJWeE (ORCPT
+        id S1728312AbfLJWeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbfLJWdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:49 -0500
+        id S1730012AbfLJWdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA902077B;
-        Tue, 10 Dec 2019 22:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB551207FF;
+        Tue, 10 Dec 2019 22:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017228;
-        bh=GI466eaFq8/XIs0M1Zy1iGa8Bm7REhY6rlR8sEXAIbw=;
+        s=default; t=1576017230;
+        bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dqSjANwS+++UTv87EcwWeIoE3Mv1fSeiwCCfw94r2Ky2CpygIZvPFya5ffpWVjJJ4
-         JWAMGWWcEr2TRZICm8YZoQpZRwg7G7Q8soQEVTu/d+8XFk0hmDmvjzV0ilsbUskfHp
-         mAIqq4cUoGRvRm1OYZoVc/aA4FTSxHxk06DFUask=
+        b=XKQ5NrOQ2IqRObfdRSLkGttOt0WWeXhqhwkw80MN+cmrxriq/OUFM3zQdj+Lu8oek
+         q6vbLIYu9cFY5+ezfAwL6AUDVMOvjEwL7pElu20KrRmXHrX8jCgUlXNZUU2H4FvA45
+         1Wu+Aykl0LT6lE3v3y29zB6js6n033VkBh4wun3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 26/71] usb: usbfs: Suppress problematic bind and unbind uevents.
-Date:   Tue, 10 Dec 2019 17:32:31 -0500
-Message-Id: <20191210223316.14988-26-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 28/71] iio: dac: ad7303: replace mlock with own lock
+Date:   Tue, 10 Dec 2019 17:32:33 -0500
+Message-Id: <20191210223316.14988-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,80 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
+[ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
 
-commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
-to a driver") added bind and unbind uevents when a driver is bound or
-unbound to a physical device.
+This change replaces indio_dev's mlock with the driver's own lock. The lock
+is mostly needed to protect state when changing the `dac_cache` info.
+The lock has been extended to `ad7303_read_raw()`, to make sure that the
+cache is updated if an SPI-write is already in progress.
 
-For USB devices which are handled via the generic usbfs layer (via
-libusb for example), this is problematic:
-Each time a user space program calls
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-and then later
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-The kernel will now produce a bind or unbind event, which does not
-really contain any useful information.
-
-This allows a user space program to run a DoS attack against programs
-which listen to uevents (in particular systemd/eudev/upowerd):
-A malicious user space program just has to call in a tight loop
-
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-
-With this loop the malicious user space program floods the kernel and
-all programs listening to uevents with tons of bind and unbind
-events.
-
-This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
-USBDEVFS_RELEASEINTERFACE.
-
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
-Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/devio.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/iio/dac/ad7303.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 7559d96695da6..4ef2484cf9935 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -640,8 +640,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	intf = usb_ifnum_to_if(dev, ifnum);
- 	if (!intf)
- 		err = -ENOENT;
--	else
-+	else {
-+		unsigned int old_suppress;
+diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
+index 4b0f942b89145..2e5e753ab7066 100644
+--- a/drivers/iio/dac/ad7303.c
++++ b/drivers/iio/dac/ad7303.c
+@@ -42,6 +42,7 @@ struct ad7303_state {
+ 	struct regulator *vdd_reg;
+ 	struct regulator *vref_reg;
+ 
++	struct mutex lock;
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+ 	 * transfer buffers to live in their own cache lines.
+@@ -80,7 +81,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 
+ 	if (pwr_down)
+ 		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
+@@ -91,7 +92,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	 * mode, so just write one of the DAC channels again */
+ 	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
+ 
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 	return len;
+ }
+ 
+@@ -117,7 +118,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
+ 
+ 	switch (info) {
+ 	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&st->lock);
+ 		*val = st->dac_cache[chan->channel];
++		mutex_unlock(&st->lock);
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		vref_uv = ad7303_get_vref(st, chan);
+@@ -145,11 +148,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
+ 		if (val >= (1 << chan->scan_type.realbits) || val < 0)
+ 			return -EINVAL;
+ 
+-		mutex_lock(&indio_dev->mlock);
++		mutex_lock(&st->lock);
+ 		ret = ad7303_write(st, chan->address, val);
+ 		if (ret == 0)
+ 			st->dac_cache[chan->channel] = val;
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&st->lock);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -213,6 +216,8 @@ static int ad7303_probe(struct spi_device *spi)
+ 
+ 	st->spi = spi;
+ 
++	mutex_init(&st->lock);
 +
-+		/* suppress uevents while claiming interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
-+	}
- 	if (err == 0)
- 		set_bit(ifnum, &ps->ifclaimed);
- 	return err;
-@@ -661,7 +668,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	if (!intf)
- 		err = -ENOENT;
- 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while releasing interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		usb_driver_release_interface(&usbfs_driver, intf);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
- 		err = 0;
- 	}
- 	return err;
+ 	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
+ 	if (IS_ERR(st->vdd_reg))
+ 		return PTR_ERR(st->vdd_reg);
 -- 
 2.20.1
 
