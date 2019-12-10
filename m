@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EA9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798ED207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCDE2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015898;
-	bh=Z+gxcSRBALymU/z+rCEXW7uPIV+JARB6XxH9QYktmxo=;
+	s=default; t=1576015902;
+	bh=CqcmmDdjuJ6RXhSdZZKilbhpEHoMGJnpGpaXaNnE4fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZvlLZ9MzXmTz+XWSH9jv46UfmBMuxtDzxtbcGZ8dLSFV65iQWRBWhcxiXT6dXraoY
-	 49x96jye/w52/kTC8abS2y/p175T9Y5BdV299iYynQd/cheo9+VCqpK7Wx3ULHVWWf
-	 ocAvzNRlUA+nrpqW/WOFyWu/AtwXDFWqUCntqhe0=
+	b=QdAf518l0uhmg52nas4KfvSUVGFHMbEAsqR+O+/gwZGqnBtWOI5NniT8zIwX8eZDS
+	 eWN1Y0axwN9sQCMjSE8t5EWnOxCP+UrwFb+DGk057gzOx3KegGB3E0WSbbjT2oUKkP
+	 YcB5qplzBC+zTW8MtPhxokh/SG6t00lSW0b2DHbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfLJWD5 (ORCPT
+        id S1730172AbfLJWLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:11:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbfLJWDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:45 -0500
+        id S1728255AbfLJWDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59452077B;
-        Tue, 10 Dec 2019 22:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5AF20637;
+        Tue, 10 Dec 2019 22:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015424;
-        bh=Z+gxcSRBALymU/z+rCEXW7uPIV+JARB6XxH9QYktmxo=;
+        s=default; t=1576015434;
+        bh=CqcmmDdjuJ6RXhSdZZKilbhpEHoMGJnpGpaXaNnE4fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUfKPAt1x+gXQRes2raQrjBxDgPtDIdhW3ymQewWgt9f0wif3ziE8tEaWxyMakrID
-         OCUN1Bh3TYRFIe/oA8MHSjRX6WiKEvmaEPEYEUsuCNID/GzBbGXP7nv225OQVkVAqw
-         x6kBQIZmHUwzRXSmUfgvOoU+Cd2NX7cPHrg/aJ68=
+        b=0sT1XPE30ls32mm18ksFel65j2K6lly1IfFIf43Gu7QiVcFMtf80FvDh5ZKV16l+X
+         H4nQ6qCO/O8xKaH71WgV080EHkIuuLZhBG2ZJC4+QSpWdVt3y2LwQLJd7fo3sgkO9J
+         zW0B9uh36ur+yFXI+Nd1ncz/+F05ysUHS6plDBhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 036/130] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Tue, 10 Dec 2019 17:01:27 -0500
-Message-Id: <20191210220301.13262-36-sashal@kernel.org>
+Cc:     Daniel Kurtz <djkurtz@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 044/130] drm/bridge: dw-hdmi: Restore audio when setting a mode
+Date:   Tue, 10 Dec 2019 17:01:35 -0500
+Message-Id: <20191210220301.13262-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,48 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
 
-[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
+[ Upstream commit fadfee3f9d8f114435a8a3e9f83a227600d89de7 ]
 
-v4l2-compliance fails with this message:
+When setting a new display mode, dw_hdmi_setup() calls
+dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
+the audio clock.
 
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
+We should only (re-)enable the audio clock if audio was already enabled
+when setting the new mode.
 
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
+Without this patch, on RK3288, there will be HDMI audio on some monitors
+if i2s was played to headphone when the monitor was plugged.
+ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
 
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191008102145.55134-1-cychiang@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 4dc08f5a60811..8a5c0d3e733e1 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1448,6 +1448,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 0febaafb8d895..cc1094f901255 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1743,7 +1743,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
  
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
+ 		/* HDMI Initialization Step E - Configure audio */
+ 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
+-		hdmi_enable_audio_clk(hdmi, true);
++		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
+ 	}
  
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_IS_INTERLACED) {
+ 	/* not for DVI mode */
 -- 
 2.20.1
 
