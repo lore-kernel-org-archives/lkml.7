@@ -2,103 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9FAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F033EC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5042B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59062077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575981942;
+	bh=BwdDEsRyP1FN087aCkpEelb6uamwGsSzpEAVkxjQrlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0t4roRkMuhOVRURYe51Tv64izhpV8u/BZX75t5W3eDEV7yDgm3GFcNdF0zW3dyW8Y
+	 +cb925CMjVHIhzCMeAxKYeLwNR9Cq53ICcRDT85P1Nsq4uYIa58p0KI6Zycc4QHRnl
+	 GbghQXdPawz5r2HndD2YJ37eIUc0+nuGsK5wRi7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfLJMpT (ORCPT
+        id S1727505AbfLJMpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:45:19 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:33564 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727211AbfLJMpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:45:19 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1ieetA-00058i-SI; Tue, 10 Dec 2019 13:45:16 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xBACjGo1005778
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 10 Dec 2019 13:45:16 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Subject: [PATCH 3/3] arm64: dts: rockchip: Enable sdio0 and uart0 on
- rk3399-roc-pc-mezzanine
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Organization: five technologies GmbH
-Message-ID: <ff50dec5-ed1d-6a0b-a387-757b8c351469@fivetechno.de>
-Date:   Tue, 10 Dec 2019 13:45:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 07:45:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:42958 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbfLJMpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:45:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01C1B1FB;
+        Tue, 10 Dec 2019 04:45:40 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51F903F52E;
+        Tue, 10 Dec 2019 04:45:39 -0800 (PST)
+Date:   Tue, 10 Dec 2019 12:45:37 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
+ regulator bindings
+Message-ID: <20191210124537.GD6110@sirena.org.uk>
+References: <20191118162502.GJ9761@sirena.org.uk>
+ <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
+ <20191119181325.GD3634@sirena.org.uk>
+ <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
+ <20191119193636.GH3634@sirena.org.uk>
+ <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
+ <20191129120925.GA5747@sirena.org.uk>
+ <ccc533df4e00bdcbe18ea45a0e0679161ff41354.camel@fi.rohmeurope.com>
+ <20191210121129.GA6110@sirena.org.uk>
+ <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1575981918;49010bb0;
-X-HE-SMSGID: 1ieetA-00058i-SI
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
+Content-Disposition: inline
+In-Reply-To: <557a4c5993a6fb16710342438f74f92bdfb40ec0.camel@fi.rohmeurope.com>
+X-Cookie: We have ears, earther...FOUR OF THEM!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mezzanine board carries an E key type M.2 slot. This is
-connected to USB, SDIO and UART0. Enable sdio and uart0 for use
-with e.g. wlan and/or bt M.2 cards.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
-Wifi via SDIO has been tested with Laird ST60-2230C (Marvell 88W8997)
-Bluetoth via USB has been tested with Intel 9260
-Bluetooth via UART has not been tested.
----
----
-  .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  | 21 +++++++++++++++++++
-  1 file changed, 21 insertions(+)
+--eqp4TxRxnD4KrmFZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-index 2db9d32ad54a..2acb3d500fb9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-@@ -70,3 +70,24 @@ pcie_perst: pcie-perst {
-  		};
-  	};
-  };
-+
-+&sdio0 {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v3_ngff>;
-+	vqmmc-supply = <&vcc_1v8>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+};
--- 
-2.24.0
+On Tue, Dec 10, 2019 at 12:41:47PM +0000, Vaittinen, Matti wrote:
 
+> The thing is that if we do initial setting of voltages (based on
+> binding data) we can set the voltages to registers before we switch to
+> that run-level. If we don't do initial setting then we will only do
+> setting when voltage change is actually requested - which may be too
+> late. (I actually heard somewhere that there is 40 uS time limit - but
+> I don't see how this is counted. Starting from what? - and I don't see
+> how this is guaranteed even with GPIO if interrupts are to be served).
+
+I suspect that if that limit is a real thing it's from some runtime
+performance metrics where people are doing benchmarking to verify that
+everything is working fine rather than an absolute thing that is a basic
+requirement for operation.
+
+> So, I am again wondering if I should just upstream the basic control
+> with I2C for SoCs which do not require fast DVS voltage changes and
+> perhaps maintain/provide own set of patches with additional interface
+> for run-level control for those customers who require it... Sorry for
+> being such a difficult guy. Decision making seems to not be my strong
+> point :/
+
+Yes, definitely submit the basic stuff separately - the GPIO changes can
+be reviewed as a separate, incremental patch.
+
+--eqp4TxRxnD4KrmFZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3vk3EACgkQJNaLcl1U
+h9Bvzgf+OZFrjIN4TOeKvgJNSsiobO5Bs89BP1ju3K4lv6xdMQ3fvnRTWKKCtbsb
+UZpmBdkVI6WQplfTQvAup1x6f9Uvxqngq2TsZKwm1JkfZY6CkoelQayXILnLCNgZ
+c4lOSXdIceavGUIzXvcy9DrOLvixaQRFcSTxKblkDQ4k1nCpdCfyZ2zTC0UxFVB4
+wtHK9/TuD83EfEXTC0U+jSoTlqXB6SGY8iMNbUiV2wUQJGlZVBAM6kCneaDGMk1S
+tAO0+eUBuaT2MCYm/AHdjX4YxZGqstLzZJ7RAbHlVu/kW6xY4XN9oOi8TXkWZaH+
+shZxrjt43yVFuIqZGsKNKD++GvSPdg==
+=ttCh
+-----END PGP SIGNATURE-----
+
+--eqp4TxRxnD4KrmFZ--
