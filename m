@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E08AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD61C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0D32053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667DD2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015904;
-	bh=8wh+p64T8rURgFickUOAnFGXBpIYAInJHAGKYcjtebI=;
+	s=default; t=1576015914;
+	bh=tzIWuL4I+oLhLcnJ0dkLgbGro6s7v09DuAocLYhOiF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JiBrZR1Cv0p63JeBmjtBSPKEFUsxF3WeCIz7W7lnDmCvIqDclKrsTuzktZyWz02MX
-	 xQNZ3gcmQCLHJVy2U+nT8hpqtwpA5qrOWrmDSpSPZ3IMIscw3+dEH777CR4uh3DnZf
-	 vu3FqT49z3SY1csLqR8JCgv6mAUrw7kW/wNtWlRo=
+	b=pQMvDFz4LP4Kuj+PpeTCMoKkIuIoOAGDSBZDzjdL+Iu4AX3usZ/Rp4m4wFfzh/+YE
+	 eJdezpDfPpFi481OL69YXFWfjnAAK5VvCWBPhCjBQaWzKFpPx296MEo2frU6kJvp32
+	 OjAom/n4fUKOurV9etqeyOItRIyXOfvMGByw5NPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfLJWLk (ORCPT
+        id S1729461AbfLJWLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:11:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34422 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:11:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfLJWD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:56 -0500
+        id S1728135AbfLJWDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BF2214D8;
-        Tue, 10 Dec 2019 22:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5A52053B;
+        Tue, 10 Dec 2019 22:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015435;
-        bh=8wh+p64T8rURgFickUOAnFGXBpIYAInJHAGKYcjtebI=;
+        s=default; t=1576015427;
+        bh=tzIWuL4I+oLhLcnJ0dkLgbGro6s7v09DuAocLYhOiF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zCqUaXp51m/sbwqaA1mh0kNdQch+Ax//VmPI4fLKVzuWPlOYXRgOrEc5dKUxsM/tQ
-         fRBoORCy3sXrr4jpwuxLo+dBbL+bJruMSK50az0eXAqkng7uhMOvM1JuJH10OcZ+Gy
-         fnA4FQG8eot2wyjiTg6ND0iQKB3qZ9mydgpdmYzQ=
+        b=N1G1ikLGeJEIZrQ7WdiOWSD74Tk2KDEdKlzQLFoSsOrMwePqia/9rJxAI3xh8dor/
+         NMkWhoiizmOqRB4dzsWYWEnQhA66uJIP5WUlXxE20k2NxgjXBc/7BdtS9qmSQr4TT0
+         WP7sA674iSxFPTo9mcAnxjRlENAhDUujXsvt+p/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 045/130] perf test: Report failure for mmap events
-Date:   Tue, 10 Dec 2019 17:01:36 -0500
-Message-Id: <20191210220301.13262-45-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 038/130] media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel panic
+Date:   Tue, 10 Dec 2019 17:01:29 -0500
+Message-Id: <20191210220301.13262-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -63,41 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
+[ Upstream commit a37980ac5be29b83da67bf7d571c6bd9f90f8e45 ]
 
-When fail to mmap events in task exit case, it misses to set 'err' to
--1; thus the testing will not report failure for it.
+v4l2-compliance fails with this message:
 
-This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
-can report correct result.
+   warn: v4l2-test-formats.cpp(717): \
+   	TRY_FMT cannot handle an invalid pixelformat.
+   test VIDIOC_TRY_FMT: FAIL
 
-Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This causes the following kernel panic:
+
+Unable to handle kernel paging request at virtual address 56595561
+pgd = ecd80e00
+*pgd=00000000
+Internal error: Oops: 205 [#1] PREEMPT SMP ARM
+...
+CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
+	4.14.62-01715-gc8cd67f49a19 #1
+Hardware name: Generic DRA72X (Flattened Device Tree)
+task: ece44d80 task.stack: ecc6e000
+PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
+LR is at 0x8
+
+Because the driver fails to properly check the 'num_planes' values for
+proper ranges it ends up accessing out of bound data causing the kernel
+panic.
+
+Since this driver only handle single or dual plane pixel format, make
+sure the provided value does not exceed 2 planes.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/task-exit.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index 89c8e1604ca73..94fe5464bc6f3 100644
---- a/tools/perf/tests/task-exit.c
-+++ b/tools/perf/tests/task-exit.c
-@@ -104,6 +104,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- 	if (perf_evlist__mmap(evlist, 128, true) < 0) {
- 		pr_debug("failed to mmap events: %d (%s)\n", errno,
- 			 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		err = -1;
- 		goto out_delete_evlist;
- 	}
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index a136fb14bf1a7..5adafee98e4c4 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1663,7 +1663,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 			      &pix->height, MIN_H, MAX_H, H_ALIGN,
+ 			      S_ALIGN);
  
+-	if (!pix->num_planes)
++	if (!pix->num_planes || pix->num_planes > 2)
+ 		pix->num_planes = fmt->coplanar ? 2 : 1;
+ 	else if (pix->num_planes > 1 && !fmt->coplanar)
+ 		pix->num_planes = 1;
 -- 
 2.20.1
 
