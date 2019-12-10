@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0555DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955D7C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FDD207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7142053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015761;
-	bh=Kyspyl1ZOtu0CnBtIvJzbvCwRWXO6zZXmW9x+KxeQ08=;
+	s=default; t=1576015771;
+	bh=VJRtcpsfpAwpkoGFFGyFknZWq/Vw+SGLlryQ7+DE7Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zxnxk+PO+eshjRPH/c5Z0bkwa+voGZ4owgT62T4zj2KE5hIt0YMaDlpTkJ4bERKZt
-	 p8Mn1yW+6XNo6QP0+UEIOrZMP4hqmC0Pk6ynzRN7FTC8fPSHiJiGp2989F6LHiixRM
-	 82hH2yETHbUbp64yrZRI6fwnvjPsmrs/4qa329JA=
+	b=cJ96HK8cmFBxX6xUo07+IuZ3+1pia3d/uYN+YYirXjW12UMo+3pM+IL+4P/5m0XWz
+	 R8buF+PTOYwEaZtlIOgT8J1cpolqclMQ8juGSBYgar4bs0+4xpzptfY2dO8wSQL9l3
+	 B30RM/SZTW8n3uF+xnjlmE2K+M+MyK7U+BPbd3Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbfLJWJU (ORCPT
+        id S1730141AbfLJWJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:09:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfLJWEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:30 -0500
+        id S1728130AbfLJWE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0C620828;
-        Tue, 10 Dec 2019 22:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B18F20838;
+        Tue, 10 Dec 2019 22:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015470;
-        bh=Kyspyl1ZOtu0CnBtIvJzbvCwRWXO6zZXmW9x+KxeQ08=;
+        s=default; t=1576015468;
+        bh=VJRtcpsfpAwpkoGFFGyFknZWq/Vw+SGLlryQ7+DE7Sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cnu5CxHz2sD+Yzyhsu0OHbJCWcsyOU95UwxEzb3R2RFcLV0IafyF0AazqQ2OglKy5
-         ik2tsPzhduyw4NJid2DQ/91866oB9Rm3oBgB6klQpVRPNgfARvRdu4f2d8/bdrDnkY
-         tQcyXviNpJDo/S5cDLzhDzaS0hRJ9y+/IHyps4SU=
+        b=o8ctW28QztQldPAcvIgk5fDFzseZkXwkjn8KJWRAjGVh3nWzccMupCsmr7qhs9M0z
+         Zhpo7Iw2N91yW4F+1CVIy4QeU8BQnuevi25O2W2CvzTKrfHV0At5XEUdxeQFCplmZW
+         5GrLB4fr8yx0WdktX/pxyY+Mo/cdW7xSGRE4KtIg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 075/130] media: rcar_drif: fix a memory disclosure
-Date:   Tue, 10 Dec 2019 17:02:06 -0500
-Message-Id: <20191210220301.13262-75-sashal@kernel.org>
+Cc:     Manjunath Patil <manjunath.b.patil@oracle.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 074/130] ixgbe: protect TX timestamping from API misuse
+Date:   Tue, 10 Dec 2019 17:02:05 -0500
+Message-Id: <20191210220301.13262-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,35 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Manjunath Patil <manjunath.b.patil@oracle.com>
 
-[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
+[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
 
-"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
-like msi2500 and airspy do, the fix initializes it to avoid
-memory disclosures.
+HW timestamping can only be requested for a packet if the NIC is first
+setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
+driver still allowed TX packets to request HW timestamping. In this
+situation, we see 'clearing Tx Timestamp hang' noise in the log.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fix this by checking that the NIC is configured for HW TX timestamping
+before accepting a HW TX timestamping request.
+
+Similar-to:
+   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
+   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
+
+Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_drif.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
-index 522364ff0d5d8..3871ed6a1fcbf 100644
---- a/drivers/media/platform/rcar_drif.c
-+++ b/drivers/media/platform/rcar_drif.c
-@@ -915,6 +915,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
- {
- 	struct rcar_drif_sdr *sdr = video_drvdata(file);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 4801d96c4fa91..0edfd199937d5 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -8379,7 +8379,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
  
-+	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
- 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
- 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
- 
+ 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
+ 	    adapter->ptp_clock) {
+-		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
++		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
++		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
+ 					   &adapter->state)) {
+ 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+ 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
 -- 
 2.20.1
 
