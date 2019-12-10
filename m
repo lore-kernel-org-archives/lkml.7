@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0154C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB03C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CF820836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E6920836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012714;
-	bh=nrKFeK8ZfpA0LOttrffsxHf9XaNKRKS8gtS1ILBWzz4=;
+	s=default; t=1576012718;
+	bh=vF3g0hw+3Ff1ci2v6urh1aDwao9IiHAd2H18RgCtfsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F66MKSHp59amqrTPQhTfN9dVDxvqCgIucy1C1ELShE5k1x+1ooPWMKOtO7ZrgefwK
-	 ochB+lZQ8XCgXjbMOhVN40hsNvtyHG5AwXEBo809l4RQjdduzWX4mP0Iqa2v4p8mk2
-	 rFwlxjrGz96ySWj2KU9KFGwyn+p6uAc39Dl2PdiE=
+	b=nB56kEy/S0JwgUD8h7916YB251fVNKEddrDrI4k/x28f0ZKdwMA/luV2LLxm5a1st
+	 dX9vtNSWQmGTAwlUiBpXxcpL6B/1KXtiyuTC8XwNLuje4g3CA2GWL6CcqD7GJsFPMR
+	 66C8Vd2NiHmCGej51XVJH2RL/vd1nYpS9EqO8fS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfLJVSd (ORCPT
+        id S1729050AbfLJVMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:18:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729059AbfLJVMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:41 -0500
+        id S1728757AbfLJVM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94682464B;
-        Tue, 10 Dec 2019 21:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02BCC205C9;
+        Tue, 10 Dec 2019 21:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012361;
-        bh=nrKFeK8ZfpA0LOttrffsxHf9XaNKRKS8gtS1ILBWzz4=;
+        s=default; t=1576012347;
+        bh=vF3g0hw+3Ff1ci2v6urh1aDwao9IiHAd2H18RgCtfsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4O4kVDTPfBp933OWfwDW+Rj692YBkJeJvKNQfrc5jZ5VY+Qgbs7Aeuz35vkpYkkG
-         RYEz+jcPbNEc6+3k4fBoBbSb7gKKILzGlDH3K0mqfTL19pNRALNLD9aVk7oms3/hcx
-         XmG+zw6AFWqTAQputvb0IdAfvBPkt2ovO7nNZP4I=
+        b=B6bsVPqm20ZEifarnMBu5UKxCDrFQxvzrxgchxZ9J7uAOLSGlamiPZNUBcQJoVrBh
+         OY1Xob5LxM0PFL0A99xs4tFfugd8RaxavqTBcTt9MNI44qBZ+72dzXdsUiFFXOfRQS
+         MhIxbftY9ZdsjpNKtfS1D0E4FjfXW1cI1ZzHd2I8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>, ralf@linux-mips.org,
-        jhogan@kernel.org, john@phrozen.org, NeilBrown <neil@brown.name>,
-        linux-mips@vger.kernel.org,
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 288/350] MIPS: ralink: enable PCI support only if driver for mt7621 SoC is selected
-Date:   Tue, 10 Dec 2019 16:06:33 -0500
-Message-Id: <20191210210735.9077-249-sashal@kernel.org>
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM power is managed by firmware
+Date:   Tue, 10 Dec 2019 16:06:22 -0500
+Message-Id: <20191210210735.9077-238-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -64,57 +67,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 3b2fa0c92686562ac0b8cf00c0326a45814f8e18 ]
+[ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
 
-Some versions of SoC MT7621 have three PCI express hosts. Some boards
-make use of those PCI through the staging driver mt7621-pci. Recently
-PCI support has been removed from MT7621 Soc kernel configuration due
-to a build error. This makes imposible to compile staging driver and
-produces a regression for gnubee based boards. Enable support for PCI
-again but enable it only if staging mt7621-pci driver is selected.
+On some platforms, the TPM power is managed by firmware and therefore we
+don't need to stop the TPM on suspend when going to a light version of
+suspend such as S0ix ("freeze" suspend state). Add a chip flag,
+TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
+platforms can probe for the usage of this light suspend and avoid
+touching the TPM state across suspend/resume.
 
-Fixes: c4d48cf5e2f0 ("MIPS: ralink: deactivate PCI support for SOC_MT7621")
-Cc: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: john@phrozen.org
-Cc: NeilBrown <neil@brown.name>
-Cc: linux-mips@vger.kernel.org
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Link: https://lore.kernel.org/r/20191019081233.7337-1-sergio.paracuellos@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrey Pronin <apronin@chromium.org>
+Cc: Duncan Laurie <dlaurie@chromium.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/ralink/Kconfig           | 1 +
- drivers/staging/mt7621-pci/Kconfig | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/tpm/tpm-interface.c | 8 +++++++-
+ drivers/char/tpm/tpm.h           | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
-index 1434fa60f3db1..94e9ce9944944 100644
---- a/arch/mips/ralink/Kconfig
-+++ b/arch/mips/ralink/Kconfig
-@@ -51,6 +51,7 @@ choice
- 		select MIPS_GIC
- 		select COMMON_CLK
- 		select CLKSRC_MIPS_GIC
-+		select HAVE_PCI if PCI_MT7621
- endchoice
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index d7a3888ad80f0..7f105490604c8 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
+ #include <linux/spinlock.h>
++#include <linux/suspend.h>
+ #include <linux/freezer.h>
+ #include <linux/tpm_eventlog.h>
  
- choice
-diff --git a/drivers/staging/mt7621-pci/Kconfig b/drivers/staging/mt7621-pci/Kconfig
-index af928b75a9403..ce58042f2f211 100644
---- a/drivers/staging/mt7621-pci/Kconfig
-+++ b/drivers/staging/mt7621-pci/Kconfig
-@@ -2,7 +2,6 @@
- config PCI_MT7621
- 	tristate "MediaTek MT7621 PCI Controller"
- 	depends on RALINK
--	depends on PCI
- 	select PCI_DRIVERS_GENERIC
- 	help
- 	  This selects a driver for the MediaTek MT7621 PCI Controller.
+@@ -394,7 +395,11 @@ int tpm_pm_suspend(struct device *dev)
+ 		return -ENODEV;
+ 
+ 	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
+-		return 0;
++		goto suspended;
++
++	if ((chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED) &&
++	    !pm_suspend_via_firmware())
++		goto suspended;
+ 
+ 	if (!tpm_chip_start(chip)) {
+ 		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+@@ -405,6 +410,7 @@ int tpm_pm_suspend(struct device *dev)
+ 		tpm_chip_stop(chip);
+ 	}
+ 
++suspended:
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index a7fea3e0ca86a..f3bf2f7f755c8 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -162,6 +162,7 @@ enum tpm_chip_flags {
+ 	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
+ 	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
+ 	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
++	TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED	= BIT(6),
+ };
+ 
+ #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
 -- 
 2.20.1
 
