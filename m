@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B12C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07985C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED53F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0532073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013534;
-	bh=tuAaTuL8euIcbGtYBkcietDdMq711xgJAVedFgWRTR4=;
+	s=default; t=1576013538;
+	bh=6qxVuvGp1IqwShizSavmY8GXUi0ZLBs7ZhpmsN4Op/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7DZDq41LnbwQmpHCVI4j8dlDHZE/L5FrVw/9P0FcjWzM/D80KSwG3c3Xckk33jnR
-	 FiPAtg22YfuUhLfEhVOd1vnoAeGcmVIkf+jxktKauYKjj3YNLLOPmG19kGpnzgxRuz
-	 Kf68sUsEeE0n5wZIqTVWnq2rVY+z3eDuo1iESmww=
+	b=ryA6SsEDqDzrDbZt8is1OZTf+ApRy73EG50KSeVK2nUqPNVM1KJXU+09wax52r04V
+	 ebWiYibBQ/wiyVP8MIpbyjSdx0SA0qB2jgy8u2NQyZIL5cqtu35MBufg2L6mm6Y6g9
+	 0lEzi0nHwDGzQRQuKYyCOVJNuNB1tK21qPuxhods=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfLJVJS (ORCPT
+        id S1728322AbfLJVcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57440 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfLJVJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:13 -0500
+        id S1726777AbfLJVJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED99F246A5;
-        Tue, 10 Dec 2019 21:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A0D2469E;
+        Tue, 10 Dec 2019 21:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012152;
-        bh=tuAaTuL8euIcbGtYBkcietDdMq711xgJAVedFgWRTR4=;
+        s=default; t=1576012155;
+        bh=6qxVuvGp1IqwShizSavmY8GXUi0ZLBs7ZhpmsN4Op/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2pEo0erx/FZPIVgCRRxr+b5XY38Qh+/f9bcyZBgkKfasVuvtUJwJYZQA3Hol7uj5d
-         ziS24lXub72Lbadix4sYcGNmt/pHPgvsghGWYfwoysAVAG2Hxf838klw+jMyoxTvlm
-         ltAJT8o750VCwaTj7+9dKzlErapqizuxLoodV6SQ=
+        b=qjmrdYNHHzKh4KoKqki04HHqO5X2fqoaC+nJh8CKMtfalfq+y3jWHP7i+tQKTmYug
+         BnCSr5eyJOugbgR/DqMHw6Qtt9/UgA0BJegkjYBwRHgOhCB59b14JVAJDvsOhx5ewy
+         3sdvRGGWQbQIhHurNx5cg8jb4WuiUy6lajSU2G1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Le Ma <le.ma@amd.com>, Alex Deucher <alexander.deucher@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 115/350] drm/amd/powerplay: avoid disabling ECC if RAS is enabled for VEGA20
-Date:   Tue, 10 Dec 2019 16:03:40 -0500
-Message-Id: <20191210210735.9077-76-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 118/350] Bluetooth: btusb: avoid unused function warning
+Date:   Tue, 10 Dec 2019 16:03:43 -0500
+Message-Id: <20191210210735.9077-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,60 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Le Ma <le.ma@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit df9331e561dab0a451cbd6a679ee88a95f306fd6 ]
+[ Upstream commit 42d22098127d6384f789107f59caae87d7520fc4 ]
 
-Program THM_BACO_CNTL.SOC_DOMAIN_IDLE=1 will tell VBIOS to disable ECC when
-BACO exit. This can save BACO exit time by PSP on none-ECC SKU. Drop the setting
-for ECC supported SKU.
+The btusb_rtl_cmd_timeout() function is used inside of an
+ifdef, leading to a warning when this part is hidden
+from the compiler:
 
-Signed-off-by: Le Ma <le.ma@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drivers/bluetooth/btusb.c:530:13: error: unused function 'btusb_rtl_cmd_timeout' [-Werror,-Wunused-function]
+
+Use an IS_ENABLED() check instead so the compiler can see
+the code and then discard it silently.
+
+Fixes: d7ef0d1e3968 ("Bluetooth: btusb: Use cmd_timeout to reset Realtek device")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/bluetooth/btusb.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
-index df6ff92524011..b068d1c7b44d2 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
-@@ -29,7 +29,7 @@
- #include "vega20_baco.h"
- #include "vega20_smumgr.h"
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index a9c35ebb30f86..23e606aaaea49 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3807,8 +3807,8 @@ static int btusb_probe(struct usb_interface *intf,
+ 		btusb_check_needs_reset_resume(intf);
+ 	}
  
--
-+#include "amdgpu_ras.h"
+-#ifdef CONFIG_BT_HCIBTUSB_RTL
+-	if (id->driver_info & BTUSB_REALTEK) {
++	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
++	    (id->driver_info & BTUSB_REALTEK)) {
+ 		hdev->setup = btrtl_setup_realtek;
+ 		hdev->shutdown = btrtl_shutdown_realtek;
+ 		hdev->cmd_timeout = btusb_rtl_cmd_timeout;
+@@ -3819,7 +3819,6 @@ static int btusb_probe(struct usb_interface *intf,
+ 		 */
+ 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
+ 	}
+-#endif
  
- static const struct soc15_baco_cmd_entry clean_baco_tbl[] =
- {
-@@ -74,6 +74,7 @@ int vega20_baco_get_state(struct pp_hwmgr *hwmgr, enum BACO_STATE *state)
- int vega20_baco_set_state(struct pp_hwmgr *hwmgr, enum BACO_STATE state)
- {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)(hwmgr->adev);
-+	struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
- 	enum BACO_STATE cur_state;
- 	uint32_t data;
- 
-@@ -84,10 +85,11 @@ int vega20_baco_set_state(struct pp_hwmgr *hwmgr, enum BACO_STATE state)
- 		return 0;
- 
- 	if (state == BACO_STATE_IN) {
--		data = RREG32_SOC15(THM, 0, mmTHM_BACO_CNTL);
--		data |= 0x80000000;
--		WREG32_SOC15(THM, 0, mmTHM_BACO_CNTL, data);
--
-+		if (!ras || !ras->supported) {
-+			data = RREG32_SOC15(THM, 0, mmTHM_BACO_CNTL);
-+			data |= 0x80000000;
-+			WREG32_SOC15(THM, 0, mmTHM_BACO_CNTL, data);
-+		}
- 
- 		if(smum_send_msg_to_smc_with_parameter(hwmgr, PPSMC_MSG_EnterBaco, 0))
- 			return -EINVAL;
+ 	if (id->driver_info & BTUSB_AMP) {
+ 		/* AMP controllers do not support SCO packets */
 -- 
 2.20.1
 
