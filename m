@@ -2,125 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129B7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F37C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBE32071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED08320726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="rUHufGCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLJCWD (ORCPT
+        id S1726691AbfLJCZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:22:03 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50650 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726598AbfLJCWD (ORCPT
+        Mon, 9 Dec 2019 21:25:53 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41010 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfLJCZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:22:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TkUheNY_1575944515;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TkUheNY_1575944515)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 10 Dec 2019 10:21:58 +0800
-Subject: Re: [PATCH v5 0/2] sched/numa: introduce numa locality
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
-Message-ID: <96342524-142e-c616-1e7e-ce05dfd9ca09@linux.alibaba.com>
-Date:   Tue, 10 Dec 2019 10:19:58 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Mon, 9 Dec 2019 21:25:53 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so17990695ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 18:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hGHO2M5txop41S0pm7dDz8V62aTHzW6Nn2xeNv86ayQ=;
+        b=rUHufGCp6EIf5KY8l3khfho84MdZP2MW0bW/pAL4vexbHeUugMe4fewy1MBR8OLfZB
+         9kEZg/8gBhBaPuYlaIRyIV2tEeBcZbUJKBpcnK9GnbrmVPHV5dO9CoaFP1b5FOYvCm6F
+         HnLqHZxL/iepXS5n2ZwrBZIGAQaIYurJ81aF3d/Tz6yq2JtV3W7RPnf2sLp57DJ66l9q
+         TRKr2b51NokEpFLSzN+433yT08nm3NfFsAOlLF7QxM1oRaz4nVM0tarfE2FKoptyHKgb
+         4jBQChzEQvvvuKCcUAlu7FzFZXURFn8FV2NJBujpKNbqTtgk2SekOZMALKbYLp2EnXIL
+         wadg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hGHO2M5txop41S0pm7dDz8V62aTHzW6Nn2xeNv86ayQ=;
+        b=A43xFjVvT8AweSLl0cpmeKEEu2h+6AAuTSdqYeuFJbiyq8ZTcobnB0zSrtgLx0SDPc
+         jSlQg3Ez9uwFrBmYFlHLy8uyX/gXm+cwXZ9s7qPsqZD+7dtUHkpJ8S+XiwtLkTaS2fpo
+         TnzyXcG/5+/mFG9mWLcjNShOnWcqj75RpHPYndIN0gXCTKh8SN6J0KXEbOwCb5MbClvY
+         TSyOV6h9q2N+K893I8P6Q5rgdoSEoDIIi7fgzy0QQo57hyhAUgxvGs34FtmrHz98hwRm
+         yuoi0dnUWSJHpFE4fPdDrFpEpO3B+4enFjmaPpjhQ05dUhMAX66O4JOOrjEUMAKoZsO9
+         trZg==
+X-Gm-Message-State: APjAAAUcxn1rQjxSKNUDkcDBLCFibfNDCyRMVk+cFKtagvE1zCndtm5f
+        vwwn2/BFpGSMSlDcPNqx9iqSuzqqGuSUyyOPX/DW
+X-Google-Smtp-Source: APXvYqwaDMumZX1i/jL/oy22xRgwcKrHm1W5A0eXWF9G0Y2YJ22oQrnCcbln71FUczdl/ECUsqJi5ZNyZeKGBdsGNUI=
+X-Received: by 2002:a2e:89da:: with SMTP id c26mr19242792ljk.54.1575944751067;
+ Mon, 09 Dec 2019 18:25:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191210124047.40852ade@canb.auug.org.au>
+In-Reply-To: <20191210124047.40852ade@canb.auug.org.au>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 9 Dec 2019 21:25:40 -0500
+Message-ID: <CAHC9VhQaBpUeAsH8Gy0NHFvE+mrkNO6_sHv2qTriiYCbfbU89A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the selinux tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jamorris@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Ingo
+On Mon, Dec 9, 2019 at 8:40 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Hi all,
+>
+> After merging the selinux tree, today's linux-next build (powerpc
+> pseries_le_defconfig) failed like this:
+>
+> ld: security/lsm_audit.o:(.toc+0x0): undefined reference to `lockdown_reasons'
+>
+> Caused by commit
+>
+>   59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+>
+> CONFIG_SECURITY is not set for this build, but CONFIG_AUDIT is set.
+>
+> I applied the following hack for today:
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 10 Dec 2019 12:28:16 +1100
+> Subject: [PATCH] security,lockdown,selinux: hack for !CONFIG_SECURITY
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  security/lsm_audit.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+> index 2d2bf49016f4..f97a3337f307 100644
+> --- a/security/lsm_audit.c
+> +++ b/security/lsm_audit.c
+> @@ -427,8 +427,10 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+>                                  a->u.ibendport->port);
+>                 break;
+>         case LSM_AUDIT_DATA_LOCKDOWN:
+> +#ifdef CONFIG_SECURITY
+>                 audit_log_format(ab, " lockdown_reason=");
+>                 audit_log_string(ab, lockdown_reasons[a->u.reason]);
+> +#endif
+>                 break;
+>         } /* switch (a->type) */
+>  }
 
-We have reformed the implementation for several times, now it's very
-simple and easy to use, there are also a document to guide admin on
-how to use not only the NUMA locality, but also other per-cgroup NUMA
-statistics, we hope this could make things easier for other NUMA users.
+Thanks for letting me know.  I'm sorry about that Stephen, I'll send
+out a little more generic patch in just a minute as a RFC.
 
-As now there are no more comments, would you please take a look at this
-patch set, see if it's good enough to be picked?
-
-Regards,
-Michael Wang
-
-
-On 2019/12/5 下午2:53, 王贇 wrote:
-> Since v4:
->   * improved documentation
-> Since v3:
->   * fix comments and improved documentation
-> Since v2:
->   * simplified the locality concept & implementation
-> Since v1:
->   * improved documentation
-> 
-> Modern production environment could use hundreds of cgroup to control
-> the resources for different workloads, along with the complicated
-> resource binding.
-> 
-> On NUMA platforms where we have multiple nodes, things become even more
-> complicated, we hope there are more local memory access to improve the
-> performance, and NUMA Balancing keep working hard to achieve that,
-> however, wrong memory policy or node binding could easily waste the
-> effort, result a lot of remote page accessing.
-> 
-> We need to notice such problems, then we got chance to fix it before
-> there are too much damages, however, there are no good monitoring
-> approach yet to help catch the mouse who introduced the remote access.
-> 
-> This patch set is trying to fill in the missing pieces， by introduce
-> the per-cgroup NUMA locality info, with this new statistics, we could
-> achieve the daily monitoring on NUMA efficiency, to give warning when
-> things going too wrong.
-> 
-> Please check the second patch for more details.
-> 
-> Michael Wang (2):
->   sched/numa: introduce per-cgroup NUMA locality info
->   sched/numa: documentation for per-cgroup numa statistics
-> 
->  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  include/linux/sched.h                           |  15 ++
->  include/linux/sched/sysctl.h                    |   6 +
->  init/Kconfig                                    |  11 ++
->  kernel/sched/core.c                             |  75 ++++++++++
->  kernel/sched/fair.c                             |  62 +++++++++
->  kernel/sched/sched.h                            |  12 ++
->  kernel/sysctl.c                                 |  11 ++
->  11 files changed, 384 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-> 
+-- 
+paul moore
+www.paul-moore.com
