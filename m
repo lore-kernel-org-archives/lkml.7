@@ -2,81 +2,77 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE2CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFFEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E7820726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC2020726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575969004;
+	bh=Qctr8HIQnkvJiRTSy7Zh1Yobn98pvpQLUdiwXsbTTG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lq/hT0GA3DarbjuSnw/0D4TTaBFAl0ENudSLy59EN4+VqEDth0uJjcoM/Nw44aX2w
+	 uQ0wqf5XcxUiJe6ZmFHJATdLSxLxXpGWArLTfRAoLOw11z8FE5UXMi7qCGEiHOt8yE
+	 ns7cko93CEZdjPwieI+BOu9axBy3Qf3IAZ2WYe0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfLJJJj (ORCPT
+        id S1727223AbfLJJKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:09:39 -0500
-Received: from comms.puri.sm ([159.203.221.185]:54324 "EHLO comms.puri.sm"
+        Tue, 10 Dec 2019 04:10:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbfLJJJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:09:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 16C30E10EC;
-        Tue, 10 Dec 2019 01:09:37 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id s3CwpN2XUNh5; Tue, 10 Dec 2019 01:09:36 -0800 (PST)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     robh@kernel.org, mark.rutland@arm.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, kernel@puri.sm,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH] arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
-Date:   Tue, 10 Dec 2019 10:08:57 +0100
-Message-Id: <20191210090857.10663-1-martin.kepplinger@puri.sm>
-In-Reply-To: <20191203130336.18763-1-martin.kepplinger@puri.sm>
-References: <20191203130336.18763-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        id S1726986AbfLJJKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:10:02 -0500
+Received: from cam-smtp0.cambridge.arm.com (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F1E2073B;
+        Tue, 10 Dec 2019 09:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575969002;
+        bh=Qctr8HIQnkvJiRTSy7Zh1Yobn98pvpQLUdiwXsbTTG4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RzJZYobFhmU8319DmaxAyhUIfIU57jH6OE0svbr9IY1Zl2QwcereuxxzWTlAH3npn
+         9To1nU9eZq4WBPd9RkehGAyXaYHmgSiRjRyVlotbUiE6+tCfhAv6ZZ5OYfLW7W6KoQ
+         Hw+8zKYnQqWWoDxgUQ5MJHTov6ujqiNmSGI+E6qg=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Richard Narron <comet.berkeley@gmail.com>
+Subject: [GIT PULL 0/1] EFI fix for v5.5
+Date:   Tue, 10 Dec 2019 10:09:44 +0100
+Message-Id: <20191210090945.11501-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Angus Ainslie (Purism)" <angus@akkea.ca>
+The following changes since commit b418d660bb9798d2249ac6a46c844389ef50b6a5:
 
-The LSM9DS1 uses a high level interrupt.
+  efi/earlycon: Remap entire framebuffer after page initialization (2019-12-08 12:42:19 +0100)
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
+are available in the Git repository at:
 
-Any objections or questions about the previously sent accelerometer DT
-description? It and this follow-up bugfix is what we're running for
-quite some time now.
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git efi-urgent
 
-thanks,
+for you to fetch changes up to e943a5491f445c0d39ec69e897eb1fd180d09ffd:
 
-                             martin
+  efi: don't attempt to map RCI2 config table if it doesn't exist (2019-12-10 10:08:24 +0100)
 
+----------------------------------------------------------------
+Another EFI fix for the v5.5 cycle:
+- Avoid dereferencing the RCI2 configuration table address if it hasn't
+  been assigned.
 
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      efi: don't attempt to map RCI2 config table if it doesn't exist
 
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index 2834d273bfdf..8de24a2d5234 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -429,7 +429,7 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_imu>;
- 		interrupt-parent = <&gpio3>;
--		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
- 		vdd-supply = <&reg_3v3_p>;
- 		vddio-supply = <&reg_3v3_p>;
- 	};
--- 
-2.20.1
-
+ drivers/firmware/efi/rci2-table.c | 3 +++
+ 1 file changed, 3 insertions(+)
