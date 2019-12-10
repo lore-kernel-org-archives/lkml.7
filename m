@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB733C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFFCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A8A24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F4A2468A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011884;
-	bh=CaIEzmNLIk68AeBJAIRs1D9WJLu/79Hwl/RZzyzBKEQ=;
+	s=default; t=1576011888;
+	bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KS6uAr7Jialu/4jHFhk+V13ZipcS2Rij3EvwhVe725HpAdqwSch7t3ZHM0hK4woHg
-	 J99wqMJaWgc7vpzRs7Mr9oAPPNUR/+1T8IVKIwnbkCbUNTzSBLyMJI9zkCD5kXLHb0
-	 Pkxa0SKqCfIdqGNJH4JZEYrVa3w9kD8vkEka6xmo=
+	b=XjVa6+KaWiuFXAFRdF19NGqJ7gYCyzPqsxfCKg0zaih+r+idr/7do4dqxxVe/8N6T
+	 VdYxMNWU2+qirfaCowPX819DGkhBei9jzByAM8KogrWCBCJ2zQ/eurQQJE8jcFmMcC
+	 yEI8xXkyqeVW8TCQiC69btQIXsd5RWvjZ6zioZxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLJVEn (ORCPT
+        id S1727529AbfLJVEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49696 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfLJVEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:34 -0500
+        id S1727403AbfLJVEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8352468B;
-        Tue, 10 Dec 2019 21:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E501524684;
+        Tue, 10 Dec 2019 21:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011874;
-        bh=CaIEzmNLIk68AeBJAIRs1D9WJLu/79Hwl/RZzyzBKEQ=;
+        s=default; t=1576011877;
+        bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSimjJhueOSDemAzTMA5jPDTWW8G1e/CPpk+Hd7AynYNsJcryFiuTd4enUuysg00H
-         O8oQ/jyX9ZJvjZaMnPV8Ma0Ht6UKLSyGdSjyux5O0yC3bML1a58VLzU3c6f/la5uz4
-         ZaIMgftwOSKtbKPRfFv12EcvIcPdSm2ikgkcO+s4=
+        b=h32rXEU4/NbMNr4UU1xCdOw/LqkZD42tvb/LH/fCPFtcHC298Rs5bFFPqx8K2CIsH
+         +KoOBOe94ffzP9SvJBY6bwoP3hxDEWWCWXn6fmza5CXCxU8eJCOhTU3UK7yMZw6woe
+         s+e5Bh25E3srr8KVzxAKYCojL1PJjoyi+SxC49qI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 026/350] rtlwifi: prevent memory leak in rtl_usb_probe
-Date:   Tue, 10 Dec 2019 15:58:38 -0500
-Message-Id: <20191210210402.8367-26-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 029/350] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
+Date:   Tue, 10 Dec 2019 15:58:41 -0500
+Message-Id: <20191210210402.8367-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -60,45 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
+[ Upstream commit 7666dfd533d4c55733037775d47a8e3551b341a2 ]
 
-In rtl_usb_probe if allocation for usb_data fails the allocated hw
-should be released. In addition the allocated rtlpriv->usb_data should
-be released on error handling path.
+This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
+24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
+this errata merely fixed an accidental double definition in the Hardware
+User's Manual Rev. 1.00.  The real definition is still present in later
+revisions of the manual (Rev. 1.50 and Rev. 2.00).
+
+Hence revert the commit to recover the definition.
+
+Based on a patch in the BSP by Takeshi Kihara
+<takeshi.kihara.df@renesas.com>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190904121658.2617-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 4b59f3b46b281..348b0072cdd69 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -1021,8 +1021,10 @@ int rtl_usb_probe(struct usb_interface *intf,
- 	rtlpriv->hw = hw;
- 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
- 				    GFP_KERNEL);
--	if (!rtlpriv->usb_data)
-+	if (!rtlpriv->usb_data) {
-+		ieee80211_free_hw(hw);
- 		return -ENOMEM;
-+	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+index 3808409cab385..5200dadd6b3ef 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
  
- 	/* this spin lock must be initialized early */
- 	spin_lock_init(&rtlpriv->locks.usb_lock);
-@@ -1083,6 +1085,7 @@ error_out2:
- 	_rtl_usb_io_handler_release(hw);
- 	usb_put_dev(udev);
- 	complete(&rtlpriv->firmware_loading_complete);
-+	kfree(rtlpriv->usb_data);
- 	return -ENODEV;
- }
- EXPORT_SYMBOL(rtl_usb_probe);
+ /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
++#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
+ #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
+ #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
+ #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
+@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ 
+ #define PINMUX_MOD_SELS	\
+ \
++			MOD_SEL1_31 \
+ MOD_SEL0_30_29		MOD_SEL1_30 \
+ 			MOD_SEL1_29 \
+ MOD_SEL0_28		MOD_SEL1_28 \
+@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
+-	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
++	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
+ 
+ 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
+ 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
+@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
+-	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
++	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
+ 
+ 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
+ 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
+@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
+ 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
+ 			     GROUP(
+-		/* RESERVED 31 */
+-		0, 0,
++		MOD_SEL1_31
+ 		MOD_SEL1_30
+ 		MOD_SEL1_29
+ 		MOD_SEL1_28
 -- 
 2.20.1
 
