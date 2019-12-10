@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A8AC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28778C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F31020828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F4C20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013872;
-	bh=q84UjZ5cXMVRYPGISLuJbUClYzzHs5ICAy5OblDRH6s=;
+	s=default; t=1576013879;
+	bh=kIKboCf9bWRKrQVh14Osv6JLDFIm2cgqKH2E8+RGDuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HRZK+tYl3RMAyh5a+76jX/DFQrRceg70WAXvgyo7kZp3YgMQlsCXACcUDRfI5hO41
-	 cUTop/iKlGzZZlQkhQ/m6tLpOl6g+CB1wWXxdRmmUTNewnDPsuQAG7/Ndr7f/wbbnn
-	 wfkic3YDiYCyYVq7/1mv0lLWO9LO3QDrIpxT4AS8=
+	b=Ni7RiBMpxmc9aPTm7bavr0Q23+b1C1bUb3et6QU5JlCqRk/djQE/pFrwcwHsq/Kpp
+	 D5yq84flSDSh6z/ObZc8u9Ib6JeuwS2+T2Wni4/hu3pYIOLvh5FA6C4EPSvVRKCjwN
+	 KmGD+Mp4T4tb+7hY1QJ8IzsV2HydMU0oAGjk4L6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbfLJVhq (ORCPT
+        id S1727459AbfLJVh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:37:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:37:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729870AbfLJVf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:27 -0500
+        id S1730250AbfLJVfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42E382465C;
-        Tue, 10 Dec 2019 21:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D23E42465A;
+        Tue, 10 Dec 2019 21:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013727;
-        bh=q84UjZ5cXMVRYPGISLuJbUClYzzHs5ICAy5OblDRH6s=;
+        s=default; t=1576013724;
+        bh=kIKboCf9bWRKrQVh14Osv6JLDFIm2cgqKH2E8+RGDuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btJj/PuK20KUil0Aai+4zuD+my2Yhf2NQB7pjN70rAzQ32rj+IRmtoKycbvk8p3BY
-         DzXF2BOzo1wqYbi4k+CL+OoqcyAGuSEhAtWGgMS0wiwEWglAVGXmen/jLr+kJq+Wsg
-         OBQzk0aJqn4JAs3RfBarNiWeHyCtW4RIsSNZZXt4=
+        b=CvTVn5TIZXWTuaGEs4HzHfNqZEN3/O4gv5cU/h0cNdfef+OGe9KPFB8jPGj3VueAw
+         grjk3M1Ccjyy4M87zcjaDWSA2jyQslOGwJFCgG5S7f6JnKNf4ShlK2J1AssWZ7tne5
+         j2biehHTtP+Q3g+qQJML01NJXaK56SsrF3XUiZ+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 152/177] spi: tegra20-slink: add missed clk_unprepare
-Date:   Tue, 10 Dec 2019 16:31:56 -0500
-Message-Id: <20191210213221.11921-152-sashal@kernel.org>
+Cc:     Wang Xuerui <wangxuerui@qiniu.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 150/177] iwlwifi: mvm: fix unaligned read of rx_pkt_status
+Date:   Tue, 10 Dec 2019 16:31:54 -0500
+Message-Id: <20191210213221.11921-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,51 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Wang Xuerui <wangxuerui@qiniu.com>
 
-[ Upstream commit 04358e40ba96d687c0811c21d9dede73f5244a98 ]
+[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+This is present since the introduction of iwlmvm.
+Example stack trace on MIPS:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
+[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+
+Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
+problem. No other unaligned accesses are spotted yet.
+
+Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 1427f343b39a3..d1187317bb5d7 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1078,7 +1078,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+index bfb163419c679..e6a67bc022090 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+@@ -62,6 +62,7 @@
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *****************************************************************************/
++#include <asm/unaligned.h>
+ #include <linux/etherdevice.h>
+ #include <linux/skbuff.h>
+ #include "iwl-trans.h"
+@@ -360,7 +361,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
+ 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
+ 	len = le16_to_cpu(rx_res->byte_count);
+-	rx_pkt_status = le32_to_cpup((__le32 *)
++	rx_pkt_status = get_unaligned_le32((__le32 *)
+ 		(pkt->data + sizeof(*rx_res) + len));
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1151,6 +1151,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1164,6 +1166,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
- 
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
- 
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
+ 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
 -- 
 2.20.1
 
