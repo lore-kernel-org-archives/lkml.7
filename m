@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD40DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E8220637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 693B820637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013882;
-	bh=HKQwQwt9URzvLpoLF9+y7xeyPu6chJAtdo5sgTYV7uE=;
+	s=default; t=1576013893;
+	bh=F1IG0oRGYgy/YNGF40gXySOC77GY6ZdfmAtk82skSyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0i2GXrm1ExGWs+0aHK5eKikQC4xupmxNbIm9vqvIDHafSxtIyzrIiOmZenfAkZw44
-	 0IswIBBtkdu8V74G3riqHFUhfSDzZiUmLyCZ4gTXvOiOjixD1xAaDL9UVBFEAEco/k
-	 e0fB6+i5wfLwVn6wQDuM1rwtALLbwhONcKgP6swQ=
+	b=GtvQywSqy+B/r7horwtqqhT6PPIKChStTnJrMLHny6F4G3CAahsyZKDphzfzw8VSi
+	 9DSiCRB4XJWhwbCTBmPhoytH/pSsNZxQ/LPNgOy6P6TArTYvp8eJvxYuyAfhBUWzHH
+	 lhMnRgl0CokOcnD8Gmf7DPmRe82BWpXMFJN6FXOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfLJVh5 (ORCPT
+        id S1729204AbfLJViM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:37:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:38:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbfLJVfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:25 -0500
+        id S1729430AbfLJVfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B54C524655;
-        Tue, 10 Dec 2019 21:35:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9649208C3;
+        Tue, 10 Dec 2019 21:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013723;
-        bh=HKQwQwt9URzvLpoLF9+y7xeyPu6chJAtdo5sgTYV7uE=;
+        s=default; t=1576013722;
+        bh=F1IG0oRGYgy/YNGF40gXySOC77GY6ZdfmAtk82skSyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRAelAC9NnvwxD+pYIL36Synom6bpU87oI4g5hU0LnyJ44U4ZWRiHvVvRt5H4oVZR
-         XerMUqgxDAz8uZGQuINikPt6jw0WU0cCgpq6bIGPcn7WqaGf19LJvgFoj70X8l5NUc
-         U/tVkwyglJE8YUcb5pcyaJoQ2uNDplQwhS51vSfY=
+        b=SCmIDV7bNgS1mVyHN5HtLDSWR6aTrvt0E37Ah2S+tF5QDRvERftn7155fGpBgNoHw
+         P9FBqBOSclZYNxZIeq6H7ad3Roja6ocnM8dPSSDVuOif6X06MEXq6p1AdHJYi1rQpr
+         hvrpq7fBmnR/1b3vU4dDLBLJvUmTqUN50Kfk5FKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 149/177] bcache: fix deadlock in bcache_allocator
-Date:   Tue, 10 Dec 2019 16:31:53 -0500
-Message-Id: <20191210213221.11921-149-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 148/177] tracing/kprobe: Check whether the non-suffixed symbol is notrace
+Date:   Tue, 10 Dec 2019 16:31:52 -0500
+Message-Id: <20191210213221.11921-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,154 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 84c529aea182939e68f618ed9813740c9165c7eb ]
+[ Upstream commit c7411a1a126f649be71526a36d4afac9e5aefa13 ]
 
-bcache_allocator can call the following:
+Check whether the non-suffixed symbol is notrace, since suffixed
+symbols are generated by the compilers for optimization. Based on
+these suffixed symbols, notrace check might not work because
+some of them are just a partial code of the original function.
+(e.g. cold-cache (unlikely) code is separated from original
+ function as FUNCTION.cold.XX)
 
- bch_allocator_thread()
-  -> bch_prio_write()
-     -> bch_bucket_alloc()
-        -> wait on &ca->set->bucket_wait
+For example, without this fix,
+  # echo p device_add.cold.67 > /sys/kernel/debug/tracing/kprobe_events
+  sh: write error: Invalid argument
 
-But the wake up event on bucket_wait is supposed to come from
-bch_allocator_thread() itself => deadlock:
+  # cat /sys/kernel/debug/tracing/error_log
+  [  135.491035] trace_kprobe: error: Failed to register probe event
+    Command: p device_add.cold.67
+               ^
+  # dmesg | tail -n 1
+  [  135.488599] trace_kprobe: Could not probe notrace function device_add.cold.67
 
-[ 1158.490744] INFO: task bcache_allocato:15861 blocked for more than 10 seconds.
-[ 1158.495929]       Not tainted 5.3.0-050300rc3-generic #201908042232
-[ 1158.500653] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1158.504413] bcache_allocato D    0 15861      2 0x80004000
-[ 1158.504419] Call Trace:
-[ 1158.504429]  __schedule+0x2a8/0x670
-[ 1158.504432]  schedule+0x2d/0x90
-[ 1158.504448]  bch_bucket_alloc+0xe5/0x370 [bcache]
-[ 1158.504453]  ? wait_woken+0x80/0x80
-[ 1158.504466]  bch_prio_write+0x1dc/0x390 [bcache]
-[ 1158.504476]  bch_allocator_thread+0x233/0x490 [bcache]
-[ 1158.504491]  kthread+0x121/0x140
-[ 1158.504503]  ? invalidate_buckets+0x890/0x890 [bcache]
-[ 1158.504506]  ? kthread_park+0xb0/0xb0
-[ 1158.504510]  ret_from_fork+0x35/0x40
+With this,
+  # echo p device_add.cold.66 > /sys/kernel/debug/tracing/kprobe_events
+  # cat /sys/kernel/debug/kprobes/list
+  ffffffff81599de9  k  device_add.cold.66+0x0    [DISABLED]
 
-Fix by making the call to bch_prio_write() non-blocking, so that
-bch_allocator_thread() never waits on itself.
+Actually, kprobe blacklist already did similar thing,
+see within_kprobe_blacklist().
 
-Moreover, make sure to wake up the garbage collector thread when
-bch_prio_write() is failing to allocate buckets.
+Link: http://lkml.kernel.org/r/157233790394.6706.18243942030937189679.stgit@devnote2
 
-BugLink: https://bugs.launchpad.net/bugs/1784665
-BugLink: https://bugs.launchpad.net/bugs/1796292
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 45408c4f9250 ("tracing: kprobes: Prohibit probing on notrace function")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c  |  5 ++++-
- drivers/md/bcache/bcache.h |  2 +-
- drivers/md/bcache/super.c  | 27 +++++++++++++++++++++------
- 3 files changed, 26 insertions(+), 8 deletions(-)
+ kernel/trace/trace_kprobe.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 9c3beb1e382b9..46794cac167e7 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -377,7 +377,10 @@ static int bch_allocator_thread(void *arg)
- 			if (!fifo_full(&ca->free_inc))
- 				goto retry_invalidate;
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index f9a0cd094b810..c61b2b0a99e9c 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -519,11 +519,10 @@ disable_trace_kprobe(struct trace_kprobe *tk, struct trace_event_file *file)
  
--			bch_prio_write(ca);
-+			if (bch_prio_write(ca, false) < 0) {
-+				ca->invalidate_needs_gc = 1;
-+				wake_up_gc(ca->set);
-+			}
- 		}
- 	}
- out:
-diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-index 83f0b91aeb90d..4677b18ac2810 100644
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -959,7 +959,7 @@ bool bch_cached_dev_error(struct cached_dev *dc);
- __printf(2, 3)
- bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
- 
--void bch_prio_write(struct cache *ca);
-+int bch_prio_write(struct cache *ca, bool wait);
- void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
- 
- extern struct workqueue_struct *bcache_wq;
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 2d60bcdb5b9c1..c45d9ad010770 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -525,12 +525,29 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
- 	closure_sync(cl);
- }
- 
--void bch_prio_write(struct cache *ca)
-+int bch_prio_write(struct cache *ca, bool wait)
+ #if defined(CONFIG_KPROBES_ON_FTRACE) && \
+ 	!defined(CONFIG_KPROBE_EVENTS_ON_NOTRACE)
+-static bool within_notrace_func(struct trace_kprobe *tk)
++static bool __within_notrace_func(unsigned long addr)
  {
- 	int i;
- 	struct bucket *b;
- 	struct closure cl;
+-	unsigned long offset, size, addr;
++	unsigned long offset, size;
  
-+	pr_debug("free_prio=%zu, free_none=%zu, free_inc=%zu",
-+		 fifo_used(&ca->free[RESERVE_PRIO]),
-+		 fifo_used(&ca->free[RESERVE_NONE]),
-+		 fifo_used(&ca->free_inc));
+-	addr = trace_kprobe_address(tk);
+ 	if (!addr || !kallsyms_lookup_size_offset(addr, &size, &offset))
+ 		return false;
+ 
+@@ -536,6 +535,28 @@ static bool within_notrace_func(struct trace_kprobe *tk)
+ 	 */
+ 	return !ftrace_location_range(addr, addr + size - 1);
+ }
 +
-+	/*
-+	 * Pre-check if there are enough free buckets. In the non-blocking
-+	 * scenario it's better to fail early rather than starting to allocate
-+	 * buckets and do a cleanup later in case of failure.
-+	 */
-+	if (!wait) {
-+		size_t avail = fifo_used(&ca->free[RESERVE_PRIO]) +
-+			       fifo_used(&ca->free[RESERVE_NONE]);
-+		if (prio_buckets(ca) > avail)
-+			return -ENOMEM;
++static bool within_notrace_func(struct trace_kprobe *tk)
++{
++	unsigned long addr = addr = trace_kprobe_address(tk);
++	char symname[KSYM_NAME_LEN], *p;
++
++	if (!__within_notrace_func(addr))
++		return false;
++
++	/* Check if the address is on a suffixed-symbol */
++	if (!lookup_symbol_name(addr, symname)) {
++		p = strchr(symname, '.');
++		if (!p)
++			return true;
++		*p = '\0';
++		addr = (unsigned long)kprobe_lookup_name(symname, 0);
++		if (addr)
++			return __within_notrace_func(addr);
 +	}
 +
- 	closure_init_stack(&cl);
- 
- 	lockdep_assert_held(&ca->set->bucket_lock);
-@@ -540,9 +557,6 @@ void bch_prio_write(struct cache *ca)
- 	atomic_long_add(ca->sb.bucket_size * prio_buckets(ca),
- 			&ca->meta_sectors_written);
- 
--	//pr_debug("free %zu, free_inc %zu, unused %zu", fifo_used(&ca->free),
--	//	 fifo_used(&ca->free_inc), fifo_used(&ca->unused));
--
- 	for (i = prio_buckets(ca) - 1; i >= 0; --i) {
- 		long bucket;
- 		struct prio_set *p = ca->disk_buckets;
-@@ -560,7 +574,7 @@ void bch_prio_write(struct cache *ca)
- 		p->magic	= pset_magic(&ca->sb);
- 		p->csum		= bch_crc64(&p->magic, bucket_bytes(ca) - 8);
- 
--		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, true);
-+		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
- 		BUG_ON(bucket == -1);
- 
- 		mutex_unlock(&ca->set->bucket_lock);
-@@ -589,6 +603,7 @@ void bch_prio_write(struct cache *ca)
- 
- 		ca->prio_last_buckets[i] = ca->prio_buckets[i];
- 	}
-+	return 0;
- }
- 
- static void prio_read(struct cache *ca, uint64_t bucket)
-@@ -1884,7 +1899,7 @@ static int run_cache_set(struct cache_set *c)
- 
- 		mutex_lock(&c->bucket_lock);
- 		for_each_cache(ca, c, i)
--			bch_prio_write(ca);
-+			bch_prio_write(ca, true);
- 		mutex_unlock(&c->bucket_lock);
- 
- 		err = "cannot allocate new UUID bucket";
++	return true;
++}
+ #else
+ #define within_notrace_func(tk)	(false)
+ #endif
 -- 
 2.20.1
 
