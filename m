@@ -2,95 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10189C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF330C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DAE20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014397;
-	bh=GjyKW6Mhw/GVEuSLoNKK5okQw9ut/zuaQPA7AR84V1w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRmhyHcqZsMSXQ8OxlphqMiTNwYSGbqY1eJh1gXV5e+sWgzbI4Ke7Gi+HqI1DL1Hh
-	 erl1+nOnAfW7m5fV3obsnvUk7Mq9oKSQdZ2Wy7QwQbSdHO2xHp6NpEa+z1D+fAgh9p
-	 SFdSp4V52OQ1VgW2vM5LgO5h8VrNwuTw8S38UhIg=
+	by mail.kernel.org (Postfix) with ESMTP id 7E08B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="xSLCrrxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfLJVqh (ORCPT
+        id S1728947AbfLJVcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:46:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfLJVcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 16:32:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C917208C3;
-        Tue, 10 Dec 2019 21:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013558;
-        bh=GjyKW6Mhw/GVEuSLoNKK5okQw9ut/zuaQPA7AR84V1w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xkBT4B6srQUNAZnmU0xjmqbu2OiVR2Bo51EGV6wcfaT9bXO45kbyoZawXNwXAoi6y
-         CW8QnEUOo7VGw9bgVFOOZur0SURvvCwAZ8KhHSFaK72lXenG/aK1BnGz5/YeLhtPC7
-         7V7h2/nJWvTKT7UpuM1zUf8Dgp7Wn84N5ZqdqVoY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 014/177] IB/iser: bound protection_sg size by data_sg size
-Date:   Tue, 10 Dec 2019 16:29:38 -0500
-Message-Id: <20191210213221.11921-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
-References: <20191210213221.11921-1-sashal@kernel.org>
+Received: from mail-ed1-f53.google.com ([209.85.208.53]:41953 "EHLO
+        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728836AbfLJVce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:34 -0500
+Received: by mail-ed1-f53.google.com with SMTP id c26so17331045eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=4Ja+Cy4lz3d7/9D3E5SJdSwFwUmUfYYIZtw7SRnmxMQ=;
+        b=xSLCrrxPejnE0kdt17030quLJkQSeBjnB1vQJo4e7EaofNY9vrZMLRjLWjTUAcCSCT
+         yuxr7DHf+2HvLYOySwaOiOuJZYvB0oesOytWvM4DmGl/IhueidOi+nYm0/KXxlf2GwEa
+         eXFXrese8dp5z5H0DwYhE+Ts7EObyeM8Pthks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=4Ja+Cy4lz3d7/9D3E5SJdSwFwUmUfYYIZtw7SRnmxMQ=;
+        b=DRW3KqHccQe0VCCoxNaE2HprD5CP75KI9hWRczg4RVj9EduH2F34+Euk2aUsb0gvc2
+         gHo9Z81gVL7gSP3DHHDiyC7OED+L1V7Rgh1rvpA53HBhPtVzBU/dxH6OtWVhliuTyi+T
+         5OXeJC7vPsf76ZYEhHUUU4CvAZzTwtwRpWD9jUeRs6LaG9vwaW9MsJb4zBaeZp4MXY+L
+         vGuwwDgXYVL7j0ItHaj5Dm6itPeoobAbyEFlvYdIJ5Y0dBbEFWojwH+wk1AuudQ8h+w4
+         e2TDy2IZmswLANkdzdNP3+z05WU6HRwMWIfNTlWB3e0pdz74G8R5Vy2ql3rJdMqZ4asG
+         S4tQ==
+X-Gm-Message-State: APjAAAUQb1N/7lCBBnosf6IhzPKiK1a7lsWSESkmIYYfFt39LyQXC1mZ
+        f6PQG/kqVHYfWDHiJ7NUZlYTYA34cWxTouhJ8mRHT/778vGxMw==
+X-Google-Smtp-Source: APXvYqy8VOTXuAbKw0j1c3O8zCSGmAQsSkjj1KkDXdHcwLguds5DtEdZJNT8Hy/+moiMk2YEf22e7OKRLAhqNqpl30A=
+X-Received: by 2002:a17:906:2e47:: with SMTP id r7mr6151354eji.215.1576013552064;
+ Tue, 10 Dec 2019 13:32:32 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Tue, 10 Dec 2019 13:32:21 -0800
+Message-ID: <CABWYdi2GG3qi6ucxtyk3=Bu1eXi0N9Dow42F4gzi9DUUc3XhLw@mail.gmail.com>
+Subject: Lock contention around unix_gc_lock
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>, hare@suse.com,
+        axboe@kernel.dk, allison@lohutok.net, tglx@linutronix.de,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+Hello,
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+We're seeing very high contention on unix_gc_lock when a bug in an
+application makes it stop reading incoming messages with inflight unix
+sockets. In our system we churn through a lot of unix sockets and we
+have 96 logical CPUs in the system, so spinlock gets very hot.
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+I was able to halve overall system throughput with 1024 inflight unix
+sockets, which is the default RLIMIT_NOFILE. This doesn't sound too
+good for isolation, one user should not be able to affect the system
+as much. One might even consider this as DoS vector.
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+There's a lot of time is spent in _raw_spin_unlock_irqrestore, which
+is triggered by wait_for_unix_gc, which in turn is unconditionally
+called from unix_stream_sendmsg:
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 3fecd87c9f2bd..b4e0ae0245754 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
- 
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
--- 
-2.20.1
+ffffffff9f64f3ea _raw_spin_unlock_irqrestore+0xa
+ffffffff9eea6ab0 prepare_to_wait_event+0x70
+ffffffff9f5a4ac6 wait_for_unix_gc+0x76
+ffffffff9f5a182c unix_stream_sendmsg+0x3c
+ffffffff9f4bb7f9 sock_sendmsg+0x39
 
+* https://elixir.bootlin.com/linux/v4.19.80/source/net/unix/af_unix.c#L1849
+
+Even more time is spent in waiting on spinlock because of call to
+unix_gc from unix_release_sock, where condition is having any inflight
+sockets whatsoever:
+
+ffffffff9eeb1758 queued_spin_lock_slowpath+0x158
+ffffffff9f5a4718 unix_gc+0x38
+ffffffff9f5a28f3 unix_release_sock+0x2b3
+ffffffff9f5a2929 unix_release+0x19
+ffffffff9f4b902d __sock_release+0x3d
+ffffffff9f4b90a1 sock_close+0x11
+
+* https://elixir.bootlin.com/linux/v4.19.80/source/net/unix/af_unix.c#L586
+
+Should this condition take the number of inflight sockets into
+account, just like unix_stream_sendmsg does via wait_for_unix_gc?
+
+Static number of inflight sockets that trigger a GC from
+wait_for_unix_gc may also be something that is scaled with system
+size, rather than be a hardcoded value.
+
+I know that our case is a pathological one, but it sounds like
+scalability of garbage collection can be better, especially on systems
+with large number of CPUs.
