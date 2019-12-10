@@ -2,136 +2,168 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A60C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A786C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5371820726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="Oar1jshL";
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="Bjj9V8Iy"
+	by mail.kernel.org (Postfix) with ESMTP id 13DD420726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfLJLGo (ORCPT
+        id S1727177AbfLJLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:06:44 -0500
-Received: from smtp114.ord1c.emailsrvr.com ([108.166.43.114]:37713 "EHLO
-        smtp114.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726915AbfLJLGn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:06:43 -0500
-X-Greylist: delayed 479 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 06:06:42 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
-        s=20190322-9u7zjiwi; t=1575975523;
-        bh=s930yeVuZ/OBWf+Xggci74+j0vX0OnxEmUgFeVwwphc=;
-        h=Subject:To:From:Date:From;
-        b=Oar1jshLInKThEcIkjd+TTC0hkswIxu8mjRLLJkdqqPyb9/9EzmYS98epw011eOuz
-         quFMLQdzII3KAY7BFOO9EAPPxfPBxlfXj+GFqv1+vV+y1ZqtEJVbNcmrVLygKsbcsS
-         4dydcRmMkOimaloGXfiBr9Zidg1dfW1P1OAMqbTI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1575975523;
-        bh=s930yeVuZ/OBWf+Xggci74+j0vX0OnxEmUgFeVwwphc=;
-        h=Subject:To:From:Date:From;
-        b=Bjj9V8IyStZQSOYzOtC39eOZ+CdyL5otXWSI/4e3msEnu6MaIvFuFWvXfzF7X+RXo
-         56qBkMZ0qzOSakrhprRDxpI3R3GPcCgkrMq9gGv0qMBtA5a+c5+MtIYKARIBMxvta8
-         SwmCoz79zPBh81//PHyG0J4CkQiww5v/W7kGaRko=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp23.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 29CA9400EE;
-        Tue, 10 Dec 2019 05:58:41 -0500 (EST)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.173] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Tue, 10 Dec 2019 05:58:42 -0500
-Subject: Re: [PATCH] staging: comedi: comedi_test: return error when
- comedi_test_init fails
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cheah Kok Cheong <thrust73@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20191210091451.23505-1-hslester96@gmail.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <ca049de4-92f1-409c-6aa7-9c2ddc336638@mev.co.uk>
-Date:   Tue, 10 Dec 2019 10:58:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 06:10:31 -0500
+Received: from mga12.intel.com ([192.55.52.136]:39249 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbfLJLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:10:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 03:10:25 -0800
+X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
+   d="scan'208";a="207247012"
+Received: from rmoran-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.35.46])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 03:10:21 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Allen Chen <allen.chen@ite.com.tw>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Pi-Hsun Shih <pihsun@chromium.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
+In-Reply-To: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+Date:   Tue, 10 Dec 2019 13:10:18 +0200
+Message-ID: <87r21ce8rp.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210091451.23505-1-hslester96@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 09:14, Chuhong Yuan wrote:
-> comedi_test_init() forgets to return error when it fails.
-> Modify the return value to fix it.
-> 
-> Fixes: 9ff7400bd38c ("Staging: comedi: drivers: comedi_test: Add auto-configuration capability")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On Tue, 26 Nov 2019, allen <allen.chen@ite.com.tw> wrote:
+> According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
+> (Defines EDID Structure Version 1, Revision 4) page: 39
+> How to determine whether the monitor support RB timing or not?
+> EDID 1.4
+> First:  read detailed timing descriptor and make sure byte 0 = 0x00,
+> 	byte 1 = 0x00, byte 2 = 0x00 and byte 3 = 0xFD
+> Second: read EDID bit 0 in feature support byte at address 18h = 1
+> 	and detailed timing descriptor byte 10 = 0x04
+> Third:  if EDID bit 0 in feature support byte = 1 &&
+> 	detailed timing descriptor byte 10 = 0x04
+> 	then we can check byte 15, if bit 4 in byte 15 = 1 is support RB
+>         if EDID bit 0 in feature support byte != 1 ||
+> 	detailed timing descriptor byte 10 != 0x04,
+> 	then byte 15 can not be used
+>
+> The linux code is_rb function not follow the VESA's rule
+>
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> Reported-by: kbuild test robot <lkp@intel.com>
 > ---
->   drivers/staging/comedi/drivers/comedi_test.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/comedi/drivers/comedi_test.c b/drivers/staging/comedi/drivers/comedi_test.c
-> index ef4c7c8a2b71..133ed99a89f1 100644
-> --- a/drivers/staging/comedi/drivers/comedi_test.c
-> +++ b/drivers/staging/comedi/drivers/comedi_test.c
-> @@ -799,12 +799,14 @@ static int __init comedi_test_init(void)
->   	if (!config_mode) {
->   		ctcls = class_create(THIS_MODULE, CLASS_NAME);
->   		if (IS_ERR(ctcls)) {
-> +			ret = PTR_ERR(ctcls);
->   			pr_warn("comedi_test: unable to create class\n");
->   			goto clean3;
->   		}
->   
->   		ctdev = device_create(ctcls, NULL, MKDEV(0, 0), NULL, DEV_NAME);
->   		if (IS_ERR(ctdev)) {
-> +			ret = PTR_ERR(ctdev);
->   			pr_warn("comedi_test: unable to create device\n");
->   			goto clean2;
->   		}
-> @@ -826,7 +828,7 @@ static int __init comedi_test_init(void)
->   clean3:
->   	ctcls = NULL;
->   
-> -	return 0;
-> +	return ret;
->   }
->   module_init(comedi_test_init);
->   
-> 
+>  drivers/gpu/drm/drm_edid.c | 36 ++++++++++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index f5926bf..e11e585 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -93,6 +93,12 @@ struct detailed_mode_closure {
+>  	int modes;
+>  };
+>  
+> +struct edid_support_rb_closure {
+> +	struct edid *edid;
+> +	bool valid_support_rb;
+> +	bool support_rb;
+> +};
+> +
+>  #define LEVEL_DMT	0
+>  #define LEVEL_GTF	1
+>  #define LEVEL_GTF2	2
+> @@ -2017,23 +2023,41 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
+>  	}
+>  }
+>  
+> +static bool
+> +is_display_descriptor(const u8 *r, u8 tag)
+> +{
+> +	return (!r[0] && !r[1] && !r[2] && r[3] == tag) ? true : false;
+> +}
+> +
+>  static void
+>  is_rb(struct detailed_timing *t, void *data)
+>  {
+>  	u8 *r = (u8 *)t;
+> -	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
+> -		if (r[15] & 0x10)
+> -			*(bool *)data = true;
+> +	struct edid_support_rb_closure *closure = data;
+> +	struct edid *edid = closure->edid;
+> +
+> +	if (is_display_descriptor(r, EDID_DETAIL_MONITOR_RANGE)) {
+> +		if (edid->features & BIT(0) && r[10] == BIT(2)) {
 
-I suspect the current behaviour was by design because the module is not 
-completely broken if it fails to create the "comedi_test" device.  The 
-module will just behave as if the "noauto" module parameter (which sets 
-the 'config_mode' variable) was set to "true" if there is an error 
-during class or device creation.  That's probably why the kernel log 
-messages are written with 'pr_warn()' rather than 'pr_err()'.
+I'll try to explain my original comment again.
 
-As long as the core "comedi" module has been loaded with the 
-"comedi_num_legacy_minors" module parameter set to a non-zero value, it 
-would still be possible to configure one of the "legacy" comedi devices 
-to use the "comedi_test" driver via the COMEDI_DEVCONFIG ioctl.
+Consider edid->features & BIT(0). It remains unchanged across the
+iteration. The code will only change anything if edid->features &
+BIT(0).
 
-However, returning an error might be preferable here, especially since 
-the comedi core module's "comedi_num_legacy_minors" parameter defaults 
-to zero.
+> +			closure->valid_support_rb = true;
+> +			closure->support_rb = (r[15] & 0x10) ? true : false;
 
-I'm happy with the change of behaviour, but would suggest changing the 
-'pr_warn()' calls to 'pr_err()' to match this change.
+You could combine these to e.g. a single int.
+
+	if (r[10] == BIT(2)) {
+		int *ret = data;
+		*ret = !!(r[15] & 0x10);
+	}
+
+> +		}
+> +	}
+>  }
+>  
+>  /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
+>  static bool
+>  drm_monitor_supports_rb(struct edid *edid)
+>  {
+> +	struct edid_support_rb_closure closure = {
+> +		.edid = edid,
+> +		.valid_support_rb = false,
+> +		.support_rb = false,
+> +	};
+> +
+>  	if (edid->revision >= 4) {
+> -		bool ret = false;
+> -		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+> -		return ret;
+> +		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
+> +		if (closure.valid_support_rb)
+> +			return closure.support_rb;
+
+Here, you'd do:
+
+        if (edid->features & BIT(0)) {
+        	int ret = -1;
+		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+                if (ret != -1)
+                	return ret;
+	}
+
+
+>  	}
+>  
+>  	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
 
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+Jani Nikula, Intel Open Source Graphics Center
