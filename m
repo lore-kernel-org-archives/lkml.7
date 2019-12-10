@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC86C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DDBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B262077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1662077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017432;
-	bh=UmCZsASE+z6+nSXxmbq3udmWCmPI8/QcKDL02fFCtoM=;
+	s=default; t=1576017437;
+	bh=blLUoTpQ6T7Qmn8UspTegfMLI1oc5yQMRt2rwXI1jhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6osBiky9JeO4yKTxsQWAZ1oBiN37eU8zqFKugrxWg+aJLhqn8bEGQPeEsMgcHH2b
-	 s5/CA7xWqu39Zd+aoZHqG2nCCAhXnecrg4lOlQf4uzzaaB8jPawRMRHqQpfM5wbiZB
-	 E3Skr9S4ch+B/DedmcDtSAXWZhEUa4Mb+E7sp3+I=
+	b=cI7WNOgIwCioP0Iv71y4PcQBj72hodgkJCR0kOak4yViLCRUS1XeS6w16hzw0Q3m6
+	 aaMuHV5uATDv+4S95R4eobTUHxiqM2OD/IQU4IQtexKccdny/+WUig7j56/gPhsejy
+	 3Z+1OIF0fMKc09rGYwm3CAkQawV3LQ5wVcO4Znog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbfLJWeG (ORCPT
+        id S1729600AbfLJWhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54874 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:37:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbfLJWdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:49 -0500
+        id S1730130AbfLJWeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A341B20828;
-        Tue, 10 Dec 2019 22:33:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72208208C3;
+        Tue, 10 Dec 2019 22:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017229;
-        bh=UmCZsASE+z6+nSXxmbq3udmWCmPI8/QcKDL02fFCtoM=;
+        s=default; t=1576017246;
+        bh=blLUoTpQ6T7Qmn8UspTegfMLI1oc5yQMRt2rwXI1jhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AkVN34Rg1nJ9xLg/dZ5RScRzwwNNi/gNUCSXQVS7iMx/RfzHePEsMJUSHST27ZrW8
-         HuqW49IKfKmlAw/OTsOaRad63+XblAWF8S8cVqDrYwUTvTkS0ghOz36QunqU6HUGMt
-         F+5QAJQaCQvdoI0uKX0+Rz56lzLBkGNu6VmL4Qg4=
+        b=qKLcJqIeAhc2JbVhXuMADuD0m76FWOSDGFn6Kb230q3LSgNXpAGt2SRxDWCLeE19q
+         /8VelP3J7TQElAjnthVvw7ic2NzmZiXG5bXKeb+Mxd2RtThkJ/papBpmOIV7KWWFBZ
+         lCh2OHB5MomNwZdw6ig3AmzPJRJGkha9XP+u3uZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/71] iio: adc: max1027: Reset the device at probe time
-Date:   Tue, 10 Dec 2019 17:32:32 -0500
-Message-Id: <20191210223316.14988-27-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 42/71] perf probe: Walk function lines in lexical blocks
+Date:   Tue, 10 Dec 2019 17:32:47 -0500
+Message-Id: <20191210223316.14988-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,40 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+Since some inlined functions are in lexical blocks of given function, we
+have to recursively walk through the DIE tree.  Without this fix,
+perf-probe -L can miss the inlined functions which is in a lexical block
+(like if (..) { func() } case.)
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+However, even though, to walk the lines in a given function, we don't
+need to follow the children DIE of inlined functions because those do
+not have any lines in the specified function.
+
+We need to walk though whole trees only if we walk all lines in a given
+file, because an inlined function can include another inlined function
+in the same file.
+
+Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/dwarf-aux.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 41d495c6035e1..7d5e4114e7a8a 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -470,6 +470,14 @@ static int max1027_probe(struct spi_device *spi)
- 		goto fail_dev_register;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index af78d6fc8d12c..ef6fa620a4264 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -664,10 +664,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
+ 		}
++		if (!lw->recursive)
++			return DIE_FIND_CB_SIBLING;
  	}
+-	if (!lw->recursive)
+-		/* Don't need to search recursively */
+-		return DIE_FIND_CB_SIBLING;
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
-+
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ 	if (addr) {
+ 		fname = dwarf_decl_file(in_die);
+@@ -714,6 +713,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
+ {
+ 	struct __line_walk_param *lw = data;
+ 
++	/*
++	 * Since inlined function can include another inlined function in
++	 * the same file, we need to walk in it recursively.
++	 */
+ 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
+ 	if (lw->retval != 0)
+ 		return DWARF_CB_ABORT;
+@@ -803,8 +806,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	 */
+ 	if (rt_die != cu_die)
+ 		/*
+-		 * Don't need walk functions recursively, because nested
+-		 * inlined functions don't have lines of the specified DIE.
++		 * Don't need walk inlined functions recursively, because
++		 * inner inlined functions don't have the lines of the
++		 * specified function.
+ 		 */
+ 		ret = __die_walk_funclines(rt_die, false, callback, data);
+ 	else {
 -- 
 2.20.1
 
