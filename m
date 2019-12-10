@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B98FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB470C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2BF2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E1A2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfLJNZI (ORCPT
+        id S1727827AbfLJNZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:25:08 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38617 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbfLJNZE (ORCPT
+        Tue, 10 Dec 2019 08:25:11 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:2002 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfLJNZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:25:04 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+        Tue, 10 Dec 2019 08:25:08 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: q2BpUB2EIl1tZPtsuj6SU+eCjbhPG/3B/lmKcttQtAuWiuhuQCH6HhHMhpDSRJULQfJQS5YDYY
- zJ8BSQEkxM6xZXli8OJxsdKn+kmtJf4DypfMlmi7/POLunMRIl8v4XzM6XRi5qW4r0VWhoc3J3
- toii4YJHdvnF85UkahExZM/qDIH8A0R6r159gpM/7EmJeqk/NifgbC5dRcswQCaQzy0Xqbp6mh
- 1YVd7ECIpp81afD651zcrOzscZBmHPCF+/nUI/QWvpLEbIbIw73Ax4USNz4wHQsXbhNenutcyA
- smU=
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: hnRNOKiQG+WcQ2REtTRs0HF9PluczubB0dOz2SJEh6gMvibIra3FXVMK32FY8x4RR/L9l0qrLj
+ WMBhNKk5d+h+TNUTmQ2wbVaTKRNlW8mrLYGEWVyND67jCb0r8lzOwCrBbPn5DJrTedKEGRtdgp
+ AC+z0XS7OAJQeYBvX8xhKvD6ISPCfr0uPhMQhN78FKoulyew8XbmHkP7J75Jd9H/5Eae1VLaJZ
+ lsMOanVYgXEBfqPZ+6tq434rMlH4AX5nkiEPpBvWSMEF5F8wu+QCvZmEoEg0P6NqnAQQrLIYVz
+ /so=
 X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
-   d="scan'208";a="59845999"
+   d="scan'208";a="59325118"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Dec 2019 06:25:03 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Dec 2019 06:25:07 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Dec 2019 06:25:03 -0700
+ 15.1.1713.5; Tue, 10 Dec 2019 06:25:06 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 10 Dec 2019 06:25:04 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 10 Dec 2019 06:25:08 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <sam@ravnborg.org>, <bbrezillon@kernel.org>, <airlied@linux.ie>,
         <daniel@ffwll.ch>, <nicolas.ferre@microchip.com>,
@@ -64,9 +64,9 @@ CC:     <dri-devel@lists.freedesktop.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 2/5] drm: atmel-hlcdc: enable clock before configuring timing engine
-Date:   Tue, 10 Dec 2019 15:24:44 +0200
-Message-ID: <1575984287-26787-3-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 3/5] mfd: atmel-hlcdc: return in case of error
+Date:   Tue, 10 Dec 2019 15:24:45 +0200
+Message-ID: <1575984287-26787-4-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
@@ -77,46 +77,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changing pixel clock source without having this clock source enabled
-will block the timing engine and the next operations after (in this case
-setting ATMEL_HLCDC_CFG(5) settings in atmel_hlcdc_crtc_mode_set_nofb()
-will fail). It is recomended (although in datasheet this is not present)
-to actually enabled pixel clock source before doing any changes on timing
-enginge (only SAM9X60 datasheet specifies that the peripheral clock and
-pixel clock must be enabled before using LCD controller).
+For HLCDC timing engine configurations bit ATMEL_HLCDC_SIP of
+ATMEL_HLCDC_SR needs to checked if it is equal with zero before applying
+new configuration to timing engine. In case of timeout there is no
+indicator about this, so, return with error in case of timeout in
+regmap_atmel_hlcdc_reg_write() and also print a message about this.
 
-Fixes: 1a396789f65a ("drm: add Atmel HLCDC Display Controller support")
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/mfd/atmel-hlcdc.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index 5040ed8d0871..721fa88bf71d 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -73,7 +73,11 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 	unsigned long prate;
- 	unsigned int mask = ATMEL_HLCDC_CLKDIV_MASK | ATMEL_HLCDC_CLKPOL;
- 	unsigned int cfg = 0;
--	int div;
-+	int div, ret;
-+
-+	ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
-+	if (ret)
-+		return;
+diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
+index 64013c57a920..19f1dbeb8bcd 100644
+--- a/drivers/mfd/atmel-hlcdc.c
++++ b/drivers/mfd/atmel-hlcdc.c
+@@ -39,10 +39,16 @@ static int regmap_atmel_hlcdc_reg_write(void *context, unsigned int reg,
  
- 	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
- 	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
-@@ -147,6 +151,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
- 			   ATMEL_HLCDC_VSPSU | ATMEL_HLCDC_VSPHO |
- 			   ATMEL_HLCDC_GUARDTIME_MASK | ATMEL_HLCDC_MODE_MASK,
- 			   cfg);
+ 	if (reg <= ATMEL_HLCDC_DIS) {
+ 		u32 status;
+-
+-		readl_poll_timeout_atomic(hregmap->regs + ATMEL_HLCDC_SR,
+-					  status, !(status & ATMEL_HLCDC_SIP),
+-					  1, 100);
++		int ret;
 +
-+	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
- }
++		ret = readl_poll_timeout_atomic(hregmap->regs + ATMEL_HLCDC_SR,
++						status,
++						!(status & ATMEL_HLCDC_SIP),
++						1, 100);
++		if (ret) {
++			pr_err("Timeout waiting for ATMEL_HLCDC_SIP\n");
++			return ret;
++		}
+ 	}
  
- static enum drm_mode_status
+ 	writel(val, hregmap->regs + reg);
 -- 
 2.7.4
 
