@@ -2,152 +2,226 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A485AC2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3089C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B543207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575939168;
-	bh=0fCKRrO+qbAUzYrgrBX7cVTSkGUF7f+hVZZmtOT+t68=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RL2Av00/2qpxIuG5tkyZNVNIbfvLLS0k5ukwYlU5qMrZxaE1FT1AU52Gzjh1W9KaA
-	 T17OAnqoT+scIX+nw+cKxawv36uTc3vPLgv5i1O1ZtFzzcLPVmF50zSM0YV5/FURXE
-	 LxdmdPB6ouCcMKQcvrNq5UP0niMG5mxsD1YcExxk=
+	by mail.kernel.org (Postfix) with ESMTP id 95E702073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XXH6hTtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfLJAwr (ORCPT
+        id S1727538AbfLJAyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:52:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfLJAwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:52:47 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3A3920637;
-        Tue, 10 Dec 2019 00:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575939166;
-        bh=0fCKRrO+qbAUzYrgrBX7cVTSkGUF7f+hVZZmtOT+t68=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fWlr7CAkvOSknyYBHXTRNgavvE6mrK/r1AXrtBH6eUb+QsI0YBjenvLz4Ffo/2APl
-         LR0r5YeA3jG0qPNX+P99Rz3GlrTOSKghEMpjjpWH4ALe1L8aaili6f0vkaCwq1/yL8
-         xd06QqNxVPuYRk4Yn/GdJ537OQjyDQOzqTj02KzA=
-Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191204175321.609072813@linuxfoundation.org>
- <1dac10cd-7183-9dfd-204c-05fae75bcd74@kernel.org>
- <20191206152823.GA75339@kroah.com>
- <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
- <e04a233b-0854-2dd4-060e-47e1013879ee@roeck-us.net>
- <f7e72654-42a6-864a-4b4c-41adcce74404@kernel.org>
- <5e923897-6bc6-5756-1283-39e5ff1481b7@roeck-us.net>
-From:   shuah <shuah@kernel.org>
-Message-ID: <453edaee-3622-dcde-1f46-4bf3aceb8c6a@kernel.org>
-Date:   Mon, 9 Dec 2019 17:52:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 9 Dec 2019 19:54:36 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16186 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfLJAyg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 19:54:36 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5deeecb60000>; Mon, 09 Dec 2019 16:54:14 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Dec 2019 16:54:34 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Dec 2019 16:54:34 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 00:54:34 +0000
+Received: from [10.2.174.71] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Dec
+ 2019 00:54:32 +0000
+Subject: Re: [PATCH v3 08/15] ASoC: tegra: Add audio mclk control through
+ clk_out_1 and extern1
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-9-git-send-email-skomatineni@nvidia.com>
+ <0ce2e83b-800c-da1e-7a3c-3cf1427cfe20@gmail.com>
+ <2eeceabe-b5f0-6f9e-ff8c-4ac6167b7cc3@nvidia.com>
+ <5d26e32c-a346-4d42-9872-840964512144@gmail.com>
+ <79661e2f-dcd4-6dd5-9b4d-9dcc40de478a@nvidia.com>
+ <664a0b15-7136-2a11-f0a0-06f32cca1a9c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <d984ca35-2c8f-d28c-e3c8-688f76ecd98f@nvidia.com>
+Date:   Mon, 9 Dec 2019 16:54:31 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <5e923897-6bc6-5756-1283-39e5ff1481b7@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <664a0b15-7136-2a11-f0a0-06f32cca1a9c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1575939254; bh=oDpjvhPKdKxOplyhkA/Vfi4vK8JfrUiRbAih49q1Mfs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XXH6hTtnAn/LTfi8HDcMWBLKXf7wQZ8g4Jd0G2RFr5XlQ4/e9PjS+vRf7+eEliPRc
+         qHVjDkvIMROEDusdyotvvJVYpuQzMsXNBKW0cQ64dsYkUUAXOqmRPlBREQ/Zlh1CqD
+         B5zp50Z0ru9e7dsc8/5Y6lNtJfYovm980v0EeldVnao/o23euDd3uXtLH/ANKMHxMk
+         cpxwmYQ+64ZKXtZXXf+WPSX/NQDdB0S3fexhbfdH4ku92wEyOOQJMfxVsjiMYfXx6G
+         nbcWaO27zdlPinIjs0FVkpgR1Hndq8h3wkOwmj908Cz/UEC74zYWXV7Dt+kadzOQZu
+         F3CCjYSv0fehA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/6/19 9:56 AM, Guenter Roeck wrote:
-> On 12/6/19 8:23 AM, shuah wrote:
->> On 12/6/19 9:10 AM, Guenter Roeck wrote:
->>> On 12/6/19 7:35 AM, shuah wrote:
->>>> On 12/6/19 8:28 AM, Greg Kroah-Hartman wrote:
->>>>> On Fri, Dec 06, 2019 at 08:24:36AM -0700, shuah wrote:
->>>>>> On 12/4/19 10:53 AM, Greg Kroah-Hartman wrote:
->>>>>>> This is the start of the stable review cycle for the 4.14.158 
->>>>>>> release.
->>>>>>> There are 209 patches in this series, all will be posted as a 
->>>>>>> response
->>>>>>> to this one.  If anyone has any issues with these being applied, 
->>>>>>> please
->>>>>>> let me know.
->>>>>>>
->>>>>>> Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
->>>>>>> Anything received after that time might be too late.
->>>>>>>
->>>>>>> The whole patch series can be found in one patch at:
->>>>>>>     https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz 
->>>>>>>
->>>>>>> or in the git tree and branch at:
->>>>>>>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
->>>>>>> linux-4.14.y
->>>>>>> and the diffstat can be found below.
->>>>>>>
->>>>>>> thanks,
->>>>>>>
->>>>>>> greg k-h
->>>>>>>
+
+On 12/9/19 3:12 PM, Dmitry Osipenko wrote:
+> 10.12.2019 02:05, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 12/9/19 12:06 PM, Dmitry Osipenko wrote:
+>>> 07.12.2019 22:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 12/7/19 6:58 AM, Dmitry Osipenko wrote:
+>>>>> 06.12.2019 05:48, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> Current ASoC driver uses extern1 as cdev1 clock from Tegra30 onwards
+>>>>>> through device tree.
 >>>>>>
->>>>>> Starting with Linux 4.14.157, 4.9.204, and 4.4.204 stables stopped
->>>>>> booting on my system. It can't find the root disk. No config changes
->>>>>> in between.
+>>>>>> Actual audio mclk is clk_out_1 and to use PLLA for mclk rate control=
+,
+>>>>>> need to clk_out_1_mux parent to extern1 and extern1 parent to
+>>>>>> PLLA_OUT0.
 >>>>>>
->>>>>> I have been bisecting 4.14 and 4.9 with no luck so far. I updated
->>>>>> to Ubuntu 19.10 in between.
+>>>>>> Currently Tegra clock driver init sets the parents and enables both
+>>>>>> clk_out_1 and extern1 clocks. But these clocks parent and enables
+>>>>>> should
+>>>>>> be controlled by ASoC driver.
 >>>>>>
->>>>>> The only other thing I see is CONFIG_GCC_VERSION which is supported
->>>>>> starting 4.18. I don't this boot failing issue on 4.19 + up. I am
->>>>>> also chasing any links between this config and scripts and tools
->>>>>> that generate the initramfs.
->>>>>
->>>>> Did you also upgrade your version of gcc?  I know I build those older
->>>>> kernels with the latest version of gcc for build tests, but I do not
->>>>> boot them.  I think everyone who still uses them uses older 
->>>>> versions of
->>>>> gcc.
+>>>>>> Clock parents can be specified in device tree using assigned-clocks
+>>>>>> and assigned-clock-parents.
+>>>>>>
+>>>>>> To enable audio mclk, both clk_out_1 and extern1 clocks need to be
+>>>>>> enabled.
+>>>>>>
+>>>>>> This patch configures parents for clk_out_1 and extern1 clocks if
+>>>>>> device
+>>>>>> tree does not specify clock parents inorder to support old device tr=
+ee
+>>>>>> and controls mclk using both clk_out_1 and extern1 clocks.
+>>>>>>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 66
+>>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>>  =C2=A0=C2=A0 sound/soc/tegra/tegra_asoc_utils.h |=C2=A0 1 +
+>>>>>>  =C2=A0=C2=A0 2 files changed, 67 insertions(+)
+>>>>>>
+>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> index 536a578e9512..8e3a3740df7c 100644
+>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>> @@ -60,6 +60,7 @@ int tegra_asoc_utils_set_rate(struct
+>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->set_mclk =3D 0;
+>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(d=
+ata->clk_cdev1);
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a_out0);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a);
+>>>>>>  =C2=A0=C2=A0 @@ -89,6 +90,14 @@ int tegra_asoc_utils_set_rate(struc=
+t
+>>>>>> tegra_asoc_utils_data *data, int srate,
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
+ err;
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_exte=
+rn1)) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enab=
+le(data->clk_extern1);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return err;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>>> +
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enable(dat=
+a->clk_cdev1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_er=
+r(data->dev, "Can't enable cdev1: %d\n", err);
+>>>>>> @@ -109,6 +118,7 @@ int tegra_asoc_utils_set_ac97_rate(struct
+>>>>>> tegra_asoc_utils_data *data)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
+>>>>>>  =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(d=
+ata->clk_cdev1);
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->clk_extern1);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a_out0);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_disable_unprepare(data->cl=
+k_pll_a);
+>>>>>>  =C2=A0=C2=A0 @@ -142,6 +152,14 @@ int tegra_asoc_utils_set_ac97_rat=
+e(struct
+>>>>>> tegra_asoc_utils_data *data)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return=
+ err;
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>  =C2=A0=C2=A0 +=C2=A0=C2=A0=C2=A0 if (!IS_ERR_OR_NULL(data->clk_exte=
+rn1)) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D clk_prepare_enab=
+le(data->clk_extern1);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err) {
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+dev_err(data->dev, "Can't enable extern1: %d\n", err);
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return err;
+>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>> Why this is needed given that clk_extern1 is either a child of MCLK o=
+r
+>>>>> MCLK itself (on T20)? The child clocks are enabled when the parent is
+>>>>> enabled.
+>>>> For T30 and later, clk_extern1 is one of the source for clk_out_1_mux.
+>>>> clk_extern1 is in CAR and it has its own gate and mux.
 >>>>
->>>> Yes. gcc version changed. That has been my strong suspect since I 
->>>> started poking around the CONFIG_GCC_VERSION.
+>>>> As audio mclk related clocks (clk_out_1, clk_out_1_mux, and extern1) a=
+re
+>>>> moved into ASoC driver from clock driver
 >>>>
+>>>> need to enable extern1 gate as well along with clk_out1 for T30 throug=
+h
+>>>> T210.
+>>>>
+>>>> Just FYI, extern1 enable here happens only when data->clk_extern1 is
+>>>> available which is for T30 onwards.
+>>> clk_out_1 is the parent of extern1, thus extern1 is enabled by the clk
+>>> core whenever clk_out_1 is enabled because data->clk_cdev1=3Dclk_out_1.=
+ An
+>>> I missing something?
 >>>
->>> What version of gcc are you using ? I currently use gcc 8.3.0 for all
->>> qemu boot tests (except for 3.16 which doesn't support it, or at least
->>> it didn't when I last checked), and have not observed any problems.
->>>
->>
->> With the upgrade gcc version went from 8.3.0 to 9.2.1
->>
->> Interestingly enough all the older 4.14, 4.9, and 4.4 kernel I have
->> on the system boot just fine. It fails when build newer rcs with new
->> gcc, boot fails.
->>
->> I would really like to understand it just in case something in our
->> kbuild scrips is the issue.
->>
-> 
-> v4.4.206 boots for me into qemu when compiled with gcc 9.2.0 (9.2.1 does 
-> not
-> appear to be an official release). So at least it isn't that simple. Let me
-> know if I can test anything else.
-> 
-
-Update on this. I managed to boot 4.14.158 by installing stripping
-modules INSTALL_MOD_STRIP=1. I also disabled KASAN.
-
-The above doesn't work on Linux 4.9.206 or Linux 4.4.206. Investigating
-still.
-
-thanks,
--- Shuah
-
+>>> [snip]
+>> extern1 is the parent for clk_out_1. explained extern1 clock path to
+>> clk_out in reply to your comment in other patch of this series.
+> Right, I meant extern1 the parent of clk_out_1, sorry for the confusion.
+> So when clk_out_1 (child) is enabled, extern1 (parent) is enabled as well=
+.
+>
+> I'll take a closer look at the other email tomorrow.
+yes, will remove explicitly enabling extern1 in next version.
