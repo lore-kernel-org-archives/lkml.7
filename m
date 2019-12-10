@@ -7,108 +7,124 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0808C2D0D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E9C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7687C2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24EB62077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLSXt+0D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zgHuWeY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfLJJvi (ORCPT
+        id S1727573AbfLJJwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:51:38 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44470 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfLJJvh (ORCPT
+        Tue, 10 Dec 2019 04:52:08 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33416 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJJwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:51:37 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p6so12541460vsj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:36 -0800 (PST)
+        Tue, 10 Dec 2019 04:52:07 -0500
+Received: by mail-vs1-f68.google.com with SMTP id n27so12592428vsa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:52:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kQDpaNJuTuBCwjRi4ZnQZs7rqwTgBbG2PPToht2ip2k=;
-        b=vLSXt+0DuDKITzK3SqmZRrGE5FDWu0InRt15eBUNJ0X20O1kjN9pH9n+E14Yfx+C08
-         4qa4xgrg/WCYkwz5zm9rCafjbNNxEsFYcfIgIeKyNiP9qiAk9bXWIUVUI11kKR7PF2SU
-         K0xhbqD1TW6QuAkV5pa9VHY4XCnoDktTOhRY9baV7BSYyERUlS1fBTR52DpdamphlyyL
-         HdvmaILtNwnX2pqbIJPt0a7g5DAxyVyeG2u0isQftIhovS0a6gHORpWe6p+q+P9uaVkz
-         qxWvNIj3uXa9d2JVvwOlYHSI6okmZsH+LDNjji2iJSRc0lxQQeI/CHCyVsB7lnrJay4l
-         Qnjw==
+        bh=ybsluu38MO5eh/YLSNECYiElz7Q4IKjXe1U2m0DW3pA=;
+        b=zgHuWeY7/innDowtWMwI8fnAseVFKB5h8yAU+F+pXXolVXl7IT59cgR3WjvfyHEKhW
+         1oJBc8pX9KCvwqjcnkqaBTwxHysQW3v4BP42qGr1GA89dxSewio7bUk2jlVDFdS5MNsw
+         tjDpH+kEBA/0avN4I6DtRqv+G+GPp6XyI5rU4VS3cqkpH8P5Ax40K+EH8WfYDK1ACA82
+         L58BwWWTVb46EJwVANNVbkh7gvhikAPoTnL8+pRWF5Q8nR+DrIsPFDhUGp/FtVn49yZp
+         PoI1VeaPwpSrsxY8/BKDruPtuxroFhcqfnCqDCZo/EXdaU8DGyIlqX9ltATOWRYuD+IT
+         aFMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kQDpaNJuTuBCwjRi4ZnQZs7rqwTgBbG2PPToht2ip2k=;
-        b=TcjIqzvu42KkskCb/xmYylgoMq+fdLtcg2ZW3y5g/EBto3spWQ1XtR/GjJ0BNsGgPt
-         nVgtHJv3RoGY+rne6WRdqFpBAc7iaHC9YKQGAcMPfCvNjPvFhicwuDUjcl4z9TcCrbOa
-         UOkNA8w9szx52Zqhh97an3zJypuP+rG7Hy9eOjDyO+0i99VegC7Ky+raKFwdGKneWv7Q
-         HvQXrQtW0Qfw/+eRMZyc3n/JOEgyiLEgkOxZa9IzCIe3obrEYgzPASi73+smfhTBNI+F
-         4OTOACIF6AiDG0BJso0qR43aY0Nt2G4iSEBYxOJIaZVbCax6oLK/aLzWDb7918QVCnQj
-         baCg==
-X-Gm-Message-State: APjAAAW1r9LRd/5iAnCmEAJs+v3545lE/u4gSqW/qL5U5CquwOFcB7sI
-        7OHD/+6Z9xpm/Db96ovjnRhrMhvzwQmtnSuZHDgHcrIn
-X-Google-Smtp-Source: APXvYqxO1M9SsfvsEtMjn6bF+rEq7sRKb12tvZGh5y8skVng9zb4XL/QUI/Alr8nAhH+JJMWFI9x+cmtZA+MWjC/M9Y=
-X-Received: by 2002:a67:ff82:: with SMTP id v2mr23145347vsq.35.1575971496164;
- Tue, 10 Dec 2019 01:51:36 -0800 (PST)
+        bh=ybsluu38MO5eh/YLSNECYiElz7Q4IKjXe1U2m0DW3pA=;
+        b=ON7c195+cN1emN9ivf3uVN9F0ZvB59sxuY6U6X7EHTpepPQt5GI4/mVKyWgSqF2Fq9
+         oujU2YIpeuZyJAw5Tjq5JunTD9b39hKcXUS0MImpIXHtm6vLl5/qJXfU+3kkMdECvc24
+         T1zbyqg27TmAEpBGX0EG9iBdTs1nC0a1JBVqCMFuWPk440tsPf2mCWIEVHAZOjb8zYWx
+         7YNOfW+YBTHXRaPiu74q8b8owhqkn7Vp78mlHw3yYJyeN/W5lYQ2JrnUEORzUtT6YVVx
+         vXIPS35rdfz3D6SOE7fG+2O3h4gmJ3c90w3YtJnj8KoDcn3FXMKTCNtBx5+UE4dXNXV/
+         eYzQ==
+X-Gm-Message-State: APjAAAVB2TAGwvRkpg+ysGrH40G8cK+4kBEfjqS7y23ip3wEByQ1s5IH
+        q65UQjQRLnCIiFaVtLhnBMQUjSc8qlx5N3cNMoseOQ==
+X-Google-Smtp-Source: APXvYqwWNMYBAQkevXVNBP8cKIcAOSNAKJn6/eATEcFnzDvyeoLn5MqjM1Lw9GooaMA+WqRtf1+QrA4tXx8wiDf2JfA=
+X-Received: by 2002:a67:b649:: with SMTP id e9mr24229005vsm.34.1575971526021;
+ Tue, 10 Dec 2019 01:52:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20191128110422.25917-1-faiz_abbas@ti.com>
-In-Reply-To: <20191128110422.25917-1-faiz_abbas@ti.com>
+References: <20191204085447.27491-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191204085447.27491-1-linux@rasmusvillemoes.dk>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 10:51:00 +0100
-Message-ID: <CAPDyKFp2Lvea+7-sExpcUvuLsi7QTuk1169nYdUn-CFYj+BAVg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Tue, 10 Dec 2019 10:51:30 +0100
+Message-ID: <CAPDyKFqyU1nyVUsuAPC8ZDCm88JOq45aywDM7AqR9vfr0k90jw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add
+ erratum A-009204 support"
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Yinbo Zhu <yinbo.zhu@nxp.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Cooper <alcooperx@gmail.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Nov 2019 at 12:03, Faiz Abbas <faiz_abbas@ti.com> wrote:
+On Wed, 4 Dec 2019 at 09:54, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
 >
-> This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
+> This reverts commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c.
 >
-> This commit aims to treat SD High speed and SDR25 as the same while
-> setting UHS Timings in HOST_CONTROL2 which leads to failures with some
-> SD cards in AM65x. Revert this commit.
+> First, the fix seems to be plain wrong, since the erratum suggests
+> waiting 5ms before setting setting SYSCTL[RSTD], but this msleep()
+> happens after the call of sdhci_reset() which is where that bit gets
+> set (if SDHCI_RESET_DATA is in mask).
 >
-> The issue this commit was trying to fix can be implemented in a platform
-> specific callback instead of common sdhci code.
+> Second, walking the whole device tree to figure out if some node has a
+> "fsl,p2020-esdhc" compatible string is hugely expensive - about 70 to
+> 100 us on our mpc8309 board. Walking the device tree is done under a
+> raw_spin_lock, so this is obviously really bad on an -rt system, and a
+> waste of time on all.
 >
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> In fact, since esdhc_reset() seems to get called around 100 times per
+> second, that mpc8309 now spends 0.8% of its time determining that
+> it is not a p2020. Whether those 100 calls/s are normal or due to some
+> other bug or misconfiguration, regularly hitting a 100 us
+> non-preemptible window is unacceptable.
+>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-Applied for fixes, thanks!
+Applied for fixes and by adding a stable tag, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 3140fe2e5dba..296d955ede59 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1882,9 +1882,7 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
->                 ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
->         else if (timing == MMC_TIMING_UHS_SDR12)
->                 ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
-> -       else if (timing == MMC_TIMING_SD_HS ||
-> -                timing == MMC_TIMING_MMC_HS ||
-> -                timing == MMC_TIMING_UHS_SDR25)
-> +       else if (timing == MMC_TIMING_UHS_SDR25)
->                 ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
->         else if (timing == MMC_TIMING_UHS_SDR50)
->                 ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+> The errata sheet for mpc8309 also mentions A-009204, so I'm not at all
+> opposed to having a fix for that. But it needs to be done properly
+> without causing a huge performance or latency impact. We should
+> probably just add a bit to struct sdhci_esdhc which gets initialized
+> in esdhc_init.
+>
+>  drivers/mmc/host/sdhci-of-esdhc.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+> index 5cca3fa4610b..7f87a90bf56a 100644
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -764,9 +764,6 @@ static void esdhc_reset(struct sdhci_host *host, u8 mask)
+>         sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>         sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+>
+> -       if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
+> -               mdelay(5);
+> -
+>         if (mask & SDHCI_RESET_ALL) {
+>                 val = sdhci_readl(host, ESDHC_TBCTL);
+>                 val &= ~ESDHC_TB_EN;
 > --
-> 2.19.2
+> 2.23.0
 >
