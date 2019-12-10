@@ -2,129 +2,124 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31681C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DA0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C31205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013072;
-	bh=dC6fjqGh654ZZLwYjdy87ftZ5dG/h1Xx9eEY+r9Uk6Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h/1rx6KnMTCaFNgx3DCLvM1h93eUIFDJzNm3sOpV9ONoCguA+jV/Qw7dJ/I8LNgN1
-	 T66pkDvjg8dF1jMPkZ3wCzDgN8tsUTROE0c21zEVJBax7PFbH28PE07B8/C0VzuDjC
-	 65FyHMeL947pMHBWM+iVzrRpECPN2kHYBPvwjVzU=
+	by mail.kernel.org (Postfix) with ESMTP id 3551D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="KHpIsIRJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfLJVYb (ORCPT
+        id S1727689AbfLJVYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbfLJVKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22B3E246AF;
-        Tue, 10 Dec 2019 21:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012251;
-        bh=dC6fjqGh654ZZLwYjdy87ftZ5dG/h1Xx9eEY+r9Uk6Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CmsVIdVGPBbLbliVtnUKOlLgY6ihmRnVqACPBbdMKv9P7yKDxieqet1UZ0tHniLU
-         SU+w8iLDYxIyWrv63iKU+VasR0zrBfD1ceyHSVCrTG1+MHYMvfV5nW+aJKNzVimm3I
-         yip71i/qS9alvx1+OrqDgxZgmKddLo8hwDLeYlrY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 198/350] pinctrl: qcom: sc7180: Add missing tile info in SDC_QDSD_PINGROUP/UFS_RESET
-Date:   Tue, 10 Dec 2019 16:05:03 -0500
-Message-Id: <20191210210735.9077-159-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:24:36 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33492 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728723AbfLJVYc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:24:32 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 6so9506321pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:24:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=y6ht5YW8dhI/whPoru8OJyyMGM1ELyH7ioiCN142OAA=;
+        b=KHpIsIRJFHpu/RE+iNns/3lFjXjW7dmPCYbVqVy2fJCsmV0QXQ+Sh1tnMDBlQiuHmc
+         dEdTZ91YLJNA0acWzBev8p8U2ZgM+kMxUf+plwKLeldKf/To+yI5l1o4i8w6eTKp67zG
+         5dOPnsWjpA1rf6+HIWCJ+ywJzhdiKHqRCJKdvupaO7nSR4TdgIp4YpeCGEU6UiV3+fdo
+         pD3cHPJrjOAoe4q81m+GIuaF74ThJeM9p4B2vthnNVJV3HZGRmtIY58FYWwYzY33SbtP
+         1bh8dCKk0ZyFnxfk0aH69bVqn3mpPv1B7xR9cPH+XqM+NS6HtwMQBT61qWveHYnZjywR
+         tVaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=y6ht5YW8dhI/whPoru8OJyyMGM1ELyH7ioiCN142OAA=;
+        b=oHRaPEPph2z6/fifyr8v8LJYluXeG0j2EJ4a3owMU2kX4YPlNCp7wIMb6yhFKDD48E
+         mAWGzNCLetgV/KKn6EISqxqN01fOFo55gzrlKGsaOl1GGLVfAaQcqnEfEmYRMy1tZFYs
+         CZ7ACLQAX44FCI0JWUftR30gxgZEpNOEphE39RTmj/sQ+JYMSthBA56EBhq0vC/v0Djd
+         Ye5mANs4KxRXk8ReYKp/S7rsZ2Y69AzWj2QAmHlrUr/IXhXQRgfWxUHUvqTFzwNObMR3
+         p3Ms5rTh9iqNhdvik1byBuZF5RybAfFTILHLy2dKAe0SRYS5UBzh6bAldUYpBePOX5w/
+         6LFQ==
+X-Gm-Message-State: APjAAAWNpIpJn67cpvvpF1+dbO+o29y5R/AbNh5leX4L2S442TXyo3hy
+        xAna8WrtOEoAvSN/iCT+L7Q7bA==
+X-Google-Smtp-Source: APXvYqzC6v4sPSMefQJvm+lNgRpCI17boTVEAvsS1g+uMr6wh21YyjZZNzvkuO7OK4RunNjrL9QxpA==
+X-Received: by 2002:a62:3045:: with SMTP id w66mr8948273pfw.122.1576013071142;
+        Tue, 10 Dec 2019 13:24:31 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id v29sm4200264pgl.88.2019.12.10.13.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 13:24:30 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:24:28 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
+ ksyms
+Message-ID: <20191210132428.4470a7b0@cakuba.netronome.com>
+In-Reply-To: <87eexbhopo.fsf@toke.dk>
+References: <20191210181412.151226-1-toke@redhat.com>
+        <20191210125457.13f7821a@cakuba.netronome.com>
+        <87eexbhopo.fsf@toke.dk>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
+On Tue, 10 Dec 2019 22:09:55 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+> Jakub Kicinski <jakub.kicinski@netronome.com> writes:
+> > On Tue, 10 Dec 2019 19:14:12 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wr=
+ote: =20
+> >> When the kptr_restrict sysctl is set, the kernel can fail to return
+> >> jited_ksyms or jited_prog_insns, but still have positive values in
+> >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when t=
+rying
+> >> to dump the program because it only checks the len fields not the actu=
+al
+> >> pointers to the instructions and ksyms.
+> >>=20
+> >> Fix this by adding the missing checks.
+> >>=20
+> >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> =20
+> >
+> > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+> >
+> > and
+> >
+> > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm f=
+ield")
+> >
+> > ? =20
+>=20
+> Yeah, guess so? Although I must admit it's not quite clear to me whether
+> bpftool gets stable backports, or if it follows the "only moving
+> forward" credo of libbpf?
 
-[ Upstream commit 81898a44f288607cb3b11a42aed6efb646891c19 ]
+bpftool does not have a GH repo, and seeing strength of Alexei's
+arguments in the recent discussion - I don't think it will. So no
+reason for bpftool to be "special" =E2=9D=84=EF=B8=8F.
 
-The SDC_QDSD_PINGROUP/UFS_RESET macros are missing the .tile info needed to
-calculate the right register offsets. Adding them here and also
-adjusting the offsets accordingly.
+Then again seeing Andrii's zeal for pushing the codegen stuff into
+bpftool, maybe Facebook's intention is to make it so.
 
-Fixes: f2ae04c45b1a ("pinctrl: qcom: Add SC7180 pinctrl driver")
+Hard to tell what to do when standard practices don't apply, sigh.
 
-Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Link: https://lore.kernel.org/r/20191021141507.24066-1-rnayak@codeaurora.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> Anyhow, I don't suppose it'll hurt to have the Fixes: tag(s) in there;
+> does Patchwork pick these up (or can you guys do that when you apply
+> this?), or should I resend?
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 6399c8a2bc22c..d6cfad7417b1c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -77,6 +77,7 @@ enum {
- 		.intr_cfg_reg = 0,			\
- 		.intr_status_reg = 0,			\
- 		.intr_target_reg = 0,			\
-+		.tile = SOUTH,				\
- 		.mux_bit = -1,				\
- 		.pull_bit = pull,			\
- 		.drv_bit = drv,				\
-@@ -102,6 +103,7 @@ enum {
- 		.intr_cfg_reg = 0,			\
- 		.intr_status_reg = 0,			\
- 		.intr_target_reg = 0,			\
-+		.tile = SOUTH,				\
- 		.mux_bit = -1,				\
- 		.pull_bit = 3,				\
- 		.drv_bit = 0,				\
-@@ -1087,14 +1089,14 @@ static const struct msm_pingroup sc7180_groups[] = {
- 	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
- 	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
- 	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
--	[119] = UFS_RESET(ufs_reset, 0x97f000),
--	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x97a000, 15, 0),
--	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x97a000, 13, 6),
--	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x97a000, 11, 3),
--	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x97a000, 9, 0),
--	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x97b000, 14, 6),
--	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x97b000, 11, 3),
--	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
-+	[119] = UFS_RESET(ufs_reset, 0x7f000),
-+	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x7a000, 15, 0),
-+	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x7a000, 13, 6),
-+	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x7a000, 11, 3),
-+	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x7a000, 9, 0),
-+	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x7b000, 14, 6),
-+	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x7b000, 11, 3),
-+	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x7b000, 9, 0),
- };
- 
- static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
--- 
-2.20.1
+I don't think it does, but perhaps Daniel's scripts do.
 
+Either way I don't think it's worth a resend.
