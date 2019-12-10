@@ -2,123 +2,106 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05171C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FBE2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017194;
-	bh=J6B8HlLUigPcN0DeWky0J2jLohY05gbyBwu7gCAHV64=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpfXM/rUmM3YJi0+u2G7Cyn4moFAr385KoAqdMotstzVK6g4zqWFaDi3ODx45Fo+h
-	 Y0wgRJJJ0Bvn60VWiS/oCnahjpqnld7tGpprjRZ+fsrt80WD1hMpmJTcBVXpWrmOiX
-	 Tro25cfPQ/XJEDSEs0936fxaJta0mOcpxV4jIMBY=
+	by mail.kernel.org (Postfix) with ESMTP id BFDF42073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="x3zO7znl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfLJWdN (ORCPT
+        id S1728857AbfLJWdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbfLJWcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E2D4214AF;
-        Tue, 10 Dec 2019 22:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017139;
-        bh=J6B8HlLUigPcN0DeWky0J2jLohY05gbyBwu7gCAHV64=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+lDwatyxlyuhE24UM1hM4ro2TFYr5nam2xqXPqsGaeRCYEAcFgl0TlQoUa9uHGp/
-         nJs/1CL9NBY3uac4e0lHsCPZMIL9k9XXmMOBnnStG5rx1vAyq693wOlK1pEyhdBJRY
-         jMWFNiP6oGj5MiHMg+sadGmLcSXcl6fzKInUuJYo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 87/91] crypto: vmx - Avoid weird build failures
-Date:   Tue, 10 Dec 2019 17:30:31 -0500
-Message-Id: <20191210223035.14270-87-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 17:33:20 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58808 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727683AbfLJWdS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=l5nCDL9ygOAUkfMI19xtYeqlPRqrJq8DhttmTEm6aW8=; b=x3zO7znlJD+0Desk5TPJUwH4zH
+        8sLQF0FvCKSQ68+jTwttTyTuVtF5Fu0u7j9GaxohPhKKNlvDBe/GN7ePxHHCYfkf3YwURFsll0r/r
+        ZzFm9YrCZJ2s5VYHMXNTDBH9YFG9iKFXyhUyKoc7ZWrL9xfhE1xnZtq72n7bdEb6FbtCNWuhjnc0y
+        Agt7gLeB0/UZFgZu8oyy0kchCihvxbfFM7ZeeaUww/TnCBl7vq1rj3s2BSXHOWlVh3+FS6q2wfHpA
+        7lXs3Dudp2TDEuzWX2TlG8N6KGEA5kRR0sRmV+OHJKsm1LRWPIe+B+miJTz8Wm9jDgMArS3LOYD0v
+        F1Oa54Mw==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:42694 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1ieo42-0004Lp-6r; Tue, 10 Dec 2019 22:33:06 +0000
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1ieo41-00023K-2O; Tue, 10 Dec 2019 22:33:05 +0000
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] net: marvell: mvpp2: phylink requires the link interrupt
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
+Date:   Tue, 10 Dec 2019 22:33:05 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+phylink requires the MAC to report when its link status changes when
+operating in inband modes.  Failure to report link status changes
+means that phylink has no idea when the link events happen, which
+results in either the network interface's carrier remaining up or
+remaining permanently down.
 
-[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
+For example, with a fiber module, if the interface is brought up and
+link is initially established, taking the link down at the far end
+will cut the optical power.  The SFP module's LOS asserts, we
+deactivate the link, and the network interface reports no carrier.
 
-In the vmx crypto Makefile we assign to a variable called TARGET and
-pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
+When the far end is brought back up, the SFP module's LOS deasserts,
+but the MAC may be slower to establish link.  If this happens (which
+in my tests is a certainty) then phylink never hears that the MAC
+has established link with the far end, and the network interface is
+stuck reporting no carrier.  This means the interface is
+non-functional.
 
-The variable is meant to describe what flavour of powerpc we're
-building for, eg. either 32 or 64-bit, and big or little endian.
+Avoiding the link interrupt when we have phylink is basically not
+an option, so remove the !port->phylink from the test.
 
-Unfortunately TARGET is a fairly common name for a make variable, and
-if it happens that TARGET is specified as a command line parameter to
-make, the value specified on the command line will override our value.
-
-In particular this can happen if the kernel Makefile is driven by an
-external Makefile that uses TARGET for something.
-
-This leads to weird build failures, eg:
-  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
-  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
-
-Which shows that we passed an empty value for $(TARGET) to the perl
-script, confirmed with make V=1:
-
-  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
-
-We can avoid this confusion by using override, to tell make that we
-don't want anything to override our variable, even a value specified
-on the command line. We can also use a less common name, given the
-script calls it "flavour", let's use that.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 ---
- drivers/crypto/vmx/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
-index de6e241b08666..957377c309a91 100644
---- a/drivers/crypto/vmx/Makefile
-+++ b/drivers/crypto/vmx/Makefile
-@@ -2,13 +2,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
- vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 111b3b8239e1..ef44c6979a31 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
+ 		valid = true;
+ 	}
  
- ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
--TARGET := linux-ppc64le
-+override flavour := linux-ppc64le
- else
--TARGET := linux-ppc64
-+override flavour := linux-ppc64
- endif
- 
- quiet_cmd_perl = PERL $@
--      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
-+      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
- 
- $(src)/aesp8-ppc.S: $(src)/aesp8-ppc.pl
- 	$(call cmd,perl)
+-	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
++	if (priv->hw_version == MVPP22 && port->link_irq) {
+ 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
+ 				  dev->name, port);
+ 		if (err) {
 -- 
 2.20.1
 
