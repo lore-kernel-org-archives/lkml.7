@@ -2,104 +2,123 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CCAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EFAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4033220828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="r0JdLzmk"
+	by mail.kernel.org (Postfix) with ESMTP id 990F320828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLJP3z (ORCPT
+        id S1727494AbfLJPcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:29:55 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:38452 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfLJP3y (ORCPT
+        Tue, 10 Dec 2019 10:32:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46702 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727320AbfLJPcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:29:54 -0500
-Received: by mail-pj1-f68.google.com with SMTP id l4so7546385pjt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=2m22tRgRbycGVEq+HVbXDKyMLb2WG5FY05Buaglo9kM=;
-        b=r0JdLzmkZyMw5U1N8SSKuKPpSPZBRu+iwEoZMlFIyi3yWca1kiu95uT/H40Ku4JEJs
-         UAQhPgiiUxurKjHE7cRJ9UtwxYVm3UUHbNseBlL3mGf0snPT5C8543snsENdosoncC/G
-         cRb7kVJEhBZQWIsstysaGrcbiHO1lWsE4PzmbdtaVrdq1JR4uFle9Q1ohNcc6tN1Bivv
-         FdB7q3gH8oCkmrjwjh7A+kAhy3zWozUQccExZiS5xkxcoE/5SW53nLIhOz77LJ2aCuNc
-         BSNM8roab+j3D6+RVyFZAzuNMpFJiaL7D/HjXi/jBHsShi8WmUvuWzgYxehLtFFIVevf
-         FL+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=2m22tRgRbycGVEq+HVbXDKyMLb2WG5FY05Buaglo9kM=;
-        b=BZ0oHql41PvKXdsP1LpdN/tOdSxA3xT91eIb7f0R+H7Q++MOVIQ0WxLU28KBaupbMC
-         fJMnPImDgQK6kgeD7UsaYn0wpp0yY+GJkY6PBEHO06IFMkfLBpfPPaqNc2fIdh8YQSKU
-         fG1tE92h65ON32DMRBnZoGPN+j0BU8aqqBNT/5Inyz9jbBcw6gopzt7TR6SqGPKVVqaz
-         SrjeWfowyrsA7V5IqN4PtYsvh/kJBjAKYjFnIfM/46ufgu8Bqw0WhBWJ2cEYCoikdtkJ
-         bsSSKRxOfDz39/lGyHT3keUr9JXz+sBlEXcqMVCWc8zSOU1eIyB8e7ikXCkQMt8Y5Kdw
-         QFdw==
-X-Gm-Message-State: APjAAAWcdSEkSiGfgJP/mCNr4UcTOGpyo1ddBBTI3z6pTn3O4414M9M3
-        Jd4pKn3G6GSdhfkedUULmEJb7A==
-X-Google-Smtp-Source: APXvYqyHQzkzTLkwLjbXtc6sUNJJurnhyP/lLslash6Z9KOPtwCs7R/U0YPczA84LkoNP5xz0hxYvg==
-X-Received: by 2002:a17:902:b68c:: with SMTP id c12mr35217696pls.126.1575991793962;
-        Tue, 10 Dec 2019 07:29:53 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:1854:f81f:5bdb:c33c? ([2601:646:c200:1ef2:1854:f81f:5bdb:c33c])
-        by smtp.gmail.com with ESMTPSA id j18sm3743530pfn.112.2019.12.10.07.29.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 07:29:53 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86-64/entry: add instruction suffix to SYSRET
-Date:   Tue, 10 Dec 2019 07:29:52 -0800
-Message-Id: <08B92B44-CCA9-4B83-B9CC-F1601D44B73F@amacapital.net>
-References: <cbecab05-9e95-5dec-ef81-499617c153a6@suse.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-In-Reply-To: <cbecab05-9e95-5dec-ef81-499617c153a6@suse.com>
-To:     Jan Beulich <JBeulich@suse.com>
-X-Mailer: iPhone Mail (17A878)
+        Tue, 10 Dec 2019 10:32:00 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iehUR-00044m-8O; Tue, 10 Dec 2019 15:31:55 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iehUQ-0007aj-Bv; Tue, 10 Dec 2019 15:31:54 +0000
+Message-ID: <e1df16f96a889e870045d6198b3cd301d135003f.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 10/72] video: of: display_timing: Add of_node_put()
+ in of_get_display_timing()
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        David Airlie <airlied@linux.ie>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 10 Dec 2019 15:31:49 +0000
+In-Reply-To: <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
+References: <lsq.1575813164.154362148@decadent.org.uk>
+         <lsq.1575813165.830287385@decadent.org.uk>
+         <CAD=FV=XpyONBT_XcKLRj2qkcJHkVntoHJJs=tYbVjzF9V10ziQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-ekvcjEuOJjj69DSg13MY"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--=-ekvcjEuOJjj69DSg13MY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Dec 10, 2019, at 2:48 AM, Jan Beulich <JBeulich@suse.com> wrote:
+On Mon, 2019-12-09 at 13:19 -0800, Doug Anderson wrote:
+> Hi,
 >=20
-> =EF=BB=BFOmitting suffixes from instructions in AT&T mode is bad practice w=
-hen
-> operand size cannot be determined by the assembler from register
-> operands, and is likely going to be warned about by upstream gas in the
-> future. Add the missing suffix here.
+> On Sun, Dec 8, 2019 at 5:54 AM Ben Hutchings <ben@decadent.org.uk> wrote:
+> > 3.16.79-rc1 review patch.  If anyone has any objections, please let me =
+know.
+> >=20
+> > ------------------
+> >=20
+> > From: Douglas Anderson <dianders@chromium.org>
+> >=20
+> > commit 4faba50edbcc1df467f8f308893edc3fdd95536e upstream.
+> >=20
+> > =3D46romcode inspection it can be seen that of_get_display_timing() is
+> > lacking an of_node_put().  Add it.
 >=20
-> Signed-off-by: Jan Beulich <jbeulich@suse.com>
->=20
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1728,7 +1728,7 @@ END(nmi)
-> SYM_CODE_START(ignore_sysret)
->    UNWIND_HINT_EMPTY
->    mov    $-ENOSYS, %eax
-> -    sysret
-> +    sysretl
+> I don't object, but I am curious why "From code" got turned into
+> "=3D46romcode" in the commit message.
 
-Isn=E2=80=99t the default sysretq?  sysretl looks more correct, but that sug=
-gests that your changelog is wrong.
+I'm not sure why this happened, but it has happened in the process of
+generating the review mail.  The patch file I'm actually going to apply
+is not affected.
 
-Is this code even reachable?
+Ben.
 
-> SYM_CODE_END(ignore_sysret)
-> #endif
->=20
+--=20
+Ben Hutchings
+Experience is directly proportional to the value of equipment destroyed
+                                                    - Carolyn Scheppner
+
+
+
+--=-ekvcjEuOJjj69DSg13MY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3vumUACgkQ57/I7JWG
+EQkGRRAAxOkWOx0oI/kMsYlf9iX8k6HAXnLbZ/em6+gnuT8sVhqpJ3oHcnZttUAe
+dgSZIH6nvhOlfj7tVhcK0GVtlfkSOc+YnlM5ieRkDbS7CM3NVD8DcGr7JMVMUdDv
+ftYJQrv3aa/ptHUmdr4W3OzG9ZmVaM6A1acKgVd0Ot5QB1mbeChyNaRFme1sesFf
+pzdM05cbMfRD5aNB+Bp6WMsQenHMrJkTTjE4LkgrSN7VMoi9uhsOJK1W3wA7u2yM
+P3Nq/7rE+rrgtCfXYSvjlXkwplF+eYhP90YvrHCrpZZiOoS4EpPIg11jmmtK7zQH
+19MZZwc+SX3jtX+rPcKUckp6S9CoEEapqGTL74JoEcy5DodwfcnGrPzU3tSD7Rwm
+BGdyRoEzEHw7lhrNzBMtZ+QUv3+mqM3Qtd7CWTsJLj2RMxzB/qsaUAMh9VE1Wlr7
+nspF96mLXXL8Hy6sjheHLsV4xq6KpSaivLrSqIcmUUo2tU7MUra+YxyQzn/icwyB
+uJLi1yQxJlYdgBN4Mkb+xOQtk9zO719mDQYcPeYDn2L2+vC29aPQBYX3Eu+pmQfk
+cs8sWddjb5ZQmupeSEX37svxZ0hBnNGKowP+wFtLYdlymn5KG5dLjJy5/fKupVAa
+TDhcwheI8OpJm+IhffaLoJre+A3HZQCPIKTnYtRLrtzGQVnZxHo=
+=JsqF
+-----END PGP SIGNATURE-----
+
+--=-ekvcjEuOJjj69DSg13MY--
