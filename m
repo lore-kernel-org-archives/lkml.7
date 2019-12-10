@@ -2,215 +2,254 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602D9C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0369C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D50920838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC8320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QayVJLfz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YN5mb0RN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLJMbT (ORCPT
+        id S1727619AbfLJMb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:31:19 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39946 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbfLJMbS (ORCPT
+        Tue, 10 Dec 2019 07:31:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41054 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727387AbfLJMbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:31:18 -0500
-Received: by mail-ua1-f66.google.com with SMTP id v18so2463736uaq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
-        b=QayVJLfzwhxAFLgXNRzLMZdJ0IvLzxp4+fLYkgsafsn6S05wJNPxe1W2fAZYyUBGR8
-         BcCeWqYv6slEWraMiYfCcPv4pF0tfY9IyHA+7AWdiyjqH31IZzLc5y/xNthjj+0mqejq
-         /gjucQhq10JYIm5v0/LMFDew4Ilc+OXTn08xJPNEu664cWU63FxtQ7yCvrJrZZa8xDGP
-         W9EiAP+c5SMOv4CIfQw/j0wZDvKbWs+qtoigdrFb6GjKOwnzrUG6gxYkrj4TJEB4DeJS
-         YgnZ+BySLGuychJ02elTMZf7LBTg/2mNw+VpOcdbROX8BTpOTFbTDzDl1jY4Q1isKofp
-         L0Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
-        b=UpLf2NJd1lc96Ipp7/QUY1tBrpSt4osQZoqfhqpwigsgoHSO76NJCh3sx2NduJ9AlW
-         cAbbPd6vv8uocE1whyiBTRQBGt3jrz4wvcVLh6zGeKWizhG9M1Guk59GDhEKkTQ7w88q
-         EZSjesbzXizVTNcLn1BXi+KodvEGHXdQdJ5X1ZcGJClYFuOd7sL3cZIAinNYAoR7pb/o
-         AlpUICVn/VysPbFWMTsOFmA8lae4OIeCOMlXvu7kPdCsIzRet1aV5cN1fpAvbklF8cSv
-         qIDWjTJy4qiA00cAyDNzhcT3Sa/PDd8c0PNDlIfHyv/I3pV6qDNNrNMX8x0n3BWnu/kU
-         Cjvg==
-X-Gm-Message-State: APjAAAXiY0xanlaTzk9hXEMFbs232WOkefBQdFDxsq0his0AWCukGSH6
-        o4rYT+u39id0eJ7B5adqVLGh/vC0Y1YIcTXuP6+Vqw==
-X-Google-Smtp-Source: APXvYqyrTM1DC8Fmp+/CAB2noSeEwqc06KeL4uYpQ1xlDaNR2EbcD+cNIjYR1xbMle/tNoYu8/S+qEj9nJ91/lu54KE=
-X-Received: by 2002:ab0:2759:: with SMTP id c25mr3460125uap.104.1575981077116;
- Tue, 10 Dec 2019 04:31:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20191113172514.19052-1-ludovic.Barre@st.com>
-In-Reply-To: <20191113172514.19052-1-ludovic.Barre@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 13:30:41 +0100
-Message-ID: <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
- non-functional state
-To:     Ludovic Barre <ludovic.Barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Dec 2019 07:31:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575981080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HvgsBcRC4TVa6w24xm3w8RBJ94V6lOTy3XS+1K6EYBM=;
+        b=YN5mb0RNoX8eFgC4n1k3ypPJ+Ioh0Pb5oSAkBVCNqQyYP9MfiO0/pVps6J8QdrTJjFMec1
+        GBMnNHoeAa8klR/4uxS8Xr/yuGvWU44fyotsjonm1C+AQuPWsQo2wVWBT2f3TPPRNIkaBU
+        AOmnHxWCftfpqe/2l4zTWPVJ731iw+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-27-0FHKC64VOV-ZpOKqjnlYaw-1; Tue, 10 Dec 2019 07:31:19 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90766800D5C;
+        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5779760BE1;
+        Tue, 10 Dec 2019 12:31:17 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id D5B2020C2A; Tue, 10 Dec 2019 07:31:15 -0500 (EST)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: [PATCH v6 15/27] nfs: get rid of ->set_security()
+Date:   Tue, 10 Dec 2019 07:31:03 -0500
+Message-Id: <20191210123115.1655-16-smayhew@redhat.com>
+In-Reply-To: <20191210123115.1655-1-smayhew@redhat.com>
+References: <20191210123115.1655-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 0FHKC64VOV-ZpOKqjnlYaw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
->
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> If datatimeout occurs on R1B request, the Data Path State Machine stays
-> in busy and is non-functional. Only a reset aborts the DPSM.
->
-> Like a reset must be outside of critical section, this patch adds
-> threaded irq function to release state machine. In this case,
-> the mmc_request_done is called at the end of threaded irq and
-> skipped into irq handler.
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
->  drivers/mmc/host/mmci.h |  1 +
->  2 files changed, 40 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 40e72c30ea84..ec6e249c87ca 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
->  static void
->  mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
->  {
-> +       if (host->irq_action == IRQ_WAKE_THREAD)
-> +               return;
-> +
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-It seems a bit unnecessary to check this every time mmci_request_end()
-is called.
+it's always either nfs_set_sb_security() or nfs_clone_sb_security(),
+the choice being controlled by mount_info->cloned !=3D NULL.  No need
+to add methods, especially when both instances live right next to
+the caller and are never accessed anywhere else.
 
-How about avoiding to call mmci_request_end() for the one specific
-condition instead? See more below.
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/nfs/internal.h  |  3 --
+ fs/nfs/namespace.c |  1 -
+ fs/nfs/nfs4super.c |  3 --
+ fs/nfs/super.c     | 69 ++++++++++++++--------------------------------
+ 4 files changed, 21 insertions(+), 55 deletions(-)
 
->         writel(0, host->base + MMCICOMMAND);
->
->         BUG_ON(host->data);
-> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->         } else if (host->variant->busy_timeout && busy_resp &&
->                    status & MCI_DATATIMEOUT) {
->                 cmd->error = -ETIMEDOUT;
-> +               host->irq_action = IRQ_WAKE_THREAD;
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 65c8e353cb6b..a467e43fc682 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -137,7 +137,6 @@ struct nfs_mount_request {
+=20
+ struct nfs_mount_info {
+ =09unsigned int inherited_bsize;
+-=09int (*set_security)(struct super_block *, struct dentry *, struct nfs_m=
+ount_info *);
+ =09struct nfs_parsed_mount_data *parsed;
+ =09struct nfs_clone_mount *cloned;
+ =09struct nfs_server *server;
+@@ -391,8 +390,6 @@ extern struct file_system_type nfs4_referral_fs_type;
+ #endif
+ bool nfs_auth_info_match(const struct nfs_auth_info *, rpc_authflavor_t);
+ struct dentry *nfs_try_mount(int, const char *, struct nfs_mount_info *);
+-int nfs_set_sb_security(struct super_block *, struct dentry *, struct nfs_=
+mount_info *);
+-int nfs_clone_sb_security(struct super_block *, struct dentry *, struct nf=
+s_mount_info *);
+ struct dentry *nfs_fs_mount(struct file_system_type *, int, const char *, =
+void *);
+ void nfs_kill_super(struct super_block *);
+=20
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 30331558bd8e..bfe607374feb 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -233,7 +233,6 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry,=
+ struct nfs_fh *fh,
+ =09};
+ =09struct nfs_mount_info mount_info =3D {
+ =09=09.inherited_bsize =3D sb->s_blocksize_bits,
+-=09=09.set_security =3D nfs_clone_sb_security,
+ =09=09.cloned =3D &mountdata,
+ =09=09.mntfh =3D fh,
+ =09=09.nfs_mod =3D NFS_SB(sb)->nfs_client->cl_nfs_mod,
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 5020a43b31c9..f1c2d294073a 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -201,8 +201,6 @@ struct dentry *nfs4_try_mount(int flags, const char *de=
+v_name,
+ =09struct nfs_parsed_mount_data *data =3D mount_info->parsed;
+ =09struct dentry *res;
+=20
+-=09mount_info->set_security =3D nfs_set_sb_security;
+-
+ =09dfprintk(MOUNT, "--> nfs4_try_mount()\n");
+=20
+ =09res =3D do_nfs4_mount(nfs4_create_server(mount_info),
+@@ -224,7 +222,6 @@ static struct dentry *nfs4_referral_mount(struct file_s=
+ystem_type *fs_type,
+ {
+ =09struct nfs_clone_mount *data =3D raw_data;
+ =09struct nfs_mount_info mount_info =3D {
+-=09=09.set_security =3D nfs_clone_sb_security,
+ =09=09.cloned =3D data,
+ =09=09.nfs_mod =3D &nfs_v4,
+ =09};
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index bec6c341f72c..de00f89dbe6e 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2550,52 +2550,6 @@ static void nfs_get_cache_cookie(struct super_block =
+*sb,
+ }
+ #endif
+=20
+-int nfs_set_sb_security(struct super_block *s, struct dentry *mntroot,
+-=09=09=09struct nfs_mount_info *mount_info)
+-{
+-=09int error;
+-=09unsigned long kflags =3D 0, kflags_out =3D 0;
+-=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL)
+-=09=09kflags |=3D SECURITY_LSM_NATIVE_LABELS;
+-
+-=09error =3D security_sb_set_mnt_opts(s, mount_info->parsed->lsm_opts,
+-=09=09=09=09=09=09kflags, &kflags_out);
+-=09if (error)
+-=09=09goto err;
+-
+-=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL &&
+-=09=09!(kflags_out & SECURITY_LSM_NATIVE_LABELS))
+-=09=09NFS_SB(s)->caps &=3D ~NFS_CAP_SECURITY_LABEL;
+-err:
+-=09return error;
+-}
+-EXPORT_SYMBOL_GPL(nfs_set_sb_security);
+-
+-int nfs_clone_sb_security(struct super_block *s, struct dentry *mntroot,
+-=09=09=09  struct nfs_mount_info *mount_info)
+-{
+-=09int error;
+-=09unsigned long kflags =3D 0, kflags_out =3D 0;
+-
+-=09/* clone any lsm security options from the parent to the new sb */
+-=09if (d_inode(mntroot)->i_fop !=3D &nfs_dir_operations)
+-=09=09return -ESTALE;
+-
+-=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL)
+-=09=09kflags |=3D SECURITY_LSM_NATIVE_LABELS;
+-
+-=09error =3D security_sb_clone_mnt_opts(mount_info->cloned->sb, s, kflags,
+-=09=09=09&kflags_out);
+-=09if (error)
+-=09=09return error;
+-
+-=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL &&
+-=09=09!(kflags_out & SECURITY_LSM_NATIVE_LABELS))
+-=09=09NFS_SB(s)->caps &=3D ~NFS_CAP_SECURITY_LABEL;
+-=09return 0;
+-}
+-EXPORT_SYMBOL_GPL(nfs_clone_sb_security);
+-
+ static void nfs_set_readahead(struct backing_dev_info *bdi,
+ =09=09=09      unsigned long iomax_pages)
+ {
+@@ -2610,6 +2564,7 @@ static struct dentry *nfs_fs_mount_common(int flags, =
+const char *dev_name,
+ =09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
+ =09int (*compare_super)(struct super_block *, void *) =3D nfs_compare_supe=
+r;
+ =09struct nfs_server *server =3D mount_info->server;
++=09unsigned long kflags =3D 0, kflags_out =3D 0;
+ =09struct nfs_sb_mountdata sb_mntdata =3D {
+ =09=09.mntflags =3D flags,
+ =09=09.server =3D server,
+@@ -2670,7 +2625,26 @@ static struct dentry *nfs_fs_mount_common(int flags,=
+ const char *dev_name,
+ =09if (IS_ERR(mntroot))
+ =09=09goto error_splat_super;
+=20
+-=09error =3D mount_info->set_security(s, mntroot, mount_info);
++
++=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL)
++=09=09kflags |=3D SECURITY_LSM_NATIVE_LABELS;
++=09if (mount_info->cloned) {
++=09=09if (d_inode(mntroot)->i_fop !=3D &nfs_dir_operations) {
++=09=09=09error =3D -ESTALE;
++=09=09=09goto error_splat_root;
++=09=09}
++=09=09/* clone any lsm security options from the parent to the new sb */
++=09=09error =3D security_sb_clone_mnt_opts(mount_info->cloned->sb, s, kfla=
+gs,
++=09=09=09=09&kflags_out);
++=09} else {
++=09=09error =3D security_sb_set_mnt_opts(s, mount_info->parsed->lsm_opts,
++=09=09=09=09=09=09=09kflags, &kflags_out);
++=09}
++=09if (error)
++=09=09goto error_splat_root;
++=09if (NFS_SB(s)->caps & NFS_CAP_SECURITY_LABEL &&
++=09=09!(kflags_out & SECURITY_LSM_NATIVE_LABELS))
++=09=09NFS_SB(s)->caps &=3D ~NFS_CAP_SECURITY_LABEL;
+ =09if (error)
+ =09=09goto error_splat_root;
+=20
+@@ -2695,7 +2669,6 @@ struct dentry *nfs_fs_mount(struct file_system_type *=
+fs_type,
+ =09int flags, const char *dev_name, void *raw_data)
+ {
+ =09struct nfs_mount_info mount_info =3D {
+-=09=09.set_security =3D nfs_set_sb_security,
+ =09};
+ =09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
+ =09struct nfs_subversion *nfs_mod;
+--=20
+2.17.2
 
-You could check this flag a few lines below and if it's set to
-IRQ_WAKE_THREAD, avoid to call mmci_request_end().
-
->         } else {
->                 cmd->resp[0] = readl(base + MMCIRESPONSE0);
->                 cmd->resp[1] = readl(base + MMCIRESPONSE1);
-> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->  {
->         struct mmci_host *host = dev_id;
->         u32 status;
-> -       int ret = 0;
->
->         spin_lock(&host->lock);
-> +       host->irq_action = IRQ_HANDLED;
->
->         do {
->                 status = readl(host->base + MMCISTATUS);
-> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                 if (host->variant->busy_detect_flag)
->                         status &= ~host->variant->busy_detect_flag;
->
-> -               ret = 1;
->         } while (status);
->
->         spin_unlock(&host->lock);
->
-> -       return IRQ_RETVAL(ret);
-> +       return host->irq_action;
-> +}
-> +
-> +/*
-> + * mmci_irq_threaded is call if the mmci host need to release state machines
-> + * before to terminate the request.
-> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
-> + * in busy and is non-functional. Only a reset can to abort the DPSM.
-> + */
-> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
-> +{
-> +       struct mmci_host *host = dev_id;
-> +       unsigned long flags;
-> +
-> +       if (host->rst) {
-> +               reset_control_assert(host->rst);
-> +               udelay(2);
-> +               reset_control_deassert(host->rst);
-> +       }
-> +
-> +       spin_lock_irqsave(&host->lock, flags);
-> +       writel(host->clk_reg, host->base + MMCICLOCK);
-> +       writel(host->pwr_reg, host->base + MMCIPOWER);
-> +       writel(MCI_IRQENABLE | host->variant->start_err,
-> +              host->base + MMCIMASK0);
-> +
-> +       host->irq_action = IRQ_HANDLED;
-> +       mmci_request_end(host, host->mrq);
-> +       spin_unlock_irqrestore(&host->lock, flags);
-> +
-> +       return host->irq_action;
->  }
->
->  static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
-> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
->                         goto clk_disable;
->         }
->
-> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
-> -                       DRIVER_NAME " (cmd)", host);
-> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
-> +                                       mmci_irq_threaded, IRQF_SHARED,
-> +                                       DRIVER_NAME " (cmd)", host);
->         if (ret)
->                 goto clk_disable;
->
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 158e1231aa23..5e63c0596364 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -412,6 +412,7 @@ struct mmci_host {
->
->         struct timer_list       timer;
->         unsigned int            oldstat;
-> +       u32                     irq_action;
->
->         /* pio stuff */
->         struct sg_mapping_iter  sg_miter;
-> --
-> 2.17.1
->
-
-Otherwise this looks good, besides my other earlier comments, of course.
-
-Kind regards
-Uffe
