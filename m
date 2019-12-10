@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D44AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430F2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E8D205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9C1205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012563;
-	bh=XGQqCVW6zSXcWoE/i4NhLzwM9TEfNzVmYhy2pL5CaBo=;
+	s=default; t=1576012575;
+	bh=62YUWTnUhGjAk9LgbavohVRi/4budOKUQ8hxrM+GGr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MqP2ToENoK1iPXcOJ0tHxRPOx4DGjOOrvRX9c16meYV7VHZR61naq5zwxhRaQ7qFa
-	 dTlVt+dz61Pw9b0/Ym1XA0BTFoDLQjDgBNpxNfYdPXZvsLLLNBptJgfIjqz2A1EqLE
-	 bbukEGEwyyJLZmvKYKbF5fXbFWtFsg+62AvYEb8M=
+	b=ENA+7Tne2uLFOxlK95Tiw2MLwEZMkN1DEhr0IArRuntZ3NRTpd9gGkP9b8y5bFZhi
+	 ekU4I5azMeC9o9AwTeKcFZc2hSInjw8Flp/fLTDXwkS6p+/suulATaOBSwNC91eeVV
+	 ASOM/kPKYkKDplHbVq8H/NYhvp3yOKUV6ovuLgCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLJVN0 (ORCPT
+        id S1729449AbfLJVQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:16:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfLJVNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:19 -0500
+        id S1729284AbfLJVNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16D0C214D8;
-        Tue, 10 Dec 2019 21:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FF8D205C9;
+        Tue, 10 Dec 2019 21:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012398;
-        bh=XGQqCVW6zSXcWoE/i4NhLzwM9TEfNzVmYhy2pL5CaBo=;
+        s=default; t=1576012401;
+        bh=62YUWTnUhGjAk9LgbavohVRi/4budOKUQ8hxrM+GGr4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgHqBzgM42g9uOGW+ZmHbgB2DDUOOu80hpiRZrqCEMLAwcDVeOv3AC1MuJUtZrCuN
-         xcfNdCC7bbvOjiKPT73dkLlNsXv776WtkzxbrcFqG2FZs8chk7WwYWCISdx4PMcfyx
-         D77eu8Szc2Q4Bv7V8jrdEjVtWJopL+77+rvwTFrc=
+        b=iciywV+KNFCh+NfGo6/RDXMtTTAs7+YvDSOgeAK3NFVSUnZkuN/zgH87GzuH1g2sh
+         Qrzqt7iXoPSyHXGc+H95Nd5kuwh/4ZqsreaRgKg8OghdjLcmISdK7V8TdmXjC/ZzbS
+         8ngTgsIGRrVnKjOptcdcPBjS9zQfpQZ8raDq8TeY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 318/350] s390/kasan: support memcpy_real with TRACE_IRQFLAGS
-Date:   Tue, 10 Dec 2019 16:07:03 -0500
-Message-Id: <20191210210735.9077-279-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 320/350] iwlwifi: check kasprintf() return value
+Date:   Tue, 10 Dec 2019 16:07:05 -0500
+Message-Id: <20191210210735.9077-281-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,74 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 13f9bae579c6bd051e58f326913dd09af1291208 ]
+[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
 
-Currently if the kernel is built with CONFIG_TRACE_IRQFLAGS and KASAN
-and used as crash kernel it crashes itself due to
-trace_hardirqs_off/trace_hardirqs_on being called with DAT off. This
-happens because trace_hardirqs_off/trace_hardirqs_on are instrumented and
-kasan code tries to perform access to shadow memory to validate memory
-accesses. Kasan shadow memory is populated with vmemmap, so all accesses
-require DAT on.
+kasprintf() can fail, we should check the return value.
 
-memcpy_real could be called with DAT on or off (with kasan enabled DAT
-is set even before early code is executed).
-
-Make sure that trace_hardirqs_off/trace_hardirqs_on are called with DAT
-on and only actual __memcpy_real is called with DAT off.
-
-Also annotate __memcpy_real and _memcpy_real with __no_sanitize_address
-to avoid further problems due to switching DAT off.
-
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
+Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/maccess.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/dvm/led.c | 3 +++
+ drivers/net/wireless/intel/iwlwifi/mvm/led.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index 1864a8bb9622f..59ad7997fed16 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -70,7 +70,7 @@ void notrace s390_kernel_write(void *dst, const void *src, size_t size)
- 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/led.c b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+index dd387aba33179..e8a4d604b9106 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+@@ -171,6 +171,9 @@ void iwl_leds_init(struct iwl_priv *priv)
  
--static int __memcpy_real(void *dest, void *src, size_t count)
-+static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
- {
- 	register unsigned long _dest asm("2") = (unsigned long) dest;
- 	register unsigned long _len1 asm("3") = (unsigned long) count;
-@@ -91,19 +91,23 @@ static int __memcpy_real(void *dest, void *src, size_t count)
- 	return rc;
- }
+ 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(priv->hw->wiphy));
++	if (!priv->led.name)
++		return;
++
+ 	priv->led.brightness_set = iwl_led_brightness_set;
+ 	priv->led.blink_set = iwl_led_blink_set;
+ 	priv->led.max_brightness = 1;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+index d104da9170ca9..72c4b2b8399d9 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+@@ -129,6 +129,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
  
--static unsigned long _memcpy_real(unsigned long dest, unsigned long src,
--				  unsigned long count)
-+static unsigned long __no_sanitize_address _memcpy_real(unsigned long dest,
-+							unsigned long src,
-+							unsigned long count)
- {
- 	int irqs_disabled, rc;
- 	unsigned long flags;
+ 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(mvm->hw->wiphy));
++	if (!mvm->led.name)
++		return -ENOMEM;
++
+ 	mvm->led.brightness_set = iwl_led_brightness_set;
+ 	mvm->led.max_brightness = 1;
  
- 	if (!count)
- 		return 0;
--	flags = __arch_local_irq_stnsm(0xf8UL);
-+	flags = arch_local_irq_save();
- 	irqs_disabled = arch_irqs_disabled_flags(flags);
- 	if (!irqs_disabled)
- 		trace_hardirqs_off();
-+	__arch_local_irq_stnsm(0xf8); // disable DAT
- 	rc = __memcpy_real((void *) dest, (void *) src, (size_t) count);
-+	if (flags & PSW_MASK_DAT)
-+		__arch_local_irq_stosm(0x04); // enable DAT
- 	if (!irqs_disabled)
- 		trace_hardirqs_on();
- 	__arch_local_irq_ssm(flags);
 -- 
 2.20.1
 
