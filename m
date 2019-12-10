@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD48C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BDBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23CB2469E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13DF24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012086;
-	bh=SBUx8yMp2GaWVuXdQGHugz9n6zPokEyvWLzJ9x4GqU8=;
+	s=default; t=1576012094;
+	bh=G2t14PKQErttC9S3UQM9Sagfp/s0I+3TuRwqFsKUQZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VA3DJdmOhjBsBMA11o+GiM0QNhllVzRfpHS+yNHoFDPFE1tp8+yBorr23dUSg/abY
-	 YzEs1XvmKZbMmCCNzIA71iUVG7F/4jNv2xA+AJeouKn2KYcKOSi/4mDgxZiYVZLOfr
-	 QfJbkPOMLEr9JnI8G8MAvoxE04hGA0r3wR66lB4M=
+	b=dMn7AAuPSrvl6euWxPvwPFOVvbCf5Tih31DmStrGYbWsnandTSqzXnCeF+800npXb
+	 0Sh+txsAh/psHe99aJ3QwsDWI59QSiblpDe8Yv9t6EgB972Oq657ofaujArWXb0A7y
+	 yrXlf4dEWrrmRJSOaBT+0E25YOXlK+qWWjd4e0Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfLJVIF (ORCPT
+        id S1727817AbfLJVIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:08:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:08:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfLJVHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:53 -0500
+        id S1727742AbfLJVIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535282468B;
-        Tue, 10 Dec 2019 21:07:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F013924697;
+        Tue, 10 Dec 2019 21:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012073;
-        bh=SBUx8yMp2GaWVuXdQGHugz9n6zPokEyvWLzJ9x4GqU8=;
+        s=default; t=1576012080;
+        bh=G2t14PKQErttC9S3UQM9Sagfp/s0I+3TuRwqFsKUQZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whdJJl7MCMzVqPkTV8iz0elwtIhrANvDrJfM6H5cWyIEhNRg4soUbd/ndZfUt1Yjh
-         nSv+ypy2fByHVZ9AUvDAe7M/c0pBHWWi7YHKQx3M7KxAPEtGPUlWbvZAf6cNgXfuat
-         I9rnsH9ukG5k4p9kq7zguqHsfdOpzyMp648fw7RI=
+        b=uhO9hmBq2KlhTpoiTwuu5GLlvs9KStOqzW01Usv4kBCEbHjCyuTrwuR5DMHxdYBCe
+         w2J7aIB//Q+YQ92VZFIdVJXq0tapH3Luj0VchJCmmtAbQbpyh5kgficVQfHnnP/cBl
+         d4nnz/zrj8CuH+ijZaFF1mbmfDXV2XUYxtAyCyYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Allen Pais <allen.pais@oracle.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 053/350] drm/amdkfd: fix a potential NULL pointer dereference (v2)
-Date:   Tue, 10 Dec 2019 16:02:38 -0500
-Message-Id: <20191210210735.9077-14-sashal@kernel.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 059/350] rtw88: fix NSS of hw_cap
+Date:   Tue, 10 Dec 2019 16:02:44 -0500
+Message-Id: <20191210210735.9077-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,42 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 81de29d842ccb776c0f77aa3e2b11b07fff0c0e2 ]
+[ Upstream commit 4f5bb7ff8b8d4bafd91243fc969ed240e67aa1ca ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+8822C is a 2x2 11ac chip, and then NSS must be less or equal to 2. However,
+current nss of hw cap is 3, likes
+	hw cap: hci=0x0f, bw=0x07, ptcl=0x03, ant_num=7, nss=3
 
-v2 (Felix Kuehling):
-* Fix compile error (kfifo_free instead of fifo_free)
-* Return proper error code
+This commit adds constraint to make sure NSS <= rf_path_num, and result
+looks like
+	hw cap: hci=0x0f, bw=0x07, ptcl=0x03, ant_num=7, nss=2
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/realtek/rtw88/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-index c56ac47cd3189..bc47f6a444564 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-@@ -62,6 +62,11 @@ int kfd_interrupt_init(struct kfd_dev *kfd)
- 	}
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 6dd457741b15d..7a3a4911bde2a 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -1020,7 +1020,8 @@ static int rtw_dump_hw_feature(struct rtw_dev *rtwdev)
  
- 	kfd->ih_wq = alloc_workqueue("KFD IH", WQ_HIGHPRI, 1);
-+	if (unlikely(!kfd->ih_wq)) {
-+		kfifo_free(&kfd->ih_fifo);
-+		dev_err(kfd_chardev(), "Failed to allocate KFD IH workqueue\n");
-+		return -ENOMEM;
-+	}
- 	spin_lock_init(&kfd->interrupt_lock);
+ 	rtw_hw_config_rf_ant_num(rtwdev, efuse->hw_cap.ant_num);
  
- 	INIT_WORK(&kfd->interrupt_work, interrupt_wq);
+-	if (efuse->hw_cap.nss == EFUSE_HW_CAP_IGNORE)
++	if (efuse->hw_cap.nss == EFUSE_HW_CAP_IGNORE ||
++	    efuse->hw_cap.nss > rtwdev->hal.rf_path_num)
+ 		efuse->hw_cap.nss = rtwdev->hal.rf_path_num;
+ 
+ 	rtw_dbg(rtwdev, RTW_DBG_EFUSE,
 -- 
 2.20.1
 
