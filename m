@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3C4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F45FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D818205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9978205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014645;
-	bh=rqiJcDmxOj5w4DNUtDakiAxzrhotGsLTvX+zXRMtAgY=;
+	s=default; t=1576014654;
+	bh=a4ZjSUbhdkUB9ysnpymNNPpDNmR+PGfGrZG2TExZ1qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wl3wxFyJnOS69UbS4u9CbG4KPIRmNSDQexBFqiSZR3T4BKATHxWbZ5dI3PiZ4jida
-	 O5jKrJsqA44eVujoZaejTqBTM3ti/J56yy7wNYVyf2pORs7I+GAMKQ0ZFyjqx+cdah
-	 vsn/3SJHMoSuAdtNnoP1+vyBtNJAnl1jcggNZ6AY=
+	b=HvFNaP9c3XYCrM123tH7LlL7torYGRiKP9PI6piyJuueEhOFZO0Ot+YZ3vq2qJFDh
+	 hinXozImz32LLyVGljYbxYeYXqolgDCZQSISwIk+70cwRXeNgk9i6ZchqZMe47oZzq
+	 G7+f8bF4aIEXjpxiEcci+ynotBoaFxVJNDeDWdSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfLJVuo (ORCPT
+        id S1728565AbfLJVuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:50:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55596 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfLJVIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:18 -0500
+        id S1727827AbfLJVIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCBC724697;
-        Tue, 10 Dec 2019 21:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556F72469A;
+        Tue, 10 Dec 2019 21:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012098;
-        bh=rqiJcDmxOj5w4DNUtDakiAxzrhotGsLTvX+zXRMtAgY=;
+        s=default; t=1576012096;
+        bh=a4ZjSUbhdkUB9ysnpymNNPpDNmR+PGfGrZG2TExZ1qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+jTIkamKFzH2kn3isCoR3ZG0RecEBKu44ygdr74e5AfA/b+2THv+eMjqhPb4G4PO
-         vjq9EQZ23vJP7BM0XaUTIILkTyKe8DqbTi4nFnAc7FCFVm1W1tQ0WPWQ35nC3iLSHG
-         cs7qR2LP+yYybMRWQOK0Cb/d9IBkDUGaLMe4MrWA=
+        b=VAhLs+IGevoH2pHKCa1vH29t/zzvUySlh2gaKad49eQVpE1LfQ+nsR0qrJI1NAknR
+         v1ES/HZv2GRsOLQ5ypP/xvAYQvf5r+agfBK5KP3WmVsoCcZC1N0MpZRN6zyZztvpf5
+         UIY0qHekoGJrGGxV2It2oWxCaWy+/s7mDBJVVqME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 074/350] iio: proximity: sx9500: fix iio_triggered_buffer_{predisable,postenable} positions
-Date:   Tue, 10 Dec 2019 16:02:59 -0500
-Message-Id: <20191210210735.9077-35-sashal@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 072/350] MIPS: syscall: Emit Loongson3 sync workarounds within asm
+Date:   Tue, 10 Dec 2019 16:02:57 -0500
+Message-Id: <20191210210735.9077-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,83 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Paul Burton <paul.burton@mips.com>
 
-[ Upstream commit 3cfd6464fe23deb45bb688df66184b3f32fefc16 ]
+[ Upstream commit e84957e6ae043bb83ad6ae7e949a1ce97b6bbfef ]
 
-The iio_triggered_buffer_predisable() should be called last, to detach the
-poll func after the devices has been suspended.
+Generate the sync instructions required to workaround Loongson3 LL/SC
+errata within inline asm blocks, which feels a little safer than doing
+it from C where strictly speaking the compiler would be well within its
+rights to insert a memory access between the separate asm statements we
+previously had, containing sync & ll instructions respectively.
 
-This change re-organizes things a bit so that the postenable & predisable
-are symmetrical. It also converts the preenable() to a postenable().
-
-Not stable material as there is no known problem with the current
-code, it's just not consistent with the form we would like all the
-IIO drivers to adopt so as to allow subsystem wide changes.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/proximity/sx9500.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/mips/kernel/syscall.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
-index 612f79c53cfc6..287d288e40c27 100644
---- a/drivers/iio/proximity/sx9500.c
-+++ b/drivers/iio/proximity/sx9500.c
-@@ -675,11 +675,15 @@ static irqreturn_t sx9500_trigger_handler(int irq, void *private)
- 	return IRQ_HANDLED;
- }
+diff --git a/arch/mips/kernel/syscall.c b/arch/mips/kernel/syscall.c
+index 3f16f38230310..c333e57886642 100644
+--- a/arch/mips/kernel/syscall.c
++++ b/arch/mips/kernel/syscall.c
+@@ -37,6 +37,7 @@
+ #include <asm/signal.h>
+ #include <asm/sim.h>
+ #include <asm/shmparam.h>
++#include <asm/sync.h>
+ #include <asm/sysmips.h>
+ #include <asm/switch_to.h>
  
--static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
-+static int sx9500_buffer_postenable(struct iio_dev *indio_dev)
- {
- 	struct sx9500_data *data = iio_priv(indio_dev);
- 	int ret = 0, i;
- 
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
-+
- 	mutex_lock(&data->mutex);
- 
- 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
-@@ -696,6 +700,9 @@ static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
- 
- 	mutex_unlock(&data->mutex);
- 
-+	if (ret)
-+		iio_triggered_buffer_predisable(indio_dev);
-+
- 	return ret;
- }
- 
-@@ -704,8 +711,6 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
- 	struct sx9500_data *data = iio_priv(indio_dev);
- 	int ret = 0, i;
- 
--	iio_triggered_buffer_predisable(indio_dev);
--
- 	mutex_lock(&data->mutex);
- 
- 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
-@@ -722,12 +727,13 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
- 
- 	mutex_unlock(&data->mutex);
- 
-+	iio_triggered_buffer_predisable(indio_dev);
-+
- 	return ret;
- }
- 
- static const struct iio_buffer_setup_ops sx9500_buffer_setup_ops = {
--	.preenable = sx9500_buffer_preenable,
--	.postenable = iio_triggered_buffer_postenable,
-+	.postenable = sx9500_buffer_postenable,
- 	.predisable = sx9500_buffer_predisable,
- };
- 
+@@ -133,12 +134,12 @@ static inline int mips_atomic_set(unsigned long addr, unsigned long new)
+ 		  [efault] "i" (-EFAULT)
+ 		: "memory");
+ 	} else if (cpu_has_llsc) {
+-		loongson_llsc_mb();
+ 		__asm__ __volatile__ (
+ 		"	.set	push					\n"
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
+ 		"	li	%[err], 0				\n"
+ 		"1:							\n"
++		"	" __SYNC(full, loongson3_war) "			\n"
+ 		user_ll("%[old]", "(%[addr])")
+ 		"	move	%[tmp], %[new]				\n"
+ 		"2:							\n"
 -- 
 2.20.1
 
