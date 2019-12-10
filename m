@@ -7,46 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0019C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8BEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D642053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F5C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017457;
-	bh=qm1jM5Kc4z1YdS4QJWEbayLHA7QRa9LDW5Fi6OCsUCU=;
+	s=default; t=1576017463;
+	bh=5bmSyDc+fPXrUgMVtYHzT3GVLLN1Sajj5eSGI2QVhdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+UrHKcBCsM3lMmi0Uv6asalclu9fKbLHCCHHbK/kL/VOupVb/TQZFyiasTju7iKD
-	 s+nY2Yi1iPqGr+nvVYjGIYOudVpYaom8qCrE5Y1OwoAr2huEgLv4Ag5LCQ5EeAV+8b
-	 hVXtHx6NsPeWYTcwQQ9TidjsS14MV2oWiLyVrpOc=
+	b=wj5umV16E/s6/NllxJOuBqYDA0OodB0tnQMqpRXi8RLBr3GKhTGdnSvNnO402Z7zr
+	 hfAhMDkrd/QWpUi3sbk6ShG0NAvaOttFsqcq1EDZl2bG+tJWKZWc6Z6eCmpnFLLNMh
+	 yDs9hpKij6q/oKFhnFjh9wa6JykV9Y1BZiznZdtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbfLJWhg (ORCPT
+        id S1729447AbfLJWd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:37:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:33:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728503AbfLJWeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:01 -0500
+        id S1729240AbfLJWdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9AF1207FF;
-        Tue, 10 Dec 2019 22:33:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DEB420836;
+        Tue, 10 Dec 2019 22:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017240;
-        bh=qm1jM5Kc4z1YdS4QJWEbayLHA7QRa9LDW5Fi6OCsUCU=;
+        s=default; t=1576017225;
+        bh=5bmSyDc+fPXrUgMVtYHzT3GVLLN1Sajj5eSGI2QVhdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Is3Yt+3nwWR/0Nj8+0YF7I6JVVDc9uvF1MnVrbPO+xTTG2O9Dnfv0uxWclanH9k8r
-         QkbtcXn2iC3jUhxdKv2r7a+hbJzuMW+8R/GiSvJQ/iJ3EVGDsPx1Vbe6vFindBgAfW
-         x8Q6xQ3Usj6mqGdSGuPQbOYpkRcBKyuhVcOSiqVc=
+        b=qFZm1pmNvZ/ehRQZaSHWe7U4zeXiCGjZKwarc9BAMME06WlrC20/OGhjWcj/VzE88
+         s3iXi0fY7vuMYi/2HHs9ihWIb/1PpMn4cY06vI+6HyYlRZlKi+eHjjj2dZCjgZsFUs
+         SbrXEMvHH5iW7ZLAd99LpgfuCoucFkhPh0xI4/8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 37/71] bnx2x: Fix PF-VF communication over multi-cos queues.
-Date:   Tue, 10 Dec 2019 17:32:42 -0500
-Message-Id: <20191210223316.14988-37-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 24/71] x86/mm: Use the correct function type for native_set_fixmap()
+Date:   Tue, 10 Dec 2019 17:32:29 -0500
+Message-Id: <20191210223316.14988-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,52 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
+[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
 
-PF driver doesn't enable tx-switching for all cos queues/clients,
-which causes packets drop from PF to VF. Fix this by enabling
-tx-switching on all cos queues/clients.
+We call native_set_fixmap indirectly through the function pointer
+struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
+'unsigned' instead of 'enum fixed_addresses'. This patch changes the
+function type for native_set_fixmap to match the pointer, which fixes
+indirect call mismatches with Control-Flow Integrity (CFI) checking.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/fixmap.h | 2 +-
+ arch/x86/mm/pgtable.c         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index 5780830f78ad2..55a7774e8ef5c 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -2384,15 +2384,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
- 	/* send the ramrod on all the queues of the PF */
- 	for_each_eth_queue(bp, i) {
- 		struct bnx2x_fastpath *fp = &bp->fp[i];
-+		int tx_idx;
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index f80d70009ff87..d0e39f54feee3 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -147,7 +147,7 @@ extern pgprot_t kmap_prot;
+ extern pte_t *pkmap_page_table;
  
- 		/* Set the appropriate Queue object */
- 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
+ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
+-void native_set_fixmap(enum fixed_addresses idx,
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ 		       phys_addr_t phys, pgprot_t flags);
  
--		/* Update the Queue state */
--		rc = bnx2x_queue_state_change(bp, &q_params);
--		if (rc) {
--			BNX2X_ERR("Failed to configure Tx switching\n");
--			return rc;
-+		for (tx_idx = FIRST_TX_COS_INDEX;
-+		     tx_idx < fp->max_cos; tx_idx++) {
-+			q_params.params.update.cid_index = tx_idx;
-+
-+			/* Update the Queue state */
-+			rc = bnx2x_queue_state_change(bp, &q_params);
-+			if (rc) {
-+				BNX2X_ERR("Failed to configure Tx switching\n");
-+				return rc;
-+			}
- 		}
- 	}
+ #ifndef CONFIG_PARAVIRT
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 50f75768aadd1..3ed4753280aaf 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -567,8 +567,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
+ 	fixmaps_set++;
+ }
  
+-void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
+-		       pgprot_t flags)
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
++		       phys_addr_t phys, pgprot_t flags)
+ {
+ 	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
+ }
 -- 
 2.20.1
 
