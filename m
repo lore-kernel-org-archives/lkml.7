@@ -2,157 +2,107 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52E2C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF06C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741E22073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D46B2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Vbl/HqYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLJKHX (ORCPT
+        id S1727316AbfLJKHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:07:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40592 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfLJKHV (ORCPT
+        Tue, 10 Dec 2019 05:07:32 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37212 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfLJKHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:07:21 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iecQ3-0006LB-AW; Tue, 10 Dec 2019 11:07:03 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DEBCD1C2904;
-        Tue, 10 Dec 2019 11:07:02 +0100 (CET)
-Date:   Tue, 10 Dec 2019 10:07:02 -0000
-From:   "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce/AMD: Allow Reserved types to be overwritten
- in smca_banks[]
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "linux-edac" <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121141508.141273-1-Yazen.Ghannam@amd.com>
-References: <20191121141508.141273-1-Yazen.Ghannam@amd.com>
+        Tue, 10 Dec 2019 05:07:31 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so2431104wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:07:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/qds3iLdYR3bbvA/Sxj6rrlo3vwcNFPffUebEm2fbs=;
+        b=Vbl/HqYiYF34szVFoZ/lOAuXg6w8DieuguG8Li8kuUfF8x0vmT8I6ofLttsisfAf3U
+         Kt/TUBwsxXfpKBB/Pts1MbO44b2HkGi/FIfp3WQhPUd6gfJOu/lY4GmmC3kTheo013rD
+         XzxD+e4AytfCqM2f9tkMoYc8OFIlMuv3fPoCIyDgtRlE1Kp8GK+0X/f6v204HQ5gPl29
+         vrXfyXCUMiz7hrfzMCLXvDT4zazwA4hvJ9AAG6VsSVk391mlx+pZZn0EEDJuB+NQcIHy
+         mSkwGvTkzrtc3y7nz+FNvX+ncXNDUADgOb+J4+o+6pvm4857taHWoyO48EAegGt+Ib15
+         mF0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C/qds3iLdYR3bbvA/Sxj6rrlo3vwcNFPffUebEm2fbs=;
+        b=reaBimt/R+8pNy/jpra1j9l/nt5H60fVfHpCVUQ3ozCm8nPjASzJPUVZkw9peGwOG8
+         htGu1NQDE+lJI7dhq4wMnHgWCZrXJUlgTXp9qe67YU0fT/VKfIBXV5JeHqz/VSXZsYNw
+         nZEcCajXlYyaZZ/3d/9TPNmJ0phurnQK4amYjtRzvvdO/7w1rUQfJJsNKVoqDoFHxJ+r
+         D/DttclEfTDdk+fe4q/eUmXBRZKhkD028dG9S6lNZ1rXRv+jJoOPu0CgL5yaYuLEBhBs
+         oKbwICKsgxLRAnztAYn93YgZGEz2aqHlTSCwKCZ4RzUNQZYgHEpruYvevJMXsMm/SCes
+         udVg==
+X-Gm-Message-State: APjAAAXDQOBTwWyKxgA/U2uW/MqOrq3jiNPUqSv3ghT+No/MWBQEFKE/
+        kMrPbCzGpA2LRyLmdydqnQG8RyHMlY8=
+X-Google-Smtp-Source: APXvYqxx+f5GIgs3DkVFmMx2x0QZrsO+/ElFSb+ShXJaUYLhsHZtS5J3Z4PxATO+JOOX56k3YYpP3A==
+X-Received: by 2002:a1c:9903:: with SMTP id b3mr4020982wme.139.1575972450291;
+        Tue, 10 Dec 2019 02:07:30 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id s8sm2628622wrt.57.2019.12.10.02.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 02:07:29 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] regulator: max77650: add of_match table
+Date:   Tue, 10 Dec 2019 11:07:25 +0100
+Message-Id: <20191210100725.11005-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Message-ID: <157597242273.30329.4326721384243738456.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Commit-ID:     a0cac35c1d83184151be4851ea90b5f920957967
-Gitweb:        https://git.kernel.org/tip/a0cac35c1d83184151be4851ea90b5f920957967
-Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Thu, 21 Nov 2019 08:15:08 -06:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 10 Dec 2019 09:27:59 +01:00
+We need the of_match table if we want to use the compatible string in
+the pmic's child node and get the regulator driver loaded automatically.
 
-x86/mce/AMD: Allow Reserved types to be overwritten in smca_banks[]
-
-Each logical CPU in Scalable MCA systems controls a unique set of MCA
-banks in the system. These banks are not shared between CPUs. The bank
-types and ordering will be the same across CPUs on currently available
-systems.
-
-However, some CPUs may see a bank as Reserved/Read-as-Zero (RAZ) while
-other CPUs do not. In this case, the bank seen as Reserved on one CPU is
-assumed to be the same type as the bank seen as a known type on another
-CPU.
-
-In general, this occurs when the hardware represented by the MCA bank
-is disabled, e.g. disabled memory controllers on certain models, etc.
-The MCA bank is disabled in the hardware, so there is no possibility of
-getting an MCA/MCE from it even if it is assumed to have a known type.
-
-For example:
-
-Full system:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          UMC
-	 2    |         CS          |          CS
-
-System with hardware disabled:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          RAZ
-	 2    |         CS          |          CS
-
-For this reason, there is a single, global struct smca_banks[] that is
-initialized at boot time. This array is initialized on each CPU as it
-comes online. However, the array will not be updated if an entry already
-exists.
-
-This works as expected when the first CPU (usually CPU0) has all
-possible MCA banks enabled. But if the first CPU has a subset, then it
-will save a "Reserved" type in smca_banks[]. Successive CPUs will then
-not be able to update smca_banks[] even if they encounter a known bank
-type.
-
-This may result in unexpected behavior. Depending on the system
-configuration, a user may observe issues enumerating the MCA
-thresholding sysfs interface. The issues may be as trivial as sysfs
-entries not being available, or as severe as system hangs.
-
-For example:
-
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         RAZ         |          UMC
-	 2    |         CS          |          CS
-
-Extend the smca_banks[] entry check to return if the entry is a
-non-reserved type. Otherwise, continue so that CPUs that encounter a
-known bank type can update smca_banks[].
-
-Fixes: 68627a697c19 ("x86/mce/AMD, EDAC/mce_amd: Enumerate Reserved SMCA bank type")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191121141508.141273-1-Yazen.Ghannam@amd.com
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/x86/kernel/cpu/mce/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/max77650-regulator.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index e41e3b4..d6cf5c1 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -266,7 +266,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
- 	smca_set_misc_banks_map(bank, cpu);
+diff --git a/drivers/regulator/max77650-regulator.c b/drivers/regulator/max77650-regulator.c
+index e57fc9197d62..ac89a412f665 100644
+--- a/drivers/regulator/max77650-regulator.c
++++ b/drivers/regulator/max77650-regulator.c
+@@ -386,9 +386,16 @@ static int max77650_regulator_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	/* Return early if this bank was already initialized. */
--	if (smca_banks[bank].hwid)
-+	if (smca_banks[bank].hwid && smca_banks[bank].hwid->hwid_mcatype != 0)
- 		return;
- 
- 	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
++static const struct of_device_id max77650_regulator_of_match[] = {
++	{ .compatible = "maxim,max77650-regulator" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max77650_regulator_of_match);
++
+ static struct platform_driver max77650_regulator_driver = {
+ 	.driver = {
+ 		.name = "max77650-regulator",
++		.of_match_table = max77650_regulator_of_match,
+ 	},
+ 	.probe = max77650_regulator_probe,
+ };
+-- 
+2.23.0
+
