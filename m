@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE3C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D91C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED2520836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746122053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015631;
-	bh=88srsW2eBFqpTiH1jjXX1wBZFk7FgPd5GNMd4Atazg8=;
+	s=default; t=1576015637;
+	bh=rLbRwo/sWzOuGDAdvjlVr/Po4p7Jwwrg/ApC9RoDilc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kb9jr8GPCEUSUdxfRzZYQlo8Pcz88iGitOnB0bbTqQoZ/ApQPsPXZ6MAzwwJTj9Iv
-	 zNZut9mK4DTY4Cg0WT1Kia4wnVuJf22w7wEQ5bOudBJF3jOl8Njb91RffS2/8tTU3X
-	 Kl4HHUo0blF1U2SBzkbSgLmNxQ4eNUO0n+WQ3NjI=
+	b=IzQH+80IbBU0EzHL7D5SIfRUrRj2AgcC8WP9auEeolY7NpUaLdg6nCQQ+vfeoPRsg
+	 VVQqDiC86xZ2f21mqaw6yWAwJd1cX5C0K2j/umFTr45G/VE7LOKwxFT671KinyesT2
+	 hc7McyASvsRmmiVyqYLjBaU2TUM7Z8UvSYFmJCWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbfLJWHK (ORCPT
+        id S1728103AbfLJWFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:07:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36592 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfLJWFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:14 -0500
+        id S1727409AbfLJWE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4227922464;
-        Tue, 10 Dec 2019 22:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA0BF20637;
+        Tue, 10 Dec 2019 22:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015514;
-        bh=88srsW2eBFqpTiH1jjXX1wBZFk7FgPd5GNMd4Atazg8=;
+        s=default; t=1576015494;
+        bh=rLbRwo/sWzOuGDAdvjlVr/Po4p7Jwwrg/ApC9RoDilc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6j0OzGGcSLfFfWT6MSdLztp22KvZyCkCDb4RuSD8y03knfCJqkeqHN1fh0G2rJUt
-         vxWmIoz1uMf6p4vLsqxn9xODJq5m/kLSqDeXkvx280cpvyEiEDe30Kj4ir63N+hiZX
-         wmCFJxSeR7rrF/rjHfRX6uRUzKK7mLhSZXAfu8dQ=
+        b=EWQ9GCBhH4nJ/53c4J+F2WL4guWYpFVmXLcApQsq0FPRbSkA3lFYIpESLHwN8G+5C
+         x4IkPKskx0QXYWvjb1iPzTZyTnmlkh/djSi9/UdE12CE4cIYa2Zs5LnyUMgi8TS39s
+         ZDniojhkw81y8zJ26VfHJCDLWO6ywPPAfM90bd0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 111/130] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Tue, 10 Dec 2019 17:02:42 -0500
-Message-Id: <20191210220301.13262-111-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 095/130] perf probe: Skip end-of-sequence and non statement lines
+Date:   Tue, 10 Dec 2019 17:02:26 -0500
+Message-Id: <20191210220301.13262-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,48 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+Skip end-of-sequence and non-statement lines while walking through lines
+list.
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+The "end-of-sequence" line information means:
 
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
+ "the current address is that of the first byte after the
+  end of a sequence of target machine instructions."
+ (DWARF version 4 spec 6.2.2)
 
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This actually means out of scope and we can not probe on it.
+
+On the other hand, the statement lines (is_stmt) means:
+
+ "the current instruction is a recommended breakpoint location.
+  A recommended breakpoint location is intended to “represent”
+  a line, a statement and/or a semantically distinct subpart
+  of a statement."
+
+ (DWARF version 4 spec 6.2.2)
+
+So, non-statement line info also should be skipped.
+
+These can reduce unneeded probe points and also avoid an error.
+
+E.g. without this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
+
+  #
+
+This puts 5 probes on one line, but acutally it's not inlined function.
+This is because there are many non statement instructions at the
+function prologue.
+
+With this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  #
+
+Now perf-probe skips unneeded addresses.
+
+Committer testing:
+
+Slightly different results, but similar:
+
+Before:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
+
+  #
+
+After:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  #
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index c73e4be9bde3f..c31303d13069a 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -62,6 +62,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -290,7 +291,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 49f9c65f1a9c1..d48bd5eaa0f2a 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -773,6 +773,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+ 	size_t nlines, i;
++	bool flag;
  
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
+ 	/* Get the CU die */
+ 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
+@@ -803,6 +804,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 				  "Possible error in debuginfo.\n");
+ 			continue;
+ 		}
++		/* Skip end-of-sequence */
++		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
++			continue;
++		/* Skip Non statement line-info */
++		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
++			continue;
+ 		/* Filter lines based on address */
+ 		if (rt_die != cu_die) {
+ 			/*
 -- 
 2.20.1
 
