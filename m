@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4340BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD408C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17015246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E25246A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012186;
-	bh=796UophT8NjBbk/E9gRtRL1R6ZdTfcJ7TBT6/Hu9NoE=;
+	s=default; t=1576012189;
+	bh=OT61r/lgEN89xq2+i6L1MnJ/asTeHRCKn79128Fe61Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOJlUbALLnokwUQK2khalzWfZRCHmxWDUhJZMDwcvUpHAPA3/IJRLmFDGDDvSEjEd
-	 ocTVgEXYFaZchVVUv48aHwy5LhfweVw8reA0BY3U/8j2PtNQbHQ+SmaR1iLnwxHs+a
-	 1UREAV27nsgI3aRz3iA+DDpKIkskuodztAGrPGB8=
+	b=oPXgb7ivJFbH1HawwYUo+LscTsYSAy35Np52oquxKAkeL+FEMBfJTX6gIte82BZeA
+	 Huml8wv8jDpfIynOBQ7qSyRb4I4DXu/9YPXc4vRp6fdXvj1sfV3rZVW0zZmtTVdOPl
+	 1dJ12mfVHZ1HsDBLi1Az2BhmjSsaOPX4YfArfLSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfLJVJo (ORCPT
+        id S1728294AbfLJVJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728256AbfLJVJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:42 -0500
+        id S1728279AbfLJVJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5D4246BA;
-        Tue, 10 Dec 2019 21:09:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10CD2077B;
+        Tue, 10 Dec 2019 21:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012182;
-        bh=796UophT8NjBbk/E9gRtRL1R6ZdTfcJ7TBT6/Hu9NoE=;
+        s=default; t=1576012185;
+        bh=OT61r/lgEN89xq2+i6L1MnJ/asTeHRCKn79128Fe61Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1hidc3VzjsmiVaG6wRKYIOHUo59wMRM5M1rrfhYW78YF3e7JOdYqRY2+HdHKdvM2w
-         77tfDQusKyXT7ZVsUgRTBl3gHqOklH4C2d3a+U6PVOotnhYiFXuNAE1Hf2uD6VsubT
-         TqAUyJp8Uqv2vt7A8QHW0HCq122JxeApLE125djQ=
+        b=RU1z3RWgjYL/0KzvxN8gmMB6RWwyxd1djwSc0jJ46fYDX9vhRMZ60wXt6w0w2ZAT7
+         6jQOSRrVq8q2BJEbd+dTL4hTCGlSkTe5xgf8b2ta+Wo/rtCKHl8RkouYC5yLIu40GT
+         3xIW3MCi1xj5uXV8W5tlak2d0CG7TteCGnW0ia5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Chiu <chiu@endlessm.com>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 139/350] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
-Date:   Tue, 10 Dec 2019 16:04:04 -0500
-Message-Id: <20191210210735.9077-100-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 142/350] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Tue, 10 Dec 2019 16:04:07 -0500
+Message-Id: <20191210210735.9077-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,71 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 0eeb91ade90ce06d2fa1e2fcb55e3316b64c203c ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-The RTL8723BU has problems connecting to AP after each warm reboot.
-Sometimes it returns no scan result, and in most cases, it fails
-the authentication for unknown reason. However, it works totally
-fine after cold reboot.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-for cold reboot and warm reboot, the registers imply that the MAC
-is already powered and thus some procedures are skipped during
-driver initialization. Double checked the vendor driver, it reads
-the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-during initialization based on them. This commit only tells the
-RTL8723BU to do full initialization without checking MAC status.
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
+
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
- 3 files changed, 5 insertions(+)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index ade057d868f7e..5e9ce03067de2 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -1341,6 +1341,7 @@ struct rtl8xxxu_fileops {
- 	u8 has_s0s1:1;
- 	u8 has_tx_report:1;
- 	u8 gen2_thermal_meter:1;
-+	u8 needs_full_init:1;
- 	u32 adda_1t_init;
- 	u32 adda_1t_path_on;
- 	u32 adda_2t_path_on_a;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-index ceffe05bd65b2..f3cd314d1a9cf 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-@@ -1670,6 +1670,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
- 	.has_s0s1 = 1,
- 	.has_tx_report = 1,
- 	.gen2_thermal_meter = 1,
-+	.needs_full_init = 1,
- 	.adda_1t_init = 0x01c00014,
- 	.adda_1t_path_on = 0x01c00014,
- 	.adda_2t_path_on_a = 0x01c00014,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index c6c41fb962ffc..361248e975687 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -3902,6 +3902,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 	else
- 		macpower = true;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index d6af97fd170a9..f0262cb5657a7 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1727,9 +1727,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
-+	if (fops->needs_full_init)
-+		macpower = false;
-+
- 	ret = fops->power_on(priv);
- 	if (ret < 0) {
- 		dev_warn(dev, "%s: Failed power on\n", __func__);
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1766,7 +1767,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
+ }
+ #else
 -- 
 2.20.1
 
