@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90713C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38033207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574202077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017552;
-	bh=0UTppwjja+mDbI1LJGPxJ1hNwKzUn7kPVpfiS3MxMZI=;
+	s=default; t=1576017558;
+	bh=7sTMV4vwJ45KNn4+KXTelyUht4p4Xd+WKHQCFHdyEV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Qw27aPxS3asyAi6lUaE2UZu2SiQb5AocqrfWfKdhlp/o2AdVg+U6k6lRYKGevVmr
-	 njArAG/hEgH+3u0jtE7SUuFgZNkfAJ622qN8og6BVZNBZ/YcHVOKHd/McZ3oz0lx2W
-	 lHj8k5sSrVMY8RbqTZ5rQfUaWd9BHDPQ+KLq9DNw=
+	b=FZ7DrdiN7IxwQLCN7r5QUHRgvk8XDX3fwijfpHF8ptb82fUydN23lDa/ImbUvv5Jj
+	 fvNbHsFsBYaLEySgoHGtm038qiItNCQNEcYRtSM3Xxb2ShqdLjmd/6W5bwj6Od4XT+
+	 BH7zf/AK+WcY9GRUBJL6Ft+lqwvh7JdPk0sPhvvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfLJWjK (ORCPT
+        id S1730510AbfLJWjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:39:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:39:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbfLJWd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:27 -0500
+        id S1728478AbfLJWdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE920207FF;
-        Tue, 10 Dec 2019 22:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F0FF207FF;
+        Tue, 10 Dec 2019 22:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017206;
-        bh=0UTppwjja+mDbI1LJGPxJ1hNwKzUn7kPVpfiS3MxMZI=;
+        s=default; t=1576017204;
+        bh=7sTMV4vwJ45KNn4+KXTelyUht4p4Xd+WKHQCFHdyEV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tRjHWp9jlsHTO6v5kinom+taLfVCYjQ5fIMedbpc47mYUU5NT5QT3l8cXDQ4drapH
-         ZnTCkyvkT/xss2A5Bc4mcJ0ZmM2zzXCLSkkEpkGn3t3HW3yi6DDXJkIyCWBELkPnc4
-         6/yfNTwYIX2qemRa0lr5qwCAlsClgDuQlziZW1/8=
+        b=GGlOjmtAp4bFuJUdCwX1aQm4+/Rxm+F20ZjCaM9NsiUjs3N6kMirgFbBr3apY7Apg
+         kX8sMaEx2Dwq1EsohC23eNXzDAYW6sxhWt+ARwIdpcr/RmqoZ2Erp6weYCnSTs6eEs
+         ATW6JW8Zx7P5u2JwROJbt2Zp+e9dhbmYJtXMgUuw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/71] media: am437x-vpfe: Setting STD to current value is not an error
-Date:   Tue, 10 Dec 2019 17:32:13 -0500
-Message-Id: <20191210223316.14988-8-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/71] rtlwifi: prevent memory leak in rtl_usb_probe
+Date:   Tue, 10 Dec 2019 17:32:11 -0500
+Message-Id: <20191210223316.14988-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,38 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
+[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
 
-VIDIOC_S_STD should not return an error if the value is identical
-to the current one.
-This error was highlighted by the v4l2-compliance test.
+In rtl_usb_probe if allocation for usb_data fails the allocated hw
+should be released. In addition the allocated rtlpriv->usb_data should
+be released on error handling path.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 572bc043b62de..36add3c463f75 100644
---- a/drivers/media/platform/am437x/am437x-vpfe.c
-+++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
- 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
- 		return -ENODATA;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index ad8390d2997b2..9408c1f8e3977 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1094,8 +1094,10 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->hw = hw;
+ 	rtlpriv->usb_data = kzalloc(RTL_USB_MAX_RX_COUNT * sizeof(u32),
+ 				    GFP_KERNEL);
+-	if (!rtlpriv->usb_data)
++	if (!rtlpriv->usb_data) {
++		ieee80211_free_hw(hw);
+ 		return -ENOMEM;
++	}
  
-+	/* if trying to set the same std then nothing to do */
-+	if (vpfe_standards[vpfe->std_index].std_id == std_id)
-+		return 0;
-+
- 	/* If streaming is started, return error */
- 	if (vb2_is_busy(&vpfe->buffer_queue)) {
- 		vpfe_err(vpfe, "%s device busy\n", __func__);
+ 	/* this spin lock must be initialized early */
+ 	spin_lock_init(&rtlpriv->locks.usb_lock);
+@@ -1158,6 +1160,7 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	_rtl_usb_io_handler_release(hw);
+ 	usb_put_dev(udev);
+ 	complete(&rtlpriv->firmware_loading_complete);
++	kfree(rtlpriv->usb_data);
+ 	return -ENODEV;
+ }
+ EXPORT_SYMBOL(rtl_usb_probe);
 -- 
 2.20.1
 
