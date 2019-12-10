@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776B4C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06285C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FF02053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C8320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015473;
-	bh=4a29hsO9cA6Tb5Symm+RaGXeg2qzcmcF6InBWcC4+6s=;
+	s=default; t=1576015476;
+	bh=iW6TLmpx7HmLQxCAY8JyfPKnD48fcWu02dpX9UrUyyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2E1LO1LO0mnzK9O2eosrBz1cjv52PYXZikETjJ7ZwfkcQR0/tKP6BuGEDh271t21M
-	 hZJO//PoQ2K9D3w1OvMXFf3R8f17Idu7V8yi4bKB/60M7NLcLqSsMuY3Emc+YqbvnW
-	 IGVcwvlSL4Jg7DKFHEmncmouIG+bY8AqQycIZguU=
+	b=n4p5q0GnxIzCJCe/p9kzjpvikIfzew7AvPELCZEgKAf0tz/Chi3SItWGOBFiyEPzV
+	 m5u5GFE0DLYbi63NFBr43JNe/PT3CmE4x0Mncl4UrmjjwGQp4ZgR41PfIMYr32Tr/N
+	 8PtlsdzIDEclfsfWRP+dv7NHlvE+WtpWNP2dfuic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbfLJWEc (ORCPT
+        id S1728984AbfLJWEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35210 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbfLJWEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:23 -0500
+        id S1728799AbfLJWE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6021D2077B;
-        Tue, 10 Dec 2019 22:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA1642077B;
+        Tue, 10 Dec 2019 22:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015463;
-        bh=4a29hsO9cA6Tb5Symm+RaGXeg2qzcmcF6InBWcC4+6s=;
+        s=default; t=1576015466;
+        bh=iW6TLmpx7HmLQxCAY8JyfPKnD48fcWu02dpX9UrUyyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LyrZ1sCGRgBK13+onaUUoeXBW1ubBoeMay4laIgCwghmwqE8gnYzBjDS0U71U09Z2
-         KHa73DqNy+x/ZAVWCDDK7HsuX+yhDhQuFvokekfMpdqFzrF9M+nvI4wU6aXDoitml1
-         4+Rz3FzlnAUWf7i+U5wCoENHYqgQQPJd43Zxa6IQ=
+        b=MsNBPMfUAGwV2hsUCfrgKkmnGZKAUR4uSqNSnJZCxgghn52heC/IU6PkC0vPOvXga
+         /ydyCGRKR3ocI6K7WuIPLYrE0ggHYNEuf9dVzP5o+WP5lAQiDqG0J3KCu4CROIQ3Z7
+         MqA9Cw2NG7pT/bi7TSzISR2eKJT8Xu1H6iuIqFsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        linux-ide@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 069/130] ata: sata_mv, avoid trigerrable BUG_ON
-Date:   Tue, 10 Dec 2019 17:02:00 -0500
-Message-Id: <20191210220301.13262-69-sashal@kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 072/130] Bluetooth: Fix advertising duplicated flags
+Date:   Tue, 10 Dec 2019 17:02:03 -0500
+Message-Id: <20191210220301.13262-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,55 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
+[ Upstream commit 6012b9346d8959194c239fd60a62dfec98d43048 ]
 
-There are several reports that the BUG_ON on unsupported command in
-mv_qc_prep can be triggered under some circumstances:
-https://bugzilla.suse.com/show_bug.cgi?id=1110252
-https://serverfault.com/questions/888897/raid-problems-after-power-outage
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
-https://bugs.centos.org/view.php?id=14998
+Instances may have flags set as part of its data in which case the code
+should not attempt to add it again otherwise it can cause duplication:
 
-Let sata_mv handle the failure gracefully: warn about that incl. the
-failed command number and return an AC_ERR_INVALID error. We can do that
-now thanks to the previous patch.
+< HCI Command: LE Set Extended Advertising Data (0x08|0x0037) plen 35
+        Handle: 0x00
+        Operation: Complete extended advertising data (0x03)
+        Fragment preference: Minimize fragmentation (0x01)
+        Data length: 0x06
+        Flags: 0x04
+          BR/EDR Not Supported
+        Flags: 0x06
+          LE General Discoverable Mode
+          BR/EDR Not Supported
 
-Remove also the long-standing FIXME.
-
-[v2] use %.2x as commands are defined as hexa.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-ide@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/sata_mv.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/bluetooth/hci_request.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-index 3b2246dded74f..d897deb4bffbe 100644
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -2111,12 +2111,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
- 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
- 		 * of which are defined/used by Linux.  If we get here, this
- 		 * driver needs work.
--		 *
--		 * FIXME: modify libata to give qc_prep a return value and
--		 * return error here.
- 		 */
--		BUG_ON(tf->command);
--		break;
-+		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
-+				tf->command);
-+		return AC_ERR_INVALID;
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index b73ac149de34f..759329bec399c 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -1095,6 +1095,14 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+ 
+ 	instance_flags = get_adv_instance_flags(hdev, instance);
+ 
++	/* If instance already has the flags set skip adding it once
++	 * again.
++	 */
++	if (adv_instance && eir_get_data(adv_instance->adv_data,
++					 adv_instance->adv_data_len, EIR_FLAGS,
++					 NULL))
++		goto skip_flags;
++
+ 	/* The Add Advertising command allows userspace to set both the general
+ 	 * and limited discoverable flags.
+ 	 */
+@@ -1127,6 +1135,7 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+ 		}
  	}
- 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
- 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
+ 
++skip_flags:
+ 	if (adv_instance) {
+ 		memcpy(ptr, adv_instance->adv_data,
+ 		       adv_instance->adv_data_len);
 -- 
 2.20.1
 
