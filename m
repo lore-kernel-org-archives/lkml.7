@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD3C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CE8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9359520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB11207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017786;
-	bh=8dhK3SFwIDOYA+xe70pN7rpZmKzS2l0W+H3z7vvRJa8=;
+	s=default; t=1576017777;
+	bh=RIKUxv5AeoPcoU46UvWDVR4Uj2fied/+jolNwWU6a74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WqbsLnv/6/u8gLoZyZ1vgb80LyJQMRaBn/xf1ii/qpR94+++pley4aU/6FeqRsez6
-	 cPXVpXd5IInjMC0AO5WVKKdd5pY6obnCoEwZ5RSIPxAwuEbGDkXBVaBNsF/HOPMj7o
-	 4GYTw4ZVdLWvQkSvGZ8r51VWLhWvRY3d2rtfnuII=
+	b=d3vsuD9TPANVZDRnC+Gg7YC280USNOdaYDhV6pZt0qUNJJXTtw2HvsRpNxzVDhvaj
+	 9+sMHkSUr1cxdXng/0602jbgHxzS0S3hmohVGcs2jekLrx3XpdkOYV2VbhcNNKTbvi
+	 1RumrcJfALEzQ+8Yqck7y9T8Zw+aCQZhJa7Ovl64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfLJWbJ (ORCPT
+        id S1728953AbfLJWmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50932 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:42:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727847AbfLJWbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:05 -0500
+        id S1728152AbfLJWbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F57720838;
-        Tue, 10 Dec 2019 22:31:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8D820828;
+        Tue, 10 Dec 2019 22:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017064;
-        bh=8dhK3SFwIDOYA+xe70pN7rpZmKzS2l0W+H3z7vvRJa8=;
+        s=default; t=1576017073;
+        bh=RIKUxv5AeoPcoU46UvWDVR4Uj2fied/+jolNwWU6a74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ncgdvu5BRxAg+9zUdGTD4zET/NjcqBrUlgKjd2ZgMB0iF09xr0Uf8Ylxt4C2xCwqP
-         RJ9gDjJAJF/SRusKwPkNJnr4tBj0t9A9rANaA/lV8pcE8iiBLUkZM2TIalFsLGhOqc
-         3cffp0DKYBkTT1oPxEV9ktUrkZh0Won2MnHDzmvA=
+        b=bJ9Y5KdaFuJBLKSc2MzsqHxbJAb45DnIDN/bdkkIdgBFROyXTMpCJ1RPMWFr+MvOP
+         S9C5lC0UmiWwVARlCnyxZYIuYLU+fMnlYWQAPxV0gi7PsWA1DHewPEozIjpS8qheJg
+         GQVfVHvSN/lNnsmr/hqVSsPnuo2mBpcxhZAvgh5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 24/91] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
-Date:   Tue, 10 Dec 2019 17:29:28 -0500
-Message-Id: <20191210223035.14270-24-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 31/91] perf test: Report failure for mmap events
+Date:   Tue, 10 Dec 2019 17:29:35 -0500
+Message-Id: <20191210223035.14270-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,39 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
+[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
 
-In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
-released if mwifiex_map_pci_memory() fails. The release for skb and
-card->evtbd_ring_vbase is added.
+When fail to mmap events in task exit case, it misses to set 'err' to
+-1; thus the testing will not report failure for it.
 
-Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
+can report correct result.
+
+Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/task-exit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index cb681b265b108..38d45a77c06ba 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -632,8 +632,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
- 		skb_put(skb, MAX_EVENT_SIZE);
- 
- 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
--					   PCI_DMA_FROMDEVICE))
-+					   PCI_DMA_FROMDEVICE)) {
-+			kfree_skb(skb);
-+			kfree(card->evtbd_ring_vbase);
- 			return -1;
-+		}
- 
- 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index b0d005d295a90..de2ddfe0f7c3c 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -98,6 +98,7 @@ int test__task_exit(int subtest __maybe_unused)
+ 	if (perf_evlist__mmap(evlist, 128, true) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
++		err = -1;
+ 		goto out_delete_evlist;
+ 	}
  
 -- 
 2.20.1
