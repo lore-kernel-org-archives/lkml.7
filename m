@@ -2,174 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2EFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D25C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8952077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F052077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfLJQNy (ORCPT
+        id S1727541AbfLJQQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:13:54 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2172 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727436AbfLJQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:13:53 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id BD22162A92049AE7E041;
-        Tue, 10 Dec 2019 16:13:51 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 10 Dec 2019 16:13:51 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
- 2019 16:13:51 +0000
-Subject: perf top for arm64?
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
- <20191106140036.GA6259@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
-Date:   Tue, 10 Dec 2019 16:13:49 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 10 Dec 2019 11:16:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46956 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727178AbfLJQQx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:16:53 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ieiBu-0006Vu-C4; Tue, 10 Dec 2019 16:16:50 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1ieiBt-0007Lp-Om; Tue, 10 Dec 2019 16:16:49 +0000
+Message-ID: <0e0b5aca785e41cdb0819820dfed1059683f5f58.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 31/72] KVM: x86: Manually calculate reserved bits
+ when loading PDPTRS
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Doug Reiland <doug.reiland@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>
+Date:   Tue, 10 Dec 2019 16:16:44 +0000
+In-Reply-To: <20191209154913.GB4042@linux.intel.com>
+References: <lsq.1575813164.154362148@decadent.org.uk>
+         <lsq.1575813165.887619822@decadent.org.uk>
+         <20191209154913.GB4042@linux.intel.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-UA+Tt2Mq8es9NoOWXu2U"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20191106140036.GA6259@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-I find to my surprise that "perf top" does not work for arm64:
+--=-UA+Tt2Mq8es9NoOWXu2U
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-root@ubuntu:/home/john/linux# tools/perf/perf top
-Couldn't read the cpuid for this machine: No such file or directory
+On Mon, 2019-12-09 at 07:49 -0800, Sean Christopherson wrote:
+> On Sun, Dec 08, 2019 at 01:53:15PM +0000, Ben Hutchings wrote:
+> > 3.16.79-rc1 review patch.  If anyone has any objections, please let me =
+know.
+> >=20
+> > ------------------
+> >=20
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >=20
+> > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
+>=20
+> You'll also want to pull in two PAE related fixes (in this order):
+>=20
+>   d35b34a9a70e ("kvm: mmu: Don't read PDPTEs when paging is not enabled")
 
-That's v5.5-rc1 release.
+I've added this, thanks.
 
-It seems that we are just missing an arm64 version of get_cpuid() - with 
-the patch below, I now get as hoped:
+>   bf03d4f93347 ("KVM: x86: introduce is_pae_paging")
+>
+> The "introduce is_pae_paging" has an undocumented bug fix.  IIRC it
+> manifests as an unexpected #GP on MOV CR3 in 64-bit mode.  Here's the blu=
+rb
+> I added to the backports for 4.x.
+>=20
+>   Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
+>   where it fails to check is_long_mode() and results in KVM incorrectly
+>   attempting to load PDPTRs for a 64-bit guest.
 
-    PerfTop:   32857 irqs/sec  kernel:85.0%  exact:  0.0% lost: 0/0 
-drop: 0/0 [4000Hz cycles],  (all, 64 CPUs)
--------------------------------------------------------------------------------
+The 3.16, 4.4, and 4.9 branches have slightly different conditions in
+kvm_set_cr3():
 
-      8.99%  [kernel]          [k] arm_smmu_cmdq_issue_cmdlist
-      5.80%  [kernel]          [k] __softirqentry_text_start
-      4.49%  [kernel]          [k] _raw_spin_unlock_irqrestore
-      3.48%  [kernel]          [k] el0_svc_common.constprop.2
-      3.37%  [kernel]          [k] _raw_write_lock_irqsave
-      3.28%  [kernel]          [k] __local_bh_enable_ip
-      3.05%  [kernel]          [k] __blk_complete_request
-      2.07%  [kernel]          [k] queued_spin_lock_slowpath
-      1.93%  [vdso]            [.] 0x0000000000000484
+	if (is_long_mode(vcpu)) {
+		if (cr3 & CR3_L_MODE_RESERVED_BITS)
+			return 1;
+	} else if (is_pae(vcpu) && is_paging(vcpu) &&
+		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
+		return 1;
+
+So load_pdptrs() already won't be called if is_long_mode() returns
+true, and this fix shouldn't be needed.
+
+Ben.
+
+--=20
+Ben Hutchings
+Experience is directly proportional to the value of equipment destroyed
+                                                    - Carolyn Scheppner
 
 
-Was this just missed? Or is there a good reason to omit?
 
-Thanks,
-John
+--=-UA+Tt2Mq8es9NoOWXu2U
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
---->8---
+-----BEGIN PGP SIGNATURE-----
 
-Subject: [PATCH] perf: Add perf top support for arm64
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3vxO0ACgkQ57/I7JWG
+EQno9BAAr6xdbmEcPcqgqcPzAiO5vPE2l2HY72KBwZumi24kIw7J3N8s5I12ad2f
+gwE/mOb5lPQV+3cuT3qxnp3so4XCPydF0xpdVDMbt0zQMKZC/Jer4ydER5Pg6b6n
+Je3/tgtcvOkR1X7Um9BppCBewPJhQHLmOa7xRguh6wffEM+JJv4a1WlRboYcjTXU
+fD6U1IFgWnxYrOhhTuHcj/jNHpyVqrlM1Bde+O/ZZTg5fxGklkeLquSzoGbhgTrb
+nBjGDtjoJnM+p4dqzz38tBZeghAhOSu6op6PFaQs8/k6l48muF+vAFihdn2ymNV3
+dN4H5yevMlLowL66emhKXXsva/zywYxs8HMKGxwY0llw4fKqiMaNIG4TMWA4cisP
+5aemU5W5xlIzAXG6emkVVvKv7R+C2TuY+mcX4Zg3V7WfvDcbMiSHJfVkZynInVzP
+vji+3W7gz5AfuiU+iTplVkxGYoUMjqfsW79B+lC58oQBi9G+7m+MQoNSs5GhmoGo
+UOO6wTMlogc2+gOrCOlXHdXXwp8z/X8EQuAc+1szQy6UXsoxySDsfzIV5UcZC9FM
+/UUW6X1FgXHj5wPEh3fbB4HqNWH9EKuua8utBPu1HNt5t/3I+LpknWKbErG1zoPB
+7VcpfU4l++zAWqiBIUhUk/EEFFdCT4ZTY/PnGNL+0wTqXgr+Zn0=
+=k9xZ
+-----END PGP SIGNATURE-----
 
-Copied from get_cpuid_str() essentially...
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/tools/perf/arch/arm64/util/header.c 
-b/tools/perf/arch/arm64/util/header.c
-index a32e4b72a98f..ecd1f86e29cc 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -1,10 +1,12 @@
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <perf/cpumap.h>
-+#include <util/cpumap.h>
-  #include <internal/cpumap.h>
-  #include <api/fs/fs.h>
-  #include "debug.h"
-  #include "header.h"
-+#include <errno.h>
-
-  #define MIDR "/regs/identification/midr_el1"
-  #define MIDR_SIZE 19
-@@ -12,6 +14,59 @@
-  #define MIDR_VARIANT_SHIFT      20
-  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
-
-+int
-+get_cpuid(char *buffer, size_t sz)
-+{
-+	char *buf = NULL;
-+	char path[PATH_MAX];
-+	const char *sysfs = sysfs__mountpoint();
-+	int cpu;
-+	u64 midr = 0;
-+	FILE *file;
-+
-+	if (!sysfs)
-+		return EINVAL;
-+
-+	buf = malloc(MIDR_SIZE);
-+	if (!buf)
-+		return EINVAL;
-+
-+	/* read midr from list of cpus mapped to this pmu */
-+	for (cpu = 0; cpu < cpu__max_present_cpu(); cpu++) {
-+		scnprintf(path, sz, "%s/devices/system/cpu/cpu%d"MIDR,
-+				sysfs, cpu);
-+
-+		file = fopen(path, "r");
-+		if (!file) {
-+			pr_debug("fopen failed for file %s\n", path);
-+			continue;
-+		}
-+
-+		if (!fgets(buf, MIDR_SIZE, file)) {
-+			fclose(file);
-+			continue;
-+		}
-+		fclose(file);
-+
-+		/* Ignore/clear Variant[23:20] and
-+		 * Revision[3:0] of MIDR
-+		 */
-+		midr = strtoul(buf, NULL, 16);
-+		midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
-+		scnprintf(buffer, MIDR_SIZE, "0x%016lx", midr);
-+		/* got midr break loop */
-+		break;
-+	}
-+
-+	if (!midr) {
-+		pr_err("failed to get cpuid string\n");
-+		free(buf);
-+		return EINVAL;
-+	}
-+	return 0;
-+}
-+
+--=-UA+Tt2Mq8es9NoOWXu2U--
