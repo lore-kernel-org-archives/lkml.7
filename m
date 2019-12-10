@@ -2,129 +2,110 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C52C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B64BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957D7206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBCC206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKWS+sYV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sJZrI6zH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfLJGnW (ORCPT
+        id S1727296AbfLJGrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:43:22 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:32948 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfLJGnW (ORCPT
+        Tue, 10 Dec 2019 01:47:18 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11717 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727024AbfLJGrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:43:22 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r67so7001191pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 22:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BEsOQpnU2Fph1cy4J7fXWqX+qA8/k32HrrzkPViDr9g=;
-        b=rKWS+sYVsja9k0hTYRx7AD3FmdiYxmyDQegsZbxb9XSsVmjse2VRHmD+zciVbY9xfd
-         Df1mS1W9/8ZsA4GVQIWMK851Wpq/RDC1D7KDrTFZD7tNqf0pzshtKjLPJfHkL3c5Fs+z
-         PUsrAKqyP1GkR+Vh2SA8as16BNtsRfBKNmqdp/t3/i2dbbVGTQqsYIpsYfHxDrMiX+L0
-         zTE4tXxRLhskmHL/IrAXD3zA8kxQ/IsiTVimAe7BYhO6yxeMPhXSOwmdvgnsu2dJo0pD
-         6yfz739bpjiHyJe9zckZeSWxbYYVdFEDPIPWjJjYRZ+GRkTFoainVrKadvRc5Lx22kxI
-         4uwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BEsOQpnU2Fph1cy4J7fXWqX+qA8/k32HrrzkPViDr9g=;
-        b=iGrG6jgK809kotSkgRpJQQ5nVc9ul5O2sSN57oaj9m0ieVf2EguBz7cz4wijAEuLBF
-         7u1NnREIHtkroWUyJ2QIBMfhoDuHGzfNIcDar7avLGmXx6AAynKVrVNRX1Q9EjSAcdG/
-         tY4cdJbjjopXKeGxqe3BBIdR88PSzfsN4bxOf3BPNSjUV1Es47uH417o/PZRdmCeyjif
-         mD5BnpT4rMlxgoUQ7y41E513BsAa6xww4RMIG+LmRCnacXUeocu6E0g/+LC0mwr8aIdw
-         DCePQHVO0jBoAvrwWqen0qiIzPwXZG8YPZNPDJTE9FM61bOi3jP7cvji/qOeUy0G6edH
-         eqtg==
-X-Gm-Message-State: APjAAAVBHxlDLyjNd2FTQLbgDXNag6ImHZfuNYKJCIk/2EwmI2rToMhG
-        stL9nK8HXDCFH0/3eb+B++gbxg==
-X-Google-Smtp-Source: APXvYqwmAHfbEzPNm/4WgwvG4FJ85rMoFfIuvn1FMXhgED7o/6LqgNh4zD7c3ekP+QYYweyaLz2cHQ==
-X-Received: by 2002:a17:902:6b49:: with SMTP id g9mr34119958plt.156.1575960201667;
-        Mon, 09 Dec 2019 22:43:21 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id s7sm1509431pjk.22.2019.12.09.22.43.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Dec 2019 22:43:20 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:13:19 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "andrew-sh.cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>,
-        srv_heupstream@mediatek.com, linux-pm@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
+        Tue, 10 Dec 2019 01:47:17 -0500
+X-UUID: 855c82a3196849a0a7aae2ccc33bb042-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AM4klYb7yCh8DLgLsvXyxgJHtcik12wFYLAScG39BXg=;
+        b=sJZrI6zHq3uGC5o0cpJZOsOAVfofL45pgCN6lDarGXhHtbOp9FXQQJlXqksaTE4y2pPYfa2ouivUCspB6FHRc8vDhErdMk43qHNZTCGRh4T4CXMBjGTpCi8dKcaYfRU5z5oAfAJ7jwu3MEfUI/XUlpPMoH1yw0BP8LSvk8SFMaQ=;
+X-UUID: 855c82a3196849a0a7aae2ccc33bb042-20191210
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1817536322; Tue, 10 Dec 2019 14:47:13 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 14:47:05 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 14:47:17 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        fan.chen@mediatek.com, devicetree@vger.kernel.org
-Subject: Re: [v5, PATCH 4/5] cpufreq: mediatek: add opp notification for SVS
- support
-Message-ID: <20191210064319.f4ksrxozp3gv4xry@vireshk-i7>
-References: <1574769046-28449-1-git-send-email-andrew-sh.cheng@mediatek.com>
- <1574769046-28449-5-git-send-email-andrew-sh.cheng@mediatek.com>
- <20191127083619.etocnhpyyut3hzwq@vireshk-i7>
- <1575874588.13494.4.camel@mtksdaap41>
+        Rob Herring <robh@kernel.org>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Yong Wu <yong.wu@mediatek.com>
+Subject: [PATCH v9 6/9] soc: mediatek: Add extra sram control
+Date:   Tue, 10 Dec 2019 14:46:50 +0800
+Message-ID: <1575960413-6900-7-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1575960413-6900-1-git-send-email-weiyi.lu@mediatek.com>
+References: <1575960413-6900-1-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575874588.13494.4.camel@mtksdaap41>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-12-19, 14:56, andrew-sh.cheng wrote:
-> On Wed, 2019-11-27 at 14:06 +0530, Viresh Kumar wrote:
-> > On 26-11-19, 19:50, Andrew-sh.Cheng wrote:
-> > > +		if (!IS_ERR(opp_item))
-> > > +			dev_pm_opp_put(opp_item);
-> > > +		else
-> > > +			freq = 0;
-> > > +
-> > 
-> > What is the purpose of the above code ?
-> When dev_pm_opp_find_freq_ceil() doesn't find matching opp item, freq
-> value won't be set.
-> Set it as 0 for below checking
-> > 
-> > > +		/* case of current opp is disabled */
-> > > +		if (freq == 0 || freq != info->opp_freq) {
-> > > +			// find an enable opp item
-> > > +			freq = 1;
-> > > +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
-> > > +							     &freq);
-> > > +			if (!IS_ERR(opp_item)) {
-> > > +				dev_pm_opp_put(opp_item);
-> > > +				policy = cpufreq_cpu_get(info->opp_cpu);
-> > > +				if (policy) {
-> > > +					cpufreq_driver_target(policy,
-> > > +						freq / 1000,
-> > > +						CPUFREQ_RELATION_L);
-> > 
-> > Why don't you simply call this instead of all the code in the else
-> > block ?
-> These else code is used to check "current opp item is disabled or not".
-> If not, do nothing.
-> If current opp item is disabled, need to find an not-disabled opp item,
-> and set frequency to it.
+Rm9yIHNvbWUgcG93ZXIgZG9tYWlucyBsaWtlIHZwdV9jb3JlIG9uIE1UODE4MyB3aG9zZSBzcmFt
+IG5lZWQgdG8NCmRvIGNsb2NrIGFuZCBpbnRlcm5hbCBpc29sYXRpb24gd2hpbGUgcG93ZXIgb24v
+b2ZmIHNyYW0uDQpXZSBhZGQgYSBmbGFnICJzcmFtX2lzb19jdHJsIiBpbiBzY3BfZG9tYWluX2Rh
+dGEgdG8ganVkZ2UgaWYgd2UNCm5lZWQgdG8gZG8gdGhlIGV4dHJhIHNyYW0gaXNvbGF0aW9uIGNv
+bnRyb2wgb3Igbm90Lg0KDQpTaWduZWQtb2ZmLWJ5OiBXZWl5aSBMdSA8d2VpeWkubHVAbWVkaWF0
+ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jIHwgMjUgKysr
+KysrKysrKysrKysrKysrKysrKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LXNjcHN5cy5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQppbmRleCAyYmJm
+OTA3Li4wNjc2YjQ2IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5
+cy5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMNCkBAIC01Nyw2ICs1
+Nyw4IEBADQogI2RlZmluZSBQV1JfT05fQklUCQkJQklUKDIpDQogI2RlZmluZSBQV1JfT05fMk5E
+X0JJVAkJCUJJVCgzKQ0KICNkZWZpbmUgUFdSX0NMS19ESVNfQklUCQkJQklUKDQpDQorI2RlZmlu
+ZSBQV1JfU1JBTV9DTEtJU09fQklUCQlCSVQoNSkNCisjZGVmaW5lIFBXUl9TUkFNX0lTT0lOVF9C
+X0JJVAkJQklUKDYpDQogDQogI2RlZmluZSBQV1JfU1RBVFVTX0NPTk4JCQlCSVQoMSkNCiAjZGVm
+aW5lIFBXUl9TVEFUVVNfRElTUAkJCUJJVCgzKQ0KQEAgLTExNSw2ICsxMTcsOCBAQCBlbnVtIGNs
+a19pZCB7DQogICogQG5hbWU6IFRoZSBkb21haW4gbmFtZS4NCiAgKiBAc3RhX21hc2s6IFRoZSBt
+YXNrIGZvciBwb3dlciBvbi9vZmYgc3RhdHVzIGJpdC4NCiAgKiBAY3RsX29mZnM6IFRoZSBvZmZz
+ZXQgZm9yIG1haW4gcG93ZXIgY29udHJvbCByZWdpc3Rlci4NCisgKiBAc3JhbV9pc29fY3RybDog
+VGhlIGZsYWcgdG8ganVkZ2UgaWYgdGhlIHBvd2VyIGRvbWFpbiBuZWVkIHRvIGRvDQorICogICAg
+ICAgICAgICAgICAgIHRoZSBleHRyYSBzcmFtIGlzb2xhdGlvbiBjb250cm9sLg0KICAqIEBzcmFt
+X3Bkbl9iaXRzOiBUaGUgbWFzayBmb3Igc3JhbSBwb3dlciBjb250cm9sIGJpdHMuDQogICogQHNy
+YW1fcGRuX2Fja19iaXRzOiBUaGUgbWFzayBmb3Igc3JhbSBwb3dlciBjb250cm9sIGFja2VkIGJp
+dHMuDQogICogQGJ1c19wcm90X21hc2s6IFRoZSBtYXNrIGZvciBzaW5nbGUgc3RlcCBidXMgcHJv
+dGVjdGlvbi4NCkBAIC0xMzAsNiArMTM0LDcgQEAgc3RydWN0IHNjcF9kb21haW5fZGF0YSB7DQog
+CWNvbnN0IGNoYXIgKm5hbWU7DQogCXUzMiBzdGFfbWFzazsNCiAJaW50IGN0bF9vZmZzOw0KKwli
+b29sIHNyYW1faXNvX2N0cmw7DQogCXUzMiBzcmFtX3Bkbl9iaXRzOw0KIAl1MzIgc3JhbV9wZG5f
+YWNrX2JpdHM7DQogCXUzMiBidXNfcHJvdF9tYXNrOw0KQEAgLTI2OSw2ICsyNzQsMTQgQEAgc3Rh
+dGljIGludCBzY3BzeXNfc3JhbV9lbmFibGUoc3RydWN0IHNjcF9kb21haW4gKnNjcGQsIHZvaWQg
+X19pb21lbSAqY3RsX2FkZHIpDQogCQkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KKwlpZiAoc2NwZC0+
+ZGF0YS0+c3JhbV9pc29fY3RybCkJew0KKwkJdmFsID0gcmVhZGwoY3RsX2FkZHIpIHwgUFdSX1NS
+QU1fSVNPSU5UX0JfQklUOw0KKwkJd3JpdGVsKHZhbCwgY3RsX2FkZHIpOw0KKwkJdWRlbGF5KDEp
+Ow0KKwkJdmFsICY9IH5QV1JfU1JBTV9DTEtJU09fQklUOw0KKwkJd3JpdGVsKHZhbCwgY3RsX2Fk
+ZHIpOw0KKwl9DQorDQogCXJldHVybiAwOw0KIH0NCiANCkBAIC0yNzgsOCArMjkxLDE2IEBAIHN0
+YXRpYyBpbnQgc2Nwc3lzX3NyYW1fZGlzYWJsZShzdHJ1Y3Qgc2NwX2RvbWFpbiAqc2NwZCwgdm9p
+ZCBfX2lvbWVtICpjdGxfYWRkcikNCiAJdTMyIHBkbl9hY2sgPSBzY3BkLT5kYXRhLT5zcmFtX3Bk
+bl9hY2tfYml0czsNCiAJaW50IHRtcDsNCiANCi0JdmFsID0gcmVhZGwoY3RsX2FkZHIpOw0KLQl2
+YWwgfD0gc2NwZC0+ZGF0YS0+c3JhbV9wZG5fYml0czsNCisJaWYgKHNjcGQtPmRhdGEtPnNyYW1f
+aXNvX2N0cmwpCXsNCisJCXZhbCA9IHJlYWRsKGN0bF9hZGRyKTsNCisJCXZhbCB8PSBQV1JfU1JB
+TV9DTEtJU09fQklUOw0KKwkJd3JpdGVsKHZhbCwgY3RsX2FkZHIpOw0KKwkJdmFsICY9IH5QV1Jf
+U1JBTV9JU09JTlRfQl9CSVQ7DQorCQl3cml0ZWwodmFsLCBjdGxfYWRkcik7DQorCQl1ZGVsYXko
+MSk7DQorCX0NCisNCisJdmFsID0gcmVhZGwoY3RsX2FkZHIpIHwgc2NwZC0+ZGF0YS0+c3JhbV9w
+ZG5fYml0czsNCiAJd3JpdGVsKHZhbCwgY3RsX2FkZHIpOw0KIA0KIAkvKiBFaXRoZXIgd2FpdCB1
+bnRpbCBTUkFNX1BETl9BQ0sgYWxsIDEgb3IgMCAqLw0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-Right. So this notifier helper of yours receive the opp which is getting
-disabled, why don't you compare its frequency directly to see if the current OPP
-is getting disabled ?
-
--- 
-viresh
