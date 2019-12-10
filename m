@@ -2,97 +2,97 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18957C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C8C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5602073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3348E2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="TBKwzP3r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j54TP/nA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfLJUJL (ORCPT
+        id S1726683AbfLJUJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:09:11 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34658 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfLJUJL (ORCPT
+        Tue, 10 Dec 2019 15:09:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44541 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfLJUJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:09:11 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so16710480otf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:09:11 -0800 (PST)
+        Tue, 10 Dec 2019 15:09:15 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so21538171wrm.11;
+        Tue, 10 Dec 2019 12:09:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kognZ45tk4qO/P86hQbS96WxT6n71WykchkXlMFBnIA=;
-        b=TBKwzP3rPMuiyrYGeU+8Gh1gU+oeYz7EGgcmGFtmp3RVEDItjmP2hYrWWig2KSTjx8
-         YAVJwDK/ebiKeyKuOM+FxnV09DyEvdC/LqGYSNj1Op8gmbNmy1zeKDUNCLkB7jdBkc2L
-         RaGklprLoUcMPg9RmoGOA/XPfuU2B1r5gCAgR3CpdDuHMZIND4AA+olWfvVuEsonX4AL
-         ux5E5rABgwjDW3j8/Xbij9FlymvC4UE3k+LxIXlosNRbpn4zjgHGAcoOaohhdKB4dM0+
-         jxsR2h/An8iwilkvvF4V53Koqf/uVu0dJ0g9oAIEkvhLdyo/NsjGvnwzvDx4X0APJOY3
-         ayiQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
+        b=j54TP/nAwGznoZrN5sbykaR8He5pb7OtuziWr36u24bFjtgGC4fQqmYI7bt0kQ38Qz
+         AIIBe0vVsCM7FpOz0f27YlcWHKCgzIuAx7vTuT4eMaNThvOD+jLiiZDSAkx0gylHcr8R
+         lQ1uKTx1wQOijjR0jD4PsHKZ8GtZ1JqwSElf5tOW344+hb00eWcRKg25W0y9nlwXFTwO
+         4eCh01Ccn+W/AYaYvwNxY7ecHXsrmeWhzU7dg3GtqxJd/YFZpbVffV9zh31G4a8xmoqq
+         acMn+8dd9s/BK4xl7KbvCHa6yaKsJRYFirKOgOPqreB84RBGY39kNaYP+wIVoIe0uNp5
+         6fIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kognZ45tk4qO/P86hQbS96WxT6n71WykchkXlMFBnIA=;
-        b=pInVNhDxK/NlwEeumbidXJL4u1V324Bl7EI3HlNEeD9OqqO85N9DMsWtyTYm1a9K2D
-         HWLScXcN57G4z/01ZjXgwRwUTkyLBTz8+mkHGPq9z9QgJ2T27QmAbDchcteO+zPSLQL5
-         bxJ+AB9ReC50H8XLqlUdiYjCY/jI2dgileRF+8L/fYiYsH28sjJF+4fm69TD+2sG+x55
-         0yjXcaUSNXVo6/iZWE/ZgF8Vx5Jcn13UbfmsroUE4kircpeXPQQqMCaaj45070+vLjqu
-         2d68Nf79iXChxDaE/7jqzOkDRVwzje01Yj3fXFw2RB4C2wqW5fpXlW7ILwxS64NTx3AQ
-         dTUw==
-X-Gm-Message-State: APjAAAW1HARld5pmzVFUPS/H4qSiFHYq2y4kOklZa7Jga04362goRNej
-        xS71zLnBbpA5qUhZr25Qh7/nHpHYbQo=
-X-Google-Smtp-Source: APXvYqwKGb/fK6fceHg9HEOEr1/bA8SL5OZxSoJpcdtzXMBv+Jtg/rxvkC1QcDp2W9mTiHTqwOHi0A==
-X-Received: by 2002:a05:6830:1af8:: with SMTP id c24mr26196068otd.362.1576008550671;
-        Tue, 10 Dec 2019 12:09:10 -0800 (PST)
-Received: from ?IPv6:2605:6000:e947:6500:6680:99ff:fe6f:cb54? ([2605:6000:e947:6500:6680:99ff:fe6f:cb54])
-        by smtp.googlemail.com with ESMTPSA id j130sm1751309oia.34.2019.12.10.12.09.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 12:09:10 -0800 (PST)
-Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <35e63e37-6ec8-8a47-8e18-639c954732e0@landley.net>
-Date:   Tue, 10 Dec 2019 14:12:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
+        b=L2t8D7IEqJB7L3kNpoLLXl73+iiCe/zr4iULV1An5FXx0FNeOZEZAqiiOztLWn2J8e
+         qmkMbeX+RNJr4Jryj51cIgBoeGixYXC/u5FEoLbPv4EAKH3zxKjQkjT/vJ5gQ7KsGA1z
+         8PEw2uWwyikoZ2PZrKmBGxFvmbNbK/N9wi04UGe4nq71XHn5fylyMv3QMC2zKYv3lMnL
+         U5FMbvZWPeRcH8QJBZH3uXC5G1EGrHupZf1N0SRG9Ek8ahvP9fDpES1YzlAvZbDHdFF/
+         4a8PMLr1xU7aXbj6XX6+fp/jCiBs/TMp7sm/Z6hLzR1jzRbzA5TM6yxc90/o4muUFnYi
+         iQKw==
+X-Gm-Message-State: APjAAAVpytTHvBPz+njRzSlg5SlulQaWP/rCzTpIqPBt8Gdfo8aBFJlj
+        3rl/x96KIsAPYpXU3h5oBHE=
+X-Google-Smtp-Source: APXvYqxMVlaHW5ay98kOIFO+brzIC+QLtbbjUCNbwV2fRMJftfklsg7j/ydpu5uw9XjJbdY3Vj3f5Q==
+X-Received: by 2002:adf:dfc1:: with SMTP id q1mr5177155wrn.155.1576008552975;
+        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w19sm4113643wmc.22.2019.12.10.12.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     kishon@ti.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 0/2] phy: brcm-sata: Support for 7216
+Date:   Tue, 10 Dec 2019 12:08:50 -0800
+Message-Id: <20191210200852.24945-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 2:38 AM, Kuninori Morimoto wrote:
-> 
-> Hi Andrew
-> 
-> I'm posting this patch from few month ago,
-> but it seems SH maintainer is not working in these days...
+Hi Kishon,
 
-Again, I dunno where you're getting that.
+This patch series adds support for our latest 7216 class of devices
+which are taped out in a 16nm process and use a different SATA PHY AFE
+that requires a custom initialization sequence.
 
-(Me, I removed the -Werror...)
+Thanks!
 
-Rob
+Florian Fainelli (2):
+  dt-bindings: phy: Document BCM7216 SATA PHY compatible string
+  phy: brcm-sata: Implement 7216 initialization sequence
+
+ .../devicetree/bindings/phy/brcm-sata-phy.txt |   1 +
+ drivers/phy/broadcom/phy-brcm-sata.c          | 120 ++++++++++++++++++
+ 2 files changed, 121 insertions(+)
+
+-- 
+2.17.1
+
