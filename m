@@ -2,87 +2,98 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53BFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB8DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A610D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xq9FVbCp"
+	by mail.kernel.org (Postfix) with ESMTP id A453F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfLJT7q (ORCPT
+        id S1727022AbfLJT7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:59:46 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36478 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJT7q (ORCPT
+        Tue, 10 Dec 2019 14:59:51 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:53595 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJT7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:59:46 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBAJxguI031599;
-        Tue, 10 Dec 2019 13:59:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576007982;
-        bh=YO2CxBp/cIgI68hjeveKHLJnq0CQ+wgfXTQUOWTfTTU=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=xq9FVbCprz8hzFMifutiq0DZq/ixNnoHPiQRqB95nlEBqWBd38jUgKHNs+VOrZm7f
-         vbClaRkvRACORBRBZ0DOY7EjB82acHEhgAOl5qBP1RlPoXFW5ZZ/PCwyc3/lWvpsW/
-         9T1rbtq5PssSx6GRSBqzmoQQB86IUWMaLUKN9mW0=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBAJxggj117575
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 13:59:42 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 13:59:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 13:59:41 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBAJxfMZ063634;
-        Tue, 10 Dec 2019 13:59:41 -0600
-Date:   Tue, 10 Dec 2019 13:59:08 -0600
-From:   Bin Liu <b-liu@ti.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <od@zcrc.me>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/7] usb: musb: jz4740: Code cleanup
-Message-ID: <20191210195908.GB16429@iaqt7>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191210171110.62141-1-paul@crapouillou.net>
- <20191210171110.62141-6-paul@crapouillou.net>
+        Tue, 10 Dec 2019 14:59:50 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MjSPq-1htqK43Row-00l1Jv; Tue, 10 Dec 2019 20:59:42 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Roman Li <Roman.Li@amd.com>, Eric Yang <Eric.Yang2@amd.com>,
+        Michael Strauss <michael.strauss@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: include linux/slab.h where needed
+Date:   Tue, 10 Dec 2019 20:59:24 +0100
+Message-Id: <20191210195941.931745-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191210171110.62141-6-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:OrcnEQHu5wIVElyPLtj9cM/U8i3tJsEHQqMgWD9iAttxajBL+4Y
+ PRozQipVEPM78uWvddh6kjFJP0m9W7Xl2iyfwMr6le8zEOqtUcR3YqBbcY0m8NmbwLj4gij
+ nH91rockYuPliucDJPwxBaK0+/s8ZLF4ilxO0+TiyEzKKY8itGLkPD8DVvHiCm1DACaRXts
+ wksFhEsGXgNsaguRsbwew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BEiflWA01l4=:gpxzEPPROCuBYSCdglCxHL
+ 0FQH6OkxWAbdkjhBtOL2AOW8TAzyUHTAwzR5AHHK34sofuin6RguUUZM4C2xfxlzS6CZOZCKz
+ Vo+yFJMGQ1BhPWdJG9soTTJrBPbwWOmI/bekCgki/MyU1It2Zx5Gne0YZaduSKHuAb0c+6YuY
+ UpL90RraaJFqofxod1WlkAjNmht7gW1xPfTQwcufejGVJFhtrWOnrLcB5PyA76aPi9FHFVzvA
+ kPjqEaWQGpM3xe9qkwf6ZjNXogUw5NkQhhqsndAXeH8kpKKt4hcLquS3mPWNqCQ6aZVcLcqbZ
+ tfJHLO/WK7A4/jNQ1gNjssnSHMqomjQE73RqgmN+a9WwtA2tbrdfl5KOjDkoU8YrmhJACYK+W
+ q36JztMtUCneNEZ6LNdXgahuwkkodb9RTyIIacI8L5lwUPUZRC3k33OCFOn24mdnsx5UL86tC
+ PPbls88S0p6zUPMMN1zOFF3uP0TMZaNPetFeEdCwKosDt57VVWEHpFE9t/JCIFFofQjpB/BpA
+ 7JAubHz0yx4UUIeL6yol4IjXh1+EOCsjo+kZYaCUsVJL8zceWjEt4ZAUZjNLEW+7andvWqIyh
+ w7oh5ezTHSn1BoCiCPguMWISCoPlAxEvaMCRimn3oR127JBQHa+H9DlG5f1LtOvIO9hXE2Zos
+ 5eSy9+iqpnSZhzGhTLuPx1nhkoO+rpRsUtZijJ8uPTvjoXouQJkXKrN9o9H5Bvx1lyPKI0mU+
+ /EFS1hkKQ0TdUH7AOlhi1Ni9JD6z30oze1Ep4dCICmtrQsf4ZKsCI7vMCb9p7gawwP5k19GoT
+ B8adXghoLkZL9WVo+ogipbYaq0Q5KN1jqMyHeq5myaaI/2CQF6K3IJzktAZ4hi80CVBLrDliv
+ p91ZckwO07jrR8qPb+Fw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Calling kzalloc() and related functions requires the
+linux/slab.h header to be included:
 
-On Tue, Dec 10, 2019 at 06:11:09PM +0100, Paul Cercueil wrote:
-> Just some code maintenance; no functional change.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In function 'dcn21_ipp_create':
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:679:3: error: implicit declaration of function 'kzalloc'; did you mean 'd_alloc'? [-Werror=implicit-function-declaration]
+   kzalloc(sizeof(struct dcn10_ipp), GFP_KERNEL);
 
-It seems the patch has a few different types of cleanup, coding style,
-indentation, data structure change, variable name change...
+A lot of other headers also miss a direct include in this file,
+but this is the only one that causes a problem for now.
 
-Please break the changes into multiple patches, each serves one type of
-cleanup.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
--Bin.
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index 906c84e6b49b..af57885bbff2 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -23,6 +23,8 @@
+  *
+  */
+ 
++#include <linux/slab.h>
++
+ #include "dm_services.h"
+ #include "dc.h"
+ 
+-- 
+2.20.0
+
