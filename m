@@ -7,48 +7,62 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7801C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EF0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802D9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA903207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013697;
-	bh=3aXqtGp4o4Le56Dewifenxf3B2S3PUiUAh1FVSDurHw=;
+	s=default; t=1576013705;
+	bh=mNujljQF3TDr/q+/amUM42IXLflGmLGEtLD+VlACM/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Svm5ZCX/RX4CBc7xPZF3BrrDQ83Fdk6O3XRKW/+ztCKX3hp2pcTAQJLiNB4i2FRP0
-	 3Eg5UxFUfOEOh7xkviHCTBvt6XEbuKIpqWLPRAE5rantxegXjIcCVnA9zg850gGdpV
-	 qOYULvqcQW0wEPhrLxHaf4MFBjdyQImrnoAdr9iQ=
+	b=br/L2VkKuS1cxE4aZjIy9xFobF76tOuj6KOzzh3dYDa8vVysqFq5Ui2n/YKDioGZ9
+	 TkDEnA1uQeHKgT36Zy/e5nIVv+/L0exd9HlTI+j9x63WPMJKHXoDFdBzDffXSNmL12
+	 1PGnPHATKF1MY+wT3VZi0/Ypn8AboLcOffklJxNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfLJVe4 (ORCPT
+        id S1730170AbfLJVfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfLJVeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:46 -0500
+        id S1730113AbfLJVev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A34A2467A;
-        Tue, 10 Dec 2019 21:34:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A404208C3;
+        Tue, 10 Dec 2019 21:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013685;
-        bh=3aXqtGp4o4Le56Dewifenxf3B2S3PUiUAh1FVSDurHw=;
+        s=default; t=1576013690;
+        bh=mNujljQF3TDr/q+/amUM42IXLflGmLGEtLD+VlACM/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OqYO9qYVFzHhYPHa71qLTVvxoDSbMXp7XCG7SaoG1HxaPGlAK8szYtzyKa0avCqc9
-         ynQcUz7ZJJxUvVd8lSDIZLfJnZo2dibHK0FqTcGKHOxDOJIH+C5SymbC79qnnBGVpL
-         ldFronwIsbUAmH61ewkqXZZZYllxfCh42PkYK7t0=
+        b=pKWnilAVP1SINOjjzzE+kmOMNOCGi9oLdJUCkmI+qCwKbLxbOuf+a+KFOOsERW8WB
+         QA/q+pKNkMhFYVtpzlGn89JleJ7LkAphDtP1g/MAZD0OpG00D2PyrvyyE7BvWZ1cex
+         3pkhT7FMpelmnzSO1gpOfqYyPg2dpR2ZaOLPFW+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hawking Zhang <Hawking.Zhang@amd.com>,
-        Candice Li <Candice.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 118/177] drm/amdgpu: disallow direct upload save restore list from gfx driver
-Date:   Tue, 10 Dec 2019 16:31:22 -0500
-Message-Id: <20191210213221.11921-118-sashal@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 121/177] perf parse: If pmu configuration fails free terms
+Date:   Tue, 10 Dec 2019 16:31:25 -0500
+Message-Id: <20191210213221.11921-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,43 +75,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hawking Zhang <Hawking.Zhang@amd.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
+[ Upstream commit 38f2c4226e6bc3e8c41c318242821ba5dc825aba ]
 
-Direct uploading save/restore list via mmio register writes breaks the security
-policy. Instead, the driver should pass s&r list to psp.
+Avoid a memory leak when the configuration fails.
 
-For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
-twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
-The latter is not allowed.
-
-VG12 is the only exception where the driver still keeps legacy approach for S&R
-list uploading. In theory, this can be elimnated if we have valid srcntl ucode
-for VG12.
-
-Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Reviewed-by: Candice Li <Candice.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191030223448.12930-9-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 7824116498169..28794b1b15c10 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -2187,7 +2187,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
- 	 * And it's needed by gfxoff feature.
- 	 */
- 	if (adev->gfx.rlc.is_rlc_v2_1) {
--		gfx_v9_1_init_rlc_save_restore_list(adev);
-+		if (adev->asic_type == CHIP_VEGA12)
-+			gfx_v9_1_init_rlc_save_restore_list(adev);
- 		gfx_v9_0_enable_save_restore_machine(adev);
- 	}
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 7ea1a230e89d0..95043cae57740 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1282,8 +1282,15 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (get_config_terms(head_config, &config_terms))
+ 		return -ENOMEM;
  
+-	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error))
++	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
++		struct perf_evsel_config_term *pos, *tmp;
++
++		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
++			list_del_init(&pos->list);
++			free(pos);
++		}
+ 		return -EINVAL;
++	}
+ 
+ 	evsel = __add_event(list, &parse_state->idx, &attr,
+ 			    get_config_name(head_config), pmu,
 -- 
 2.20.1
 
