@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D348DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606B9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A083A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3456220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013903;
-	bh=vACwuEckSbbcXg5RDmsmQNirCql0qClr/29nJu35mGU=;
+	s=default; t=1576013907;
+	bh=KBWIotveJbh6YphD+kZjOybEOo+u4bqZz69XmnGL6ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dl1Lm36YHo0ihe4pNiuMtIto/Bq0bWBolQv4w1kci3VikbFI0xjlcnPZd3YPYHBL9
-	 sAMPo7x/JSWhgaAEHqRJwSVuwTOMnWGBUl0bhec0FB+JjFPgv+hda14fO7nM/flrfV
-	 Z93rkxszKB2zgAwmfqOoTbrRfEeFPMe5gofAQNJY=
+	b=PsdZM1t4zDzXIPab1AYvgJUmGHGyupPnhlmUdKQdIx/zVLwYBsSbD3Fol9uadLCN2
+	 mt2mRaTL1VgbdrFLDfQK3Zv/VOmdpDD/D7Alt1/dQESVn+qOhp1N+UdWlmQwpk1art
+	 RGF26wbqXMgooCcP3GfasB9bYSIzLZxRzMhkADjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfLJViW (ORCPT
+        id S1730216AbfLJVfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:38:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbfLJVfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:17 -0500
+        id S1730159AbfLJVfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 120C4207FF;
-        Tue, 10 Dec 2019 21:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB9A2465A;
+        Tue, 10 Dec 2019 21:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013716;
-        bh=vACwuEckSbbcXg5RDmsmQNirCql0qClr/29nJu35mGU=;
+        s=default; t=1576013702;
+        bh=KBWIotveJbh6YphD+kZjOybEOo+u4bqZz69XmnGL6ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJ2CPdVps4dXcDMAj1FQZQKNYS5LPPGiDQzU0NOT7rp5CAZUCrKKzJWk3BY6/KHT0
-         7aXmwKu1vsLhCSGWRZvuLoi844T8rEedCeBLcs5AYJOpQqGZr5MDk6Nqv0oklvpqwB
-         e7kUFeSZosqY8Xkq2u1h5PN5inwr+1WBJ86gfZ+I=
+        b=StbrdHMGG8VZTwEK6qaaRkPmMSwpw/bKCkUvUqmkWO1VMZ+1jlgzRvNahKhENcY9C
+         KGsPMP3YUiKayfAcBkjbptqeaOfkVc9dTKP9ggN1fsK8/yYF3K2PPwNgwvXn6+ak6b
+         /2XaS9gbfq5NRJQn4tBj9N5OipoK7EnnQsXtNqjI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 144/177] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Tue, 10 Dec 2019 16:31:48 -0500
-Message-Id: <20191210213221.11921-144-sashal@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 131/177] crypto: atmel - Fix authenc support when it is set to m
+Date:   Tue, 10 Dec 2019 16:31:35 -0500
+Message-Id: <20191210213221.11921-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,67 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit 1520c72596dde7f22b8bd6bed3ef7df2b8b7ef39 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+As it is if CONFIG_CRYPTO_DEV_ATMEL_AUTHENC is set to m it is in
+effect disabled.  This patch fixes it by using IS_ENABLED instead
+of ifdef.
 
-This happens due to following sequence of events:
-
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
-
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/crypto/atmel-aes.c     | 18 +++++++++---------
+ drivers/crypto/atmel-authenc.h |  2 +-
+ drivers/crypto/atmel-sha.c     |  2 +-
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 9d8d64f706e06..e35c397b1259f 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2480,6 +2480,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
+diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
+index 801aeab5ab1e6..e659c3d9c2e4f 100644
+--- a/drivers/crypto/atmel-aes.c
++++ b/drivers/crypto/atmel-aes.c
+@@ -148,7 +148,7 @@ struct atmel_aes_xts_ctx {
+ 	u32			key2[AES_KEYSIZE_256 / sizeof(u32)];
+ };
  
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
-+
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ struct atmel_aes_authenc_ctx {
+ 	struct atmel_aes_base_ctx	base;
+ 	struct atmel_sha_authenc_ctx	*auth;
+@@ -160,7 +160,7 @@ struct atmel_aes_reqctx {
+ 	u32			lastc[AES_BLOCK_SIZE / sizeof(u32)];
+ };
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ struct atmel_aes_authenc_reqctx {
+ 	struct atmel_aes_reqctx	base;
+ 
+@@ -489,13 +489,13 @@ static inline bool atmel_aes_is_encrypt(const struct atmel_aes_dev *dd)
+ 	return (dd->flags & AES_FLAGS_ENCRYPT);
+ }
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ static void atmel_aes_authenc_complete(struct atmel_aes_dev *dd, int err);
+ #endif
+ 
+ static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
+ {
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 	if (dd->ctx->is_aead)
+ 		atmel_aes_authenc_complete(dd, err);
+ #endif
+@@ -1976,7 +1976,7 @@ static struct crypto_alg aes_xts_alg = {
+ 	}
+ };
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ /* authenc aead functions */
+ 
+ static int atmel_aes_authenc_start(struct atmel_aes_dev *dd);
+@@ -2463,7 +2463,7 @@ static void atmel_aes_unregister_algs(struct atmel_aes_dev *dd)
+ {
+ 	int i;
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 	if (dd->caps.has_authenc)
+ 		for (i = 0; i < ARRAY_SIZE(aes_authenc_algs); i++)
+ 			crypto_unregister_aead(&aes_authenc_algs[i]);
+@@ -2510,7 +2510,7 @@ static int atmel_aes_register_algs(struct atmel_aes_dev *dd)
+ 			goto err_aes_xts_alg;
+ 	}
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 	if (dd->caps.has_authenc) {
+ 		for (i = 0; i < ARRAY_SIZE(aes_authenc_algs); i++) {
+ 			err = crypto_register_aead(&aes_authenc_algs[i]);
+@@ -2522,7 +2522,7 @@ static int atmel_aes_register_algs(struct atmel_aes_dev *dd)
+ 
+ 	return 0;
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 	/* i = ARRAY_SIZE(aes_authenc_algs); */
+ err_aes_authenc_alg:
+ 	for (j = 0; j < i; j++)
+@@ -2713,7 +2713,7 @@ static int atmel_aes_probe(struct platform_device *pdev)
+ 
+ 	atmel_aes_get_cap(aes_dd);
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 	if (aes_dd->caps.has_authenc && !atmel_sha_authenc_is_ready()) {
+ 		err = -EPROBE_DEFER;
+ 		goto iclk_unprepare;
+diff --git a/drivers/crypto/atmel-authenc.h b/drivers/crypto/atmel-authenc.h
+index 2a60d1224143a..7f6742d35dd5a 100644
+--- a/drivers/crypto/atmel-authenc.h
++++ b/drivers/crypto/atmel-authenc.h
+@@ -23,7 +23,7 @@
+ #ifndef __ATMEL_AUTHENC_H__
+ #define __ATMEL_AUTHENC_H__
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ 
+ #include <crypto/authenc.h>
+ #include <crypto/hash.h>
+diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
+index 8a19df2fba6a3..ef125d4be8fc4 100644
+--- a/drivers/crypto/atmel-sha.c
++++ b/drivers/crypto/atmel-sha.c
+@@ -2215,7 +2215,7 @@ static struct ahash_alg sha_hmac_algs[] = {
+ },
+ };
+ 
+-#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
++#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+ /* authenc functions */
+ 
+ static int atmel_sha_authenc_init2(struct atmel_sha_dev *dd);
 -- 
 2.20.1
 
