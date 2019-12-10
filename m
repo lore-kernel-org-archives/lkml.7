@@ -2,174 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20172C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81214C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50BF20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014016;
-	bh=sU/hv5OnzgjSlrQPBJsVkApxWD7ChcuCQUDBHs/gNrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vq4Sy8eGfUDCbQsvj39ZhGM9yjxbcoSki1yTGFnsqn1eA4lIJE05dCKbeDGXWqBDi
-	 vM+4yROM+Trrc4gsUEuWCY62SstfM6xewk8R6KxaIdqctK0dCURY7GU9hgQnZQmsb2
-	 xxhPi2HRU/axax4wS/+a52mRNyVBh0ORpFPuYuBU=
+	by mail.kernel.org (Postfix) with ESMTP id 5947D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfLJVkO (ORCPT
+        id S1730129AbfLJVkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730058AbfLJVef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF7AC22464;
-        Tue, 10 Dec 2019 21:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013674;
-        bh=sU/hv5OnzgjSlrQPBJsVkApxWD7ChcuCQUDBHs/gNrI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLKsH/M/Qa47ad4meD7NHHSwgGitUfUMSA1TV1ltoDA0OP4ia62yFlIX8/jTFQ9it
-         5YfFAHbM+iZosOdgASGkHR0Rb+GHKn7KeWq43mtyvPVywSD3ISwZUMneafjKamWcpB
-         7rzlQS1gmaWqHTB3AvZ5KW8jiGyCNVemj5IH++1M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Luke Mujica <lukemujica@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 110/177] perf jevents: Fix resource leak in process_mapfile() and main()
-Date:   Tue, 10 Dec 2019 16:31:14 -0500
-Message-Id: <20191210213221.11921-110-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
-References: <20191210213221.11921-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:40:22 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:49723 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbfLJVkS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:40:18 -0500
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MbSXf-1i8DVp0nqj-00bv4d for <linux-kernel@vger.kernel.org>; Tue, 10 Dec
+ 2019 22:40:16 +0100
+Received: by mail-qk1-f175.google.com with SMTP id z14so7481495qkg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:40:16 -0800 (PST)
+X-Gm-Message-State: APjAAAU3wQe1kzExBy9X5IIjCdrYzJKjlKi7kam84Jfl16lcNTMLVdLS
+        p/CNyJ7sHFbeTIAFS+VSJFaCf6A8zEowzXHm/Oc=
+X-Google-Smtp-Source: APXvYqxUoC6H/HWZMBtDiTF2+IJfRax40MKZBHGh8CU2NKudSB89mZzzFUDhBYEjsX0QO0qaYD1duiXIHE3h8N56nz0=
+X-Received: by 2002:a37:4e4e:: with SMTP id c75mr13322344qkb.3.1576014015095;
+ Tue, 10 Dec 2019 13:40:15 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191210203101.2663341-1-arnd@arndb.de> <DM6PR12MB34665D3A13E23D8AA7E2E7919E5B0@DM6PR12MB3466.namprd12.prod.outlook.com>
+ <b552de20-dca5-b5d1-e5e8-4c09bc3fdcb5@amd.com>
+In-Reply-To: <b552de20-dca5-b5d1-e5e8-4c09bc3fdcb5@amd.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Dec 2019 22:39:59 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2qM2Vi9qH5b+REBWp2tpb96CpxjmeGSbc63XfGwD6ozg@mail.gmail.com>
+Message-ID: <CAK8P3a2qM2Vi9qH5b+REBWp2tpb96CpxjmeGSbc63XfGwD6ozg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: fix undefined struct member reference
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Cc:     "Liu, Zhan" <Zhan.Liu@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Liu, Charlene" <Charlene.Liu@amd.com>,
+        "Yang, Eric" <Eric.Yang2@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "Cornij, Nikola" <Nikola.Cornij@amd.com>,
+        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Lei, Jun" <Jun.Lei@amd.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:IX8poFHkhmWDMtT05CyGRNNlyICIfre20x86D5UgS/CzaHTuJED
+ ZSkbMjlym3LobiOUkDBHJC7of/LSmA2SZqFZU/lnUMKA1rtjcAJLLYHkHdtwRJ+FIPJkXO/
+ RXVqdNm3SLbjkzhKza3y7NAEFeSbQ/oSmoStH4eUEo9DsQwEJEd0rBmYOfD4gdo7Wt6be1J
+ 31A0jjhgPmqP9IPFO9v9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y0bKYy13xqM=:K5+KBmK6Pe1eeq0vlqvmUq
+ pPqGAviGh1Zo4SCGhf6I1H2RLJwd62AdNHOdjMP4aWxxq0Pvozrz3ylSrE1YJpN+kxgjZD/4n
+ KfcRW+gSRO8NXSXH7DXtOfP0vyo1imFET6FC1Ak6SeoVau1i3qkq3Kf7mJMN2OhsuxdvQ7RDT
+ 4sTexFuAVkdbXRNlQsYB/QvZX+AqMD3MRBO5VU/8DsPSOOULAlABlMqd/36sJXTsvRPVoUmIA
+ wldqOS1XlCHsYGoz6raTMBLv+Wh19vFyNbkqjIfKoJGRc7UorDdEUE0KwSi0wN1FWCaiHrJbe
+ rGh7a5AenYKZNYIVGN5wYPTRrVMtGI72c701REYkDFIOPUiQhBBuWEYG5hy+QX7eV8ZOzW0xt
+ EzhOWRFuwA7C+oqRAc5hMm22EJ3Autjhbvx+YKPdGAKQt2OQeFNvZpVUmnOhcP58OBRy2AnD3
+ dHbakyB7P+H/dEgZX/UJLqDYDJiskr8L3TQJgJVoMWKb3BpLL7dvZXwXiXT+EAyaoSFfuyNsx
+ 5pHEAZo/xGyRa1J85sVZ6wT5UnEuPyUHvSKp1gS6ZsskdtFnTiFL7I9u6iPlvZXxocvJ8SSMN
+ QSDaH6pGHKL4MsMe+FH1BjNrHyqPuOOn01yHk0oXA8+XgafHPAJyOyA2cm0J2QiF7asLkJVtn
+ BDC0+wEFJ1Al0AYP+hbcIjFQ9khsHlBnlEYdmPuFISTdRqCQyg7gKLyqQrA3nnHTSo1Fhilcr
+ bBf2OyHNkcjNG439K1BJmmrxDpCvxd7v7GtjVHKerF5RGWUnZ0aDJ0D20UYHge8hFx3RwvXqT
+ CXTlNrRgGD6YOTGShqYOFXkyezHlhbhSyDTG/GnTK6mKHFvqlmbW7srhBFiHJCSyJxPgoRd5b
+ eB3e3wvIUvu94fqJVBLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+On Tue, Dec 10, 2019 at 9:56 PM Kazlauskas, Nicholas
+<nicholas.kazlauskas@amd.com> wrote:
+> On 2019-12-10 3:54 p.m., Liu, Zhan wrote:
 
-[ Upstream commit 1785fbb73896dbd9d27a406f0d73047df42db710 ]
+> >>
+> >> Fixes: c3d03c5a196f ("drm/amd/display: Include num_vmid and num_dsc
+> >> within NV14's resource caps")
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Thank you for catching that On my side I kept that flag enabled all the time, so I didn't realize there was a warning hidden here.
+> >
+> > Reviewed-by: Zhan Liu <zhan.liu@amd.com>
+>
+> What tree is this reported on?
 
-There are memory leaks and file descriptor resource leaks in
-process_mapfile() and main().
+This is plain linux-5.5-rc1.
 
-Fix this by adding free(), fclose() and free_arch_std_events() on the
-error paths.
+> We dropped this flag whenever building DCN. Sounds like we're missing a
+> patch if you're getting this.
+>
+> So this is a NAK from me for going into amd-staging-drm-next at least.
 
-Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Luke Mujica <lukemujica@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/pmu-events/jevents.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Fair enough, please revert c3d03c5a196f ("drm/amd/display: Include
+num_vmid and num_dsc within NV14's resource caps") for 5.5-rc2 then.
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 6cd9623ebc93b..38b5888ef7b38 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -754,6 +754,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	char *line, *p;
- 	int line_num;
- 	char *tblname;
-+	int ret = 0;
- 
- 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
- 
-@@ -765,6 +766,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	if (!mapfp) {
- 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
- 				fpath);
-+		free(line);
- 		return -1;
- 	}
- 
-@@ -791,7 +793,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 			/* TODO Deal with lines longer than 16K */
- 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
- 					prog, fpath, line_num);
--			return -1;
-+			ret = -1;
-+			goto out;
- 		}
- 		line[strlen(line)-1] = '\0';
- 
-@@ -821,7 +824,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 
- out:
- 	print_mapping_table_suffix(outfp);
--	return 0;
-+	fclose(mapfp);
-+	free(line);
-+	return ret;
- }
- 
- /*
-@@ -1118,6 +1123,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1130,6 +1136,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1147,6 +1154,8 @@ int main(int argc, char *argv[])
- 	if (process_mapfile(eventsfp, mapfile)) {
- 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
- 		/* Make build fail */
-+		fclose(eventsfp);
-+		free_arch_std_events();
- 		return 1;
- 	}
- 
--- 
-2.20.1
-
+      Arnd
