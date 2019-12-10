@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34B9C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C370CC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36EE20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9304320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015444;
-	bh=y/AIGhyESa+miggHCYjzstiZ1XXGS4yxFdUcYd0QkwI=;
+	s=default; t=1576015450;
+	bh=8w8s0yBl1dK+1lrctpEaz0CSbxA6raR3/iLBfgHuj0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2Kzjg5/PHMxMBOEONEbNtg8WJikYn01qm64kd3IRD28MfurwNArvffXE8emIf6dD
-	 DXSaJZcf3oN0kbCZNbpdHMsQce3rHq2ZJmSCpqpAwrWlF08X+/RfyyTwBhRCQtoPpK
-	 JSQBf9Opxv58iq1epApjSAa6d61AilgOa2/JpQb8=
+	b=wNT4Pyf7GK8GxQS1twzSnZAC9yR6K3fWUOKkM0thWGWVtPimSEA8yxLAfn1U66UVI
+	 IydoA0WYTDmJ8KdGx8Zvb/qCvYUSDybHYPPOuZNnSHV/D7jq8yqrdI6pIo057k5OE6
+	 nsSolRfgaayOl9I8Lza1B6zKMa8XizfbZbuKPQB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfLJWED (ORCPT
+        id S1728544AbfLJWEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbfLJWDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:52 -0500
+        id S1728370AbfLJWEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D748F2053B;
-        Tue, 10 Dec 2019 22:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB4D24656;
+        Tue, 10 Dec 2019 22:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015432;
-        bh=y/AIGhyESa+miggHCYjzstiZ1XXGS4yxFdUcYd0QkwI=;
+        s=default; t=1576015439;
+        bh=8w8s0yBl1dK+1lrctpEaz0CSbxA6raR3/iLBfgHuj0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3vFtivJxKOnni3rA3aT1ap2cdI1Q4loHhEuaeVGeV00c5T1gI9UuDEa9uRlm1848
-         XUoxok6Ucy9k6wuMXynYWjJYa0NITMWSyZiHYw/LjQZ0D/fP2KlcwEytWnMKLzAykV
-         mSKPqjVEOkuQzlq+z/f+4MJAOqt8gi+IgGfW2M5g=
+        b=D3sA1DSFs4r1ekfoUTbSmwcwKTTzDyiR8z6Kr4Z+VXfdZJJU2fqdXzknbHARi33Q5
+         IvqYi8//AndjJqKZnFlslp2R3UnuJYHWQAvd3zeiARcFrGVCTfQBgfwQbTJ3jBScco
+         8qa95ewONPl9q76mH1aECKTh8+YY8peFpPZNo+6g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 042/130] x86/mm: Use the correct function type for native_set_fixmap()
-Date:   Tue, 10 Dec 2019 17:01:33 -0500
-Message-Id: <20191210220301.13262-42-sashal@kernel.org>
+Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 048/130] usb: usbfs: Suppress problematic bind and unbind uevents.
+Date:   Tue, 10 Dec 2019 17:01:39 -0500
+Message-Id: <20191210220301.13262-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -67,63 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
 
-[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
+[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
 
-We call native_set_fixmap indirectly through the function pointer
-struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
-'unsigned' instead of 'enum fixed_addresses'. This patch changes the
-function type for native_set_fixmap to match the pointer, which fixes
-indirect call mismatches with Control-Flow Integrity (CFI) checking.
+commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
+to a driver") added bind and unbind uevents when a driver is bound or
+unbound to a physical device.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+For USB devices which are handled via the generic usbfs layer (via
+libusb for example), this is problematic:
+Each time a user space program calls
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+and then later
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+The kernel will now produce a bind or unbind event, which does not
+really contain any useful information.
+
+This allows a user space program to run a DoS attack against programs
+which listen to uevents (in particular systemd/eudev/upowerd):
+A malicious user space program just has to call in a tight loop
+
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+
+With this loop the malicious user space program floods the kernel and
+all programs listening to uevents with tons of bind and unbind
+events.
+
+This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
+USBDEVFS_RELEASEINTERFACE.
+
+Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fixmap.h | 2 +-
- arch/x86/mm/pgtable.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/core/devio.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 6390bd8c141b4..5e12b2319d7a5 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -159,7 +159,7 @@ extern pte_t *kmap_pte;
- extern pte_t *pkmap_page_table;
- 
- void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
--void native_set_fixmap(enum fixed_addresses idx,
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- 		       phys_addr_t phys, pgprot_t flags);
- 
- #ifndef CONFIG_PARAVIRT
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index b4fd36271f906..55338b3922210 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -590,8 +590,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
- 	fixmaps_set++;
- }
- 
--void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
--		       pgprot_t flags)
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-+		       phys_addr_t phys, pgprot_t flags)
- {
- 	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
- }
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index 62b2a7105f023..4fb4cf8c2f14d 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -755,8 +755,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	intf = usb_ifnum_to_if(dev, ifnum);
+ 	if (!intf)
+ 		err = -ENOENT;
+-	else
++	else {
++		unsigned int old_suppress;
++
++		/* suppress uevents while claiming interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
++	}
+ 	if (err == 0)
+ 		set_bit(ifnum, &ps->ifclaimed);
+ 	return err;
+@@ -776,7 +783,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	if (!intf)
+ 		err = -ENOENT;
+ 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
++		unsigned int old_suppress;
++
++		/* suppress uevents while releasing interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		usb_driver_release_interface(&usbfs_driver, intf);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
+ 		err = 0;
+ 	}
+ 	return err;
 -- 
 2.20.1
 
