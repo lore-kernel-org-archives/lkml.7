@@ -2,227 +2,161 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EF4C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B099C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BC72073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3BB2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZICkPQ0q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IK8fFVLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLJJRT (ORCPT
+        id S1727177AbfLJJSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:17:19 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:50741 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbfLJJRT (ORCPT
+        Tue, 10 Dec 2019 04:18:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37955 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726957AbfLJJSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:17:19 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id xBA9F3nk002286;
-        Tue, 10 Dec 2019 18:15:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com xBA9F3nk002286
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575969304;
-        bh=fZSJ9406U2jMjTj0MJPsSAKAuiCbOY7z777j3BlnS64=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZICkPQ0qlKaZ5gvesye64Ajer4Y29LiQHJTthQMyXqWchv1Oz6XlkHQGYD46IHJVb
-         oETXHqu+ORXaEeG2zHFMNaJ8eoHO2Vw5BKDohlNsjkKWCdgyYpZPX2e8Y5c05iVQ+J
-         lpEEVP48mVGbii42pFZXO41SCVxny/qq5XKolD5ekOkNNKd+jsgDOFzwHfL46T1QbH
-         EciXXoHdlaw8FYEn/Qg/Q4d4FhPPrRvw7TM4vumikxXMK6F/dUBL9xdOL3tkht9bc4
-         b+iqdsdNEcaOtiy//c13esKtEgHx/A0AvXUDXTgL4nXUWmmHGDA+5F6DeMQ94K1nGw
-         HD1IxhqkAZl8Q==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: denali: add reset controlling
-Date:   Tue, 10 Dec 2019 18:14:53 +0900
-Message-Id: <20191210091453.26346-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 10 Dec 2019 04:18:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575969480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LwMyxUw+/mSFbkl5BEsUf1e5k5JSpB6gcLmT1T2v/3Y=;
+        b=IK8fFVLIllRlxYvGGFTdXf1JRbCgGs1Kv+6eGxPFGPLWN3/jQpnrB/7Oe53ly7SdXdJqHz
+        dGSHRnnwtvLOT2AKBVGcrteaJ8k0Lqelz1gX2SjFgMOc+sFoTqUY/aGG23AOysxBkkQw13
+        hpzg+a+aSBLKtV928Sl0N3ZPGe+MeHg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-321-OJetW2moMh-RmEHA3-COaA-1; Tue, 10 Dec 2019 04:17:59 -0500
+Received: by mail-wr1-f70.google.com with SMTP id f17so8717517wrt.19
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:17:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LwMyxUw+/mSFbkl5BEsUf1e5k5JSpB6gcLmT1T2v/3Y=;
+        b=YQSwVyKRNo5JIzJMchyi2EOp+ktDYSLuSfhYyVNp1eszXEUhGO7XgkOTcPzg64glVK
+         wlybHwFmapHOn6imOF19jLDhvobaz9yobgwU2gFLj7+DqEdEHiUf10TosQaakPxiOCM/
+         D9Zo7s0yBgau7bOSnPMLN+sXI55w4NAUwzbbOK2HoYPK36icehrz7nLMqx10sMRE2US/
+         XN1L844pEToPBvLtDY2gfvLNAFy4DPZRrHkWJ3w7rSL+ANTuiV6pBezcLxNv/9nCgqWi
+         m5HLaHTxH7ECNdCGS5BK2/2LDdY2VSiomiDb77s64nCNmj3/3dvvD8bwL0Ol0mq1llMh
+         GG6Q==
+X-Gm-Message-State: APjAAAUAZCw89hWknh0Vux7ExajQsDgBe9ygvIKLzAYCoIMSLxxkADj8
+        Jg6qxif6VRSZS2SynIiQkOjsOr8Z5xm4OQowepGh39mSmWxte9fmN0XkKhMNYtkjU2JyYZWG/Z/
+        LcTucEuBOjoJz8U6Ym2NXlfdc
+X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr1868030wrw.255.1575969477749;
+        Tue, 10 Dec 2019 01:17:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyT0r5sAsbVRhAQAWw4X6A3mFDEuojh7E3PXeWsyr9m82fngl68lEwBeshDLcB23QXVcTSFww==
+X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr1868009wrw.255.1575969477478;
+        Tue, 10 Dec 2019 01:17:57 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
+        by smtp.gmail.com with ESMTPSA id h127sm2412586wme.31.2019.12.10.01.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 01:17:56 -0800 (PST)
+Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved
+ bits
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     sean.j.christopherson@intel.com, stable@vger.kernel.org
+References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+ <8f7e3e87-15dc-2269-f5ee-c3155f91983c@amd.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7b885f53-e0d3-2036-6a06-9cdcbb738ae2@redhat.com>
+Date:   Tue, 10 Dec 2019 10:17:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <8f7e3e87-15dc-2269-f5ee-c3155f91983c@amd.com>
+Content-Language: en-US
+X-MC-Unique: OJetW2moMh-RmEHA3-COaA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the Denali User's Guide, this IP has two reset signals.
+On 04/12/19 16:57, Tom Lendacky wrote:
+> On 12/4/19 9:40 AM, Paolo Bonzini wrote:
+>> The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+>> true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
+>> available, it is simplest and works even if memory is not encrypted.
+> 
+> This isn't correct for AMD. The reduction in physical addressing is
+> correct. You can't set, e.g. bit 45, in the nested page table, because
+> that will be considered a reserved bit and generate an NPF. When memory
+> encryption is enabled today, bit 47 is the encryption indicator bit and
+> bits 46:43 must be zero or else an NPF is generated. The hardware uses
+> these bits internally based on the whether running as the hypervisor or
+> based on the ASID of the guest.
 
-  rst_n:     reset most of FFs in the controller core
-  reg_rst_n: reset all FFs in the register interface, and in the
-             initialization sequence
+kvm_get_shadow_phys_bits() must be conservative in that:
 
-This commit supports controlling those reset signals, although they
-might be often tied up together in actual SoC integration.
+1) if a bit is reserved it _can_ return a value higher than its index
 
-One thing that should be kept in mind is the automated initialization
-sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
-deasserted.
+2) if a bit is used by the processor (for physical address or anything
+else) it _must_ return a value higher than its index.
 
-When the reset is deasserted, the controller issues a RESET command
-to the chip select 0, and attempts to read out the chip ID, and further
-more, ONFI parameters if it is an ONFI-compliant device. Then, the
-controller sets up the relevant registers based on the detected
-device parameters.
+In the SEV case we're not obeying (2), because the function returns 43
+when the C bit is bit 47.  The patch fixes that.
 
-This process is just redundant for Linux because nand_scan_ident()
-probes devices and sets up parameters accordingly. Rather, this hardware
-feature is annoying because it ends up with misdetection due to bugs.
+Paolo
 
-So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
-specific fixup code") changed the driver to not rely on it.
-
-However, there is no way to prevent it from running. The IP provides
-the 'bootstrap_inhibit_init' port to suppress this sequence, but it is
-usually out of software control, and dependent on SoC implementation.
-As for the Socionext UniPhier platform, LD4 always enables it. For the
-later SoCs, the bootstrap sequence runs depending on the boot mode.
-
-I added usleep_range() to make the driver wait until the sequence
-finishes. Otherwise, the driver would fail to detect the chip due
-to the race between the driver and hardware-controlled sequence.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
- drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
- 2 files changed, 46 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index b32aed1db46d..a48b17fb969a 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -14,6 +14,11 @@ Required properties:
-     interface clock, and the ECC circuit clock.
-   - clock-names: should contain "nand", "nand_x", "ecc"
- 
-+Optional properties:
-+  - resets: may contain phandles to the controller core reset, the register
-+ reset
-+  - reset-names: may contain "nand", "reg"
-+
- Sub-nodes:
-   Sub-nodes represent available NAND chips.
- 
-@@ -46,6 +51,8 @@ nand: nand@ff900000 {
- 	reg-names = "nand_data", "denali_reg";
- 	clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
- 	clock-names = "nand", "nand_x", "ecc";
-+	resets = <&nand_rst>, <&nand_reg_rst>;
-+	reset-names = "nand", "reg";
- 	interrupts = <0 144 4>;
- 
- 	nand@0 {
-diff --git a/drivers/mtd/nand/raw/denali_dt.c b/drivers/mtd/nand/raw/denali_dt.c
-index 8b779a899dcf..132bc6cc066c 100644
---- a/drivers/mtd/nand/raw/denali_dt.c
-+++ b/drivers/mtd/nand/raw/denali_dt.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-@@ -14,6 +15,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- 
- #include "denali.h"
- 
-@@ -22,6 +24,8 @@ struct denali_dt {
- 	struct clk *clk;	/* core clock */
- 	struct clk *clk_x;	/* bus interface clock */
- 	struct clk *clk_ecc;	/* ECC circuit clock */
-+	struct reset_control *rst;	/* core reset */
-+	struct reset_control *rst_reg;	/* register reset */
- };
- 
- struct denali_dt_data {
-@@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device *pdev)
- 	if (IS_ERR(dt->clk_ecc))
- 		return PTR_ERR(dt->clk_ecc);
- 
-+	dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
-+	if (IS_ERR(dt->rst))
-+		return PTR_ERR(dt->rst);
-+
-+	dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
-+	if (IS_ERR(dt->rst_reg))
-+		return PTR_ERR(dt->rst_reg);
-+
- 	ret = clk_prepare_enable(dt->clk);
- 	if (ret)
- 		return ret;
-@@ -166,10 +178,30 @@ static int denali_dt_probe(struct platform_device *pdev)
- 	denali->clk_rate = clk_get_rate(dt->clk);
- 	denali->clk_x_rate = clk_get_rate(dt->clk_x);
- 
--	ret = denali_init(denali);
-+	/*
-+	 * Deassert the register reset, and the core reset in this order.
-+	 * Deasserting the core reset while the register reset is asserted
-+	 * will cause unpredictable behavior in the controller.
-+	 */
-+	ret = reset_control_deassert(dt->rst_reg);
- 	if (ret)
- 		goto out_disable_clk_ecc;
- 
-+	ret = reset_control_deassert(dt->rst);
-+	if (ret)
-+		goto out_assert_rst_reg;
-+
-+	/*
-+	 * When the reset is deasserted, the initialization sequence is kicked
-+	 * (bootstrap process). This will take a while, and the driver must
-+	 * wait until it finished in order to avoid unpredictable behavior.
-+	 */
-+	usleep_range(200, 1000);
-+
-+	ret = denali_init(denali);
-+	if (ret)
-+		goto out_assert_rst;
-+
- 	for_each_child_of_node(dev->of_node, np) {
- 		ret = denali_dt_chip_init(denali, np);
- 		if (ret) {
-@@ -184,6 +216,10 @@ static int denali_dt_probe(struct platform_device *pdev)
- 
- out_remove_denali:
- 	denali_remove(denali);
-+out_assert_rst:
-+	reset_control_assert(dt->rst);
-+out_assert_rst_reg:
-+	reset_control_assert(dt->rst_reg);
- out_disable_clk_ecc:
- 	clk_disable_unprepare(dt->clk_ecc);
- out_disable_clk_x:
-@@ -199,6 +235,8 @@ static int denali_dt_remove(struct platform_device *pdev)
- 	struct denali_dt *dt = platform_get_drvdata(pdev);
- 
- 	denali_remove(&dt->controller);
-+	reset_control_assert(dt->rst);
-+	reset_control_assert(dt->rst_reg);
- 	clk_disable_unprepare(dt->clk_ecc);
- 	clk_disable_unprepare(dt->clk_x);
- 	clk_disable_unprepare(dt->clk);
--- 
-2.17.1
+> 
+> Thanks,
+> Tom
+> 
+>>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> ---
+>>  arch/x86/kvm/mmu/mmu.c | 20 ++++++++++++--------
+>>  1 file changed, 12 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+>> index 6f92b40d798c..1e4ee4f8de5f 100644
+>> --- a/arch/x86/kvm/mmu/mmu.c
+>> +++ b/arch/x86/kvm/mmu/mmu.c
+>> @@ -538,16 +538,20 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+>>  static u8 kvm_get_shadow_phys_bits(void)
+>>  {
+>>  	/*
+>> -	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+>> -	 * in CPU detection code, but MKTME treats those reduced bits as
+>> -	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+>> -	 * we should still return physical address bits reported by CPUID.
+>> +	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
+>> +	 * in CPU detection code, but the processor treats those reduced bits as
+>> +	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
+>> +	 * the physical address bits reported by CPUID.
+>>  	 */
+>> -	if (!boot_cpu_has(X86_FEATURE_TME) ||
+>> -	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+>> -		return boot_cpu_data.x86_phys_bits;
+>> +	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
+>> +		return cpuid_eax(0x80000008) & 0xff;
+>>  
+>> -	return cpuid_eax(0x80000008) & 0xff;
+>> +	/*
+>> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
+>> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
+>> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
+>> +	 */
+>> +	return boot_cpu_data.x86_phys_bits;
+>>  }
+>>  
+>>  static void kvm_mmu_reset_all_pte_masks(void)
+>>
+> 
 
