@@ -2,188 +2,177 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EDBC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00936C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D762073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575971782;
-	bh=grqW5MwSwh5bfeTqGe2eaMDZCFxjfCnPVlS3K00LND8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CYziBC8n9gdygYIkkeGXnmdOWA4pSHpV3LyvdW44E2phJ7HogwW2iWcK8y1jNyRDT
-	 JPEMYaDQvOOUUd8AikevOf6/Iwswj9VZaCqB2y1/r5EZnv46kjM85vyi7NPr0kp17h
-	 /kzwZK/V2HZoczV7w8Ohtyxs3LW+koP+SsBYWY+s=
+	by mail.kernel.org (Postfix) with ESMTP id CF1A52073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfLJJ4V (ORCPT
+        id S1727163AbfLJJ6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:56:21 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38637 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfLJJ4U (ORCPT
+        Tue, 10 Dec 2019 04:58:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40557 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfLJJ6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:56:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so19277094wrh.5;
-        Tue, 10 Dec 2019 01:56:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wiDeNqk4JUYH6LbyjP3mNqGyXwUCv0yPtvfwbu07E84=;
-        b=AvZkSkayyZiR5bZRlkYLVnUBcZtoQOsZgZkxrM+X0LrkuvAbiq72iFEbzB6MutpNYL
-         W7SmqP3ANY7p+WD6rbzocvhNLVcclLks3X9Cj2oDRv7sYK8oxlJ3EBvmiVbip5N9Q6jz
-         8Ax0U3Qoqy2LHuMqRvlpgFtVqkEyuJi//2LcNeSUNCOn5KU+6KE6Lbn382dEzEr5KQnN
-         YL45bngPQU3SI0/NuOVEqyXTYpFrprVy+kqnu3H/xncUYjm0bfWeZiqLbi5h+o8NyAT6
-         nQlWtvRPT6PGk1htM8lFSLSiV2vDLMesqM/tRuA7Nb8VCY+4WQwmfPUVu1EFd/g4XCYd
-         AY1g==
-X-Gm-Message-State: APjAAAU1d/12fkybi+de6lst4oQjBDulGdBO2fzc2hLQ6m50kxoQE8YO
-        QVJsp46K5kd2agfzkTcEeSU=
-X-Google-Smtp-Source: APXvYqyOvGHL/dLqIEko15VM3eCGbjurIUWfw6wjXgmK+XRllFbX0OjTyzcaIccFUw979KzcsTh8+w==
-X-Received: by 2002:adf:fc08:: with SMTP id i8mr2324107wrr.82.1575971777315;
-        Tue, 10 Dec 2019 01:56:17 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id u18sm2642900wrt.26.2019.12.10.01.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:56:16 -0800 (PST)
-Date:   Tue, 10 Dec 2019 10:56:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Tue, 10 Dec 2019 04:58:43 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iecHt-0006C1-5u; Tue, 10 Dec 2019 10:58:37 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ADFA81C2901;
+        Tue, 10 Dec 2019 10:58:36 +0100 (CET)
+Date:   Tue, 10 Dec 2019 09:58:36 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/setup: Enhance the comments
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
- pgprot_t in arch_add_memory()
-Message-ID: <20191210095615.GB10404@dhcp22.suse.cz>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <20191209204128.GC7658@dhcp22.suse.cz>
- <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-ID: <157597191652.30187.13419678365834211633.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-12-19 14:24:22, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-12-09 1:41 p.m., Michal Hocko wrote:
-> > On Mon 09-12-19 13:24:19, Logan Gunthorpe wrote:
-> >>
-> >>
-> >> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
-> >>> On 09.12.19 20:13, Logan Gunthorpe wrote:
-> >>>> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
-> >>>> struct page mappings for IO memory. At present, these mappings are created
-> >>>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
-> >>>> x86, an mtrr register will typically override this and force the cache
-> >>>> type to be UC-. In the case firmware doesn't set this register it is
-> >>>> effectively WB and will typically result in a machine check exception
-> >>>> when it's accessed.
-> >>>>
-> >>>> Other arches are not currently likely to function correctly seeing they
-> >>>> don't have any MTRR registers to fall back on.
-> >>>>
-> >>>> To solve this, add an argument to arch_add_memory() to explicitly
-> >>>> set the pgprot value to a specific value.
-> >>>>
-> >>>> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
-> >>>> simple change to pass the pgprot_t down to their respective functions
-> >>>> which set up the page tables. For x86_32, set the page tables explicitly
-> >>>> using _set_memory_prot() (seeing they are already mapped). For sh, reject
-> >>>> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
-> >>>> sh doesn't support ZONE_DEVICE anyway.
-> >>>>
-> >>>> Cc: Dan Williams <dan.j.williams@intel.com>
-> >>>> Cc: David Hildenbrand <david@redhat.com>
-> >>>> Cc: Michal Hocko <mhocko@suse.com>
-> >>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> >>>> ---
-> >>>>  arch/arm64/mm/mmu.c            | 4 ++--
-> >>>>  arch/ia64/mm/init.c            | 5 ++++-
-> >>>>  arch/powerpc/mm/mem.c          | 4 ++--
-> >>>>  arch/s390/mm/init.c            | 4 ++--
-> >>>>  arch/sh/mm/init.c              | 5 ++++-
-> >>>>  arch/x86/mm/init_32.c          | 7 ++++++-
-> >>>>  arch/x86/mm/init_64.c          | 4 ++--
-> >>>>  include/linux/memory_hotplug.h | 2 +-
-> >>>>  mm/memory_hotplug.c            | 2 +-
-> >>>>  mm/memremap.c                  | 2 +-
-> >>>>  10 files changed, 25 insertions(+), 14 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> >>>> index 60c929f3683b..48b65272df15 100644
-> >>>> --- a/arch/arm64/mm/mmu.c
-> >>>> +++ b/arch/arm64/mm/mmu.c
-> >>>> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
-> >>>>  }
-> >>>>  
-> >>>>  #ifdef CONFIG_MEMORY_HOTPLUG
-> >>>> -int arch_add_memory(int nid, u64 start, u64 size,
-> >>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
-> >>>>  			struct mhp_restrictions *restrictions)
-> >>>
-> >>> Can we fiddle that into "struct mhp_restrictions" instead?
-> >>
-> >> Yes, if that's what people want, it's pretty trivial to do. I chose not
-> >> to do it that way because it doesn't get passed down to add_pages() and
-> >> it's not really a "restriction". If I don't hear any objections, I will
-> >> do that for v2.
-> > 
-> > I do agree that restriction is not the best fit. But I consider prot
-> > argument to complicate the API to all users even though it is not really
-> > clear whether we are going to have many users really benefiting from it.
-> > Look at the vmalloc API and try to find how many users of __vmalloc do
-> > not use PAGE_KERNEL.
-> > 
-> > So I can see two options. One of them is to add arch_add_memory_prot
-> > that would allow to have give and extra prot argument or simply call
-> > an arch independent API to change the protection after arch_add_memory.
-> > The later sounds like much less code. The memory shouldn't be in use by
-> > anybody at that stage yet AFAIU. Maybe there even is an API like that.
-> 
-> Yes, well, we tried something like this by calling set_memory_wc()
-> inside memremap_pages(); but on large bars (tens of GB) it was too slow
-> (taking several seconds to complete) and on some hosts actually hit CPU
-> watchdog errors.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Which looks like something to fix independently.
+Commit-ID:     360db4ace3117ac1d9936d529f59c653e337b0f5
+Gitweb:        https://git.kernel.org/tip/360db4ace3117ac1d9936d529f59c653e337b0f5
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 16:03:39 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 10 Dec 2019 09:59:38 +01:00
 
-> So at the very least we'd have to add some cpu_relax() calls to that
-> path. And it's also the case that set_memory_wc() is x86 only right now.
-> So we'd have to create a new general interface to walk and fixup page
-> tables for all arches.
-> 
-> But, in my opinion, setting up all those page tables twice is too large
-> of an overhead and it's better to just add them correctly the first
-> time. The changes I propose to do this aren't really a lot of code and
-> probably less than creating a new interface for all arches.
+x86/setup: Enhance the comments
 
-OK, fair enough. Then I would suggest going with arch_add_memory_prot
-then unless there is a wider disagreement witht that.
--- 
-Michal Hocko
-SUSE Labs
+Update various comments, fix outright mistakes and meaningless descriptions.
+
+Also harmonize the style across the file, both in form and in language.
+
+Cc: linux-kernel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/setup.c | 41 ++++++++++++++++++++++++----------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 7778ee0..b5ac993 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -43,11 +43,11 @@
+ #include <asm/vsyscall.h>
+ 
+ /*
+- * max_low_pfn_mapped: highest direct mapped pfn under 4GB
+- * max_pfn_mapped:     highest direct mapped pfn over 4GB
++ * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
++ * max_pfn_mapped:     highest directly mapped pfn > 4 GB
+  *
+  * The direct mapping only covers E820_TYPE_RAM regions, so the ranges and gaps are
+- * represented by pfn_mapped
++ * represented by pfn_mapped[].
+  */
+ unsigned long max_low_pfn_mapped;
+ unsigned long max_pfn_mapped;
+@@ -57,14 +57,23 @@ RESERVE_BRK(dmi_alloc, 65536);
+ #endif
+ 
+ 
+-static __initdata unsigned long _brk_start = (unsigned long)__brk_base;
+-unsigned long _brk_end = (unsigned long)__brk_base;
++/*
++ * Range of the BSS area. The size of the BSS area is determined
++ * at link time, with RESERVE_BRK*() facility reserving additional
++ * chunks.
++ */
++static __initdata
++unsigned long _brk_start = (unsigned long)__brk_base;
++unsigned long _brk_end   = (unsigned long)__brk_base;
+ 
+ struct boot_params boot_params;
+ 
+ /*
+- * Machine setup..
++ * These are the four main kernel memory regions, we put them into
++ * the resource tree so that kdump tools and other debugging tools
++ * recover it:
+  */
++
+ static struct resource rodata_resource = {
+ 	.name	= "Kernel rodata",
+ 	.start	= 0,
+@@ -95,16 +104,16 @@ static struct resource bss_resource = {
+ 
+ 
+ #ifdef CONFIG_X86_32
+-/* cpu data as detected by the assembly code in head_32.S */
++/* CPU data as detected by the assembly code in head_32.S */
+ struct cpuinfo_x86 new_cpu_data;
+ 
+-/* common cpu data for all cpus */
++/* Common CPU data for all CPUs */
+ struct cpuinfo_x86 boot_cpu_data __read_mostly;
+ EXPORT_SYMBOL(boot_cpu_data);
+ 
+ unsigned int def_to_bigsmp;
+ 
+-/* for MCA, but anyone else can use it if they want */
++/* For MCA, but anyone else can use it if they want */
+ unsigned int machine_id;
+ unsigned int machine_submodel_id;
+ unsigned int BIOS_revision;
+@@ -390,15 +399,15 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ /*
+  * Keep the crash kernel below this limit.
+  *
+- * On 32 bits earlier kernels would limit the kernel to the low 512 MiB
++ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+  * due to mapping restrictions.
+  *
+- * On 64bit, kdump kernel need be restricted to be under 64TB, which is
++ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+  * the upper limit of system RAM in 4-level paging mode. Since the kdump
+- * jumping could be from 5-level to 4-level, the jumping will fail if
+- * kernel is put above 64TB, and there's no way to detect the paging mode
+- * of the kernel which will be loaded for dumping during the 1st kernel
+- * bootup.
++ * jump could be from 5-level paging to 4-level paging, the jump will fail if
++ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
++ * no good way to detect the paging mode of the target kernel which will be
++ * loaded for dumping.
+  */
+ #ifdef CONFIG_X86_32
+ # define CRASH_ADDR_LOW_MAX	SZ_512M
+@@ -809,7 +818,7 @@ void __init setup_arch(char **cmdline_p)
+ 	/*
+ 	 * Note: Quark X1000 CPUs advertise PGE incorrectly and require
+ 	 * a cr3 based tlb flush, so the following __flush_tlb_all()
+-	 * will not flush anything because the cpu quirk which clears
++	 * will not flush anything because the CPU quirk which clears
+ 	 * X86_FEATURE_PGE has not been invoked yet. Though due to the
+ 	 * load_cr3() above the TLB has been flushed already. The
+ 	 * quirk is invoked before subsequent calls to __flush_tlb_all()
