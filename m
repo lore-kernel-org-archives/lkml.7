@@ -2,53 +2,80 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56F9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BDA20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D412206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Us+uzDqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfLJIT6 (ORCPT
+        id S1726960AbfLJIXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:19:58 -0500
-Received: from mga04.intel.com ([192.55.52.120]:34973 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfLJIT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:19:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 00:19:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
-   d="scan'208";a="387516160"
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.197.115]) ([10.239.197.115])
-  by orsmga005.jf.intel.com with ESMTP; 10 Dec 2019 00:19:56 -0800
-Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
- Write Policy
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191202070348.32148-1-tao3.xu@intel.com>
- <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
- <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com>
- <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com>
-Date:   Tue, 10 Dec 2019 16:19:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 03:23:53 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37818 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfLJIXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 03:23:53 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so1714618plz.4;
+        Tue, 10 Dec 2019 00:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hmr8rjn6U3tumEScYIjT/0XkqE121FE3es2/36sADFE=;
+        b=Us+uzDqVf20qnBiT2ZqtcM2CVaucGD8IMZvxe1CItqcingDyyT1WkEEPJRfgGC5Gz8
+         dDnY8K1lJqs1cm1JhdMo7wNVOtjb2rkEIih4VNnLvZHV6uRCpixyB++HrRc9eqMdZ/fr
+         doUV7kAyazpljj4/M9ryYE5YcNt1AJB9lrhYaywbGCawWw2chRVPPzo1PreZCnjo4jO6
+         U9+1/ZlCYen0F6trcfhcAmKQUz/v3fLQ97jHwsAF6qjmp+O7TGHNP/fX5/Dk/nHT1gHZ
+         gKutat4kfaIPbzIBf+QzMs56uLfj5IsRnpeBdwABG3KgfNo+AxnqQMUMR2ws0sgupkxX
+         mgQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hmr8rjn6U3tumEScYIjT/0XkqE121FE3es2/36sADFE=;
+        b=g+SrgxCfr9YwWuq3R6dezFdiN+xSAAoN05Q3qECFSgooLPTmVWNQC1W89KoKXHpJVT
+         jPQcCKSisgEvog2Qb/suI5fMopybXGjd+JaDM42dJyA7o2Dfbv0ctTBnIye5qwHHC5Sw
+         TTgsx7yG+1tWLRwXyrN7wQGQxM7ZN8XKMr1Ty2MEsrcDazixQcuZg71NSzRvCowOakXB
+         bNCle/jUNe3gkQU+oAhENSMPxAcXXa44jq59jXNuMrmbhaz/dRLNn++zhUlSATuWuiZZ
+         8sw43Hs9e2F0qsR/hg3YNTf4upCaGKXsPXfnY5zaXkQdNvmXe1RpsLhGLUvhX413wN5v
+         Agzg==
+X-Gm-Message-State: APjAAAWHYO3cTFHhzwwIht6He5WlKQoVGVdqId6YnQtMAtu67CZCoY8N
+        IjROgaB54JTFU0+sfPX4TIBLAEDv
+X-Google-Smtp-Source: APXvYqyZVVCLCPAfclKFq8vb588kB2D6CN1HFfBPllKWqPb9k3iMVnU1IsZUQQKz0876hmAQ7MrWdw==
+X-Received: by 2002:a17:902:7045:: with SMTP id h5mr34584616plt.245.1575966232501;
+        Tue, 10 Dec 2019 00:23:52 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 200sm2228277pfz.121.2019.12.10.00.23.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 00:23:50 -0800 (PST)
+Subject: Re: [PATCH] hexagon: io: Define ioremap_uc to fix build error
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Brian Cain <bcain@codeaurora.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+References: <20191204133328.18668-1-linux@roeck-us.net>
+ <CAMuHMdXwJUzuSNS7CBpU5J6ofOZGrWMStJU9VaT2gp3m5U5=Lw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <42cb2e14-a2d7-8e53-509f-da201f0624a0@roeck-us.net>
+Date:   Tue, 10 Dec 2019 00:23:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXwJUzuSNS7CBpU5J6ofOZGrWMStJU9VaT2gp3m5U5=Lw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -57,74 +84,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
-> On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
+On 12/10/19 12:09 AM, Geert Uytterhoeven wrote:
+> On Wed, Dec 4, 2019 at 2:34 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>> ioremap_uc is now mandatory.
 >>
->> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
->>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
->>>>
->>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
->>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
->>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
->>>> 2 is "Write Through" for Write Policy.
->>>
->>> Well, I'm not sure what the connection between the above statement,
->>> which is correct AFAICS, and the changes made by the patch is.
->>>
->>> Is that the *_OTHER symbol names are confusing or something deeper?
->>>
+>> lib/devres.c:44:3: error: implicit declaration of function 'ioremap_uc'
 >>
->> Because in include/acpi/actbl1.h:
+>> Fixes: e537654b7039 ("lib: devres: add a helper function for ioremap_uc")
+>> Cc: Tuowen Zhao <ztuowen@gmail.com>
+>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Cc: Luis Chamberlain <mcgrof@kernel.org>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   arch/hexagon/include/asm/io.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> #define ACPI_HMAT_CA_NONE                     (0)
+>> diff --git a/arch/hexagon/include/asm/io.h b/arch/hexagon/include/asm/io.h
+>> index 539e3efcf39c..39e5605c5d42 100644
+>> --- a/arch/hexagon/include/asm/io.h
+>> +++ b/arch/hexagon/include/asm/io.h
+>> @@ -173,7 +173,7 @@ static inline void writel(u32 data, volatile void __iomem *addr)
 >>
->> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
+>>   void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
+>>   #define ioremap_nocache ioremap
+>> -
+>> +#define ioremap_uc ioremap
 >>
->>      enum cache_indexing {
->>             NODE_CACHE_DIRECT_MAP,
->>             NODE_CACHE_INDEXED,
->>             NODE_CACHE_OTHER,
->>      };
->> NODE_CACHE_OTHER is 2, and for otner enum:
->>
->>            case ACPI_HMAT_CA_DIRECT_MAPPED:
->>                    tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
->>                    break;
->>            case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
->>                    tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
->>                    break;
->> in include/acpi/actbl1.h:
->>
->>    #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
->>    #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
->>
->> but in include/linux/node.h:
->>
->> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is incorrect.
+>>   #define __raw_writel writel
 > 
-> Why is it incorrect?
+> Do we really need this? There is only one user of ioremap_uc(), which
+> Christoph is trying hard to get rid of, and the new devres helper that
+> triggers all of this :-(
+> https://lore.kernel.org/dri-devel/20191112105507.GA7122@lst.de/
+> 
 
-Sorry I paste the wrong pre-define.
 
-This is the incorrect line:
+One may ask why we needed a devres helper in the first place if there
+is indeed just one user.
 
-case ACPI_HMAT_CA_DIRECT_MAPPED:
-tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+Either case, I don't really care, as long as the problem is fixed.
 
-ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means 
-if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in 
-cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole 
-switch codes:
-
-         switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
-         case ACPI_HMAT_CA_DIRECT_MAPPED(1):
-                 tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP(0);
-                 break;
-         case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING(2):
-                 tcache->cache_attrs.indexing = NODE_CACHE_INDEXED(1);
-                 break;
-         case ACPI_HMAT_CA_NONE(0):
-         default:
-                 tcache->cache_attrs.indexing = NODE_CACHE_OTHER(2);
-                 break;
-         }
+Guenter
