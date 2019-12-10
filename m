@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F33FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74737C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308A1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A68205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012961;
-	bh=I9352z0iCXVXtkWPBa/1Pa0m0mxbqm65/+V+ZPZCkZQ=;
+	s=default; t=1576012967;
+	bh=t0LcuR2FDoqNCgWTOGjsQt2dTOSh6sBKWK9mUIorUOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGozSlTaE0dqaZ5u4/i3V8v/MmcxEugi3+TOpeBPoXiNf5ArM6kwWRXNHmZPehN/W
-	 aeH2VMufoh1KxZYbkJetzIKM0siHH9D/qCB/u0vl2R9OsDfdt2IEgYus3g9K+JLzfD
-	 BaMH+VPD4oKcqQgP1IN+jEpwMHuj29SVrt6NXxGA=
+	b=v+eH2xdHwoNEKh0p4S8lSXdxf/m6ra+e7E+HwZOIU93QXWWHjn0zHgkG54gY/8i9N
+	 BUd8vDo3Qcfl+oZuC33bmE4+GcMpBXKTHvWLdbMFlMBTujzYwGVWItilZQEulx90Yu
+	 GYvw5nTRApamDY3sHGQKk3PO4okiqAcFXP7voDqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfLJVWk (ORCPT
+        id S1729260AbfLJVWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:22:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:22:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727237AbfLJVL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:27 -0500
+        id S1728457AbfLJVLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAA246B5;
-        Tue, 10 Dec 2019 21:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372AA246B5;
+        Tue, 10 Dec 2019 21:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012287;
-        bh=I9352z0iCXVXtkWPBa/1Pa0m0mxbqm65/+V+ZPZCkZQ=;
+        s=default; t=1576012282;
+        bh=t0LcuR2FDoqNCgWTOGjsQt2dTOSh6sBKWK9mUIorUOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l473EK03KUfcAyZL7z1WJiQwruGd02ONuc43tV5lh0h0t3RIWaIN/ikR3h/znoDnR
-         7CtqRKxv1yQqFze4mXW0EP70ijviy3xtCA/cGO/QK2kyUcbXHrTJ7CxpGTwoXZnxgs
-         fKtaflZTpwacSTb8Ms3jcvWUpWMxVk4wUIYf6MRw=
+        b=ivjx5yF0QzxBTQbGM4Dc73wRGURsE191oIyaGYUM/7/Ng114UghTmgAsullKLjMRV
+         tYCSuL4l6PmCXcuvO3zdm8YejPmYBkHHwJgSf/N4B+hp5vzgFltWyElS66FaJ5zHzh
+         avQkfNcuVienlZ7XX0sCabYxALBPyheR41J2wjBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 228/350] perf tools: Fix cross compile for ARM64
-Date:   Tue, 10 Dec 2019 16:05:33 -0500
-Message-Id: <20191210210735.9077-189-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 225/350] perf probe: Fix to show inlined function callsite without entry_pc
+Date:   Tue, 10 Dec 2019 16:05:30 -0500
+Message-Id: <20191210210735.9077-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -66,65 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 71f699078b154fcb1c9162fd0208ada9ce532ffc ]
+[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
 
-Currently when cross compiling perf tool for ARM64 on my x86 machine I
-get this error:
+Fix 'perf probe --line' option to show inlined function callsite lines
+even if the function DIE has only ranges.
 
-  arch/arm64/util/sym-handling.c:9:10: fatal error: gelf.h: No such file or directory
-   #include <gelf.h>
+Without this:
 
-For the build, libelf is reported off:
-
-  Auto-detecting system features:
+  # perf probe -L amd_put_event_constraints
   ...
-  ...                        libelf: [ OFF ]
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                        __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
-Indeed, test-libelf is not built successfully:
+With this patch:
 
-  more ./build/feature/test-libelf.make.output
-  test-libelf.c:2:10: fatal error: libelf.h: No such file or directory
-   #include <libelf.h>
-          ^~~~~~~~~~
-  compilation terminated.
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+      4                 __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
-I have no such problems natively compiling on ARM64, and I did not
-previously have this issue for cross compiling. Fix by relocating the
-gelf.h include.
+Committer testing:
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Before:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                          __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+        4                 __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  Added new event:
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+
+  [root@quaco ~]#
+
+  [root@quaco ~]# perf probe -l
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf trace -e probe:*
+  ^C[root@quaco ~]#
+
+Ok, Intel system here... :-)
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/1573045254-39833-1-git-send-email-john.garry@huawei.com
+Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/arm64/util/sym-handling.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
-index 5df7889851305..8dfa3e5229f1b 100644
---- a/tools/perf/arch/arm64/util/sym-handling.c
-+++ b/tools/perf/arch/arm64/util/sym-handling.c
-@@ -6,9 +6,10 @@
- 
- #include "symbol.h" // for the elf__needs_adjust_symbols() prototype
- #include <stdbool.h>
--#include <gelf.h>
- 
- #ifdef HAVE_LIBELF_SUPPORT
-+#include <gelf.h>
-+
- bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
- {
- 	return ehdr.e_type == ET_EXEC ||
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 4b1890204e996..08aba015e0725 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -673,7 +673,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
+ 		fname = die_get_call_file(in_die);
+ 		lineno = die_get_call_lineno(in_die);
+-		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
++		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
+ 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
 -- 
 2.20.1
 
