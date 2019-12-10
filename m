@@ -2,100 +2,235 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BAAC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90798C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139DB2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REh/G6RJ"
+	by mail.kernel.org (Postfix) with ESMTP id 630BA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfLJJUG (ORCPT
+        id S1727065AbfLJJWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:20:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39893 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727003AbfLJJUF (ORCPT
+        Tue, 10 Dec 2019 04:22:12 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40475 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfLJJWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:20:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575969605;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/bYiIJtudCWkuxmJ3U7uh+uE9YOFh6uPtLmRweTcPTI=;
-        b=REh/G6RJzAVlizUUO6oZ/eOPkUafjZ57OFEvoE772l1zcGElS4DWFtwzEnvpjEdBWeDTHs
-        skpVHx3vw07BKUnNNKIRFtAfMlPJN/ntcK+F9NX7lQ1iieAAn+Hh/VATAW2Q8LJKWOSkJM
-        xBGzJdV8nnlScJtlRyUq5bPMY23Adf4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-217-3jpxheGdMx-PT6DNDgbP6w-1; Tue, 10 Dec 2019 04:19:59 -0500
-Received: by mail-wm1-f69.google.com with SMTP id o205so764796wmo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:19:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/bYiIJtudCWkuxmJ3U7uh+uE9YOFh6uPtLmRweTcPTI=;
-        b=SsllXlDkAF3uclbm09gbv0RFQOvzCQEWVldAfz5Yie1Um4RNGmHZSdqjf+5thstzF2
-         +ZMPgFiztiVt2sbxxq6Jmdo7fntzsOFApBqOhJj7r1JdT0UL6F49zWAFWyYS7MBohMX4
-         DJOcEra7k2MPivsor0lb6H17X88I6vgSZDzWd064Bl96Ij5kJPVAjITOpcEPhXIfFXpn
-         IvkeU/EquFOL82+dVIc7jjZg6j+szCBzL3vFmKTBNNe1hAZDh1SUOycXLXwrVW0iq8vt
-         Pz5XQN+nKGknQWhTr3Un7b/YcfwUUvOFSuRXz5JOYM5FRRpbJc1Q+mOaDQDbxKaPSBCm
-         K/nQ==
-X-Gm-Message-State: APjAAAVPZVhPRZlGnuUN/vstFF2kMlBLavXEqUZc3syJsTs82Vg+jJMG
-        XrZTzlYRmwySI8lI1EK4sHTlu1L4eDBOpMqWDyBA7PkupzkYR3yrLrGA6cOL5gj8BWqF/FHUKKY
-        KdVao/+ZKgXk3SxJzUxdjuHoU
-X-Received: by 2002:adf:f803:: with SMTP id s3mr1955414wrp.7.1575969597795;
-        Tue, 10 Dec 2019 01:19:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwzDnyT2KZKAXq1IvkcmoircMXuSHIe+B7ZX1hbvwigcGPf4Y/msYzb6HapPfHPkh1RodEdyw==
-X-Received: by 2002:adf:f803:: with SMTP id s3mr1955389wrp.7.1575969597600;
-        Tue, 10 Dec 2019 01:19:57 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id m3sm2549644wrs.53.2019.12.10.01.19.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:19:57 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved
- bits
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        thomas.lendacky@amd.com, stable@vger.kernel.org
-References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
- <20191204154806.GC6323@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <9951afb8-8f91-2fe1-3893-04307fafa570@redhat.com>
-Date:   Tue, 10 Dec 2019 10:19:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 10 Dec 2019 04:22:12 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iebiV-0005Wj-Ob; Tue, 10 Dec 2019 10:22:03 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B7211C28F0;
+        Tue, 10 Dec 2019 10:22:03 +0100 (CET)
+Date:   Tue, 10 Dec 2019 09:22:03 -0000
+From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/setup: Clean up the header portion of setup.c
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191204154806.GC6323@linux.intel.com>
-Content-Language: en-US
-X-MC-Unique: 3jpxheGdMx-PT6DNDgbP6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=windows-1252
+Message-ID: <157596972330.29619.6182009036260169506.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/19 16:48, Sean Christopherson wrote:
->> +	/*
->> +	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
->> +	 * custom CPUID.  Proceed with whatever the kernel found since these features
->> +	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
-> No love for MKTME?  :-D
+The following commit has been merged into the x86/cleanups branch of tip:
 
-I admit I didn't check, but does MKTME really require CPUID leaves in
-the "AMD range"?  (My machines have 0x80000008 as the highest supported
-leaf in that range).
+Commit-ID:     12609013c43acaa5e547062ffc2fcfc4dcddde2e
+Gitweb:        https://git.kernel.org/tip/12609013c43acaa5e547062ffc2fcfc4dcddde2e
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 15:49:22 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 10 Dec 2019 09:59:37 +01:00
 
-Paolo
+x86/setup: Clean up the header portion of setup.c
 
+In 20 years we accumulated 89 #include lines in setup.c,
+but we only need 30 of them (!) ...
+
+Get rid of the excessive ones, and while at it, sort the
+remaining ones alphabetically.
+
+Also get rid of the incomplete changelogs at the header of the file,
+and explain better what this file does.
+
+Cc: linux-kernel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/setup.c | 122 +++++++--------------------------------
+ 1 file changed, 22 insertions(+), 100 deletions(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index cedfe20..7778ee0 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -2,123 +2,45 @@
+ /*
+  *  Copyright (C) 1995  Linus Torvalds
+  *
+- *  Support of BIGMEM added by Gerhard Wichert, Siemens AG, July 1999
+- *
+- *  Memory region support
+- *	David Parsons <orc@pell.chi.il.us>, July-August 1999
+- *
+- *  Added E820 sanitization routine (removes overlapping memory regions);
+- *  Brian Moyle <bmoyle@mvista.com>, February 2001
+- *
+- * Moved CPU detection code to cpu/${cpu}.c
+- *    Patrick Mochel <mochel@osdl.org>, March 2002
+- *
+- *  Provisions for empty E820 memory regions (reported by certain BIOSes).
+- *  Alex Achenbach <xela@slit.de>, December 2002.
+- *
++ * This file contains the setup_arch() code, which handles the architecture-dependent
++ * parts of early kernel initialization.
+  */
+-
+-/*
+- * This file handles the architecture-dependent parts of initialization
+- */
+-
+-#include <linux/sched.h>
+-#include <linux/mm.h>
+-#include <linux/mmzone.h>
+-#include <linux/screen_info.h>
+-#include <linux/ioport.h>
+-#include <linux/acpi.h>
+-#include <linux/sfi.h>
+-#include <linux/apm_bios.h>
+-#include <linux/initrd.h>
+-#include <linux/memblock.h>
+-#include <linux/seq_file.h>
+ #include <linux/console.h>
+-#include <linux/root_dev.h>
+-#include <linux/highmem.h>
+-#include <linux/export.h>
++#include <linux/crash_dump.h>
++#include <linux/dmi.h>
+ #include <linux/efi.h>
+-#include <linux/init.h>
+-#include <linux/edd.h>
++#include <linux/init_ohci1394_dma.h>
++#include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+-#include <linux/nodemask.h>
+-#include <linux/kexec.h>
+-#include <linux/dmi.h>
+-#include <linux/pfn.h>
++#include <linux/memblock.h>
+ #include <linux/pci.h>
+-#include <asm/pci-direct.h>
+-#include <linux/init_ohci1394_dma.h>
+-#include <linux/kvm_para.h>
+-#include <linux/dma-contiguous.h>
+-#include <xen/xen.h>
+-#include <uapi/linux/mount.h>
+-
+-#include <linux/errno.h>
+-#include <linux/kernel.h>
+-#include <linux/stddef.h>
+-#include <linux/unistd.h>
+-#include <linux/ptrace.h>
+-#include <linux/user.h>
+-#include <linux/delay.h>
+-
+-#include <linux/kallsyms.h>
+-#include <linux/cpufreq.h>
+-#include <linux/dma-mapping.h>
+-#include <linux/ctype.h>
+-#include <linux/uaccess.h>
+-
+-#include <linux/percpu.h>
+-#include <linux/crash_dump.h>
++#include <linux/root_dev.h>
++#include <linux/sfi.h>
+ #include <linux/tboot.h>
+-#include <linux/jiffies.h>
+-#include <linux/mem_encrypt.h>
+-#include <linux/sizes.h>
+-
+ #include <linux/usb/xhci-dbgp.h>
+-#include <video/edid.h>
+ 
+-#include <asm/mtrr.h>
++#include <uapi/linux/mount.h>
++
++#include <xen/xen.h>
++
+ #include <asm/apic.h>
+-#include <asm/realmode.h>
+-#include <asm/e820/api.h>
+-#include <asm/mpspec.h>
+-#include <asm/setup.h>
+-#include <asm/efi.h>
+-#include <asm/timer.h>
+-#include <asm/i8259.h>
+-#include <asm/sections.h>
+-#include <asm/io_apic.h>
+-#include <asm/ist.h>
+-#include <asm/setup_arch.h>
+ #include <asm/bios_ebda.h>
+-#include <asm/cacheflush.h>
+-#include <asm/processor.h>
+ #include <asm/bugs.h>
+-#include <asm/kasan.h>
+-
+-#include <asm/vsyscall.h>
+ #include <asm/cpu.h>
+-#include <asm/desc.h>
+-#include <asm/dma.h>
+-#include <asm/iommu.h>
++#include <asm/efi.h>
+ #include <asm/gart.h>
+-#include <asm/mmu_context.h>
+-#include <asm/proto.h>
+-
+-#include <asm/paravirt.h>
+ #include <asm/hypervisor.h>
+-#include <asm/olpc_ofw.h>
+-
+-#include <asm/percpu.h>
+-#include <asm/topology.h>
+-#include <asm/apicdef.h>
+-#include <asm/amd_nb.h>
++#include <asm/io_apic.h>
++#include <asm/kasan.h>
++#include <asm/kaslr.h>
+ #include <asm/mce.h>
+-#include <asm/alternative.h>
++#include <asm/mtrr.h>
++#include <asm/olpc_ofw.h>
++#include <asm/pci-direct.h>
+ #include <asm/prom.h>
+-#include <asm/microcode.h>
+-#include <asm/kaslr.h>
++#include <asm/proto.h>
+ #include <asm/unwind.h>
++#include <asm/vsyscall.h>
+ 
+ /*
+  * max_low_pfn_mapped: highest direct mapped pfn under 4GB
