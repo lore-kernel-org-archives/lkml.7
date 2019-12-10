@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6104C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC336C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ABD207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFA42053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015782;
-	bh=0q2ZS5XWFRQBLJiC/t0ud3YAaQaPf8ZUZp8Sad2KK40=;
+	s=default; t=1576015787;
+	bh=W8FjvEdZ1OetBhrZBLdVen2FG3URZ0YyYFeokNVLBf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sAS5scTPU6uxbeczjRCsNQfm3xOMAoP9dTbm1An3ZCD24vbwmakCwLBlOEowW/dn1
-	 oNXEKG1Kb8dwQ86Rd6wLU1M7uWvQkEOhs0lnJAf5dt+KJubY5s/YTsB4lTwpTYnguw
-	 TCneHFfZW8u5ETmc+5aQifQ+HyWaZTxVqYnTuqkg=
+	b=ltlanY2lnk6eOG7A53kX5jqQmJCua/ftO6ZD4iywurSxF0yI0Kavdqp9jx0pcx4qp
+	 TEvbqNJDcd0tYTcF1+PLM1mccfpOlTFUS6oJwKtxbNbxIhVLQTt35O3AxmZ63HQl7h
+	 5ICGsidSOXb82c3DnHYcQYytHLwmvB2493f3lGXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfLJWJl (ORCPT
+        id S1728725AbfLJWEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:09:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbfLJWE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:26 -0500
+        id S1728154AbfLJWEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B478C2073B;
-        Tue, 10 Dec 2019 22:04:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC8C20828;
+        Tue, 10 Dec 2019 22:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015465;
-        bh=0q2ZS5XWFRQBLJiC/t0ud3YAaQaPf8ZUZp8Sad2KK40=;
+        s=default; t=1576015455;
+        bh=W8FjvEdZ1OetBhrZBLdVen2FG3URZ0YyYFeokNVLBf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WV1EQpaaM1n3/T/e/NpeClFV1KKgyvywqyv/2d9qhntmIhb1YFEKr5v2XkBQSExWI
-         JHlCyyqY9v2tOoj2jsItsa98wxmY856TQ0mchCB1bCfKhDF9V2/swJ/huMk9HiYYss
-         WhmSE07NyN+fMZigh5gy0Rr8rfV3cqn8g5UfDeGs=
+        b=F8ikRw058sZ9Qc9dPDhTG2IRJrMsHhOCzRedZUljP60hOOq09q0JYjv6sco8MsKO3
+         86INyizZn9OQk3BoV2n2DPnxJlU0RE4QEcbYcmvUwkG4Jr4eXRgVS36wRnuhlhsFKu
+         AHyqJX4nC40Jl3g6TZPMLdOU45ifcCGct9D7RNbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 071/130] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
-Date:   Tue, 10 Dec 2019 17:02:02 -0500
-Message-Id: <20191210220301.13262-71-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 062/130] gpu: host1x: Allocate gather copy for host1x
+Date:   Tue, 10 Dec 2019 17:01:53 -0500
+Message-Id: <20191210220301.13262-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,93 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
+[ Upstream commit b78e70c04c149299bd210759d7c7af7c86b89ca8 ]
 
-The iio_triggered_buffer_postenable() hook should be called first to
-attach the poll function. The iio_triggered_buffer_predisable() hook is
-called last (as is it should).
+Currently when the gather buffers are copied, they are copied to a
+buffer that is allocated for the host1x client that wants to execute the
+command streams in the buffers. However, the gather buffers will be read
+by the host1x device, which causes SMMU faults if the DMA API is backed
+by an IOMMU.
 
-This change moves iio_triggered_buffer_postenable() to be called first. It
-adds iio_triggered_buffer_predisable() on the error paths of the postenable
-hook.
-For the predisable hook, some code-paths have been changed to make sure
-that the iio_triggered_buffer_predisable() hook gets called in case there
-is an error before it.
+Fix this by allocating the gather buffer copy for the host1x device,
+which makes sure that it will be mapped into the host1x's IOVA space if
+the DMA API is backed by an IOMMU.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/gpu/host1x/job.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-index ab8d6aed5085e..2a299bbd6acf3 100644
---- a/drivers/iio/adc/dln2-adc.c
-+++ b/drivers/iio/adc/dln2-adc.c
-@@ -528,6 +528,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 	u16 conflict;
- 	unsigned int trigger_chan;
- 
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
-+
- 	mutex_lock(&dln2->mutex);
- 
- 	/* Enable ADC */
-@@ -541,6 +545,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 				(int)conflict);
- 			ret = -EBUSY;
- 		}
-+		iio_triggered_buffer_predisable(indio_dev);
- 		return ret;
- 	}
- 
-@@ -554,6 +559,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 		if (ret < 0) {
- 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-+			iio_triggered_buffer_predisable(indio_dev);
- 			return ret;
- 		}
- 	} else {
-@@ -561,12 +567,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 	}
- 
--	return iio_triggered_buffer_postenable(indio_dev);
-+	return 0;
+diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
+index acd99783bbca1..67f3c050c4cfc 100644
+--- a/drivers/gpu/host1x/job.c
++++ b/drivers/gpu/host1x/job.c
+@@ -545,7 +545,8 @@ static int validate(struct host1x_firewall *fw, struct host1x_job_gather *g)
+ 	return err;
  }
  
- static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+-static inline int copy_gathers(struct host1x_job *job, struct device *dev)
++static inline int copy_gathers(struct device *host, struct host1x_job *job,
++			       struct device *dev)
  {
--	int ret;
-+	int ret, ret2;
- 	struct dln2_adc *dln2 = iio_priv(indio_dev);
+ 	struct host1x_firewall fw;
+ 	size_t size = 0;
+@@ -570,12 +571,12 @@ static inline int copy_gathers(struct host1x_job *job, struct device *dev)
+ 	 * Try a non-blocking allocation from a higher priority pools first,
+ 	 * as awaiting for the allocation here is a major performance hit.
+ 	 */
+-	job->gather_copy_mapped = dma_alloc_wc(dev, size, &job->gather_copy,
++	job->gather_copy_mapped = dma_alloc_wc(host, size, &job->gather_copy,
+ 					       GFP_NOWAIT);
  
- 	mutex_lock(&dln2->mutex);
-@@ -581,12 +587,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
- 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
+ 	/* the higher priority allocation failed, try the generic-blocking */
+ 	if (!job->gather_copy_mapped)
+-		job->gather_copy_mapped = dma_alloc_wc(dev, size,
++		job->gather_copy_mapped = dma_alloc_wc(host, size,
+ 						       &job->gather_copy,
+ 						       GFP_KERNEL);
+ 	if (!job->gather_copy_mapped)
+@@ -636,7 +637,7 @@ int host1x_job_pin(struct host1x_job *job, struct device *dev)
+ 		goto out;
  
- 	mutex_unlock(&dln2->mutex);
--	if (ret < 0) {
-+	if (ret < 0)
- 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
--		return ret;
--	}
+ 	if (IS_ENABLED(CONFIG_TEGRA_HOST1X_FIREWALL)) {
+-		err = copy_gathers(job, dev);
++		err = copy_gathers(host->dev, job, dev);
+ 		if (err)
+ 			goto out;
+ 	}
+@@ -701,7 +702,7 @@ void host1x_job_unpin(struct host1x_job *job)
+ 	job->num_unpins = 0;
  
--	return iio_triggered_buffer_predisable(indio_dev);
-+	ret2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (ret == 0)
-+		ret = ret2;
-+
-+	return ret;
+ 	if (job->gather_copy_size)
+-		dma_free_wc(job->channel->dev, job->gather_copy_size,
++		dma_free_wc(host->dev, job->gather_copy_size,
+ 			    job->gather_copy_mapped, job->gather_copy);
  }
- 
- static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
+ EXPORT_SYMBOL(host1x_job_unpin);
 -- 
 2.20.1
 
