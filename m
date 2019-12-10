@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C792C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A70C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A0D2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C529207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017518;
-	bh=iXrNNQ+iLcuxDivbefHTA17DGz9vPsw1x9aknKSRrxM=;
+	s=default; t=1576017519;
+	bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BtVhNTqu81AmdPrQmeqjnU/7G28BGpK9dpkI3UhfQqlZoXekSmACdx9LU5oP+Rw64
-	 Ak9NZx4q0q002Gz5aFngF6rqcj8aqceqm66YiKxkPlQ9ciOV+iWRgHUvsfPUO3zNXO
-	 Zp8964p4LTrwR/dRPFWEGWDRGH+eIKnANvjfmUmg=
+	b=uHvRY3eDXec99EGgmIRdunpGOuSM36q0E3DkfwZMpko+BHQIS2JRjxbmKBmlYBjB5
+	 MXcpDixH589dSOTboIbENHEk/6bZqjHb3bJj83CnJEjxzCLt2wVXtXWEu/UE3U1TYT
+	 bzJs+Bo+dlQL6lgbFOEWeRBbdrmMbm7mXolF6WCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfLJWdh (ORCPT
+        id S1730297AbfLJWii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:38:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbfLJWdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:31 -0500
+        id S1729859AbfLJWdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554E821556;
-        Tue, 10 Dec 2019 22:33:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BDB24653;
+        Tue, 10 Dec 2019 22:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017210;
-        bh=iXrNNQ+iLcuxDivbefHTA17DGz9vPsw1x9aknKSRrxM=;
+        s=default; t=1576017217;
+        bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eaoDdMB3QoahxGAp0KiSYUBUFdQtEkzipnV8nrs7BZgk0g7vIzijAbnSrUaTGhvIp
-         /nUKgXMG/s5xlyN8KCTZCzKuLWIUoh1TIUPz2eWppw+xSo8yIwlZ5m3I8QL5Yh/nKA
-         vny17QR5FormFNF/Vv7a9jEj5YXCik7+Uv9vrwOk=
+        b=K7rhFT/juprP/Ki+dAMTz8DK4TBRqxJhN3hboutnsDwwimeXMnxtVUBNgMx5AZPaY
+         Oz3rt+CX2m1bc5uWbecatlwfAjQryexC2S8Ab3GMJn01WCzVuqJFg/WkGkItbGTdN1
+         rePdOpLarDClX7ty/KbG2LLsQRsZfSs9QEtUfo5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/71] media: ov6650: Fix stored frame format not in sync with hardware
-Date:   Tue, 10 Dec 2019 17:32:16 -0500
-Message-Id: <20191210223316.14988-11-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 17/71] samples: pktgen: fix proc_cmd command result check logic
+Date:   Tue, 10 Dec 2019 17:32:22 -0500
+Message-Id: <20191210223316.14988-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -60,69 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
+[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
 
-The driver stores frame format settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, those settings are updated before they are actually applied
-on hardware.  If an error occurs on device update, the stored settings
-my not reflect hardware state anymore and consecutive calls to
-.get_fmt() may return incorrect information.  That in turn may affect
-ability of a bridge device to use correct DMA transfer settings if such
-incorrect informmation on active frame format returned by .get_fmt() is
-used.
+Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
+'pg_set'. proc_cmd is designed to check command result with grep the
+"Result:", but this might fail since this string is only shown in
+'pg_thread' and 'pg_set'.
 
-Assuming a failed device update means its state hasn't changed, update
-frame format related settings stored in the device private structure
-only after they are successfully applied so the stored values always
-reflect hardware state as closely as possible.
+This commit fixes this logic by grep-ing the "Result:" string only when
+the command is not for 'pg_ctrl'.
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+For clarity of an execution flow, 'errexit' flag has been set.
+
+To cleanup pktgen on exit, trap has been added for EXIT signal.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ samples/pktgen/functions.sh | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index 4e19f5e5d8cf7..bb55ddfbf7337 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -611,7 +611,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
- 		return -EINVAL;
- 	}
--	priv->code = code;
+diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
+index 205e4cde46012..065a7e296ee31 100644
+--- a/samples/pktgen/functions.sh
++++ b/samples/pktgen/functions.sh
+@@ -5,6 +5,8 @@
+ # Author: Jesper Dangaaard Brouer
+ # License: GPL
  
- 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
- 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
-@@ -637,7 +636,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_dbg(&client->dev, "max resolution: CIF\n");
- 		coma_mask |= COMA_QCIF;
- 	}
--	priv->half_scale = half_scale;
- 
- 	if (sense) {
- 		if (sense->master_clock == 8000000) {
-@@ -677,8 +675,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
- 	if (!ret)
- 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
--	if (!ret)
-+	if (!ret) {
-+		priv->half_scale = half_scale;
++set -o errexit
 +
- 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
-+	}
-+	if (!ret)
-+		priv->code = code;
+ ## -- General shell logging cmds --
+ function err() {
+     local exitcode=$1
+@@ -58,6 +60,7 @@ function pg_set() {
+ function proc_cmd() {
+     local result
+     local proc_file=$1
++    local status=0
+     # after shift, the remaining args are contained in $@
+     shift
+     local proc_ctrl=${PROC_DIR}/$proc_file
+@@ -73,13 +76,13 @@ function proc_cmd() {
+ 	echo "cmd: $@ > $proc_ctrl"
+     fi
+     # Quoting of "$@" is important for space expansion
+-    echo "$@" > "$proc_ctrl"
+-    local status=$?
++    echo "$@" > "$proc_ctrl" || status=$?
  
- 	if (!ret) {
- 		mf->colorspace	= priv->colorspace;
+-    result=$(grep "Result: OK:" $proc_ctrl)
+-    # Due to pgctrl, cannot use exit code $? from grep
+-    if [[ "$result" == "" ]]; then
+-	grep "Result:" $proc_ctrl >&2
++    if [[ "$proc_file" != "pgctrl" ]]; then
++        result=$(grep "Result: OK:" $proc_ctrl) || true
++        if [[ "$result" == "" ]]; then
++            grep "Result:" $proc_ctrl >&2
++        fi
+     fi
+     if (( $status != 0 )); then
+ 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
+@@ -105,6 +108,8 @@ function pgset() {
+     fi
+ }
+ 
++[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
++
+ ## -- General shell tricks --
+ 
+ function root_check_run_with_sudo() {
 -- 
 2.20.1
 
