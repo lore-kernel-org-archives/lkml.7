@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B7EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D886C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0276E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020BF205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013044;
-	bh=S13FeBSZPT7/Oj8p8PgiFWgFs3YS3U63TWxg6lY1ldY=;
+	s=default; t=1576013052;
+	bh=cQMKOX25Wq8pLkfNAErys6KzFr9M5KO/PQFYg5AOy9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyVjN4Qm4naOLveASFfUlUT5IsxgIhgma3sflxAi7PKjxHl9hgD47t3u8v8H+zZFJ
-	 JFZoUu6uSypeort1k4CFf5pVjUj0oTBHdceAsEQmlXD0xVSVJD0RecBGU5cJ0Q7BxQ
-	 5OKnZ/XEpxllC1SmjMIu32tkaFl08ag9tg4GlcXs=
+	b=R4s9SJRSoeaERVgW7/4Qrvxnx4RACO7eQ0mwpAGmybf9GsxNv6yVCfrg2atJ7YZGm
+	 FPg4c3oarZ/5PTKLVqvyGaiTji9ji22SoQYuGqLmGWrPA1SkieOa7pKAnhdwvCkmXF
+	 8FVNHf0gu6aLsGh7mwdVvsCO6yv3LFoqoNOAM0zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbfLJVYD (ORCPT
+        id S1729195AbfLJVYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33286 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:24:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbfLJVLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:01 -0500
+        id S1727061AbfLJVK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D763824680;
-        Tue, 10 Dec 2019 21:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30428246B9;
+        Tue, 10 Dec 2019 21:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012260;
-        bh=S13FeBSZPT7/Oj8p8PgiFWgFs3YS3U63TWxg6lY1ldY=;
+        s=default; t=1576012256;
+        bh=cQMKOX25Wq8pLkfNAErys6KzFr9M5KO/PQFYg5AOy9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tyJKiTF4/qpu8glRwESoLINBjNqOmVEkR7mwfph+r7Rwqx/a+NZMEajhsuLPPkAq/
-         xWeI3HCbh3RJYXQ3TgvQSh5xEysTC50JdqacViGtDjViHBR1j4Zjk8v2f8NlUpSMq/
-         n33imH+61jUeyAkIGx9TzJrASFx2PyuYqGyrhHjo=
+        b=Jzm8RQRkrqSvDmbWk3k53v5PtoRgzNcPrtyJZLmEqsjJjC4VlSq30OiYaGCKLJLE7
+         KRgqoZSywTLr0WnyVRkFRr0vmvkoqxcwnZZtVWKQRHRcUB25t1GxYw3eGg4nBtU+Uf
+         w2xKN0W+iCXR+9/qabBu31C8F+qQ+jOUJVIjLKTw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 206/350] nvmem: imx-ocotp: reset error status on probe
-Date:   Tue, 10 Dec 2019 16:05:11 -0500
-Message-Id: <20191210210735.9077-167-sashal@kernel.org>
+Cc:     Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 203/350] media: v4l2-core: fix touch support in v4l_g_fmt
+Date:   Tue, 10 Dec 2019 16:05:08 -0500
+Message-Id: <20191210210735.9077-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,39 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Vandana BN <bnvandana@gmail.com>
 
-[ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
+[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
 
-If software running before the OCOTP driver is loaded left the
-controller with the error status pending, the driver will never
-be able to complete the read timing setup. Reset the error status
-on probe to make sure the controller is in usable state.
+v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
+the v4l2_pix_format structure to default values.This was
+missing in v4l_g_fmt, which would lead to failures in
+v4l2-compliance tests.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/imx-ocotp.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index dff2f3c357f56..fc40555ca4cdd 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -521,6 +521,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 51b912743f0f4..21bb96ce4cd65 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1466,10 +1466,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return ret;
+ }
  
-+	clk_prepare_enable(priv->clk);
-+	imx_ocotp_clr_err_if_set(priv->base);
-+	clk_disable_unprepare(priv->clk);
++static void v4l_pix_format_touch(struct v4l2_pix_format *p)
++{
++	/*
++	 * The v4l2_pix_format structure contains fields that make no sense for
++	 * touch. Set them to default values in this case.
++	 */
 +
- 	priv->params = of_device_get_match_data(&pdev->dev);
- 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
- 	imx_ocotp_nvmem_config.dev = dev;
++	p->field = V4L2_FIELD_NONE;
++	p->colorspace = V4L2_COLORSPACE_RAW;
++	p->flags = 0;
++	p->ycbcr_enc = 0;
++	p->quantization = 0;
++	p->xfer_func = 0;
++}
++
+ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
+ 	struct v4l2_format *p = arg;
++	struct video_device *vfd = video_devdata(file);
+ 	int ret = check_fmt(file, p->type);
+ 
+ 	if (ret)
+@@ -1507,6 +1523,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
+ 		/* just in case the driver zeroed it again */
+ 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
++		if (vfd->vfl_type == VFL_TYPE_TOUCH)
++			v4l_pix_format_touch(&p->fmt.pix);
+ 		return ret;
+ 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
+ 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
+@@ -1544,21 +1562,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return -EINVAL;
+ }
+ 
+-static void v4l_pix_format_touch(struct v4l2_pix_format *p)
+-{
+-	/*
+-	 * The v4l2_pix_format structure contains fields that make no sense for
+-	 * touch. Set them to default values in this case.
+-	 */
+-
+-	p->field = V4L2_FIELD_NONE;
+-	p->colorspace = V4L2_COLORSPACE_RAW;
+-	p->flags = 0;
+-	p->ycbcr_enc = 0;
+-	p->quantization = 0;
+-	p->xfer_func = 0;
+-}
+-
+ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
 -- 
 2.20.1
 
