@@ -2,193 +2,108 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E997C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F9C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C7720726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3E720726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cPuGzMKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfLJJ1W (ORCPT
+        id S1727223AbfLJJ1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:27:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36160 "EHLO mx1.suse.de"
+        Tue, 10 Dec 2019 04:27:42 -0500
+Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:30217
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfLJJ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:27:21 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6B6A1AE74;
-        Tue, 10 Dec 2019 09:27:19 +0000 (UTC)
-Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        gurchetansingh@chromium.org
-References: <20191210085759.14763-1-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
-Date:   Tue, 10 Dec 2019 10:27:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726574AbfLJJ1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:27:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nhG1tv/jGbVEY06rgXbFz5Mw9hGnlNHJvL27k9L7JbkPNoIkt65A/Rke4eGh3HJmo1cq8/gU/1iXgNDESXQ6j7X7iWSsIpMYOiD4azuJDMv1I9eDcmGesczUtS9ywvOpFzGD4j/wKdfwSxPcy3yWfFBGp0Jzf7C9gIZWj7JMq8sVum1Yt+L2or+YJ910bUXHyHoQotNqM3hX4btgaP/8STyGeMRHHh37ad3tS9lL6z8nHKVVkj9Y95BKzbqtunSMrrzuGCbqBWs7f/dGs03svxV/yKfpfwJH6tlTJzZ91wggxvU59rdy4EldGiUglyD7Szd2qOajNC5iR91OGX61fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
+ b=FOyR8hSxwkq5Lg2h1griBQzGGKMXGHOT8KpV3pVX3GK/5HkqjdbcGO+Jz3tgQOm5JKAPNVw0JGAUqz/BQQRJdy+H1rn8at1chfUV6F4fKSnoO7qqFxUKvmVKpS0MSdM1p2iKYHqBI8MkDBIzaR8KaCTPPNFZnDH/34QmPIku5dNJLGz+HWZg9bEF1wRc1GSgQyNHt0eOdXNHl/a9DrjsPpjSlvdKMXq5GgdC0S21s36kP9oTO0O5dC89qHI8GZ72iITJN0FtcdCmBAnmLvrdrLoOBaiM0tqD7DQD+WVgjRCRSGDeC9ATtP9nmD/e2GXLswQSITctfRa39K7SrIGbzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
+ b=cPuGzMKGLpe4wD+ZQvSacqwATKVuGYsXSBckj5gXKo8nMAMdoZmue37mJyl9GJVrwXqa9OD/ImK6B5zf6wYAskWM7Mqn4quKo2S7xJwS8l6I2aXshMdAFJkci0wkm/6PiAJN/05Yibjge5NQlc3h5tllMHSr8PvtmpSTOKgQqWY=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3502.eurprd04.prod.outlook.com (52.134.6.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Tue, 10 Dec 2019 09:27:39 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
+ 09:27:39 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrei Botila <andrei.botila@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] crypto: caam - remove double buffering for ahash
+Thread-Topic: [PATCH 1/2] crypto: caam - remove double buffering for ahash
+Thread-Index: AQHVrrIee3UpGuT8yEWtzvAic+JZ5Q==
+Date:   Tue, 10 Dec 2019 09:27:39 +0000
+Message-ID: <VI1PR0402MB348517448546120EC75D5188985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1575910796-13897-1-git-send-email-andrei.botila@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 324d4264-500c-404f-34e2-08d77d533358
+x-ms-traffictypediagnostic: VI1PR0402MB3502:|VI1PR0402MB3502:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3502A4BFC32AC6463C8B3BD4985B0@VI1PR0402MB3502.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(71190400001)(52536014)(55016002)(9686003)(66556008)(71200400001)(64756008)(33656002)(66446008)(305945005)(110136005)(54906003)(91956017)(86362001)(76116006)(66946007)(66476007)(229853002)(6636002)(8936002)(478600001)(316002)(5660300002)(53546011)(6506007)(44832011)(186003)(4326008)(4744005)(26005)(8676002)(2906002)(7696005)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3502;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LX6JKw7TlQQwDw2YjmYvjcIm+RoO3cm/UNJCoIctWc6TDkROtJwuLkwDGANDaIZZZMV25vCXFR4JYOclYgh9BdI9aecd5dEeIuV+RmY1x1E/WGhG9V1JgMuXMCiMfRYquYWRBMUm2P+0SK4lCWIa2HT+x2Jty4ccNtHSBu6E9I0FQNc/VNBRGOR/ddCIHf+6FA9Brszg4A1FuPlfr3RCp0eK7lH6PgcE+5aH/3Eu3yye14hdEpyMkB1k0zEBZrCzowzhKVJoGiG0if97DqEuuxhE1mZ1Ns9X7Da74Fh7d2FlmdHLH18rYeppyisvHfCJWjZOiw7m9K6KdSQA6WHsjod+EeeN0Zs3AYnR6kLjAZ9i/zs8fWeGhX1IMeB0O6/FDfvDz5JUdSQxf+3IlaTOmVuDqQmcm37lyLfE5TL3SyaJLpsX7/3QkIiATzsEI4aL
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20191210085759.14763-1-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 324d4264-500c-404f-34e2-08d77d533358
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 09:27:39.2091
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8PVkaR6iId+YIrCD/tSwxpzozq7PvW55u1yROQDjikSA6MghpjmfnnFy8ap06gNcLla4vBfC0sQgsGjh/TKR0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3502
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x
-Content-Type: multipart/mixed; boundary="byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>, open list
- <linux-kernel@vger.kernel.org>,
- "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
- gurchetansingh@chromium.org
-Message-ID: <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
-Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
-References: <20191210085759.14763-1-kraxel@redhat.com>
-In-Reply-To: <20191210085759.14763-1-kraxel@redhat.com>
-
---byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 10.12.19 um 09:57 schrieb Gerd Hoffmann:
-> virtio-gpu uses cached mappings.  shmem helpers use writecombine though=
-=2E
-> So roll our own mmap function, wrapping drm_gem_shmem_mmap(), to tweak
-> vm_page_prot accordingly.
->=20
-> Reported-by: Gurchetan Singh <gurchetansingh@chromium.org>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_object.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/=
-virtio/virtgpu_object.c
-> index 017a9e0fc3bb..158610902054 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -75,6 +75,22 @@ static void virtio_gpu_free_object(struct drm_gem_ob=
-ject *obj)
->  	drm_gem_shmem_free_object(obj);
->  }
-> =20
-> +static int virtio_gpu_gem_mmap(struct drm_gem_object *obj, struct vm_a=
-rea_struct *vma)
-> +{
-> +	pgprot_t prot;
-> +	int ret;
-> +
-> +	ret =3D drm_gem_shmem_mmap(obj, vma);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* virtio-gpu needs normal caching, so clear writecombine */
-> +	prot =3D vm_get_page_prot(vma->vm_flags);
-> +	prot =3D pgprot_decrypted(prot);
-> +	vma->vm_page_prot =3D prot;
-> +	return 0;
-> +}
-
-There's similar code in udl, [1] which still uses writecombine for
-imported buffers. Virtio does not need this?
-
-Aside from this, do you think we could handle all special cases within
-shmem?
-
-Best regards
-Thomas
-
-[1]
-https://cgit.freedesktop.org/drm/drm-tip/tree/drivers/gpu/drm/udl/udl_gem=
-=2Ec?id=3D28ecf94a6f1072fc4744c06f5b3d267297125b37#n20
-
-> +
->  static const struct drm_gem_object_funcs virtio_gpu_gem_funcs =3D {
->  	.free =3D virtio_gpu_free_object,
->  	.open =3D virtio_gpu_gem_object_open,
-> @@ -86,7 +102,7 @@ static const struct drm_gem_object_funcs virtio_gpu_=
-gem_funcs =3D {
->  	.get_sg_table =3D drm_gem_shmem_get_sg_table,
->  	.vmap =3D drm_gem_shmem_vmap,
->  	.vunmap =3D drm_gem_shmem_vunmap,
-> -	.mmap =3D &drm_gem_shmem_mmap,
-> +	.mmap =3D &virtio_gpu_gem_mmap,
->  };
-> =20
->  struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev=
-,
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh--
-
---tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3vZPIACgkQaA3BHVML
-eiOEEQgAm12FJOpXRZL0gz0A05Oagc66189UnZVFiMGYgvmaTb/glrD2qc1uZ0/z
-kDVe8Amys5mv3I/QeEuoN9p9ZMpuxAdcKmeNlfroDSo5BJfJWQO9/PC5Lyz6sWEq
-Snr9ukUlw2jwtSFA0GcbgzdbuVyaA6ZM4rkNuYAnadUPf/EswcgUxQlxWjZSQ1dY
-4PnkqgrHk+LZwyza2haOM5AX/2zjGjdbGxPHWQ1LE4YSESqEOg4xOJ0AuYCc84aO
-fU8klXGhkQ+MeTr55AG71Kc10y8cQwelz4V/f4AW05Kk6eHuumykaVUZPE2+AVtu
-r+HKNLNv+FkXOrlmPdo3y0F/BFB8Fw==
-=15RE
------END PGP SIGNATURE-----
-
---tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x--
+On 12/9/2019 7:00 PM, Andrei Botila wrote:=0A=
+> Previously double buffering was used for storing previous and next=0A=
+> "less-than-block-size" bytes. Double buffering can be removed by moving=
+=0A=
+> the copy of next "less-than-block-size" bytes after current request is=0A=
+> executed by HW.=0A=
+> =0A=
+> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
