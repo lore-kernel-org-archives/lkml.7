@@ -2,134 +2,265 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E19C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06158C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0252465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575949354;
-	bh=O8zSgVKAg5FjaVRPXFRAgSlpaYk/7KotlPxmPGoBjpI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQoacVThtlTW4KGiFhQzUQj5LMOrTPe/UN0i6TXH7Ekbbv9M58YUYR/gguJHj/FAg
-	 hBJJqpQ7HECqXtf/6JERS7hWCbS0F41JLLZ0idfzkj3xgQ2RxL/NiU7mkocINPIbd+
-	 DLr40qr2bASJzSESSLyjas5Amv6iOR2BNlKps26o=
+	by mail.kernel.org (Postfix) with ESMTP id C145D2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="AIVWunWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfLJDmd (ORCPT
+        id S1727437AbfLJDmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLJDm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:42:29 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BF9222C4;
-        Tue, 10 Dec 2019 03:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575949348;
-        bh=O8zSgVKAg5FjaVRPXFRAgSlpaYk/7KotlPxmPGoBjpI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xIAsa6lJroSRwfUyaYatY1AIbzHZRRUDhGm0/tEZFSHLsBEPDuMVXSUGV6oX4BrWy
-         rle21P0MNI49Il0Kkxb/HBFjLcdXe0tuxniloaWr4dJso6SvMeVmHZLIq2yZCJuE+P
-         FuQYemvdvRpQ1jeLC5zesB/0wpZAbfk+8LFdZsOw=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 12/12] torture: Hoist calls to lscpu to higher-level kvm.sh script
-Date:   Mon,  9 Dec 2019 19:42:17 -0800
-Message-Id: <20191210034217.405-12-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20191210034119.GA32711@paulmck-ThinkPad-P72>
-References: <20191210034119.GA32711@paulmck-ThinkPad-P72>
+        Mon, 9 Dec 2019 22:42:37 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43056 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfLJDme (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 22:42:34 -0500
+Received: by mail-qt1-f193.google.com with SMTP id q8so1468460qtr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 19:42:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=HSkbHsLsaqfQDr/Qigk/MgThmH429gWM5QAZfrurbHg=;
+        b=AIVWunWPK5LW9THdKlTLo/WzQvKZZ2EqSyz58pgGOfu5PSMm3SUsXm585KE3McK6hu
+         Lz27O7Ve1HGXIO66jt+jzI1AQ8w4hwQJ+BUNgVa8hHpKbXXRnMIomcu7fQ/qj1v0AkVx
+         Ud7tLGzFoB/I0EEm6ScN8/bkeKdjLo6mxwqYnh1so7ve2YT6EQ3MZUeC2LKl6ywGf1K0
+         L4b80SW7JagXi8GtTLgUQXVacQ1yR3l2r3BLaUUrCReIVnrFLeh6FhiDfwt8Fy+oVHel
+         AyD39csnZjWmaxZJg0ijrmopIvQcrNLltdR8vpZedWVD20gBt2zyHForNixroxvr2MHU
+         kA6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=HSkbHsLsaqfQDr/Qigk/MgThmH429gWM5QAZfrurbHg=;
+        b=aEiRwol4TCn7BUI3f5lGO6rEp7YsI3sI1TMxtx3MNJR4k8Ak5n0Xru+r9i6PA7jCqy
+         BoSKhDFlbjWl+HSn6QDGa1i5aAx1f7wmYiBc45wG7O4DWgd63OAl7TbWP/eBZem3ogzk
+         JKrOi6xQMSEVNYgDEZtb5EvpayhlfIdY/aoeMXAp0oEcsyiokXd9+mARbIDzkfIzT0gN
+         t75gYw/OEZoWf8s+URt1jvIE/U4idgVmk2F+onurfzaqhZSqEYhgOUZk9Q+6F0yVGwrQ
+         vobCy54wKY+zahkg9bxqmGUysvaWU4DqJlw9wjVFqU9S+zqCeWMyryNddyhVGSlPD347
+         ep6A==
+X-Gm-Message-State: APjAAAUq5aGn/9wJWiyRpfmAGIUyJJvQk543/knjAqHpG/fEJRfKDSBG
+        qx9xinkebjirpMCzjLFpdZ3E7dFp/ag=
+X-Google-Smtp-Source: APXvYqyacWiSW20TRcPBrAZJpXpXZOit1js32GRkn/LlvYq9Pp4PQdj4OqUPdlH8mrwsZGwXkwD8mQ==
+X-Received: by 2002:aed:33a3:: with SMTP id v32mr28458752qtd.269.1575949353549;
+        Mon, 09 Dec 2019 19:42:33 -0800 (PST)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id o19sm683827qtb.43.2019.12.09.19.42.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 19:42:32 -0800 (PST)
+Message-ID: <89908b9f9ae974b23f7ba05ff658c3860bfbba88.camel@ndufresne.ca>
+Subject: Re: [PATCH v3 0/4] media: meson: vdec: Add compliant H264 support
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hans.verkuil@cisco.com
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 09 Dec 2019 22:42:30 -0500
+In-Reply-To: <20191209122028.13714-1-narmstrong@baylibre.com>
+References: <20191209122028.13714-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+Hi,
 
-On some kernels, concurrent calls to the lscpu command result in severe
-slowdowns.  For example, on v4.16, a single lscpu invocation takes about
-two milliseconds, four concurrent invocations more than two seconds,
-and 16 concurrent invocations more than 20 seconds.  Given that the only
-goal is to learn the number of CPUs, invoking lscpu but once suffices.
-This commit therefore invokes lscpu early in kvm.sh execution, setting
-the initial value of the TORTURE_ALLOTED_CPUS environment variable.
+Le lundi 09 décembre 2019 à 13:20 +0100, Neil Armstrong a écrit :
+> Hello,
+> 
+> This patch series aims to bring H.264 support as well as compliance update
+> to the amlogic stateful video decoder driver.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh |  7 +++----
- tools/testing/selftests/rcutorture/bin/kvm.sh            | 11 ++++++++---
- 2 files changed, 11 insertions(+), 7 deletions(-)
+I have started testing this patchset on S905X. I'm not very far into it
+yet, but noticed this spam in the kernel logs:
 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-index 1d98992..e035230 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-@@ -133,11 +133,10 @@ fi
- qemu_args="-enable-kvm -nographic $qemu_args"
- cpu_count=`configNR_CPUS.sh $resdir/ConfigFragment`
- cpu_count=`configfrag_boot_cpus "$boot_args" "$config_template" "$cpu_count"`
--vcpus=`identify_qemu_vcpus`
--if test $cpu_count -gt $vcpus
-+if test "$cpu_count" -gt "$TORTURE_ALLOTED_CPUS"
- then
--	echo CPU count limited from $cpu_count to $vcpus | tee -a $resdir/Warnings
--	cpu_count=$vcpus
-+	echo CPU count limited from $cpu_count to $TORTURE_ALLOTED_CPUS | tee -a $resdir/Warnings
-+	cpu_count=$TORTURE_ALLOTED_CPUS
- fi
- qemu_args="`specify_qemu_cpus "$QEMU" "$qemu_args" "$cpu_count"`"
- 
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
-index e19151c..78d18ab 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
-@@ -24,7 +24,9 @@ dur=$((30*60))
- dryrun=""
- KVM="`pwd`/tools/testing/selftests/rcutorture"; export KVM
- PATH=${KVM}/bin:$PATH; export PATH
--TORTURE_ALLOTED_CPUS=""
-+. functions.sh
-+
-+TORTURE_ALLOTED_CPUS="`identify_qemu_vcpus`"
- TORTURE_DEFCONFIG=defconfig
- TORTURE_BOOT_IMAGE=""
- TORTURE_INITRD="$KVM/initrd"; export TORTURE_INITRD
-@@ -40,8 +42,6 @@ cpus=0
- ds=`date +%Y.%m.%d-%H:%M:%S`
- jitter="-1"
- 
--. functions.sh
--
- usage () {
- 	echo "Usage: $scriptname optional arguments:"
- 	echo "       --bootargs kernel-boot-arguments"
-@@ -93,6 +93,11 @@ do
- 		checkarg --cpus "(number)" "$#" "$2" '^[0-9]*$' '^--'
- 		cpus=$2
- 		TORTURE_ALLOTED_CPUS="$2"
-+		max_cpus="`identify_qemu_vcpus`"
-+		if test "$TORTURE_ALLOTED_CPUS" -gt "$max_cpus"
-+		then
-+			TORTURE_ALLOTED_CPUS=$max_cpus
-+		fi
- 		shift
- 		;;
- 	--datestamp)
--- 
-2.9.5
+[  192.230935] meson-vdec c8820000.video-codec: VIFIFO usage (16777858) > VIFIFO size (16777216)
+
+So far it seems to be printed once per frame while decoding
+bbb_sunflower_1080p_30fps_normal.mp4 from blender fondation. I'm don't
+think I have ever seen that one before.
+
+> 
+> The issue in the V1 patchset at [1] is solved by patch #1 following comments
+> and requirements from hans. It moves the full draining & stopped state tracking
+> and handling from vicodec to core v4l2-mem2mem.
+> 
+> With this, it passes v4l2-compliance with streaming on Amlogic G12A and
+> Amlogic SM1 SoCs successfully.
+> 
+> This patchset depends on G12A and SM1 enablement series at [2] and [3].
+> 
+> The compliance log is:
+> # v4l2-compliance --stream-from-hdr test-25fps.h264.hdr -s
+> v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
+> 
+> Compliance test for vicodec device /dev/video0:
+> 
+> Driver Info:
+> 	Driver name      : vicodec
+> 	Card type        : vicodec
+> 	Bus info         : platform:vicodec
+> 	Driver version   : 5.5.0
+> 	Capabilities     : 0x84208000
+> 		Video Memory-to-Memory
+> 		Streaming
+> 		Extended Pix Format
+> 		Device Capabilities
+> 	Device Caps      : 0x04208000
+> 		Video Memory-to-Memory
+> 		Streaming
+> 		Extended Pix Format
+> 	Detected Stateful Encoder
+> Media Driver Info:
+> 	Driver name      : vicodec
+> 	Model            : vicodec
+> 	Serial           : 
+> 	Bus info         : platform:vicodec
+> 	Media version    : 5.5.0
+> 	Hardware revision: 0x00000000 (0)
+> 	Driver version   : 5.5.0
+> Interface Info:
+> 	ID               : 0x0300000c
+> 	Type             : V4L Video
+> Entity Info:
+> 	ID               : 0x00000001 (1)
+> 	Name             : stateful-encoder-source
+> 	Function         : V4L2 I/O
+> 	Pad 0x01000002   : 0: Source
+> 	  Link 0x02000008: to remote pad 0x1000005 of entity 'stateful-encoder-proc': Data, Enabled, Immutable
+> 
+> Required ioctls:
+> 	test MC information (see 'Media Driver Info' above): OK
+> 	test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+> 	test second /dev/video0 open: OK
+> 	test VIDIOC_QUERYCAP: OK
+> 	test VIDIOC_G/S_PRIORITY: OK
+> 	test for unlimited opens: OK
+> 
+> Debug ioctls:
+> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls:
+> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+> 	test VIDIOC_QUERYCTRL: OK
+> 	test VIDIOC_G/S_CTRL: OK
+> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> 	Standard Controls: 6 Private Controls: 0
+> 
+> Format ioctls:
+> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> 	test VIDIOC_G/S_PARM: OK (Not Supported)
+> 	test VIDIOC_G_FBUF: OK (Not Supported)
+> 	test VIDIOC_G_FMT: OK
+> 	test VIDIOC_TRY_FMT: OK
+> 	test VIDIOC_S_FMT: OK
+> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 	test Cropping: OK
+> 	test Composing: OK (Not Supported)
+> 	test Scaling: OK (Not Supported)
+> 
+> Codec ioctls:
+> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
+> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> 
+> Buffer ioctls:
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> 	test Requests: OK (Not Supported)
+> 
+> Test input 0:
+> 
+> Streaming ioctls:
+> 	test read/write: OK (Not Supported)
+> 	test blocking wait: OK
+> 	Video Capture: Captured 60 buffers                
+> 	test MMAP (select): OK
+> 	Video Capture: Captured 60 buffers                
+> 	test MMAP (epoll): OK
+> 	Video Capture: Captured 60 buffers                
+> 	test USERPTR (select): OK
+> 	test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total for vicodec device /dev/video0: 50, Succeeded: 50, Failed: 0, Warnings: 0
+> 
+> Changes since v2 at [4]:
+> - Move full draining & stopped state tracking into core v4l2-mem2mem
+> - Adapt vicodec to use the core v4l2-mem2mem draining & stopped state tracking
+> 
+> Changes since v1 at [1]:
+> - fixed output_size is never used reported by hans
+> - rebased on G12A and SM1 patches
+> - added handling of qbuf after STREAMON and STOP before enought buffer queued
+> 
+> [1] https://lore.kernel.org/linux-media/20191007145909.29979-1-mjourdan@baylibre.com
+> [2] https://lore.kernel.org/linux-media/20191205153408.26500-1-narmstrong@baylibre.com
+> [3] https://lore.kernel.org/linux-media/20191121101429.23831-1-narmstrong@baylibre.com
+> [4] https://lore.kernel.org/linux-media/20191126093733.32404-1-narmstrong@baylibre.com
+> 
+> Maxime Jourdan (2):
+>   media: meson: vdec: bring up to compliance
+>   media: meson: vdec: add H.264 decoding support
+> 
+> Neil Armstrong (2):
+>   media: v4l2-mem2mem: handle draining, stopped and next-buf-is-last
+>     states
+>   media: vicodec: use v4l2-mem2mem draining, stopped and
+>     next-buf-is-last states handling
+> 
+>  drivers/media/platform/vicodec/vicodec-core.c | 154 ++----
+>  drivers/media/v4l2-core/v4l2-mem2mem.c        | 174 ++++++-
+>  drivers/staging/media/meson/vdec/Makefile     |   2 +-
+>  drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
+>  drivers/staging/media/meson/vdec/codec_h264.h |  14 +
+>  drivers/staging/media/meson/vdec/esparser.c   |  58 +--
+>  drivers/staging/media/meson/vdec/vdec.c       |  92 ++--
+>  drivers/staging/media/meson/vdec/vdec.h       |  14 +-
+>  .../staging/media/meson/vdec/vdec_helpers.c   |  85 ++-
+>  .../staging/media/meson/vdec/vdec_helpers.h   |   6 +-
+>  .../staging/media/meson/vdec/vdec_platform.c  |  71 +++
+>  include/media/v4l2-mem2mem.h                  |  87 ++++
+>  12 files changed, 1009 insertions(+), 230 deletions(-)
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
+>  create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
+> 
 
