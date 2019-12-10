@@ -2,113 +2,85 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAB3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A6CC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BE320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7B32073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:14:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kzQG1Pij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLJIL4 (ORCPT
+        id S1726926AbfLJIOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:11:56 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43168 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfLJILz (ORCPT
+        Tue, 10 Dec 2019 03:14:51 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39119 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726062AbfLJIOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:11:55 -0500
-Received: by mail-ot1-f66.google.com with SMTP id p8so14731356oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 00:11:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zUF00rSBZ0rnjT0she8dgiVuY2HTDNpwSRiMpgHNEPo=;
-        b=JrHKV25z641rC4YUp3fMWtpvuHnCbHKTg7bQ/EowcloId68Noial+jQ4mN4Ruz9iNX
-         Q/bJACdVsv1YbxcAnzcyyhl7I9/VHdFeuaGeMICB8K0mk344mnLTftfSgOV1DK3vsQ2n
-         c8u/WYKmAa8tJMbmlg1qPhw72x8g4GePwNriWFxMhNHhCTjXZJrsxSoftoqhxCoWOI/X
-         3J3ekGfAlHwAalUcn7t1dY6lAv+V+4F1qAOo2AdmuO8Gmdtxwk5vAt+F+zUNSK5GHpKm
-         PHNLaWivCgQbSjiRxDAiLorQ2otl+kL/r5GNAoR0gdG8+43RO7kxPo9zaBusVzlptQ6n
-         chtg==
-X-Gm-Message-State: APjAAAX3dFPGoVsj+yDqcePgfwBvbXOrL2ICFCKEIc+iyXWJYgR/AmJo
-        pNijC8ySNxNPOvB46RbHdlB3YJTdgcZNk0QsA4Y=
-X-Google-Smtp-Source: APXvYqww83pIOrUu0BN3bShrtAYoiA5OS6W6KDKkqzWuPHgtSkW0JmeBXySfxHjIFw+GE00Owf4MpkhUCPqxMM2DCHQ=
-X-Received: by 2002:a9d:6c81:: with SMTP id c1mr23733892otr.39.1575965514778;
- Tue, 10 Dec 2019 00:11:54 -0800 (PST)
+        Tue, 10 Dec 2019 03:14:51 -0500
+X-UUID: 8f0ba1f4840f4936b2c6ccbfb04d7663-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=uC8RbIA/Bmt5jx7r3LAgXAyyrUdbG45GJY60y9w1Jj0=;
+        b=kzQG1PijyQIvz17fz+F/cb/IZaPnQR2v6XDMsEcwMk2B9pdtwxmPkQGVHpN0kIcp7nWg5Vb+Iy8ENI8FvTnEhHvpQHqRSmzQOjjExTkESI+bY1r7gw8RShydh0SYdOwlZK2oSdRNeIb2XqgZW4wREq+uRqGAJCo6kE0X5DZz4m0=;
+X-UUID: 8f0ba1f4840f4936b2c6ccbfb04d7663-20191210
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 754408917; Tue, 10 Dec 2019 16:14:46 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 16:14:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 16:14:26 +0800
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <vivien.didelot@savoirfairelinux.com>, <matthias.bgg@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
+        <sean.wang@mediatek.com>, <opensource@vdorst.com>,
+        <frank-w@public-files.de>, Landen Chao <landen.chao@mediatek.com>
+Subject: [PATCH net-next 0/6] net-next: dsa: mt7530: add support for MT7531
+Date:   Tue, 10 Dec 2019 16:14:36 +0800
+Message-ID: <cover.1575914275.git.landen.chao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20191016210629.1005086-1-ztuowen@gmail.com> <20191016210629.1005086-4-ztuowen@gmail.com>
-In-Reply-To: <20191016210629.1005086-4-ztuowen@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 10 Dec 2019 09:11:43 +0100
-Message-ID: <CAMuHMdXOnAO1h-uMf719muYhD4QEiVi7oMMeeGbuVd+mRrJcCA@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] mfd: intel-lpss: use devm_ioremap_uc for MMIO
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        acelan.kao@canonical.com, "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC Christoph (ioremap() API cleanup)
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBNVDc1MzEuDQoNCk1UNzUzMSBpcyB0
+aGUgbmV4dCBnZW5lcmF0aW9uIG9mIE1UNzUzMCB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNZWRp
+YXRlaw0Kcm91dGVyIHBsYXRmb3JtcyBzdWNoIGFzIE1UNzYyMiBvciBNVDc2MjkuIA0KDQpJdCBp
+cyBhbHNvIGEgNy1wb3J0cyBzd2l0Y2ggd2l0aCA1IGdpZ2EgZW1iZWRkZWQgcGh5cywgMiBjcHUg
+cG9ydHMsIGFuZA0KdGhlIHNhbWUgTUFDIGxvZ2ljIG9mIE1UNzUzMC4gQ3B1IHBvcnQgNiBvbmx5
+IHN1cHBvcnRzIEhTR01JSSBpbnRlcmZhY2UuDQpDcHUgcG9ydCA1IHN1cHBvcnRzIGVpdGhlciBS
+R01JSSBvciBIU0dNSUkgaW4gZGlmZmVyZW50IEhXIFNLVS4gRHVlIHRvDQpzdXBwb3J0IGZvciBI
+U0dNSUkgaW50ZXJmYWNlLCBwbGwsIGFuZCBwYWQgc2V0dGluZyBhcmUgZGlmZmVyZW50IGZyb20N
+Ck1UNzUzMC4NCg0KTGFuZGVuIENoYW8gKDYpOg0KICBuZXQ6IGRzYTogbXQ3NTMwOiBSZWZpbmUg
+bWVzc2FnZSBpbiBLY29uZmlnDQogIG5ldDogZHNhOiBtdDc1MzA6IEV4dGVuZCBkZXZpY2UgZGF0
+YSByZWFkeSBmb3IgYWRkaW5nIGEgbmV3IGhhcmR3YXJlDQogIGR0LWJpbmRpbmdzOiBuZXQ6IGRz
+YTogYWRkIG5ldyBNVDc1MzEgYmluZGluZyB0byBzdXBwb3J0IE1UNzUzMQ0KICBuZXQ6IGRzYTog
+bXQ3NTMwOiBBZGQgdGhlIHN1cHBvcnQgb2YgTVQ3NTMxIHN3aXRjaA0KICBhcm02NDogZHRzOiBt
+dDc2MjI6IGFkZCBtdDc1MzEgZHNhIHRvIG10NzYyMi1yZmIxIGJvYXJkDQogIGFybTY0OiBkdHM6
+IG10NzYyMjogYWRkIG10NzUzMSBkc2EgdG8gYmFuYW5hcGktYnBpLXI2NCBib2FyZA0KDQogLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2RzYS9tdDc1MzAudHh0ICAgIHwgIDc3ICstDQogLi4u
+L2R0cy9tZWRpYXRlay9tdDc2MjItYmFuYW5hcGktYnBpLXI2NC5kdHMgIHwgIDUwICsNCiBhcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYyMi1yZmIxLmR0cyAgfCAgNjMgKy0NCiBkcml2
+ZXJzL25ldC9kc2EvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKy0NCiBkcml2
+ZXJzL25ldC9kc2EvbXQ3NTMwLmMgICAgICAgICAgICAgICAgICAgICAgfCA4NzQgKysrKysrKysr
+KysrKysrKy0tDQogZHJpdmVycy9uZXQvZHNhL210NzUzMC5oICAgICAgICAgICAgICAgICAgICAg
+IHwgMTczICsrKy0NCiA2IGZpbGVzIGNoYW5nZWQsIDExNjggaW5zZXJ0aW9ucygrKSwgNzUgZGVs
+ZXRpb25zKC0pDQoNCi0tIA0KMi4xNy4xDQo=
 
-On Thu, Oct 17, 2019 at 10:44 PM Tuowen Zhao <ztuowen@gmail.com> wrote:
-> Some BIOS erroneously specifies write-combining BAR for intel-lpss-pci
-> in MTRR. This will cause the system to hang during boot. If possible,
-> this bug could be corrected with a firmware update.
->
-> This patch use devm_ioremap_uc to overwrite/ignore the MTRR settings
-> by forcing the use of strongly uncachable pages for intel-lpss.
->
-> The BIOS bug is present on Dell XPS 13 7390 2-in-1:
->
-> [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
->
-> 4000000000-7fffffffff : PCI Bus 0000:00
->   4000000000-400fffffff : 0000:00:02.0 (i915)
->   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
-> Cc: <stable@vger.kernel.org>
-> Tested-by: AceLan Kao <acelan.kao@canonical.com>
-> Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/intel-lpss.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-> index bfe4ff337581..b0f0781a6b9c 100644
-> --- a/drivers/mfd/intel-lpss.c
-> +++ b/drivers/mfd/intel-lpss.c
-> @@ -384,7 +384,7 @@ int intel_lpss_probe(struct device *dev,
->         if (!lpss)
->                 return -ENOMEM;
->
-> -       lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-> +       lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
->                                   LPSS_PRIV_SIZE);
->         if (!lpss->priv)
->                 return -ENOMEM;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
