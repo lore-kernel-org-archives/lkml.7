@@ -2,123 +2,95 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3163CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278C1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDB92073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE212073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cF1SCOvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfLJQYc (ORCPT
+        id S1727561AbfLJQ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:24:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42576 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727177AbfLJQYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:24:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3B3C9AC2F;
-        Tue, 10 Dec 2019 16:24:30 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Felix Schnizlein <fschnizlein@suse.com>,
-        linux-kernel@vger.kernel.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
-Date:   Tue, 10 Dec 2019 17:24:29 +0100
-Message-ID: <2363489.ZvMXcgbkLu@skinner.arch.suse.de>
-In-Reply-To: <20191210144737.GB3975980@kroah.com>
-References: <20191206162421.15050-1-trenn@suse.de> <11195456.EmMzWPVPDU@skinner.arch.suse.de> <20191210144737.GB3975980@kroah.com>
+        Tue, 10 Dec 2019 11:26:58 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33968 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJQ06 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:26:58 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 171B7B85;
+        Tue, 10 Dec 2019 17:26:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1575995215;
+        bh=INR/mKkQI/IM3YQhM9P0qlHvkaUK5RnEhhQJIaEZHZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cF1SCOvV+Yi9hh+C6cabPaVN0UqSFawHBYnJTZuU466QMjrST7uN7R8sLgGqIXqHe
+         l7tAhnV0TYgKmZ/XOtAEyVn+UTyKRZ1kCvSbzhVKh9yRAhc5pSjnN5XriCu9BxKowN
+         2XpDRlx0UxrGHqiqIc9PXH8ExnzxaFlxTvm5fhDM=
+Date:   Tue, 10 Dec 2019 18:26:47 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Linux Walleij <linux.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge: panel: export drm_panel_bridge_connector
+Message-ID: <20191210162647.GA5211@pendragon.ideasonboard.com>
+References: <20191207140353.23967-5-sam@ravnborg.org>
+ <20191210144834.27491-1-mihail.atanassov@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191210144834.27491-1-mihail.atanassov@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, December 10, 2019 3:47:37 PM CET Greg KH wrote:
-> On Tue, Dec 10, 2019 at 02:33:07PM +0100, Thomas Renninger wrote:
-> > On Monday, December 9, 2019 6:38:05 PM CET Will Deacon wrote:
-> > > On Mon, Dec 09, 2019 at 12:28:44PM +0100, Thomas Renninger wrote:
-> > > > On Monday, December 9, 2019 11:31:11 AM CET Will Deacon wrote:
-> > > > > On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
-> > > > > > From: Felix Schnizlein <fschnizlein@suse.de>
-> > > > > > 
-> > > > > > Export all information from /proc/cpuinfo to sysfs:
-> > > > > > implementer, architecture, variant, part, revision,
-> > > > > > bogomips and flags are exported.
-> > > > > > 
-> > > > > > Example:
-> > > > > > /sys/devices/system/cpu/cpu1/info/:[0]# head *
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > ==> flags <==
-> > > > > > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
-> > > > 
-> > > > ...
-> > > > 
-> > > > > I don't understand why we need this on arm64
-> > 
-> > Again: proc is moving to sys.
+Hi Mihail,
+
+Thank you for the patch.
+
+On Tue, Dec 10, 2019 at 02:48:49PM +0000, Mihail Atanassov wrote:
+> The function was unexported and was causing link failures for pl111 (and
+> probably the other user tve200) in a module build.
 > 
-> No.  New stuff is to be added to /sys/, don't add new things to /proc
-> unless it deals with processes.
+> Fixes: d383fb5f8add ("drm: get drm_bridge_panel connector via helper")
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Linux Walleij <linux.walleij@linaro.org>
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/bridge/panel.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> There is no mass-migration of existing /proc files to sysfs for no good
-> reason.
-> 
-> > You probably export feature flags in /proc/cpuinfo for a good reason.
-> > So where in sysfs should this show up?
-> 
-> Why does it have to live in sysfs if it is already in /proc and parsed
-> properly by tools?
+> diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> index 1443897f999b..f66777e24968 100644
+> --- a/drivers/gpu/drm/bridge/panel.c
+> +++ b/drivers/gpu/drm/bridge/panel.c
+> @@ -306,3 +306,4 @@ struct drm_connector *drm_panel_bridge_connector(struct drm_bridge *bridge)
+>  
+>  	return &panel_bridge->connector;
+>  }
+> +EXPORT_SYMBOL(drm_panel_bridge_connector);
 
-Parsing /proc/cpuinfo is the best example why we have sysfs...
-Most important things have already been ported:
+-- 
+Regards,
 
-microcode       : 0x10
-cat /sys/devices/system/cpu/cpu1/microcode/version
-0x10
-
-physical id     : 0
-siblings        : 8
-core id         : 1
-cpu cores       : 4
-...
-/sys/devices/system/cpu/cpu1/topology/
-
-clflush size    : 64
-cache_alignment : 64
-...
-/sys/devices/system/cpu/cpu1/cache/
-
-
-Only missing important info which still is needed is family/model/stepping, 
-name, bugs and flags
-cpufreq also got ported to sysfs quite some time ago already.
-
-I am aware that /proc/cpuinfo won't vanish...
-...the next decade. Still I am confident I will still see this.
-
-Still relevant info which is accessed by (newly written) userspace tools 
-should read out info via sysfs.
-
-Beside microcode, topology, cache, cpufreq,...
-info, there now is also family, model, stepping, bugs, flags and name
-
-There rest is (from my perspective) really old ugly stuff and not needed 
-anymore by recent tools.
-
-
-   Thomas
-
-
+Laurent Pinchart
