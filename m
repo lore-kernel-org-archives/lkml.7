@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCCEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296B9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D102077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01A32077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017441;
-	bh=z6VNPAjdlwsXZf+UURspqWnK3HBDctgIcTjbgHC1vMo=;
+	s=default; t=1576017444;
+	bh=SWq216+F8l7Z445rLdIYffnwZFmjp3ysALFL5P7ZJ2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvfNs5knQhBfoQMMJYcxONPxiuVTMVx9BvoNTcr1uJWH+dlvJB+Gas7jrz1bBz2qz
-	 bBdwohFgrqjWnVTMVNYLnBXDjRf42KizmOSw0jxEwL2vtdzcK70HBcHvCsK/Ik0Zk9
-	 Kj3qWbunW54146o5dnT8o4b4ZSGURUT5ug0sedCA=
+	b=Mm9IAo+TVyfYuojIvSZrouMsjLfLLt36cHZpjs8vcO6NWWuhrNdZUbjj62CPgGHrz
+	 cY7Vm4QPnyXgWknL2R3usgLp5pfoTe5e0h7916pQ6OfgeRDvPmArNQoxuzXZXeXHc8
+	 vQXyuyrgPBz3qssY2ibYiqBSgGkVn5cMtUxwV+vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbfLJWeC (ORCPT
+        id S1730417AbfLJWhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:37:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfLJWdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:47 -0500
+        id S1729170AbfLJWeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D3ED208C3;
-        Tue, 10 Dec 2019 22:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA6A207FF;
+        Tue, 10 Dec 2019 22:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017227;
-        bh=z6VNPAjdlwsXZf+UURspqWnK3HBDctgIcTjbgHC1vMo=;
+        s=default; t=1576017242;
+        bh=SWq216+F8l7Z445rLdIYffnwZFmjp3ysALFL5P7ZJ2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JV4TWomsTuezmxRHAo4wFizyDEos0VGnvslx1gKxnQOsWactQc3ctL+WxVMFXhF9H
-         t8WUAYojR7s7pORiKC1SGFjXghhEWjPGvz9sA/UHkzBLGflqJH1EDOtuNvrVIY8LiL
-         ZQXO8gSGAEnidt7r2irftxqYQ6r4yQIZdGfu/PGQ=
+        b=JoLEgUOWvI7soSQeKmi78hrtH+MVRbVZVWF4tp1ITWDrhYHvOWXN9RXcRbxPe1FP3
+         NEgsl2B3A9LS4W187UHQw/78qpnOSk9IHUS2bjG00ZGTLcqA/PSAmw6vKN71ZrVpm5
+         EExdkhZS2V2NJnB7PKiCK+ifiarARQED4yx4FELo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 25/71] perf report: Add warning when libunwind not compiled in
-Date:   Tue, 10 Dec 2019 17:32:30 -0500
-Message-Id: <20191210223316.14988-25-sashal@kernel.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 39/71] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
+Date:   Tue, 10 Dec 2019 17:32:44 -0500
+Message-Id: <20191210223316.14988-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -63,54 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
+[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
 
-We received a user report that call-graph DWARF mode was enabled in
-'perf record' but 'perf report' didn't unwind the callstack correctly.
-The reason was, libunwind was not compiled in.
+This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
+Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
+single memory leak during probe:
 
-We can use 'perf -vv' to check the compiled libraries but it would be
-valuable to report a warning to user directly (especially valuable for
-a perf newbie).
+unreferenced object 0xec13ee40 (size 176):
+  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
+    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
+    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
+    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
+    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
+    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
+    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
+    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
+    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
+    [<ac5fcae4>] process_one_work+0x22c/0x564
+    [<f5e6d3b6>] worker_thread+0x44/0x5d8
+    [<82c7b073>] kthread+0x150/0x154
+    [<b43e1b7d>] ret_from_fork+0x14/0x2c
+    [<794dff30>] 0x0
 
-The warning is:
+It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
+patch just frees the skb within the function to resolve memleak problem
+by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
+command packet for firmware via the function, applying this patch doesn't
+affect driver behavior.
 
-Warning:
-Please install libunwind development packages during the perf build.
-
-Both TUI and stdio are supported.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f256fac1e7225..0f7ebac1846b5 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -285,6 +285,13 @@ static int report__setup_sample_type(struct report *rep)
- 				PERF_SAMPLE_BRANCH_ANY))
- 		rep->nonany_branch_mode = true;
- 
-+#ifndef HAVE_LIBUNWIND_SUPPORT
-+	if (dwarf_callchain_users) {
-+		ui__warning("Please install libunwind development packages "
-+			    "during the perf build.\n");
-+	}
-+#endif
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+index 34ce06441d1b6..137d7c8645dae 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+@@ -1601,6 +1601,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
+    * This is maybe necessary:
+    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
+    */
++	dev_kfree_skb(skb);
 +
- 	return 0;
+ 	return true;
  }
  
 -- 
