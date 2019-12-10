@@ -2,95 +2,111 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38052C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B208DC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6B6206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="a093tOG7"
+	by mail.kernel.org (Postfix) with ESMTP id 7E165205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013328;
+	bh=Oc1rvpKcL/soWIEgvtuIxcfNqfE9BSdj64ReTl1woj8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v6+Zc5ns4KlDgACibm+MeVQSiD3rP9xxAmsHOc98bfsCedyQmOh2tkkBr6rs2R+hY
+	 MUNkWvCi2WuARJK8sdooRuaq8cP7kxfL2anYFiv4FAorq4Q8JRWHDHOq4OMuPveLUa
+	 azdY/notGmzVQzmt/IICFjOLYTSaoNLhyOPdf18E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfLJV2n (ORCPT
+        id S1728708AbfLJV2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:28:43 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46296 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbfLJV2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 16:28:39 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y14so448807pfm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:28:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=pIRKF4dHpqchckl72/YpmRs/BI55M7i7L1pucxA2z4E=;
-        b=a093tOG7PusILFWMBFDVZ0S7cjLimPfDS0Zqh5j+gZZf0kucIbzeOm1CZHw/ZFdKMP
-         c5BZhT8yU9LDGIwsJooldnJGpXIUeCdvKvmVTV1/7tGguspn6r67Ymp9MWE3b5ABeEX3
-         MyMvr8rIAhVm4hFS2bpB0VRnNTI9K2aV6dFJnWzCGJ8HOgVy/DnlT2wfZlwVitnqMf1P
-         Izu35iju3ABwkITiAmB6sjvuy0B4D8pxDxbRtihc+tHVaMVUuZKCDNImkk/IPBFMpKcQ
-         ustlUOQPP84kvEv6q34WV3vdg+12dH5JvZzffPU87O63e/lZhpaNqSMeg8mFJh11e3fs
-         c3jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=pIRKF4dHpqchckl72/YpmRs/BI55M7i7L1pucxA2z4E=;
-        b=GT98UEsyO0J6xZ6VS6lgByhB4mnHTcoGzTD7JsGPEI3Or657xRvO0cFBzcFYPLYcWp
-         N8jQT10eqqmU2hqEDofvsCy3UkM3iCdV/rfgpSVTlHi5jaEz2lcNTIyeMtGICgqkBTxs
-         Zrnl0Q+ANKgy3Jwy71wa6KUccnHo70KlqaahZ0SEf5SGkpOrh7+1IprjZ5TMfPHyw83/
-         dBcLCvun1tmiMzryGhlUow1s2mD9VjjkOzOPEm4Sj7jBzYaJSwjCYHZX1I9RE+Mvu+Gk
-         BlauKkS5Bf7rqz8XcE2x08xEoSeBjGHem3ZVSIjKO3AcmVCjqeOVva4bORF+xUCJFilN
-         FqnQ==
-X-Gm-Message-State: APjAAAUjm8jOfg/EnifCENs9VL7k0tzMrpukDX55R9XjeFuQS1f3ORRX
-        iX/OkVwmWT6jMSeK7/N6matI2VbBDOw=
-X-Google-Smtp-Source: APXvYqxRq/2Ns0jfcbuRphOE4p7vfQeBo99PSUxKfImVcOh2PMEHsuUBN+Tqjb4WlMMGrECKyUA6ww==
-X-Received: by 2002:a63:e608:: with SMTP id g8mr190645pgh.448.1576013318350;
-        Tue, 10 Dec 2019 13:28:38 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id k4sm4629761pfk.11.2019.12.10.13.28.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:28:38 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:28:34 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.4 326/350] bpf: Switch bpf_map
- ref counter to atomic64_t so bpf_map_inc() never fails
-Message-ID: <20191210132834.157d5fc5@cakuba.netronome.com>
-In-Reply-To: <20191210210735.9077-287-sashal@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727133AbfLJVKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:21 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F492246B9;
+        Tue, 10 Dec 2019 21:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012221;
+        bh=Oc1rvpKcL/soWIEgvtuIxcfNqfE9BSdj64ReTl1woj8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NiTA/tWT8cidZwA1JaFL8U/k7VlmI3BG1HJYtGl7dAFy3YEBacwuKOrw31rbyqLCK
+         bvSJh5o+lRblTWqFGbxsaKo7BKaJGOf3hUC/qDwvc1f4E3rbs5hZhC8fK8FWCe8KZA
+         /wWettS/K9xCVjcrJoQDNCSv1jGfCpMPe0KKfQLQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 171/350] RDMA/qedr: Fix memory leak in user qp and mr
+Date:   Tue, 10 Dec 2019 16:04:36 -0500
+Message-Id: <20191210210735.9077-132-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
-        <20191210210735.9077-287-sashal@kernel.org>
-Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:07:11 -0500, Sasha Levin wrote:
-> From: Andrii Nakryiko <andriin@fb.com>
-> 
-> [ Upstream commit 1e0bd5a091e5d9e0f1d5b0e6329b87bb1792f784 ]
-> 
-> 92117d8443bc ("bpf: fix refcnt overflow") turned refcounting of bpf_map into
-> potentially failing operation, when refcount reaches BPF_MAX_REFCNT limit
-> (32k). Due to using 32-bit counter, it's possible in practice to overflow
-> refcounter and make it wrap around to 0, causing erroneous map free, while
-> there are still references to it, causing use-after-free problems.
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-I don't think this is a bug fix, the second sentence here is written
-in a quite confusing way, but there is no bug.
+[ Upstream commit 24e412c1e00ebfe73619e6b88cbc26c2c7d41b85 ]
 
-Could you drop? I don't think it's worth the backporting pain since it
-changes bpf_map_inc().
+User QPs pbl's weren't freed properly.
+MR pbls weren't freed properly.
+
+Fixes: e0290cce6ac0 ("qedr: Add support for memory registeration verbs")
+Link: https://lore.kernel.org/r/20191027200451.28187-5-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/qedr/verbs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 6f3ce86019b73..a7ccca3c4f894 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -1577,6 +1577,14 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
+ 
+ 	ib_umem_release(qp->urq.umem);
+ 	qp->urq.umem = NULL;
++
++	if (rdma_protocol_roce(&dev->ibdev, 1)) {
++		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
++		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
++	} else {
++		kfree(qp->usq.pbl_tbl);
++		kfree(qp->urq.pbl_tbl);
++	}
+ }
+ 
+ static int qedr_create_user_qp(struct qedr_dev *dev,
+@@ -2673,8 +2681,8 @@ int qedr_dereg_mr(struct ib_mr *ib_mr, struct ib_udata *udata)
+ 
+ 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
+ 
+-	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
+-		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
++	if (mr->type != QEDR_MR_DMA)
++		free_mr_info(dev, &mr->info);
+ 
+ 	/* it could be user registered memory. */
+ 	ib_umem_release(mr->umem);
+-- 
+2.20.1
+
