@@ -2,104 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E30C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B64C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F028C206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hSua+FKx"
+	by mail.kernel.org (Postfix) with ESMTP id B15E4206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576004182;
+	bh=eq+hZuioS+yRfgMR0DDvV2booLMS9SFKLa0otLErZ9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a/pv2durC52bIhANAplyhw5g9x2WeaLjb4NQ47p9PWWmWIqe0kwgh+TO6nE+/NLrm
+	 47g2Fx3yO1tAILx7S6y/yKlrZw7hRiHCEMbhRvq5VNz5zHETjOkw0e1Hbp8qd4tIQj
+	 OJ2r4Kl3zKcwbNDUb0FTtsPx8CWcBdyef9oGROGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfLJS4P (ORCPT
+        id S1727815AbfLJS4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:56:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50665 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727617AbfLJS4P (ORCPT
+        Tue, 10 Dec 2019 13:56:21 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35447 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfLJS4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:56:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576004173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=pKKP6PQdfmPaXtDmvgj9kKM8eTO86wVwsKrvHl8BN6w=;
-        b=hSua+FKxZefdiFtM/VKdVvEUHJdd0JLMK3ClEKSmgEcBT7jcRTI1Gp/n5D6Hn4Mtf8Ngs7
-        cIEbkTdXpky3tY/O02Sk+cmsqGz/msrzycNnq7Hw4dLY6n2tlWo6eSJ/rpiHzA5MZFOsJb
-        XihDfJWyy6mtt57xtVixa/f6mtvNDpw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-i3sAJY1kNVaA7JbYMKOm9Q-1; Tue, 10 Dec 2019 13:56:10 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D7F419057B1;
-        Tue, 10 Dec 2019 18:56:09 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-117-41.phx2.redhat.com [10.3.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE6FF19C6A;
-        Tue, 10 Dec 2019 18:56:08 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org, stable@vger.kernel.org
-Subject: [PATCH] iommu: set group default domain before creating direct mappings
-Date:   Tue, 10 Dec 2019 11:56:06 -0700
-Message-Id: <20191210185606.11329-1-jsnitsel@redhat.com>
+        Tue, 10 Dec 2019 13:56:21 -0500
+Received: by mail-pl1-f194.google.com with SMTP id s10so231644plp.2;
+        Tue, 10 Dec 2019 10:56:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SusWz82FXY+hVBTH0+WUs88Y9sVAdnEx3AtXJCD2kjU=;
+        b=kRG7z0ue7zQD5IUUYGqa4kkIP+5IkhMPHatUhE+HWtg6lXf7w1/72nixGvax4OrXL9
+         RGDoodvebXZk5piMrp8GVR60IxHwTsp8yomd7aERaE3lh3XL49C1jbnjpcIl8ZEEWVdB
+         JzQIZ7Z5v1tgyekybab4GQmm7fUsOWc6MGlLhvfVf4V2DZ29YJLzRLH9Utu6DpMVSJcR
+         8VEW+KfBFl/qMNcwUkyscQ/QbesvMA/iqg6L/t6xLS28FGt7HFd9ar6iEo0HWKMf8tmP
+         +9f5r86Lfl+a/PjYhNatC2U+wAv8OYrKJtD9DZ+h9D3SFUkiWmFsLEPGt/ZYbfdgYEQ0
+         Xbvg==
+X-Gm-Message-State: APjAAAWH8S+PwOba0YcgpFYdPLCyY+L0y8elR2BAAAtrVXbh+m8LcPfo
+        /R7gVklSHAlUQSl7HHKNC3UrUMkIoxsfCw==
+X-Google-Smtp-Source: APXvYqzIVvC4wMeTsEf1zGEVciH66x1iN6YzpOFGsUzK48Zvz1bihopCVM1RTLfmJE5Wrrfb7niQ0w==
+X-Received: by 2002:a17:902:9302:: with SMTP id bc2mr37159497plb.148.1576004180358;
+        Tue, 10 Dec 2019 10:56:20 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id f30sm4229373pga.20.2019.12.10.10.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 10:56:19 -0800 (PST)
+Date:   Tue, 10 Dec 2019 10:57:16 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Add KSEG*ADDR definitions to CONFIG_64BIT
+Message-ID: <20191210185716.3lkhbuuqtzj2vs3l@lantea.localdomain>
+References: <20191210172739.27131-1-efremov@linux.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: i3sAJY1kNVaA7JbYMKOm9Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210172739.27131-1-efremov@linux.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iommu_group_create_direct_mappings uses group->default_domain, but
-right after it is called, request_default_domain_for_dev calls
-iommu_domain_free for the default domain, and sets the group default
-domain to a different domain. Move the
-iommu_group_create_direct_mappings call to after the group default
-domain is set, so the direct mappings get associated with that domain.
+Hi Denis,
 
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>=20
-Cc: iommu@lists.linux-foundation.org
-Cc: stable@vger.kernel.org
-Fixes: 7423e01741dd ("iommu: Add API to request DMA domain for device")
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
- drivers/iommu/iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Dec 10, 2019 at 08:27:39PM +0300, Denis Efremov wrote:
+> The patch adds KSEG0ADDR, KSEG1ADDR, KSEG2ADDR, KSEG3ADDR
+> definitions to CONFIG_64BIT ifdef. This fixes broken compilation:
+>   CC      drivers/watchdog/mtx-1_wdt.o
+> In file included from drivers/watchdog/mtx-1_wdt.c:44:
+> ./arch/mips/include/asm/mach-au1x00/au1000.h: In function ‘alchemy_rdsys’:
+> ./arch/mips/include/asm/mach-au1x00/au1000.h:603:36: error: implicit
+>   declaration of function ‘KSEG1ADDR’; did you mean ‘CKSEG1ADDR’?
+>   [-Werror=implicit-function-declaration]
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index db7bfd4f2d20..fa908179b80b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2282,13 +2282,13 @@ request_default_domain_for_dev(struct device *dev, =
-unsigned long type)
- =09=09goto out;
- =09}
-=20
--=09iommu_group_create_direct_mappings(group, dev);
--
- =09/* Make the domain the default for this group */
- =09if (group->default_domain)
- =09=09iommu_domain_free(group->default_domain);
- =09group->default_domain =3D domain;
-=20
-+=09iommu_group_create_direct_mappings(group, dev);
-+
- =09dev_info(dev, "Using iommu %s mapping\n",
- =09=09 type =3D=3D IOMMU_DOMAIN_DMA ? "dma" : "direct");
-=20
---=20
-2.24.0
+Since this driver is meant to run on a system that only supports 32 bit
+kernels, I think it would be better to correct its dependencies in
+Kconfig like so:
 
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 58e7c100b6ad..509cbb6d2cea 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1648,7 +1648,7 @@ config JZ4740_WDT
+
+ config WDT_MTX1
+        tristate "MTX-1 Hardware Watchdog"
+-       depends on MIPS_MTX1 || (MIPS && COMPILE_TEST)
++       depends on MIPS_MTX1 || (MIPS && 32BIT && COMPILE_TEST)
+        help
+          Hardware driver for the MTX-1 boards. This is a watchdog timer that
+          will reboot the machine after a 100 seconds timer expired.
+
+And mark this with the appropriate fixes tag:
+
+  Fixes: da2a68b3eb47 ("watchdog: Enable COMPILE_TEST where possible")
+
+What do you think?
+
+Alternatively the driver could just use the existing & equivalent
+CKSEG1ADDR() macro as the compiler suggested, but in that case it'd be
+good to check that's the only change needed to build cleanly with
+CONFIG_64BIT=y.
+
+Thanks,
+    Paul
