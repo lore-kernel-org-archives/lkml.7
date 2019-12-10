@@ -2,124 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A482C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AC0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6C820637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015749;
-	bh=49bS9orNd3ZL4raZ9exAir3QWp/udIrIFkNDQ3sgHVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=td7jMwOMqfxh6h43PoPw3JjxrLK01XSdvVwvZNEVG93MouFpnCkVFFakE2o7iQdlt
-	 lOjecPcxv9GCNmjbzvWca1/kK3cixXc5s8L2Ph3VMj4pSykX2TptClspJSGcqAD4Up
-	 r3TaLpV8vF5wzAkOyYOeovu+coWEVMvaLe34Vhps=
+	by mail.kernel.org (Postfix) with ESMTP id 4C7A420637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfLJWJI (ORCPT
+        id S1729806AbfLJWJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:09:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbfLJWEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:33 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72F621D7D;
-        Tue, 10 Dec 2019 22:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015472;
-        bh=49bS9orNd3ZL4raZ9exAir3QWp/udIrIFkNDQ3sgHVk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKLkdBdzibz5F27Y6USdiTR9LU+EU0wXgVMJp2t9ZCfb9eEs1oRb7CBEwIDHouSL/
-         h4tkGfvN50kF/xRhUSfA/QvVkr7gAtCBQaXw+Xur/DMOitzjL1QuWW64eyc+pP091J
-         5MHo9ZpRyQzJUNYH4fV7vrfN6RJ+wYSA5n++MN4U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 077/130] rfkill: allocate static minor
-Date:   Tue, 10 Dec 2019 17:02:08 -0500
-Message-Id: <20191210220301.13262-77-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
-References: <20191210220301.13262-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 17:09:18 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:51197 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfLJWEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:30 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MtfRv-1hsKxf2QUp-00v7CU; Tue, 10 Dec 2019 23:04:28 +0100
+Received: by mail-qt1-f171.google.com with SMTP id b3so458059qti.10;
+        Tue, 10 Dec 2019 14:04:28 -0800 (PST)
+X-Gm-Message-State: APjAAAW7ZhzwUvO3N2faIvYsrRK+941i/3l72ockKp7WetHd7jz+okYC
+        W4dHBIgFDGCz8FMeivB3EEmfJ9i8LLQj/nckF7k=
+X-Google-Smtp-Source: APXvYqwTjvXJ/KoAki4o/MUgxzzj/fhwQvf/9FGGYqifR9IsL+5DzL6tYg3p325LEDaNOoZLB5KJXR0sQBvqgJ8RT3Q=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr85987qtr.142.1576015467432;
+ Tue, 10 Dec 2019 14:04:27 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191210203710.2987983-1-arnd@arndb.de> <CA+h21hrJ45J2N4DD=pAtE8vN6hCjUYUq5vz17pY-7=TpkA51rA@mail.gmail.com>
+In-Reply-To: <CA+h21hrJ45J2N4DD=pAtE8vN6hCjUYUq5vz17pY-7=TpkA51rA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Dec 2019 23:04:11 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2ONPojLz=REmbBMwnSsB3GVyqLYtCD28mmKk5qr3KpdQ@mail.gmail.com>
+Message-ID: <CAK8P3a2ONPojLz=REmbBMwnSsB3GVyqLYtCD28mmKk5qr3KpdQ@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: ocelot: add NET_VENDOR_MICROSEMI dependency
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:zW9BNAUrHQL6FrpIOCu81hOutpEMn/prPi1pqOev5pKC6WIffOs
+ HrzPztIp/xmYtniA24mq/QiV/b477YwWmrdtZ07GKqeehwFWgyIvAsRJbqW6T8zUxFKjP3N
+ PyWXRyBdbSwFW2JZAh2dkwNeTAgAo3w4ehgBZGhiWrqMqP3w47NJqD9W8c1xsgSaqJpdT2t
+ Icxs56Jw4IPxRwmOUoWAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xX8tIzNEtV4=:QiZY+obU4/nww/UC6CjsC+
+ V6lvjK7a5oH6tir+KwFoan0JXIlgu0mEW7B3l7v6w7WQpxBxv+j+wBkZkRka8Kqcj0ixk33K0
+ nWj+QnUALr3QzMHAiEG7Hf7BxXtIDCAZ8Nnr33ypjf1sXbOO5u4AkD5sn2TBTt/H0dCrzOLaj
+ nQtDgaCS1M46rbpuD13S20gRwOG7vq3/PyiVdZhprZnX3CAentaY2InZGnaI42vWkH0kdBFGR
+ 28lrbaRLCbk/Oso3iLW1QR0A3DLQzfNH+8kcQ+HGauqks+9MuScoHOs94ZYk7FiSIMlWDAuT0
+ HiE90yuPoBDMtmx2q/g6/iN9ZJyOLiPdLB76BwyeY4fb/KvA3cLwKi6B10Gkk0SXD1T8abQSc
+ 93Kcn3ve22zlB7hAHUIdEuU/8t6nU0oeif+crccKgbKvDg2Sr/DYJqsdd45gvCbdUw0rnPiEL
+ e+C3MeKTw8rg7dQWyYEO19dyDWSM3xTejJzuDl9ujU9/nDz6LJngj2QyXafUT1F32FopDqKhg
+ O+Ts/xxLt/1jyhugfzgfNl6VKSEK5iPBADfsM2WPbHVZ+21zaRfgdf3lAPBMZZM5HMxROQOLT
+ wXB2ONzfHg9rEYnp64zKnGt4ldBUXovOmLmkwXaLETbk0lKYoqH2ARYRYayex9RBPPqzWvzqo
+ Ij8eaf7++zTM7Mzjji7PC5g13M0zvI9VIR7QWMRXgWMZXERt630Y5C5MPxd2iODvBCHHdkjgH
+ wUMaJDahhC0bMJR/rTHxe91UkrnLbxGGwwQHCWBWh+kgxVVtnIJM7yduqM6pbbC3mGPRXM7FF
+ /0F+tW5ghwIu+WeuFECPiGwcRpPG+8ReCHaKI6Ul/OBp6gJfy/WIckjUDQHqZ1t2YnWFRD497
+ ZdBQeSknQzSohs5PwGYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+On Tue, Dec 10, 2019 at 10:37 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Hi Arnd,
+>
+> On Tue, 10 Dec 2019 at 22:37, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > Selecting MSCC_OCELOT_SWITCH is not possible when NET_VENDOR_MICROSEMI
+> > is disabled:
+> >
+> > WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+> >   Depends on [n]: NETDEVICES [=y] && ETHERNET [=n] && NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+> >   Selected by [m]:
+> >   - NET_DSA_MSCC_FELIX [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && NET_DSA [=y] && PCI [=y]
+> >
+> > Add a Kconfig dependency on NET_VENDOR_MICROSEMI, which also implies
+> > CONFIG_NETDEVICES.
+> >
+> > Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+>
+> This has been submitted before, here [0].
+>
+> It isn't wrong, but in principle I agree with David that it is strange
+> to put a "depends" relationship between a driver in drivers/net/dsa
+> and the Kconfig vendor umbrella from drivers/net/ethernet/mscc ("why
+> would the user care/need to enable NET_VENDOR_MICROSEMI to see the DSA
+> driver" is a valid point to me). This is mainly because I don't
+> understand the point of CONFIG_NET_VENDOR_* options, they're a bit
+> tribalistic to my ears.
+>
+> Nonetheless, alternatives may be:
+> - Move MSCC_OCELOT_SWITCH core option outside of the
+> NET_VENDOR_MICROSEMI umbrella, and make it invisible to menuconfig,
+> just selectable from the 2 driver instances (MSCC_OCELOT_SWITCH_OCELOT
+> and NET_DSA_MSCC_FELIX). MSCC_OCELOT_SWITCH has no reason to be
+> selectable by the user anyway.
 
-[ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
+You still need 'depends on NETDEVICES' in that case, otherwise this sounds
+like a good option.
 
-udev has a feature of creating /dev/<node> device-nodes if it finds
-a devnode:<node> modalias. This allows for auto-loading of modules that
-provide the node. This requires to use a statically allocated minor
-number for misc character devices.
+> - Remove NET_VENDOR_MICROSEMI altogether. There is a single driver
+> under drivers/net/ethernet/mscc and it's already causing problems,
+> it's ridiculous.
 
-However, rfkill uses dynamic minor numbers and prevents auto-loading
-of the module. So allocate the next static misc minor number and use
-it for rfkill.
+It's only there for consistency with the other directories under
+drivers/net/ethernet/.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/miscdevice.h | 1 +
- net/rfkill/core.c          | 9 +++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+> - Leave it as it is. I genuinely ask: if the build system tells you
+> that the build dependencies are not met, does it matter if it compiles
+> or not?
 
-diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
-index 4de703d9e21f0..5e1e50b8f8c47 100644
---- a/include/linux/miscdevice.h
-+++ b/include/linux/miscdevice.h
-@@ -56,6 +56,7 @@
- #define UHID_MINOR		239
- #define USERIO_MINOR		240
- #define VHOST_VSOCK_MINOR	241
-+#define RFKILL_MINOR		242
- #define MISC_DYNAMIC_MINOR	255
- 
- struct device;
-diff --git a/net/rfkill/core.c b/net/rfkill/core.c
-index 2064c3a35ef84..99a2e55b01cf3 100644
---- a/net/rfkill/core.c
-+++ b/net/rfkill/core.c
-@@ -1312,10 +1312,12 @@ static const struct file_operations rfkill_fops = {
- 	.llseek		= no_llseek,
- };
- 
-+#define RFKILL_NAME "rfkill"
-+
- static struct miscdevice rfkill_miscdev = {
--	.name	= "rfkill",
- 	.fops	= &rfkill_fops,
--	.minor	= MISC_DYNAMIC_MINOR,
-+	.name	= RFKILL_NAME,
-+	.minor	= RFKILL_MINOR,
- };
- 
- static int __init rfkill_init(void)
-@@ -1367,3 +1369,6 @@ static void __exit rfkill_exit(void)
- 	class_unregister(&rfkill_class);
- }
- module_exit(rfkill_exit);
-+
-+MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
-+MODULE_ALIAS("devname:" RFKILL_NAME);
--- 
-2.20.1
+We try very hard to allow all randconfig builds to complete without
+any output from the build process when building with 'make -s'.
+Random warnings like this just clutter up the output, even if it's
+harmless there is a risk of missing something important.
 
+Yet another option is
+- Change NET_DSA_MSCC_FELIX to use 'depends on
+  MSCC_OCELOT_SWITCH' instead of 'select NET_DSA_MSCC_FELIX'.
+
+
+     Arnd
