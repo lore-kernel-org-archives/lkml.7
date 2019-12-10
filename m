@@ -2,108 +2,137 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06F6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC308C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94622077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA8B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017474;
-	bh=nbQdTNtfSD5DbSFqvV0bw5QYGDq9+muh2sSkV1tjNjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZO35jLu8xwEiNvjka4zNmysdzq2ycH78MptMnhmmEcB9cChsEmwAdRFjxUkqGkKo
-	 GY7BcByLxR8P7+LRunL5EIdSJwh0tJPKZ0Z5RH0Nbwxmzkh1XsAYmZ7V3sQIRctSeR
-	 RYCBorIQSRnAlToGYIrlwxvfNjclwpnul2ltEHM8=
+	s=default; t=1576017479;
+	bh=pmltaW9LsjEuTpeKbuA3I4m6I9tXYKuy+WxPnOiBySg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=sqMNXuds+thOTEsgjMQG67L6VqSA0HEZCYNxau0TKy1SCxEglvo7LJ+2jnUyHrD3f
+	 mZEXe/4X99+UTxFz3WwoJ3H7Wq77NifQLFn4/5zjAZdWoa/tvR8frqRcaV2Q90tg0f
+	 yqbXAxtw6ZCr4ZmBonj8NDOuD5TazjpyGAXleXOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfLJWhx (ORCPT
+        id S1730490AbfLJWh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:37:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:37:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbfLJWdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730355AbfLJWhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:37:47 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B37208C3;
-        Tue, 10 Dec 2019 22:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6617214D8;
+        Tue, 10 Dec 2019 22:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017231;
-        bh=nbQdTNtfSD5DbSFqvV0bw5QYGDq9+muh2sSkV1tjNjM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjevCIrIaGgNxnRQVJsOW6oAkrnrGkAaBenL1Z29YzTY4tlMzYW/qjWbHszqTtH/F
-         cxtDy2PXfiTG/jpQzKFBlslh9E79ehHfjA++y9SRH0UmVM0ziCdZn7dBH65nJXANbh
-         nZPoADVDA4OJaxC27sgIcViKXfkrTM4ZuxgQOOqA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mattijs Korpershoek <mkorpershoek@baylibre.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 29/71] Bluetooth: hci_core: fix init for HCI_USER_CHANNEL
-Date:   Tue, 10 Dec 2019 17:32:34 -0500
-Message-Id: <20191210223316.14988-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
-References: <20191210223316.14988-1-sashal@kernel.org>
+        s=default; t=1576017467;
+        bh=pmltaW9LsjEuTpeKbuA3I4m6I9tXYKuy+WxPnOiBySg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=GpF77bDRMYOZMzZUsc1xfZBNt0grHZ4wf9ahTXpwyB/3gWFtElsyCOKqPj3U1bJFM
+         F12G87CHzuPAb/bUPdSWsiVx1FaP+i8FGPXzpLIMlG9rGYgTSbaTbyG8VW14eyc8d+
+         yP9jUwAsNzCNQ3sJ/NVKANDpE4MxAYItUWmqRpYM=
+Date:   Tue, 10 Dec 2019 16:37:45 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     James Sewart <jamessewart@arista.com>
+Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v6 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
+Message-ID: <20191210223745.GA167002@google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+[+cc Joerg]
 
-[ Upstream commit eb8c101e28496888a0dcfe16ab86a1bee369e820 ]
+On Tue, Dec 03, 2019 at 03:43:53PM +0000, James Sewart wrote:
+> pci_add_dma_alias can now be used to create a dma alias for a range of
+> devfns.
+> 
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: James Sewart <jamessewart@arista.com>
+> ---
+>  drivers/pci/pci.c    | 22 +++++++++++++++++-----
+>  drivers/pci/quirks.c | 14 +++++++-------
+>  include/linux/pci.h  |  2 +-
+>  3 files changed, 25 insertions(+), 13 deletions(-)
 
-During the setup() stage, HCI device drivers expect the chip to
-acknowledge its setup() completion via vendor specific frames.
+Heads up Joerg: I also updated drivers/iommu/amd_iommu.c (this is the
+one reported by the kbuild test robot) and removed the printk there
+that prints the same thing as the one in pci_add_dma_alias(), and I
+updated a PCI quirk that was merged after this patch was posted.
 
-If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
-the vendor specific frames are never tranmitted to the driver, as
-they are filtered in hci_rx_work().
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d3c83248f3ce..dbb01aceafda 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>  /**
+>   * pci_add_dma_alias - Add a DMA devfn alias for a device
+>   * @dev: the PCI device for which alias is added
+> - * @devfn: alias slot and function
+> + * @devfn_from: alias slot and function
+> + * @nr_devfns: Number of subsequent devfns to alias
+>   *
+>   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+>   * which is used to program permissible bus-devfn source addresses for DMA
+> @@ -5873,8 +5874,13 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
+>   * cannot be left as a userspace activity).  DMA aliases should therefore
+>   * be configured via quirks, such as the PCI fixup header quirk.
+>   */
+> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
+>  {
+> +	int devfn_to;
+> +
+> +	nr_devfns = min(nr_devfns, (unsigned)MAX_NR_DEVFNS);
+> +	devfn_to = devfn_from + nr_devfns - 1;
 
-Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
-frames if the HCI device is is HCI_INIT state.
+I made this look like:
 
-[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
++       devfn_to = min(devfn_from + nr_devfns - 1,
++                      (unsigned) MAX_NR_DEVFNS - 1);
 
-Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/hci_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+so devfn_from=0xf0, nr_devfns=0x20 doesn't cause devfn_to to wrap
+around.
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 5d0b1358c7547..4bce3ef2c392a 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4459,7 +4459,14 @@ static void hci_rx_work(struct work_struct *work)
- 			hci_send_to_sock(hdev, skb);
- 		}
- 
--		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-+		/* If the device has been opened in HCI_USER_CHANNEL,
-+		 * the userspace has exclusive access to device.
-+		 * When device is HCI_INIT, we still need to process
-+		 * the data packets to the driver in order
-+		 * to complete its setup().
-+		 */
-+		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
-+		    !test_bit(HCI_INIT, &hdev->flags)) {
- 			kfree_skb(skb);
- 			continue;
- 		}
--- 
-2.20.1
+I did keep Logan's reviewed-by, so let me know if I broke something.
 
+>  	if (!dev->dma_alias_mask)
+>  		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+>  	if (!dev->dma_alias_mask) {
+> @@ -5882,9 +5888,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+>  		return;
+>  	}
+>  
+> -	set_bit(devfn, dev->dma_alias_mask);
+> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
+> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
+> +
+> +	if (nr_devfns == 1)
+> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
+> +	else if(nr_devfns > 1)
+> +		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
+> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
+> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
+>  }
