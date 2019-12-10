@@ -2,156 +2,106 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B32AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94D8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BA020637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4CB20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="a9UqpWI8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bI25uhsn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfLJTIe (ORCPT
+        id S1727708AbfLJTIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:08:34 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45586 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727653AbfLJTIe (ORCPT
+        Tue, 10 Dec 2019 14:08:41 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37014 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfLJTIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:08:34 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 2so281825pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:08:34 -0800 (PST)
+        Tue, 10 Dec 2019 14:08:41 -0500
+Received: by mail-qk1-f195.google.com with SMTP id m188so17417308qkc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:08:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=454uV1cOoqwlPgGnzA3d4nZPEzgWJEr9W54Tx6mSllE=;
-        b=a9UqpWI8m3bt2OIdbLjfvj2LL5RUlqYA+avGfvuI/TYqsBvkVfdOeB8K2KfVRn3bbO
-         7sAQUioicVFF0tMsEQTGXm7XVGxX7Ij7/qwMjpAAgvBcll4vCo8LGz6uRiX81a0K3i1s
-         w8/wsoMK5O7rrvag9eAu1aAtGT+WqTKYQutuDFvfwxjsqLGXt3xPvko/cProN8afMepc
-         td/GYhMWGLqN71Hs9aB5VWV2O6SX04QKnDazCrrZQL2AsaLErwrs1ShcKuIRVXyK/YbY
-         YlllWV3pXkj73aR5q/STTVLYCt6ibE5ZKL/FTjxJybAl2fZrkoVHARBk3UDcyAjhQZ4i
-         6Iog==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=xHZoF8qtGvYH+o9PkkLoHC+ywTgARXqFC6m+2XnjOKg=;
+        b=bI25uhsnJy0K/gOfHwnTaHl8J4s12l+pPKCjzEe68SKrdCnubBni7GaYFAHu7Tzh8N
+         FWhxxyYRP1ZvTZhQIQ80ogf9zZ/A3HjTQiOc+Ozwch3VSGSKrb8Qyh0tq0nvzYDBGVPq
+         1CxQDWFv9n9gjRKdnj4iVQbVhfnZgxKdsH4q00dwtEuO+p5YH4nooNyDmjaThaJdNT7N
+         o6bwzkOi5Pd/MPXAEgAFNvAA8Qg2pQVgKbU3xKmqnmSOd8EhTPqXENHxVH/UfoMIpTY5
+         BC2f1fLW6F8Nt0pz4BoPhIAcXm96bRIq+VJQDFLkTMENayAqWijvKnpxVREuRu3kMmti
+         EgsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=454uV1cOoqwlPgGnzA3d4nZPEzgWJEr9W54Tx6mSllE=;
-        b=UDsioE3QFRwHQ6mmrirZHyA+ytd7h6uBE40bLJY7KbdAYnj9Sk+QMGUJle2HgXZnvD
-         yw6aXrSlmxBbuvn9i+Rq+rDm4XFOIyMhZKVLrlvOLeJaIufqW43syzg5cnvr47suIk0q
-         uc+4AjivWl9msXSA5BjMQO3cTF97YFq/YEHQfOJwCcCZdgpR9pimmRXdo0U4iteVpjBx
-         DwGTLmt4rQ6pqqptcR0SdjUOqfSdAMSGxn3vcoFkit+G8fdfgDWD61pC6zASyGOGeRwg
-         ZCUwQ9J7ZpmCD/gwf7uexss7Jj8BG9zz5K+CVyhggz07VhJKrlJtglAnn/uBogMtaUHs
-         CrrQ==
-X-Gm-Message-State: APjAAAWowdPW7ESXgU7AZXc2RVUo362zZ0mUttUl1KQDnMPGHXaR7NhH
-        eZwz/CSJuiWNCpEEB2+mTRWIkA==
-X-Google-Smtp-Source: APXvYqwKTPtiDDOpAsmKtYAyuVpfnhERLJ6IIAxhnLzU3MqfCAahCnezsHH/BCCz+mhGRKhlwAumPw==
-X-Received: by 2002:a63:1346:: with SMTP id 6mr26669783pgt.111.1576004913752;
-        Tue, 10 Dec 2019 11:08:33 -0800 (PST)
-Received: from ?IPv6:2620:10d:c081:1131::1365? ([2620:10d:c090:180::b7af])
-        by smtp.gmail.com with ESMTPSA id 129sm4394395pfw.71.2019.12.10.11.08.32
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=xHZoF8qtGvYH+o9PkkLoHC+ywTgARXqFC6m+2XnjOKg=;
+        b=aF1/X2X7dzRuilVOlfiVJjNq5X2JY+t87RopoiQQdJKV5pHZh9Q9tuu+vOZAHsn0GX
+         DPTY5VfeLR8M05zxB7b6M3ou/sDTby98GPNeyCvBHBf9+gqRcT7Mro+jTz9zxsIFjqge
+         8Am4YC2Wfw0QpZT7Sh3+S+ygnEHtcSh0YE70zORmtKAI5/hustnd9c1dmibv6joZS7FH
+         sIUaBE8C6BGtB0yGYAvn/GRAVEDykvhkIvQ07riojdo8lDI2/Y/+1Rt/5lyOx5fzbItT
+         ZQ/V9LjOYy+H905N5SXDoyClsGcbzU5kWCLg+HcXTpxaDPFftYQ7fgcikueDsBI/MiSu
+         FXdw==
+X-Gm-Message-State: APjAAAUdXif5URGGfhQEnHHh8bx0dcYKUzH5eZbiRtthpkvhKnQsVZBE
+        0e91kjr6/FXWFwCAY4t1vC1hNw==
+X-Google-Smtp-Source: APXvYqxLSPtY6oOoEG0W6kbYDl7cytfp4xJjuF3H74qIUXtDmgC14NEGEG1rkRu+ZBsedUTjB26RKA==
+X-Received: by 2002:a37:ac16:: with SMTP id e22mr19638217qkm.186.1576004920008;
+        Tue, 10 Dec 2019 11:08:40 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v2sm1212684qkj.29.2019.12.10.11.08.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 11:08:32 -0800 (PST)
-Subject: Re: [PATCH] block: fix NULL pointer dereference in account statistics
- with IDE
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel test robot <rong.a.chen@intel.com>
-References: <20191210184704.24081-1-logang@deltatee.com>
- <81ec258d-3bfe-f55a-ba55-83047743bbbe@kernel.dk>
- <eaa2c3ae-b71b-acca-32a0-494e545d60d9@deltatee.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <bfddce21-0a26-0d3a-6503-189b31c809a5@kernel.dk>
-Date:   Tue, 10 Dec 2019 12:08:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <eaa2c3ae-b71b-acca-32a0-494e545d60d9@deltatee.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Dec 2019 11:08:39 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86/resctrl: fix an imbalance in domain_remove_cpu
+Date:   Tue, 10 Dec 2019 14:08:38 -0500
+Message-Id: <35666437-F8AF-4170-A00F-79C34370BEF0@lca.pw>
+References: <37341135-a0db-6d1c-236f-e32461b4c398@intel.com>
+Cc:     Ryan Chen <yu.chen.surf@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
+        Tony Luck <tony.luck@intel.com>, tj@kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <37341135-a0db-6d1c-236f-e32461b4c398@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 12:02 PM, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-12-10 11:59 a.m., Jens Axboe wrote:
->> On 12/10/19 11:47 AM, Logan Gunthorpe wrote:
->>> The IDE driver creates some passthru requests which never get
->>> submitted to the block layer in such a way that blk_account_io_start()
->>> gets called. However, the driver still calls __blk_mq_end_request() in
->>> ide_end_rq() which will call blk_account_io_completion() which tries
->>> to dereferences req->part which is never set. See ide_prep_sense() for
->>> an example of where these requests come from.
->>>
->>> To fix this, blk_account_io_completion() and blk_account_io_done()
->>> should do nothing if req->part is not set.
->>>
->>> The back trace of this bug is:
->>>
->>>     BUG: kernel NULL pointer dereference, address: 000002ac
->>>     #PF: supervisor write access in kernel mode
->>>     #PF: error_code(0x0002) - not-present page
->>>     *pde = 00000000
->>>     Oops: 0002 [#1]
->>>     CPU: 0 PID: 237 Comm: kworker/0:1H Not tainted
->>>     5.4.0-rc2-00011-g48d9b0d43105e #1
->>>     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1
->>>     04/01/2014
->>>     Workqueue: kblockd drive_rq_insert_work
->>>     EIP: blk_account_io_completion+0x7a/0xf0
->>>     Code: 89 54 24 08 31 d2 89 4c 24 04 31 c9 c7 04 24 02 00 00 00 c1 ee
->>>     09 e8 f5 21 a6 ff e8 70 5c a7 ff 8b 53 60 8d 04 bd 00 00 00 00 <01> b4
->>>     02 ac 02 00 00 8b 9a 88 02 00 00 85 db 74 11 85 d2 74 51 8b
->>>     EAX: 00000000 EBX: f5b80000 ECX: 00000000 EDX: 00000000
->>>     ESI: 00000000 EDI: 00000000 EBP: f3031e70 ESP: f3031e54
->>>     DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00010046
->>>     CR0: 80050033 CR2: 000002ac CR3: 03c25000 CR4: 000406d0
->>>     Call Trace:
->>>      <IRQ>
->>>       blk_update_request+0x85/0x420
->>>       ide_end_rq+0x38/0xa0
->>>       ide_complete_rq+0x3d/0x70
->>>       cdrom_newpc_intr+0x258/0xba0
->>>       ide_intr+0x135/0x250
->>>       __handle_irq_event_percpu+0x3e/0x250
->>>       handle_irq_event_percpu+0x1f/0x50
->>>       handle_irq_event+0x32/0x60
->>>       handle_level_irq+0x6c/0x110
->>>       handle_irq+0x72/0xa0
->>>       </IRQ>
->>>       do_IRQ+0x45/0xad
->>>       common_interrupt+0x115/0x11c
->>
->> Why not just:
->>
->> diff --git a/block/blk.h b/block/blk.h
->> index 6842f28c033e..d7407b5d0200 100644
->> --- a/block/blk.h
->> +++ b/block/blk.h
->> @@ -250,7 +250,7 @@ int blk_dev_init(void);
->>   */
->>  static inline bool blk_do_io_stat(struct request *rq)
->>  {
->> -	return rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
->> +	return rq->part && rq->rq_disk && (rq->rq_flags & RQF_IO_STAT);
->>  }
-> 
-> Because blk_account_io_start() also checks blk_do_io_stat() and, in that
-> case, rq->part will never be set (seeing that's the function that
-> typically sets it); thus that solution would disable stats entirely.
 
-Gotcha. I'm fine with the patch you posted in that case.
 
--- 
-Jens Axboe
+> On Dec 10, 2019, at 1:44 PM, Reinette Chatre <reinette.chatre@intel.com> w=
+rote:
+>=20
+>=20
+> "A system that supports resource monitoring may have multiple resources
+> while not all of these resources are capable of monitoring. Monitoring
+> related state is initialized only for resources that are capable of
+> monitoring and correspondingly this state should subsequently only be
+> removed from these resources that are capable of monitoring.
+>=20
+> domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
+> is true where it will initialize d->mbm_over. However,
+> domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
+> checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
+> all resources, even those that never initialized d->mbm_over because
+> they are not capable of monitoring. Hence, it triggers a debugobjects
+> warning when offlining CPUs because those timer debugobjects are never
+> initialized.
+>=20
+> ODEBUG:..."
 
+Looks better to me. Do you want me to send a v2 for it or you could update i=
+t for merging?=
