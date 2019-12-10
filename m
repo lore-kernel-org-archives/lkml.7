@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7D4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F85C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22F720637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3867620836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014462;
-	bh=10t/UT/PeC75TXkxlx9sgFx10KLPZyqcib845xRxFh0=;
+	s=default; t=1576014465;
+	bh=uMDhw3/AatnRTsP/eeEhRsJFDcnjfi0/Wf4rBikrZ1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYJ+cUcW34xqzGlfQ3pvL+KGOm0WWSK9AL0vDQ00c8QqG81ditaZmMaOhjH3n7zwR
-	 lAFHffv/Hz21PFFntUne6Qxh4+ul84LVJJK8dLOfp8S5gzRsuIy+nNk1WMDYMcmtnC
-	 eAgdKMV1L6VesfYzdFvNF+Qcs247Snq244KFPzWI=
+	b=vZn2pkxKZXSVLjiqnhHsp9dawRxXRrWRTL2w6CYZH7NL+UQdUTkZEy1y79L8z6jmw
+	 H6OTnmO/Zeh3qnl7rC+96HxToHfC2yoJ6v92hUZqT2/CqcaPw+hg5z6CW4vukhVZnr
+	 VpZQZZ8/cH81gD25LD/egTVGU7MpAwf+l7XXCw9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbfLJVrm (ORCPT
+        id S1729787AbfLJVrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:47:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:47:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728078AbfLJVJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:12 -0500
+        id S1726532AbfLJVJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB0E2077B;
-        Tue, 10 Dec 2019 21:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E1F246A6;
+        Tue, 10 Dec 2019 21:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012151;
-        bh=10t/UT/PeC75TXkxlx9sgFx10KLPZyqcib845xRxFh0=;
+        s=default; t=1576012153;
+        bh=uMDhw3/AatnRTsP/eeEhRsJFDcnjfi0/Wf4rBikrZ1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DL8/4XsSPMhZJdplsrpqxWV3Kscz3VTppw0Yywfpp80Ux9cfyzs11deBI57rcN+Az
-         AwB0v8DJqGB+vQGeejomVdig4eOJsMz8WCZSSkz3W9iHYPeYfq/zxn2eGO/GKoU3Qm
-         /KZEhNpCWnUWg7rCggGbkm24eA4tczOG3iUqQX+s=
+        b=fKVtoaQmGdbPjrUlmIPqX38pOz6oenHlO21c9GEAFZzQG1StNmg8HltOT770WHQCu
+         dSEHWhXy4SezUyyUcbu1TesvtAzYzpa9tjf9pMfKo0CHY9JSViJgaRLqFAT/AGMabX
+         4y7MUXvXi0Tm4qav/GPj9Q/3oOnf89fRGzSeuccY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 114/350] usb: usbfs: Suppress problematic bind and unbind uevents.
-Date:   Tue, 10 Dec 2019 16:03:39 -0500
-Message-Id: <20191210210735.9077-75-sashal@kernel.org>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 116/350] iio: adc: max1027: Reset the device at probe time
+Date:   Tue, 10 Dec 2019 16:03:41 -0500
+Message-Id: <20191210210735.9077-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,80 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
+[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
 
-commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
-to a driver") added bind and unbind uevents when a driver is bound or
-unbound to a physical device.
+All the registers are configured by the driver, let's reset the chip
+at probe time, avoiding any conflict with a possible earlier
+configuration.
 
-For USB devices which are handled via the generic usbfs layer (via
-libusb for example), this is problematic:
-Each time a user space program calls
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-and then later
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-The kernel will now produce a bind or unbind event, which does not
-really contain any useful information.
-
-This allows a user space program to run a DoS attack against programs
-which listen to uevents (in particular systemd/eudev/upowerd):
-A malicious user space program just has to call in a tight loop
-
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-
-With this loop the malicious user space program floods the kernel and
-all programs listening to uevents with tons of bind and unbind
-events.
-
-This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
-USBDEVFS_RELEASEINTERFACE.
-
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
-Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/devio.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/iio/adc/max1027.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 3f899552f6e3c..6ca40d135430b 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -764,8 +764,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	intf = usb_ifnum_to_if(dev, ifnum);
- 	if (!intf)
- 		err = -ENOENT;
--	else
-+	else {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while claiming interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
-+	}
- 	if (err == 0)
- 		set_bit(ifnum, &ps->ifclaimed);
- 	return err;
-@@ -785,7 +792,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	if (!intf)
- 		err = -ENOENT;
- 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while releasing interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		usb_driver_release_interface(&usbfs_driver, intf);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
- 		err = 0;
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index 2148834585825..e3be8eedd773f 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -458,6 +458,14 @@ static int max1027_probe(struct spi_device *spi)
+ 		return ret;
  	}
- 	return err;
+ 
++	/* Internal reset */
++	st->reg = MAX1027_RST_REG;
++	ret = spi_write(st->spi, &st->reg, 1);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
++		return ret;
++	}
++
+ 	/* Disable averaging */
+ 	st->reg = MAX1027_AVG_REG;
+ 	ret = spi_write(st->spi, &st->reg, 1);
 -- 
 2.20.1
 
