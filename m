@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD35C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFFBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFB52053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37AA52077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015528;
-	bh=ckVPPKvp4QuzvK5hx8lDOR5XHSzzstdV/oyUR08ezrw=;
+	s=default; t=1576015530;
+	bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yws2e3O8hzKba9yjoAFj+CVxEfry9PFSQMQogOvv/Sfd4HAoGgBTb3DaGBkntzYu5
-	 eJgI1Ld3MSc2Kw4N+gSub9Lqjc9locMVpywyl1dPHunAH6uDveIJCFkNcMAxYPv/55
-	 ZnH2AJ5m+lEESlxZ71DIJDP2fzZaLraZCx65iT60=
+	b=YxJSP+cpwboS8JT6amfZlY+1sNcAB+lXwipb8vW9yoFdyFqstrcFMXSJl76z5ZmWQ
+	 6Y6dK0YAJtn4uIYpX5F00VOOLhpeVTHYzgyKrk6Vc0NAm4aVY3kjfnFXHY9ew5Zq6u
+	 Oi5SgrdMY/oJutQ5HCSsIwTMvZ/6QrO5UnYChNIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfLJWF1 (ORCPT
+        id S1729715AbfLJWF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36378 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfLJWFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:10 -0500
+        id S1729415AbfLJWFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2095208C3;
-        Tue, 10 Dec 2019 22:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2692E20637;
+        Tue, 10 Dec 2019 22:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015509;
-        bh=ckVPPKvp4QuzvK5hx8lDOR5XHSzzstdV/oyUR08ezrw=;
+        s=default; t=1576015512;
+        bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1XjJOw6RakFEUnPMmZI4pxWLUkAYuvI+vDBUNaqBdu0uFIxuhJRSGkP/YpbdOh2S
-         YRBHHdlKniH3LwnBKMx7AfPxJAnck7WLyvuMuupGgcqSRHAhUBsXXDOGsGd/6yaNk1
-         8fd4lDkMNl3/nEUAyMtE6+vnzadn2XD2dNLLL7Vk=
+        b=eCY1FX5gHK5o9vQQQQ/U+kReQhH9WOP6YWdWuQtWXDH8WlGQWnaS3ZPibSuXI8mJ+
+         emUgJeQIGb2WUHpOjrkRspqVf4iKPKQRPIpL0RmynT/y4byDFNNG+V9ol/2XPVyRdG
+         EqoBsEzDvn21zeSSfs0CaqcJVJ7PUW6L0dJcvAsA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 108/130] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Tue, 10 Dec 2019 17:02:39 -0500
-Message-Id: <20191210220301.13262-108-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 110/130] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Tue, 10 Dec 2019 17:02:41 -0500
+Message-Id: <20191210220301.13262-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -63,65 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-This happens due to following sequence of events:
+Protect against that by always validating the show/store callbacks.
 
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
-
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 480e8c13567c8..c798a1233e6a0 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2475,6 +2475,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index ca2638d8f35ef..d831f3e61ae8f 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
++	if (!pattr->show)
++		return -EIO;
 +
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+ 	return pattr->show(ppd, buf);
+ }
+ 
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
+ 
 -- 
 2.20.1
 
