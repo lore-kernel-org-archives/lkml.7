@@ -2,119 +2,85 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7A5C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB4C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F2720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTFrwZsV"
+	by mail.kernel.org (Postfix) with ESMTP id 2AC052077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfLJT6l (ORCPT
+        id S1726987AbfLJT7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:58:41 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45246 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJT6k (ORCPT
+        Tue, 10 Dec 2019 14:59:16 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:46739 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJT7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:58:40 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 203so14695199lfa.12;
-        Tue, 10 Dec 2019 11:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cvLA6SLf2bKE07yg0HKaHP2/grDfEpmexDJw0d9Uy8g=;
-        b=gTFrwZsVodvFApTjCQmw3UiTwNJ+4OItpxaDmYfpRqtVGCIb4WveT1bk/NpTgTqhac
-         4SDFeIxJGigGukw4OGlS+H4wren3Gw63Z17mzs7TBwuL9gsmvsxcRsIZyvS52fLCAPd5
-         5IKavCuFDp806MC+KUdTcxif4p6xKxqgk+8Kpsy0tZio7VaENp7w1xHR+8oZpx550IKq
-         4vAr5Loh8y1RuFUzv1ESwItchuI1DbAm00vd9+2KXWIHrAd6uSDNKM6IWLwRVPnOpsqB
-         3om4eNnUmaoGUfe8/CGlIDsWyptKHl8xHk2+6ldvCa36hR3HWlx+zL6j5JIIs1iUueuh
-         bD5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cvLA6SLf2bKE07yg0HKaHP2/grDfEpmexDJw0d9Uy8g=;
-        b=GsM/u5G1rHuTi4AO8SJko0+xEp/gSl9P+2+xMHK6ufo/tf583xNyjzYvHvlSwXOyJx
-         UMAIspnvnKVYHIU+VX4WOaN2kXQcdAr+Pxxn/Yw/uiGmHD9M8phzh8GgPMLWgtzNgxf3
-         oY0rXOWlnKyrml2QxJbuOAUe8g0RbNxpdKyW+W0XD5+NmJPBakt37CygDlDhx6aRo4TT
-         adiYqUBJPZ4ZEWSPS5UDe/yWHmLlZI4ZmpSv+Iw1DgOqeBCpbKiwiW4bqlZ8p+vik6pp
-         Xoke+pihlRYmdJDnbSUsB5oOT5qMrZ4nRMtXerrgiQ+fAJ9PbrjZZTNZjt088oVrr8sY
-         intg==
-X-Gm-Message-State: APjAAAXoss0zWzdnDY9u5MzNElRDV3Dy+PfFa7a2xbUl+I9mPOfOsM7F
-        XPxBb5of6/m5EyYJM3rnJHrZqSe6g5WKWkyqzWU=
-X-Google-Smtp-Source: APXvYqzYgV7pLzv9dyjVa9JvPpCT5tZXDSo5dUz5fNuTjRw5r8yUo3wM6afiUBHEPOCG5oAOE7kVEqUbErxmp2QLR6g=
-X-Received: by 2002:a19:784:: with SMTP id 126mr13582955lfh.191.1576007918112;
- Tue, 10 Dec 2019 11:58:38 -0800 (PST)
+        Tue, 10 Dec 2019 14:59:16 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MxYT3-1hpfEc1HRJ-00xw8R; Tue, 10 Dec 2019 20:58:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: equilibrium: add CONFIG_OF dependency
+Date:   Tue, 10 Dec 2019 20:58:29 +0100
+Message-Id: <20191210195853.883483-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
- <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
- <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
- <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
- <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
- <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com>
- <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com> <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 11 Dec 2019 05:58:26 +1000
-Message-ID: <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tor64cZnKhFnxEaYoQEpGAP8ldGzW0XYqcz2ApV2GsAkNueUVHr
+ opMFb096CXHadKuAynMYTzGTS1Z/U0psIZF2RkTHAg+bgv0tO8R3eVLn96wT0KG8bRZ3VrU
+ 31eABVntrr0zjoVBjFV4shZt1DHHFiFRvD8z9JSm2l2U7XDd3RaYr3SCONdZEMaIzRoAjss
+ R/B2Nzh15TD0Qf4BxF9bA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qQgVTMFdYqY=:sw5rjP3PFD/RYb3as8Qxec
+ 6rMTwdAQon1V8mmRc1tzXiUmHOLGjXxK97pSPHFC979WgKrYNjIbz/MgAugU9hKiq4l1ur7LK
+ E+3oyCjC3lfEyvhiSCgGIFCFTlcq8qjy1RrPbqTCFnqL7MszB7YEa0SKK1MfQkjHbMAjYN/BR
+ UQoeTGZhzf6VF0EVifouYbme40TU3mqWQ/fABxMYvKVBSWR+GGDNmZEhoiHcogQ2kYzHRpOcR
+ f46lHXYWyjKO2XeJW6rV6ydcdTFKlnSgzgRoa7hME3ic5naed8C0s80i8kHuiFZyGfMZ3rBqP
+ YVlP3JB0AsX16iaFHv1yg2zr2Bc5UxI+c4SkqbA4d2pllWTddd8XE40NksWb9ha7DMSCLdW19
+ Hh0Ue3rF85MRTxqeTupH70lVXf7+Qi7plL4vQ9hnKEfYMRVAWbuTr4mrV9i5OCjF7AOq101CN
+ j/8HL0selF+tY3J3CBl0usODrSUTGKXrz/TyZ7EYZ+Fq0e9HsgPg03GY6MvuXEM43n/oUTXu/
+ qfuLWqqCaDJ12EZE5US/a3LVm/L4JHiiH7cOKeWh80rZ9dRwrwh7NLQaT35lNT/dHZOM796AZ
+ 7wC3XPzVWvyc+wFVCh9XZBMuqJMm0vzL5j4mAEOX6/GR9wQrh/mCdt3WF1onnp+lXmwpzHgi1
+ XSSp7fJx55WR196/B2p7mCS4LaDh7dhz0tV7U9eX35ShHvlTs5CQa2EE60Lv3Uu5x/kYb9K2V
+ FjebnNr7d3ExCnDgiRBAN8TmWsoFX/ivBs1GTD02J61s/unpfen3NGeuXaVIckIOkTE9mtVpK
+ Bji/Imh8NKTiaLxREhibOy4uBOwVD/2mIWnTCpnIQQMsLANy3SFNZgWRmL1OkZFcJ32a4O/9e
+ ph5E/qL847FEC5ZeGt6w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 at 21:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > anybody any other ideas?
->
-> Not yet, but I'm trying to collect some more information.
->
-> > It seems that both patches don't really fix
-> > the issue and I have no idea left on my side to try out. The only
-> > thing left I could do to further investigate would be to reverse
-> > engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
-> > but I've heard users having similar issues to the one Lyude told us
-> > about... and I couldn't verify that the patches help there either in a
-> > reliable way.
->
-> It looks like the newer (8+) versions of Windows expect the GPU driver
-> to prepare the GPU for power removal in some specific way and the
-> latter fails if the GPU has not been prepared as expected.
->
-> Because testing indicates that the Windows 7 path in the platform
-> firmware works, it may be worth trying to do what it does to the PCIe
-> link before invoking the _OFF method for the power resource
-> controlling the GPU power.
->
+Without this, randconfig builds get a link failure
 
-Remember the pre Win8 path required calling a DSM method to actually
-power the card down, I think by the time we reach these methods in
-those cases the card is already gone.
+drivers/pinctrl/pinctrl-equilibrium.o: In function `pinconf_generic_dt_node_to_map_all':
+pinctrl-equilibrium.c:(.text+0x96d): undefined reference to `pinconf_generic_dt_node_to_map'
 
-Dave.
+Fixes: 1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pinctrl/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 3bfbf2ff6e2b..ba0cad4bd072 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -422,6 +422,7 @@ config PINCTRL_TB10X
+ 
+ config PINCTRL_EQUILIBRIUM
+ 	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
++	depends on OF
+ 	select PINMUX
+ 	select PINCONF
+ 	select GPIOLIB
+-- 
+2.20.0
+
