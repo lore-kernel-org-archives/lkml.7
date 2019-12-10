@@ -2,140 +2,206 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430C8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9148C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134F620726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E75206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ljb8tg7n"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qAyRZKwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbfLJHoV (ORCPT
+        id S1727386AbfLJHrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:44:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38866 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbfLJHoU (ORCPT
+        Tue, 10 Dec 2019 02:47:01 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:12786 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfLJHrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:44:20 -0500
-Received: by mail-io1-f66.google.com with SMTP id v3so725014ioj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 23:44:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hIsV7YVqTr9LN39nGbpXBWYNxZYF/API4vjBkMRTnwk=;
-        b=Ljb8tg7n90pdawq/mSFektjTKgzTmE7zQum6REv33IhRaHuPe1d9SUFjtSRTKFr2p7
-         PQTUukcvGegnkptM1YRmnXr+B556MHA6AdoZWJ0FHHj4E3yCB8dPnHFmQzR/+GjAHB7Q
-         fetDW20lj789BZBkb0oUyj8+oxtJXcCXrAap3ooXvVGD1CbQpR64kRfOsPBOui/kWwN6
-         uUwh1N9O9JrpixNgeSWkkc2mln9fnCDyU12KpGHykJADPKH0ZRFI0DxSoQpbDlWoydz6
-         ouCO9/RAOx+Z4TDLjJmxC8w8PB1XkHf/TGmSWGi4xoWOBEZnaGFISiUnhU4AgOhQlSE3
-         yzFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hIsV7YVqTr9LN39nGbpXBWYNxZYF/API4vjBkMRTnwk=;
-        b=iBWo1wm6n7xvexhooTvA5LfjCFpqrZq1uf/8pMiJcnQ/KX4DnWvDL4whcOrPJQLcEn
-         +vkAZWBd8N+cUmpwY8Y1mlQsNmaE2rwoO2AfVCcPxfyK+a0fuPPG5mFcIYMP7GCIYnvv
-         W1Up+2X6PXqF6jKL7nKTJP15FopSPD8tEoUVjdi1EelBMagm/FH3OjSTvb3u1U0HE0YF
-         jiJvBGy9xblFGFmD4RDnmJgZfy64JTYl/lYk4ChzhiH7W97o1YvFGp727RcZ2JS3xUyh
-         ahRxcdL6rwt/SLgal/T+gHjLK8rME1rhj/HLBiXaW1EFqEbW3YmRU6DnvALFIP2YkGY0
-         O9Fg==
-X-Gm-Message-State: APjAAAVdf5KxUqosPVH5nbPTcQaGg6AXi6/KougqThjmopxOUcmTHWFo
-        IEyJb7bnJumOW/Q7vhZ8U4BE3sgyJloRmMj5DEE=
-X-Google-Smtp-Source: APXvYqx7x52SHGUCnps+unxtCpneRw981NZJH+EbrlRI3ANRLVcL+vm9mUgkduOPsk30MEnyZmF2DaqDKCxWgGbMDhM=
-X-Received: by 2002:a6b:770b:: with SMTP id n11mr22526006iom.154.1575963860181;
- Mon, 09 Dec 2019 23:44:20 -0800 (PST)
+        Tue, 10 Dec 2019 02:47:01 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191210074656epoutp042872043f52651f808314c6e8a11e15d3~e8uxEqQjX0307303073epoutp047
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:46:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191210074656epoutp042872043f52651f808314c6e8a11e15d3~e8uxEqQjX0307303073epoutp047
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575964016;
+        bh=ai8509VNNNtg7PGRnPyCmwNZWYdJnA3gZTpwHNd5lps=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=qAyRZKwWEBlvZ/McDot32HUDVmY+bYtQ3kE7gefhugoVHN8FiJ1610vgzraw+K6TV
+         JiJVZJSLFh7ggywev9cSU4IZ+gatjqhNgq921gJnxOh0ZikQsXbo/Jdj3/B5t/5+Ef
+         KxbttGHfcRf38Cvzq4eKWK/pBayOGevBJreN4jMM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191210074655epcas1p13b9d26ccfbc8479be65da2b76c65eb9c~e8uwypRfr2849828498epcas1p1k;
+        Tue, 10 Dec 2019 07:46:55 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47XBwD19bgzMqYm3; Tue, 10 Dec
+        2019 07:46:52 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        60.53.48019.A6D4FED5; Tue, 10 Dec 2019 16:46:50 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210074649epcas1p2a8c7a93753c45988558fe7e949758a70~e8uq3W_6X2887328873epcas1p2B;
+        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191210074649epsmtrp1f117c9a11cc132cc00183cff65148b8a~e8uq2pLnT2121421214epsmtrp1p;
+        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-73-5def4d6a1565
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.68.10238.96D4FED5; Tue, 10 Dec 2019 16:46:49 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210074649epsmtip25dbe9c54d08beaf9b6c93e0d189400a2~e8uqmtnDd2402124021epsmtip2m;
+        Tue, 10 Dec 2019 07:46:49 +0000 (GMT)
+Subject: Re: [PATCH 1/4] PM / devfreq: reuse system workqueue machanism
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <9926005a-c030-a823-fd65-6b8578e39218@samsung.com>
+Date:   Tue, 10 Dec 2019 16:53:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20191208041318.3702-1-cai@lca.pw>
-In-Reply-To: <20191208041318.3702-1-cai@lca.pw>
-From:   Ryan Chen <yu.chen.surf@gmail.com>
-Date:   Tue, 10 Dec 2019 15:55:57 +0800
-Message-ID: <CADjb_WRmyE3rRN2sLAh9ZOqAg0E3WeCkj9SwSM9dorvx4TGC2A@mail.gmail.com>
-Subject: Re: [PATCH] x86/resctrl: fix an imbalance in domain_remove_cpu
-To:     Qian Cai <cai@lca.pw>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        Tony Luck <tony.luck@intel.com>, tj@kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut7vdXZfLX/N1WlDrRoTG0quurpXLnjOyEgKDyOziLrrci90Z
+        WREV5rP3SxtagyjLHpZZLSsEG4VSWViRlVBkZOUDzB4SPXa9i/zv+33nO3znO79DERovqaUs
+        djfvsnNWmlTJr9+N0es3rhjIivdVhrJXquoVrHewSsG2t19Wsg939SrZjqZqkv2y14/Yi/4u
+        Jftq51kylUprqCsj0/Y11qG0Lw2TMoi1+fPyeM7Mu3S8PcdhtthzU+jlq7MXZRtmxTN6Jpmd
+        TevsnI1PoRenZ+iXWqyBCWjdJs5aEKAyOEGg44zzXI4CN6/LcwjuFJp3mq3OZOdMgbMJBfbc
+        mTkO2xwmPj7BEBBuyM/7tbtd5hyK3rzvQR/agZ6Fl6MQCnASfC37hsqRitJgH4J3f9qU0mMQ
+        wfDz1mDlGwLvb7+8HFEjLSWeUIm/g+BMbU9QNBBoHy4hRFE4NsGdq5miRQTWQ6/vNCFqCHxC
+        Br3HHivEAoljobnnBSniMDwFnv14h0SsxkZ4f61nhJfjaXD2Q79SxJE4E1qvFwU146H1eLdc
+        xCF4Phw98JkQMYGj4WX3SZmEJ8ONvuoRY8ADJAzX9iml0IvhbfGQTMLh8Ol+Y5DXwsf9xUG8
+        Fc61+kmpuRRBY7M0NeBEaD59WCamJHAM1DfFSfQUuPmzBknG46D/6x6FtC01lBZrJMlU6HjT
+        FbSdAKdKysgDiPaMiuMZFcEzKoLnv5kXyetQFO8UbLm8wDiTRv92Axq5zljWh24/Sm9BmEJ0
+        qNqb2p+lUXCbhEJbCwKKoCPU94sDlNrMFW7hXY5sV4GVF1qQIbDtg4Q2MscRuHW7O5sxJCQm
+        JrJJzCwDw9DRaurHkywNzuXcfD7PO3nXvz4ZFaLdgYo2HMlk8ZDuhknd1fmgTXd+SY12xkRr
+        0dO7ay7ek71elXHtVmEY0aa6Kk81mbsqiXrv91pTeNT0zTH+McmWXQtMOOGC53FnRcmEGUbL
+        2DF0EdM551PTwu3Mthajh5/dTKl8D+f2d5S+r1h3af3EldtVIRVpy4yDHtnGM8mRh14N03Ih
+        j2NiCZfA/QWa7g0iswMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXjfT932swfSrkhYbZ6xntVjwaQar
+        xfnzG9gtzja9Ybe4vGsOm8Xn3iOMFmuP3GW3uN24gs2Bw2PTqk42j74tqxg9Pm+SC2CO4rJJ
+        Sc3JLEst0rdL4Mr423qeqeCLeEXfmbeMDYxXhbsYOTgkBEwk2mfxdDFycQgJ7GaUuNvwiamL
+        kRMoLikx7eJRZogaYYnDh4shat4ySjz4vpgNJC4s4C6xd3MYSLmIgK7Emx1LmUFqmAUWMEnM
+        vzmRBaJhLZPEjO8TWEGq2AS0JPa/uMEGYvMLKEpc/fGYEcTmFbCTeLr1BVicRUBVYsXzd+wg
+        tqhAmMTOJY+ZIGoEJU7OfMICYnMK2EtMnfCaGcRmFlCX+DPvEpQtLnHryXwmCFteYvvbOcwT
+        GIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI4hLc0d
+        jJeXxB9iFOBgVOLhXeDwLlaINbGsuDL3EKMEB7OSCO/xNqAQb0piZVVqUX58UWlOavEhRmkO
+        FiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFINjLMXdUSvef8/41329ojlSy8b7Cwrzv4bovRP
+        /9ckoe/hX/41vL6kf8d17lobvh3Pn9x6cJpzis3ei/2Bz/P/8qlPeu/Gdks3YdGZwuzjyZ17
+        W3Nm2Yhae2zhb8r6r/FDkyfk1pyi9Sl7mlKfn5QK7ki7KlkfMK03sWXDHq+At8st18hODJmg
+        EKrEUpyRaKjFXFScCADfdg1UnQIAAA==
+X-CMS-MailID: 20191210074649epcas1p2a8c7a93753c45988558fe7e949758a70
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
+References: <20191209144425.13321-1-k.konieczny@samsung.com>
+        <CGME20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2@eucas1p1.samsung.com>
+        <20191209144425.13321-2-k.konieczny@samsung.com>
+        <2eab8a20-1701-94dc-410a-bb072a5f5b4e@samsung.com>
+        <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+On 12/10/19 4:28 PM, Kamil Konieczny wrote:
+> On 10.12.2019 02:41, Chanwoo Choi wrote:
+>> On 12/9/19 11:44 PM, Kamil Konieczny wrote:
+>>> There is no need for creating another workqueue, it is enough
+>>> to reuse system_freezable_power_efficient one.
+>>>
+>>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+>>> ---
+>>>  drivers/devfreq/devfreq.c | 6 +++---
+>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>> index 46a7ff7c2994..955949c6fc1f 100644
+>>> --- a/drivers/devfreq/devfreq.c
+>>> +++ b/drivers/devfreq/devfreq.c
+>>> @@ -1532,11 +1532,11 @@ static int __init devfreq_init(void)
+>>>  		return PTR_ERR(devfreq_class);
+>>>  	}
+>>>  
+>>> -	devfreq_wq = create_freezable_workqueue("devfreq_wq");
+>>> +	devfreq_wq = system_freezable_power_efficient_wq;
+>>
+>> It affect the behaviors of whole device drivers using devfreq subsystem.
+>> It is not good to change the workqueue type without any reasonable
+>> data like experiment result, power-consumption result and performance
+>> result for almost device drivers using devfreq subsystem.
+>>
+>> Are there any problem or any benefit to change workqueue type?
+> 
+> The workqueue is freezable with additional capability of 'power_efficient',
+> it is already developed by linux community so why not reuse it ?
 
-On Sun, Dec 8, 2019 at 12:14 PM Qian Cai <cai@lca.pw> wrote:
->
-> domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
-> is true where it will initialize d->mbm_over. However,
-> domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
-> checking r->mon_capable. Hence, it triggers a debugobjects warning when
-> offlining CPUs because those timer debugobjects are never initialized.
->
-Could you elaborate a little more on the failure symptom?
-If I understand correctly, the error you described was  due to
-r->mon_capable set to false while is_mbm_enabled() returns true?
-Which means on this platform rdt_mon_features is non zero?
-And in get_rdt_mon_resources() it will invoke rdt_get_mon_l3_config(),
-however the only possible failure to do not set r->mon_capable is that it
- failed in dom_data_init() due to kcalloc() failure?  Then the logic in
-get_rdt_resources() is that it will ignore the return error if rdt allocate
-feature is supported on this platform?  If this is the case, the r->mon_capable
-is not an indicator for whether the overflow thread has been created, right?
-Can we simply remove the check of r->mon_capable in domain_add_cpu() and
-invoke  domain_setup_mon_state() directly?
-> ODEBUG: assert_init not available (active state 0) object type:
-> timer_list hint: 0x0
-> WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-> debug_print_object+0xfe/0x140
-> Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS
-> I40 05/23/2018
-> RIP: 0010:debug_print_object+0xfe/0x140
-> Call Trace:
-> debug_object_assert_init+0x1f5/0x240
-> del_timer+0x6f/0xf0
-> try_to_grab_pending+0x42/0x3c0
-> cancel_delayed_work+0x7d/0x150
-> resctrl_offline_cpu+0x3c0/0x520
-> cpuhp_invoke_callback+0x197/0x1120
-> cpuhp_thread_fun+0x252/0x2f0
-> smpboot_thread_fn+0x255/0x440
-> kthread+0x1e6/0x210
-> ret_from_fork+0x3a/0x50
->
-> Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/x86/kernel/cpu/resctrl/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> index 03eb90d00af0..89049b343c7a 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -618,7 +618,7 @@ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
->                 if (static_branch_unlikely(&rdt_mon_enable_key))
->                         rmdir_mondata_subdir_allrdtgrp(r, d->id);
->                 list_del(&d->list);
-> -               if (is_mbm_enabled())
-> +               if (r->mon_capable && is_mbm_enabled())
->                         cancel_delayed_work(&d->mbm_over);
-Humm, it looks like there are two places within this function
-invoked cancel_delayed_work(&d->mbm_over),
-why not adding the check for both of them?
+As you agreed below, why don't you suggest the any reasonable test result
+with this patch? As I commented, it affects the all device drivers. 
+It is necessary to suggest the test result on multiple scenarios
+in order to prevent the any power-consumption and performance regression.
+It is not easy to change them without any data.
 
-thanks,
-Y
+Frankly, if you test almost scenarios and suggest the reasonable result
+that anyone can understand, like there are never difference
+between "create_freezable_workqueue("devfreq_wq");" and system_freezable_power_efficient_wq.
+But you don't suggest any data.
+
+- The original devfreq_wq include the only work related to devfreq.
+- system_freezable_power_efficient_wq include the all works registered
+from both other subsystem and device drivers in linux kernel.
+
+> 
+>> Actually, it is not simple to change the like just one device driver
+>> because devfreq subsytem is very important for both performance
+>> and power-consumption.
+> 
+> I agree. The name of this wq promises what you want, both freezable
+> and power efficiency.
+> 
+>> If you hope to change the feature related to both performance 
+>> and power-consumption, please suggest the reasonable data
+>> with fundamental reason.
+>>
+>> So, I can't agree it.
+>>
+>>
+>>>  	if (!devfreq_wq) {
+>>>  		class_destroy(devfreq_class);
+>>> -		pr_err("%s: couldn't create workqueue\n", __FILE__);
+>>> -		return -ENOMEM;
+>>> +		pr_err("%s: system_freezable_power_efficient_wq isn't initialized\n", __FILE__);
+>>> +		return -EINVAL;
+>>>  	}
+>>>  	devfreq_class->dev_groups = devfreq_groups;
+>>>  
+>>>
+>>
+>>
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
