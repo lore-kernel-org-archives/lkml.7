@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1912BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC91C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D914B206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E900F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013355;
-	bh=2tdQh7owUxDkjvY4hUjByt01ydM67WLZgxcr2v+lDv4=;
+	s=default; t=1576013359;
+	bh=9DuhPQ8azOh7FR3hAsKZOg1/CZehSj6kpfTGsmmOFM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwjtjUCrR4dR53RElDgabF5Jedq9CFz4mnoQzyJ/RpQllipDJ1C/V02I1g6wU/Xlx
-	 prPWEO6N/uhDJA+ISZIbTBXi1XVBVd2Sjn8OTHOq65D1Ptf+TTCAwuXLhYuYA9IAIb
-	 y7L7FLgYZZ+AHXsHWhcAFCplyoJTbZu8k3/cXT/g=
+	b=ctVWPT7fOF0wptGuZeSvhCiIjZpIWj+W3Ui3ps7gic66BBE8XEkfs9+g4ngGA5799
+	 hV04ZqiNuZaJEr9i9sfObbxcYh8EIz0rWP8F1HDMYrcrYvwU5p16a/ezkojI1wJFIG
+	 h6j1KlZ9lUKcobNqJK8tCI4LGXulM4407/fxw8/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLJVKO (ORCPT
+        id S1728702AbfLJV3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59532 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:29:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbfLJVKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:06 -0500
+        id S1728075AbfLJVKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB46246AF;
-        Tue, 10 Dec 2019 21:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3BE246AF;
+        Tue, 10 Dec 2019 21:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012205;
-        bh=2tdQh7owUxDkjvY4hUjByt01ydM67WLZgxcr2v+lDv4=;
+        s=default; t=1576012214;
+        bh=9DuhPQ8azOh7FR3hAsKZOg1/CZehSj6kpfTGsmmOFM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBaV3pOuqihgkQoVr8vAYosgj7S0R6L/SarkJnjcmldRLkfBmUupzjDK+tQUDsIyw
-         a76z0EQTq7VVE93dpm/1vLbrMSKnGZRs9UFhq73kTi39Dd+10B0TwDIDim8YPGSVRO
-         0FfkMb0K3l9VtI/Uk/Ky1QGe+48Klsqxhk2gRYUw=
+        b=R6Q37TjxS/Rl96xQsYpisviQwEOpgRl0czFecIAUc0QTKu1CIj597btHb+NmdCGY8
+         jjk6SFMsMlz6jahz1LLCI2iDcJqn1YLj+5QbGjJOP5l7ryctkATR6jdt/xbVB7812v
+         kD4D92WyrURyeMnCnX7dHQp0LNK8Aa3hn5cGP9+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 158/350] EDAC/amd64: Set grain per DIMM
-Date:   Tue, 10 Dec 2019 16:04:23 -0500
-Message-Id: <20191210210735.9077-119-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 165/350] drm/tegra: sor: Use correct SOR index on Tegra210
+Date:   Tue, 10 Dec 2019 16:04:30 -0500
+Message-Id: <20191210210735.9077-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -64,55 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 466503d6b1b33be46ab87c6090f0ade6c6011cbc ]
+[ Upstream commit 24e64f86da40e68c5f58af08796110f147b12193 ]
 
-The following commit introduced a warning on error reports without a
-non-zero grain value.
+The device tree bindings for the Tegra210 SOR don't require the
+controller instance to be defined, since the instance can be derived
+from the compatible string. The index is never used on Tegra210, so we
+got away with it not getting set. However, subsequent patches will
+change that, so make sure the proper index is used.
 
-  3724ace582d9 ("EDAC/mc: Fix grain_bits calculation")
-
-The amd64_edac_mod module does not provide a value, so the warning will
-be given on the first reported memory error.
-
-Set the grain per DIMM to cacheline size (64 bytes). This is the current
-recommendation.
-
-Fixes: 3724ace582d9 ("EDAC/mc: Fix grain_bits calculation")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20191022203448.13962-7-Yazen.Ghannam@amd.com
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/amd64_edac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/tegra/sor.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index c1d4536ae466e..cc5e56d752c8d 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2936,6 +2936,7 @@ static int init_csrows_df(struct mem_ctl_info *mci)
- 			dimm->mtype = pvt->dram_type;
- 			dimm->edac_mode = edac_mode;
- 			dimm->dtype = dev_type;
-+			dimm->grain = 64;
- 		}
+diff --git a/drivers/gpu/drm/tegra/sor.c b/drivers/gpu/drm/tegra/sor.c
+index e1669ada0a405..75e65d9536d54 100644
+--- a/drivers/gpu/drm/tegra/sor.c
++++ b/drivers/gpu/drm/tegra/sor.c
+@@ -3200,6 +3200,11 @@ static int tegra_sor_parse_dt(struct tegra_sor *sor)
+ 		 * earlier
+ 		 */
+ 		sor->pad = TEGRA_IO_PAD_HDMI_DP0 + sor->index;
++	} else {
++		if (sor->soc->supports_edp)
++			sor->index = 0;
++		else
++			sor->index = 1;
  	}
  
-@@ -3012,6 +3013,7 @@ static int init_csrows(struct mem_ctl_info *mci)
- 			dimm = csrow->channels[j]->dimm;
- 			dimm->mtype = pvt->dram_type;
- 			dimm->edac_mode = edac_mode;
-+			dimm->grain = 64;
- 		}
- 	}
- 
+ 	err = of_property_read_u32_array(np, "nvidia,xbar-cfg", xbar_cfg, 5);
 -- 
 2.20.1
 
