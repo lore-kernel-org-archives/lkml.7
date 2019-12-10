@@ -2,29 +2,29 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704F5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC86C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BD22073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2EC2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfLJLsF (ORCPT
+        id S1727611AbfLJLsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:05 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:51572 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727421AbfLJLsC (ORCPT
+        Tue, 10 Dec 2019 06:48:09 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:43389 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727421AbfLJLsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:48:02 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R841e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0TkX6Iw9_1575978472;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkX6Iw9_1575978472)
+        Tue, 10 Dec 2019 06:48:07 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TkXAQar_1575978470;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkXAQar_1575978470)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 10 Dec 2019 19:47:52 +0800
+          Tue, 10 Dec 2019 19:47:51 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -32,142 +32,114 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v5 3/8] mm/lru: introduce the relock_page_lruvec function
-Date:   Tue, 10 Dec 2019 19:46:19 +0800
-Message-Id: <1575978384-222381-4-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v5 0/8] per lruvec lru_lock for memcg
+Date:   Tue, 10 Dec 2019 19:46:16 +0800
+Message-Id: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the lruvec locking, a new page's lruvec is may same as
-previous one. Thus we could save a re-locking, and only
-change lock iff lruvec is new.
+Hi all,
 
-Function named relock_page_lruvec following Hugh Dickins' patch.
+Sorry for send out later.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: swkhack <swkhack@gmail.com>
-Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Nikolay Borisov <nborisov@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- include/linux/memcontrol.h | 36 ++++++++++++++++++++++++++++++++++++
- mm/vmscan.c                |  8 ++------
- 2 files changed, 38 insertions(+), 6 deletions(-)
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node.
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 16449d9836ee..9e2cb7dea866 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1294,6 +1294,42 @@ static inline void dec_lruvec_page_state(struct page *page,
- 	mod_lruvec_page_state(page, idx, -1);
- }
- 
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
-+		struct lruvec *locked_lruvec)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (likely(locked_lruvec == lruvec))
-+		return lruvec;
-+
-+	if (unlikely(locked_lruvec))
-+		unlock_page_lruvec_irq(locked_lruvec);
-+
-+	return lock_page_lruvec_irq(page);
-+}
-+
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
-+		struct lruvec *locked_lruvec, unsigned long *flags)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (likely(locked_lruvec == lruvec))
-+		return lruvec;
-+
-+	if (unlikely(locked_lruvec))
-+		unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
-+
-+	return lock_page_lruvec_irqsave(page, flags);
-+}
-+
- #ifdef CONFIG_CGROUP_WRITEBACK
- 
- struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f59cf96b9e38..ecad34c9e167 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -4302,14 +4302,10 @@ void check_move_unevictable_pages(struct pagevec *pvec)
- 
- 	for (i = 0; i < pvec->nr; i++) {
- 		struct page *page = pvec->pages[i];
--		struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 
- 		pgscanned++;
--		if (lruvec != new_lruvec) {
--			if (lruvec)
--				unlock_page_lruvec_irq(lruvec);
--			lruvec = lock_page_lruvec_irq(page);
--		}
-+
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
- 
- 		if (!PageLRU(page) || !PageUnevictable(page))
- 			continue;
+This is the main patch to replace per node lru_lock with per memcg
+lruvec lock.
+
+We introduces function lock_page_lruvec, which will lock the page's
+memcg and then memcg's lruvec->lru_lock. (Thanks Johannes Weiner,
+Hugh Dickins and Konstantin Khlebnikov suggestion/reminder)
+
+According to Daniel Jordan's suggestion, I run 208 'dd' with on 104
+containers on a 2s * 26cores * HT box with a modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+
+With this and later patches, the readtwice performance increases about
+80% with containers, but w/o memcg the readtwice performance drops
+about 5%.(and another 5% drops with the last debug patch). Slighty
+better than v4.(about 6% drop w/o memcg)
+
+Considering the memcg move task path:
+   mem_cgroup_move_task:
+     mem_cgroup_move_charge:
+	lru_add_drain_all();
+	atomic_inc(&mc.from->moving_account); //ask lruvec's move_lock
+	synchronize_rcu();
+	walk_parge_range: do charge_walk_ops(mem_cgroup_move_charge_pte_range):
+	   isolate_lru_page();
+	   mem_cgroup_move_account(page,)
+		spin_lock(&from->move_lock) 
+		page->mem_cgroup = to;
+		spin_unlock(&from->move_lock) 
+	   putback_lru_page(page)
+
+to guard 'page->mem_cgroup = to' by to_vec->lru_lock has the similar effect with
+move_lock. So for performance reason, both solutions are same.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
+7 years ago.
+
+Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan, 
+Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
+and some testing support from Intel 0days!
+
+v5,
+  a, locking page's memcg according JohannesW suggestion
+  b, using macro for non memcg, according to Johanness and Metthew's suggestion.
+
+v4: 
+  a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
+  b, remove the irqsave flags changes, thanks Metthew Wilcox
+  c, merge/split patches for better understanding and bisection purpose
+
+v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
+
+v2: bypass a performance regression bug and fix some function issues
+
+v1: initial version, aim testing show 5% performance increase
+
+
+Alex Shi (7):
+  mm/vmscan: remove unnecessary lruvec adding
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: introduce the relock_page_lruvec function
+  mm/mlock: optimize munlock_pagevec by relocking
+  mm/swap: only change the lru_lock iff page's lruvec is different
+  mm/pgdat: remove pgdat lru_lock
+  mm/lru: debug checking for page memcg moving and lock_page_memcg
+
+Hugh Dickins (1):
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +---
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
+ Documentation/trace/events-kmem.rst                |  2 +-
+ Documentation/vm/unevictable-lru.rst               | 22 ++---
+ include/linux/memcontrol.h                         | 63 ++++++++++++++
+ include/linux/mm_types.h                           |  2 +-
+ include/linux/mmzone.h                             |  5 +-
+ mm/compaction.c                                    | 59 ++++++++-----
+ mm/filemap.c                                       |  4 +-
+ mm/huge_memory.c                                   | 18 ++--
+ mm/memcontrol.c                                    | 88 +++++++++++++++-----
+ mm/mlock.c                                         | 28 +++----
+ mm/mmzone.c                                        |  1 +
+ mm/page_alloc.c                                    |  1 -
+ mm/page_idle.c                                     |  7 +-
+ mm/rmap.c                                          |  2 +-
+ mm/swap.c                                          | 75 +++++++----------
+ mm/vmscan.c                                        | 97 ++++++++++++----------
+ 18 files changed, 300 insertions(+), 195 deletions(-)
+
 -- 
 1.8.3.1
 
