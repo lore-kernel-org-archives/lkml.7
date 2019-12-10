@@ -2,135 +2,113 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F066FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD5F206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTFteTCV"
+	by mail.kernel.org (Postfix) with ESMTP id 5611D207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfLJRaS (ORCPT
+        id S1727671AbfLJRcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:30:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52740 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727516AbfLJRaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:30:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575999017;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N5UMSx3WXyq4ntdzIIdQoavJRcBpD/Cn3JiwPc8bV3Q=;
-        b=DTFteTCV1pT+xpOr+Xishfx2kNwEEjUAomPss8VU30Jtt7jArFtC1Dwd4zSh67K3iPS3NH
-        bfkh1t9uR2K1PtTSJUHwJp1TmyHaoWMTj476bsfu+GLXjrSwAOJwnQ3sV0uDd5LqS0b2YF
-        8oNh/ZqlVlGGk23uvkqFTOIxMXo41Po=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-199-v0TME5MqNNmT5BaY1JpOjg-1; Tue, 10 Dec 2019 12:30:16 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D04C31800D45;
-        Tue, 10 Dec 2019 17:30:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-205-240.brq.redhat.com [10.40.205.240])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 91BCE60BE0;
-        Tue, 10 Dec 2019 17:30:09 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 10 Dec 2019 18:30:14 +0100 (CET)
-Date:   Tue, 10 Dec 2019 18:30:08 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
- wakeups reliable
-Message-ID: <20191210173007.GA14449@redhat.com>
-References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
- <20191209091813.GA41320@gmail.com>
- <20191209120852.GA5388@redhat.com>
- <20191210072921.GB114501@gmail.com>
+        Tue, 10 Dec 2019 12:32:05 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:37748 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbfLJRcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:32:05 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iejMh-0006P3-6P; Tue, 10 Dec 2019 10:32:04 -0700
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>, Shyam-sundar.S-k@amd.com,
+        fancer.lancer@gmail.com, jdmason@kudzu.us
+Cc:     dave.jiang@intel.com, allenbh@gmail.com, will@kernel.org,
+        linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org
+References: <1575983255-70377-1-git-send-email-Sanju.Mehta@amd.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <fd958d1b-5abc-b936-2f21-429326a6e5de@deltatee.com>
+Date:   Tue, 10 Dec 2019 10:31:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191210072921.GB114501@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: v0TME5MqNNmT5BaY1JpOjg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <1575983255-70377-1-git-send-email-Sanju.Mehta@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com, will@kernel.org, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, fancer.lancer@gmail.com, Shyam-sundar.S-k@amd.com, Sanju.Mehta@amd.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] ntb_perf: pass correct struct device to
+ dma_alloc_coherent
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10, Ingo Molnar wrote:
->
-> --- a/kernel/sched/wait.c
-> +++ b/kernel/sched/wait.c
-> @@ -290,6 +290,11 @@ long prepare_to_wait_event(struct wait_queue_head *w=
-q_head, struct wait_queue_en
->  =09=09 * But we need to ensure that set-condition + wakeup after that
->  =09=09 * can't see us, it should wake up another exclusive waiter if
->  =09=09 * we fail.
-> +=09=09 *
-> +=09=09 * In other words, if an exclusive waiter got here, then the
-> +=09=09 * waitqueue condition is and stays true and we are guaranteed
-> +=09=09 * to exit the waitqueue loop and will ignore the -ERESTARTSYS
-> +=09=09 * and return success.
->  =09=09 */
->  =09=09list_del_init(&wq_entry->entry);
->  =09=09ret =3D -ERESTARTSYS;
 
-Agreed, this makes it more clear... but at the same time technically this i=
-s
-not 100% correct, or perhaps I misread this comment.
+On 2019-12-10 6:07 a.m., Sanjay R Mehta wrote:
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
+> 
+> Currently, ntb->dev is passed to dma_alloc_coherent
+> and dma_free_coherent calls. The returned dma_addr_t
+> is the CPU physical address. This works fine as long
+> as IOMMU is disabled. But when IOMMU is enabled, we
+> need to make sure that IOVA is returned for dma_addr_t.
+> So the correct way to achieve this is by changing the
+> first parameter of dma_alloc_coherent() as ntb->pdev->dev
+> instead.
+> 
+> Fixes: 5648e56 ("NTB: ntb_perf: Add full multi-port NTB API support")
+> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 
-We are not guaranteed to return success even if condition =3D=3D T and we w=
-ere
-woken up as an exclusive waiter, another waiter can consume the condition.
-But this is fine. Say,
+Yes, I did the same thing as one of the patches in my fix-up series that
+never got merged. See [1].
 
-=09long LOCK;
-=09wait_queue_head WQ;
+Hopefully you can make better progress than I did.
 
-=09int lock()
-=09{
-=09=09return wait_event_interruptible_exclusive(&WQ, xchg(&LOCK, 1) =3D=3D =
-0);
-=09}
+While you're at it I think it's worth doing the same thing in ntb_tool
+as well as removing the dma_coerce_mask_and_coherent() calls that are in
+the NTB drivers which are meaningless once we get back to using the
+correct DMA device.
 
-=09void unlock()
-=09{
-=09=09xchg(&LOCK, 0);
-=09=09wake_up(&WQ, TASK_NORMAL);
-=09}
+Thanks,
 
-A woken exclusive waiter can return -ERESTARTSYS if it races with another
-lock(), or it races with another sleeping waiter woken up by the signal,
-this is fine.
+Logan
 
-So may be
+[1] https://lore.kernel.org/lkml/20190109192233.5752-3-logang@deltatee.com/
 
-=09=09 * In other words, if an exclusive waiter got here and the
-=09=09 * waitqueue condition is and stays true, then we are guaranteed
-=09=09 * to exit the waitqueue loop and will ignore the -ERESTARTSYS
-=09=09 * and return success.
-
-is more accurate?
-
-Oleg.
-
+> ---
+>  drivers/ntb/test/ntb_perf.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+> index f5df33a..8729838 100644
+> --- a/drivers/ntb/test/ntb_perf.c
+> +++ b/drivers/ntb/test/ntb_perf.c
+> @@ -559,7 +559,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
+>  		return;
+>  
+>  	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
+> -	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
+> +	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
+>  			  peer->inbuf, peer->inbuf_xlat);
+>  	peer->inbuf = NULL;
+>  }
+> @@ -588,8 +588,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
+>  
+>  	perf_free_inbuf(peer);
+>  
+> -	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
+> -					 &peer->inbuf_xlat, GFP_KERNEL);
+> +	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
+> +					 peer->inbuf_size, &peer->inbuf_xlat,
+> +					 GFP_KERNEL);
+>  	if (!peer->inbuf) {
+>  		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
+>  			&peer->inbuf_size);
+> 
