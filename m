@@ -2,96 +2,142 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D21C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5202DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A514207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575987036;
-	bh=pDfWgToeCwKXy4rZwMgvZbyi7USiItVyJhcdghsgXJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2t9QMOQDrnAN3fIftUyDissi826fcXbPlWghA6Y9uS4MTo1HHWGwX/lXa8E3ZFbM2
-	 ptJtMvT9Ztgrg6p9hjuKn+ag/t5vbARrweZVSySBBjdtMsFUbZr8ijejZs5N/G0tey
-	 +r2jG9xOawwMjXtBDrYiM45QyEnh9yi8V/pUIBDI=
+	by mail.kernel.org (Postfix) with ESMTP id 2695E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pD2UzuXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLJOKf (ORCPT
+        id S1727453AbfLJOLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfLJOKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:10:34 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3ED22073B;
-        Tue, 10 Dec 2019 14:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575987034;
-        bh=pDfWgToeCwKXy4rZwMgvZbyi7USiItVyJhcdghsgXJc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QspxdB2WHMDogjPzjFOUV7usPNe/GEhwj72SX925rqO4kbaUoWnkvvQeG0J9Xb0rB
-         mgOGnEH4+GRYP7pWOHcsDPqBOMFSQHJXSSl+DqVcYjBfl6qjunFGtqytrrdJpnpR+V
-         STSy/Bu7HiFuSk3/lUMrZbYEVIuzX6BPRpXTkfBY=
-Date:   Tue, 10 Dec 2019 14:10:29 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Hanjun Guo <guohanjun@huawei.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/smmuv3: Remove the leftover put_cpu() in error path
-Message-ID: <20191210141029.GB19183@willie-the-truck>
-References: <1575974784-55046-1-git-send-email-guohanjun@huawei.com>
- <20191210132458.GA19183@willie-the-truck>
- <d251a136-2722-93ba-1bea-0000bf257db2@huawei.com>
+        Tue, 10 Dec 2019 09:11:24 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39657 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfLJOLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:11:24 -0500
+Received: by mail-il1-f195.google.com with SMTP id n1so1690239ilm.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:11:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=B2D3Qyl+CwEJ45ada86WIyLvrr4ccx3M8jqZypSwAH4=;
+        b=pD2UzuXZbkpf0sMWJFiX6bgUR5KEaxD9P2Yt1cXm4D0vXt+bVxawCksIZu7jsPCOYn
+         qx7TsRGaq8G9OrHx/dYkHvnen0oKgHN85Q9QH1uydQ5ODdNZmTiW1rNLjgjDwzyGyojr
+         XpI7BqXabgC4zw5xpi4Vw1Yaf8I8kGMZgI995YCY9dzEieBRe7jJ4SYqE+LnAk92UzNg
+         xO2v0IWBY2kxI3RXX1Ma7znE5R5aUHW/ZiIJGJXcDOZLt1z/OeKW1Bpwb4/dPUNgli73
+         yaXAWmM2e1I8VHxY/9UN9l3JJtxn/IIKnxjU/wCcSfb0MZKiZqQQt5KfCVFPVJqYGj0N
+         9RAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=B2D3Qyl+CwEJ45ada86WIyLvrr4ccx3M8jqZypSwAH4=;
+        b=nXyCIZiRaRYUYwoo4ejCBScWUYLrACPOxgihLes+u8dx5uNfjaXcL3qlIJ3SJUPgJl
+         yWdise4ou6oXnudZKH3g++XA2p8saiotMlKuwYT8BHjuet4J05PpFF18VwnLOEysaewN
+         PmnB8n+jxxhZYhARU7Bl9Qe8YWUy2DeDQuDv6B7SUwS9E50z9tAtlKggErjnYFQm/NFe
+         mV2ygK9VVrpaS7AX2khrgNVLBVnGN7FCjdfV70VyRoEaje9IqoKkjp+tggUlSWIEmBU1
+         bVur24r106XNdE0w74myIlQXXNKf9w1Z6FhuR6C2GHO83TEv3aoafgPYAlpzgnIzuqex
+         ILQw==
+X-Gm-Message-State: APjAAAVbdN41XoWhmygdzBZO5FsZCGz+cicXagKADhEtcnKdRIfz+y1/
+        BA/r4r2Vz1QCdIKKTgjBeQLM50pasecBiVc2cJ/lBg==
+X-Google-Smtp-Source: APXvYqz77/tNrfDrJzKlU1Z8nBr6FZXWg9w2drB9REe0e0/oWbhzgPRAk7Tql+RF8fA3qEobiSrZ/r5PcuLUof3Nr40=
+X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr34653892ils.287.1575987083100;
+ Tue, 10 Dec 2019 06:11:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d251a136-2722-93ba-1bea-0000bf257db2@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210021525.13455-1-warthog618@gmail.com>
+In-Reply-To: <20191210021525.13455-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 10 Dec 2019 15:11:12 +0100
+Message-ID: <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:55:28PM +0800, Hanjun Guo wrote:
-> On 2019/12/10 21:24, Will Deacon wrote:
-> > On Tue, Dec 10, 2019 at 06:46:24PM +0800, Hanjun Guo wrote:
-> >> In smmu_pmu_probe(), there is put_cpu() in the error path,
-> >> which is wrong because we use raw_smp_processor_id() to
-> >> get the cpu ID, not get_cpu(), remove it.
-> >>
-> >> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-> >> ---
-> >>  drivers/perf/arm_smmuv3_pmu.c | 1 -
-> >>  1 file changed, 1 deletion(-)
-> >>
-> >> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-> >> index 773128f..fd1d46a 100644
-> >> --- a/drivers/perf/arm_smmuv3_pmu.c
-> >> +++ b/drivers/perf/arm_smmuv3_pmu.c
-> >> @@ -834,7 +834,6 @@ static int smmu_pmu_probe(struct platform_device *pdev)
-> >>  out_unregister:
-> >>  	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
-> >>  out_cpuhp_err:
-> >> -	put_cpu();
-> >>  	return err;
-> > 
-> > Can we kill 'out_cpuhp_err' altogether then and just return err if we fail
-> > to add the hotplug instance?
-> 
-> Makes sense, but I think we can go further to kill both 'out_cpuhp_err' and
-> 'out_register' as below [1], what do you think?
+wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> Restore the external behavior of gpio-mockup to what it was prior to the
+> change to using GPIO_LINE_DIRECTION.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>
+> Fix a regression introduced in v5.5-rc1.
+>
+> The change to GPIO_LINE_DIRECTION reversed the polarity of the
+> dir field within gpio-mockup.c, but overlooked inverting the value on
+> initialization and when returned by gpio_mockup_get_direction.
+> The latter is a bug.
+> The former is a problem for tests which assume initial conditions,
+> specifically the mockup used to initialize chips with all lines as inputs=
+.
+> That superficially appeared to be the case after the previous patch due
+> to the bug in gpio_mockup_get_direction.
+>
+>  drivers/gpio/gpio-mockup.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index 56d647a30e3e..c4fdc192ea4e 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip=
+ *gc, unsigned int offset)
+>         int direction;
+>
+>         mutex_lock(&chip->lock);
+> -       direction =3D !chip->lines[offset].dir;
+> +       direction =3D chip->lines[offset].dir;
+>         mutex_unlock(&chip->lock);
+>
+>         return direction;
+> @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *=
+pdev)
+>         struct gpio_chip *gc;
+>         struct device *dev;
+>         const char *name;
+> -       int rv, base;
+> +       int rv, base, i;
+>         u16 ngpio;
+>
+>         dev =3D &pdev->dev;
+> @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *=
+pdev)
+>         if (!chip->lines)
+>                 return -ENOMEM;
+>
+> +       for (i =3D 0; i < gc->ngpio; i++)
+> +               chip->lines[i].dir =3D GPIO_LINE_DIRECTION_IN;
+> +
+>         if (device_property_read_bool(dev, "named-gpio-lines")) {
+>                 rv =3D gpio_mockup_name_lines(dev, chip);
+>                 if (rv)
+> --
+> 2.24.0
+>
 
-Although that's functionally correct, I'd prefer to keep out_unregister(),
-since it acts as good reminder to anybody extending this function in future
-that they need to unregister the hotplug instance on failure.
+Hi Kent,
 
-Will
+I was applying and testing your libgpiod series and noticed that the
+gpio-tools tests fail after applying patches 16 & 17 (with linux
+v5.5-rc1). Is this fix related to this?
+
+Bart
