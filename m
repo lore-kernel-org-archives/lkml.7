@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E4BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D88C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C342073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D41F2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013476;
-	bh=cwMBLvP+bQjJKU19Fc8UeIkvvtMAGhEI2YS6+LSkA4I=;
+	s=default; t=1576013480;
+	bh=Uu84qpMnEvTek01jYaB5sD7m/AD+QkDsg73IgbTZqkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoblPdOF6s2PRbi24n1KtvaRq1GCIeUk5PI2m6df3dSP/EtNb3wKc1S6UdrtGBIcy
-	 X5FPkuUyPD2B6+9i9N6Ti0kKDYXb/Dpm1yMBlYb8NP1+sQyR6i9MMAg6ToCnRKlHK4
-	 qRFpz2KMUrQLxfaAK4xV51Ky1N9Wi3mwy1KJcBXU=
+	b=K42P5J+J1rRBXwEP7WM0CHbdaxwrblioAscNeVOhxDv1ZfSt/GzFPzv12oHOvgJRc
+	 CTho+/5xQeLGR5jXinXEDQQYm+HdWip9QQmQWF80NvE5Fj8PhjuJOcReev6wyOub8F
+	 rJes8WEEYnsLUNuSBS7JBdqsUoBrUZfZ8ibOX0Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLJVbP (ORCPT
+        id S1728207AbfLJVJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbfLJVJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:36 -0500
+        id S1727809AbfLJVJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D725C24696;
-        Tue, 10 Dec 2019 21:09:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F7E246A2;
+        Tue, 10 Dec 2019 21:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012175;
-        bh=cwMBLvP+bQjJKU19Fc8UeIkvvtMAGhEI2YS6+LSkA4I=;
+        s=default; t=1576012170;
+        bh=Uu84qpMnEvTek01jYaB5sD7m/AD+QkDsg73IgbTZqkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vx51UUgKJf5tVdz84/5NsIjQko/aEw+SjKkQyre6iDycN7Dh4RgkXIl9Cmt0GSeg1
-         BbVFe0s3r66z8zbMRASO9ACiaSiA2V1L4r4meN/mUNpb7OtIb7vJQG5aWPv+KjjSNQ
-         WwcF1HLdRlnYndsNZi0o/Hfd65EWXHh5Le7Gwt/I=
+        b=11qm0ncgsqu23jJFRvuEqlC0ws4zA0Z6/B2X4w9CeCU2bbK2wr25yp+cdxEpWqhON
+         QYJo/DbyeU4OQ4JZsqTVWGu/Kv9CNTWg80/cjysNgFnUD6yidHWidl498AUv4KRaFF
+         7xow5Hbq74eW71JphrqwENmUhRgaXWklx2hMIAS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 133/350] Bluetooth: hci_bcm: Fix RTS handling during startup
-Date:   Tue, 10 Dec 2019 16:03:58 -0500
-Message-Id: <20191210210735.9077-94-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.4 129/350] staging: iio: ad9834: add a check for devm_clk_get
+Date:   Tue, 10 Dec 2019 16:03:54 -0500
+Message-Id: <20191210210735.9077-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,39 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 3347a80965b38f096b1d6f995c00c9c9e53d4b8b ]
+[ Upstream commit a96de139301385e5992768c0f60240ddfbb33325 ]
 
-The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
-doesn't react to HCI requests during DT probe. The reason is the inproper
-handling of the RTS line during startup. According to the startup
-signaling sequence in the CYW43455 datasheet, the hosts RTS line must
-be driven after BT_REG_ON and BT_HOST_WAKE.
+ad9834_probe misses a check for devm_clk_get and may cause problems.
+Add a check like what ad9832 does to fix it.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_bcm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/iio/frequency/ad9834.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 7646636f2d183..0f73f6a686cb7 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
+diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
+index 038d6732c3fdb..23026978a5a5f 100644
+--- a/drivers/staging/iio/frequency/ad9834.c
++++ b/drivers/staging/iio/frequency/ad9834.c
+@@ -417,6 +417,10 @@ static int ad9834_probe(struct spi_device *spi)
+ 	st = iio_priv(indio_dev);
+ 	mutex_init(&st->lock);
+ 	st->mclk = devm_clk_get(&spi->dev, NULL);
++	if (IS_ERR(st->mclk)) {
++		ret = PTR_ERR(st->mclk);
++		goto error_disable_reg;
++	}
  
- out:
- 	if (bcm->dev) {
-+		hci_uart_set_flow_control(hu, true);
- 		hu->init_speed = bcm->dev->init_speed;
- 		hu->oper_speed = bcm->dev->oper_speed;
- 		err = bcm_gpio_set_power(bcm->dev, true);
-+		hci_uart_set_flow_control(hu, false);
- 		if (err)
- 			goto err_unset_hu;
- 	}
+ 	ret = clk_prepare_enable(st->mclk);
+ 	if (ret) {
 -- 
 2.20.1
 
