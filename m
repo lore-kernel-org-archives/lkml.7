@@ -2,142 +2,113 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C65C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E674C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25FBC2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5rS1ded"
+	by mail.kernel.org (Postfix) with ESMTP id 68A912073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfLJUuQ (ORCPT
+        id S1726898AbfLJUwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:50:16 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60649 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbfLJUuP (ORCPT
+        Tue, 10 Dec 2019 15:52:09 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:41911 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfLJUwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:50:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576011014;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QKUGte0LJJOC+2J/QTsxMNBL/KSTWmiIxFV3NdoEcMk=;
-        b=P5rS1dedEBxFPy5AnXGUz9ogs5rnL+G8tGqNeRh8ENhrU8wqM7+JEOWXSitLFPq2r2yrwF
-        4UFS4AvbtqL+Rmd/62txWgYEjsm0kVpwVZb9NxsV/grwpqgq+cyoKwoC6ievxfKo2S/NmV
-        1vR+S0rUYcz6LeFlakYxRRZKuD4CbXk=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-Kp1i787HO8KAWrXGbgsrtA-1; Tue, 10 Dec 2019 15:50:11 -0500
-Received: by mail-qt1-f198.google.com with SMTP id d9so2847299qtq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:50:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L2m4Tv+vpahKKFm5uAjvOrE573uy1RkQak8WAblX7g4=;
-        b=AX2KGRXNK6Te/1gqR1iun1NRPRgnXEySXCnjLIaLjZKkMtEwWHNuHggiSmQWSMz0W5
-         b+qql14fTO0BWbd4NsVBvXzScdjVIQ8noHuCNHmcMUHf2TgPGbiRl0c5ikHkS2wUr1CI
-         lbFCIiB27FWXI4vCSvo0gGyUhf64qOvOK29iBJ0kG7ZNWSZmMZ2bnXvxdEUhxkFbzl0T
-         n+6d5S6oQ+39p2k4ysk7mUv5dnZXOhxWX10DAyg2b+PqthLm/GiUmia+9MbsStPkVTvt
-         r6JYjOQddxPx7WeMfsS9ia+I0UOd0sqnZnzRepEr/7wrfDfOM6c7ybNrZ0iOFY3BY5SX
-         5tCQ==
-X-Gm-Message-State: APjAAAWKGWceNNQNEd/kCo6mnBlVADsJoqbyzhKKJgS+3BahY9KhTeVE
-        5XGCr5069RdJbPCj0Gy+tP25+4b5EOV7nZbdKwHY/nhv4PAFCs2W07Na7ILkXbWc7/dN5JVPVqt
-        pjC3Z9tNdPMJsxZG1qy4FLObB64W1wRthW5Pv+Usl
-X-Received: by 2002:a0c:baad:: with SMTP id x45mr29886299qvf.230.1576011010489;
-        Tue, 10 Dec 2019 12:50:10 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyIAonngUfW9uC+kmuZAs4RSR2w6CHMt+zmLNoDWoivMcdar5w1+a+QgsrZGu/DH2I2RocsrHyDBA/p4a7IrDU=
-X-Received: by 2002:a0c:baad:: with SMTP id x45mr29886279qvf.230.1576011010089;
- Tue, 10 Dec 2019 12:50:10 -0800 (PST)
+        Tue, 10 Dec 2019 15:52:08 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mdva2-1i7Mwb1bSo-00b4PA for <linux-kernel@vger.kernel.org>; Tue, 10 Dec
+ 2019 21:52:07 +0100
+Received: by mail-qt1-f181.google.com with SMTP id d5so4137026qto.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:52:07 -0800 (PST)
+X-Gm-Message-State: APjAAAWPqDqi+ERyVsWLR1DqU/752knclVNS7+nqczWfjx6fyrngY/00
+        l6Ej6uCh5lrkS7FXCqZX97fhokjqk7KojRgd5tA=
+X-Google-Smtp-Source: APXvYqx1uN5tm9eCOzoQBysKWKFpMTzZPxr5PqaW9bDfYB2yfC5l95PFbwxivepFESYFJ8F3qgkDRXUfr5anVcdWFA0=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr31351077qte.204.1576011126328;
+ Tue, 10 Dec 2019 12:52:06 -0800 (PST)
 MIME-Version: 1.0
-References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
- <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
- <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
- <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
- <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
- <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com>
- <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com>
- <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com> <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com>
-In-Reply-To: <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 10 Dec 2019 21:49:58 +0100
-Message-ID: <CACO55tvhSM0aATBOK05-05aOc6LeN67=US2zO2jqXKWGTpUZFw@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
+References: <20191210195941.931745-1-arnd@arndb.de> <cded03ab-40fe-a904-7b1f-5b3623bb7af4@amd.com>
+In-Reply-To: <cded03ab-40fe-a904-7b1f-5b3623bb7af4@amd.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Dec 2019 21:51:49 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3XHWPBOsCpFtdoT8F-pAMXaekDOX1rNjjMWKLN6WSK6w@mail.gmail.com>
+Message-ID: <CAK8P3a3XHWPBOsCpFtdoT8F-pAMXaekDOX1rNjjMWKLN6WSK6w@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: include linux/slab.h where needed
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Eric Yang <Eric.Yang2@amd.com>, Roman Li <Roman.Li@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Strauss <michael.strauss@amd.com>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: Kp1i787HO8KAWrXGbgsrtA-1
-X-Mimecast-Spam-Score: 0
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oljtm7MBh2EuGsqK1MIrX4qRTs1Z1e9HmMtnoaYHANv/WhV8rvN
+ K+hUUimEFinqfuX1IStG/MVsMB1i84npQqXWb2ap9FiARR5myeB5Qdl/mPFC147TfsK4jpF
+ Ty6JaHcePLAGWkIOyDEu9PDeUgO2Ym8jXEWgfI5qSqfs4YAQE7ieYq9UPGc0yIdjavUo4aC
+ 4loBY2QeeEZyzG3pFWwoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:szinTJ8XRQ8=:JC4e7kScSbrCX0Ai7I196b
+ A/UFOnF1+vLwkCOfTtgLvrMKGDcEHZiaUqObl1GorkWek+lO8SWrQqL74YIXJlnX/ZdJh+BsD
+ stiwjPZnrMrsqkEZftDfUrlw6w4SMMA+cv+yzUWNQVcZ9OmDGtQYQCaAPJw0J2rhmb/d1OpV2
+ XQex49onnR/Eoh4G+R11gF+UoB8KnlS5nQz7jV2h1QrwGcp6HO1Gole2dx8QuYu3Hc4+lnoeN
+ GJNRfxyzBU+ZSK8ymJ8nrDIUt5BErV/vKeKaA8/510/s/QrueeMadqY1GNasLs6pgE7UdeAcl
+ 33QbgVPtRLcozDU1kw7APme/QoA/zlLvNum3nMyGRHYSRY1rsJiwlXEwGdCGHL7GsFXrr9Axq
+ koE0XZSBelCqlVNJqRg3p0CYqu48++lSLMzrk3Z+MQLT8LtgWLz5iODvF4zmMKXmDRTs6S7gz
+ Ble/2ZUo+uFinTvgWl6rR1Np3+1ZbB5Nq2TVt+1RsFfaufU7/JaQr0FQCt5q8C8dEIm0VAxKB
+ 66hb3Z+Ei7ShhQ4E5fRTjwp2v3CB6xW7trssSdkUbPx2TTba1Wwa+utN54MJlFvCC4LU8+K1N
+ qoHugotG+iGtV1yoSCVg1Zl0N1CnkBIIAxQh2BC56i6ge6ECfuhXjGfXTAoJyOsiT5/IRYTx7
+ KmaekWcN5DGLXrJUp5jTnrvwn0idjtuz1YuuLVKdQuMmbMyOPaYehHqQsBkRqckT2o7Huup9V
+ 8qb9QwvtJfol2zlsMFmlnzlDVKMiGUBmLklziUYizJ2ehj4N2VhD8XNYBpyjUJqmT2tG8qQhi
+ VRLFDaeXxbajc0XpvutK7leawKgIXvPapgfFAhh4qxFRD4aHBUHulHtK9On3tjjPwABPRexuZ
+ 6YK4bkDirsSkoxM3Xkkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 8:58 PM Dave Airlie <airlied@gmail.com> wrote:
+On Tue, Dec 10, 2019 at 9:30 PM Kazlauskas, Nicholas
+<nicholas.kazlauskas@amd.com> wrote:
 >
-> On Mon, 9 Dec 2019 at 21:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> On 2019-12-10 2:59 p.m., Arnd Bergmann wrote:
+> > Calling kzalloc() and related functions requires the
+> > linux/slab.h header to be included:
 > >
-> > On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote=
-:
-> > >
-> > > anybody any other ideas?
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c: In function 'dcn21_ipp_create':
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_resource.c:679:3: error: implicit declaration of function 'kzalloc'; did you mean 'd_alloc'? [-Werror=implicit-function-declaration]
+> >     kzalloc(sizeof(struct dcn10_ipp), GFP_KERNEL);
 > >
-> > Not yet, but I'm trying to collect some more information.
+> > A lot of other headers also miss a direct include in this file,
+> > but this is the only one that causes a problem for now.
 > >
-> > > It seems that both patches don't really fix
-> > > the issue and I have no idea left on my side to try out. The only
-> > > thing left I could do to further investigate would be to reverse
-> > > engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
-> > > but I've heard users having similar issues to the one Lyude told us
-> > > about... and I couldn't verify that the patches help there either in =
-a
-> > > reliable way.
-> >
-> > It looks like the newer (8+) versions of Windows expect the GPU driver
-> > to prepare the GPU for power removal in some specific way and the
-> > latter fails if the GPU has not been prepared as expected.
-> >
-> > Because testing indicates that the Windows 7 path in the platform
-> > firmware works, it may be worth trying to do what it does to the PCIe
-> > link before invoking the _OFF method for the power resource
-> > controlling the GPU power.
-> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 >
-> Remember the pre Win8 path required calling a DSM method to actually
-> power the card down, I think by the time we reach these methods in
-> those cases the card is already gone.
->
-> Dave.
->
+> What version of the kernel are you building?
 
-The point was that the firmware seems to do more in the legacy paths
-and maybe we just have to do those things inside the driver instead
-when using the new method. Also the _DSM call just wraps around the
-interfaces on newer firmware anyway. The OS check is usually what
-makes the difference. I might be wrong about the _DSM call just
-wrapping though, but I think I saw it at least in some firmware at
-some point.
+This is v5.5-rc1, plus some local patches.
 
+> We have:
+>
+> #include <linux/slab.h>
+>
+> in os_types.h which gets included as part of this file:
+>
+> #include <dc.h> -> #include <dc_types.h> -> #include <os_types.h>
+
+I don't see linux/slab.h in os_types.h. I now see that commit
+4fc4dca8320e ("drm/amd: drop use of drmp.h in os_types.h")
+was merged into linux-5.3, which may have caused this.
+
+I also don't see anything in os_types.h that needs linux/slab.h.
+
+    Arnd
