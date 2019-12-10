@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B022C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87F0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F4C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4EE208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017358;
-	bh=pRkDM/CF+pDMMNZ9PHz5JBSWUQ/7kpYceu8QbOYY+Do=;
+	s=default; t=1576017361;
+	bh=38FFUr4wJcSHZUo18xjwL//0/s+aUyFXP8m0Ec/39v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kuZXDC29AJQeIuEDNPNx81hmFC26eRKlat+eyI/ikbkn9vwbrXuqK2Z2yQ26cq3Ja
-	 bu5GVV5SVtXVGeIhBkXLHtpCoDrlLpMgmJ1wApzQS1EHFtKGIGnWpip1H5N1aq9SxH
-	 in6Fy/RrSa4y7ImWVzmqd1+S3/rni7zpUjLqI5DU=
+	b=OapoZKrcONvMXiL7fZlkLvULFEzprW2rt6vkj7xEW2Y7x8TSsnxDNWZdHFXKATEnC
+	 VY3QpcqraHOwRAMOvqgkTT6n6vQrPNVKb56xd9xPN5u4JRLPq4pc99DJx3LRdFZkBF
+	 +d2qPjdCJ6Xhy8ZcbxfTKCuuQOnmI0ZC43Bh7h7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfLJWe1 (ORCPT
+        id S1730504AbfLJWgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:36:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbfLJWeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:08 -0500
+        id S1730312AbfLJWeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 906E7207FF;
-        Tue, 10 Dec 2019 22:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58C6120836;
+        Tue, 10 Dec 2019 22:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017247;
-        bh=pRkDM/CF+pDMMNZ9PHz5JBSWUQ/7kpYceu8QbOYY+Do=;
+        s=default; t=1576017264;
+        bh=38FFUr4wJcSHZUo18xjwL//0/s+aUyFXP8m0Ec/39v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z3nAhMdWYBJtIGPYvGWKwHNywkEgrRGow6mnoXPL1x3wE4GJ4H2JKFFVYi2xed9gg
-         zjmh6Vt3Udd5h57OGDJfsQRj2yzloOZYw9uZjUYB8+Dnm/dl6YrLgUiADaKB4CahhW
-         2d1pKWiiJnSJJzgDGElABS4+vuUEzJtw4QLO/JyE=
+        b=AK5QDvCxSNyhcwrB6ujF6dB2CM19kDLrHGqqljbekTvZqwnffOmDpPY0H9cTPqJPY
+         FPY8hmsUuRkm0U5CjpUy0ci5Rj7jHKNNB4/CNfwdraEoP9v6cFw5BwGsJhMHjXL23J
+         2CzrxOSrOmvTyhDC2lxClBpbt5Tu8VMMdOjVTJ/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 43/71] perf probe: Fix to probe an inline function which has no entry pc
-Date:   Tue, 10 Dec 2019 17:32:48 -0500
-Message-Id: <20191210223316.14988-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 58/71] parport: load lowlevel driver if ports not found
+Date:   Tue, 10 Dec 2019 17:33:03 -0500
+Message-Id: <20191210223316.14988-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,70 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+Usually all the distro will load the parport low level driver as part
+of their initialization. But we can get into a situation where all the
+parallel port drivers are built as module and we unload all the modules
+at a later time. Then if we just do "modprobe parport" it will only
+load the parport module and will not load the low level driver which
+will actually register the ports. So, check the bus if there is any
+parport registered, if not, load the low level driver.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
+We can get into the above situation with all distro but only Suse has
+setup the alias for "parport_lowlevel" and so it only works in Suse.
+Users of Debian based distro will need to load the lowlevel module
+manually.
 
-Without this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-
-With this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/parport/share.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index dce40710b5de6..28a0f37b05c0e 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -900,7 +900,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index f26af0214ab3e..3be1f4a041d49 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -228,6 +228,18 @@ static int port_check(struct device *dev, void *dev_drv)
+ 	return 0;
+ }
+ 
++/*
++ * Iterates through all the devices connected to the bus and return 1
++ * if the device is a parallel port.
++ */
++
++static int port_detect(struct device *dev, void *dev_drv)
++{
++	if (is_parport(dev))
++		return 1;
++	return 0;
++}
++
+ /**
+  *	parport_register_driver - register a parallel port device driver
+  *	@drv: structure describing the driver
+@@ -280,6 +292,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
+ 		if (ret)
+ 			return ret;
+ 
++		/*
++		 * check if bus has any parallel port registered, if
++		 * none is found then load the lowlevel driver.
++		 */
++		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
++				       port_detect);
++		if (!ret)
++			get_lowlevel_driver();
++
+ 		mutex_lock(&registration_lock);
+ 		if (drv->match_port)
+ 			bus_for_each_dev(&parport_bus_type, NULL, drv,
 -- 
 2.20.1
 
