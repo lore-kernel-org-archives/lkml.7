@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64191C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E6AC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F1120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5464320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014260;
-	bh=T9m8SXWfl5H4z2L8fZVt30eVvsbmwwU57qc76vLpFLI=;
+	s=default; t=1576014264;
+	bh=F0+kkrRTwVP8Xo9cxIPdWf5Jj8TfPYEmyUfgfpDNy0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zcnym9gc/G+BC478FOCkKBlQn4NPcDifqkCQ1xmMcI0k8galgLOkpVdwI769ZLPc3
-	 CXRJRPVempOiZeQP1lA1MoB2DOIqYz+J4YjgCk5dr9u3R+PBFn7gPMZvX1d4pUndb+
-	 sQytVw4OOjKPU1zbJ1N5OhJcZf8a5UiYdoocY8m4=
+	b=jgSDxrhBqXMu0CSDs6NvzMScTPCUN4Yvxcmn6laXaJ6flMseYZujgHFbYlAK4Gbvh
+	 TQx2A/rvYUScErG4egTu5b1R4L4d04Owe8Mmx2AC3ftS0wntV+Bv+4HBnweR64aFIy
+	 YU3iovj96j/U09ofhWB00x/XqKjBNiZxihd0XCtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfLJVd0 (ORCPT
+        id S1729969AbfLJVoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:33:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37458 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:44:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728344AbfLJVdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:18 -0500
+        id S1729705AbfLJVd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4051B20836;
-        Tue, 10 Dec 2019 21:33:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A2DB2467B;
+        Tue, 10 Dec 2019 21:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013597;
-        bh=T9m8SXWfl5H4z2L8fZVt30eVvsbmwwU57qc76vLpFLI=;
+        s=default; t=1576013605;
+        bh=F0+kkrRTwVP8Xo9cxIPdWf5Jj8TfPYEmyUfgfpDNy0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ncG+8v03Q2qcQr7TwfXIw9njbiMd9+3IZ26pTseeSfRGEdR/OMlAcCKY6tgMJ4P0c
-         gOThPm/7mkSJmyoslZJgzhBNa0F4E9cZQtBcJSnBv51JPxxHFwjqEsfZvTDalooh7o
-         lzN+zKLDi7oS4zCOhqQJpkPflJdUBoFbtNRr5iwI=
+        b=IDFwmskJ96T/ExBGQoobVYMOk6BX9EoTkMON8TSHG20aXO982RihnFjtPVkkh7MdU
+         eyat33Gg8wguW08lm7xN/Drz1gJHjeHQ1muB/ScTW3U4jTWsbRyXBXSX+Jprkihk6r
+         Zax1G/yiToCp7LxDLtVJt5NEjqQIjWwY2Zo9BAyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/177] media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort cases
-Date:   Tue, 10 Dec 2019 16:30:10 -0500
-Message-Id: <20191210213221.11921-46-sashal@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 052/177] x86/mm: Use the correct function type for native_set_fixmap()
+Date:   Tue, 10 Dec 2019 16:30:16 -0500
+Message-Id: <20191210213221.11921-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,124 +67,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit cf6acb73b050e98b5cc435fae0e8ae0157520410 ]
+[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
 
-v4l2-compliance fails with this message:
+We call native_set_fixmap indirectly through the function pointer
+struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
+'unsigned' instead of 'enum fixed_addresses'. This patch changes the
+function type for native_set_fixmap to match the pointer, which fixes
+indirect call mismatches with Control-Flow Integrity (CFI) checking.
 
-   fail: v4l2-test-buffers.cpp(691): ret == 0
-   fail: v4l2-test-buffers.cpp(974): captureBufs(node, q, m2m_q,
-frame_count, true)
-   test MMAP: FAIL
-
-This caused the following Kernel Warning:
-
-WARNING: CPU: 0 PID: 961 at
-drivers/media/v4l2-core/videobuf2-core.c:1658
-__vb2_queue_cancel+0x174/0x1d8
-...
-CPU: 0 PID: 961 Comm: v4l2-compliance Not tainted
-4.14.62-01720-g20ecd717e87a #6
-Hardware name: Generic DRA72X (Flattened Device Tree)
-Backtrace:
-[<c020b5bc>] (dump_backtrace) from [<c020b8a0>] (show_stack+0x18/0x1c)
- r7:00000009 r6:60070013 r5:00000000 r4:c1053824
-[<c020b888>] (show_stack) from [<c09232e8>] (dump_stack+0x90/0xa4)
-[<c0923258>] (dump_stack) from [<c022b740>] (__warn+0xec/0x104)
-  r7:00000009 r6:c0c0ad50 r5:00000000 r4:00000000
-[<c022b654>] (__warn) from [<c022b810>] (warn_slowpath_null+0x28/0x30)
-  r9:00000008 r8:00000000 r7:eced4808 r6:edbc9bac r5:eced4844
-r4:eced4808
-[<c022b7e8>] (warn_slowpath_null) from [<c0726f48>]
-(__vb2_queue_cancel+0x174/0x1d8)
-[<c0726dd4>] (__vb2_queue_cancel) from [<c0727648>]
-(vb2_core_queue_release+0x20/0x40)
-  r10:ecc7bd70 r9:00000008 r8:00000000 r7:edb73010 r6:edbc9bac
-r5:eced4844
-  r4:eced4808 r3:00000004
-[<c0727628>] (vb2_core_queue_release) from [<c0729528>]
-(vb2_queue_release+0x10/0x14)
-  r5:edbc9810 r4:eced4800
-[<c0729518>] (vb2_queue_release) from [<c0724d08>]
-(v4l2_m2m_ctx_release+0x1c/0x30)
-[<c0724cec>] (v4l2_m2m_ctx_release) from [<bf0e8f28>]
-(vpe_release+0x74/0xb0 [ti_vpe])
-  r5:edbc9810 r4:ed67a400
-[<bf0e8eb4>] (vpe_release [ti_vpe]) from [<c070fccc>]
-(v4l2_release+0x3c/0x80)
-  r7:edb73010 r6:ed176aa0 r5:edbc9868 r4:ed5119c0
-[<c070fc90>] (v4l2_release) from [<c033cf1c>] (__fput+0x8c/0x1dc)
-  r5:ecc7bd70 r4:ed5119c0
-[<c033ce90>] (__fput) from [<c033d0cc>] (____fput+0x10/0x14)
-  r10:00000000 r9:ed5119c0 r8:ece392d0 r7:c1059544 r6:ece38d80
-r5:ece392b4
-  r4:00000000
-[<c033d0bc>] (____fput) from [<c0246e00>] (task_work_run+0x98/0xb8)
-[<c0246d68>] (task_work_run) from [<c022f1d8>] (do_exit+0x170/0xa80)
-  r9:ece351fc r8:00000000 r7:ecde3f58 r6:ffffe000 r5:ece351c0
-r4:ece38d80
-[<c022f068>] (do_exit) from [<c022fb6c>] (do_group_exit+0x48/0xc4)
-  r7:000000f8
-[<c022fb24>] (do_group_exit) from [<c022fc00>]
-(__wake_up_parent+0x0/0x28)
-  r7:000000f8 r6:b6c6a798 r5:00000001 r4:00000001
-[<c022fbe8>] (SyS_exit_group) from [<c0207c80>]
-(ret_fast_syscall+0x0/0x4c)
-
-These warnings are caused by buffers which not properly cleaned
-up/release during an abort use case.
-
-In the abort cases the VPDMA desc buffers would still be mapped and the
-in-flight VB2 buffers would not be released properly causing a kernel
-warning from being generated by the videobuf2-core level.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/fixmap.h | 2 +-
+ arch/x86/mm/pgtable.c         | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 54f0d9d3cc491..52d5aebe0fb81 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1418,9 +1418,6 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 	 /* the previous dst mv buffer becomes the next src mv buffer */
- 	ctx->src_mv_buf_selector = !ctx->src_mv_buf_selector;
+diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
+index 6390bd8c141b4..5e12b2319d7a5 100644
+--- a/arch/x86/include/asm/fixmap.h
++++ b/arch/x86/include/asm/fixmap.h
+@@ -159,7 +159,7 @@ extern pte_t *kmap_pte;
+ extern pte_t *pkmap_page_table;
  
--	if (ctx->aborting)
--		goto finished;
--
- 	s_vb = ctx->src_vbs[0];
- 	d_vb = ctx->dst_vb;
+ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
+-void native_set_fixmap(enum fixed_addresses idx,
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ 		       phys_addr_t phys, pgprot_t flags);
  
-@@ -1485,6 +1482,9 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 	ctx->src_vbs[0] = NULL;
- 	ctx->dst_vb = NULL;
+ #ifndef CONFIG_PARAVIRT
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 59274e2c1ac44..bf52106ab9c49 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -660,8 +660,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
+ 	fixmaps_set++;
+ }
  
-+	if (ctx->aborting)
-+		goto finished;
-+
- 	ctx->bufs_completed++;
- 	if (ctx->bufs_completed < ctx->bufs_per_job && job_ready(ctx)) {
- 		device_run(ctx);
-@@ -2383,6 +2383,12 @@ static int vpe_release(struct file *file)
- 
- 	mutex_lock(&dev->dev_mutex);
- 	free_mv_buffers(ctx);
-+
-+	vpdma_unmap_desc_buf(dev->vpdma, &ctx->desc_list.buf);
-+	vpdma_unmap_desc_buf(dev->vpdma, &ctx->mmr_adb);
-+	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_h);
-+	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_v);
-+
- 	vpdma_free_desc_list(&ctx->desc_list);
- 	vpdma_free_desc_buf(&ctx->mmr_adb);
- 
+-void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
+-		       pgprot_t flags)
++void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
++		       phys_addr_t phys, pgprot_t flags)
+ {
+ 	/* Sanitize 'prot' against any unsupported bits: */
+ 	pgprot_val(flags) &= __default_kernel_pte_mask;
 -- 
 2.20.1
 
