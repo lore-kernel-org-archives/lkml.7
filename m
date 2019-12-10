@@ -2,79 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCCDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DDFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED42077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3ktR9TNw"
+	by mail.kernel.org (Postfix) with ESMTP id 2A4702077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLJNtk (ORCPT
+        id S1727518AbfLJNuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:49:40 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:44780 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbfLJNtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:49:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=TxOgTAvMrFvIY/xWQTFemzYKWt8cKg0T6qd8rkjWoAc=; b=3ktR9TNw8012Jk5deFD8YQVULI
-        Tf+1U9L8eOuV8HnnIbtHluBDDixrZI/hzORPC0nme6llG5uf0hcHBzdS6k2Ra6HAmbcxDK+6e9uZC
-        3t37gGvLNpYAcFXnTDrXNqa3qZ/3l/pKGmaWFkOv5mUufQDDNQsCnIqQwG2RudI9QScI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ieftI-0004OR-WF; Tue, 10 Dec 2019 14:49:29 +0100
-Date:   Tue, 10 Dec 2019 14:49:28 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 5/5] ethtool: provide link mode names as a
- string set
-Message-ID: <20191210134928.GC16369@lunn.ch>
-References: <cover.1575982069.git.mkubecek@suse.cz>
- <fe689865e1e8cda85dd0ca259c820c473bd9576c.1575982069.git.mkubecek@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe689865e1e8cda85dd0ca259c820c473bd9576c.1575982069.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 10 Dec 2019 08:50:03 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46134 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727007AbfLJNuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:50:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DD710AD6C;
+        Tue, 10 Dec 2019 13:50:00 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 14:50:00 +0100
+Message-ID: <s5hy2vkwarb.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Lukas Wunner <lukas@wunner.de>, Jaroslav Kysela <perex@perex.cz>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/hdmi - Fix duplicate unref of pci_dev
+In-Reply-To: <PSXP216MB0438D2E81B187B3B2124FEBB805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <77aa6c01aefe1ebc4004e87b0bc714f2759f15c4.1575985006.git.lukas@wunner.de>
+        <PSXP216MB0438D2E81B187B3B2124FEBB805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 02:08:13PM +0100, Michal Kubecek wrote:
-> Unlike e.g. netdev features, the ethtool ioctl interface requires link mode
-> table to be in sync between kernel and userspace for userspace to be able
-> to display and set all link modes supported by kernel. The way arbitrary
-> length bitsets are implemented in netlink interface, this will be no longer
-> needed.
+On Tue, 10 Dec 2019 14:47:28 +0100,
+Nicholas Johnson wrote:
 > 
-> To allow userspace to access all link modes running kernel supports, add
-> table of ethernet link mode names and make it available as a string set to
-> userspace GET_STRSET requests. Add build time check to make sure names
-> are defined for all modes declared in enum ethtool_link_mode_bit_indices.
+> On Tue, Dec 10, 2019 at 02:39:50PM +0100, Lukas Wunner wrote:
+> > Nicholas Johnson reports a null pointer deref as well as a refcount
+> > underflow upon hot-removal of a Thunderbolt-attached AMD eGPU.
+> > He's bisected the issue down to commit 586bc4aab878 ("ALSA: hda/hdmi -
+> > fix vgaswitcheroo detection for AMD").
+> > 
+> > The commit iterates over PCI devices using pci_get_class() and
+> > unreferences each device found, even though pci_get_class()
+> > subsequently unreferences the device as well.  Fix it.
+> > 
+> > Fixes: 586bc4aab878 ("ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD")
+> > Link: https://lore.kernel.org/r/PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM/
+> > Reported-and-tested-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Alexander Deucher <alexander.deucher@amd.com>
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>
+> > ---
+> >  sound/pci/hda/hda_intel.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> > index 35b4526f0d28..b856b89378ac 100644
+> > --- a/sound/pci/hda/hda_intel.c
+> > +++ b/sound/pci/hda/hda_intel.c
+> > @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
+> >  				return true;
+> >  			}
+> >  		}
+> > -		pci_dev_put(pdev);
+> >  	}
+> >  	return false;
+> >  }
+> > -- 
+> > 2.24.0
+> > 
+> Extremely fast turnaround from bisect to patch.
 > 
-> Once the string set is available, make it also accessible via ioctl.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> If you want the bugzilla.kernel.org report then I can do that ASAP, but 
+> I feel that it is redundant now.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+We have now Link tag to track the ML archive, so it should suffice, I
+suppose.
 
-    Andrew
+> Thank you for handling my bug report.
+
+And thank you for your quick testing.
+
+
+Takashi
