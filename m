@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B6DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16348C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F055B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD05205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013179;
-	bh=pFS7/13JJX6dO6lO1moac4r+EqYfl0x/LCkLPyn44F0=;
+	s=default; t=1576013188;
+	bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/J21y1iOSEXFTXsyZTIcH0RM065FTXz/xptnu7wcUxZGAh1RRFlWojoj0Holce5R
-	 eD591otkezowyxvly4FRS/p1onsr9LxlZziOoIFZSGx1fyzxD1e46AB6lXzbuA+uxJ
-	 fKpNOacdxVw+aLFKmBGczAb8T2Lbn826dedkB0FE=
+	b=l6sZD34W/nTJ8QZPyDoaOCf2cvc1iA5NQSGpFwbIwkxPADSInkOlxidfF/aEBl10k
+	 UAAuRCLTcSj46Aqj3Rh2hcfLi/ejd76JEFIatYqD795VeA+v4T6G/Yqhw75nhgJbvu
+	 wrIlmxwTTPhtlHkO5LFxYF+oDJ5SMPZhKGX5+EIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfLJV0N (ORCPT
+        id S1729217AbfLJV01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:26:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57030 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:26:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfLJVZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:42 -0500
+        id S1729558AbfLJVZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2917020836;
-        Tue, 10 Dec 2019 21:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF13205C9;
+        Tue, 10 Dec 2019 21:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013141;
-        bh=pFS7/13JJX6dO6lO1moac4r+EqYfl0x/LCkLPyn44F0=;
+        s=default; t=1576013139;
+        bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nwhAXtJa6KWw/XyFMap3oikMC2KgQKdTrFxRvCYKQW9Zw96/KjaSmZiQyEUDU6Cfr
-         AMlHHTupMJeyv+rfHVlDfPzFOAaD77HaaH/bFUXdBmtc7CgYVNT8Cznp+WB37SFShq
-         KqTflBQStgimyKtHwL/pvqvwhbZz1RoUiuM9QlXc=
+        b=JqXTVTMo2THfpflIOE6fz6PGZTETMszWMkvxwPphBVDb7e7QKfk9VhSLyeLqsTHow
+         ka+9syrf8tBYxL6NCHEz5jAXAVj4xbItwGdwvvN+0xjrn2aaxoYpK7rBFUhYWKFlep
+         gQ+fKnZNAKxURP/pjeueyy3ND1mTzuSAcrl0BJe4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 025/292] IB/iser: bound protection_sg size by data_sg size
-Date:   Tue, 10 Dec 2019 16:20:44 -0500
-Message-Id: <20191210212511.11392-25-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 023/292] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
+Date:   Tue, 10 Dec 2019 16:20:42 -0500
+Message-Id: <20191210212511.11392-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -59,38 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+[ Upstream commit 7666dfd533d4c55733037775d47a8e3551b341a2 ]
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
+24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
+this errata merely fixed an accidental double definition in the Hardware
+User's Manual Rev. 1.00.  The real definition is still present in later
+revisions of the manual (Rev. 1.50 and Rev. 2.00).
+
+Hence revert the commit to recover the definition.
+
+Based on a patch in the BSP by Takeshi Kihara
+<takeshi.kihara.df@renesas.com>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190904121658.2617-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 2e72fc5af1573..c4c015c604465 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_dev->attrs.sig_prot_cap;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+index 3808409cab385..5200dadd6b3ef 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
  
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
+ /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
++#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
+ #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
+ #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
+ #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
+@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ 
+ #define PINMUX_MOD_SELS	\
+ \
++			MOD_SEL1_31 \
+ MOD_SEL0_30_29		MOD_SEL1_30 \
+ 			MOD_SEL1_29 \
+ MOD_SEL0_28		MOD_SEL1_28 \
+@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
+-	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
++	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
+ 
+ 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
+ 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
+@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
+-	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
++	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
+ 
+ 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
+ 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
+@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
+ 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
+ 			     GROUP(
+-		/* RESERVED 31 */
+-		0, 0,
++		MOD_SEL1_31
+ 		MOD_SEL1_30
+ 		MOD_SEL1_29
+ 		MOD_SEL1_28
 -- 
 2.20.1
 
