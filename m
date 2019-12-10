@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA1DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B83C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC60207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F6020838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eV1RGKdF"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="U9hq47q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLJTzS (ORCPT
+        id S1727077AbfLJTz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:55:18 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:45166 "EHLO
+        Tue, 10 Dec 2019 14:55:26 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:45198 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbfLJTzB (ORCPT
+        by vger.kernel.org with ESMTP id S1726687AbfLJTzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 14:55:01 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 97AA9C0BAA;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A6479C0BAE;
         Tue, 10 Dec 2019 19:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576007700; bh=Cfw3M7U5ViQkR09cH8IW6MQSpnx2YW5OmJD8GTUWfj0=;
+        t=1576007700; bh=hNPVGvX287G7j1Ei3yz/c7/UqEe5MnMoip2YipLhq5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=eV1RGKdFcT2wyJSSJMUdmUOprKeBNVWz4wosj6Pdq3911eIlpfkijdwPOwQXfc6Z6
-         xnlPmg5AsvsZFHZ+gtrS/wpRfb5wArCh2XbhvDGTg3+k34jNiyLSOFr0chrcTS6byE
-         pG85yOg0AGTUz77JaMcCN/ffyuBbL7aheJw6UBQrjEseZ0TW1efng4uLFIIB9pu2xb
-         XQmw3JbWSpXoptJytpJnvj7pbRCmXXSWettZrYBeEE17zDurEdGLMVW2GiX/Y1uz/V
-         8nLTiipzFIAcEdbtYRM9ZGZ2wdBYTkcAe6vz107sn0sQ7Mo+XZyjoNoxrV/gJSDVZq
-         H2/asnIQzZoug==
+        b=U9hq47q1iMdEyMX+3VnklyHCIXlIgvWug9GktDJSFvNJNsC+qQ0wR2CqAfhF81A2/
+         kjMvMSZ3hOasUNBQWU7rCM5FVag4ZonIFq8gB6A+0yostVFV/0DymsnRDptvaQhpOe
+         ea/zXLgrAvTg3nizaJQv+LzIz8Qk4xkN/+nM7aG1aG5ooE4iPWLkA1nfyUinOkk+tO
+         151YiC1ft2NygPLCtjc0sjGKw/+MH7S0DHtsqiM5qojzv1POlbyv3XohxXbSEOWrPx
+         iX3GYjdTIKt2z3+wTnOOJ/gXCH7SVfwfZOVRm66+WXnfq4zcE3vAvO2OPC/BV6DPV8
+         GC4ANFcVGBaxQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 23C1CA009C;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 518D4A00A4;
         Tue, 10 Dec 2019 19:54:58 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/4] net: stmmac: Always arm TX Timer at end of transmission start
-Date:   Tue, 10 Dec 2019 20:54:42 +0100
-Message-Id: <1fb07301c129a858f82ab548fbadd8e1992de561.1576007149.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 4/4] net: stmmac: Always use TX coalesce timer value when rescheduling
+Date:   Tue, 10 Dec 2019 20:54:44 +0100
+Message-Id: <23c0ff1feddcc690ee66adebefdc3b10031afe1b.1576007149.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576007149.git.Jose.Abreu@synopsys.com>
 References: <cover.1576007149.git.Jose.Abreu@synopsys.com>
@@ -65,12 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If TX Coalesce timer is enabled we should always arm it, otherwise we
-may hit the case where an interrupt is missed and the TX Queue will
-timeout.
-
-Arming the timer does not necessarly mean it will run the tx_clean()
-because this function is wrapped around NAPI launcher.
+When we have pending packets we re-arm the TX timer with a magic value.
+Change this from the hardcoded value to the pre-defined TX coalesce
+timer value.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -85,46 +82,21 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 41d4188fc7bc..ae499fdd47bc 100644
+index f61780ae30ac..726a17d9cc35 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3053,8 +3053,6 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 		tx_q->tx_count_frames = 0;
- 		stmmac_set_tx_ic(priv, desc);
- 		priv->xstats.tx_set_ic_bit++;
--	} else {
--		stmmac_tx_timer_arm(priv, queue);
- 	}
+@@ -1975,7 +1975,7 @@ static int stmmac_tx_clean(struct stmmac_priv *priv, int budget, u32 queue)
  
- 	/* We've used all descriptors we need for this skb, however,
-@@ -3125,6 +3123,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	/* We still have pending packets, let's call for a new scheduling */
+ 	if (tx_q->dirty_tx != tx_q->cur_tx)
+-		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(10));
++		mod_timer(&tx_q->txtimer, STMMAC_COAL_TIMER(priv->tx_coal_timer));
  
- 	tx_q->tx_tail_addr = tx_q->dma_tx_phy + (tx_q->cur_tx * sizeof(*desc));
- 	stmmac_set_tx_tail_ptr(priv, priv->ioaddr, tx_q->tx_tail_addr, queue);
-+	stmmac_tx_timer_arm(priv, queue);
- 
- 	return NETDEV_TX_OK;
- 
-@@ -3276,8 +3275,6 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		tx_q->tx_count_frames = 0;
- 		stmmac_set_tx_ic(priv, desc);
- 		priv->xstats.tx_set_ic_bit++;
--	} else {
--		stmmac_tx_timer_arm(priv, queue);
- 	}
- 
- 	/* We've used all descriptors we need for this skb, however,
-@@ -3366,6 +3363,7 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- 	tx_q->tx_tail_addr = tx_q->dma_tx_phy + (tx_q->cur_tx * sizeof(*desc));
- 	stmmac_set_tx_tail_ptr(priv, priv->ioaddr, tx_q->tx_tail_addr, queue);
-+	stmmac_tx_timer_arm(priv, queue);
- 
- 	return NETDEV_TX_OK;
+ 	__netif_tx_unlock_bh(netdev_get_tx_queue(priv->dev, queue));
  
 -- 
 2.7.4
