@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90E3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E43A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471C1214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017140;
-	bh=P52QaYQYRzEDfJhAUcaMO3WYFhJuIDoGFFYgQMkcWy0=;
+	s=default; t=1576017144;
+	bh=x3aG7lm2+c8CM6MgbuvFVGF/tQTmsmjJE5Xxk9vXbg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1OBE6yKDiTMdAqtXHnEoHx9VBYD41lV6YVDFKaLqWz2/5fpHOS6YXnImNDwGAuMV
-	 ZdtwoT1d5HHvgpQQQ5sjCmQGgwRtkVwD9jrt1sUIRkOroHM0YirhSBEaQXnOtWnshu
-	 DadckbUo4w2ujHMjnR7O//CM2wWSD09R7M3y6L9o=
+	b=jut02Yh/S230CtMXcbpNxOQ1KKHRbhRVeINeN+EMuHUABcZjXKBvDZrji6e73Pgkh
+	 dVddkYOgzCyzWw2bW2pd2svnQHS8piDYDDXRISWYFtedUkFZhkqLfdUozMqQpPz4Qz
+	 8k5YUC3TX0zBoDGLQeIkQNaYaPwlUnN4RJsSHE2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfLJWcS (ORCPT
+        id S1729438AbfLJWcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbfLJWb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:59 -0500
+        id S1728415AbfLJWcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF8B21D7D;
-        Tue, 10 Dec 2019 22:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CB420828;
+        Tue, 10 Dec 2019 22:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017118;
-        bh=P52QaYQYRzEDfJhAUcaMO3WYFhJuIDoGFFYgQMkcWy0=;
+        s=default; t=1576017120;
+        bh=x3aG7lm2+c8CM6MgbuvFVGF/tQTmsmjJE5Xxk9vXbg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4m54EQprhnRLrMSQSsSWJSid+5i9DtkHsLEWtGjAIfKZ67NjMp4AP1bAZRKkapo1
-         tpLHDF1xxhGtwW+4NKQnLDEeAZYhCbfgkOGdBN+AktMeRnuMB7k0+tXeFB0TumkjY5
-         V1taZd1TkA4wkFw0bronhOLCnW4pNcebb7t94GxM=
+        b=uOe66+B6kEKgo5sLFtCC+bq6fjBimDLmWWFXcYiDbJCxvevm3EB/v4ojI3AKm/+mh
+         dH046yFgHsndzDrS6F0shMl/YNQqOGd76ITczYtFiEDI8wMld8jNMfHAh/C+MQ2Fxf
+         oskfupvH198Tc8DKUiFVQDW6Dn+LZJwk7j4o1z64=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 70/91] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 17:30:14 -0500
-Message-Id: <20191210223035.14270-70-sashal@kernel.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 72/91] parport: load lowlevel driver if ports not found
+Date:   Tue, 10 Dec 2019 17:30:16 -0500
+Message-Id: <20191210223035.14270-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,71 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+Usually all the distro will load the parport low level driver as part
+of their initialization. But we can get into a situation where all the
+parallel port drivers are built as module and we unload all the modules
+at a later time. Then if we just do "modprobe parport" it will only
+load the parport module and will not load the low level driver which
+will actually register the ports. So, check the bus if there is any
+parport registered, if not, load the low level driver.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+We can get into the above situation with all distro but only Suse has
+setup the alias for "parport_lowlevel" and so it only works in Suse.
+Users of Debian based distro will need to load the lowlevel module
+manually.
 
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/parport/share.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index aaf9dab3c1933..f9dca1aed9a4b 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index daa2eb3050df3..a7ceed7182acb 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -230,6 +230,18 @@ static int port_check(struct device *dev, void *dev_drv)
+ 	return 0;
+ }
+ 
++/*
++ * Iterates through all the devices connected to the bus and return 1
++ * if the device is a parallel port.
++ */
 +
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -2005,7 +2006,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -2033,7 +2034,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
++static int port_detect(struct device *dev, void *dev_drv)
++{
++	if (is_parport(dev))
++		return 1;
++	return 0;
++}
++
+ /**
+  *	parport_register_driver - register a parallel port device driver
+  *	@drv: structure describing the driver
+@@ -282,6 +294,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
+ 		if (ret)
+ 			return ret;
+ 
++		/*
++		 * check if bus has any parallel port registered, if
++		 * none is found then load the lowlevel driver.
++		 */
++		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
++				       port_detect);
++		if (!ret)
++			get_lowlevel_driver();
++
+ 		mutex_lock(&registration_lock);
+ 		if (drv->match_port)
+ 			bus_for_each_dev(&parport_bus_type, NULL, drv,
 -- 
 2.20.1
 
