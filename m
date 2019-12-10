@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C2BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24AAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1292053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8B12053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015847;
-	bh=B1QIwygrLOhokb6wIsVKv19GcVnKSWWMr+sjIqDHfZY=;
+	s=default; t=1576015851;
+	bh=OpYY6wT/zFCvAvFwLxll9Qwm8ewmyTz2/BkoeLTd5oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wwu/Q8molKx5DO4DkcDNoMTpr0m8gIq4JhwVsrqbAbSuRPlZfLpZ0rN/E6Fx/aM8X
-	 DD50BtuwjbcU+b9msUFWvaxa/M90AvLnUIHqJJfxscCEQlEziyKFsbKXkQUNLWqfWE
-	 s+16+RUxgutNnur/w5AuBEzGEBtBsfgW2cHHRg0M=
+	b=RX/bPuY9WxEcfN2B8kh2SBSK2qXmLynb7sxZBHnRbuaMwqY/XE6WmtZumsHfP/Vr9
+	 5NtCl3TyjUZuAvDjE7/srowT5BWHsuSeUgG0i5JoSPerSNTndyLzjb8YLcpwjQxXFf
+	 u+A3vDk3WY5Oq8XpFavUj9vkMv+SFWIIVtbkbC/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbfLJWEF (ORCPT
+        id S1730350AbfLJWKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34350 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:10:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbfLJWDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:53 -0500
+        id S1728458AbfLJWEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96829208C3;
-        Tue, 10 Dec 2019 22:03:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E4D624654;
+        Tue, 10 Dec 2019 22:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015433;
-        bh=B1QIwygrLOhokb6wIsVKv19GcVnKSWWMr+sjIqDHfZY=;
+        s=default; t=1576015443;
+        bh=OpYY6wT/zFCvAvFwLxll9Qwm8ewmyTz2/BkoeLTd5oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mi+vNacjjsjUOqhSLpjjjsKfFEvkxhsgzXeZhlhQjQ6Qon3rAtXnEjskg69d9QUkN
-         Ed+cwdSpxFLg25Ot5d30w7RiAQl3ivlhWAb9P7uG5xNeW12zqxCnJ16v3g9JGF6uH3
-         oTF7B6xIcA8zyIZbRs5eRSnhkoVAfHZBNgI7me8M=
+        b=bv7HfuvRmJhbz8xPzCdRKYRqX/FO9qvvabhPrpqv17RyElpvUaO9X/u5Eptb5fLFG
+         XGqdQLEGgVWzk1tmVc2/24o7OQ1FFP6KmkAthXdXxj9Jym4s4NEgPy+40fgypifkcd
+         3awrvJxRd+1slF4hmgZNj7uBNGGey+AFLgvLKfCk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/130] iio: chemical: atlas-ph-sensor: fix iio_triggered_buffer_predisable() position
-Date:   Tue, 10 Dec 2019 17:01:34 -0500
-Message-Id: <20191210220301.13262-43-sashal@kernel.org>
+Cc:     Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 052/130] Bluetooth: hci_core: fix init for HCI_USER_CHANNEL
+Date:   Tue, 10 Dec 2019 17:01:43 -0500
+Message-Id: <20191210220301.13262-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,56 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-[ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
+[ Upstream commit eb8c101e28496888a0dcfe16ab86a1bee369e820 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+During the setup() stage, HCI device drivers expect the chip to
+acknowledge its setup() completion via vendor specific frames.
 
-The iio_triggered_buffer_predisable() should be called last, to detach the
-poll func after the devices has been suspended.
+If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
+the vendor specific frames are never tranmitted to the driver, as
+they are filtered in hci_rx_work().
 
-The position of iio_triggered_buffer_postenable() is correct.
+Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
+frames if the HCI device is is HCI_INIT state.
 
-Note this is not stable material. It's a fix in the logical
-model rather fixing an actual bug.  These are being tidied up
-throughout the subsystem to allow more substantial rework that
-was blocked by variations in how things were done.
+[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/bluetooth/hci_core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
-index dad2a8be68308..f5859c118a44a 100644
---- a/drivers/iio/chemical/atlas-ph-sensor.c
-+++ b/drivers/iio/chemical/atlas-ph-sensor.c
-@@ -331,16 +331,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
- 	struct atlas_data *data = iio_priv(indio_dev);
- 	int ret;
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index d6d7364838f47..ff80a9d41ce17 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4215,7 +4215,14 @@ static void hci_rx_work(struct work_struct *work)
+ 			hci_send_to_sock(hdev, skb);
+ 		}
  
--	ret = iio_triggered_buffer_predisable(indio_dev);
-+	ret = atlas_set_interrupt(data, false);
- 	if (ret)
- 		return ret;
- 
--	ret = atlas_set_interrupt(data, false);
-+	pm_runtime_mark_last_busy(&data->client->dev);
-+	ret = pm_runtime_put_autosuspend(&data->client->dev);
- 	if (ret)
- 		return ret;
- 
--	pm_runtime_mark_last_busy(&data->client->dev);
--	return pm_runtime_put_autosuspend(&data->client->dev);
-+	return iio_triggered_buffer_predisable(indio_dev);
- }
- 
- static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
+-		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
++		/* If the device has been opened in HCI_USER_CHANNEL,
++		 * the userspace has exclusive access to device.
++		 * When device is HCI_INIT, we still need to process
++		 * the data packets to the driver in order
++		 * to complete its setup().
++		 */
++		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
++		    !test_bit(HCI_INIT, &hdev->flags)) {
+ 			kfree_skb(skb);
+ 			continue;
+ 		}
 -- 
 2.20.1
 
