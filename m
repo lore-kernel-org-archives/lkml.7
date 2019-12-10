@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BDBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A893C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13DF24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70CB24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012094;
-	bh=G2t14PKQErttC9S3UQM9Sagfp/s0I+3TuRwqFsKUQZk=;
+	s=default; t=1576012099;
+	bh=NTLGjjrKDMXOJHDqU/SElGsTPONZ0OyXok4rT2tYV9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dMn7AAuPSrvl6euWxPvwPFOVvbCf5Tih31DmStrGYbWsnandTSqzXnCeF+800npXb
-	 0Sh+txsAh/psHe99aJ3QwsDWI59QSiblpDe8Yv9t6EgB972Oq657ofaujArWXb0A7y
-	 yrXlf4dEWrrmRJSOaBT+0E25YOXlK+qWWjd4e0Po=
+	b=VLnLOqLV73ts+4sVq4I/R0RiM5uravz184LbGaGetlX88zbEJab7nnpQyix5VXlY0
+	 moOlPegnM8V/6hU7bAwrVAmcXM+VSsbZcTv/jLEZGtRb2guKdEnxwoe4i4Y4qFLxQJ
+	 WIUz2y4w3scXIYFi7uZ9klbOCMZPteHJGxdWbh4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfLJVIO (ORCPT
+        id S1727832AbfLJVIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:08:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:08:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbfLJVIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:01 -0500
+        id S1727789AbfLJVIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F013924697;
-        Tue, 10 Dec 2019 21:07:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 311D620652;
+        Tue, 10 Dec 2019 21:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012080;
-        bh=G2t14PKQErttC9S3UQM9Sagfp/s0I+3TuRwqFsKUQZk=;
+        s=default; t=1576012088;
+        bh=NTLGjjrKDMXOJHDqU/SElGsTPONZ0OyXok4rT2tYV9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhO9hmBq2KlhTpoiTwuu5GLlvs9KStOqzW01Usv4kBCEbHjCyuTrwuR5DMHxdYBCe
-         w2J7aIB//Q+YQ92VZFIdVJXq0tapH3Luj0VchJCmmtAbQbpyh5kgficVQfHnnP/cBl
-         d4nnz/zrj8CuH+ijZaFF1mbmfDXV2XUYxtAyCyYU=
+        b=Ojxn/sHaiKidI348cjLqGsIr4rbB++Jcf03Q95dmFP2dijnxe8vCGIwRvylfZorVc
+         jHKfrpxzJE3tk1opro7xfazJ69SKiFc9clVWXt0bCkLJzhI9N3Y5HQwk0dnZfq1Z99
+         5cseljFvssmsE4Bv87UFO/r6R7djT/B59QBkoozc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 059/350] rtw88: fix NSS of hw_cap
-Date:   Tue, 10 Dec 2019 16:02:44 -0500
-Message-Id: <20191210210735.9077-20-sashal@kernel.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 066/350] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Tue, 10 Dec 2019 16:02:51 -0500
+Message-Id: <20191210210735.9077-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,41 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 4f5bb7ff8b8d4bafd91243fc969ed240e67aa1ca ]
+[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 
-8822C is a 2x2 11ac chip, and then NSS must be less or equal to 2. However,
-current nss of hw cap is 3, likes
-	hw cap: hci=0x0f, bw=0x07, ptcl=0x03, ant_num=7, nss=3
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
-This commit adds constraint to make sure NSS <= rf_path_num, and result
-looks like
-	hw cap: hci=0x0f, bw=0x07, ptcl=0x03, ant_num=7, nss=2
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 6dd457741b15d..7a3a4911bde2a 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1020,7 +1020,8 @@ static int rtw_dump_hw_feature(struct rtw_dev *rtwdev)
- 
- 	rtw_hw_config_rf_ant_num(rtwdev, efuse->hw_cap.ant_num);
- 
--	if (efuse->hw_cap.nss == EFUSE_HW_CAP_IGNORE)
-+	if (efuse->hw_cap.nss == EFUSE_HW_CAP_IGNORE ||
-+	    efuse->hw_cap.nss > rtwdev->hal.rf_path_num)
- 		efuse->hw_cap.nss = rtwdev->hal.rf_path_num;
- 
- 	rtw_dbg(rtwdev, RTW_DBG_EFUSE,
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index 1a801dc286f85..d1331f8281082 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -504,7 +504,13 @@ static int flexcop_usb_transfer_init(struct flexcop_usb *fc_usb)
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
+ {
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
++
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
++
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
 -- 
 2.20.1
 
