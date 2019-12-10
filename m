@@ -2,107 +2,165 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCDCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAE2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B2B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017800;
-	bh=DDCumilzqX1hW15OnazxpP3d5zUeNiUF7JTCApGmrvE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjy43bjrvNgFWWjkObj0eClBkeuXrosX/SgsM71XtcG0cEeV+hEgoPYzalbDntxjR
-	 4tKpT38WTaKhGw+spKNgvAOoEWrr0n8T06tvPaN1Kc06ZpCrQmeIQA40DezWU2biBJ
-	 OMtiYD+ntjeKO6FazXpHGxXhgRE7gD5Sb7QHX0yI=
+	by mail.kernel.org (Postfix) with ESMTP id 595662077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfLJWnT (ORCPT
+        id S1728763AbfLJWn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:43:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfLJWbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:07 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E672920836;
-        Tue, 10 Dec 2019 22:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017066;
-        bh=DDCumilzqX1hW15OnazxpP3d5zUeNiUF7JTCApGmrvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPysJRhM8He4noCCEX+mZ70+P8rQZdcRsS2CjW1h8F+x43OrKDDTXZrzfn8kqA+b+
-         qrnZfUYESY1lUorHUVm/4YpDojTxx/U79nJgVXTzhqVP094v/cz2Av4+M4FYPWXZ90
-         M3GxuA9w+U5pOqR+/dLxgiSbGYsStmCpfdBVlKfc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 26/91] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Tue, 10 Dec 2019 17:29:30 -0500
-Message-Id: <20191210223035.14270-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 17:43:28 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727265AbfLJWnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:43:23 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbYfZ131423
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:22 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wrt12snuh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:43:22 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 10 Dec 2019 22:43:20 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 22:43:16 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMhF5l39190700
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 22:43:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FCCCA405E;
+        Tue, 10 Dec 2019 22:43:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 46F9DA4069;
+        Tue, 10 Dec 2019 22:43:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.214.111])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Dec 2019 22:43:14 +0000 (GMT)
+Subject: Re: [PATCH v10 4/6] KEYS: Call the IMA hook to measure keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Tue, 10 Dec 2019 17:43:13 -0500
+In-Reply-To: <20191204224131.3384-5-nramas@linux.microsoft.com>
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+         <20191204224131.3384-5-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121022-0012-0000-0000-00000373A035
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121022-0013-0000-0000-000021AF748C
+Message-Id: <1576017793.4579.43.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 suspectscore=2 impostorscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
+> Call the IMA hook from key_create_or_update() function to measure
+> the payload when a new key is created or an existing key is updated.
+> 
+> This patch adds the call to the IMA hook from key_create_or_update()
+> function to measure the key on key create or update.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
+Please Cc the key/keyring maintainers, here, immediately following
+your tag.
 
-v4l2-compliance fails with this message:
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
-
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index da308fa6561fc..067548e14e113 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1298,6 +1298,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
- 
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
- 
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_DATA_INTERLACED) {
--- 
-2.20.1
+> ---
+>  include/linux/ima.h | 14 ++++++++++++++
+>  security/keys/key.c | 10 ++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 6d904754d858..3b89136bc218 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -101,6 +101,20 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
+>  {}
+>  #endif
+>  
+> +#if defined(CONFIG_IMA) && defined(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE)
+> +extern void ima_post_key_create_or_update(struct key *keyring,
+> +					  struct key *key,
+> +					  const void *payload, size_t plen,
+> +					  unsigned long flags, bool create);
+> +#else
+> +static inline void ima_post_key_create_or_update(struct key *keyring,
+> +						 struct key *key,
+> +						 const void *payload,
+> +						 size_t plen,
+> +						 unsigned long flags,
+> +						 bool create) {}
+> +#endif  /* CONFIG_IMA && CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
+> +
+>  #ifdef CONFIG_IMA_APPRAISE
+>  extern bool is_ima_appraise_enabled(void);
+>  extern void ima_inode_post_setattr(struct dentry *dentry);
+> diff --git a/security/keys/key.c b/security/keys/key.c
+> index 764f4c57913e..718bf7217420 100644
+> --- a/security/keys/key.c
+> +++ b/security/keys/key.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/security.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/random.h>
+> +#include <linux/ima.h>
+>  #include <linux/err.h>
+>  #include "internal.h"
+>  
+> @@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+>  		goto error_link_end;
+>  	}
+>  
+> +	ima_post_key_create_or_update(keyring, key, payload, plen,
+> +				      flags, true);
+> +
+>  	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
+>  
+>  error_link_end:
+> @@ -965,6 +969,12 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
+>  	}
+>  
+>  	key_ref = __key_update(key_ref, &prep);
+> +
+> +	if (!IS_ERR(key_ref))
+> +		ima_post_key_create_or_update(keyring, key,
+> +					      payload, plen,
+> +					      flags, false);
+> +
+>  	goto error_free_prep;
+>  }
+>  EXPORT_SYMBOL(key_create_or_update);
 
