@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D87EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4DEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C06207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01254207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013233;
-	bh=/SVe0pXGAgiWiU2Aj/V5oelee8zM1PXTQwlxRsZFXfQ=;
+	s=default; t=1576013240;
+	bh=pfweuhzheRT+MBCmUjZdFceQheS50mACzk1KJkOnWKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCvnqWT+kxlydzNaWxRF7qPklx2fKTySCdo8Lf39dvCZ0ztvyLVXb3z+XqQKjI+6O
-	 cMn1r9WMph0WzGXSnKfmA0bWD7KRRbQ8GlRjpFiBONgbf2tR7QvTI9D83P+pzo4dKt
-	 1Fu0alEaPiLU/RKt7GMgtkeiVje6C0e/4xqd0yfY=
+	b=rFNnjb861wkCLfIiqPnm0rI0OhD/Dy/Y6HNWWkQrM492E8xICp4nlGugXYDFNtui5
+	 mmYcMIouF/XqrDvkoo8E3PDEze2fU6FpiVITIjQu9u1t+6OOWoLSG6jKiUYONXlN67
+	 UBkCztvv3OPUXhZs0O6ARLarhCB/A2NIHut19wsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLJV1L (ORCPT
+        id S1728896AbfLJV1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:27:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfLJVZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:28 -0500
+        id S1729474AbfLJVZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1647B20838;
-        Tue, 10 Dec 2019 21:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B22921556;
+        Tue, 10 Dec 2019 21:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013128;
-        bh=/SVe0pXGAgiWiU2Aj/V5oelee8zM1PXTQwlxRsZFXfQ=;
+        s=default; t=1576013125;
+        bh=pfweuhzheRT+MBCmUjZdFceQheS50mACzk1KJkOnWKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=faz4JOax0bCt5FUiU9HVE5JPH/jOAo6gysdzyZBmcZfmXIf0icq9dAjLqmPUoOhPC
-         hdZq7/vVBxSwAD+dOj6/WeoA6RH8GSvJMm9NLNAzcu+3Tm4qfEl0pL2uSR7y9waD8N
-         cOjE1qCk53JbqJ+axlZUpc9tIWTjQsuG5lTnUjiY=
+        b=Fj5PVfx7Brg76qVs9O6h6NNhNwU0N+QFbp4+Cke2SHSs670PE2s9rC5XxSjaLJwmR
+         mDa9LoB5Gp+R5viLZPB80/2NniCNiil2Z7H9SeuwWCU3j0cQApS7LM836dhnFV3HRs
+         cxgWff7TQXQ3VIujwbaQzAPNFKHsk0Lu2/14wR5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Tsai <martin.tsai@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 013/292] drm/amd/display: Handle virtual signal type in disable_link()
-Date:   Tue, 10 Dec 2019 16:20:32 -0500
-Message-Id: <20191210212511.11392-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 011/292] drm/amdgpu: grab the id mgr lock while accessing passid_mapping
+Date:   Tue, 10 Dec 2019 16:20:30 -0500
+Message-Id: <20191210212511.11392-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,47 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Tsai <martin.tsai@amd.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 616f5b65f1c02d3d6ae370644670d14c57de2fd8 ]
+[ Upstream commit 6817bf283b2b851095825ec7f0e9f10398e09125 ]
 
-[Why]
-The new implementation changed the behavior to allow process setMode
-to DAL when DAL returns empty mode query for unplugged display.
-This will trigger additional disable_link().
-When unplug HDMI from MST dock, driver will update stream->signal to
-"Virtual". disable_link() will call disable_output() if the signal type
-is not DP and induce other displays on MST dock show black screen.
+Need to make sure that we actually dropping the right fence.
+Could be done with RCU as well, but to complicated for a fix.
 
-[How]
-Don't need to process disable_output() if the signal type is virtual.
-
-Signed-off-by: Martin Tsai <martin.tsai@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index 355b4ba127966..90217cf83ce17 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2157,8 +2157,10 @@ static void disable_link(struct dc_link *link, enum signal_type signal)
- 			dp_set_fec_ready(link, false);
- 		}
- #endif
--	} else
--		link->link_enc->funcs->disable_output(link->link_enc, signal);
-+	} else {
-+		if (signal != SIGNAL_TYPE_VIRTUAL)
-+			link->link_enc->funcs->disable_output(link->link_enc, signal);
-+	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index 24c3c05e2fb7d..4a7b2ffd3bfe3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -1036,10 +1036,8 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 		id->oa_base != job->oa_base ||
+ 		id->oa_size != job->oa_size);
+ 	bool vm_flush_needed = job->vm_needs_flush;
+-	bool pasid_mapping_needed = id->pasid != job->pasid ||
+-		!id->pasid_mapping ||
+-		!dma_fence_is_signaled(id->pasid_mapping);
+ 	struct dma_fence *fence = NULL;
++	bool pasid_mapping_needed;
+ 	unsigned patch_offset = 0;
+ 	int r;
  
- 	if (signal == SIGNAL_TYPE_DISPLAY_PORT_MST) {
- 		/* MST disable link only when no stream use the link */
+@@ -1049,6 +1047,12 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 		pasid_mapping_needed = true;
+ 	}
+ 
++	mutex_lock(&id_mgr->lock);
++	if (id->pasid != job->pasid || !id->pasid_mapping ||
++	    !dma_fence_is_signaled(id->pasid_mapping))
++		pasid_mapping_needed = true;
++	mutex_unlock(&id_mgr->lock);
++
+ 	gds_switch_needed &= !!ring->funcs->emit_gds_switch;
+ 	vm_flush_needed &= !!ring->funcs->emit_vm_flush  &&
+ 			job->vm_pd_addr != AMDGPU_BO_INVALID_OFFSET;
+@@ -1088,9 +1092,11 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 	}
+ 
+ 	if (pasid_mapping_needed) {
++		mutex_lock(&id_mgr->lock);
+ 		id->pasid = job->pasid;
+ 		dma_fence_put(id->pasid_mapping);
+ 		id->pasid_mapping = dma_fence_get(fence);
++		mutex_unlock(&id_mgr->lock);
+ 	}
+ 	dma_fence_put(fence);
+ 
 -- 
 2.20.1
 
