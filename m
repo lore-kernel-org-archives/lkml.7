@@ -2,155 +2,151 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0688C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4512077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF062053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:53:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="kzQSj3z2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glGU9x02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfLJWvK (ORCPT
+        id S1727267AbfLJWxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:51:10 -0500
-Received: from gateway36.websitewelcome.com ([192.185.198.13]:16480 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbfLJWvJ (ORCPT
+        Tue, 10 Dec 2019 17:53:24 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46605 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJWxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:51:09 -0500
-X-Greylist: delayed 1406 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 17:51:09 EST
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id B298B42023754
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:38:09 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id enyniIJSlHunhenyoiZyuT; Tue, 10 Dec 2019 16:27:42 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bzpeAaT5kT5Duk3AQk2pp02valHVwvZP6PGLFqa0WP0=; b=kzQSj3z24U2BiHYZ7ElBx+Cqvk
-        mbIiYRGr6i5XIJaZQMQ6Wz/Q4TAEx9lyCAWk7BdGVOiNrMXK9IDKXVXUF17WTmrHj+sk34rZ+5oL1
-        m4sygOAKyXhuJ4Jiew81qeo8hVXuUogMPG4wM7gNHD1gGALT6/fBxFk6PDur75nMqScFFR3VEgHhT
-        uK2BpMsOTgNad/6M3wQAquzunipyq5k98xIVRieIKW8XTZtfcqNra2+hR59mnHo0cu26L8ryUEITj
-        F7bKxNr2FvWqsX8Ix9d2r62qD0CiwBT3padxHt9FH+ycLCG1kHKish1qBVSjq2RSE7kZiPn8wNH2n
-        luVgkfWg==;
-Received: from [187.192.35.14] (port=52248 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ienyn-004Els-Bi; Tue, 10 Dec 2019 16:27:41 -0600
-Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <983e0029-28d1-a428-4932-aa0588225293@embeddedor.com>
-Date:   Tue, 10 Dec 2019 16:28:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 17:53:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so9601219pgb.13;
+        Tue, 10 Dec 2019 14:53:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=dUDhi+vrizCDQsGj4pc5jWU26FSBssN6Xxld2hQXfVA=;
+        b=glGU9x02KRDnsK6A5AaLs4rMCnVwW3EE4N4dp/TxbNWO/ZBbszGfmMqnw7HdES9cxE
+         Pja83pvNOaSNHHtCXiYZ0kaTelWQzDvI58yV/FcQCGdLfHbt28xPjw1Tebg1dyojyEzG
+         hpX2QWFSCsknI6nJiriz2OLae7gZRVx8yS5xbR+2tK/sfAKzsTSroqj50MlfedJoDP3S
+         GVw4VIhuNqphzVT311+/nDoVDh/8OiaaBO1hwqD/R3wSsYGOOgqnrRf8G4AuMk0TwTYZ
+         Pylt7PZqspGPlBhBCS5M1yKnd1yJ818brA+OwED6jbXKfRr1jSnI5kfTjxbbY+xXRUoS
+         Vs8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=dUDhi+vrizCDQsGj4pc5jWU26FSBssN6Xxld2hQXfVA=;
+        b=bORDvV8CGSoCmpwvFVZsntP8lE6PaXDfs6JLkKNgD+BU1LkSY3LUX2DwRjH3hRr+iJ
+         6EdjFtMbe+MjAuzZI17JGAIjna2qa4dsJww5UlXHpf8NiPSfG9uSHx5cS0MpchzD/2In
+         gBwCgsnAl1an6E156dYjD+g0pd4s78Yl0iWup+IOAXQxvYOe9UzkKLQSflLRe1ZhczW8
+         3TujUOBD18BkVZnNf01G97wpM2PqOetzKMFQumf/LUDBZgggPbKmYRip1dsCC8p02jmI
+         6mq0UtMxaVOmeoin+lXieKRT3vBdhbTGPyFfiqjeitbHGkPamyAyoI4f8nztpdBbTLwH
+         8yLw==
+X-Gm-Message-State: APjAAAWanKK9Cttnvk86gJFEQCIqnrmRL6LuVYqATLqUf2JY/Cb8scF1
+        AxTKY8aOjHc5F4oi8opPvig=
+X-Google-Smtp-Source: APXvYqyaoXewPtk6K9LcJ2BvDJm09Y0mkTH2JS0qcJmsPhCtrlORmEXitFkhZ7Qbka6vFiST/SILVQ==
+X-Received: by 2002:aa7:8658:: with SMTP id a24mr304483pfo.87.1576018402986;
+        Tue, 10 Dec 2019 14:53:22 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:a25c])
+        by smtp.gmail.com with ESMTPSA id e7sm70381pfe.168.2019.12.10.14.53.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 14:53:22 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:53:21 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
+ ksyms
+Message-ID: <20191210225320.pymey5md727e4m5x@ast-mbp.dhcp.thefacebook.com>
+References: <20191210181412.151226-1-toke@redhat.com>
+ <20191210125457.13f7821a@cakuba.netronome.com>
+ <87eexbhopo.fsf@toke.dk>
+ <20191210132428.4470a7b0@cakuba.netronome.com>
+ <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
+ <20191210135205.529044a4@cakuba.netronome.com>
 MIME-Version: 1.0
-In-Reply-To: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.35.14
-X-Source-L: No
-X-Exim-ID: 1ienyn-004Els-Bi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.35.14]:52248
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210135205.529044a4@cakuba.netronome.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Dec 10, 2019 at 01:52:05PM -0800, Jakub Kicinski wrote:
+> On Tue, 10 Dec 2019 13:31:50 -0800, Alexei Starovoitov wrote:
+> > On Tue, Dec 10, 2019 at 01:24:28PM -0800, Jakub Kicinski wrote:
+> > > On Tue, 10 Dec 2019 22:09:55 +0100, Toke Høiland-Jørgensen wrote:  
+> > > > Jakub Kicinski <jakub.kicinski@netronome.com> writes:  
+> > > > > On Tue, 10 Dec 2019 19:14:12 +0100, Toke Høiland-Jørgensen wrote:    
+> > > > >> When the kptr_restrict sysctl is set, the kernel can fail to return
+> > > > >> jited_ksyms or jited_prog_insns, but still have positive values in
+> > > > >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when trying
+> > > > >> to dump the program because it only checks the len fields not the actual
+> > > > >> pointers to the instructions and ksyms.
+> > > > >> 
+> > > > >> Fix this by adding the missing checks.
+> > > > >> 
+> > > > >> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>    
+> > > > >
+> > > > > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+> > > > >
+> > > > > and
+> > > > >
+> > > > > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm field")
+> > > > >
+> > > > > ?    
+> > > > 
+> > > > Yeah, guess so? Although I must admit it's not quite clear to me whether
+> > > > bpftool gets stable backports, or if it follows the "only moving
+> > > > forward" credo of libbpf?  
+> > > 
+> > > bpftool does not have a GH repo, and seeing strength of Alexei's
+> > > arguments in the recent discussion - I don't think it will. So no
+> > > reason for bpftool to be "special"  
+> > 
+> > bpftool always was and will be a special user of libbpf.
+> 
+> There we go again. Making proclamations without any justification or
+> explanation.
+> 
+> Maybe there is a language barrier between us, but I wrote the initial
+> bpftool code, so I don't see how you (who authored one patch) can say
+> what it was or is. Do you mean to say what you intend to make it?
 
-On 12/10/19 02:38, Kuninori Morimoto wrote:
-> 
-> Hi Andrew
-> 
-> I'm posting this patch from few month ago,
-> but it seems SH maintainer is not working in these days...
-> 
-> Is it possible to consider about it ?
-> SH compile will be error without this patch.
-> 
+When code lands it becomes the part of the code that maintainers keep in the
+best shape possible considering contributions from many parties. Original
+author of the code is equal to everyone else who submits patches. The job of
+the maintainer is to mediate folks who contribute the patches. Sounds like you
+expected to own bpftool as a single owner. I don't think kernel is such place.
+In most projects I'm aware of the OWNERS file is discouraged. The kernel is
+such project. The kernel has MAINTAINERS file which lists people most
+knowledgeable in the area and who's job is to keep the code in good shape,
+consider long term growth, etc. Maintainers are not owners of the code.
 
-I've added this to my -next tree and will consider it for 5.5-rc2.
+bpftool became way more than what it was when initially landed. Just like
+libbpf was implemented mainly by huawei folks and used in perf only. Now perf
+is a minority and original authors are not contributing any more. I'm sure you
+thought of bpftool as cli for sys_bpf only. Well thankfully it outgrew this
+narrow view point. bpftool btf dump file doesn't call sys_bpf at all.
+bpftool perf | net using several other kernel apis. I think it's a good growth
+trajectory for bpftool. More people use it and like it.
 
-Thanks!
---
-Gustavo
+> Upstreaming bpftool was a big mistake, but we live and we learn
+
+ok. Not going count on your help anymore.
+Since you're not interesting in helping please don't stall it either.
 
