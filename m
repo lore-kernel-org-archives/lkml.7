@@ -4,61 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880C0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB07C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B162205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9D0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012740;
-	bh=VS0842Du/Ba/NlUL/G3mBTQHBJKcTT41h1fajZiiH3I=;
+	s=default; t=1576012751;
+	bh=gO0zIpFJKpquYQof+OSOD6WGuHnTuW3L0PQvOK9w3vU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qb47t+DR/Qj4tUi8sn8l6yE0l0CgVWcy21GTc4Cfgrh8jaPRh0cL9GtFyBeMP7AdT
-	 Zamfz8kB0CqZ9XrvroM7Wh/lkSbc+FQmQ0Dn/QT9lUokkbMr0D2DLminS3BWxF4MW+
-	 8kcnNikpnPrEyEby1omn6vq8OINtWA9dczTqkub4=
+	b=jJBB8zUCVlFQ+w0VForpvLYG76+rk+q0yY0Aq1PS8QsqNzvlR46R56FcdTgnSUmlp
+	 X4i48rNCq+dT3qJFN4Xe0MnAiGrdxYPFkQCPAz8BnGQCOZuYuRzdOLZMu5eJN+3T9h
+	 +i1OR/5pnywi8rVHOb75wt/I+YhubySzvLnrFC5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfLJVS7 (ORCPT
+        id S1729016AbfLJVTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:18:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:19:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbfLJVMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:36 -0500
+        id S1729000AbfLJVMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304E822B48;
-        Tue, 10 Dec 2019 21:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC1020838;
+        Tue, 10 Dec 2019 21:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012355;
-        bh=VS0842Du/Ba/NlUL/G3mBTQHBJKcTT41h1fajZiiH3I=;
+        s=default; t=1576012351;
+        bh=gO0zIpFJKpquYQof+OSOD6WGuHnTuW3L0PQvOK9w3vU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=niUlfQBgVTksYQxHw6YICizalPa1tBNd0QdbYYUr2DFHwFofgivDLcxgLlYc49Lr9
-         VPTe+E97JxxH86PQx+O9ZBQ66DzunDx+VvzFQTyN46nVwxQQ8HNmFruqVAGoQkxKDB
-         gIeRWMrBJ/LpjO2YOET5wxTHl/3S9S71vaXR8kig=
+        b=JnInmXfCiiDXmzFRd0ixsXY+9G3P9hiMXncAhv8D8fBO2RavcAOTcm+GFIMGxUljs
+         YxBFrdvuCECbvl2KhsXZKSg9YNwcEhVgzgt5rvhqsmkFnju6/wAwxvPkAOGntXGpke
+         HekwjO4R+//l4lW/N0SMcazMnyxFe2SUb3ZgFt9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lianbo Jiang <lijiang@redhat.com>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
-        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
-        ebiederm@xmission.com, horms@verge.net.au,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
-        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 283/350] x86/crash: Add a forward declaration of struct kimage
-Date:   Tue, 10 Dec 2019 16:06:28 -0500
-Message-Id: <20191210210735.9077-244-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 281/350] qtnfmac: fix debugfs support for multiple cards
+Date:   Tue, 10 Dec 2019 16:06:26 -0500
+Message-Id: <20191210210735.9077-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,67 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lianbo Jiang <lijiang@redhat.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
+[ Upstream commit dd4c2260dab04f5ae7bdb79b9470e7da56f48145 ]
 
-Add a forward declaration of struct kimage to the crash.h header because
-future changes will invoke a crash-specific function from the realmode
-init path and the compiler will complain otherwise like this:
+Fix merge artifact for commit 0b68fe10b8e8 ("qtnfmac: modify debugfs
+to support multiple cards") and finally add debugfs support
+for multiple qtnfmac wireless cards.
 
-  In file included from arch/x86/realmode/init.c:11:
-  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      5 | int crash_load_segments(struct kimage *image);
-        |                                ^~~~~~
-  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      6 | int crash_copy_backup_region(struct kimage *image);
-        |                                     ^~~~~~
-  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      7 | int crash_setup_memmap_entries(struct kimage *image,
-        |
-
- [ bp: Rewrite the commit message. ]
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: bhe@redhat.com
-Cc: d.hatayama@fujitsu.com
-Cc: dhowells@redhat.com
-Cc: dyoung@redhat.com
-Cc: ebiederm@xmission.com
-Cc: horms@verge.net.au
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jürgen Gross <jgross@suse.com>
-Cc: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: vgoyal@redhat.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
-Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/crash.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index 0acf5ee45a21a..ef5638f641f2b 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_CRASH_H
- #define _ASM_X86_CRASH_H
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+index 8ae318b5fe546..4824be0c6231e 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+@@ -130,6 +130,8 @@ static int qtnf_dbg_shm_stats(struct seq_file *s, void *data)
  
-+struct kimage;
-+
- int crash_load_segments(struct kimage *image);
- int crash_copy_backup_region(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
+ int qtnf_pcie_fw_boot_done(struct qtnf_bus *bus)
+ {
++	struct qtnf_pcie_bus_priv *priv = get_bus_priv(bus);
++	char card_id[64];
+ 	int ret;
+ 
+ 	bus->fw_state = QTNF_FW_STATE_BOOT_DONE;
+@@ -137,7 +139,9 @@ int qtnf_pcie_fw_boot_done(struct qtnf_bus *bus)
+ 	if (ret) {
+ 		pr_err("failed to attach core\n");
+ 	} else {
+-		qtnf_debugfs_init(bus, DRV_NAME);
++		snprintf(card_id, sizeof(card_id), "%s:%s",
++			 DRV_NAME, pci_name(priv->pdev));
++		qtnf_debugfs_init(bus, card_id);
+ 		qtnf_debugfs_add_entry(bus, "mps", qtnf_dbg_mps_show);
+ 		qtnf_debugfs_add_entry(bus, "msi_enabled", qtnf_dbg_msi_show);
+ 		qtnf_debugfs_add_entry(bus, "shm_stats", qtnf_dbg_shm_stats);
 -- 
 2.20.1
 
