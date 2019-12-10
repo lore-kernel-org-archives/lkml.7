@@ -2,161 +2,278 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A6C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DBCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3692A20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9AF20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sb87YeZv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGOqDbVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLJB5v (ORCPT
+        id S1726743AbfLJB73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:57:51 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:37195 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfLJB5u (ORCPT
+        Mon, 9 Dec 2019 20:59:29 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40542 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfLJB73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:57:50 -0500
-Received: by mail-pj1-f68.google.com with SMTP id ep17so6697211pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 17:57:50 -0800 (PST)
+        Mon, 9 Dec 2019 20:59:29 -0500
+Received: by mail-lj1-f194.google.com with SMTP id s22so17952532ljs.7;
+        Mon, 09 Dec 2019 17:59:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=X0ZaIoyR0nAfoAh+OKYqyipN9nS86d8k81AmmebC5Dc=;
-        b=sb87YeZvIf6gK8MxK8th+yPOx87KM8qaPeiKcUwKrOIbUgAb9I5pwdg/HMyYMEDSSx
-         UIUHeTq/3n/rBqNZHIglSd1ZJQNnRBMbk3fl2Jm5pL0BAUlr6J6zFW9eqct/2KKka5/+
-         rF/C68G6ytDbE9x3eU5OLeWVNKeFrN9mcSo/Vw1Itifv2X0/apYsiYes1MIpbZpxWJ2s
-         5LOa/8C2bnf2YXD0bT0S+gAJjfIgQh9JeEWoYt/LoXh45DUXGqJ2cEsH1ffV7gkHSTox
-         UD0gocftINsuxU3GYY/IsPowiTQjL9g9wJqSZdBmrIc02mg++MVUodsJqTT1Tc3U1I0V
-         43/g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WXjnsGwtfZqka2R7m7SW8ohrhA4KQPsG5oGGT/Eq4lE=;
+        b=nGOqDbVIDsNymrvYh2TB0OljcXoFPk2skPUIFhcJ0CCsq4T4dzrf0eXLpsvQPEKiMV
+         uHtc9eKl7+c4TpfptpoZLmdg95uSn5gCrwtHCFUNmFhw1LIytg33J/VCyKupyzC/b7SE
+         R4lbQOsayLpXkhUv65TU9iKtGhmuv4eBqmo/VgWw9tuCIdzx6rYtAAHIXB4paGnGo4S0
+         LVGNh731ZaFCgDAniLL/9f71isbFMbDWzfcQwewhCFOUFM572VVTSPsEiBIJhkKhMx4D
+         3LSZnhTw/F+ltIzYio3KckVh9E7ZFEHP1/6YhNlM9Kt2CFBDtdWzSKvw+6YN7OTPnop+
+         q+GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=X0ZaIoyR0nAfoAh+OKYqyipN9nS86d8k81AmmebC5Dc=;
-        b=g1ZlcWO0Jqju0ti6bKmtadvlNGyEP+GptYB9HrW49ODmE4Ow5lfRcnEMgII5g2sf9i
-         RctW8OqTCQ3V+m0yAfZDYFJvvvj8VB9sCrBHNnCdKxRiNPBtfmQEzoFObeqz5zl1jMx5
-         gpI+2RxTbprvtysnSeU+Z0896EMk7Ld1UygZL+iXSdGyiTWb6EBryIzUbRA0S8lOgIVT
-         O9iErp8b96C9x+rLtfs1FN+jxLvQUj76uFnCkWXjVOAgjPhLmSRCEx0bU/8/7c+Mf1Pz
-         VLwGHGS7ODalMYoZyBk7bqSFWgBWCBtR72wk1frheJZqJzg8sInG4kEj9Iv4qTKa2eNs
-         xEGA==
-X-Gm-Message-State: APjAAAVyJm48F8Tkb9+kYUBWeuHycfo5v2r4IEpzAIge1+ny6n3Nsmly
-        gJaFWq2sG+z8cQq4ERpZx+Crqg==
-X-Google-Smtp-Source: APXvYqys8ovS57cLyC7J/rp5+/z3FlN6mLZcXsxEwRgLeXUTRjanA6cqMt/mABIv9OcM6hrstcgOXQ==
-X-Received: by 2002:a17:90a:28a1:: with SMTP id f30mr2508921pjd.77.1575943069618;
-        Mon, 09 Dec 2019 17:57:49 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id h11sm775665pgv.38.2019.12.09.17.57.48
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WXjnsGwtfZqka2R7m7SW8ohrhA4KQPsG5oGGT/Eq4lE=;
+        b=En5SAlppLenyYpsz8SaoDilhY8kefetfcoS+L9q7LPx6KIaMc2GptJqULMeFuh+nXk
+         9BHNAoGodnRwSnJ69EArUcm1P1rt9T9XWltO8R5SP+RNIVCFlecyrwB3/5y06k3rCL7x
+         0t+fHmyH6nAm8DJ8YVrIIG3cyH4H9bcKreOu2UP34Y9OQ/HBB3lG8CCpDHmxAoiCxAgZ
+         wfd7OLbhXE2YOfpjJv2TkcahrVq/WdCnUdI7zOzQ3vWSWB6QOeTT4lOU5ldNW/BblVjS
+         A2cOaKfAfnfiR5h7UpvqZw/6OVlpMN0Tl8h6hcccXpQu3qT8/ZsGRTSQ5uRrOYrJoWTW
+         Zjlg==
+X-Gm-Message-State: APjAAAWpOKjbJEFbCmpS6HJC2AY6cw4xJDafdfqSNRGNgovKGigs22p3
+        wYATOuAzsnsMTjs8uTV05xo=
+X-Google-Smtp-Source: APXvYqzXzj2axJHCfw5NsyZKOoiIpVJJDlKRN+9uTg6Fc6rDns5lO/XPi2aBSj/mp4iZpgJ/uOTngg==
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr18233740ljh.42.1575943166017;
+        Mon, 09 Dec 2019 17:59:26 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id a24sm756856ljp.97.2019.12.09.17.59.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 17:57:49 -0800 (PST)
-Date:   Mon, 9 Dec 2019 17:57:45 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>, <ast@fb.com>,
-        <daniel@iogearbox.net>, <andrii.nakryiko@gmail.com>,
-        <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-Message-ID: <20191209175745.2d96a1f0@cakuba.netronome.com>
-In-Reply-To: <20191210011438.4182911-12-andriin@fb.com>
-References: <20191210011438.4182911-1-andriin@fb.com>
-        <20191210011438.4182911-12-andriin@fb.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 09 Dec 2019 17:59:25 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] i2c: tegra: Support atomic transfers
+Date:   Tue, 10 Dec 2019 04:58:56 +0300
+Message-Id: <20191210015856.5268-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:
-> struct <object-name> {
-> 	/* used by libbpf's skeleton API */
-> 	struct bpf_object_skeleton *skeleton;
-> 	/* bpf_object for libbpf APIs */
-> 	struct bpf_object *obj;
-> 	struct {
-> 		/* for every defined map in BPF object: */
-> 		struct bpf_map *<map-name>;
-> 	} maps;
-> 	struct {
-> 		/* for every program in BPF object: */
-> 		struct bpf_program *<program-name>;
-> 	} progs;
-> 	struct {
-> 		/* for every program in BPF object: */
-> 		struct bpf_link *<program-name>;
-> 	} links;
-> 	/* for every present global data section: */
-> 	struct <object-name>__<one of bss, data, or rodata> {
-> 		/* memory layout of corresponding data section,
-> 		 * with every defined variable represented as a struct field
-> 		 * with exactly the same type, but without const/volatile
-> 		 * modifiers, e.g.:
-> 		 */
-> 		 int *my_var_1;
-> 		 ...
-> 	} *<one of bss, data, or rodata>;
-> };
+System shutdown may happen with interrupts being disabled and in this case
+I2C core rejects transfers if atomic transfer isn't supported by driver.
 
-I think I understand how this is useful, but perhaps the problem here
-is that we're using C for everything, and simple programs for which
-loading the ELF is majority of the code would be better of being
-written in a dynamic language like python?  Would it perhaps be a
-better idea to work on some high-level language bindings than spend
-time writing code gens and working around limitations of C?
+There were several occurrences where I found my Nexus 7 completely
+discharged despite of being turned off and then one day I spotted this in
+the log:
 
-> This provides great usability improvements:
-> - no need to look up maps and programs by name, instead just
->   my_obj->maps.my_map or my_obj->progs.my_prog would give necessary
->   bpf_map/bpf_program pointers, which user can pass to existing libbpf APIs;
-> - pre-defined places for bpf_links, which will be automatically populated for
->   program types that libbpf knows how to attach automatically (currently
->   tracepoints, kprobe/kretprobe, raw tracepoint and tracing programs). On
->   tearing down skeleton, all active bpf_links will be destroyed (meaning BPF
->   programs will be detached, if they are attached). For cases in which libbpf
->   doesn't know how to auto-attach BPF program, user can manually create link
->   after loading skeleton and they will be auto-detached on skeleton
->   destruction:
-> 
-> 	my_obj->links.my_fancy_prog = bpf_program__attach_cgroup_whatever(
-> 		my_obj->progs.my_fancy_prog, <whatever extra param);
-> 
-> - it's extremely easy and convenient to work with global data from userspace
->   now. Both for read-only and read/write variables, it's possible to
->   pre-initialize them before skeleton is loaded:
-> 
-> 	skel = my_obj__open(raw_embed_data);
-> 	my_obj->rodata->my_var = 123;
-> 	my_obj__load(skel); /* 123 will be initialization value for my_var */
-> 
->   After load, if kernel supports mmap() for BPF arrays, user can still read
->   (and write for .bss and .data) variables values, but at that point it will
->   be directly mmap()-ed to BPF array, backing global variables. This allows to
->   seamlessly exchange data with BPF side. From userspace program's POV, all
->   the pointers and memory contents stay the same, but mapped kernel memory
->   changes to point to created map.
->   If kernel doesn't yet support mmap() for BPF arrays, it's still possible to
->   use those data section structs to pre-initialize .bss, .data, and .rodata,
->   but after load their pointers will be reset to NULL, allowing user code to
->   gracefully handle this condition, if necessary.
-> 
-> Given a big surface area, skeleton is kept as an experimental non-public
-> API for now, until more feedback and real-world experience is collected.
+ reboot: Power down
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 1 at drivers/i2c/i2c-core.h:40 i2c_transfer+0x95/0x9c
+ No atomic I2C transfer handler for 'i2c-1'
+ Modules linked in: tegra30_devfreq
+ CPU: 0 PID: 1 Comm: systemd-shutdow Not tainted 5.4.0-next-20191202-00120-gf7ecd80fb803-dirty #3195
+ Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+ [<c010e4b5>] (unwind_backtrace) from [<c010a0fd>] (show_stack+0x11/0x14)
+ [<c010a0fd>] (show_stack) from [<c09995e5>] (dump_stack+0x85/0x94)
+ [<c09995e5>] (dump_stack) from [<c011f3d1>] (__warn+0xc1/0xc4)
+ [<c011f3d1>] (__warn) from [<c011f691>] (warn_slowpath_fmt+0x61/0x78)
+ [<c011f691>] (warn_slowpath_fmt) from [<c069a8dd>] (i2c_transfer+0x95/0x9c)
+ [<c069a8dd>] (i2c_transfer) from [<c05667f1>] (regmap_i2c_read+0x4d/0x6c)
+ [<c05667f1>] (regmap_i2c_read) from [<c0563601>] (_regmap_raw_read+0x99/0x1cc)
+ [<c0563601>] (_regmap_raw_read) from [<c0563757>] (_regmap_bus_read+0x23/0x38)
+ [<c0563757>] (_regmap_bus_read) from [<c056293d>] (_regmap_read+0x3d/0xfc)
+ [<c056293d>] (_regmap_read) from [<c0562d3b>] (_regmap_update_bits+0x87/0xc4)
+ [<c0562d3b>] (_regmap_update_bits) from [<c0563add>] (regmap_update_bits_base+0x39/0x50)
+ [<c0563add>] (regmap_update_bits_base) from [<c056fd39>] (max77620_pm_power_off+0x29/0x2c)
+ [<c056fd39>] (max77620_pm_power_off) from [<c013bbdd>] (__do_sys_reboot+0xe9/0x170)
+ [<c013bbdd>] (__do_sys_reboot) from [<c0101001>] (ret_fast_syscall+0x1/0x28)
+ Exception stack(0xde907fa8 to 0xde907ff0)
+ 7fa0:                   00000000 00000000 fee1dead 28121969 4321fedc 00000000
+ 7fc0: 00000000 00000000 00000000 00000058 00000000 00000000 00000000 00000000
+ 7fe0: 0045adf0 bed9abb8 004444a0 b6c666d0
+ ---[ end trace bdd18f87595b1a5e ]---
 
-That makes no sense to me. bpftool has the same backward compat
-requirements as libbpf. You're just pushing the requirements from
-one component to the other. Feedback and real-world use cases have 
-to be exercised before code is merged to any project with backward
-compatibility requirements :(
+The atomic transferring is implemented by enforcing PIO mode for the
+transfer and by polling interrupt status until transfer is completed or
+failed.
 
-Also please run checkpatch on your patches, and fix reverse xmas tree.
-This is bpftool, not libbpf. Creating a separate tool for this codegen
-stuff is also an option IMHO.
+Now system shuts down properly every time.
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 87 +++++++++++++++++++++++++++++++---
+ 1 file changed, 80 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index a98bf31d0e5c..19acf3e75605 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
++#include <linux/ktime.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/pinctrl/consumer.h>
+@@ -279,6 +280,7 @@ struct tegra_i2c_dev {
+ 	unsigned int dma_buf_size;
+ 	bool is_curr_dma_xfer;
+ 	struct completion dma_complete;
++	bool is_curr_atomic_xfer;
+ };
+ 
+ static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
+@@ -999,6 +1001,44 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
+ 	i2c_writel(i2c_dev, val, reg);
+ }
+ 
++static unsigned long
++tegra_i2c_poll_completion_timeout(struct tegra_i2c_dev *i2c_dev,
++				  unsigned int timeout_ms)
++{
++	ktime_t ktime = ktime_get();
++	ktime_t ktimeout = ktime_add_ms(ktime, timeout_ms);
++
++	do {
++		u32 status = i2c_readl(i2c_dev, I2C_INT_STATUS);
++
++		if (status) {
++			tegra_i2c_isr(i2c_dev->irq, i2c_dev);
++
++			if (completion_done(&i2c_dev->msg_complete)) {
++				s64 delta = ktime_ms_delta(ktimeout, ktime);
++
++				return msecs_to_jiffies(delta) ?: 1;
++			}
++		}
++
++		ktime = ktime_get();
++
++	} while (ktime_before(ktime, ktimeout));
++
++	return 0;
++}
++
++static unsigned long
++tegra_i2c_wait_msg_completion_timeout(struct tegra_i2c_dev *i2c_dev,
++				      unsigned int timeout_ms)
++{
++	if (i2c_dev->is_curr_atomic_xfer)
++		return tegra_i2c_poll_completion_timeout(i2c_dev, timeout_ms);
++
++	return wait_for_completion_timeout(&i2c_dev->msg_complete,
++					   msecs_to_jiffies(timeout_ms));
++}
++
+ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+ {
+ 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+@@ -1020,8 +1060,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+ 	i2c_writel(i2c_dev, reg, I2C_BUS_CLEAR_CNFG);
+ 	tegra_i2c_unmask_irq(i2c_dev, I2C_INT_BUS_CLR_DONE);
+ 
+-	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+-						msecs_to_jiffies(50));
++	time_left = tegra_i2c_wait_msg_completion_timeout(i2c_dev, 50);
+ 	if (time_left == 0) {
+ 		dev_err(i2c_dev->dev, "timed out for bus clear\n");
+ 		return -ETIMEDOUT;
+@@ -1066,7 +1105,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 
+ 	xfer_size = ALIGN(xfer_size, BYTES_PER_FIFO_WORD);
+ 	i2c_dev->is_curr_dma_xfer = (xfer_size > I2C_PIO_MODE_MAX_LEN) &&
+-				    i2c_dev->dma_buf;
++				    i2c_dev->dma_buf &&
++				    !i2c_dev->is_curr_atomic_xfer;
+ 	tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
+ 	dma = i2c_dev->is_curr_dma_xfer;
+ 	/*
+@@ -1202,8 +1242,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 					      i2c_dev->tx_dma_chan);
+ 	}
+ 
+-	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+-						msecs_to_jiffies(xfer_time));
++	time_left = tegra_i2c_wait_msg_completion_timeout(i2c_dev, xfer_time);
+ 	tegra_i2c_mask_irq(i2c_dev, int_mask);
+ 
+ 	if (time_left == 0) {
+@@ -1270,6 +1309,38 @@ static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+ 	return ret ?: i;
+ }
+ 
++static int tegra_i2c_xfer_atomic(struct i2c_adapter *adap,
++				 struct i2c_msg msgs[], int num)
++{
++	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
++	int ret;
++
++	i2c_dev->is_curr_atomic_xfer = true;
++
++	WARN_ON_ONCE(i2c_dev->irq_disabled);
++
++	if (!i2c_dev->irq_disabled) {
++		disable_irq_nosync(i2c_dev->irq);
++		i2c_dev->irq_disabled = true;
++	}
++
++	ret = tegra_i2c_xfer(adap, msgs, num);
++
++	/*
++	 * Interrupt will be enabled after hardware reset which happens in
++	 * a case of transfer failure. For successful transfers interrupt
++	 * need to be re-enabled.
++	 */
++	if (i2c_dev->irq_disabled) {
++		enable_irq(i2c_dev->irq);
++		i2c_dev->irq_disabled = false;
++	}
++
++	i2c_dev->is_curr_atomic_xfer = false;
++
++	return ret;
++}
++
+ static u32 tegra_i2c_func(struct i2c_adapter *adap)
+ {
+ 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+@@ -1297,8 +1368,9 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+ }
+ 
+ static const struct i2c_algorithm tegra_i2c_algo = {
+-	.master_xfer	= tegra_i2c_xfer,
+-	.functionality	= tegra_i2c_func,
++	.master_xfer		= tegra_i2c_xfer,
++	.master_xfer_atomic	= tegra_i2c_xfer_atomic,
++	.functionality		= tegra_i2c_func,
+ };
+ 
+ /* payload size is only 12 bit */
+@@ -1607,6 +1679,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		goto unprepare_fast_clk;
+ 	}
+ 
++	pm_runtime_irq_safe(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	if (!pm_runtime_enabled(&pdev->dev))
+ 		ret = tegra_i2c_runtime_resume(&pdev->dev);
+-- 
+2.24.0
+
