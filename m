@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0C7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252FFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9938D20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E374C20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013910;
-	bh=+mJtfdZ/m/8YdlF0bimkvFs+ZilsuQaB+cO9fGqJGZU=;
+	s=default; t=1576013914;
+	bh=LGGLpN9446DPXRNWT7ia7WmCS+8dFNjLYAqjDsFvlbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aSoMbMlprL5QL6PvCH8ohhJhSRbtGiYseZp1xxrXx+pYQkPvkpAUsQmsJrUP7AB28
-	 3yZMbxbvN6IyukzaQh2MybsCLYxKrOGypJt5ZFwyoDai3n05LtaO83YqoNs+Z41cy2
-	 WmlcyXigamCSoJr7PJxQ5k+sDL7DqzI/P57eNdZ4=
+	b=2Bu8MX9JmST/5EzwMNMteAfrC1Gt0cGy0bXbkUBg4fYzpFq6UdsX3oUksnh7XVJl5
+	 z7109bPcM6sCvDhUhvb0DjAXlAciIu4jtwSrGxGJtTO1YTLyWgDuqEB7w654bHKXMV
+	 EAB133iOE3qKfsDJV0aLjCHBlDG9VDa8ZvLT+7pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfLJVi3 (ORCPT
+        id S1730207AbfLJVfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:38:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbfLJVfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:16 -0500
+        id S1730157AbfLJVfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED98E24655;
-        Tue, 10 Dec 2019 21:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4129D24654;
+        Tue, 10 Dec 2019 21:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013715;
-        bh=+mJtfdZ/m/8YdlF0bimkvFs+ZilsuQaB+cO9fGqJGZU=;
+        s=default; t=1576013700;
+        bh=LGGLpN9446DPXRNWT7ia7WmCS+8dFNjLYAqjDsFvlbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8aq5sbtNpniErcGYMxmZNJNT+s8QXptbk8ovQGP2P2Ep6QwrjeYAX7ghDqwHspOq
-         k5cZ9fEHaS+VjEAvWhEGEYhu8MuB7NNUOd+8vRhDIShSHxHJR7BwApuElwJyWaUphm
-         ZKPwa95U2r9/cau97hpw0VAex6M0ne2nXO81nU7o=
+        b=VTdrBtunAJdsD55DqZHJ0n5KGdlKFVg/RHxdTnUKPRUHt8OXaYcU1JDF5xT8KLljY
+         1bHg2e+7/SGDfxcMeiNg1V3ZHDcKtx1pbsT+PfdU3KLNNTRb/pIRPkAN/6yJM3r5T4
+         hOcCRTbniqokb/aTtPsYIJEZgDaxg7qwArd+kjaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 143/177] bcache: fix static checker warning in bcache_device_free()
-Date:   Tue, 10 Dec 2019 16:31:47 -0500
-Message-Id: <20191210213221.11921-143-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 130/177] soundwire: intel: fix PDI/stream mapping for Bulk
+Date:   Tue, 10 Dec 2019 16:31:34 -0500
+Message-Id: <20191210213221.11921-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,97 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 2d8869518a525c9bce5f5268419df9dfbe3dfdeb ]
+[ Upstream commit c134f914e9f55b7817e2bae625ec0e5f1379f7cd ]
 
-Commit cafe56359144 ("bcache: A block layer cache") leads to the
-following static checker warning:
+The previous formula is incorrect for PDI0/1, the mapping is not
+linear but has a discontinuity between PDI1 and PDI2.
 
-    ./drivers/md/bcache/super.c:770 bcache_device_free()
-    warn: variable dereferenced before check 'd->disk' (see line 766)
+This change has no effect on PCM PDIs (same mapping).
 
-drivers/md/bcache/super.c
-   762  static void bcache_device_free(struct bcache_device *d)
-   763  {
-   764          lockdep_assert_held(&bch_register_lock);
-   765
-   766          pr_info("%s stopped", d->disk->disk_name);
-                                      ^^^^^^^^^
-Unchecked dereference.
-
-   767
-   768          if (d->c)
-   769                  bcache_device_detach(d);
-   770          if (d->disk && d->disk->flags & GENHD_FL_UP)
-                    ^^^^^^^
-Check too late.
-
-   771                  del_gendisk(d->disk);
-   772          if (d->disk && d->disk->queue)
-   773                  blk_cleanup_queue(d->disk->queue);
-   774          if (d->disk) {
-   775                  ida_simple_remove(&bcache_device_idx,
-   776                                    first_minor_to_idx(d->disk->first_minor));
-   777                  put_disk(d->disk);
-   778          }
-   779
-
-It is not 100% sure that the gendisk struct of bcache device will always
-be there, the warning makes sense when there is problem in block core.
-
-This patch tries to remove the static checking warning by checking
-d->disk to avoid NULL pointer deferences.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191022232948.17156-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/soundwire/intel.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 14d381cc6d747..2d60bcdb5b9c1 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -747,20 +747,28 @@ static inline int idx_to_first_minor(int idx)
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 29bc99c4a7b66..e49d3c810677a 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -352,7 +352,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	int pdi_conf = 0;
  
- static void bcache_device_free(struct bcache_device *d)
- {
-+	struct gendisk *disk = d->disk;
-+
- 	lockdep_assert_held(&bch_register_lock);
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
--	pr_info("%s stopped", d->disk->disk_name);
-+	if (disk)
-+		pr_info("%s stopped", disk->disk_name);
-+	else
-+		pr_err("bcache device (NULL gendisk) stopped");
+ 	/*
+ 	 * Program stream parameters to stream SHIM register
+@@ -381,7 +384,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	unsigned int conf;
  
- 	if (d->c)
- 		bcache_device_detach(d);
--	if (d->disk && d->disk->flags & GENHD_FL_UP)
--		del_gendisk(d->disk);
--	if (d->disk && d->disk->queue)
--		blk_cleanup_queue(d->disk->queue);
--	if (d->disk) {
-+
-+	if (disk) {
-+		if (disk->flags & GENHD_FL_UP)
-+			del_gendisk(disk);
-+
-+		if (disk->queue)
-+			blk_cleanup_queue(disk->queue);
-+
- 		ida_simple_remove(&bcache_device_idx,
--				  first_minor_to_idx(d->disk->first_minor));
--		put_disk(d->disk);
-+				  first_minor_to_idx(disk->first_minor));
-+		put_disk(disk);
- 	}
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
- 	bioset_exit(&d->bio_split);
+ 	/* Program Stream config ALH register */
+ 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
 -- 
 2.20.1
 
