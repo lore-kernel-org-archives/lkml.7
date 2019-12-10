@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29113C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60746C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB0D20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8E520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014098;
-	bh=KjSWDhtP3ZbIMDyKnEhl+atm1faZHsdM5HPJ2q0Anlo=;
+	s=default; t=1576014102;
+	bh=3890q/UFuIjArfkRPaMmNRfZ1FgV2b4RJ8Fxxgr9zS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=019WnvUpIK4yKdEoSqcGvnQBDFiL82hwh6wveJCIUQGg56n1ACn++Xti3HL8bHDlE
-	 6j2h6aJ+Moo525scN/CGCrRie2nwqhfb77uNWlfxH8UJ331P5Fe5zm/fOUpLLRAQad
-	 YjVV2xrgedfMgLwsQJmsrEjLXJhprDFkSV74AAwE=
+	b=Ed73MhNmf7nwyUWM9LYwxEPS+qiMIXhIswo5AMd3gs5ijtb0Hxak7oeBSC290d7nA
+	 S4tPXDIG0/6qRiQ6bMaud4hORkwzemL7A4ME1J4dPwv3IOSG7j9fNdI45DYMYJsYnC
+	 rw5p6caO0W10shHurxxEbM4iGKQxoTXQXYsRKJmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbfLJVlh (ORCPT
+        id S1729957AbfLJVeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:41:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbfLJVeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:13 -0500
+        id S1729908AbfLJVeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1877206D5;
-        Tue, 10 Dec 2019 21:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF59214AF;
+        Tue, 10 Dec 2019 21:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013652;
-        bh=KjSWDhtP3ZbIMDyKnEhl+atm1faZHsdM5HPJ2q0Anlo=;
+        s=default; t=1576013641;
+        bh=3890q/UFuIjArfkRPaMmNRfZ1FgV2b4RJ8Fxxgr9zS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myP5O2JHdz9ZBQAkjdG7IdvO5EvIco4+EzXxYH8/9fEVUdywFvfdP6qcfXVI2GIKG
-         TsIBCmxy5E2NT/X+ASmymKWCfneJo91k76vdxykRjU+tcdcngDiSoAER3qjdCEvHi0
-         lliOLFRQa6zZzeJXQ0vFBbsLPr6Z2nc2phsMNnRw=
+        b=ZJyFoc0H4CKMQV9YPpwDNcuBCzq1KwsKzx4ymGa+BKfnxdvh641VbC8X0wLGVi4j0
+         qXVSRJxYT8vT//wsNHE4LmQk1RWR6eNelAAl5brQa++TfA3P5EFwVIMl/WeEkEtRAt
+         dWdw+FEr7dTPhLRfxEbtbra+kbRYw9pgNWivIQUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 091/177] libata: Ensure ata_port probe has completed before detach
-Date:   Tue, 10 Dec 2019 16:30:55 -0500
-Message-Id: <20191210213221.11921-91-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 081/177] ACPI: button: Add DMI quirk for Medion Akoya E2215T
+Date:   Tue, 10 Dec 2019 16:30:45 -0500
+Message-Id: <20191210213221.11921-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -58,92 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
+[ Upstream commit 932e1ba486117de2fcea3df27ad8218ad6c11470 ]
 
-With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
+The Medion Akoya E2215T's ACPI _LID implementation is quite broken:
 
-[   23.452574] ------------[ cut here ]------------
-[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
-[   23.466047] Modules linked in:
-[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
-[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
-[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
-[   23.491065] pc : ata_host_detach+0x15c/0x168
-[   23.495322] lr : ata_host_detach+0x88/0x168
-[   23.499491] sp : ffff800011cabb50
-[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
-[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
-[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
-[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
-[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
-[   23.529286] x19: 0000000000000000 x18: 0000000000000004
-[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
-[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
-[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
-[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
-[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
-[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
-[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
-[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
-[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
-[   23.582272] Call trace:
-[   23.584706]  ata_host_detach+0x15c/0x168
-[   23.588616]  ata_pci_remove_one+0x10/0x18
-[   23.592615]  ahci_remove_one+0x20/0x40
-[   23.596356]  pci_device_remove+0x3c/0xe0
-[   23.600267]  really_probe+0xdc/0x3e0
-[   23.603830]  driver_probe_device+0x58/0x100
-[   23.608000]  device_driver_attach+0x6c/0x90
-[   23.612169]  __driver_attach+0x84/0xc8
-[   23.615908]  bus_for_each_dev+0x74/0xc8
-[   23.619730]  driver_attach+0x20/0x28
-[   23.623292]  bus_add_driver+0x148/0x1f0
-[   23.627115]  driver_register+0x60/0x110
-[   23.630938]  __pci_register_driver+0x40/0x48
-[   23.635199]  ahci_pci_driver_init+0x20/0x28
-[   23.639372]  do_one_initcall+0x5c/0x1b0
-[   23.643199]  kernel_init_freeable+0x1a4/0x24c
-[   23.647546]  kernel_init+0x10/0x108
-[   23.651023]  ret_from_fork+0x10/0x18
-[   23.654590] ---[ end trace 634a14b675b71c13 ]---
+ 1. For notifications it uses an ActiveLow Edge GpioInt, rather then
+    an ActiveBoth one, meaning that the device is only notified when the
+    lid is closed, not when it is opened.
 
-With KASAN also enabled, we may also get many use-after-free reports.
+2. Matching with this its _LID method simply always returns 0 (closed)
 
-The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
-attempt to detach the ata_port before it has been probed.
+  In order for the Linux LID code to work properly with this implementation,
+  the lid_init_state selection needs to be set to ACPI_BUTTON_LID_INIT_OPEN.
 
-This is because the ata_ports are async probed, meaning that there is no
-guarantee that the ata_port has probed prior to detach. When the ata_port
-does probe in this scenario, we get all sorts of issues as the detach may
-have already happened.
+This commit adds a DMI quirk for this.
 
-Fix by ensuring synchronisation with async_synchronize_full(). We could
-alternatively use the cookie returned from the ata_port probe
-async_schedule() call, but that means managing the cookie, so more
-complicated.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/acpi/button.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index 133fed8e4a8bb..85ee6c35d8e0b 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6726,6 +6726,9 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
-+	/* Ensure ata_port probe has completed */
-+	async_synchronize_full();
-+
- 	for (i = 0; i < host->n_ports; i++)
- 		ata_port_detach(host->ports[i]);
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index a19ff3977ac4a..870eb5c7516a5 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -91,6 +91,17 @@ static const struct dmi_system_id lid_blacklst[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "BYT70A.YNCHENG.WIN.007"),
+ 		},
+ 	},
++	{
++		/*
++		 * Medion Akoya E2215T, notification of the LID device only
++		 * happens on close, not on open and _LID always returns closed.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MEDION"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "E2215T MD60198"),
++		},
++		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
++	},
+ 	{}
+ };
  
 -- 
 2.20.1
