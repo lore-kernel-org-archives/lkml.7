@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920AEC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768A2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67E0A20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477DF206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013611;
-	bh=CrsqgKqbDpPyk4bGfqt2NNt8XHhWn1MqKD1zltXJMvA=;
+	s=default; t=1576013614;
+	bh=PX5vOMAe3WelCDyOsnCu/L2YTS9HO4Ui6SNmnp+WoH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgMEHdKn218WD0xVHqzqKb6SsC6TymKus+H+zs78DjkYKjIdkm0DJAaOy7SYfFh+1
-	 KIc2726i6BbvQ/eF8knsEwCvsdUSnnW1OnTqqzp/0kktlu8hJ68J2xmpPgxmO+lXO0
-	 ygJAkS98+he8m95a5aiT9Od+LvpQFQr9Sz2dBwHg=
+	b=n3LuNbywqF9AnrNSn724DppitNnmCw4nfG+otSRoGMy6LavxF3rtkfamgcXCmyziP
+	 myFpDL5+K1J5xnTkps571v6j4OzOSQD/BSiKGxklc9FIc0wa/N6owCyyEbqB1Pg7FV
+	 miRnhpJx0RnJyOA8MX1tLnfhOhdDNORwEtn3LcFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbfLJVda (ORCPT
+        id S1729756AbfLJVdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:33:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:33:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbfLJVdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:20 -0500
+        id S1729718AbfLJVd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B428C22B48;
-        Tue, 10 Dec 2019 21:33:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E553420836;
+        Tue, 10 Dec 2019 21:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013599;
-        bh=CrsqgKqbDpPyk4bGfqt2NNt8XHhWn1MqKD1zltXJMvA=;
+        s=default; t=1576013606;
+        bh=PX5vOMAe3WelCDyOsnCu/L2YTS9HO4Ui6SNmnp+WoH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1A3uuAR4rih1nk5gu6UN710X9L2AlGIAWEnZJXkHmXtBoOaGyqOaawhzsCIwxexht
-         6Czf/z5g4/b/Nj8lsvtvAClIKnSp/VbcijPLsSLOfeaM1lrR70/0ljCL58pPQrXDoE
-         v2LBkPYy3U4KIAaUWeiGURfe0OsQFBLOrtyTRqbQ=
+        b=W2qWnHq+4pk44tibcnlDCcWOsjAfYy1qvTX+aRMExUXxxX5ttY1Y7R8TRqJu+0mAN
+         0avnsoQLlYgs1A69LzNHumsUeqqToz3/xUk6S9E6hyMNgA1WxJltTuio9Hi/kAbiwd
+         Kr6rLRm/frj3OvIA91wG/42TjSLSNpR2x90lYBrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 048/177] syscalls/x86: Use the correct function type in SYSCALL_DEFINE0
-Date:   Tue, 10 Dec 2019 16:30:12 -0500
-Message-Id: <20191210213221.11921-48-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 053/177] iio: chemical: atlas-ph-sensor: fix iio_triggered_buffer_predisable() position
+Date:   Tue, 10 Dec 2019 16:30:17 -0500
+Message-Id: <20191210213221.11921-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -65,70 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 8661d769ab77c675b5eb6c3351a372b9fbc1bf40 ]
+[ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid type mismatches
-with Control-Flow Integrity (CFI) checking.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008224049.115427-2-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The iio_triggered_buffer_predisable() should be called last, to detach the
+poll func after the devices has been suspended.
+
+The position of iio_triggered_buffer_postenable() is correct.
+
+Note this is not stable material. It's a fix in the logical
+model rather fixing an actual bug.  These are being tidied up
+throughout the subsystem to allow more substantial rework that
+was blocked by variations in how things were done.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/syscall_wrapper.h | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index e046a405743d8..90eb70df0b18d 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -48,12 +48,13 @@
-  * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
-  * named __ia32_sys_*()
-  */
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);	\
--	asmlinkage long __x64_sys_##sname(void)
-+
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
+index 3a20cb5d9bffc..6c175eb1c7a7f 100644
+--- a/drivers/iio/chemical/atlas-ph-sensor.c
++++ b/drivers/iio/chemical/atlas-ph-sensor.c
+@@ -323,16 +323,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct atlas_data *data = iio_priv(indio_dev);
+ 	int ret;
  
- #define COND_SYSCALL(name)						\
- 	cond_syscall(__x64_sys_##name);					\
-@@ -181,11 +182,11 @@
-  * macros to work correctly.
-  */
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __x64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
--	asmlinkage long __x64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)						\
-+	SYSCALL_METADATA(_##sname, 0);					\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
-+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
-+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
- #endif
+-	ret = iio_triggered_buffer_predisable(indio_dev);
++	ret = atlas_set_interrupt(data, false);
+ 	if (ret)
+ 		return ret;
  
- #ifndef COND_SYSCALL
+-	ret = atlas_set_interrupt(data, false);
++	pm_runtime_mark_last_busy(&data->client->dev);
++	ret = pm_runtime_put_autosuspend(&data->client->dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	pm_runtime_mark_last_busy(&data->client->dev);
+-	return pm_runtime_put_autosuspend(&data->client->dev);
++	return iio_triggered_buffer_predisable(indio_dev);
+ }
+ 
+ static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
 -- 
 2.20.1
 
