@@ -2,147 +2,158 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A2AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E7E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85005206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i1zuOTNu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XUzcJcbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfLJJIe (ORCPT
+        id S1727133AbfLJJIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:08:34 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36494 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbfLJJIe (ORCPT
+        Tue, 10 Dec 2019 04:08:51 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39840 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbfLJJIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:08:34 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j17so15308593edp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:08:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AtN3Q3W1bdf9VARMb6C2iXiiZG+VLqz+9X40+TK0cJI=;
-        b=i1zuOTNupXiKlWynk217tYSihTBbG46uf17LLX13BEdS44JTXmYrBDR9J8wcx7guRO
-         wgNTPGd3onOaq7p+838Q9LeINfaqbihuo/WMX4jVEKNJeCkc2ZF0UB5w2mdPuZoC57aO
-         jTIgy1wBREjUpHJIWdehS0K8HxNTc2uIQEcz6QohaINpCMk1n6bakccFzd/vrFUIsIdK
-         EOVnsx25XiS4em6p7M6F/3ogJOHcNO0EEMJHBgP3ZEXReEN5tWa4HThzhHZ3MjnJG3y3
-         Ykf8oTOoHc4Z2rnFKAJZgQvIUmxFzH3Lcgt7T99EcJDWsNCTjxmTndEWCWMM1ZdpYJUV
-         7CMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AtN3Q3W1bdf9VARMb6C2iXiiZG+VLqz+9X40+TK0cJI=;
-        b=CbvsHr1H8z8fysjAdjeeGNuqqje8jDx/ycYam+CBaCM+gNLjhWkReo/L0lVisXgblw
-         qxXQOVIdHQoGeWE7SZJ1v3IsJAWkB1s8Ve8s/zgLwdk/ObP6eTkjAUrOP5iEl1NOsa5B
-         a7CZ6qvAtzqYoE1hQgp6sIxe5Wic3OfbScTpij6Rj0L+mHrI4mgKC9sr15ekq5SLi0qW
-         uEdlEE8tSrLr1Y6zaBIhmY9wkCd/dMncwtQsGbfJSBXDQ4k2DseDVc07Y0yUeuB+5DME
-         rKYE8yWmb4byfojkAegofMxHMEyXqQjvMM8UtJzTLydrX0bqIbo8DJ3Wz7Lm9qgq+Sa1
-         Mi2Q==
-X-Gm-Message-State: APjAAAXldEcqe6Tz5uXLPepAX/JmCaMjEAz0G99BKLu5sjO4Qo1IKq3E
-        J7a98GLj44kjhO0Je5pLbsv2Rw==
-X-Google-Smtp-Source: APXvYqxrwIVuqeKmvw7IUojlrOQ+phD5fflfDOgKrnwolC/Ge+ZJlFNHMjmWp+R4gKTxRyV6RwmEZg==
-X-Received: by 2002:aa7:da84:: with SMTP id q4mr37653095eds.152.1575968912531;
-        Tue, 10 Dec 2019 01:08:32 -0800 (PST)
-Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id cb20sm56832edb.1.2019.12.10.01.08.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:08:31 -0800 (PST)
-Subject: Re: [PATCH 4/6] dt-bindings: media: venus: describe sdm845 with
- optional pmdomains
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>
-References: <20191209083824.806-1-stanimir.varbanov@linaro.org>
- <20191209083824.806-5-stanimir.varbanov@linaro.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <cc6b409f-b562-2034-1f31-e38db267bcd7@linaro.org>
-Date:   Tue, 10 Dec 2019 11:08:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 04:08:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7Np3mYI/hWzH1a0mhGdWsn2rtKh/CYj0rX2+UZwec7c=; b=XUzcJcbFozAchROC4whTC1LIT
+        PyOtRisPGCsrmkFBb9Zt5n7IEnp7nfU/eilqDEwZf12rWEnP1cidCIBjgkOiUdRblxeaLyykYeGkz
+        cI1fNjwI3JZf4ZOIjHaY2BfhdZGK4Qf8Tg48sX21a0XhziM3BrBQzMmxnyGqAh6/NxJaazBjw8Nya
+        9vizoZJlm6Z9kogvJwVLeUBOo0pUtKBdnSt5xQXzlR+EMC5nTR1nnf5nLO23ZccPHNiX9NKdsd2tw
+        9wRSBSTVmRkfJBqd0ZB8FZrkK5ASHKKMET+vFR5XfRBo72z6mbO1LRb2i6DfJxOechfbgMqCbNeG6
+        PB06DGH8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iebVb-0001V1-7U; Tue, 10 Dec 2019 09:08:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 52256306011;
+        Tue, 10 Dec 2019 10:07:20 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B51F529DE18D2; Tue, 10 Dec 2019 10:08:39 +0100 (CET)
+Date:   Tue, 10 Dec 2019 10:08:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: Workqueues splat due to ending up on wrong CPU
+Message-ID: <20191210090839.GJ2844@hirez.programming.kicks-ass.net>
+References: <20191202015548.GA13391@paulmck-ThinkPad-P72>
+ <20191202201338.GH16681@devbig004.ftw2.facebook.com>
+ <20191203095521.GH2827@hirez.programming.kicks-ass.net>
+ <20191204201150.GA14040@paulmck-ThinkPad-P72>
+ <20191205102928.GG2810@hirez.programming.kicks-ass.net>
+ <20191205103213.GB2871@hirez.programming.kicks-ass.net>
+ <20191205144805.GR2889@paulmck-ThinkPad-P72>
+ <20191206185208.GA25636@paulmck-ThinkPad-P72>
+ <20191206220020.GA27511@paulmck-ThinkPad-P72>
+ <20191209185908.GA8470@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20191209083824.806-5-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209185908.GA8470@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Please ignore this patch for now. I forgot to add description for
-power-domain-names property for sdm845. Will fix that in next version.
-
-On 12/9/19 10:38 AM, Stanimir Varbanov wrote:
-> Describe an optional DT binding for sdm845 with power-domain-names
-> and clocks in Venus DT node. After that the binding for sdm845 will
-> have two options, the first will be to describe vcodec clocks and
-> pmdomains in (encoder and decoder) subnodes and the second will be
-> to describe vcodec clocks and pmdomains in the Venus DT node
-> (the parent). Both option will be handled in driver, and the second
-> one will give an opportunity to the driver to dynamically assign
-> vcodec pipelines for every given instance depending on its load.
+On Mon, Dec 09, 2019 at 10:59:08AM -0800, Paul E. McKenney wrote:
+> And it survived!  ;-)
 > 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  .../devicetree/bindings/media/qcom,venus.txt  | 22 ++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> index b602c4c025e7..69a104fcb8eb 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> @@ -35,6 +35,21 @@
->  		- "iface"	Video accelerator AHB clock
->  		- "bus"		Video accelerator AXI clock
->  		- "mbus"	Video MAXI clock
-> +- clock-names:
-> +	Usage: required for sdm845
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries:
-> +		- "core"	Core video accelerator clock
-> +		- "iface"	Video accelerator AHB clock
-> +		- "bus"		Video accelerator AXI clock
-> +- clock-names:
-> +	Usage: optional for sdm845
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries:
-> +		- "vcodec0_core"	Codec0 core clock
-> +		- "vcodec0_bus"		Codec0 AXI clock
-> +		- "vcodec1_core"	Codec1 core clock
-> +		- "vcoded1_bus"		Codec1 AXI clock
->  - power-domains:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -72,7 +87,12 @@ Every of video-encoder or video-decoder subnode should have:
->  	Value type: <stringlist>
->  	Definition: Should contain the following entries:
->  		- "core"	Subcore video accelerator clock
-> -
-> +- clock-names:
-> +	Usage: required for sdm845
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries:
-> +		- "core"	Video codec accelerator clock
-> +		- "bus"		Video codec AXI clock
->  - power-domains:
->  	Usage: required for msm8996
->  	Value type: <prop-encoded-array>
-> 
+> Peter, could I please have your Signed-off-by?  Or take my Tested-by if
+> you would prefer to send it up some other way.
 
--- 
-regards,
-Stan
+How's this?
+
+---
+Subject: cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue Dec 10 09:34:54 CET 2019
+
+Paul reported a very sporadic, rcutorture induced, workqueue failure.
+When the planets align, the workqueue rescuer's self-migrate fails and
+then triggers a WARN for running a work on the wrong CPU.
+
+Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
+could be ignored! When stopper->enabled is false, stop_machine will
+insta complete the work, without actually doing the work. Worse, it
+will not WARN about this (we really should fix this).
+
+It turns out there is a small window where a freshly online'ed CPU is
+marked 'online' but doesn't yet have the stopper task running:
+
+	BP				AP
+
+	bringup_cpu()
+	  __cpu_up(cpu, idle)	 -->	start_secondary()
+					...
+					cpu_startup_entry()
+	  bringup_wait_for_ap()
+	    wait_for_ap_thread() <--	  cpuhp_online_idle()
+					  while (1)
+					    do_idle()
+
+					... available to run kthreads ...
+
+	    stop_machine_unpark()
+	      stopper->enable = true;
+
+Close this by moving the stop_machine_unpark() into
+cpuhp_online_idle(), such that the stopper thread is ready before we
+start the idle loop and schedule.
+
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Debugged-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -525,8 +525,7 @@ static int bringup_wait_for_ap(unsigned
+ 	if (WARN_ON_ONCE((!cpu_online(cpu))))
+ 		return -ECANCELED;
+ 
+-	/* Unpark the stopper thread and the hotplug thread of the target cpu */
+-	stop_machine_unpark(cpu);
++	/* Unpark the hotplug thread of the target cpu */
+ 	kthread_unpark(st->thread);
+ 
+ 	/*
+@@ -1089,8 +1088,8 @@ void notify_cpu_starting(unsigned int cp
+ 
+ /*
+  * Called from the idle task. Wake up the controlling task which brings the
+- * stopper and the hotplug thread of the upcoming CPU up and then delegates
+- * the rest of the online bringup to the hotplug thread.
++ * hotplug thread of the upcoming CPU up and then delegates the rest of the
++ * online bringup to the hotplug thread.
+  */
+ void cpuhp_online_idle(enum cpuhp_state state)
+ {
+@@ -1100,6 +1099,12 @@ void cpuhp_online_idle(enum cpuhp_state
+ 	if (state != CPUHP_AP_ONLINE_IDLE)
+ 		return;
+ 
++	/*
++	 * Unpart the stopper thread before we start the idle loop (and start
++	 * scheduling); this ensures the stopper task is always available.
++	 */
++	stop_machine_unpark(smp_processor_id());
++
+ 	st->state = CPUHP_AP_ONLINE_IDLE;
+ 	complete_ap_thread(st, true);
+ }
