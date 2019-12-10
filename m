@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B208DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06EAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E165205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ACB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013328;
-	bh=Oc1rvpKcL/soWIEgvtuIxcfNqfE9BSdj64ReTl1woj8=;
+	s=default; t=1576013335;
+	bh=dEYdNzA7sCJZoAWIs+glPqeh02jENtriAG4jZL0kQbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6+Zc5ns4KlDgACibm+MeVQSiD3rP9xxAmsHOc98bfsCedyQmOh2tkkBr6rs2R+hY
-	 MUNkWvCi2WuARJK8sdooRuaq8cP7kxfL2anYFiv4FAorq4Q8JRWHDHOq4OMuPveLUa
-	 azdY/notGmzVQzmt/IICFjOLYTSaoNLhyOPdf18E=
+	b=POIvVH/B6oYGaCn9F7FOJkOrLWlwaZDlCHyTqX7nX20SyrJssJ0h3Ctpex1s7Xz3k
+	 LFQoX5BcJQEYiV8NzLhSXG2VUhmN99YhNhdjI8KZnPqEoqn8uuy/VquEtGoQBMa6oT
+	 WVb2Hp8kjE5QCqJ10cnBfKSIIjPtV0UYtKU5f9b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfLJV2j (ORCPT
+        id S1728444AbfLJVKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:28:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbfLJVKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:21 -0500
+        id S1728382AbfLJVKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F492246B9;
-        Tue, 10 Dec 2019 21:10:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99446246AF;
+        Tue, 10 Dec 2019 21:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012221;
-        bh=Oc1rvpKcL/soWIEgvtuIxcfNqfE9BSdj64ReTl1woj8=;
+        s=default; t=1576012209;
+        bh=dEYdNzA7sCJZoAWIs+glPqeh02jENtriAG4jZL0kQbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NiTA/tWT8cidZwA1JaFL8U/k7VlmI3BG1HJYtGl7dAFy3YEBacwuKOrw31rbyqLCK
-         bvSJh5o+lRblTWqFGbxsaKo7BKaJGOf3hUC/qDwvc1f4E3rbs5hZhC8fK8FWCe8KZA
-         /wWettS/K9xCVjcrJoQDNCSv1jGfCpMPe0KKfQLQ=
+        b=Xt4Xfaqkgn6L2U1WUYUNepDdvxuXnIfWYoW2LRdX6ZjapUlvMB84rQpHoI4Vao52M
+         4qmfkg742DoCANxKQFpy4q6kNYySFcb6k8+QSfofm8UtDpZSkchlmH85acNVG1s2tK
+         mwhL+OP0F7O/yUJxRFO0uelAnHFOYbd/lljvOZf0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 171/350] RDMA/qedr: Fix memory leak in user qp and mr
-Date:   Tue, 10 Dec 2019 16:04:36 -0500
-Message-Id: <20191210210735.9077-132-sashal@kernel.org>
+Cc:     Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 161/350] i40e: initialize ITRN registers with correct values
+Date:   Tue, 10 Dec 2019 16:04:26 -0500
+Message-Id: <20191210210735.9077-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,53 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Nicholas Nunley <nicholas.d.nunley@intel.com>
 
-[ Upstream commit 24e412c1e00ebfe73619e6b88cbc26c2c7d41b85 ]
+[ Upstream commit 998e5166e604fd37afe94352f7b8c2d816b11049 ]
 
-User QPs pbl's weren't freed properly.
-MR pbls weren't freed properly.
+Since commit 92418fb14750 ("i40e/i40evf: Use usec value instead of reg
+value for ITR defines") the driver tracks the interrupt throttling
+intervals in single usec units, although the actual ITRN/ITR0 registers are
+programmed in 2 usec units. Most register programming flows in the driver
+correctly handle the conversion, although it is currently not applied when
+the registers are initialized to their default values. Most of the time
+this doesn't present a problem since the default values are usually
+immediately overwritten through the standard adaptive throttling mechanism,
+or updated manually by the user, but if adaptive throttling is disabled and
+the interval values are left alone then the incorrect value will persist.
 
-Fixes: e0290cce6ac0 ("qedr: Add support for memory registeration verbs")
-Link: https://lore.kernel.org/r/20191027200451.28187-5-michal.kalderon@marvell.com
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Since the intended default interval of 50 usecs (vs. 100 usecs as
+programmed) performs better for most traffic workloads, this can lead to
+performance regressions.
+
+This patch adds the correct conversion when writing the initial values to
+the ITRN registers.
+
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/verbs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 6f3ce86019b73..a7ccca3c4f894 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -1577,6 +1577,14 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 6031223eafab8..339925af02062 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -3534,14 +3534,14 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
+ 		q_vector->rx.target_itr =
+ 			ITR_TO_REG(vsi->rx_rings[i]->itr_setting);
+ 		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, vector - 1),
+-		     q_vector->rx.target_itr);
++		     q_vector->rx.target_itr >> 1);
+ 		q_vector->rx.current_itr = q_vector->rx.target_itr;
  
- 	ib_umem_release(qp->urq.umem);
- 	qp->urq.umem = NULL;
-+
-+	if (rdma_protocol_roce(&dev->ibdev, 1)) {
-+		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
-+		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
-+	} else {
-+		kfree(qp->usq.pbl_tbl);
-+		kfree(qp->urq.pbl_tbl);
-+	}
- }
+ 		q_vector->tx.next_update = jiffies + 1;
+ 		q_vector->tx.target_itr =
+ 			ITR_TO_REG(vsi->tx_rings[i]->itr_setting);
+ 		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, vector - 1),
+-		     q_vector->tx.target_itr);
++		     q_vector->tx.target_itr >> 1);
+ 		q_vector->tx.current_itr = q_vector->tx.target_itr;
  
- static int qedr_create_user_qp(struct qedr_dev *dev,
-@@ -2673,8 +2681,8 @@ int qedr_dereg_mr(struct ib_mr *ib_mr, struct ib_udata *udata)
+ 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
+@@ -3646,11 +3646,11 @@ static void i40e_configure_msi_and_legacy(struct i40e_vsi *vsi)
+ 	/* set the ITR configuration */
+ 	q_vector->rx.next_update = jiffies + 1;
+ 	q_vector->rx.target_itr = ITR_TO_REG(vsi->rx_rings[0]->itr_setting);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr);
++	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr >> 1);
+ 	q_vector->rx.current_itr = q_vector->rx.target_itr;
+ 	q_vector->tx.next_update = jiffies + 1;
+ 	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr);
++	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr >> 1);
+ 	q_vector->tx.current_itr = q_vector->tx.target_itr;
  
- 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
+ 	i40e_enable_misc_int_causes(pf);
+@@ -11396,7 +11396,7 @@ static int i40e_setup_misc_vector(struct i40e_pf *pf)
  
--	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
--		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
-+	if (mr->type != QEDR_MR_DMA)
-+		free_mr_info(dev, &mr->info);
+ 	/* associate no queues to the misc vector */
+ 	wr32(hw, I40E_PFINT_LNKLST0, I40E_QUEUE_END_OF_LIST);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K);
++	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K >> 1);
  
- 	/* it could be user registered memory. */
- 	ib_umem_release(mr->umem);
+ 	i40e_flush(hw);
+ 
 -- 
 2.20.1
 
