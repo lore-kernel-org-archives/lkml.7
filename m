@@ -4,92 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5DAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D98C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2A520652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F112073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLJUgR (ORCPT
+        id S1727035AbfLJUhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:36:17 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:47765 "EHLO
+        Tue, 10 Dec 2019 15:37:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:43473 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJUgQ (ORCPT
+        with ESMTP id S1726417AbfLJUhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:36:16 -0500
+        Tue, 10 Dec 2019 15:37:21 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M2ep5-1iiuph1YVD-004DY0; Tue, 10 Dec 2019 21:35:54 +0100
+ 1N2lzA-1hijXp0e9U-0135X3; Tue, 10 Dec 2019 21:37:13 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] bpf: Fix build in minimal configurations, again
-Date:   Tue, 10 Dec 2019 21:35:46 +0100
-Message-Id: <20191210203553.2941035-1-arnd@arndb.de>
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: dsa: ocelot: add NET_VENDOR_MICROSEMI dependency
+Date:   Tue, 10 Dec 2019 21:36:54 +0100
+Message-Id: <20191210203710.2987983-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/TPNkN7ip+x2EGFaeArJV7t8UOMDz3Xt3D+KTG86o+YtHi7AQpl
- EA0traGRcVUYNiVhb1WcqtyedHFK/G7uo0ODPsfSwvljgdSlfpiB9jNCLcGrp8AhFzBC3Rd
- 4nUPKrnESghS/cdlCX+dbI/zA0oHna+X0b/mFXnE8c9EQLoI9fPJU9FDHyh3lXC7+LwYcnO
- MgvBxcOH6E8fFfruQkYlA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bT0fWJOkfpk=:6CchuXFwP8SMBieEroZBrH
- AEk/STZiwVmNZ6TG+ImhFDC8ApYwPA7+2PF1wJ1oF4yezz4fciDC2lAIcsYU8l9tOdKyaAspc
- 0SV4G8rpDiBjXWCLZFHS7Z0Te6aJKDsHTnwW5S830ljYf1BSx2ot7TrIb+leoxWvV/rJpv7G6
- s93O3GFciGFrMcGQvg/4y5kuZTog+nYzBYsYTkoMhg94yai9Lt1IRXZ+Hfqgwboq+fyK9dxlB
- l9BeW0HRcPSCTz/Ffv3pRWOc8grqW1Ch9/qcx8X/MvZc6NZI5Q0pkb9C1F3Luz2JswPZotGUe
- 3b2aLkC6+GHufoBizFdA/b0KJSMyKqrgfbX/X/ZsxY1LNOZggZZ7D4Azve0M5vAtt9elY0gA9
- 1O8BK9hMoUxBG7rBjdE86VP0HDrKI3nYXD6GFOXW1asqP8X0sPceT2JqFJ0WORXaDcISz8cMK
- Ql2klZPu/IBSMdURuGUq/MX7eul0lx+jgH4enSmzY7dZ0A1LiJ9vyGUrwdLbj9qrwmyqRc+kg
- TH7oDzkvFT7pPOAuqi3JXAyT2MEIRPqIp7Lg3RW6MlfCM+IO1BmLFprg6nq4n9FiNKMEZN+Jc
- fwQldPMpfVPv/oy+cOmzm3pR+g+W/VRoQvQtsNui5r/0YTD6VxIC3t5mfw9z41bzv60Cdm+Ur
- KrxfaMaRqcW23Ic55KNRGxmoqmwoIfzyZnL0e85ry9EBbcgd/hCYNDkuvB74++T31XmWyNWdZ
- MsT72djQzrEtDUsHBD7Tznyn0vpyOO9cMJpdu1OWpNwJfp/kDX9ISul2HBStsFU+t+lf3z5xB
- 8qrhMqfuRGHL0wlzT9vDVAF2ZruLF9m1EUVzvrSuay9XrZLsyZR0d53z/apMy4yDL2M51VGDd
- 0BQYnKMJ8IWxWvoy3Jfg==
+X-Provags-ID: V03:K1:zJ2ZnfctRkGrEmmQCsTswUN3CkKSHq1z6wDjKHcvncBqdAp5pu9
+ Fc91qBajfNX/VAvcjRirsXJEWtk20Hjj2CsC+LuKMY987U6YhW0KRxlEzE3wzEoSyAst8m6
+ ycVJaUHJsiiLRvtGE8g4eQlklWuB9S/gndxdGaj8f3x/WGeUfTm0G6vw6ACENDxQpVwh/C6
+ YatDKbVEe+dE9+mZOa4Gg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/oWooy0CdaA=:LmtZVsHikqzQlV95reccN3
+ KGxYNc/zPXeOjbYvNnBQ/JKVgXndvMBhHFKtkrjOPQgAG8pfWACWQoqz4E0FQ//L4Mj2dPJYw
+ EKZ8GWp5AI1U95rPFF0BZGcPx7AAaHF2mtYaDZR7RI5PECoxXlKsEqt52ju/yZz3ffFz+RZkA
+ U3SpQBcmihPlRmyaRjNE6KrKKSlnZC6vEfFCb2QSMdOz3ieqIKtDgMeEpM1S+D7PonSpcXmEL
+ hG7IBOd/5EcYUaKBAasv+UlJQ0ffClD1+pNdBNVQnsNdr53/IZGuBbGkVoGCUztnYTak6jtLP
+ XFvWYGeSe3iSwZJLooflerubE/JAUe9ZvVlN9ak7w+109kGGTIj1JunLBVpQkOqfwFZf2KwMq
+ 6bj8C8xr98llq1+zQMBT17OES2DBtydhU9rA7/KC4AOn7xrZqxvmPPTuii/ECAyvAiC8ZKXay
+ z/FlQaoRWGEB8zP6PWCGDHMhNAhS4wmdZciHZqF8+LjOdaemJX8n/yU4iONNtN04sL16HFSI4
+ X9rHUlJR6sdGQMDhz/BuhjTrFQQu+rXexeLB6l7h79vOeFJAKoocXXDszSFewIM0wWVIJjyQv
+ TCqiQUmvzX1m3LDK73xd9ygYKg4cdOcg2HTuMtfBYad3tqiyK25zdZqkWO7A9TetvRV0Rt8No
+ mzVR8J07TkKi5VMCW5QbIzkEsNbfCL7q0CSxXtfVpW1v9vKLDfazL7VSVTlcQwM2eXAOr4l0l
+ WU8DBQlhnstG5WnK3fFMySk6U3SUiC17wbMNj5QkEfgdHLuOXQyXGqT6iuGnAoFJfMbZ/rYfp
+ 4HTo7bX1xmlqbs3AMOU3HjO20CwcAA2RDLEGV6oytvzVxkkYxPakO3f2WBW8ZbZPXZKzFHukn
+ wPcXoQlU2nCKe2oN0UEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with -Werror showed another failure:
+Selecting MSCC_OCELOT_SWITCH is not possible when NET_VENDOR_MICROSEMI
+is disabled:
 
-kernel/bpf/btf.c: In function 'btf_get_prog_ctx_type.isra.31':
-kernel/bpf/btf.c:3508:63: error: array subscript 0 is above array bounds of 'u8[0]' {aka 'unsigned char[0]'} [-Werror=array-bounds]
-  ctx_type = btf_type_member(conv_struct) + bpf_ctx_convert_map[prog_type] * 2;
+WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+  Depends on [n]: NETDEVICES [=y] && ETHERNET [=n] && NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+  Selected by [m]:
+  - NET_DSA_MSCC_FELIX [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && NET_DSA [=y] && PCI [=y]
 
-I don't actually understand why the array is empty, but a similar
-fix has addressed a related problem, so I suppose we can do the
-same thing here.
+Add a Kconfig dependency on NET_VENDOR_MICROSEMI, which also implies
+CONFIG_NETDEVICES.
 
-Fixes: ce27709b8162 ("bpf: Fix build in minimal configurations")
+Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/bpf/btf.c | 1 +
+ drivers/net/dsa/ocelot/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 7d40da240891..ed2075884724 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3470,6 +3470,7 @@ static u8 bpf_ctx_convert_map[] = {
- 	[_id] = __ctx_convert##_id,
- #include <linux/bpf_types.h>
- #undef BPF_PROG_TYPE
-+	0, /* avoid empty array */
- };
- #undef BPF_MAP_TYPE
- 
+diff --git a/drivers/net/dsa/ocelot/Kconfig b/drivers/net/dsa/ocelot/Kconfig
+index 0031ca814346..6f9804093150 100644
+--- a/drivers/net/dsa/ocelot/Kconfig
++++ b/drivers/net/dsa/ocelot/Kconfig
+@@ -2,6 +2,7 @@
+ config NET_DSA_MSCC_FELIX
+ 	tristate "Ocelot / Felix Ethernet switch support"
+ 	depends on NET_DSA && PCI
++	depends on NET_VENDOR_MICROSEMI
+ 	select MSCC_OCELOT_SWITCH
+ 	select NET_DSA_TAG_OCELOT
+ 	help
 -- 
 2.20.0
 
