@@ -2,109 +2,137 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F78C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6CEC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839332073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111C620663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mf3xlkOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLJK7w (ORCPT
+        id S1727223AbfLJLCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:59:52 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2169 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727227AbfLJK7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:59:51 -0500
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 7663FC5F3FC24E60EDEE;
-        Tue, 10 Dec 2019 10:59:50 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 10 Dec 2019 10:59:50 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
- 2019 10:59:49 +0000
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
- for managed interrupt
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
-        <chenxiang66@hisilicon.com>, <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, <hare@suse.com>, <hch@lst.de>,
-        <axboe@kernel.dk>, <bvanassche@acm.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>
-References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
- <1575642904-58295-2-git-send-email-john.garry@huawei.com>
- <20191207080335.GA6077@ming.t460p>
- <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
- <20191210014335.GA25022@ming.t460p>
- <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
- <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
-Date:   Tue, 10 Dec 2019 10:59:48 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 10 Dec 2019 06:02:24 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45304 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbfLJLCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:02:24 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d20so19321365ljc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 03:02:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=avT8djgaVLUaP/1BXJuTZBwRdJwwah+0AF+tp3FQZPs=;
+        b=Mf3xlkOSDEXkKBh/xlW95jq/ctKWC6+5W25pp6TESvMuNfvypSGAfYHsVnbPTF1cYg
+         RR0YLlmQ0tYBn9eVo9B5cXn5iQtVmIH73aTUt7+x6qyrXUIoBdS4hBRmUK0eZkDmLkAb
+         EGIAlfTwNBPpLzuweZ8Ri86B/UxW1T1ZRDG8hmX5tHJ5Y5Aildo02kJCV0NHR6AdkbLh
+         NBmHSZGnygxVFb9Yn3M+Ft/tELQKD1dHnNiv4mWLZc6mZCvBM+Tsyr0Wp7Sd2MG1aAHj
+         Tq/GviXZQEHaPzhya05BIy0b3HF1EnJFgiDF4nG2cr+QZRR8UVHE0LLUBd9LPIqUTqH1
+         6QoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=avT8djgaVLUaP/1BXJuTZBwRdJwwah+0AF+tp3FQZPs=;
+        b=lmLr/0v1qsw3vEraMBWm79H9umwP4IFOSdysSvSi3zJZ4Y5ziMSEZtPYjhLJqugOSI
+         CLUTekjBHpNSaEd8zxE4KN2yp1OU+NU0zk5uAqVckIf2/iVHjYTYBRD+Fh4GptnfDmgu
+         uA/E58Eojl/HHN8N+/ytOsdIw1azDE5NNvBkWX+PvVH3lqebfehrZhAaS2evN07x01k7
+         9UqymrDhpVuLVyAeBHrI2IMvCLZZF2pMvsb2ssh5j0xNIVeozgnssAgTIBynLFGqp9Pf
+         FBHaOG2l1LZ7kR1C/tHBtxbWtGQ+2244cJZ/xhw0LbM9K3SlELhiwtUxpk8VORji/rrJ
+         J9ow==
+X-Gm-Message-State: APjAAAX3r3gqRNp9oQsqtcvc4W/vdI6k+k59nR2IF9VVafWz+eqN84DA
+        B5APDk3vUzYfjpvZrC4zdQ9Y/CkW/l7Xlo+2Wyk1zQ==
+X-Google-Smtp-Source: APXvYqzdKySfdTeUTqDZf48QC6nKJjVrzelXQbA5XcMaY5YcawhwrWRM8Td38VBdqI6RgEEmwUiYHkXJsa2/pme7HDg=
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr21104651lji.214.1575975741445;
+ Tue, 10 Dec 2019 03:02:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20191115234005.GO4614@dread.disaster.area> <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area> <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb> <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com> <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com> <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
+ <20191210101116.GA9139@linux.vnet.ibm.com>
+In-Reply-To: <20191210101116.GA9139@linux.vnet.ibm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 10 Dec 2019 12:02:09 +0100
+Message-ID: <CAKfTPtD1by06eQ=vJhh9SvfegRanSSwQrKPageLGo0OODu9bjg@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound kthread
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 10 Dec 2019 at 11:11, Srikar Dronamraju
+<srikar@linux.vnet.ibm.com> wrote:
+>
+> * Vincent Guittot <vincent.guittot@linaro.org> [2019-12-10 10:43:46]:
+>
+> > On Tue, 10 Dec 2019 at 06:43, Srikar Dronamraju
+> > <srikar@linux.vnet.ibm.com> wrote:
+> > >
+> > > This is more prone to happen if the current running task is CPU
+> > > intensive and the sched_wake_up_granularity is set to larger value.
+> > > When the sched_wake_up_granularity was relatively small, it was observed
+> > > that the bound thread would complete before the load balancer would have
+> > > chosen to move the cache hot task to a different CPU.
+> > >
+> > > To deal with this situation, the current running task would yield to a
+> > > per CPU bound kthread, provided kthread is not CPU intensive.
+> > >
+> > > /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+> > >
+> > > (With sched_wake_up_granularity set to 15ms)
+> >
+> > So you increase sched_wake_up_granularity to a high level to ensure
+> > that current is no preempted by waking thread but then you add a way
+> > to finally preempt it which is somewhat weird IMO
+> >
+>
+> Yes, setting to a smaller value will help mitigate/solve the problem.
+> There may be folks out who have traditionally set a high wake_up_granularity
+> (and have seen better performance with it), who may miss out that when using
+> blk-mq, such settings will cause more harm. And they may continue to see
+> some performance regressions when they move to a lower wake_up_granularity.
+>
+> > Have you tried to increase the priority of workqueue thread  (decrease
+> > nice priority) ? This is the right way to reduce the impact of the
+> > sched_wake_up_granularity on the wakeup of your specific kthread.
+> > Because what you want at the end is keeping a low wakeup granularity
+> > for these io workqueues
+> >
+>
+> Yes, people can tune the priority of workqueue threads and infact it may be
+> easier to set wake_up_granularity to a lower value. However the point is how
+> do we make everyone aware that they are running into a performance issue
+> with a higher wakeup_granularity?
 
->>
->> There is no lockup, just a potential performance boost in this change.
->>
->> My colleague Xiang Chen can provide specifics of the test, as he is
->> the one running it.
->>
->> But one key bit of info - which I did not think most relevant before
->> - that is we have 2x SAS controllers running the throughput test on
->> the same host.
->>
->> As such, the completion queue interrupts would be spread identically
->> over the CPUs for each controller. I notice that ARM GICv3 ITS
->> interrupt controller (which we use) does not use the generic irq
->> matrix allocator, which I think would really help with this.
->>
->> Hi Marc,
->>
->> Is there any reason for which we couldn't utilise of the generic irq
->> matrix allocator for GICv3?
-> 
+I did the test on my local setup to change the nice priority of io
+workqueue and the active migrations are removed even with high
+wakeup_granularity because IO workqueue can still preempt normal task
+but let other workqueue behave normally.
 
-Hi Marc,
-
-> For a start, the ITS code predates the matrix allocator by about three
-> years. Also, my understanding of this allocator is that it allows
-> x86 to cope with a very small number of possible interrupt vectors
-> per CPU. The ITS doesn't have such issue, as:
-> 
-> 1) the namespace is global, and not per CPU
-> 2) the namespace is *huge*
-> 
-> Now, what property of the matrix allocator is the ITS code missing?
-> I'd be more than happy to improve it.
-
-I think specifically the property that the matrix allocator will try to 
-find a CPU for irq affinity which "has the lowest number of managed IRQs 
-allocated" - I'm quoting the comment on matrix_find_best_cpu_managed().
-
-The ITS code will make the lowest online CPU in the affinity mask the 
-target CPU for the interrupt, which may result in some CPUs handling so 
-many interrupts.
-
-Thanks,
-John
+>
+> --
+> Thanks and Regards
+> Srikar Dronamraju
+>
