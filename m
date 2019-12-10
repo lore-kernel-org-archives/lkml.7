@@ -2,171 +2,160 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE1C04E30
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8C7C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3512A20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E62D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HOOfNE7L"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="neQUnqb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfLJCes (ORCPT
+        id S1726847AbfLJCfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:34:48 -0500
-Received: from mail-eopbgr10088.outbound.protection.outlook.com ([40.107.1.88]:45433
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726509AbfLJCer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:34:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dfAowhx6GWUHJy2IxK6qwgTRXjdKy44VmOh/3VV+tApB+1DFevzBKp8G5gczVZ7YbDMVE4XW2iziMFZIT5rsyKQTzyB7tIdqTWYYfF7SZA0PrYf/IRRYd5NUrcF4c1uGSMe7Xpb51q1qIR2dfFW/4PG2ZrvFT0AJv3avEkJCbYx74qNhp89NYwgZv+BcRc7h6CQ539fE60fMimY2iEkG2Jh0BrTnU22LlhdxlFDdK5crePJI43eN82Z6WC7XzGUtZq8+TibFE703WbSQInz/h9JIPCLNuQFlq790+VQV/IQNBSrcIo9NF1uC6r5Kvm8/R9DUqO1SxQtdU8CcFAJrxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rStWe+TjU9Ro35O6Hig088w3MqyV1pwn9vFSozj9KU=;
- b=lEaLy041fWgp5POkGzpWcPmZSSJyxe2vTG3/qFYVxOYKOb+117jc2PIp8bg9YQgFdq84Y+uUBubYoGMlrw9c7cE3g6Ene8JKJ1oBtQ9Y/9IHa37AjkSGpePmcFVzIDSnetR7y37HvlJJl+93FmxJCAGhY+Y/cbntJrx3MM0aFt7oC1nXlQuLflvOuijOCLy81W0dcJ9yEdl906iRmoaHt5QKQuT39W22YpmV1I3CNbx7+KrdAqXzFtzu7vxl2/LiTghd65jf7aGinfC2PeX+LCsdIl4I9mkh0n01vuN3yxcdJ5r7n3nbFWpU+EZR0moGZb25OmBBpkdv+0TXV2ig2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rStWe+TjU9Ro35O6Hig088w3MqyV1pwn9vFSozj9KU=;
- b=HOOfNE7LyMNK6c5hl3dJocjpRFmQQPpw9od+5ezlsArWFHH6Zc/lZJHWL/qshcrxeet9A9PqSgz3Q78YnV/fQv90MY3pH6KI+5+OJrcr7uS23RmDUDaWRZlkkQ8M4iVRMYL5x2qFE+PtmJ74E4TQO30fWIIYIlrvPDSi1mTNiic=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2335.eurprd04.prod.outlook.com (10.169.136.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Tue, 10 Dec 2019 02:34:31 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::391e:6024:cefd:6d51]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::391e:6024:cefd:6d51%4]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 02:34:30 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Ashish Kumar <ashish.kumar@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        "Amit Jain (aj)" <amit.jain_1@nxp.com>,
-        "catalin.horghidan@nxp.com" <catalin.horghidan@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Jiafei Pan <jiafei.pan@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "rajat.srivastava@nxp.com" <rajat.srivastava@nxp.com>,
-        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Michael Walle <michael@walle.cc>, Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue
- for dcfg
-Thread-Topic: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue
- for dcfg
-Thread-Index: AQHVUnFULi52wD5vaE6y0evvPl+NNKezNm2AgAAo2GA=
-Date:   Tue, 10 Dec 2019 02:34:30 +0000
-Message-ID: <VI1PR0401MB2237D2D6708807511BDB8788F85B0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190814072649.8237-3-yinbo.zhu@nxp.com>
- <20191210000623.22321-1-michael@walle.cc>
-In-Reply-To: <20191210000623.22321-1-michael@walle.cc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6c9cbf6e-5ad0-4730-40cf-08d77d197c45
-x-ms-traffictypediagnostic: VI1PR0401MB2335:|VI1PR0401MB2335:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0401MB233578102CF0A485F37A10C3F85B0@VI1PR0401MB2335.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:913;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(189003)(199004)(13464003)(6916009)(33656002)(64756008)(4326008)(76116006)(66946007)(66446008)(66556008)(66476007)(5660300002)(8676002)(52536014)(305945005)(229853002)(9686003)(55016002)(81156014)(81166006)(478600001)(26005)(86362001)(2906002)(8936002)(6506007)(7696005)(53546011)(186003)(54906003)(316002)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2335;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XWfDF16pmTXSd487xSKs0lutqGdO3fJFMUW53KeSIAtBe0tCXxt2WIKa9+qIv7IK5qnur6/5P5wUjXwglNkqOX5nQC6kVFepz6OlbrJwfZcHiaidsXAMgCQOPkq7MrtvntpoPY3/mVrh+THjJpCrW4t5Z/NCRWQiaPDuaF7q3OyEwEdXkKveVa4GQI3tnAxAzW6Nco0sJlgupeVzlUDOcyHkh80j0kBmoOeBJ5rGGmS1BTYztPsIH5tRHguffnum9AAEl0/gnA7AAz/FeXAy1WXGpi52Cokjtv2VIzM8vBEtLCUcsGnha+9Iu4lvyAIj+0ZgmF+WrxhDNYlYwPNhqlwQCsGQS8DlPcu2Cp7YyFVEIv9VyXnibn8Wc9WMJ1KOX2a5f0/IOASvjoAiL72XO7SQqLtCSXaIxMSSHsJRf6Hf7SI2wpey5RpSMjpSV8q5J0TjBqm3PN9xSKpm1Rdv48EkD2/D+PcO+S9kXGofeN+Zd1tdSU/tP830JwcvfhZ0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 9 Dec 2019 21:35:53 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:41322 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfLJCfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:35:52 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47X3yP62Tzz5Y;
+        Tue, 10 Dec 2019 03:33:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1575945198; bh=28ZRq1FI2/sd4GBSEA17lEwHQUUzefEXEY1pCiKIzfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=neQUnqb8yNbGKLEtkX5q3ZEZQq6YSwQBVg61WDjvqiehVlijufpRomrZTn9LGIo5n
+         0XIDUwy/mP8019WfJT4YL2X7N7zJlGKpBk88KfOiWmyTuA2rlOK55NAZOpN0MxaZex
+         06Y3OLlSEr4JDVTUomCd0LlcmGeUEfEVC+3+Ec8Z2D7yKovFZaPcrU0UFP7ijexRiS
+         1S7SPa8RZ/a7GpRZ4EPehhP2cZHc0DbxfE3KBtuh5cWBGfNhH8+sPlcHSNn13XL2UU
+         JHgcN/wK3LIQVsg/1Uq17zup8DiLwUNFUfqx2MhrBrTNhmbGWSXa/vuKkYUqiU1Eg5
+         TNEciPiEE6t8Q==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Tue, 10 Dec 2019 03:35:49 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+Message-ID: <20191210023549.GA15246@qmqm.qmqm.pl>
+References: <20191203004116.11771-1-digetx@gmail.com>
+ <20191207215216.GA9561@qmqm.qmqm.pl>
+ <0b3a861d-e5e8-ddca-ac60-0a3c61a9d9dc@gmail.com>
+ <20191209160420.GA24097@qmqm.qmqm.pl>
+ <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9cbf6e-5ad0-4730-40cf-08d77d197c45
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 02:34:30.8062
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: inhC5TjVZnnF1gtcBx27H+ZX/fGc5BR/7k90pnVkFrZwV52MJoF8dmaSCnq+Ei1HZksx58hSycKZfxo05BLgpw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2335
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <323f5f70-5249-e75a-98cc-7fdca2d375c2@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Shawn,
+On Tue, Dec 10, 2019 at 12:22:18AM +0300, Dmitry Osipenko wrote:
+> 09.12.2019 19:04, Michał Mirosław пишет:
+> > On Sun, Dec 08, 2019 at 01:56:14AM +0300, Dmitry Osipenko wrote:
+> >> 08.12.2019 00:52, Michał Mirosław пишет:
+> >>> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
+> >>>> Hello,
+> >>>>
+> >>>> This series does the following:
+> >>>>
+> >>>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+> >>>>      into common drivers/cpuidle/ directory.
+> >>>>
+> >>>>   2. Enables CPU cluster power-down idling state on Tegra30.
+> >>>>
+> >>>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+> >>>> and of the Tegra's arch code in general. Please review, thanks!
+> >>>
+> >>> I did a quick smoke test for this series on top of Linus' master:
+> >>>  - rebuilding with the patches applied, CONFIG_ARM_TEGRA_CPUIDLE=n - works
+> >>>  - building with CONFIG_ARM_TEGRA_CPUIDLE=y - doesn't boot
+> >>>
+> >>> The hang is somewhere early in the boot process, before simplefb can
+> >>> take the console and show any logs. If I get BOOTFB to work again I might
+> >>> be able to get some more info.
+> >>
+> >> Thank you very much for trying these patches!
+> >>
+> >> Could you please try to make ARM_TEGRA_CPUIDLE "tristate" in the Kconfig
+> >> and compile it as a loadable module? That way you'll get framebuffer
+> >> shown before the hang happens.
+> >>
+> >> Does LP2 suspend/resume work for you? There should be
+> >> "nvidia,suspend-mode = <2>" in the PMC's node of device-tree.
+> > 
+> > Not at the moment. I also tried suspend-mode = <1> and <0>, but it
+> > made no difference.
+> 
+> If LP2 doesn't work, then it explains why you're getting the hang.
+> 
+> Are you using TF300T for the testing? I'm recalling that LP2 worked for
+> you sometime ago on TF300T, maybe some offending change was introduced
+> since then. Could you please try to do the git bisection or at least
+> find out what is the last good kernel version?
+> 
+> I rebased this series on a recent linux-next and you could find the
+> rebased patches here [1].
+> 
+> [1] https://github.com/grate-driver/linux/commits/master
+> 
+> With [1] you should be able to remove "nvidia,suspend-mode" property
+> from the device-tree to get cpuidle working with the disabled CC6 state
+> (LP2). Could you please check that at least disabled CC6 works for you?
 
-> -----Original Message-----
-> From: Michael Walle <michael@walle.cc>
-> Sent: Tuesday, December 10, 2019 8:06 AM
-> To: Yinbo Zhu <yinbo.zhu@nxp.com>
-> Cc: Ashish Kumar <ashish.kumar@nxp.com>; Alexandru Marginean
-> <alexandru.marginean@nxp.com>; Alison Wang <alison.wang@nxp.com>;
-> Amit Jain (aj) <amit.jain_1@nxp.com>; catalin.horghidan@nxp.com; Claudiu
-> Manoil <claudiu.manoil@nxp.com>; devicetree@vger.kernel.org; Jiafei Pan
-> <jiafei.pan@nxp.com>; Leo Li <leoyang.li@nxp.com>;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> linuxppc-dev@lists.ozlabs.org; mark.rutland@arm.com;
-> rajat.srivastava@nxp.com; Rajesh Bhagat <rajesh.bhagat@nxp.com>;
-> robh+dt@kernel.org; Vabhav Sharma <vabhav.sharma@nxp.com>; Xiaobo Xie
-> <xiaobo.xie@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; Michael Walle
-> <michael@walle.cc>
-> Subject: Re: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian is=
-sue for
-> dcfg
->=20
+I tested suspend with your tree merged, but CONFIG_TEGRA_CPUIDLE=n. LP2
+seems to work [1]. The same tree with CONFIG_TEGRA_CPUIDLE=y doesn't
+boot. I'll try comparing DTs, but other than that I'm blocked on BOOTFB now.
 
-[Y.b. Lu] Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
+Best Regards,
+Michał Mirosław
 
-Hi Shawn, could you help to review and merge the two dts patches of this pa=
-tch-set?
-Thanks.
+[1] rtcwake -s 3 -d /dev/rtc0 -v -m mem
 
-> > dcfg use little endian that SoC register value will be correct
-> >
-> > Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> This patch is still missing. Any news?
->=20
-> Tested-by: Michael Walle <michael@walle.cc>
->=20
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index b0d4f8916ede..5538e8e354b2 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -162,7 +162,7 @@
-> >  		dcfg: syscon@1e00000 {
-> >  			compatible =3D "fsl,ls1028a-dcfg", "syscon";
-> >  			reg =3D <0x0 0x1e00000 0x0 0x10000>;
-> > -			big-endian;
-> > +			little-endian;
-> >  		};
-> >
-> >  		scfg: syscon@1fc0000 {
-> > --
-> > 2.17.1
-> >
+(...)
+[ 2710.157919] PM: suspend entry (deep)
+[ 2710.161205] Filesystems sync: 0.000 seconds
+[ 2710.176677] Freezing user space processes ... (elapsed 0.001 seconds) done.
+[ 2710.178342] OOM killer disabled.
+[ 2710.178527] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+[ 2710.347871] Disabling non-boot CPUs ...
+[ 2710.349160] IRQ 18: no longer affine to CPU1
+[ 2710.352499] IRQ 19: no longer affine to CPU2
+[ 2710.370059] IRQ 20: no longer affine to CPU3
+[ 2710.371284] Entering suspend state LP2
+[ 2710.371556] Enabling non-boot CPUs ...
+[ 2710.373157] CPU1 is up
+[ 2710.374598] CPU2 is up
+[ 2710.375996] CPU3 is up
+[ 2710.462876] OOM killer enabled.
+[ 2710.463018] Restarting tasks ...
+[ 2710.463880] tegra-devfreq 6000c800.actmon: Failed to get emc clock
+[ 2710.464509] done.
+[ 2710.552824] asus-ec 1-0015: model         : ASUS-TF201-PAD
+[ 2710.558345] asus-ec 1-0015: FW version    : PAD-EC20T-0216
+[ 2710.562942] asus-ec 1-0015: Config format : ECFG-0001
+[ 2710.567651] asus-ec 1-0015: HW version    : TF201-PAD-SKU1
+[ 2710.572488] asus-ec 1-0015: EC FW behaviour: susb on when system wakeup
+[ 2710.769796] atkbd serio1: no of_node; not parsing pinctrl DT
+[ 2710.835629] asus-ec 5-0019: model         : ASUS-TF201-DOCK
+[ 2710.838686] asus-ec 5-0019: FW version    : DOCK-EC20N-0207
+[ 2710.841865] asus-ec 5-0019: Config format : ECFG-0001
+[ 2710.844271] asus-ec 5-0019: HW version    : PCBA-SKU-2
+[ 2710.847950] asus-ec 5-0019: EC FW behaviour: susb on when receive ec_req
+[ 2711.040935] PM: suspend exit
+
