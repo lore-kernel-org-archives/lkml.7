@@ -2,183 +2,232 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192F3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AAFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE07E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="b6I/X2gn"
+	by mail.kernel.org (Postfix) with ESMTP id D48F9207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfLJRXG (ORCPT
+        id S1727865AbfLJRXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:23:06 -0500
-Received: from mail-eopbgr150125.outbound.protection.outlook.com ([40.107.15.125]:34566
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727561AbfLJRXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:23:05 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dj4RO5GdrGGL818zgMCLRYNKR4nwtuF4lN4p1ijsrmO7zWAASVmZaUEZrYDeVNxkYwVF4FimmjHH04gwlseqgXfn1edGQbYtplkGv+40qBOv8P/9PYAExBf1fuPFWoQOXauD/bu7Ir1QJYFd1H09D6C7Fpr9qR44fjRzmxYyDcZ6Pi1UwfuZ0owEd6VZJkh/bUc7VDl+Y20pLdu7VGX9ZlYrb4iJP6xVRtbOEDMjwxwhnl1vzRLBqQKVHQoLXGN5Wc5F+g4Rvij7e2+TMlaY3HJIfatkbobxZ5ES9fU2aIRB2bN8b+DQZFQQADNie3/mP5BitdzjEyivp6ZUGFt49Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgN6TM3hsDnuQ8kp6yYGCwfMb96CSmuVN2j36F1JCVE=;
- b=JLIvjpgHUo3v289XG21j9pwKknIByGKr5/Bb20yql2gxvWApdKubb5oI+bQG1Lkwng6MRahaYr88BxL0CUfNifiEM5NYieG6SfHOrd8OnN68OIrEFYfM4cfsYfG8LovpvAbcX8Go/enihN86hJOEznYOP7zcvIJzOgWM+ypPYSi361iWfApvp1rBc6VMd9jY69Mns8d/Z7ks9XG19Is3BIPcnlyUFr93PWLubC2jZKewqPTIvEMxSdfcV1iZoucIqfhaRcZX2FAI1XlwG/lYFvFzugoPmichTpmfv+QkEWdob2IqrEaNJyDRR8jZ1zKLJ7YsOWO88OljSMZsGsc6MQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HgN6TM3hsDnuQ8kp6yYGCwfMb96CSmuVN2j36F1JCVE=;
- b=b6I/X2gnCwn+i7tNsDKdKb7btOBfCLzsJ64TCBXFN7YTXg+EFl9fJikcry385U/UmriyrZqnBDUFHre5ziKsaZfU0kKyb3PQgtywvXO9HD113j9shm8ByZOzIEntBq8dNHQ0HScRbl0RQkOn7Bsh/G3FOVjKQ42fNP705//xJo8=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3404.eurprd02.prod.outlook.com (52.134.68.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Tue, 10 Dec 2019 17:22:59 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::446e:c4f8:7e59:1c6d]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::446e:c4f8:7e59:1c6d%7]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 17:22:59 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     "Claudiu.Beznea@microchip.com" <Claudiu.Beznea@microchip.com>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] Revert "drm/atmel-hlcdc: allow selecting a higher
- pixel-clock than requested"
-Thread-Topic: [PATCH 4/5] Revert "drm/atmel-hlcdc: allow selecting a higher
- pixel-clock than requested"
-Thread-Index: AQHVr11DyxIz9S+dLEWyrkArJlSyg6ezeYGA///8moCAACgWAA==
-Date:   Tue, 10 Dec 2019 17:22:59 +0000
-Message-ID: <2272669c-38ee-1928-9563-46755574897c@axentia.se>
-References: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
- <1575984287-26787-5-git-send-email-claudiu.beznea@microchip.com>
- <4c3ffc48-7aa5-1e48-b0e9-a50c4eea7c38@axentia.se>
- <5fbad2cd-0dbe-0be5-833a-f7a612d48012@microchip.com>
-In-Reply-To: <5fbad2cd-0dbe-0be5-833a-f7a612d48012@microchip.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR05CA0158.eurprd05.prod.outlook.com
- (2603:10a6:7:28::45) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f5b200d6-3e3d-4dd8-e48d-08d77d959a60
-x-ms-traffictypediagnostic: DB3PR0202MB3404:
-x-microsoft-antispam-prvs: <DB3PR0202MB3404FB03D7D4B79D2D8C093CBC5B0@DB3PR0202MB3404.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39840400004)(346002)(396003)(136003)(189003)(199004)(2616005)(36756003)(6486002)(66476007)(4001150100001)(31686004)(316002)(81166006)(66946007)(66446008)(508600001)(64756008)(66556008)(4326008)(86362001)(26005)(6512007)(53546011)(2906002)(54906003)(186003)(7416002)(52116002)(81156014)(31696002)(8936002)(8676002)(71200400001)(6506007)(5660300002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3404;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hbhh7sNwcJR+jAohzN4/z9SxPwL49VDMzyeQuwInotkK5KgOQrUFk7CNhedaAzgCUA9D04u0G1tPkOIxMY4Lh+X5/FtqTXj/Ck5SSWMwm2ZwZv8KbpX9KHqiKwmfQ09qmwC1SFaRT9r+3WlUPE0+DTYhmqIkash17NGTwOapCbREhzXA72CewIwvY95Ao5nqicgwIrvWKmoy+nHXFxcaJqUkhvncgnXKfWLIWh8aX4THbYNKP7teyKxu8GnC7OsfXDabK/xBcQ5crao2BdhE/eIV0I37RYUP7NdH7YvvvHBGpUCChvsflXgIsTPqkzQeJcgD6abNHm5K7gRm9VqK4+oYOSXiQQKIdTl3Xma/mwKs4oBYU250efqX61FVUCLX8pBJ4Pu1qUpKM62Aync8Y9jmStkmwQMO1OA4oXDJhfWo0YEsnZkYivPbjptNGOcz
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A9E8A3325A99654699E1B825FC51ECCC@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 10 Dec 2019 12:23:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727573AbfLJRXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:23:21 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAHMHna106961
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:23:20 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsu3pqr9x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:23:20 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 10 Dec 2019 17:23:17 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 17:23:11 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAHNAdG43778142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 17:23:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0676A405F;
+        Tue, 10 Dec 2019 17:23:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 098C6A405B;
+        Tue, 10 Dec 2019 17:23:08 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 10 Dec 2019 17:23:07 +0000 (GMT)
+Date:   Tue, 10 Dec 2019 22:53:07 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3] sched/core: Preempt current task in favour of bound
+ kthread
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5b200d6-3e3d-4dd8-e48d-08d77d959a60
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 17:22:59.1933
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kT2mTsS0ZoZwTo6Gr5jeIc8W62MJ0u/U+VfnLh2luKNqwCrZTiV550uhEzq7Jx1J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3404
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20191210054330.GF27253@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19121017-0012-0000-0000-000003739155
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121017-0013-0000-0000-000021AF64F3
+Message-Id: <20191210172307.GD9139@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_05:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ bulkscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 suspectscore=2 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0xMi0xMCAxNTo1OSwgQ2xhdWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToN
-Cj4gDQo+IA0KPiBPbiAxMC4xMi4yMDE5IDE2OjExLCBQZXRlciBSb3NpbiB3cm90ZToNCj4+IE9u
-IDIwMTktMTItMTAgMTQ6MjQsIENsYXVkaXUgQmV6bmVhIHdyb3RlOg0KPj4+IFRoaXMgcmV2ZXJ0
-cyBjb21taXQgZjZmN2FkMzIzNDYxM2Y2ZjdmMjdjMjUwMzZhYWYwNzhkZTA3ZTliMC4NCj4+PiAo
-ImRybS9hdG1lbC1obGNkYzogYWxsb3cgc2VsZWN0aW5nIGEgaGlnaGVyIHBpeGVsLWNsb2NrIHRo
-YW4gcmVxdWVzdGVkIikNCj4+PiBiZWNhdXNlIGFsbG93aW5nIHNlbGVjdGluZyBhIGhpZ2hlciBw
-aXhlbCBjbG9jayBtYXkgb3ZlcmNsb2NrDQo+Pj4gTENEIGRldmljZXMsIG5vdCBhbGwgb2YgdGhl
-bSBiZWluZyBjYXBhYmxlIG9mIHRoaXMuDQo+Pg0KPj4gV2l0aG91dCB0aGlzIHBhdGNoLCB0aGVy
-ZSBhcmUgcGFuZWxzIHRoYXQgYXJlICpzZXZlcmx5KiB1bmRlcmNsb2NrZWQgKG9uIHRoZQ0KPj4g
-bWFnbml0dWRlIG9mIDQwTUh6IGluc3RlYWQgb2YgNjVNSHogb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dCwgSSBkb24ndCByZW1lbWJlcg0KPj4gdGhlIGV4YWN0IGZpZ3VyZXMpLiANCj4gDQo+IFdpdGgg
-cGF0Y2ggdGhhdCBzd2l0Y2hlcyBieSBkZWZhdWx0IHRvIDJ4c3lzdGVtIGNsb2NrIGZvciBwaXhl
-bCBjbG9jaywgaWYNCj4gdXNpbmcgMTMzTUh6IHN5c3RlbSBjbG9jayAoYXMgeW91IHNwZWNpZmll
-ZCBpbiB0aGUgcGF0Y2ggSSBwcm9wb3NlZCBmb3INCj4gcmV2ZXJ0IGhlcmUpIHRoYXQgd291bGQg
-Z28sIHdpdGhvdXQgdGhpcyBwYXRjaCBhdCA1M01IeiBpZiA2NU1IeiBpcw0KPiByZXF1ZXN0ZWQu
-IENvcnJlY3QgbWUgaWYgSSdtIHdyb25nLg0KDQpJdCBtaWdodCBoYXZlIGJlZW4gNTNNSHosIHdo
-YXRldmVyIGl0IHdhcyBpdCB3YXMgdG9vIGxvdyBmb3IgdGhpbmdzIHRvIHdvcmsuDQoNCj4+IEFu
-ZCB0aGV5IGFyZSBvZiBjb3Vyc2Ugbm90IGNhcGFibGUgb2YgdGhhdC4gQWxsIHBhbmVscw0KPj4g
-aGF2ZSAqc29tZSogc2xhY2sgYXMgdG8gd2hhdCBmcmVxdWVuY2llcyBhcmUgc3VwcG9ydGVkLCBh
-bmQgdGhlIHBhdGNoIHdhcw0KPj4gd3JpdHRlbiB1bmRlciB0aGUgYXNzdW1wdGlvbiB0aGF0IHRo
-ZSBwcmVmZXJyZWQgZnJlcXVlbmN5IG9mIHRoZSBwYW5lbCB3YXMNCj4+IHJlcXVlc3RlZCwgd2hp
-Y2ggc2hvdWxkIGxlYXZlIGF0IGxlYXN0IGEgKmxpdHRsZSogaGVhZHJvb20uDQo+IA0KPiBJIHNl
-ZSwgYnV0IGZyb20gbXkgcG9pbnQgb2YgdmlldywgdGhlIHVwcGVyIGxheWVycyBzaG91bGQgZGVj
-aWRlIHdoYXQNCj4gZnJlcXVlbmN5IHNldHRpbmdzIHNob3VsZCBiZSBkb25lIG9uIHRoZSBMQ0Qg
-Y29udHJvbGxlciBhbmQgbm90IGxldCB0aGlzIGF0DQo+ICB0aGUgZHJpdmVyJ3MgbGF0aXR1ZGUu
-DQoNClJpZ2h0LCBidXQgdGhlIHVwcGVyIGxheWVycyBkbyBub3Qgc3VwcG9ydCBuZWdvdGlhdGlu
-ZyBhIGZyZXF1ZW5jeSBmcm9tDQpyYW5nZXMuIEF0IGxlYXN0IHRoZSBkaWRuJ3Qgd2hlbiB0aGUg
-cGF0Y2ggd2FzIHdyaXR0ZW4sIGFuZCBpbXBsZW1lbnRpbmcNCip0aGF0KiBzZWVtZWQgbGlrZSBh
-IGh1Z2UgdW5kZXJ0YWtpbmcuDQoNCj4+DQo+PiBTbywgSSdtIGN1cmlvdXMgYXMgdG8gd2hhdCBw
-YW5lbCByZWdyZXNzZWQuIE9yIHJhdGhlciwgd2hhdCBwaXhlbC1jbG9jayBpdCBuZWVkcw0KPj4g
-YW5kIHdoYXQgaXQgZ2V0cyB3aXRoL3dpdGhvdXQgdGhlIHBhdGNoPw0KPiANCj4gSSBoYXZlIDIg
-dXNlIGNhc2VzOg0KPiAxLyBzeXN0ZW0gY2xvY2sgPSAyMDBNSHogYW5kIHJlcXVlc3RlZCBwaXhl
-bCBjbG9jayAobW9kZV9yYXRlKSB+NzFNSHouIFdpdGgNCj4gdGhlIHJldmVydGVkIHBhdGNoIHRo
-ZSByZXN1bHRlZCBjb21wdXRlZCBwaXhlbCBjbG9jayB3b3VsZCBiZSA4ME1Iei4NCj4gUHJldmlv
-dXNseSBpdCB3YXMgYXQgNjZNSHoNCg0KSSBkb24ndCBzZWUgaG93IHRoYXQncyBwb3NzaWJsZS4N
-Cg0KW2RvaW5nIHNvbWUgY2FsY3VsYXRpb24gYnkgaGFuZF0NCg0KQXJyZ2guICpibHVzaCoNCg0K
-VGhlIGNvZGUgZG9lcyBub3QgZG8gd2hhdCBJIGludGVuZGVkIGZvciBpdCB0byBkby4NCkNhbiB5
-b3UgcGxlYXNlIHRyeSB0aGlzIGluc3RlYWQgb2YgcmV2ZXJ0aW5nPw0KDQpDaGVlcnMsDQpQZXRl
-cg0KDQpGcm9tIGIzZTg2ZDU1YjhkMTA3YTVjMDdlOThmODc5YzY3ZjY3MTIwYzg3YTYgTW9uIFNl
-cCAxNyAwMDowMDowMCAyMDAxDQpGcm9tOiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPg0K
-RGF0ZTogVHVlLCAxMCBEZWMgMjAxOSAxODoxMToyOCArMDEwMA0KU3ViamVjdDogW1BBVENIXSBk
-cm0vYXRtZWwtaGxjZGM6IHByZWZlciBhIGxvd2VyIHBpeGVsLWNsb2NrIHRoYW4gcmVxdWVzdGVk
-DQoNClRoZSBpbnRlbnRpb24gd2FzIHRvIG9ubHkgc2VsZWN0IGEgaGlnaGVyIHBpeGVsLWNsb2Nr
-IHJhdGUgdGhhbiB0aGUNCnJlcXVlc3RlZCwgaWYgYSBzbGlnaHQgb3ZlcmNsb2NraW5nIHdvdWxk
-IHJlc3VsdCBpbiBhIHJhdGUgc2lnbmlmaWNhbnRseQ0KY2xvc2VyIHRvIHRoZSByZXF1ZXN0ZWQg
-cmF0ZSB0aGFuIGlmIHRoZSBjb25zZXJ2YXRpdmUgbG93ZXIgcGl4ZWwtY2xvY2sNCnJhdGUgaXMg
-c2VsZWN0ZWQuIFRoZSBmaXhlZCBwYXRjaCBoYXMgdGhlIGxvZ2ljIHRoZSBvdGhlciB3YXkgYXJv
-dW5kIGFuZA0KYWN0dWFsbHkgcHJlZmVycyB0aGUgaGlnaGVyIGZyZXF1ZW5jeS4gRml4IHRoYXQu
-DQoNCkZpeGVzOiBmNmY3YWQzMjM0NjEgKCJkcm0vYXRtZWwtaGxjZGM6IGFsbG93IHNlbGVjdGlu
-ZyBhIGhpZ2hlciBwaXhlbC1jbG9jayB0aGFuIHJlcXVlc3RlZCIpDQpSZXBvcnRlZC1ieTogQ2xh
-dWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQpTaWduZWQtb2ZmLWJ5
-OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL2F0
-bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYyB8IDQgKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL2F0
-bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2NydGMuYw0KaW5kZXggOWUzNGJjZTA4OWQwLi4wMzY5MTg0
-NWQzN2EgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxj
-ZGNfY3J0Yy5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNf
-Y3J0Yy5jDQpAQCAtMTIwLDggKzEyMCw4IEBAIHN0YXRpYyB2b2lkIGF0bWVsX2hsY2RjX2NydGNf
-bW9kZV9zZXRfbm9mYihzdHJ1Y3QgZHJtX2NydGMgKmMpDQogCQlpbnQgZGl2X2xvdyA9IHByYXRl
-IC8gbW9kZV9yYXRlOw0KIA0KIAkJaWYgKGRpdl9sb3cgPj0gMiAmJg0KLQkJICAgICgocHJhdGUg
-LyBkaXZfbG93IC0gbW9kZV9yYXRlKSA8DQotCQkgICAgIDEwICogKG1vZGVfcmF0ZSAtIHByYXRl
-IC8gZGl2KSkpDQorCQkgICAgKDEwICogKHByYXRlIC8gZGl2X2xvdyAtIG1vZGVfcmF0ZSkgPA0K
-KwkJICAgICAobW9kZV9yYXRlIC0gcHJhdGUgLyBkaXYpKSkNCiAJCQkvKg0KIAkJCSAqIEF0IGxl
-YXN0IDEwIHRpbWVzIGJldHRlciB3aGVuIHVzaW5nIGEgaGlnaGVyDQogCQkJICogZnJlcXVlbmN5
-IHRoYW4gcmVxdWVzdGVkLCBpbnN0ZWFkIG9mIGEgbG93ZXIuDQotLSANCjIuMjAuMQ0KDQo=
+A running task can wake-up a per CPU bound kthread on the same CPU.
+If the current running task doesn't yield the CPU before the next load
+balance operation, the scheduler would detect load imbalance and try to
+balance the load. However this load balance would fail as the waiting
+task is CPU bound, while the running task cannot be moved by the regular
+load balancer. Finally the active load balancer would kick in and move
+the task to a different CPU/Core. Moving the task to a different
+CPU/core can lead to loss in cache affinity leading to poor performance.
+
+This is more prone to happen if the current running task is CPU
+intensive and the sched_wake_up_granularity is set to larger value.
+When the sched_wake_up_granularity was relatively small, it was observed
+that the bound thread would complete before the load balancer would have
+chosen to move the cache hot task to a different CPU.
+
+To deal with this situation, the current running task would yield to a
+per CPU bound kthread, provided kthread is not CPU intensive.
+
+/pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+
+(With sched_wake_up_granularity set to 15ms)
+
+Performance counter stats for 'system wide' (5 runs):
+event					    v5.4 				v5.4 + patch(v3)
+probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                     4  ( +- 20.48% )
+sched:sched_waking                     441,535  ( +-  0.17% )               914,630  ( +-  0.18% )
+sched:sched_wakeup                     441,533  ( +-  0.17% )               914,630  ( +-  0.18% )
+sched:sched_wakeup_new                   2,436  ( +-  8.08% )                   545  ( +-  4.02% )
+sched:sched_switch                     797,007  ( +-  0.26% )             1,490,261  ( +-  0.10% )
+sched:sched_migrate_task                20,998  ( +-  1.04% )                 2,492  ( +- 11.56% )
+sched:sched_process_free                 2,436  ( +-  7.90% )                   526  ( +-  3.65% )
+sched:sched_process_exit                 2,451  ( +-  7.85% )                   546  ( +-  4.06% )
+sched:sched_wait_task                        7  ( +- 21.20% )                     1  ( +- 40.82% )
+sched:sched_process_wait                 3,951  ( +-  9.14% )                   854  ( +-  5.33% )
+sched:sched_process_fork                 2,435  ( +-  8.09% )                   545  ( +-  3.96% )
+sched:sched_process_exec                 1,023  ( +- 12.21% )                   205  ( +-  5.13% )
+sched:sched_wake_idle_without_ipi      187,794  ( +-  1.14% )               353,579  ( +-  0.42% )
+
+Elasped time in seconds          289.43 +- 1.42 ( +-  0.49% )      72.7318 +- 0.0545 ( +-  0.07% )
+
+Throughput results
+
+v5.4
+Trigger time:................... 0.842679 s   (Throughput:     6075.86 MB/s)
+Asynchronous submit time:.......   1.0184 s   (Throughput:     5027.49 MB/s)
+Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
+I/O time:.......................   263.17 s   (Throughput:      19.455 MB/s)
+Ratio trigger time to I/O time:.0.00320202
+
+v5.4 + patch(v3)
+Trigger time:................... 0.852413 s   (Throughput:     6006.47 MB/s)
+Asynchronous submit time:....... 0.773043 s   (Throughput:     6623.17 MB/s)
+Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
+I/O time:.......................   44.341 s   (Throughput:     115.468 MB/s)
+Ratio trigger time to I/O time:. 0.019224
+
+(With sched_wake_up_granularity set to 4ms)
+
+Performance counter stats for 'system wide' (5 runs):
+event					      v5.4 				    v5.4 + patch(v3)
+probe:active_load_balance_cpu_stop               6  ( +-  6.03% )                      5  ( +- 15.04% )
+sched:sched_waking                         899,880  ( +-  0.38% )                912,625  ( +-  0.41% )
+sched:sched_wakeup                         899,878  ( +-  0.38% )                912,624  ( +-  0.41% )
+sched:sched_wakeup_new                         622  ( +- 11.95% )                    550  ( +-  3.85% )
+sched:sched_switch                       1,458,214  ( +-  0.40% )              1,489,032  ( +-  0.41% )
+sched:sched_migrate_task                     3,120  ( +- 10.00% )                  2,524  ( +-  5.54% )
+sched:sched_process_free                       608  ( +- 12.18% )                    528  ( +-  3.89% )
+sched:sched_process_exit                       623  ( +- 11.91% )                    550  ( +-  3.79% )
+sched:sched_wait_task                            1  ( +- 31.18% )                      1  ( +- 66.67% )
+sched:sched_process_wait                       998  ( +- 13.22% )                    867  ( +-  4.41% )
+sched:sched_process_fork                       622  ( +- 11.95% )                    550  ( +-  3.88% )
+sched:sched_process_exec                       242  ( +- 13.81% )                    208  ( +-  4.57% )
+sched:sched_wake_idle_without_ipi          349,165  ( +-  0.35% )                352,443  ( +-  0.21% )
+
+Elasped time in seconds           72.8560 +- 0.0768 ( +-  0.11% )        72.5523 +- 0.0725 ( +-  0.10% )
+
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog:
+v1 : http://lore.kernel.org/lkml/20191209165122.GA27229@linux.vnet.ibm.com
+v2 : http://lore.kernel.org/lkml/20191210054330.GF27253@linux.vnet.ibm.com
+v1->v2: Pass the the right params to try_to_wake_up as correctly pointed out
+by Dave Chinner
+v2->v3: Suggestions from Peter Zijlstra including using vtime over
+context switch and detect per-cpu-kthread in try_to_wake_up
+
+ kernel/sched/core.c  | 3 +++
+ kernel/sched/fair.c  | 2 +-
+ kernel/sched/sched.h | 3 ++-
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 44123b4d14e8..03e77e159c27 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2542,6 +2542,9 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		goto out;
+ 	}
+ 
++	if (is_per_cpu_kthread(p))
++		wake_flags |= WF_KTHREAD;
++
+ 	/*
+ 	 * If we are going to wake up a thread waiting for CONDITION we
+ 	 * need to ensure that CONDITION=1 done by the caller can not be
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 69a81a5709ff..8fe40f83804d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6716,7 +6716,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+ 	find_matching_se(&se, &pse);
+ 	update_curr(cfs_rq_of(se));
+ 	BUG_ON(!pse);
+-	if (wakeup_preempt_entity(se, pse) == 1) {
++	if (wakeup_preempt_entity(se, pse) >= !(wake_flags & WF_KTHREAD)) {
+ 		/*
+ 		 * Bias pick_next to pick the sched entity that is
+ 		 * triggering this preemption.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c8870c5bd7df..fcd1ed5af9a3 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1643,7 +1643,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
+  */
+ #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
+ #define WF_FORK			0x02		/* Child wakeup after fork */
+-#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
++#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
++#define WF_KTHREAD		0x08		/* Per CPU Kthread */
+ 
+ /*
+  * To aid in avoiding the subversion of "niceness" due to uneven distribution
+-- 
+2.18.1
+
