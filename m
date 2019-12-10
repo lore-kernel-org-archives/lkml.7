@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A026C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84057C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C112077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55EFB21D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012372;
-	bh=6ZrutHCfZULgWK9SE9TNvRak3OhPphztuTeNSWShhDs=;
+	s=default; t=1576012376;
+	bh=JoezncLal8tX5E5C06jg4nA05CSMwztgNYWQyFETTuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=URVeupY6UlY88Gh/DTfIdKozWLfpBH9V2lq66B4mav9FUlXqcp2Cgx8pkkq7VIm+o
-	 Dh8DC80/a7k/J5N73CC1S6iyHSeVLdkHJs8N0tfnJbHvPcjXEMYWJwK8SXCO/EUqk1
-	 MREr/3luYM1EvazmjrcScn6YI7wTbAI84TNcoIiA=
+	b=JiDGxMqiRRnWqJyWCW0FSKZWEJ7ZezjPgmBktVVJwuX+u+LegIdBQ7/1ZBuJCvqRU
+	 YVfdY+MzEr+DGEfapSMEfb4eXdKepo2rowbGPWZKpuuKoNUrNeynGYRonhP6PyZ/iB
+	 0JgSoYktH66vvLwt/HC43FoHlpK2ZhsfMRSrbB2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfLJVMv (ORCPT
+        id S1729130AbfLJVMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbfLJVMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:48 -0500
+        id S1729103AbfLJVMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0733321D7D;
-        Tue, 10 Dec 2019 21:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6192E21D7D;
+        Tue, 10 Dec 2019 21:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012367;
-        bh=6ZrutHCfZULgWK9SE9TNvRak3OhPphztuTeNSWShhDs=;
+        s=default; t=1576012371;
+        bh=JoezncLal8tX5E5C06jg4nA05CSMwztgNYWQyFETTuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0KbGam5OJsS+KXI8h/v6GW75D13gKPEShJFH8VQiSV6iSt7ieyqIHPZ4PN8paqTPV
-         xRoiqys+Sxwof8UxAO5SQhuLXKSu/Xjhz79BPNm+Y7y/pVDUSqurtWIC0YsyPV780d
-         GFLDEfjxV8MhG1TWeP7mWpag1yAv1iz2FIvgGXu4=
+        b=EeFgIYGwhJg55B9UW2aEo6TE+OXN1n74AEGai39QHIDN0qux5HX/3hR3vVm59D9YB
+         3+EWJLunCRh2NIt6boIq/yddVeLJi3njF0ezwBA9sUFmx6tep6VI7LWCG7C/sr8AH6
+         gEfypW8G+Nn6dFOBdjAFP70/+vvhXaOiTOt/MPJY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 294/350] spi: tegra20-slink: add missed clk_unprepare
-Date:   Tue, 10 Dec 2019 16:06:39 -0500
-Message-Id: <20191210210735.9077-255-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        virtualization@lists.linux-foundation.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 297/350] crypto: virtio - deal with unsupported input sizes
+Date:   Tue, 10 Dec 2019 16:06:42 -0500
+Message-Id: <20191210210735.9077-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,51 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 04358e40ba96d687c0811c21d9dede73f5244a98 ]
+[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+Return -EINVAL for input sizes that are not a multiple of the AES
+block size, since they are not supported by our CBC chaining mode.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+While at it, remove the pr_err() that reports unsupported key sizes
+being used: we shouldn't spam the kernel log with that.
+
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: virtualization@lists.linux-foundation.org
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 111fffc91435c..374a2a32edcd3 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1073,7 +1073,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index 42d19205166b0..673fb29fda53c 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -105,8 +105,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
+ 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
+ 		break;
+ 	default:
+-		pr_err("virtio_crypto: Unsupported key length: %d\n",
+-			key_len);
+ 		return -EINVAL;
  	}
+ 	return 0;
+@@ -484,6 +482,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1146,6 +1146,8 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1159,6 +1161,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
+@@ -504,6 +507,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
- 
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
 -- 
 2.20.1
 
