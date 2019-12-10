@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B62C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D488C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8648F2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4A22077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575950899;
-	bh=1EDFsKq10v2RAcv+ouUFckwgU2L7K+cLnN0yoZBQRvk=;
+	s=default; t=1575950904;
+	bh=QRuENrWQsFO86orF+hIXkaucxBWb5Zr3So7jpgEhebI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GwDohKe1CofLb439yLyE7MKk1CyiATyoGMeTdbrMOx2ezgB+osivlPT7j3L6MZbH6
-	 /3Ii/LlIG7AzpQSNb9gUHrQjARbtQGM2aaPeUnE/jvBA6gJgZ4lKAvzhIvzLcywpsd
-	 Tpb9A4Prd7sZVYdZjP2PtDaRIlrbVxqUVWa5/c2U=
+	b=DV2AROWH2lEQu2LUhZnIXt12ujXUmo/iDY768Oy48Cs8OxZEdGVvncq+q5IC07C7z
+	 ROqzsOZDVze+6mpKvX2pQlo8c2rI00CZqA4T1R33bvmpq8rAKifouZeJvCDDCXPBX8
+	 f1nL3IxyQFvNFZ5YUl2t/mjWmMdWmW6U3CwHTWX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfLJEIS (ORCPT
+        id S1727296AbfLJEIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:08:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43450 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:08:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfLJEHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:07:48 -0500
+        id S1726953AbfLJEHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 23:07:46 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DD2214D8;
-        Tue, 10 Dec 2019 04:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8782B20828;
+        Tue, 10 Dec 2019 04:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575950867;
-        bh=1EDFsKq10v2RAcv+ouUFckwgU2L7K+cLnN0yoZBQRvk=;
+        s=default; t=1575950866;
+        bh=QRuENrWQsFO86orF+hIXkaucxBWb5Zr3So7jpgEhebI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quOhZVYH43vcx6t9ug2xhRcRopYbRvxgdl1776/UXJlpL/vWZnzlVk3JtOv5u28VY
-         VfVmv3kRYwguiXtdzKaIpUlgo6HCbTXteDTeNlICu2sFayOv/lneapm9djqQpvhA/n
-         ZvEqrK3Tz1dUSb60DgNFMHMlvjSy4WatZtCer6uQ=
+        b=z1eiiqPq2UyLmPivJP63F3Eit/vmiwIqZrH7VtOOHe++vBqI4oTU21phur/uKnBR8
+         kSn9cj8VicRfNE9sA3c+/JkbnoX+31uG1QO0dPi8NBdvbiBgLiRqGNQSRmuFSSUDzk
+         sqvueU3uu/N5Hu+wEPsZmcImbLurNtduQYl1POKo=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         Lai Jiangshan <laijs@linux.alibaba.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 06/12] rcu: Move gp_state_names[] and gp_state_getname() to tree_stall.h
-Date:   Mon,  9 Dec 2019 20:07:35 -0800
-Message-Id: <20191210040741.2943-6-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 04/12] rcu: Fix tracepoint tracking RCU CPU kthread utilization
+Date:   Mon,  9 Dec 2019 20:07:33 -0800
+Message-Id: <20191210040741.2943-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210040714.GA2715@paulmck-ThinkPad-P72>
 References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
@@ -62,99 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-Only tree_stall.h needs to get name from GP state, so this commit
-moves the gp_state_names[] array and the gp_state_getname()
-from kernel/rcu/tree.h and kernel/rcu/tree.c, respectively, to
-kernel/rcu/tree_stall.h.  While moving gp_state_names[], this commit
-uses the GCC syntax to ensure that the right string is associated with
-the right CPP macro.
+In the call to trace_rcu_utilization() at the start of the loop in
+rcu_cpu_kthread(), "rcu_wait" is incorrect, plus this trace event needs
+to be hoisted above the loop to balance with either the "rcu_wait" or
+"rcu_yield", depending on how the loop exits.  This commit therefore
+makes these changes.
 
 Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
 Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c       | 10 ----------
- kernel/rcu/tree.h       | 12 ------------
- kernel/rcu/tree_stall.h | 22 ++++++++++++++++++++++
- 3 files changed, 22 insertions(+), 22 deletions(-)
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ba154a3..bbb60ed 100644
+index dd8cfc3..ba154a3 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -529,16 +529,6 @@ static struct rcu_node *rcu_get_root(void)
- }
+@@ -2474,8 +2474,8 @@ static void rcu_cpu_kthread(unsigned int cpu)
+ 	char work, *workp = this_cpu_ptr(&rcu_data.rcu_cpu_has_work);
+ 	int spincnt;
  
- /*
-- * Convert a ->gp_state value to a character string.
-- */
--static const char *gp_state_getname(short gs)
--{
--	if (gs < 0 || gs >= ARRAY_SIZE(gp_state_names))
--		return "???";
--	return gp_state_names[gs];
--}
--
--/*
-  * Send along grace-period-related data for rcutorture diagnostics.
-  */
- void rcutorture_get_gp_data(enum rcutorture_type test_type, int *flags,
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 54ff989..9d5986a 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -368,18 +368,6 @@ struct rcu_state {
- #define RCU_GP_CLEANUP   7	/* Grace-period cleanup started. */
- #define RCU_GP_CLEANED   8	/* Grace-period cleanup complete. */
- 
--static const char * const gp_state_names[] = {
--	"RCU_GP_IDLE",
--	"RCU_GP_WAIT_GPS",
--	"RCU_GP_DONE_GPS",
--	"RCU_GP_ONOFF",
--	"RCU_GP_INIT",
--	"RCU_GP_WAIT_FQS",
--	"RCU_GP_DOING_FQS",
--	"RCU_GP_CLEANUP",
--	"RCU_GP_CLEANED",
--};
--
- /*
-  * In order to export the rcu_state name to the tracing tools, it
-  * needs to be added in the __tracepoint_string section.
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index c0b8c45..f18adaf 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -279,6 +279,28 @@ static void print_cpu_stall_fast_no_hz(char *cp, int cpu)
- 
- #endif /* #else #ifdef CONFIG_RCU_FAST_NO_HZ */
- 
-+static const char * const gp_state_names[] = {
-+	[RCU_GP_IDLE] = "RCU_GP_IDLE",
-+	[RCU_GP_WAIT_GPS] = "RCU_GP_WAIT_GPS",
-+	[RCU_GP_DONE_GPS] = "RCU_GP_DONE_GPS",
-+	[RCU_GP_ONOFF] = "RCU_GP_ONOFF",
-+	[RCU_GP_INIT] = "RCU_GP_INIT",
-+	[RCU_GP_WAIT_FQS] = "RCU_GP_WAIT_FQS",
-+	[RCU_GP_DOING_FQS] = "RCU_GP_DOING_FQS",
-+	[RCU_GP_CLEANUP] = "RCU_GP_CLEANUP",
-+	[RCU_GP_CLEANED] = "RCU_GP_CLEANED",
-+};
-+
-+/*
-+ * Convert a ->gp_state value to a character string.
-+ */
-+static const char *gp_state_getname(short gs)
-+{
-+	if (gs < 0 || gs >= ARRAY_SIZE(gp_state_names))
-+		return "???";
-+	return gp_state_names[gs];
-+}
-+
- /*
-  * Print out diagnostic information for the specified stalled CPU.
-  *
++	trace_rcu_utilization(TPS("Start CPU kthread@rcu_run"));
+ 	for (spincnt = 0; spincnt < 10; spincnt++) {
+-		trace_rcu_utilization(TPS("Start CPU kthread@rcu_wait"));
+ 		local_bh_disable();
+ 		*statusp = RCU_KTHREAD_RUNNING;
+ 		local_irq_disable();
 -- 
 2.9.5
 
