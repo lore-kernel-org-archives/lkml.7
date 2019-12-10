@@ -2,74 +2,87 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5AC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B75AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF7820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2726220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfLJIRl (ORCPT
+        id S1727068AbfLJISF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:17:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38224 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727048AbfLJIRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:17:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9CC40B321;
-        Tue, 10 Dec 2019 08:17:39 +0000 (UTC)
-Subject: Re: [PATCH v5 1/2] xenbus/backend: Add memory pressure handler
- callback
-To:     SeongJae Park <sj38.park@gmail.com>, sjpark@amazon.com
-Cc:     axboe@kernel.dk, konrad.wilk@oracle.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pdurrant@amazon.com, roger.pau@citrix.com,
-        xen-devel@lists.xenproject.org, SeongJae Park <sjpark@amazon.de>
-References: <20191210080628.5264-1-sjpark@amazon.de>
- <20191210080628.5264-2-sjpark@amazon.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <7260cdce-7488-5045-0572-021a0ef191ac@suse.com>
-Date:   Tue, 10 Dec 2019 09:17:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 03:18:05 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40726 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfLJISE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 03:18:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 6so9007804oix.7;
+        Tue, 10 Dec 2019 00:18:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0t6BygI7LR4P3npISzoIFLrulT/ZjkgVbIJ3rXhwSlA=;
+        b=oeCpT5aNr/Pz6ppqL+xXfcrmSk72WEuB5gCm/FN2WUh4saC79v5FaOHEU4sXfqh3lW
+         DbdWYzF9T3Ma+bwXHNmozeo9KBE5SJVZEGlL5gVijltp3m//wqT4CmF0PC0o/nrqBzSP
+         uxmh+uQ56Q1ErOZbpEbydZMHzNCbWsqx2rtRK6o/EqobPb/EFf9ybzKPnD0V30/dzOyj
+         ehmiWfKCmjbt3O4iYC+Pr15Znd9n+9b/Bg8ZtFWxa/Ro9oXY9PEVFnEnkRWFXypj0IVp
+         fGCCSHBEUO6LSK8H2DYhaJnwXfst6t3VqP9mGMrqN8pmp+G5yFHy+2OLOhqABeFIMdg7
+         QeTg==
+X-Gm-Message-State: APjAAAXOcvirUrF1TyITJaSZrtODraSG2pmz1X2E2OkjxGINQ2zvhouT
+        PkthYX211rlI8ccE7SsiR0S/a6N55CvHT4vG5Hv1+7NZ
+X-Google-Smtp-Source: APXvYqwrZUEYZojjfpkgjPqaUslY8uQ/wa/kO+nTiz8i0MhyFYjSfBho3TmcDZZMDxjNKXhATPaCB4+jCWZLuvoBX/E=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr3059534oia.102.1575965883580;
+ Tue, 10 Dec 2019 00:18:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210080628.5264-2-sjpark@amazon.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <87muc1yqip.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87muc1yqip.wl-kuninori.morimoto.gx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Dec 2019 09:17:52 +0100
+Message-ID: <CAMuHMdUqSFhUScPJWqaBLO2zzX=qtp-dmh3y+jsJ0wX7j=P8Hw@mail.gmail.com>
+Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.12.19 09:06, SeongJae Park wrote:
-> Granting pages consumes backend system memory.  In systems configured
-> with insufficient spare memory for those pages, it can cause a memory
-> pressure situation.  However, finding the optimal amount of the spare
-> memory is challenging for large systems having dynamic resource
-> utilization patterns.  Also, such a static configuration might lack a
-> flexibility.
-> 
-> To mitigate such problems, this commit adds a memory reclaim callback to
-> 'xenbus_driver'.  Using this facility, 'xenbus' would be able to monitor
-> a memory pressure and request specific devices of specific backend
-> drivers which causing the given pressure to voluntarily release its
-> memory.
-> 
-> That said, this commit simply requests every callback registered driver
-> to release its memory for every domain, rather than issueing the
-> requests to the drivers and the domain in charge.  Such things will be
-> done in a futur.  Also, this commit focuses on memory only.  However, it
-> would be ablt to be extended for general resources.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Hi Morimoto-san,
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+On Tue, Dec 10, 2019 at 1:26 AM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> I'm posting this patch from few month ago,
+> but it seems SH ML maintainer is not working in these days...
+>
+> I'm not sure who can handle this patch in this case,
+> but is it possible to consider about it ?
 
+You may want to CC Andrew Morton <akpm@linux-foundation.org>, who
+tends to pick up patches for non-responsive architecture maintainers.
 
-Juergen
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
