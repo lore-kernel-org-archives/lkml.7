@@ -2,175 +2,151 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2016BC2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D48C2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E218720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:03:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utw6wVq8"
+	by mail.kernel.org (Postfix) with ESMTP id E7C7720637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLJBDX (ORCPT
+        id S1727572AbfLJBEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:03:23 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37187 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbfLJBDX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:03:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u17so17861304lja.4;
-        Mon, 09 Dec 2019 17:03:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gm6i6qWQ1sKIz4SMMqeT6Pkh0KtZ5FmEQQWK1xpXhYg=;
-        b=utw6wVq8SCj6tkBIhNsQaP3RRFd+h6n6jF+l0y3gX3S6FyudFPQjQk7v0NY/7cEYDv
-         dR5qpNMtOGabl5ap/kkmS2h4lF+20RNfsrzFBc4Js9Kagw257WpsMSVykq61zRWKBF3p
-         AkUh4pLDMZSlrXcNaLp5qb8cW3/xAONrOPu1Pmwdaz4gSrpk/z2suYuJ3AYW7IltUrV3
-         iC9ciHBC8Pmwu6H2BfEvAsycJBxjHtngxxB9Lzehh+7sloxdbUkIXI4vT5r32W1zncSa
-         Z1JWikdiYn+WPLguuH1D4Xwdc5N5DEA1edz1IYjReNTRrJgLjdhn9dOaz5fQMYL5Gg7g
-         BOBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gm6i6qWQ1sKIz4SMMqeT6Pkh0KtZ5FmEQQWK1xpXhYg=;
-        b=iaunrmZmW2eZg87ECUylqppzgJYS58EvTb9XtkiF/cYox7S5GRZeAs9l2JbVnU5JXk
-         AGXPHyvnqfpI7o7MoQrIPLqF2LEFcZB/1oPodQy9hC9ZnedduZ9Zsg90gZ+eL1Mm364p
-         HRK23X/AUGKG2Sy84ATs1He3U4UZsDXOa3PU31VTmvKu2WnJ3aqNTeqROj5wBsTQdSeS
-         QwcKfYgtPE+znp6UIja6sRYAVmJqbCdViPt3bc2rq1LiDPniQvSLOCzUsV/WL+E77R1u
-         qUWL08LbeaX+LVihV73k6gX3qJAyXAieOCJpM55dtCc2bl9rbY0XguWC3j0uS7d+iuiK
-         u2lQ==
-X-Gm-Message-State: APjAAAWGtSGRYh3wtGi5kXh8NESImnfjjCj9GltwtKLIOWjABMdjQqCX
-        K3EhKospKBd0bzNi0GgWHaIrjogV
-X-Google-Smtp-Source: APXvYqzc9uOxWSESXSZiw8rEsw97HAm53f7FiodlZYB9v7625PFavw7T3m767nvmg41n3PiZ9E2dCA==
-X-Received: by 2002:a2e:5304:: with SMTP id h4mr19244308ljb.75.1575939800200;
-        Mon, 09 Dec 2019 17:03:20 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g5sm505771lfc.11.2019.12.09.17.03.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 17:03:19 -0800 (PST)
-Subject: Re: [PATCH 3/6] input: elants: support common touchscreen DT
- properties
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
- <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
-Date:   Tue, 10 Dec 2019 04:03:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 20:04:24 -0500
+Received: from mga06.intel.com ([134.134.136.31]:57737 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727383AbfLJBEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 20:04:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 17:04:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,297,1571727600"; 
+   d="scan'208";a="387431429"
+Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.197.115]) ([10.239.197.115])
+  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2019 17:04:21 -0800
+Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
+ Write Policy
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191202070348.32148-1-tao3.xu@intel.com>
+ <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com>
+Date:   Tue, 10 Dec 2019 09:04:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.12.2019 03:19, Michał Mirosław пишет:
-> Support common DT properties like axis inversions to complement
-> information obtained from device's firmware.
+On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
+> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
+>>
+>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
+>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
+>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
+>> 2 is "Write Through" for Write Policy.
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 27 ++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
+> Well, I'm not sure what the connection between the above statement,
+> which is correct AFAICS, and the changes made by the patch is.
 > 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index eadd26d5a06f..02bd5e3e2171 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -31,6 +31,7 @@
->  #include <linux/buffer_head.h>
->  #include <linux/slab.h>
->  #include <linux/firmware.h>
-> +#include <linux/input/touchscreen.h>
->  #include <linux/input/mt.h>
->  #include <linux/acpi.h>
->  #include <linux/of.h>
-> @@ -146,8 +147,7 @@ struct elants_data {
->  	u16 hw_version;
->  	unsigned int x_res;	/* resolution in units/mm */
->  	unsigned int y_res;
-> -	unsigned int x_max;
-> -	unsigned int y_max;
-> +	struct touchscreen_properties prop;
->  
->  	enum elants_state state;
->  	enum elants_iap_mode iap_mode;
-> @@ -498,10 +498,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
->  			 rows, cols, osr);
->  	} else {
->  		/* translate trace number to TS resolution */
-> -		ts->x_max = ELAN_TS_RESOLUTION(rows, osr);
-> -		ts->x_res = DIV_ROUND_CLOSEST(ts->x_max, phy_x);
-> -		ts->y_max = ELAN_TS_RESOLUTION(cols, osr);
-> -		ts->y_res = DIV_ROUND_CLOSEST(ts->y_max, phy_y);
-> +		ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
-> +		ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
-> +		ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
-> +		ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
->  	}
->  
->  	return 0;
-> @@ -833,8 +833,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
->  
->  			input_mt_slot(input, i);
->  			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
-> -			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
-> -			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
-> +			touchscreen_report_pos(input, &ts->prop, x, y, true);
->  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
->  			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
->  
-> @@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	ts->input->name = "Elan Touchscreen";
->  	ts->input->id.bustype = BUS_I2C;
->  
-> +	touchscreen_parse_properties(ts->input, true, &ts->prop);
+> Is that the *_OTHER symbol names are confusing or something deeper?
+> 
 
-Shouldn't this function be invoked after setting the max x/y sizes with
-the hardware values? That's what all other drivers do and then you won't
-need to set the ts->prop.max_x/y above in the code.
+Because in include/acpi/actbl1.h:
 
->  	__set_bit(BTN_TOUCH, ts->input->keybit);
->  	__set_bit(EV_ABS, ts->input->evbit);
->  	__set_bit(EV_KEY, ts->input->evbit);
->  
->  	/* Single touch input params setup */
-> -	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
-> -	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_X, 0, ts->prop.max_x, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_Y, 0, ts->prop.max_y, 0, 0);
->  	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
->  	input_abs_set_res(ts->input, ABS_X, ts->x_res);
->  	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
-> @@ -1271,8 +1272,10 @@ static int elants_i2c_probe(struct i2c_client *client,
->  		return error;
->  	}
->  
-> -	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0, ts->x_max, 0, 0);
-> -	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_MT_POSITION_X,
-> +			     0, ts->prop.max_x, 0, 0);
-> +	input_set_abs_params(ts->input, ABS_MT_POSITION_Y,
-> +			     0, ts->prop.max_y, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
->  	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
->  	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> 
+#define ACPI_HMAT_CA_NONE                     (0)
+
+ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
+
+    enum cache_indexing {
+           NODE_CACHE_DIRECT_MAP,
+           NODE_CACHE_INDEXED,
+           NODE_CACHE_OTHER,
+    };
+NODE_CACHE_OTHER is 2, and for otner enum:
+
+          case ACPI_HMAT_CA_DIRECT_MAPPED:
+                  tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+                  break;
+          case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+                  tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+                  break;
+in include/acpi/actbl1.h:
+
+  #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
+  #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
+
+but in include/linux/node.h:
+
+NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is incorrect. 
+And same for enum cache_write_policy.
+
+>> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+>> ---
+>>   drivers/acpi/numa/hmat.c | 4 ++--
+>>   include/linux/node.h     | 4 ++--
+>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> index 2c32cfb72370..719d0279563d 100644
+>> --- a/drivers/acpi/numa/hmat.c
+>> +++ b/drivers/acpi/numa/hmat.c
+>> @@ -383,7 +383,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
+>>                  break;
+>>          case ACPI_HMAT_CA_NONE:
+>>          default:
+>> -               tcache->cache_attrs.indexing = NODE_CACHE_OTHER;
+>> +               tcache->cache_attrs.indexing = NODE_CACHE_NONE;
+>>                  break;
+>>          }
+>>
+>> @@ -396,7 +396,7 @@ static __init int hmat_parse_cache(union acpi_subtable_headers *header,
+>>                  break;
+>>          case ACPI_HMAT_CP_NONE:
+>>          default:
+>> -               tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_OTHER;
+>> +               tcache->cache_attrs.write_policy = NODE_CACHE_WRITE_NONE;
+>>                  break;
+>>          }
+>>          list_add_tail(&tcache->node, &target->caches);
+>> diff --git a/include/linux/node.h b/include/linux/node.h
+>> index 4866f32a02d8..6dbd764d09ce 100644
+>> --- a/include/linux/node.h
+>> +++ b/include/linux/node.h
+>> @@ -36,15 +36,15 @@ struct node_hmem_attrs {
+>>   };
+>>
+>>   enum cache_indexing {
+>> +       NODE_CACHE_NONE,
+>>          NODE_CACHE_DIRECT_MAP,
+>>          NODE_CACHE_INDEXED,
+>> -       NODE_CACHE_OTHER,
+>>   };
+>>
+>>   enum cache_write_policy {
+>> +       NODE_CACHE_WRITE_NONE,
+>>          NODE_CACHE_WRITE_BACK,
+>>          NODE_CACHE_WRITE_THROUGH,
+>> -       NODE_CACHE_WRITE_OTHER,
+>>   };
+>>
+>>   /**
 
