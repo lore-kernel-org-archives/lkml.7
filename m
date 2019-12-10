@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C15C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A6AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78739208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7492073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013156;
-	bh=Q4VBBcVHLUBqiODns1zyQG5zfK8ZHI0uDaGYoWiea0U=;
+	s=default; t=1576013158;
+	bh=cXy8ZML0fsnWkhNXvFU3jBh1336ClxUKiYLWUWD3YtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KLVWJ+iDfwKlv/MXeR0A1S23Iho24ORxVfN8m2PYcjj7WCk7Ow/ObWaJm03I0e2lh
-	 kLPzKGKSCHmv9j+JRY/EgUDhoMcmeU3CtZKjDhL3FfBP3YLOQYOXX2eSZxJTTEPSZ+
-	 0zk+FiDN8J7uFthKAMYRWuHj94nhh6dxSWe6h7e4=
+	b=NEqIBqx44/ejVsHnB15Oly+x4fd76A/BEDicOCYehYV8me3whzfljo9b61x8jwvS+
+	 tjv1ROitiABi3Axw0eF6cohDwUVdUbKQKoBFZMAGBb9o5l3cnu9tzGHKQDKyxgJl83
+	 FqYJiT9EYyFCKYHWMTG5KtBbMGqIEdq4bUhAYCe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfLJVZz (ORCPT
+        id S1729589AbfLJVZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56994 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbfLJVZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:42 -0500
+        id S1729553AbfLJVZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E74D5206D5;
-        Tue, 10 Dec 2019 21:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD5E214D8;
+        Tue, 10 Dec 2019 21:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013140;
-        bh=Q4VBBcVHLUBqiODns1zyQG5zfK8ZHI0uDaGYoWiea0U=;
+        s=default; t=1576013138;
+        bh=cXy8ZML0fsnWkhNXvFU3jBh1336ClxUKiYLWUWD3YtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UdEUMuPg9WmufsAXN1hqd8kJYBmRurF2o3kez5RXpv/IEBai9AYIoTCpaTZd0zWKk
-         z8mHWKHUEbFJdTKHDUVwAnPRFoNlNmlO3H35tFD40UAtQJCk4kKBA8pJA8vQzILFlg
-         DZ7aja27mGZOGVm7f53dsZrSjccCvDLQaVBnjegw=
+        b=isRUARWdhpkEZX4k5nVvHQZFOX4MnIoRar0tkhSKqa/b5pvID+vvhQSf3xYifY8hd
+         Ygu7IaMkHC71E+2X7InhnLp8Tv7eWp2pa4XTL4QRXk7WNpr5MweruNrpzYCagEQx4e
+         L2rr0duoYxbPtaeFR94XNDPE7HlJ5AnEYNXB/SW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 024/292] ath10k: fix backtrace on coredump
-Date:   Tue, 10 Dec 2019 16:20:43 -0500
-Message-Id: <20191210212511.11392-24-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 022/292] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using SSI_SCK2 and SSI_WS2"
+Date:   Tue, 10 Dec 2019 16:20:41 -0500
+Message-Id: <20191210212511.11392-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
@@ -60,72 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anilkumar Kolli <akolli@codeaurora.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit d98ddae85a4a57124f87960047b1b6419312147f ]
+[ Upstream commit 3672bc7093434621c83299ef27ea3b3225a67600 ]
 
-In a multiradio board with one QCA9984 and one AR9987
-after enabling the crashdump with module parameter
-coredump_mask=7, below backtrace is seen.
+This reverts commit e87882eb9be10b2b9e28156922c2a47d877f5db4.
 
-vmalloc: allocation failure: 0 bytes
- kworker/u4:0: page allocation failure: order:0, mode:0x80d2
- CPU: 0 PID: 6 Comm: kworker/u4:0 Not tainted 3.14.77 #130
- Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
- (unwind_backtrace) from [<c021abf8>] (show_stack+0x10/0x14)
- (dump_stack+0x80/0xa0)
- (warn_alloc_failed+0xd0/0xfc)
- (__vmalloc_node_range+0x1b4/0x1d8)
- (__vmalloc_node+0x34/0x40)
- (vzalloc+0x24/0x30)
- (ath10k_coredump_register+0x6c/0x88 [ath10k_core])
- (ath10k_core_register_work+0x350/0xb34 [ath10k_core])
- (process_one_work+0x20c/0x32c)
- (worker_thread+0x228/0x360)
+According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
+24, 2018, the SEL_SSI2_{0,1} definition was to be deleted.  However,
+this errata merely fixed an accidental double definition in the Hardware
+User's Manual Rev. 1.00.  The real definition is still present in later
+revisions of the manual (Rev. 1.50 and Rev. 2.00).
 
-This is due to ath10k_hw_mem_layout is not defined for AR9987.
-For coredump undefined hw ramdump_size is 0.
-Check for the ramdump_size before allocation memory.
+Hence revert the commit to recover the definition.
 
-Tested on: AR9987, QCA9984
-FW version: 10.4-3.9.0.2-00044
+Based on a patch in the BSP by Takeshi Kihara
+<takeshi.kihara.df@renesas.com>.
 
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190904121658.2617-3-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/coredump.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/coredump.c b/drivers/net/wireless/ath/ath10k/coredump.c
-index b6d2932383cf6..1cfe75a2d0c3a 100644
---- a/drivers/net/wireless/ath/ath10k/coredump.c
-+++ b/drivers/net/wireless/ath/ath10k/coredump.c
-@@ -1208,9 +1208,11 @@ static struct ath10k_dump_file_data *ath10k_coredump_build(struct ath10k *ar)
- 		dump_tlv = (struct ath10k_tlv_dump_data *)(buf + sofar);
- 		dump_tlv->type = cpu_to_le32(ATH10K_FW_CRASH_DUMP_RAM_DATA);
- 		dump_tlv->tlv_len = cpu_to_le32(crash_data->ramdump_buf_len);
--		memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
--		       crash_data->ramdump_buf_len);
--		sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		if (crash_data->ramdump_buf_len) {
-+			memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
-+			       crash_data->ramdump_buf_len);
-+			sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		}
- 	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+index 2dfb8d9cfda12..3808409cab385 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
  
- 	mutex_unlock(&ar->dump_mutex);
-@@ -1257,6 +1259,9 @@ int ath10k_coredump_register(struct ath10k *ar)
- 	if (test_bit(ATH10K_FW_CRASH_DUMP_RAM_DATA, &ath10k_coredump_mask)) {
- 		crash_data->ramdump_buf_len = ath10k_coredump_get_ramdump_size(ar);
+ /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
++#define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
+ #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
+ #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
+ #define MOD_SEL1_26		FM(SEL_DRIF2_0)			FM(SEL_DRIF2_1)
+@@ -468,7 +469,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
  
-+		if (!crash_data->ramdump_buf_len)
-+			return 0;
-+
- 		crash_data->ramdump_buf = vzalloc(crash_data->ramdump_buf_len);
- 		if (!crash_data->ramdump_buf)
- 			return -ENOMEM;
+ #define PINMUX_MOD_SELS	\
+ \
+-MOD_SEL0_30_29 \
++MOD_SEL0_30_29		MOD_SEL1_30 \
+ 			MOD_SEL1_29 \
+ MOD_SEL0_28		MOD_SEL1_28 \
+ MOD_SEL0_27_26 \
+@@ -1058,7 +1059,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		RIF0_CLK_B,	SEL_DRIF0_1),
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		SCL2_B,		SEL_I2C2_1),
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		TCLK1_A,	SEL_TIMER_TMU_0),
+-	PINMUX_IPSR_GPSR(IP10_27_24,		SSI_SCK2_B),
++	PINMUX_IPSR_MSEL(IP10_27_24,		SSI_SCK2_B,	SEL_SSI2_1),
+ 	PINMUX_IPSR_GPSR(IP10_27_24,		TS_SCK0),
+ 
+ 	PINMUX_IPSR_GPSR(IP10_31_28,		SD0_WP),
+@@ -1067,7 +1068,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		RIF0_D0_B,	SEL_DRIF0_1),
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		SDA2_B,		SEL_I2C2_1),
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		TCLK2_A,	SEL_TIMER_TMU_0),
+-	PINMUX_IPSR_GPSR(IP10_31_28,		SSI_WS2_B),
++	PINMUX_IPSR_MSEL(IP10_31_28,		SSI_WS2_B,	SEL_SSI2_1),
+ 	PINMUX_IPSR_GPSR(IP10_31_28,		TS_SDAT0),
+ 
+ 	/* IPSR11 */
+@@ -1085,13 +1086,13 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_IPSR_MSEL(IP11_11_8,		RX0_A,		SEL_SCIF0_0),
+ 	PINMUX_IPSR_MSEL(IP11_11_8,		HRX1_A,		SEL_HSCIF1_0),
+-	PINMUX_IPSR_GPSR(IP11_11_8,		SSI_SCK2_A),
++	PINMUX_IPSR_MSEL(IP11_11_8,		SSI_SCK2_A,	SEL_SSI2_0),
+ 	PINMUX_IPSR_GPSR(IP11_11_8,		RIF1_SYNC),
+ 	PINMUX_IPSR_GPSR(IP11_11_8,		TS_SCK1),
+ 
+ 	PINMUX_IPSR_MSEL(IP11_15_12,		TX0_A,		SEL_SCIF0_0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		HTX1_A),
+-	PINMUX_IPSR_GPSR(IP11_15_12,		SSI_WS2_A),
++	PINMUX_IPSR_MSEL(IP11_15_12,		SSI_WS2_A,	SEL_SSI2_0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		RIF1_D0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		TS_SDAT1),
+ 
+@@ -4957,11 +4958,12 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		MOD_SEL0_1_0 ))
+ 	},
+ 	{ PINMUX_CFG_REG_VAR("MOD_SEL1", 0xe6060504, 32,
+-			     GROUP(2, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1,
+-				   2, 2, 2, 1, 1, 2, 1, 4),
++			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
++				   1, 2, 2, 2, 1, 1, 2, 1, 4),
+ 			     GROUP(
+-		/* RESERVED 31, 30 */
+-		0, 0, 0, 0,
++		/* RESERVED 31 */
++		0, 0,
++		MOD_SEL1_30
+ 		MOD_SEL1_29
+ 		MOD_SEL1_28
+ 		/* RESERVED 27 */
 -- 
 2.20.1
 
