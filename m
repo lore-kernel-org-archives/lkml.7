@@ -2,162 +2,187 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B948AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23019C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791052073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576018608;
-	bh=XWDREuj9dAdtDalevfFif+p6LIl9S2O4mIRyDr996/4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=pnd7gwF4FFxKrxNyO6gn975LHINJ4isfyzSgooMehho8L1TDHjKavaVVigoss4Ryo
-	 Qdm6FFuPgwgvNByebOKjMYu3CQ7RkiNmufBgOecu25jGtwnwVauRbmh7gkvUz9JmOZ
-	 6nMSI3GphazmkTdtOr+/9xsfieUSHgRp66oChlhQ=
+	by mail.kernel.org (Postfix) with ESMTP id E326020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="wcNzTkNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfLJW4r (ORCPT
+        id S1727300AbfLJW7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:56:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbfLJW4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:56:47 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994B92053B;
-        Tue, 10 Dec 2019 22:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576018605;
-        bh=XWDREuj9dAdtDalevfFif+p6LIl9S2O4mIRyDr996/4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SP4ifQLvAuOKWVhyW64pmq5mrOWwJOo/YYVIh5Bul9lwGAl/Y51PLhuzJm+uNok70
-         PHrhLHfHvp2cT6k9SFs2hUM7kTGbt+ly0Z99oT74r0JkEo6EG/ImO2NzR3Suow7ROL
-         rrHYMqQbm9y5He1w7pDuYDGPu0kCc2q4cxtDvO+w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3A68F352276D; Tue, 10 Dec 2019 14:56:45 -0800 (PST)
-Date:   Tue, 10 Dec 2019 14:56:45 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Tejun Heo <tj@kernel.org>, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Workqueues splat due to ending up on wrong CPU
-Message-ID: <20191210225645.GW2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191202201338.GH16681@devbig004.ftw2.facebook.com>
- <20191203095521.GH2827@hirez.programming.kicks-ass.net>
- <20191204201150.GA14040@paulmck-ThinkPad-P72>
- <20191205102928.GG2810@hirez.programming.kicks-ass.net>
- <20191205103213.GB2871@hirez.programming.kicks-ass.net>
- <20191205144805.GR2889@paulmck-ThinkPad-P72>
- <20191206185208.GA25636@paulmck-ThinkPad-P72>
- <20191206220020.GA27511@paulmck-ThinkPad-P72>
- <20191209185908.GA8470@paulmck-ThinkPad-P72>
- <20191210090839.GJ2844@hirez.programming.kicks-ass.net>
+        Tue, 10 Dec 2019 17:59:03 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46695 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfLJW7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:59:02 -0500
+Received: by mail-pl1-f194.google.com with SMTP id k20so476156pll.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:59:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vpFOxiMZI3wLnugiw6ZK5a1MGgcbf1URL3Ew4UkA4vw=;
+        b=wcNzTkNRAo8zcaltDabwo/6jjeesZ1t9zuh8cTat1eROxlv9eD0P98UAIRG5f7kIIG
+         NPm6dZ28OlSpn4DdnjMi7IFj+IpK7B+St+TCqINRIowPNscwvwg3n6+pcvZ4uDLsUCQc
+         RfJJ/hwxxzH/R8KqmXjdTewAswQ/5tBNudkNjInxZmX+1BWxo2YJx05O31IDVixSR4md
+         aFGJZWs4NQ4IxeARGNq4G+/rTZJfO2OnByhSr1P7yNIVlyIQcJ3Z/x3j7RfVWiYsGBlu
+         oR8yEyjx7GQmga0BxQI+1Ew0fZELTnzu9sQhJrVh4QlfYEq8UcHmuLDZOuydmityK2cS
+         uLCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vpFOxiMZI3wLnugiw6ZK5a1MGgcbf1URL3Ew4UkA4vw=;
+        b=OUZ6tM64ZYtOnU9ZRd/RAjuPMMSPFwXl9popQgc0sZ4WMt2HziawrZBzf+DCFhBz0y
+         m80Gsx5KONsX2U5gKzleu2WJu2h1bCb4bHA1urPzdiStCzfB/iLMpQtg7rDAk1h56viy
+         vWU2/tcw6YfhlImx06DmIsUDCxvfAhZ1bcdfRzU+6WDY08EEjUZ7Z8/Hot4+sF3TOIMR
+         xH5YEBzrvBD0o7/zBIr7Nqg8xsQSXEOcyl/uNjpVxyxEU8at48kza4+4xFx3e5lJLsKE
+         HxQ9c8Agd+00cWDe1fRDbXHmaDINDCfetZd59URRhMmflDp81VXj95vhH7Kr3UCrawNB
+         5GJQ==
+X-Gm-Message-State: APjAAAXZpre3oKbsxF1BejuVlzVfCv3fJrYA/zSrEJ2+h8f894mST7Wx
+        byWmVwszpwFFyEaqnQGhKuUYQg==
+X-Google-Smtp-Source: APXvYqwse9t7cYgpMsIPVSQvmp8zy5G48e60UJTJLW0VCZrFhsf/Hqc7ZW1lh7fRy4XaxSGHTG+1FQ==
+X-Received: by 2002:a17:90a:f84:: with SMTP id 4mr8275895pjz.74.1576018741580;
+        Tue, 10 Dec 2019 14:59:01 -0800 (PST)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id q6sm83979pfh.127.2019.12.10.14.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 14:59:01 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:59:00 -0800
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191210225900.GB3105713@mini-arch>
+References: <20191210011438.4182911-1-andriin@fb.com>
+ <20191210011438.4182911-12-andriin@fb.com>
+ <20191209175745.2d96a1f0@cakuba.netronome.com>
+ <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
+ <20191210100536.7a57d5e1@cakuba.netronome.com>
+ <20191210214407.GA3105713@mini-arch>
+ <CAEf4BzbSwoeKVnyJU7EoP86exNj3Eku5_+8MbEieZKt2MqrhbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210090839.GJ2844@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAEf4BzbSwoeKVnyJU7EoP86exNj3Eku5_+8MbEieZKt2MqrhbQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 10:08:39AM +0100, Peter Zijlstra wrote:
-> On Mon, Dec 09, 2019 at 10:59:08AM -0800, Paul E. McKenney wrote:
-> > And it survived!  ;-)
-> > 
-> > Peter, could I please have your Signed-off-by?  Or take my Tested-by if
-> > you would prefer to send it up some other way.
+On 12/10, Andrii Nakryiko wrote:
+> On Tue, Dec 10, 2019 at 1:44 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> >
+> > On 12/10, Jakub Kicinski wrote:
+> > > On Tue, 10 Dec 2019 09:11:31 -0800, Andrii Nakryiko wrote:
+> > > > On Mon, Dec 9, 2019 at 5:57 PM Jakub Kicinski wrote:
+> > > > > On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:
+> > > > > > struct <object-name> {
+> > > > > >       /* used by libbpf's skeleton API */
+> > > > > >       struct bpf_object_skeleton *skeleton;
+> > > > > >       /* bpf_object for libbpf APIs */
+> > > > > >       struct bpf_object *obj;
+> > > > > >       struct {
+> > > > > >               /* for every defined map in BPF object: */
+> > > > > >               struct bpf_map *<map-name>;
+> > > > > >       } maps;
+> > > > > >       struct {
+> > > > > >               /* for every program in BPF object: */
+> > > > > >               struct bpf_program *<program-name>;
+> > > > > >       } progs;
+> > > > > >       struct {
+> > > > > >               /* for every program in BPF object: */
+> > > > > >               struct bpf_link *<program-name>;
+> > > > > >       } links;
+> > > > > >       /* for every present global data section: */
+> > > > > >       struct <object-name>__<one of bss, data, or rodata> {
+> > > > > >               /* memory layout of corresponding data section,
+> > > > > >                * with every defined variable represented as a struct field
+> > > > > >                * with exactly the same type, but without const/volatile
+> > > > > >                * modifiers, e.g.:
+> > > > > >                */
+> > > > > >                int *my_var_1;
+> > > > > >                ...
+> > > > > >       } *<one of bss, data, or rodata>;
+> > > > > > };
+> > > > >
+> > > > > I think I understand how this is useful, but perhaps the problem here
+> > > > > is that we're using C for everything, and simple programs for which
+> > > > > loading the ELF is majority of the code would be better of being
+> > > > > written in a dynamic language like python?  Would it perhaps be a
+> > > > > better idea to work on some high-level language bindings than spend
+> > > > > time writing code gens and working around limitations of C?
+> > > >
+> > > > None of this work prevents Python bindings and other improvements, is
+> > > > it? Patches, as always, are greatly appreciated ;)
+> > >
+> > > This "do it yourself" shit is not really funny :/
+> > >
+> > > I'll stop providing feedback on BPF patches if you guy keep saying
+> > > that :/ Maybe that's what you want.
+> > >
+> > > > This skeleton stuff is not just to save code, but in general to
+> > > > simplify and streamline working with BPF program from userspace side.
+> > > > Fortunately or not, but there are a lot of real-world applications
+> > > > written in C and C++ that could benefit from this, so this is still
+> > > > immensely useful. selftests/bpf themselves benefit a lot from this
+> > > > work, see few of the last patches in this series.
+> > >
+> > > Maybe those applications are written in C and C++ _because_ there
+> > > are no bindings for high level languages. I just wish BPF programming
+> > > was less weird and adding some funky codegen is not getting us closer
+> > > to that goal.
+> > >
+> > > In my experience code gen is nothing more than a hack to work around
+> > > bad APIs, but experiences differ so that's not a solid argument.
+> > *nod*
+> >
+> > We have a nice set of C++ wrappers around libbpf internally, so we can do
+> > something like BpfMap<key type, value type> and get a much better interface
+> > with type checking. Maybe we should focus on higher level languages instead?
+> > We are open to open-sourcing our C++ bits if you want to collaborate.
 > 
-> How's this?
+> Python/C++ bindings and API wrappers are an orthogonal concerns here.
+> I personally think it would be great to have both Python and C++
+> specific API that uses libbpf under the cover. The only debatable
+> thing is the logistics: where the source code lives, how it's kept in
+> sync with libbpf, how we avoid crippling libbpf itself because
+> something is hard or inconvenient to adapt w/ Python, etc.
 
-Very good, thank you!  I have queued it on -rcu, but please let me
-know if you would rather that it go in via some other path.
+[..]
+> The problem I'm trying to solve here is not really C-specific. I don't
+> think you can solve it without code generation for C++. How do you
+> "generate" BPF program-specific layout of .data, .bss, .rodata, etc
+> data sections in such a way, where it's type safe (to the degree that
+> language allows that, of course) and is not "stringly-based" API? This
+> skeleton stuff provides a natural, convenient and type-safe way to
+> work with global data from userspace pretty much at the same level of
+> performance and convenience, as from BPF side. How can you achieve
+> that w/ C++ without code generation? As for Python, sure you can do
+> dynamic lookups based on just the name of property/method, but amount
+> of overheads is not acceptable for all applications (and Python itself
+> is not acceptable for those applications). In addition to that, C is
+> the best way for other less popular languages (e.g., Rust) to leverage
+> libbpf without investing lots of effort in re-implementing libbpf in
+> Rust.
+I'd say that a libbpf API similar to dlopen/dlsym is a more
+straightforward thing to do. Have a way to "open" a section and
+a way to find a symbol in it. Yes, it's a string-based API,
+but there is nothing wrong with it. IMO, this is easier to
+use/understand and I suppose Python/C++ wrappers are trivial.
 
-							Thanx, Paul
-
-> ---
-> Subject: cpu/hotplug, stop_machine: Fix stop_machine vs hotplug order
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Tue Dec 10 09:34:54 CET 2019
-> 
-> Paul reported a very sporadic, rcutorture induced, workqueue failure.
-> When the planets align, the workqueue rescuer's self-migrate fails and
-> then triggers a WARN for running a work on the wrong CPU.
-> 
-> Tejun then figured that set_cpus_allowed_ptr()'s stop_one_cpu() call
-> could be ignored! When stopper->enabled is false, stop_machine will
-> insta complete the work, without actually doing the work. Worse, it
-> will not WARN about this (we really should fix this).
-> 
-> It turns out there is a small window where a freshly online'ed CPU is
-> marked 'online' but doesn't yet have the stopper task running:
-> 
-> 	BP				AP
-> 
-> 	bringup_cpu()
-> 	  __cpu_up(cpu, idle)	 -->	start_secondary()
-> 					...
-> 					cpu_startup_entry()
-> 	  bringup_wait_for_ap()
-> 	    wait_for_ap_thread() <--	  cpuhp_online_idle()
-> 					  while (1)
-> 					    do_idle()
-> 
-> 					... available to run kthreads ...
-> 
-> 	    stop_machine_unpark()
-> 	      stopper->enable = true;
-> 
-> Close this by moving the stop_machine_unpark() into
-> cpuhp_online_idle(), such that the stopper thread is ready before we
-> start the idle loop and schedule.
-> 
-> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
-> Debugged-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -525,8 +525,7 @@ static int bringup_wait_for_ap(unsigned
->  	if (WARN_ON_ONCE((!cpu_online(cpu))))
->  		return -ECANCELED;
->  
-> -	/* Unpark the stopper thread and the hotplug thread of the target cpu */
-> -	stop_machine_unpark(cpu);
-> +	/* Unpark the hotplug thread of the target cpu */
->  	kthread_unpark(st->thread);
->  
->  	/*
-> @@ -1089,8 +1088,8 @@ void notify_cpu_starting(unsigned int cp
->  
->  /*
->   * Called from the idle task. Wake up the controlling task which brings the
-> - * stopper and the hotplug thread of the upcoming CPU up and then delegates
-> - * the rest of the online bringup to the hotplug thread.
-> + * hotplug thread of the upcoming CPU up and then delegates the rest of the
-> + * online bringup to the hotplug thread.
->   */
->  void cpuhp_online_idle(enum cpuhp_state state)
->  {
-> @@ -1100,6 +1099,12 @@ void cpuhp_online_idle(enum cpuhp_state
->  	if (state != CPUHP_AP_ONLINE_IDLE)
->  		return;
->  
-> +	/*
-> +	 * Unpart the stopper thread before we start the idle loop (and start
-> +	 * scheduling); this ensures the stopper task is always available.
-> +	 */
-> +	stop_machine_unpark(smp_processor_id());
-> +
->  	st->state = CPUHP_AP_ONLINE_IDLE;
->  	complete_ap_thread(st, true);
->  }
+As for type-safety: it's C, forget about it :-)
