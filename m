@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC965C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01CC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D082053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015557;
-	bh=UpZ6MNb/Yjt/rtvFNQG0xygwu3D/RzjBw3c7jSbs0vs=;
+	s=default; t=1576015560;
+	bh=BqdLStzEJB6Zi2WSurBDBiPlZMz52nDuIolEUyiSz5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DoV8W4YXzQHcjVIwq4XKIu+1LZYBR5TtfZMR9cl0rx3cTlSyOY2vfWpVdlrpGB0eq
-	 ht+X7uqxgCi1MPtvukPEQVqn9noMRrg/7jh6LLhm/LJ2VX76yzOTcM8jCVb7r/qP0m
-	 lDCxoziKSSTVWvQsHDe05yaJ6xMuXKoSkYmM2ipk=
+	b=beQFMzFAIzxgjQVhBC+4B9FGHeq8q9Ow3Y5YPrkQV1QB7KSlu6GS7Q4Odx/oFz/0W
+	 J2TsWNtop00Zhv+en37r8xEhI2/dS2Dn5G5ULSYjfM05Xdu5y4BOfXA8hutyP2IaGo
+	 WuAfHk2igSJCYflR+bz8DU12or8q1BqZbWZYhQ1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfLJWFj (ORCPT
+        id S1730022AbfLJWFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36962 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbfLJWF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:28 -0500
+        id S1729518AbfLJWFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F20320637;
-        Tue, 10 Dec 2019 22:05:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EF1B22464;
+        Tue, 10 Dec 2019 22:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015527;
-        bh=UpZ6MNb/Yjt/rtvFNQG0xygwu3D/RzjBw3c7jSbs0vs=;
+        s=default; t=1576015524;
+        bh=BqdLStzEJB6Zi2WSurBDBiPlZMz52nDuIolEUyiSz5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fnejex6U8Hedkb6pNjDsu7hOI/d/jNga1NS14t0SvTg++aFhyapYhRjDoQj3c+Umb
-         TKEs9Q7FHK7NnopKgtch8MsHCbSpYkZjUPwdRLowkLIhAMLFSO7dsf9bzs4v2NSpxT
-         ONgdxDDdd7JmV3yK9MnG1rP6iSEaQhYhDnZIpMCc=
+        b=CF2+64oRXqgVJ/UqswAm+sPJCP2X/CKQxMWMuqGt6KR8aGgPX0sdpvuXbZ6JRaGW5
+         isYpvTUFDm33zgVGZhb1H/boEeeIiCntLBJPdEtjuV+5eaETj5zWjleXAGRiLXFPH3
+         /XTtiaoKdD0lYsHb84bh5qUQhvu1C4dAoxc4DrLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 122/130] crypto: sun4i-ss - Fix 64-bit size_t warnings
-Date:   Tue, 10 Dec 2019 17:02:53 -0500
-Message-Id: <20191210220301.13262-122-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 119/130] iwlwifi: check kasprintf() return value
+Date:   Tue, 10 Dec 2019 17:02:50 -0500
+Message-Id: <20191210220301.13262-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,100 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit d6e9da21ee8246b5e556b3b153401ab045adb986 ]
+[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
 
-If you try to compile this driver on a 64-bit platform then you
-will get warnings because it mixes size_t with unsigned int which
-only works on 32-bit.
+kasprintf() can fail, we should check the return value.
 
-This patch fixes all of the warnings.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
+Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/dvm/led.c | 3 +++
+ drivers/net/wireless/intel/iwlwifi/mvm/led.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-index 5cf64746731a3..22e4918579254 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-@@ -81,7 +81,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
- 	oi = 0;
- 	oo = 0;
- 	do {
--		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
-+		todo = min(rx_cnt, ileft);
-+		todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 		if (todo) {
- 			ileft -= todo;
- 			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
-@@ -96,7 +97,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/led.c b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+index 1bbd17ada9747..20e16c4239901 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+@@ -185,6 +185,9 @@ void iwl_leds_init(struct iwl_priv *priv)
  
--		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			oleft -= todo;
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
-@@ -220,7 +222,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 			 * todo is the number of consecutive 4byte word that we
- 			 * can read from current SG
- 			 */
--			todo = min3(rx_cnt, ileft / 4, (mi.length - oi) / 4);
-+			todo = min(rx_cnt, ileft / 4);
-+			todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 			if (todo && !ob) {
- 				writesl(ss->base + SS_RXFIFO, mi.addr + oi,
- 					todo);
-@@ -234,8 +237,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * we need to be able to write all buf in one
- 				 * pass, so it is why we min() with rx_cnt
- 				 */
--				todo = min3(rx_cnt * 4 - ob, ileft,
--					    mi.length - oi);
-+				todo = min(rx_cnt * 4 - ob, ileft);
-+				todo = min_t(size_t, todo, mi.length - oi);
- 				memcpy(buf + ob, mi.addr + oi, todo);
- 				ileft -= todo;
- 				oi += todo;
-@@ -255,7 +258,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		spaces = readl(ss->base + SS_FCSR);
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
--		dev_dbg(ss->dev, "%x %u/%u %u/%u cnt=%u %u/%u %u/%u cnt=%u %u\n",
-+		dev_dbg(ss->dev,
-+			"%x %u/%zu %u/%u cnt=%u %u/%zu %u/%u cnt=%u %u\n",
- 			mode,
- 			oi, mi.length, ileft, areq->cryptlen, rx_cnt,
- 			oo, mo.length, oleft, areq->cryptlen, tx_cnt, ob);
-@@ -263,7 +267,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		if (!tx_cnt)
- 			continue;
- 		/* todo in 4bytes word */
--		todo = min3(tx_cnt, oleft / 4, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft / 4);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
- 			oleft -= todo * 4;
-@@ -287,7 +292,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * no more than remaining buffer
- 				 * no need to test against oleft
- 				 */
--				todo = min(mo.length - oo, obl - obo);
-+				todo = min_t(size_t,
-+					     mo.length - oo, obl - obo);
- 				memcpy(mo.addr + oo, bufo + obo, todo);
- 				oleft -= todo;
- 				obo += todo;
+ 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(priv->hw->wiphy));
++	if (!priv->led.name)
++		return;
++
+ 	priv->led.brightness_set = iwl_led_brightness_set;
+ 	priv->led.blink_set = iwl_led_blink_set;
+ 	priv->led.max_brightness = 1;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+index b27269504a622..072f80c90ce4a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+@@ -131,6 +131,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
+ 
+ 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(mvm->hw->wiphy));
++	if (!mvm->led.name)
++		return -ENOMEM;
++
+ 	mvm->led.brightness_set = iwl_led_brightness_set;
+ 	mvm->led.max_brightness = 1;
+ 
 -- 
 2.20.1
 
