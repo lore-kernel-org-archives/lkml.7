@@ -2,281 +2,188 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C76C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EDBC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD28D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew2wtssY"
+	by mail.kernel.org (Postfix) with ESMTP id 54D762073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575971782;
+	bh=grqW5MwSwh5bfeTqGe2eaMDZCFxjfCnPVlS3K00LND8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CYziBC8n9gdygYIkkeGXnmdOWA4pSHpV3LyvdW44E2phJ7HogwW2iWcK8y1jNyRDT
+	 JPEMYaDQvOOUUd8AikevOf6/Iwswj9VZaCqB2y1/r5EZnv46kjM85vyi7NPr0kp17h
+	 /kzwZK/V2HZoczV7w8Ohtyxs3LW+koP+SsBYWY+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfLJJyB (ORCPT
+        id S1727185AbfLJJ4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:54:01 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39913 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLJJyB (ORCPT
+        Tue, 10 Dec 2019 04:56:21 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38637 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbfLJJ4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:54:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e10so19119364ljj.6;
-        Tue, 10 Dec 2019 01:53:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6cqsGsp+ZUO8m1vGxlpJnKGWq2w7yuiDyolBR1vJcuo=;
-        b=Ew2wtssYP8SmMU1ROaoHiHzoktWVWSAYckzYFBievnIGc0dUBEi2Z9tlOcfiP4ljO+
-         0Brnhv2C53NbpncwbTrFhMCdvgqt6InfYfOpiJWlobU1eAyEnpLzFJqPCcKdITsvs6zE
-         Ow8Bxz3uJCCvf1Jc6V8NY2QJzwHWI1a2cAXD9rgKJuiw9/0iqLvNgKMVcHWSAt65x0he
-         PfXXwx9xjdqaj5vM7hnxAm4ffPm2vo4j4umi1C+0gJIFVWpQFGkF7TqsY9xg4fc4uFRD
-         Wx7VxEVhP9l6CimjAvNmtz/zineDsgABTiHNNevqSXwgLLLbvymyz1rSSCmgCaK37fBY
-         qIQw==
+        Tue, 10 Dec 2019 04:56:20 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so19277094wrh.5;
+        Tue, 10 Dec 2019 01:56:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6cqsGsp+ZUO8m1vGxlpJnKGWq2w7yuiDyolBR1vJcuo=;
-        b=h9zS+ubkT0o4/lSIhRMhubLMJYSXTnPoucvKYGUwfY45+9AfGxxj6VaSeF6ZAFqzaM
-         bjaDvEsJr6x0colztiiHiBnfWfh0YBY1R4lDNd0FEr9hPX+/A2rhFamVlrSDICytQoPP
-         58FEfXL9PnKyT+Cu4d1P1UuBovMz07yHpeqtbq7+nwlzgydOE3ZOGSSBuKKPxnoPZj1C
-         HFCpc5KikTk52k2AIQMUFfKr/yfJpKAB0sI+gE9P/Qc4KGGGb00WY2eY/QEy78xRbZBD
-         YOf9LSNDKDsZ072/nQgiRsO53xec4eglRMsa+WBw+PQhw1R9LXQDAkn+Lvy3BjigjmnG
-         0yMg==
-X-Gm-Message-State: APjAAAWzEQ33lE/2TDqgKkgMATa9qNHeR5MjhsYD2E2KIWJfftWmFwm3
-        FqyYS9Ame+jpkTCRpm6gGMY=
-X-Google-Smtp-Source: APXvYqyrtlbfYzZ/pCO/3gmb09kNQZyF9u6YoHH2Co0UmXVsW3aFy02gbouF6hbKQHeTXYLkKnYsFw==
-X-Received: by 2002:a2e:9694:: with SMTP id q20mr3206696lji.248.1575971637302;
-        Tue, 10 Dec 2019 01:53:57 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id g27sm1201547lfh.57.2019.12.10.01.53.56
+        bh=wiDeNqk4JUYH6LbyjP3mNqGyXwUCv0yPtvfwbu07E84=;
+        b=AvZkSkayyZiR5bZRlkYLVnUBcZtoQOsZgZkxrM+X0LrkuvAbiq72iFEbzB6MutpNYL
+         W7SmqP3ANY7p+WD6rbzocvhNLVcclLks3X9Cj2oDRv7sYK8oxlJ3EBvmiVbip5N9Q6jz
+         8Ax0U3Qoqy2LHuMqRvlpgFtVqkEyuJi//2LcNeSUNCOn5KU+6KE6Lbn382dEzEr5KQnN
+         YL45bngPQU3SI0/NuOVEqyXTYpFrprVy+kqnu3H/xncUYjm0bfWeZiqLbi5h+o8NyAT6
+         nQlWtvRPT6PGk1htM8lFSLSiV2vDLMesqM/tRuA7Nb8VCY+4WQwmfPUVu1EFd/g4XCYd
+         AY1g==
+X-Gm-Message-State: APjAAAU1d/12fkybi+de6lst4oQjBDulGdBO2fzc2hLQ6m50kxoQE8YO
+        QVJsp46K5kd2agfzkTcEeSU=
+X-Google-Smtp-Source: APXvYqyOvGHL/dLqIEko15VM3eCGbjurIUWfw6wjXgmK+XRllFbX0OjTyzcaIccFUw979KzcsTh8+w==
+X-Received: by 2002:adf:fc08:: with SMTP id i8mr2324107wrr.82.1575971777315;
+        Tue, 10 Dec 2019 01:56:17 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id u18sm2642900wrt.26.2019.12.10.01.56.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 01:53:56 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 10 Dec 2019 10:53:48 +0100
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        kernel-team@lge.com, Byungchul Park <byungchul.park@lge.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        max.byungchul.park@gmail.com, Rao Shoaib <rao.shoaib@oracle.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v4 1/2] rcu/tree: Add basic support for kfree_rcu()
- batching
-Message-ID: <20191210095348.GA420@pc636>
-References: <20190814160411.58591-1-joel@joelfernandes.org>
- <20190918095811.GA25821@pc636>
+        Tue, 10 Dec 2019 01:56:16 -0800 (PST)
+Date:   Tue, 10 Dec 2019 10:56:15 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
+ pgprot_t in arch_add_memory()
+Message-ID: <20191210095615.GB10404@dhcp22.suse.cz>
+References: <20191209191346.5197-1-logang@deltatee.com>
+ <20191209191346.5197-6-logang@deltatee.com>
+ <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
+ <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
+ <20191209204128.GC7658@dhcp22.suse.cz>
+ <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918095811.GA25821@pc636>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 11:58:11AM +0200, Uladzislau Rezki wrote:
-> > Recently a discussion about stability and performance of a system
-> > involving a high rate of kfree_rcu() calls surfaced on the list [1]
-> > which led to another discussion how to prepare for this situation.
+On Mon 09-12-19 14:24:22, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-12-09 1:41 p.m., Michal Hocko wrote:
+> > On Mon 09-12-19 13:24:19, Logan Gunthorpe wrote:
+> >>
+> >>
+> >> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
+> >>> On 09.12.19 20:13, Logan Gunthorpe wrote:
+> >>>> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+> >>>> struct page mappings for IO memory. At present, these mappings are created
+> >>>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+> >>>> x86, an mtrr register will typically override this and force the cache
+> >>>> type to be UC-. In the case firmware doesn't set this register it is
+> >>>> effectively WB and will typically result in a machine check exception
+> >>>> when it's accessed.
+> >>>>
+> >>>> Other arches are not currently likely to function correctly seeing they
+> >>>> don't have any MTRR registers to fall back on.
+> >>>>
+> >>>> To solve this, add an argument to arch_add_memory() to explicitly
+> >>>> set the pgprot value to a specific value.
+> >>>>
+> >>>> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
+> >>>> simple change to pass the pgprot_t down to their respective functions
+> >>>> which set up the page tables. For x86_32, set the page tables explicitly
+> >>>> using _set_memory_prot() (seeing they are already mapped). For sh, reject
+> >>>> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
+> >>>> sh doesn't support ZONE_DEVICE anyway.
+> >>>>
+> >>>> Cc: Dan Williams <dan.j.williams@intel.com>
+> >>>> Cc: David Hildenbrand <david@redhat.com>
+> >>>> Cc: Michal Hocko <mhocko@suse.com>
+> >>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>>> ---
+> >>>>  arch/arm64/mm/mmu.c            | 4 ++--
+> >>>>  arch/ia64/mm/init.c            | 5 ++++-
+> >>>>  arch/powerpc/mm/mem.c          | 4 ++--
+> >>>>  arch/s390/mm/init.c            | 4 ++--
+> >>>>  arch/sh/mm/init.c              | 5 ++++-
+> >>>>  arch/x86/mm/init_32.c          | 7 ++++++-
+> >>>>  arch/x86/mm/init_64.c          | 4 ++--
+> >>>>  include/linux/memory_hotplug.h | 2 +-
+> >>>>  mm/memory_hotplug.c            | 2 +-
+> >>>>  mm/memremap.c                  | 2 +-
+> >>>>  10 files changed, 25 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> >>>> index 60c929f3683b..48b65272df15 100644
+> >>>> --- a/arch/arm64/mm/mmu.c
+> >>>> +++ b/arch/arm64/mm/mmu.c
+> >>>> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+> >>>>  }
+> >>>>  
+> >>>>  #ifdef CONFIG_MEMORY_HOTPLUG
+> >>>> -int arch_add_memory(int nid, u64 start, u64 size,
+> >>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
+> >>>>  			struct mhp_restrictions *restrictions)
+> >>>
+> >>> Can we fiddle that into "struct mhp_restrictions" instead?
+> >>
+> >> Yes, if that's what people want, it's pretty trivial to do. I chose not
+> >> to do it that way because it doesn't get passed down to add_pages() and
+> >> it's not really a "restriction". If I don't hear any objections, I will
+> >> do that for v2.
 > > 
-> > This patch adds basic batching support for kfree_rcu(). It is "basic"
-> > because we do none of the slab management, dynamic allocation, code
-> > moving or any of the other things, some of which previous attempts did
-> > [2]. These fancier improvements can be follow-up patches and there are
-> > different ideas being discussed in those regards. This is an effort to
-> > start simple, and build up from there. In the future, an extension to
-> > use kfree_bulk and possibly per-slab batching could be done to further
-> > improve performance due to cache-locality and slab-specific bulk free
-> > optimizations. By using an array of pointers, the worker thread
-> > processing the work would need to read lesser data since it does not
-> > need to deal with large rcu_head(s) any longer.
+> > I do agree that restriction is not the best fit. But I consider prot
+> > argument to complicate the API to all users even though it is not really
+> > clear whether we are going to have many users really benefiting from it.
+> > Look at the vmalloc API and try to find how many users of __vmalloc do
+> > not use PAGE_KERNEL.
 > > 
-According to https://lkml.org/lkml/2017/12/19/706 there was an attempt
-to make use of kfree_bulk() interface. I have done some tests based on
-your patch and enhanced kfree_bulk() logic. Basically storing pointers 
-in an array with a specific size makes sense to me and seems to others
-as well. I mean in comparison with "pointer chasing" way, when there is
-probably a cache misses each time the access is done to next element:
+> > So I can see two options. One of them is to add arch_add_memory_prot
+> > that would allow to have give and extra prot argument or simply call
+> > an arch independent API to change the protection after arch_add_memory.
+> > The later sounds like much less code. The memory shouldn't be in use by
+> > anybody at that stage yet AFAIU. Maybe there even is an API like that.
+> 
+> Yes, well, we tried something like this by calling set_memory_wc()
+> inside memremap_pages(); but on large bars (tens of GB) it was too slow
+> (taking several seconds to complete) and on some hosts actually hit CPU
+> watchdog errors.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 1fe0418a5901..4f68662c1568 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2595,6 +2595,13 @@ EXPORT_SYMBOL_GPL(call_rcu);
+Which looks like something to fix independently.
 
- /* Maximum number of jiffies to wait before draining a batch. */
- #define KFREE_DRAIN_JIFFIES (HZ / 50)
-+#define KFREE_BULK_MAX_SIZE 64
-+
-+struct kfree_rcu_bulk_data {
-+       int nr_records;
-+       void *records[KFREE_BULK_MAX_SIZE];
-+       struct kfree_rcu_bulk_data *next;
-+};
+> So at the very least we'd have to add some cpu_relax() calls to that
+> path. And it's also the case that set_memory_wc() is x86 only right now.
+> So we'd have to create a new general interface to walk and fixup page
+> tables for all arches.
+> 
+> But, in my opinion, setting up all those page tables twice is too large
+> of an overhead and it's better to just add them correctly the first
+> time. The changes I propose to do this aren't really a lot of code and
+> probably less than creating a new interface for all arches.
 
- /*
-  * Maximum number of kfree(s) to batch, if this limit is hit then the batch of
-@@ -2607,15 +2614,24 @@ struct kfree_rcu_cpu {
-        struct rcu_work rcu_work;
-
-        /* The list of objects being queued in a batch but are not yet
--        * scheduled to be freed.
-+        * scheduled to be freed. For emergency path only.
-         */
-        struct rcu_head *head;
-
-        /* The list of objects that have now left ->head and are queued for
--        * freeing after a grace period.
-+        * freeing after a grace period. For emergency path only.
-         */
-        struct rcu_head *head_free;
-
-+       /*
-+        * It is a block list that keeps pointers in the array of specific
-+        * size which are freed by the kfree_bulk() logic. Intends to improve
-+        * drain throughput.
-+        */
-+       struct kfree_rcu_bulk_data *bhead;
-+       struct kfree_rcu_bulk_data *bhead_free;
-+       struct kfree_rcu_bulk_data *bcached;
-+
-        /* Protect concurrent access to this structure. */
-        spinlock_t lock;
-@@ -2637,23 +2653,39 @@ static void kfree_rcu_work(struct work_struct *work)
- {
-        unsigned long flags;
-        struct rcu_head *head, *next;
-+       struct kfree_rcu_bulk_data *bhead, *bnext;
-        struct kfree_rcu_cpu *krcp = container_of(to_rcu_work(work),
-                                        struct kfree_rcu_cpu, rcu_work);
- 
-        spin_lock_irqsave(&krcp->lock, flags);
-        head = krcp->head_free;
-        krcp->head_free = NULL;
-+       bhead = krcp->bhead_free;
-+       krcp->bhead_free = NULL;
-        spin_unlock_irqrestore(&krcp->lock, flags);
- 
-        /*
-         * The head is detached and not referenced from anywhere, so lockless
-         * access is Ok.
-         */
-+       for (; bhead; bhead = bnext) {
-+               bnext = bhead->next;
-+               kfree_bulk(bhead->nr_records, bhead->records);
-+
-+               if (cmpxchg(&krcp->bcached, NULL, bhead))
-+                       kfree(bhead);
-+
-+               cond_resched_tasks_rcu_qs();
-+       }
-+
-+       /*
-+        * Emergency case only. It can happen under low
-+        * memory condition when kmalloc gets failed, so
-+        * the "bulk" path can not be temporary maintained.
-+        */
-        for (; head; head = next) {
-                next = head->next;
--               /* Could be possible to optimize with kfree_bulk in future */
-                __rcu_reclaim(rcu_state.name, head);
--               cond_resched_tasks_rcu_qs();
-        }
- }
-
-@@ -2671,11 +2703,15 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
-         * another one, just refuse the optimization and it will be retried
-         * again in KFREE_DRAIN_JIFFIES time.
-         */
--       if (krcp->head_free)
-+       if (krcp->bhead_free || krcp->head_free)
-                return false;
-
-        krcp->head_free = krcp->head;
-        krcp->head = NULL;
-+
-+       krcp->bhead_free = krcp->bhead;
-+       krcp->bhead = NULL;
-+
-        INIT_RCU_WORK(&krcp->rcu_work, kfree_rcu_work);
-        queue_rcu_work(system_wq, &krcp->rcu_work);
-
-@@ -2747,6 +2783,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- {
-        unsigned long flags;
-        struct kfree_rcu_cpu *krcp;
-+       struct kfree_rcu_bulk_data *bnode;
-
-        /* kfree_call_rcu() batching requires timers to be up. If the scheduler
-         * is not yet up, just skip batching and do the non-batched version.
-@@ -2754,16 +2791,35 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-        if (rcu_scheduler_active != RCU_SCHEDULER_RUNNING)
-                return kfree_call_rcu_nobatch(head, func);
-
--       head->func = func;
--
-        local_irq_save(flags);  /* For safely calling this_cpu_ptr(). */
-        krcp = this_cpu_ptr(&krc);
-        spin_lock(&krcp->lock);
-
-+       if (!krcp->bhead ||
-+                       krcp->bhead->nr_records == KFREE_BULK_MAX_SIZE) {
-+               /* Need a new block. */
-+               if (!(bnode = xchg(&krcp->bcached, NULL)))
-+                       bnode = kmalloc(sizeof(struct kfree_rcu_bulk_data),
-+                               GFP_ATOMIC | __GFP_NOWARN);
-+
-+               /* If gets failed, maintain the list instead. */
-+               if (unlikely(!bnode)) {
-+                       head->func = func;
-+                       head->next = krcp->head;
-+                       krcp->head = head;
-+                       goto check_and_schedule;
-+               }
-+
-+               bnode->nr_records = 0;
-+               bnode->next = krcp->bhead;
-+               krcp->bhead = bnode;
-+       }
-+
-        /* Queue the kfree but don't yet schedule the batch. */
--       head->next = krcp->head;
--       krcp->head = head;
-+       krcp->bhead->records[krcp->bhead->nr_records++] =
-+               (void *) head - (unsigned long) func;
- 
-+check_and_schedule:
-        /* Schedule monitor for timely drain after KFREE_DRAIN_JIFFIES. */
-        if (!xchg(&krcp->monitor_todo, true))
-                schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
-
-See below some test results with/without this patch:
-
-# HiKey 960 8xCPUs
-rcuperf.ko kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1
-[  159.017771] Total time taken by all kfree'ers: 92783584881 ns, loops: 200000, batches: 5117
-[  126.862573] Total time taken by all kfree'ers: 70935580718 ns, loops: 200000, batches: 3953
-
-Running the "rcuperf" shows approximately ~23% better throughput in case of using
-"bulk" interface, so we have 92783584881 vs 70935580718 as total time. The "drain logic"
-or its RCU callback does the work faster that leads to better throughput.
-
-I can upload the RFC/PATCH of that change providing the test details and so on. 
-
-Any thoughts about it?
-
-Thank you in advance!
-
---
-Vlad Rezki
+OK, fair enough. Then I would suggest going with arch_add_memory_prot
+then unless there is a wider disagreement witht that.
+-- 
+Michal Hocko
+SUSE Labs
