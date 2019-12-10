@@ -2,99 +2,155 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF4C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCD6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19112073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iXHtkFlw"
+	by mail.kernel.org (Postfix) with ESMTP id F1EDB20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfLJCtt (ORCPT
+        id S1726682AbfLJCwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:49:49 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40597 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726509AbfLJCtt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:49:49 -0500
-X-UUID: 9c5509bccf6f4399b862490ffa15bd33-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3p9xe1k8UZpHU7V65IFk3agqCgquUJjR9B/HHNjxoE4=;
-        b=iXHtkFlw5EqtcJGCRYIPyntinI+xVifE0nr4IvDgZRIl/aq4thDe3nIk9dpHgyrYFJW1BHUFdu3st2/sl8tVzGiUPavST++VF5LAuVQzb6fGTE398Cc8hjl+iNhjcQaiS6tIBarGU632FVV3ao18dQPePtT+3mScB4p/kRiohKo=;
-X-UUID: 9c5509bccf6f4399b862490ffa15bd33-20191210
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2088386181; Tue, 10 Dec 2019 10:49:42 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 10:49:20 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 10:49:09 +0800
-Message-ID: <1575946181.16676.4.camel@mtksdaap41>
-Subject: Re: [PATCH v2 04/14] mailbox: mediatek: cmdq: clear task in channel
- before shutdown
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Dec 2019 10:49:41 +0800
-In-Reply-To: <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 9 Dec 2019 21:52:37 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23954 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfLJCwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:52:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 18:52:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,297,1571727600"; 
+   d="scan'208";a="244684538"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 18:52:34 -0800
+Date:   Mon, 9 Dec 2019 21:44:23 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [RFC PATCH 1/9] vfio/pci: introduce mediate ops to intercept
+ vfio-pci ops
+Message-ID: <20191210024422.GA27331@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20191205032419.29606-1-yan.y.zhao@intel.com>
+ <20191205032536.29653-1-yan.y.zhao@intel.com>
+ <20191205165519.106bd210@x1.home>
+ <20191206075655.GG31791@joy-OptiPlex-7040>
+ <20191206142226.2698a2be@x1.home>
+ <20191209034225.GK31791@joy-OptiPlex-7040>
+ <20191209170339.2cb3d06e@x1.home>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209170339.2cb3d06e@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
-WUMgSHNpZWggd3JvdGU6DQo+IERvIHN1Y2Nlc3MgY2FsbGJhY2sgaW4gY2hhbm5lbCB3aGVuIHNo
-dXRkb3duLiBGb3IgdGhvc2UgdGFzayBub3QgZmluaXNoLA0KPiBjYWxsYmFjayB3aXRoIGVycm9y
-IGNvZGUgdGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJlc2V0Lg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsu
-Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMgfCAyNiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlv
-bnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJv
-eC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiBpbmRleCBmZDUxOWI2
-ZjUxOGIuLmMxMmE3NjhkMTE3NSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tYWlsYm94L210ay1j
-bWRxLW1haWxib3guYw0KPiArKysgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5j
-DQo+IEBAIC00NTAsNiArNDUwLDMyIEBAIHN0YXRpYyBpbnQgY21kcV9tYm94X3N0YXJ0dXAoc3Ry
-dWN0IG1ib3hfY2hhbiAqY2hhbikNCj4gIA0KPiAgc3RhdGljIHZvaWQgY21kcV9tYm94X3NodXRk
-b3duKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ICB7DQo+ICsJc3RydWN0IGNtZHFfdGhyZWFk
-ICp0aHJlYWQgPSAoc3RydWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+ICsJc3Ry
-dWN0IGNtZHEgKmNtZHEgPSBkZXZfZ2V0X2RydmRhdGEoY2hhbi0+bWJveC0+ZGV2KTsNCj4gKwlz
-dHJ1Y3QgY21kcV90YXNrICp0YXNrLCAqdG1wOw0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+
-ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmdGhyZWFkLT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+
-ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRv
-bmU7DQo+ICsNCj4gKwlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8
-IDApOw0KPiArDQo+ICsJLyogbWFrZSBzdXJlIGV4ZWN1dGVkIHRhc2tzIGhhdmUgc3VjY2VzcyBj
-YWxsYmFjayAqLw0KPiArCWNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKGNtZHEsIHRocmVhZCk7DQo+
-ICsJaWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiArCQlnb3RvIGRv
-bmU7DQo+ICsNCj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUodGFzaywgdG1wLCAmdGhyZWFk
-LT50YXNrX2J1c3lfbGlzdCwNCj4gKwkJCQkgbGlzdF9lbnRyeSkgew0KPiArCQljbWRxX3Rhc2tf
-ZXhlY19kb25lKHRhc2ssIC1FQ09OTkFCT1JURUQpOw0KPiArCQlrZnJlZSh0YXNrKTsNCj4gKwl9
-DQo+ICsNCj4gKwljbWRxX3RocmVhZF9kaXNhYmxlKGNtZHEsIHRocmVhZCk7DQo+ICsJY2xrX2Rp
-c2FibGUoY21kcS0+Y2xvY2spOw0KPiArZG9uZToNCg0KY21kcV90aHJlYWRfcmVzdW1lKHRocmVh
-ZCk7DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmdGhyZWFk
-LT5jaGFuLT5sb2NrLCBmbGFncyk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-bWJveF9jaGFuX29wcyBjbWRxX21ib3hfY2hhbl9vcHMgPSB7DQoNCg==
+> > > > Currently, yes, i40e has build dependency on vfio-pci.
+> > > > It's like this, if i40e decides to support SRIOV and compiles in vf
+> > > > related code who depends on vfio-pci, it will also have build dependency
+> > > > on vfio-pci. isn't it natural?  
+> > > 
+> > > No, this is not natural.  There are certainly i40e VF use cases that
+> > > have no interest in vfio and having dependencies between the two
+> > > modules is unacceptable.  I think you probably want to modularize the
+> > > i40e vfio support code and then perhaps register a table in vfio-pci
+> > > that the vfio-pci code can perform a module request when using a
+> > > compatible device.  Just and idea, there might be better options.  I
+> > > will not accept a solution that requires unloading the i40e driver in
+> > > order to unload the vfio-pci driver.  It's inconvenient with just one
+> > > NIC driver, imagine how poorly that scales.
+> > >   
+> > what about this way:
+> > mediate driver registers a module notifier and every time when
+> > vfio_pci is loaded, register to vfio_pci its mediate ops?
+> > (Just like in below sample code)
+> > This way vfio-pci is free to unload and this registering only gives
+> > vfio-pci a name of what module to request.
+> > After that,
+> > in vfio_pci_open(), vfio-pci requests the mediate driver. (or puts
+> > the mediate driver when mediate driver does not support mediating the
+> > device)
+> > in vfio_pci_release(), vfio-pci puts the mediate driver.
+> > 
+> > static void register_mediate_ops(void)
+> > {
+> >         int (*func)(struct vfio_pci_mediate_ops *ops) = NULL;
+> > 
+> >         func = symbol_get(vfio_pci_register_mediate_ops);
+> > 
+> >         if (func) {
+> >                 func(&igd_dt_ops);
+> >                 symbol_put(vfio_pci_register_mediate_ops);
+> >         }
+> > }
+> > 
+> > static int igd_module_notify(struct notifier_block *self,
+> >                               unsigned long val, void *data)
+> > {
+> >         struct module *mod = data;
+> >         int ret = 0;
+> > 
+> >         switch (val) {
+> >         case MODULE_STATE_LIVE:
+> >                 if (!strcmp(mod->name, "vfio_pci"))
+> >                         register_mediate_ops();
+> >                 break;
+> >         case MODULE_STATE_GOING:
+> >                 break;
+> >         default:
+> >                 break;
+> >         }
+> >         return ret;
+> > }
+> > 
+> > static struct notifier_block igd_module_nb = {
+> >         .notifier_call = igd_module_notify,
+> >         .priority = 0,
+> > };
+> > 
+> > 
+> > 
+> > static int __init igd_dt_init(void)
+> > {
+> > 	...
+> > 	register_mediate_ops();
+> > 	register_module_notifier(&igd_module_nb);
+> > 	...
+> > 	return 0;
+> > }
+> 
+> 
+> No, this is bad.  Please look at MODULE_ALIAS() and request_module() as
+> used in the vfio-platform for loading reset driver modules.  I think
+> the correct approach is that vfio-pci should perform a request_module()
+> based on the device being probed.  Having the mediation provider
+> listening for vfio-pci and registering itself regardless of whether we
+> intend to use it assumes that we will want to use it and assumes that
+> the mediation provider module is already loaded.  We should be able to
+> support demand loading of modules that may serve no other purpose than
+> providing this mediation.  Thanks,
+hi Alex
+Thanks for this message.
+So is it good to create a separate module as mediation provider driver,
+and alias its module name to "vfio-pci-mediate-vid-did".
+Then when vfio-pci probes the device, it requests module of that name ?
 
+Thanks
+Yan
