@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4B2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75201C47409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B0A205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5CE20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014320;
-	bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+	s=default; t=1576014328;
+	bh=O9wvgMQOY4z6mdfhDgz/8/61sjmrTeVx4xKSD80smfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLs+wSaijfp8qba60fGmKEPP9WG2T2owp2WFcOR/Apra+nplvHMCItG8Qoogvmfff
-	 BsJIDHaFhlwZr6sXfBoq68QA3bhw8CNDATWbjVM1U8v0I9Y+paK/N9qklt6eNqfs+v
-	 1DdPF1syoYBu1wKk27Xls0JxqdTgPfDEbgNKVwsA=
+	b=1w8PQsEabwKLIgUSGB0Ypkrnz23XL9otI0/csqKwPDRT9qLI6UACRTkzTsAdILHm3
+	 8TWDYVtfmc4wYdn4xyD2o0oCuPUf74mxTITCWk+/GbJieyX7awVD4yU2jpgMiEZNKK
+	 BkdMPac8E8Q5zig/bZdLHrbirEqyTIDZWgC+l3Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbfLJVpT (ORCPT
+        id S1729597AbfLJVc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:45:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37060 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbfLJVdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:04 -0500
+        id S1729528AbfLJVcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE99E207FF;
-        Tue, 10 Dec 2019 21:33:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C0BE205C9;
+        Tue, 10 Dec 2019 21:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013583;
-        bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+        s=default; t=1576013573;
+        bh=O9wvgMQOY4z6mdfhDgz/8/61sjmrTeVx4xKSD80smfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tokELLiAfeNeCoT/ymf6x+bdlnGA9h7g47YUkcFqmtfjQDqbO9J5EaRH/8DdNw2ko
-         EGVwNm06bC0moI6ppAeiJ4PhsGY1Ux6oBTurEPhxB9hEumEj3Sg/iMddnDiHWgz1O4
-         GyGxPC5+HJm+SR5uoFaU5zTIh7oNqZ+6QWAWeJsU=
+        b=y2w2cb91hGpf9Cdo5/9adlcFno1hceBXmdb1TtDffl4KsPh2cKuef9wQHOyJZ22Il
+         gZxMqmm7PyHGwjgVusD/D9gdjHM4gfZNXXQrCUHd34J8IJ3pOtBIV71cAMlG/C5T+0
+         c0eRzTt6s4H/dTzmTDRKTR0nhFr36GuhxCfL16Ik=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 035/177] block: Fix writeback throttling W=1 compiler warnings
-Date:   Tue, 10 Dec 2019 16:29:59 -0500
-Message-Id: <20191210213221.11921-35-sashal@kernel.org>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 026/177] selftests/bpf: Correct path to include msg + path
+Date:   Tue, 10 Dec 2019 16:29:50 -0500
+Message-Id: <20191210213221.11921-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,126 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit 1d200e9d6f635ae894993a7d0f1b9e0b6e522e3b ]
+[ Upstream commit c588146378962786ddeec817f7736a53298a7b01 ]
 
-Fix the following compiler warnings:
+The "path" buf is supposed to contain path + printf msg up to 24 bytes.
+It will be cut anyway, but compiler generates truncation warns like:
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:21,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:38,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/mm.h:10,
-                 from ./include/linux/bvec.h:13,
-                 from ./include/linux/blk_types.h:10,
-                 from block/blk-wbt.c:23:
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c: In
+function ‘setup_cgroup_environment’:
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:34:
+warning: ‘/cgroup.controllers’ directive output may be truncated
+writing 19 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+				  ^~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:2:
+note: ‘snprintf’ output between 20 and 4116 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:34:
+warning: ‘/cgroup.subtree_control’ directive output may be truncated
+writing 23 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+				  ^~~~~~~~~~~~~~~~~~~~~~~
+cgroup_path);
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:2:
+note: ‘snprintf’ output between 24 and 4120 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+cgroup_path);
+"
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In order to avoid warns, lets decrease buf size for cgroup workdir on
+24 bytes with assumption to include also "/cgroup.subtree_control" to
+the address. The cut will never happen anyway.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20191002120404.26962-3-ivan.khoronzhuk@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/wbt.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ tools/testing/selftests/bpf/cgroup_helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index b048694070e2c..37342a13c9cb9 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,8 @@ TRACE_EVENT(wbt_stat,
- 	),
+diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
+index cf16948aad4ad..6af24f9a780de 100644
+--- a/tools/testing/selftests/bpf/cgroup_helpers.c
++++ b/tools/testing/selftests/bpf/cgroup_helpers.c
+@@ -44,7 +44,7 @@
+  */
+ int setup_cgroup_environment(void)
+ {
+-	char cgroup_workdir[PATH_MAX + 1];
++	char cgroup_workdir[PATH_MAX - 24];
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
- 		__entry->rmax		= stat[0].max;
-@@ -67,7 +68,8 @@ TRACE_EVENT(wbt_lat,
- 	),
+ 	format_cgroup_path(cgroup_workdir, "");
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
- 
-@@ -103,7 +105,8 @@ TRACE_EVENT(wbt_step,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
- 		__entry->window	= div_u64(window, 1000);
-@@ -138,7 +141,8 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
- 		__entry->inflight	= inflight;
 -- 
 2.20.1
 
