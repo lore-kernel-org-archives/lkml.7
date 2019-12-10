@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D08DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B025C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5227D205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4A520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014667;
-	bh=Kj9F+E8kssmWLrGlaaPjGhscFWLYKxX1BArT3M5lpTw=;
+	s=default; t=1576014672;
+	bh=4GcaNRym+CRcSsofJfGvU4jd2st0wiBAHPwPyBYZ8Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mNi5676rJmUWKfDL4sJ7C9XFhG/zqlLdBs0w7SOHW8vykIf/gsbiLgtQQv2UTEUBz
-	 BK69a+3cMPis/I5lv1Dc6IOZO1DIQJ+untsqWc8/SZrgwrmbAA5ck82X9k3W6sOUTx
-	 VfUtvHkuXuPEPHj2wO0CzkrhtAZoYt0Lhhjs9TgE=
+	b=UvupnBwAYSIbdOKL/wCZL8Gwv0OEawG1XYJrcO769wMeP7wpaNo/HrPl8NlD34FWk
+	 uONHL2bwke1cVNUIlVOKaYlzdP7dn0ycDklMlMuKIhud2Xhd8PNFEWKbO72rAj9S6P
+	 s+ZUyzfG41k6fDXEwmcCb0z3mOs6ysZm43q8NiWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfLJVvG (ORCPT
+        id S1730194AbfLJVvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:51:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55182 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:51:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfLJVII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:08 -0500
+        id S1726592AbfLJVIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C01D2469E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F422469D;
         Tue, 10 Dec 2019 21:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012087;
-        bh=Kj9F+E8kssmWLrGlaaPjGhscFWLYKxX1BArT3M5lpTw=;
+        s=default; t=1576012086;
+        bh=4GcaNRym+CRcSsofJfGvU4jd2st0wiBAHPwPyBYZ8Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEOTgXibgN3Dp5Nz+PJwq3YRioGG2gReyaAJCovVKKqVQV1V0sSD7NgSyksGwI+Tm
-         /fMGuTJCrje0+oWjxPGqh+1ziZvx6aqQ6AoRAl1BFBDuYTc85ssCl4dZOzFsd67auI
-         WF6frQMlAbTYQDD/EzK1hlVOMp82VMvjN7lACtXM=
+        b=tzMKZOrV6/tU2n6RyQhRsrTntwC6Vvpd3TxvFrcOaabTYEpmGoFUm2jA1YCQIRoRK
+         GZDgoItirj1+9SfHLU64tCNNXJdh83OMUebcNJaKsb6ohHehnZFNLdN4GXU98W6pwf
+         /zPK1UMkJs84ePmSgX8661YRVYl6J3Zp9OTNgiSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arch@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 065/350] tools/memory-model: Fix data race detection for unordered store and load
-Date:   Tue, 10 Dec 2019 16:02:50 -0500
-Message-Id: <20191210210735.9077-26-sashal@kernel.org>
+Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 064/350] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
+Date:   Tue, 10 Dec 2019 16:02:49 -0500
+Message-Id: <20191210210735.9077-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,87 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit daebf24a8e8c6064cba3a330db9fe9376a137d2c ]
+[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
 
-Currently the Linux Kernel Memory Model gives an incorrect response
-for the following litmus test:
+Inside function max8907_regulator_probe(), variable val could
+be uninitialized if regmap_read() fails. However, val is used
+later in the if statement to decide the content written to
+"pmic", which is potentially unsafe.
 
-C plain-WWC
-
-{}
-
-P0(int *x)
-{
-	WRITE_ONCE(*x, 2);
-}
-
-P1(int *x, int *y)
-{
-	int r1;
-	int r2;
-	int r3;
-
-	r1 = READ_ONCE(*x);
-	if (r1 == 2) {
-		smp_rmb();
-		r2 = *x;
-	}
-	smp_rmb();
-	r3 = READ_ONCE(*x);
-	WRITE_ONCE(*y, r3 - 1);
-}
-
-P2(int *x, int *y)
-{
-	int r4;
-
-	r4 = READ_ONCE(*y);
-	if (r4 > 0)
-		WRITE_ONCE(*x, 1);
-}
-
-exists (x=2 /\ 1:r2=2 /\ 2:r4=1)
-
-The memory model says that the plain read of *x in P1 races with the
-WRITE_ONCE(*x) in P2.
-
-The problem is that we have a write W and a read R related by neither
-fre or rfe, but rather W ->coe W' ->rfe R, where W' is an intermediate
-write (the WRITE_ONCE() in P0).  In this situation there is no
-particular ordering between W and R, so either a wr-vis link from W to
-R or an rw-xbstar link from R to W would prove that the accesses
-aren't concurrent.
-
-But the LKMM only looks for a wr-vis link, which is equivalent to
-assuming that W must execute before R.  This is not necessarily true
-on non-multicopy-atomic systems, as the WWC pattern demonstrates.
-
-This patch changes the LKMM to accept either a wr-vis or a reverse
-rw-xbstar link as a proof of non-concurrency.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Acked-by: Andrea Parri <parri.andrea@gmail.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/memory-model/linux-kernel.cat | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
-index ea2ff4b940749..2a9b4fe4a84eb 100644
---- a/tools/memory-model/linux-kernel.cat
-+++ b/tools/memory-model/linux-kernel.cat
-@@ -197,7 +197,7 @@ empty (wr-incoh | rw-incoh | ww-incoh) as plain-coherence
- (* Actual races *)
- let ww-nonrace = ww-vis & ((Marked * W) | rw-xbstar) & ((W * Marked) | wr-vis)
- let ww-race = (pre-race & co) \ ww-nonrace
--let wr-race = (pre-race & (co? ; rf)) \ wr-vis
-+let wr-race = (pre-race & (co? ; rf)) \ wr-vis \ rw-xbstar^-1
- let rw-race = (pre-race & fr) \ rw-xbstar
+diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
+index 76152aaa330bd..96dc0eea76596 100644
+--- a/drivers/regulator/max8907-regulator.c
++++ b/drivers/regulator/max8907-regulator.c
+@@ -296,7 +296,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
  
- flag ~empty (ww-race | wr-race | rw-race) as data-race
+ 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
+-	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	if (ret)
++		return ret;
++
+ 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
+ 	    MAX8907_II2RR_VERSION_REV_B) {
+ 		pmic->desc[MAX8907_SD1].min_uV = 637500;
+@@ -333,14 +336,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 		}
+ 
+ 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & MAX8907_MASK_LDO_SEQ) !=
+ 			    MAX8907_MASK_LDO_SEQ)
+ 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
+ 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
+ 						MAX8907_MASK_OUT5V_ENSRC)) !=
+ 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
