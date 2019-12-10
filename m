@@ -2,63 +2,63 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172D8C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9541BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31A820726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC0C20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="L9kgcXtV"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="pjXGQyS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfLJDHq (ORCPT
+        id S1726691AbfLJDJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:07:46 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38879 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfLJDHp (ORCPT
+        Mon, 9 Dec 2019 22:09:02 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44077 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfLJDJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:07:45 -0500
-Received: by mail-pj1-f67.google.com with SMTP id l4so6765290pjt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 19:07:45 -0800 (PST)
+        Mon, 9 Dec 2019 22:09:01 -0500
+Received: by mail-pf1-f195.google.com with SMTP id d199so8279100pfd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 19:09:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+l3sjBeSVFh4rm+tGcPw6py430z3WdKBO1qe4zUPUJM=;
-        b=L9kgcXtVkKdXP1vvTGOzo7P0KBeZ5Ho+sktp5bes1PmRFaarhpuFQC6ryBLDaG8rhW
-         g/u6qPASdc0JFsr7N/ydqCd26rqm8sstrqSsR/1+8RzBOiyelM7UIldOhstJoxfgv7Dj
-         J02kSA+0VIgJWS4YyPBiivIfcpHsxaTq/+dUhGQkoNbawZhnCYO7cPKF28xzYMRUtLS0
-         tWsSuzJ8xwPfZZGvpo7uW8rb/h64z43lSUJ2H+JpPP5OlHvsx+uXuQBz8DnIC7B7K3Hr
-         khVmnIU2qQXXC+HwqeIBCAHf7PjYqlDj3UbOBjff4j4QxDaHOOU7aFggLCoyJ3cMHSbO
-         IPtg==
+        bh=DmS5ss7ipUF3F5vE6DlF0K5CcdA6RqYOk95nZq9VCag=;
+        b=pjXGQyS7oHO0C6mKYEqLhRUP2s5yD54ySVXE0KEEWdbp0xKvdqb0z9lsgfbc7Z7ha0
+         WYegY6IQvupK+gPV7kK2gcMxOhUbMBQ2/p0ntD9j+k2O4an3wZfL8gPTjG2vqMve0N03
+         3kJaRnLvNe2faci4IY9yudGAqAsR3MkJp1EbKyLZs9bqn5o5c8EDB7AHDukZpcOKCoF7
+         eQN0yR7mxzSPXyQ9PcnLonQhUvXIZr/SsN8aMnRX1q7Jy/Lwn49qB2VP7gZfuEGs+oJI
+         GaU2qSJYUavOct1+nERgJSPr4SwROn7STu2+6b4xWULiiZEzNhTsmStdnzMB3mDdQqtH
+         yPYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+l3sjBeSVFh4rm+tGcPw6py430z3WdKBO1qe4zUPUJM=;
-        b=iwt3XcwOmcN8/Nxhal/dlCf3avMZkNV9KdeWcmr8YUFfC8Ucpb/ri2UtSBJA8br/zB
-         2xfbjVXEZQaaDu4RwLKi3aqCsuNsNIvftCOfQnCSW4O4rIYWAfB07YbzmWI9J6YEViXt
-         cHyrtHdz4if1v0y0MsBk6qkLmdf3pvlorWmsWXpP3602rAZ38PscjaoxjsPEPnRVlqYv
-         8eigxJ32KjItccc9vTXsgbdieopLKp5JOMgoyHt0SoDZ/luBggXjtNmLlTHf9V0g+DHx
-         maekoNSOKUzQHjM9UMyerJNEA1C3poHDJRa23vDIcD0iS0ae1HsoS1jdVQMAkrV5xzsy
-         SuEQ==
-X-Gm-Message-State: APjAAAUNshZmhSiiqvO1C/HLbld+3/nEmJTLBU4E061m9chJwRhABy47
-        Rez1peNENXcTSx/021wpv0+/yg==
-X-Google-Smtp-Source: APXvYqzXTagyiiv8vyJOWr5RUs3+9ax/mNC9SzhDflplwNKGo8jCd7Zqv0+UDaRvkP/qJ5BRvQ8pWg==
-X-Received: by 2002:a17:902:b212:: with SMTP id t18mr8772198plr.333.1575947265045;
-        Mon, 09 Dec 2019 19:07:45 -0800 (PST)
+        bh=DmS5ss7ipUF3F5vE6DlF0K5CcdA6RqYOk95nZq9VCag=;
+        b=rANv5kupQI0A3llfSrCrXmxxuCQm7+mj6CqE9gyq/swXEJY+1294hYDQGpCPnEdl+v
+         k76REHDuG0JVH/Vmd6JH/N8avpBqG3n0d3FjGEOM4q2ya0fsvBp6KZvrQjLBCpw1jdF2
+         JmAL7PuTcAq2xXJU504Ir6itwFhsUnIc0Rzz+t+WIi+zUIMwL8LaPYKaQGeXEUBUgF+f
+         1YhV/zWH0FS/uMfLJhPM88CaOSexLT+0cuSifaitMZw9c3jj90gkU/Gd8+5acOImEWoh
+         9qti2ZxVl/Qeg+YHz6LYOmORDkf8OKhsOadb2VjawUGh0ZbLyvGdjaluq6Ui3FboWzIH
+         GpzA==
+X-Gm-Message-State: APjAAAWTojOdc4EpceWZySSpL2oBfpWzLoIoiyR/o5r+iXpmkbk1EtA8
+        lIU8T0SOQLw5hE52kErjBNp61A==
+X-Google-Smtp-Source: APXvYqwklbqazU0Dc6HZHhTC9QLFYzfhC4Kx1e6mc8e7pTupnHRD/2YXSFmiXvdj70iC2UgWjFRnuw==
+X-Received: by 2002:a63:bc01:: with SMTP id q1mr10517240pge.442.1575947340338;
+        Mon, 09 Dec 2019 19:09:00 -0800 (PST)
 Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id o31sm888119pgb.56.2019.12.09.19.07.38
+        by smtp.gmail.com with ESMTPSA id w3sm863235pfd.161.2019.12.09.19.08.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 19:07:43 -0800 (PST)
-Subject: Re: [PATCH v5 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
+        Mon, 09 Dec 2019 19:08:59 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for
+ Secure VM.
 To:     Ram Pai <linuxram@us.ibm.com>, mpe@ellerman.id.au
 Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
         david@gibson.dropbear.id.au, paulus@ozlabs.org,
@@ -68,6 +68,7 @@ Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
         linux-kernel@vger.kernel.org, leonardo@linux.ibm.com
 References: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com>
  <1575681159-30356-2-git-send-email-linuxram@us.ibm.com>
+ <1575681159-30356-3-git-send-email-linuxram@us.ibm.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -142,12 +143,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <ed0f048c-bb40-c6c6-887c-ef68c9e411a2@ozlabs.ru>
-Date:   Tue, 10 Dec 2019 14:07:36 +1100
+Message-ID: <5ee813ba-8f83-efd1-074c-1d9b2cb24334@ozlabs.ru>
+Date:   Tue, 10 Dec 2019 14:08:52 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1575681159-30356-2-git-send-email-linuxram@us.ibm.com>
+In-Reply-To: <1575681159-30356-3-git-send-email-linuxram@us.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -159,131 +160,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 07/12/2019 12:12, Ram Pai wrote:
-> H_PUT_TCE_INDIRECT hcall uses a page filled with TCE entries, as one of
-> its parameters.  On secure VMs, hypervisor cannot access the contents of
-> this page since it gets encrypted.  Hence share the page with the
-> hypervisor, and unshare when done.
-
-
-I thought the idea was to use H_PUT_TCE and avoid sharing any extra
-pages. There is small problem that when DDW is enabled,
-FW_FEATURE_MULTITCE is ignored (easy to fix); I also noticed complains
-about the performance on slack but this is caused by initial cleanup of
-the default TCE window (which we do not use anyway) and to battle this
-we can simply reduce its size by adding
-
--global
-spapr-pci-host-bridge.dma_win_size=0x4000000
-
-to the qemu command line. And the huge DMA window will use 16MB or 1GB
-TCEs so even mapping 32GB guests is barely noticeable. What do I miss?
-
-
+> Commit edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on
+> 		secure guests")
+> disabled dma_iommu_ops path, for secure VMs. Disabling dma_iommu_ops
+> path for secure VMs, helped enable dma_direct path.  This enabled
+> support for bounce-buffering through SWIOTLB.  However it fails to
+> operate when IOMMU is enabled, since I/O pages are not TCE mapped.
+> 
+> Renable dma_iommu_ops path for pseries Secure VMs.  It handles all
+> cases including, TCE mapping I/O pages, in the presence of a
+> IOMMU.
 > 
 > Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+
+
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+Although I still do not totally understand the mechanics of this
+(swiotlb on top of huge DDW at 0x800.0000.0000.0000), this change looks
+reasonable anyway.
+
+
+
 > ---
->  arch/powerpc/platforms/pseries/iommu.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
+>  arch/powerpc/platforms/pseries/iommu.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
 > 
 > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 6ba081d..67b5009 100644
+> index 67b5009..4e27d66 100644
 > --- a/arch/powerpc/platforms/pseries/iommu.c
 > +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -37,6 +37,7 @@
+> @@ -36,7 +36,6 @@
+>  #include <asm/udbg.h>
 >  #include <asm/mmzone.h>
 >  #include <asm/plpar_wrappers.h>
->  #include <asm/svm.h>
-> +#include <asm/ultravisor.h>
+> -#include <asm/svm.h>
+>  #include <asm/ultravisor.h>
 >  
 >  #include "pseries.h"
+> @@ -1346,15 +1345,7 @@ void iommu_init_early_pSeries(void)
+>  	of_reconfig_notifier_register(&iommu_reconfig_nb);
+>  	register_memory_notifier(&iommu_mem_nb);
 >  
-> @@ -179,6 +180,18 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  
->  static DEFINE_PER_CPU(__be64 *, tce_page);
->  
-> +static void pre_process_tce_page(__be64 *tcep)
-> +{
-> +	if (tcep && is_secure_guest())
-> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
-> +}
-> +
-> +static void post_process_tce_page(__be64 *tcep)
-> +{
-> +	if (tcep && is_secure_guest())
-> +		uv_unshare_page(PHYS_PFN(__pa(tcep)), 1);
-> +}
-> +
->  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  				     long npages, unsigned long uaddr,
->  				     enum dma_data_direction direction,
-> @@ -187,7 +200,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  	u64 rc = 0;
->  	u64 proto_tce;
->  	__be64 *tcep;
-> -	u64 rpn;
-> +	u64 rpn, tcep0;
->  	long l, limit;
->  	long tcenum_start = tcenum, npages_start = npages;
->  	int ret = 0;
-> @@ -216,6 +229,8 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  		__this_cpu_write(tce_page, tcep);
->  	}
->  
-> +	pre_process_tce_page(tcep);
-> +
->  	rpn = __pa(uaddr) >> TCE_SHIFT;
->  	proto_tce = TCE_PCI_READ;
->  	if (direction != DMA_TO_DEVICE)
-> @@ -243,6 +258,14 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  		tcenum += limit;
->  	} while (npages > 0 && !rc);
->  
-> +	/*
-> +	 * if "tcep" is shared, post_process_tce_page() will unshare the page,
-> +	 * which will zero the page. Grab any interesting content, before it
-> +	 * disappears.
-> +	 */
-> +	tcep0 = tcep[0];
-> +	post_process_tce_page(tcep);
-> +
->  	local_irq_restore(flags);
->  
->  	if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
-> @@ -256,7 +279,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  		printk("tce_buildmulti_pSeriesLP: plpar_tce_put failed. rc=%lld\n", rc);
->  		printk("\tindex   = 0x%llx\n", (u64)tbl->it_index);
->  		printk("\tnpages  = 0x%llx\n", (u64)npages);
-> -		printk("\ttce[0] val = 0x%llx\n", tcep[0]);
-> +		printk("\ttce[0] val = 0x%llx\n", tcep0);
->  		dump_stack();
->  	}
->  	return ret;
-> @@ -280,7 +303,6 @@ static void tce_free_pSeriesLP(struct iommu_table *tbl, long tcenum, long npages
->  	}
+> -	/*
+> -	 * Secure guest memory is inacessible to devices so regular DMA isn't
+> -	 * possible.
+> -	 *
+> -	 * In that case keep devices' dma_map_ops as NULL so that the generic
+> -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
+> -	 */
+> -	if (!is_secure_guest())
+> -		set_pci_dma_ops(&dma_iommu_ops);
+> +	set_pci_dma_ops(&dma_iommu_ops);
 >  }
 >  
-> -
->  static void tce_freemulti_pSeriesLP(struct iommu_table *tbl, long tcenum, long npages)
->  {
->  	u64 rc;
-> @@ -413,6 +435,8 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  		__this_cpu_write(tce_page, tcep);
->  	}
->  
-> +	pre_process_tce_page(tcep);
-> +
->  	proto_tce = TCE_PCI_READ | TCE_PCI_WRITE;
->  
->  	liobn = (u64)be32_to_cpu(maprange->liobn);
-> @@ -451,6 +475,8 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  		num_tce -= limit;
->  	} while (num_tce > 0 && !rc);
->  
-> +	post_process_tce_page(tcep);
-> +
->  	/* error cleanup: caller will clear whole range */
->  
->  	local_irq_enable();
+>  static int __init disable_multitce(char *str)
 > 
 
 -- 
