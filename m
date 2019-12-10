@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6AEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCF6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A072077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526082077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012827;
-	bh=qdaUEd6RSCneTSpQtuhwyYlffqnjWBzGQouSCxqiKgs=;
+	s=default; t=1576012830;
+	bh=4nmCBGDmTjlj8RxkgiEgGZZWDF4POOuLpQPwXgDNb1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jl629j9UtFVS5xJhz+zAlAcxXxzNL/FV+I0bVUUVHCu+vCgPrbvc0ajNzFBVc1lNn
-	 CDPDiFd2ZP7hOs4W8hYOYkqvZcOt4QBklT4WN2tEqHkjl6q8zcNYL8l7AZrSoA0fS1
-	 e7AOIKUidp9m74ty7E8tmZAfZnVEdfs9+YAqp1AY=
+	b=YTYXv1nBdhmyjT33e34Qk/fwzbu9Cj4K9zWM095HeT3xjQvZr06LWRf6xQQGEX90a
+	 6aaQxiTVCwXuJ1xsdphFmfnVENQ0Zl4zEK+H3VpMnEmyxmSE2z1KwSjr2K50Dkn3zc
+	 Nmdu1L5HuwFrg0gt2ci39ow0MNn22k5DaIMvoUTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfLJVU0 (ORCPT
+        id S1729173AbfLJVU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:20:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:20:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfLJVMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:09 -0500
+        id S1728663AbfLJVMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 358B0246B5;
-        Tue, 10 Dec 2019 21:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DFF246A2;
+        Tue, 10 Dec 2019 21:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012329;
-        bh=qdaUEd6RSCneTSpQtuhwyYlffqnjWBzGQouSCxqiKgs=;
+        s=default; t=1576012326;
+        bh=4nmCBGDmTjlj8RxkgiEgGZZWDF4POOuLpQPwXgDNb1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YqyeRVFqpx4daUCRMeRCId8Rv2j5CafFRqo2fMJNtWlV0hf9+5gOG1xegoMhy8i5N
-         i1wqFDsS11fvmdb65ETjROwvYqIlDwNa3ExGnPWrTy0OKJqZOrBnupj+NmEPngMrBW
-         Jcx4P2nwGXjdngFMXVm4+U2/ZMq+oHlMd0xS+MHE=
+        b=vBbiGxwWBujMiClJ1FkL24gLhGdyCgE9YMJAKN+QIsasdXpCq0uM3Sq/5T35boGSr
+         UJI4jdRZXp2CxYlp65e9xHNGYtPgm4rVEU6b9PoC2j2YnhQm5nlxCCOcBWLAhyFLVr
+         bJGRY4jjeMnBxewXg4c1H1AS0wbf0uhwQVWuQyD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 261/350] EDAC/ghes: Fix grain calculation
-Date:   Tue, 10 Dec 2019 16:06:06 -0500
-Message-Id: <20191210210735.9077-222-sashal@kernel.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 259/350] media: v4l2-ctrl: Lock main_hdl on operations of requests_queued.
+Date:   Tue, 10 Dec 2019 16:06:04 -0500
+Message-Id: <20191210210735.9077-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -63,93 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
+[ Upstream commit df4a3e7f88e3b0d7ae46d70b9ff8e3c0ea730785 ]
 
-The current code to convert a physical address mask to a grain
-(defined as granularity in bytes) is:
+There's a race condition between the list_del_init in the
+v4l2_ctrl_request_complete, and the list_add_tail in the
+v4l2_ctrl_request_queue, since they can be called in different thread
+and the requests_queued list is not protected by a lock. This can lead
+to that the v4l2_ctrl_handler is still in the requests_queued list while
+the request_is_queued is already set to false, which would cause
+use-after-free if the v4l2_ctrl_handler is later released.
 
-	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+Fix this by locking the ->lock of main_hdl (which is the owner of the
+requests_queued list) when doing list operations on the
+->requests_queued list.
 
-This is broken in several ways:
-
-1) It calculates to wrong grain values. E.g., a physical address mask
-of ~0xfff should give a grain of 0x1000. Without considering
-PAGE_MASK, there is an off-by-one. Things are worse when also
-filtering it with ~PAGE_MASK. This will calculate to a grain with the
-upper bits set. In the example it even calculates to ~0.
-
-2) The grain does not depend on and is unrelated to the kernel's
-page-size. The page-size only matters when unmapping memory in
-memory_failure(). Smaller grains are wrongly rounded up to the
-page-size, on architectures with a configurable page-size (e.g. arm64)
-this could round up to the even bigger page-size of the hypervisor.
-
-Fix this with:
-
-	e->grain = ~mem_err->physical_addr_mask + 1;
-
-The grain_bits are defined as:
-
-	grain = 1 << grain_bits;
-
-Change also the grain_bits calculation accordingly, it is the same
-formula as in edac_mc.c now and the code can be unified.
-
-The value in ->physical_addr_mask coming from firmware is assumed to
-be contiguous, but this is not sanity-checked. However, in case the
-mask is non-contiguous, a conversion to grain_bits effectively
-converts the grain bit mask to a power of 2 by rounding it up.
-
-Suggested-by: James Morse <james.morse@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ghes_edac.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index f6f6a688c009d..1858baa96211b 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -231,6 +231,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 	/* Cleans the error report buffer */
- 	memset(e, 0, sizeof (*e));
- 	e->error_count = 1;
-+	e->grain = 1;
- 	strcpy(e->label, "unknown label");
- 	e->msg = pvt->msg;
- 	e->other_detail = pvt->other_detail;
-@@ -326,7 +327,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 1d8f388246313..cd84dbbf6a890 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -3144,6 +3144,7 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
+ 	struct v4l2_ctrl_handler *prev_hdl = NULL;
+ 	struct v4l2_ctrl_ref *ref_ctrl, *ref_ctrl_prev = NULL;
  
- 	/* Error grain */
- 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
--		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-+		e->grain = ~mem_err->physical_addr_mask + 1;
++	mutex_lock(main_hdl->lock);
+ 	if (list_empty(&main_hdl->requests_queued))
+ 		goto queue;
  
- 	/* Memory error location, mapped on e->location */
- 	p = e->location;
-@@ -442,8 +443,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 	if (p > pvt->other_detail)
- 		*(p - 1) = '\0';
+@@ -3175,18 +3176,22 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
+ queue:
+ 	list_add_tail(&hdl->requests_queued, &main_hdl->requests_queued);
+ 	hdl->request_is_queued = true;
++	mutex_unlock(main_hdl->lock);
+ }
  
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
-+
-+	grain_bits = fls_long(e->grain - 1);
-+
- 	/* Generate the trace event */
--	grain_bits = fls_long(e->grain);
- 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
- 		 "APEI location: %s %s", e->location, e->other_detail);
- 	trace_mc_event(type, e->msg, e->label, e->error_count,
+ static void v4l2_ctrl_request_unbind(struct media_request_object *obj)
+ {
+ 	struct v4l2_ctrl_handler *hdl =
+ 		container_of(obj, struct v4l2_ctrl_handler, req_obj);
++	struct v4l2_ctrl_handler *main_hdl = obj->priv;
+ 
+ 	list_del_init(&hdl->requests);
++	mutex_lock(main_hdl->lock);
+ 	if (hdl->request_is_queued) {
+ 		list_del_init(&hdl->requests_queued);
+ 		hdl->request_is_queued = false;
+ 	}
++	mutex_unlock(main_hdl->lock);
+ }
+ 
+ static void v4l2_ctrl_request_release(struct media_request_object *obj)
+@@ -4128,9 +4133,11 @@ void v4l2_ctrl_request_complete(struct media_request *req,
+ 		v4l2_ctrl_unlock(ctrl);
+ 	}
+ 
++	mutex_lock(main_hdl->lock);
+ 	WARN_ON(!hdl->request_is_queued);
+ 	list_del_init(&hdl->requests_queued);
+ 	hdl->request_is_queued = false;
++	mutex_unlock(main_hdl->lock);
+ 	media_request_object_complete(obj);
+ 	media_request_object_put(obj);
+ }
 -- 
 2.20.1
 
