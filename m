@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EAEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07292C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D6B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FB5207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S44Wn2T5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY5ElSrv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfLJIhG (ORCPT
+        id S1727268AbfLJIhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:37:06 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39155 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfLJIhE (ORCPT
+        Tue, 10 Dec 2019 03:37:17 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39352 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfLJIhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:37:04 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b137so8553300pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 00:37:03 -0800 (PST)
+        Tue, 10 Dec 2019 03:37:16 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so8693591pfx.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 00:37:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=O3M2kUIZvh1y7QnzVDJ72RW9/rxyHw9ji71B/UMwuh4=;
-        b=S44Wn2T5PcoqwaV3CVGoQ1DX9MYFHbLY8nvZt/g3ehUarxNrT2OSCdpjgUyTFPJwYR
-         HmAJpQ2csDJi5yEBjb0YCWsYeAqXZlP2zOZmmD0y3asMy+6lmU70hwyPNBFOUgaNNEE0
-         VTT4yqPiUiIXV+OeRrYBApkok60cYKDOQmDseZz/yNWXMfCjAy/dJTYmYU60yksY8p2Z
-         s04xPejKe3eUmxzXKwnoNH24oCbbVZWmrx5O8y/LYwKDmqRoD7rpiR0h7KVYOnccqU2k
-         FL/qkSC/026aXibE0xe0nccjQ4Aa+Bz5cQYw5TUMcHV0R+jxqrkKSSleaQz5xSR11RD+
-         7zxQ==
+        bh=izzwB8GMZJtES8ZNzh6CcmsnyTygddhapLbM209XNjI=;
+        b=RY5ElSrvt9m23bn6KokPJuIx7mpooAE3UOGD8182QQ2aLBbw/3XARg3U4NssfIn4uf
+         DIm2/IwlKT2SsUkIqx1FSNTP4G7bo3CRntEOR38TFdltdHqa/Qj0xvV9RitldJjW4t++
+         tpve1aMOlW+HDP0150nclSp9OB/w9CpiLiEAeA8iyLmtUHBwZiZJNrOKo5rV94p3nbzs
+         6QzDmC4trEU9d2ntnMUXeKvvN1vO5CM829dKmLFJjI6lI3d5BcIGm5FWOI2+mVNpFNr0
+         10SDE/VVfKol+2nsCqSg9qJethOqcoFd/EAzPp47hyo/vhgHdTYbZRR21xPwUjhYovww
+         Afqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=O3M2kUIZvh1y7QnzVDJ72RW9/rxyHw9ji71B/UMwuh4=;
-        b=F7UxTvZlNUZEv4T0me5wvkFP2Kcn2SDoKE3U/Sj3YDnClo41kYykrbnNpn80MbSgnI
-         HKD9Oxny7q1OmIEIMNqgFGnOQw7u/Bu3aOGntmEcOn6zZudqSiKvD6Zx4YCSKHQiVkUM
-         RbsZ2rcEGXzchT44Yo5o3rZAV4hxW2445vISuBEBKW7d5e+sP+RZK4KJmIt9QEoouvnQ
-         dp6zT6sE6lth3MNC7hrfQQLzoDZxDS5e3aN5H0ZGlXGBn2kxBgXWw8GuvoJaSNJJ1EyQ
-         G16+4o7p99440HOn0KZXvZg+lUCeM26IBuZr3CGh1csc3H+dLbOusyblJ1LNUDSNoGCK
-         CWTA==
-X-Gm-Message-State: APjAAAVmNASsvgYQ+l85kEnoH+6XTQjf3WZsECef3jW87qW879ZWXDhQ
-        JNn4644BpaUIaZ9eEPGM9eM=
-X-Google-Smtp-Source: APXvYqwhny1ZVNzbPOBw/olf4ehlF11KH1tCeKi32VRZ+TDhrLTREKKuG5ium9HCOL33qjdar33b+Q==
-X-Received: by 2002:a63:f5c:: with SMTP id 28mr23720083pgp.348.1575967023390;
-        Tue, 10 Dec 2019 00:37:03 -0800 (PST)
+        bh=izzwB8GMZJtES8ZNzh6CcmsnyTygddhapLbM209XNjI=;
+        b=myOqXAnhkPvi/xWYNs1ZN3ScnPCt2aVcDOJH1CfLL1l6HpNq1xX1bvGgjLT8u7qfKY
+         /zQfFZWwHzSajrPD2s5VkTaKn8DrqMG+bf+p+mE+iNpJKeg2u7IaRNsz0NXCfgJm9h8Q
+         4Wf/RNSFciDH/BRzb1+PUNr1nDp4runhKqFd7fO1rawzRyus2guGOJoAd23yIQUfBPkD
+         5zNPJtHP+QE+F8aX7O94ehPKRGwtDf99UEoVTzySVbP4AR3SdctRFGoIwnzPim4u/LzF
+         8iV0wh6b+ZrR9UISqD9lGSgfoIFW3fBgeTmyYI4hlDjznVaFqFqZsILH+eN2KFkIL8JA
+         ZVCw==
+X-Gm-Message-State: APjAAAWiyWptJndrKE3qBgkTVj8IZ9rBnqzkcUkysPnMp11zSLlV6m1a
+        kzVdyghxlBUeMSKzZARJ6KZVrEed
+X-Google-Smtp-Source: APXvYqxtI/cPX825d6dJH84afTJ2EE+ZB7g4K8G2rqcPi3OiL/v8zCDGAp1+6vtHxRwnEBV6UZhfZQ==
+X-Received: by 2002:a63:4466:: with SMTP id t38mr23512976pgk.316.1575967035473;
+        Tue, 10 Dec 2019 00:37:15 -0800 (PST)
 Received: from nj08008nbu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id y128sm2246632pfg.17.2019.12.10.00.36.59
+        by smtp.gmail.com with ESMTPSA id y128sm2246632pfg.17.2019.12.10.00.37.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 10 Dec 2019 00:37:02 -0800 (PST)
+        Tue, 10 Dec 2019 00:37:15 -0800 (PST)
 From:   Kevin Tang <kevin3.tang@gmail.com>
 To:     airlied@linux.ie, daniel@ffwll.ch, kevin3.tang@gmail.com
 Cc:     orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH RFC 5/8] dt-bindings: display: add Unisoc's mipi dsi&dphy bindings
-Date:   Tue, 10 Dec 2019 16:36:32 +0800
-Message-Id: <1575966995-13757-6-git-send-email-kevin3.tang@gmail.com>
+Subject: [PATCH RFC 7/8] dt-bindings: display: add Unisoc's generic mipi panel bindings
+Date:   Tue, 10 Dec 2019 16:36:34 +0800
+Message-Id: <1575966995-13757-8-git-send-email-kevin3.tang@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
 References: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
@@ -73,149 +73,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kevin Tang <kevin.tang@unisoc.com>
 
-Adds MIPI DSI Master and MIPI DSI-PHY (D-PHY)
-support for Unisoc's display subsystem.
+Adds generic MIPI panel support for Unisoc's display subsystem.
 
 Cc: Orson Zhai <orsonzhai@gmail.com>
 Cc: Baolin Wang <baolin.wang@linaro.org>
 Cc: Chunyan Zhang <zhang.lyra@gmail.com>
 Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
 ---
- .../devicetree/bindings/display/sprd/dphy.txt      | 49 ++++++++++++++++
- .../devicetree/bindings/display/sprd/dsi.txt       | 68 ++++++++++++++++++++++
- 2 files changed, 117 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/sprd/dphy.txt
- create mode 100644 Documentation/devicetree/bindings/display/sprd/dsi.txt
+ .../devicetree/bindings/display/sprd/panel.txt     | 110 +++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/sprd/panel.txt
 
-diff --git a/Documentation/devicetree/bindings/display/sprd/dphy.txt b/Documentation/devicetree/bindings/display/sprd/dphy.txt
+diff --git a/Documentation/devicetree/bindings/display/sprd/panel.txt b/Documentation/devicetree/bindings/display/sprd/panel.txt
 new file mode 100644
-index 0000000..474c2b2
+index 0000000..a4017af
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/sprd/dphy.txt
-@@ -0,0 +1,49 @@
-+Unisoc MIPI DSI-PHY (D-PHY)
-+============================================================================
++++ b/Documentation/devicetree/bindings/display/sprd/panel.txt
+@@ -0,0 +1,110 @@
++Unisoc Generic MIPI Panel
++================================================================
 +
 +Required properties:
-+  - compatible: value should be "sprd,dsi-phy".
-+  - reg: must be the dsi controller base address.
++  - compatible: must be "sprd,generic-mipi-panel"
++  - reg: panel ID
 +  - #address-cells, #size-cells: should be set respectively to <1> and <0>
++  - port: video port for DPI input
++  - sprd,dsi-work-mode: the following dsi mode can be select:
++	0: cmd mode,
++	1: video burst mode,
++	2: video non-burst mode with sync pulse,
++	3: video non-burst mode with sync event
++  - sprd,dsi-lane-number: number of dsi lanes to use, default is 4
++  - sprd,dsi-color-format: data format for video stream transmission, currently
++	supports "rgb888", "rgb666", "rgb666_packed", "rgb565" and "dsc", defaults rgb888
++  - sprd,phy-bit-clock: the transmission rate of the clock lane for High-Speed,
++	the unit is Kbps, and the default value is 500Mbps
++  - sprd,phy-escape-clock: the transmission rate of the clock lane for Low-Power,
++	the unit is Kbps, and the default value is 20Mbps
 +
-+Video interfaces:
-+  Device node can contain video interface port nodes according to [1].
-+  The following are properties specific to those nodes:
-+
-+  port node inbound:
-+    - reg: (required) must be 0.
-+  port node outbound:
-+    - reg: (required) must be 1.
-+
-+  endpoint node connected from DSI controller node (reg = 0):
-+    - remote-endpoint: specifies the endpoint in DSI node.
-+  endpoint node connected to panel node (reg = 1):
-+    - remote-endpoint: specifies the endpoint in panel node.
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+
-+Example:
-+
-+	dphy: dphy {
-+		compatible = "sprd,dsi-phy";
-+		reg = <0x0 0x63100000 0x0 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* input port*/
-+		port@1 {
-+			reg = <1>;
-+			dphy_in: endpoint {
-+				remote-endpoint = <&dsi_out>;
-+			};
-+		};
-+
-+		/* output port */
-+		port@0 {
-+			reg = <0>;
-+			dphy_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/display/sprd/dsi.txt b/Documentation/devicetree/bindings/display/sprd/dsi.txt
-new file mode 100644
-index 0000000..1719ff5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/sprd/dsi.txt
-@@ -0,0 +1,68 @@
-+Unisoc MIPI DSI Master
-+=============================================================================
-+
-+Required properties:
-+  - compatible: value should be "sprd,dsi-host";
-+  - reg: physical base address and length of the registers set for the device
-+  - interrupts: should contain DSI interrupt
-+  - clocks: list of clock specifiers, must contain an entry for each required
-+	    entry in clock-names
-+  - clock-names: list of clock names sorted in the same order as the clocks
-+                 property.
-+  - #address-cells, #size-cells: should be set respectively to <1> and <0>
-+    according to DSI host bindings (see MIPI DSI bindings [1])
 +
 +Optional properties:
-+  - power-domains: a phandle to DSIM power domain node
++  - width-mm: see [2] for details
++  - height-mm: see [2] for details
++  - sprd,esd-check-enable: esd check function enable switch
++  - sprd,esd-check-mode: esd detection method, default is register
++	0: register,
++	1: TE signal
++  - sprd,esd-check-period: esd detection cycle, unit ms, default 1000ms
++  - sprd,esd-check-register: if register detection is used, this attribute must be configured
++  - sprd,esd-check-value: if register detection is used, this attribute must be configured
++  - sprd,reset-on-sequence: timing of the reset pin when the lcd power on
++	<1 5>, <0 5> means first keep high for 5ms, then keep low for 5ms
++  - sprd,reset-on-sequence: timing of the reset pin when the lcd power off
++  - sprd,use-dcs-write: bool attribute, indicating whether to use the dcs to send inital & sleep cmds,
++	default use generic
++  - sprd,initial-command: lcd initialization command set
++  - sprd,sleep-in-command: lcd suspend command set
++  - sprd,sleep-out-command: lcd resume command set
++  - display-timings: see [1] for details
 +
-+Child nodes:
-+  Should contain DSI peripheral nodes (see MIPI DSI bindings [1]).
 +
-+Video interfaces:
-+  Device node can contain video interface port nodes according to [2].
-+  The following are properties specific to those nodes:
++	[1] Documentation/devicetree/bindings/display/panel/display-timing.txt
++	[2] Documentation/devicetree/bindings/display/panel/panel-common.yaml
 +
-+  port node inbound:
-+    - reg: (required) must be 0.
-+  port node outbound:
-+    - reg: (required) must be 1.
++Example
++-------
 +
-+  endpoint node connected from DPU node (reg = 0):
-+    - remote-endpoint: specifies the endpoint in DPU node.
-+  endpoint node connected to D-PHY node (reg = 1):
-+    - remote-endpoint: specifies the endpoint in D-PHY node.
++Panel specific DT entry:
 +
-+[1]: Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-+[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+
-+SoC specific DT entry:
-+
-+	dsi: dsi@63100000 {
-+		compatible = "sprd,dsi-host";
-+		reg = <0 0x63100000 0 0x1000>;
-+		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+			<GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-names = "clk_aon_apb_disp_eb";
-+		clocks = <&clk_aon_top_gates 2>;
-+
-+		ports {
++	&dsi {
++		panel {
++			compatible = "sprd,generic-mipi-panel";
 +			#address-cells = <1>;
 +			#size-cells = <0>;
++			reg = <0>;
 +
-+			port@0 {
-+				reg = <0>;
-+				dsi_in: endpoint {
-+					remote-endpoint = <&dpu_out>;
-+				};
-+			};
-+
-+			port@1 {
++			port {
 +				reg = <1>;
-+				dsi_out: endpoint@1 {
-+					remote-endpoint = <&dphy_in>;
++				panel_in: endpoint {
++					remote-endpoint = <&dphy_out>;
 +				};
 +			};
 +		};
 +	};
++
++	/ { lcds {
++        lcd_mipi_hd: lcd_mipi_hd {
++                sprd,dsi-work-mode = <1>;
++                sprd,dsi-lane-number = <4>;
++                sprd,dsi-color-format = "rgb888";
++                sprd,phy-bit-clock = <1100000>;
++                sprd,phy-escape-clock = <20000>;
++                width-mm = <68>;
++                height-mm = <121>;
++                sprd,esd-check-enable = <0>;
++                sprd,esd-check-mode = <0>;
++                sprd,esd-check-period = <1000>;
++                sprd,esd-check-register = <0x0A>;
++                sprd,esd-check-value = <0x9C>;
++                sprd,reset-on-sequence = <1 5>, <0 5>, <1 20>;
++                sprd,reset-off-sequence = <0 5>;
++                sprd,use-dcs-write;
++                sprd,initial-command = [
++                        39 00 00 02 b0 00
++                        39 00 00 04 B3 31 00 06
++                        ];
++                sprd,sleep-in-command = [
++                        13 0A 00 01 28
++                        13 78 00 01 10
++                        ];
++                sprd,sleep-out-command = [
++                        13 78 00 01 11
++                        13 32 00 01 29
++                        ];
++                display-timings {
++                        timing0 {
++                                clock-frequency = <64000000>;
++                                hactive = <720>;
++                                vactive = <1280>;
++                                hback-porch = <31>;
++                                hfront-porch = <31>;
++                                vback-porch = <32>;
++                                vfront-porch = <16>;
++                                hsync-len = <20>;
++                                vsync-len = <2>;
++                        };
++                };
++        };
 \ No newline at end of file
 -- 
 2.7.4
