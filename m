@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2809C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 492F62077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7C5246AD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012260;
-	bh=KROqiwEc4Yl8hYF9U4D/vGypWetk7u5BYKdW5/o94H0=;
+	s=default; t=1576012265;
+	bh=stqJirSBigCjUNifC1OoMutB1fJmmXeU1I9ydq6AYUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3c69YkIsJ9F8r9hBCoIqvdKg56mBp4DrNqCUOfhITIxFNRha5VfqGfMe3b/nXvSR
-	 dyRd5jFRuvFbpSwGSf2tUrKv4w5q3RR3Caxlh2pOxLtgKn0aPbJsyv7nkE8qX9fd6O
-	 jM3Bu+0zbest9sDSarVkuUuTv2LIBQd31EV2EmcM=
+	b=vSCCUvIvSZ5ARlghGvMVwIYBeVNKXVHxN9B9tVvcvkpy8Ii81/sZWBBx4qdHTvHLw
+	 p7eoHypE40rdqrDTKMmRGBKkq5nbAdHRk/3jS/Qn1brGBngJV6OhBO7yHAKhPRJJ8S
+	 rESMWgqZ2Hzfz/VsOINAoHBLNMR0xWbQpOFgvOIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfLJVK7 (ORCPT
+        id S1728669AbfLJVLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbfLJVKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:46 -0500
+        id S1728292AbfLJVKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 758E3246A3;
-        Tue, 10 Dec 2019 21:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5C0D246AE;
+        Tue, 10 Dec 2019 21:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012245;
-        bh=KROqiwEc4Yl8hYF9U4D/vGypWetk7u5BYKdW5/o94H0=;
+        s=default; t=1576012249;
+        bh=stqJirSBigCjUNifC1OoMutB1fJmmXeU1I9ydq6AYUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bs5EmLx+0etvN685ifWMOE5854B98UCqEkfX6MOgXyrVSfLY2dGdAgFYYFQL7Eucq
-         URHRWi4P32Eh5P+cC943b6IAkU4jXRvhXV6rWs92NwD5A5qyoZMEB39cVX1AJUPrA0
-         mIQH/vuYstUK9i5rqeAo2bORccOUMSV/TxWQHzz0=
+        b=dlbFKKgn2thnft8UuIIwlYj0GXTEJh2YQtSYCnf+aKbhjhyW9qagx12qytufVjgOD
+         VkMg/oCjnsM+sW+3nYq9VxNqjzswS2vyUi9QQHJJeG6PuHZeHrPNMnxeJv+bq9lesl
+         Jde12IFb8TKLFNHQkNw78PYreD3oqSM+rwjSs/rA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 193/350] libbpf: Fix error handling in bpf_map__reuse_fd()
-Date:   Tue, 10 Dec 2019 16:04:58 -0500
-Message-Id: <20191210210735.9077-154-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 197/350] ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency
+Date:   Tue, 10 Dec 2019 16:05:02 -0500
+Message-Id: <20191210210735.9077-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,63 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit d1b4574a4b86565325ef2e545eda8dfc9aa07c60 ]
+[ Upstream commit f9ad75468453b019b92c5296e6a04bf7c37f49e4 ]
 
-bpf_map__reuse_fd() was calling close() in the error path before returning
-an error value based on errno. However, close can change errno, so that can
-lead to potentially misleading error messages. Instead, explicitly store
-errno in the err variable before each goto.
+updated solution to the problem reported with randconfig:
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/157269297769.394725.12634985106772698611.stgit@toke.dk
+CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
+turn referenced by the sof-of-dev driver. This creates a reverse
+dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
+is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+
+sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+
+use def_trisate to propagate the right settings without select.
+
+Fixes: f4df4e4042b0 ("ASoC: SOF: imx8: Fix COMPILE_TEST error")
+Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191101173045.27099-6-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ sound/soc/sof/imx/Kconfig | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e0276520171b9..a267cd0c0ce28 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1897,16 +1897,22 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
- 		return -errno;
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 5acae75f5750d..71f318bc2c74f 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -11,8 +11,8 @@ config SND_SOC_SOF_IMX_TOPLEVEL
  
- 	new_fd = open("/", O_RDONLY | O_CLOEXEC);
--	if (new_fd < 0)
-+	if (new_fd < 0) {
-+		err = -errno;
- 		goto err_free_new_name;
-+	}
+ if SND_SOC_SOF_IMX_TOPLEVEL
  
- 	new_fd = dup3(fd, new_fd, O_CLOEXEC);
--	if (new_fd < 0)
-+	if (new_fd < 0) {
-+		err = -errno;
- 		goto err_close_new_fd;
-+	}
+-config SND_SOC_SOF_IMX8
+-	tristate "SOF support for i.MX8"
++config SND_SOC_SOF_IMX8_SUPPORT
++	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+ 	depends on IMX_DSP
+ 	help
+@@ -20,4 +20,8 @@ config SND_SOC_SOF_IMX8
+           Say Y if you have such a device.
+           If unsure select "N".
  
- 	err = zclose(map->fd);
--	if (err)
-+	if (err) {
-+		err = -errno;
- 		goto err_close_new_fd;
-+	}
- 	free(map->name);
- 
- 	map->fd = new_fd;
-@@ -1925,7 +1931,7 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
- 	close(new_fd);
- err_free_new_name:
- 	free(new_name);
--	return -errno;
-+	return err;
- }
- 
- int bpf_map__resize(struct bpf_map *map, __u32 max_entries)
++config SND_SOC_SOF_IMX8
++	def_tristate SND_SOC_SOF_OF
++	depends on SND_SOC_SOF_IMX8_SUPPORT
++
+ endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
 -- 
 2.20.1
 
