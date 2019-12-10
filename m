@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE66C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F354C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D77222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5239120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015412;
-	bh=NvJ0w1npQFSuUb/ujRWcNHg1Z74Zo0uTyOuuTQy93ZU=;
+	s=default; t=1576015415;
+	bh=7Dc4axMlf7o0Iscg6wxMmGHMCOp0oY38gUotoCDzxbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A7lY/+MpkvjYsgT723SXtYeruyF8QqoetUxrldEf6gLLyF2jqXQCxRKgqHEMgGtHS
-	 mCeDcmosxhVk8LgFv1bX3JEGEk/4cDo6D2GVT4CnpyoK2L2l0WGwowcvnwSSb4OKac
-	 etFF0ny4wwoMpnZdFqPcLqlbMfXlfGhKzrczu4Wg=
+	b=CZm5he57Xe5vgZ8P2BEdpKwrX6wgDSqkx4Gr2s1hI/g09uy0VygsmYLNcOUQNaMaM
+	 i3Df5imgQNpHyW4Xi4VRN4scnDcjCNH199qHYYnqmqH7BFQyHga+hcfo7/9oLK4gzI
+	 bbgAfveEyp224WUSRmatMtaLFMLqjSfVQLj6vwzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfLJWDb (ORCPT
+        id S1727877AbfLJWDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:03:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbfLJWDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:22 -0500
+        id S1727666AbfLJWDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74AB92053B;
-        Tue, 10 Dec 2019 22:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DF320637;
+        Tue, 10 Dec 2019 22:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015401;
-        bh=NvJ0w1npQFSuUb/ujRWcNHg1Z74Zo0uTyOuuTQy93ZU=;
+        s=default; t=1576015404;
+        bh=7Dc4axMlf7o0Iscg6wxMmGHMCOp0oY38gUotoCDzxbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVEOMCDxwbl4ynWS6MxhbakLUD9iJ5TFbAPgRLkEJ0jShAeSGlqvNQxSPg6fq6rL3
-         Irrxl4g5OpFvaDDg9ATV/1vDWqwb7WncIdXeqfONzcoHz89Cc6sAaqG/o43zqxEdPj
-         132opKcLD6E6yjOVKpAvQGV0+8CB81M0e7+VNeBk=
+        b=HZs9bmrbARVB1iEmsyXNPGL/SK8/fQAi/1I/pk9W92QCHvoUeK5tgCn8URK2h9HFV
+         OoL7R74Lrrs9L3ot9t8bhs2E/xDySh7HxziZX+3Qn6iDdQCS34vubKk05YYrvKCBgl
+         C1wagIfogQuWKdbhp+78z8tcQ19C9Uz8UtjmnOk4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 016/130] media: ov6650: Fix stored frame format not in sync with hardware
-Date:   Tue, 10 Dec 2019 17:01:07 -0500
-Message-Id: <20191210220301.13262-16-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 019/130] media: venus: core: Fix msm8996 frequency table
+Date:   Tue, 10 Dec 2019 17:01:10 -0500
+Message-Id: <20191210220301.13262-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,69 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
+[ Upstream commit c690435ed07901737e5c007a65ec59f53b33eb71 ]
 
-The driver stores frame format settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, those settings are updated before they are actually applied
-on hardware.  If an error occurs on device update, the stored settings
-my not reflect hardware state anymore and consecutive calls to
-.get_fmt() may return incorrect information.  That in turn may affect
-ability of a bridge device to use correct DMA transfer settings if such
-incorrect informmation on active frame format returned by .get_fmt() is
-used.
+In downstream driver, there are two frequency tables defined,
+one for the encoder and one for the decoder:
 
-Assuming a failed device update means its state hasn't changed, update
-frame format related settings stored in the device private structure
-only after they are successfully applied so the stored values always
-reflect hardware state as closely as possible.
+/* Encoders /
+<972000 490000000 0x55555555>, / 4k UHD @ 30 /
+<489600 320000000 0x55555555>, / 1080p @ 60 /
+<244800 150000000 0x55555555>, / 1080p @ 30 /
+<108000 75000000 0x55555555>, / 720p @ 30 */
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+/* Decoders /
+<1944000 490000000 0xffffffff>, / 4k UHD @ 60 /
+< 972000 320000000 0xffffffff>, / 4k UHD @ 30 /
+< 489600 150000000 0xffffffff>, / 1080p @ 60 /
+< 244800 75000000 0xffffffff>; / 1080p @ 30 */
+
+It shows that encoder always needs a higher clock than decoder.
+
+In current venus driver, the unified frequency table is aligned
+with the downstream decoder table which causes performance issues
+in encoding scenarios. Fix that by aligning frequency table on
+worst case (encoding).
+
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/platform/qcom/venus/core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 98080d4204445..81fa21ed25992 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -613,7 +613,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
- 		return -EINVAL;
- 	}
--	priv->code = code;
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 769e9e68562df..9360b36b82cd8 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -345,10 +345,11 @@ static const struct venus_resources msm8916_res = {
+ };
  
- 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
- 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
-@@ -639,7 +638,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_dbg(&client->dev, "max resolution: CIF\n");
- 		coma_mask |= COMA_QCIF;
- 	}
--	priv->half_scale = half_scale;
+ static const struct freq_tbl msm8996_freq_table[] = {
+-	{ 1944000, 490000000 },	/* 4k UHD @ 60 */
+-	{  972000, 320000000 },	/* 4k UHD @ 30 */
+-	{  489600, 150000000 },	/* 1080p @ 60 */
+-	{  244800,  75000000 },	/* 1080p @ 30 */
++	{ 1944000, 520000000 },	/* 4k UHD @ 60 (decode only) */
++	{  972000, 520000000 },	/* 4k UHD @ 30 */
++	{  489600, 346666667 },	/* 1080p @ 60 */
++	{  244800, 150000000 },	/* 1080p @ 30 */
++	{  108000,  75000000 },	/* 720p @ 30 */
+ };
  
- 	clkrc = CLKRC_12MHz;
- 	mclk = 12000000;
-@@ -657,8 +655,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
- 	if (!ret)
- 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
--	if (!ret)
-+	if (!ret) {
-+		priv->half_scale = half_scale;
-+
- 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
-+	}
-+	if (!ret)
-+		priv->code = code;
- 
- 	if (!ret) {
- 		mf->colorspace	= priv->colorspace;
+ static const struct reg_val msm8996_reg_preset[] = {
 -- 
 2.20.1
 
