@@ -7,49 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D88C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D41F2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AAA2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013480;
-	bh=Uu84qpMnEvTek01jYaB5sD7m/AD+QkDsg73IgbTZqkI=;
+	s=default; t=1576013483;
+	bh=YpQWkDLIOfvR4l/fOKKCXAcyaAJPXvo1vWfzuAc4hNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K42P5J+J1rRBXwEP7WM0CHbdaxwrblioAscNeVOhxDv1ZfSt/GzFPzv12oHOvgJRc
-	 CTho+/5xQeLGR5jXinXEDQQYm+HdWip9QQmQWF80NvE5Fj8PhjuJOcReev6wyOub8F
-	 rJes8WEEYnsLUNuSBS7JBdqsUoBrUZfZ8ibOX0Qc=
+	b=jjWwT4Dn5AoG4mqQH1Ji6yE/4gsNIsCHB1ArrIWP/OjuMwCfdAUn1ADhLkPIPZSRq
+	 R2+8LUj44W8ul/oTq/e3diC8vP4RzvNw6HoLv3ow4ScVfmPlcluSz9PzzbTR3ToyRi
+	 OwCNmbKZQj4P4XNdO4eUxGRLNc6TvEnWXbpBVk2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfLJVJe (ORCPT
+        id S1728347AbfLJVbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:31:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfLJVJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:30 -0500
+        id S1728196AbfLJVJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F7E246A2;
-        Tue, 10 Dec 2019 21:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADAE92077B;
+        Tue, 10 Dec 2019 21:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012170;
-        bh=Uu84qpMnEvTek01jYaB5sD7m/AD+QkDsg73IgbTZqkI=;
+        s=default; t=1576012173;
+        bh=YpQWkDLIOfvR4l/fOKKCXAcyaAJPXvo1vWfzuAc4hNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11qm0ncgsqu23jJFRvuEqlC0ws4zA0Z6/B2X4w9CeCU2bbK2wr25yp+cdxEpWqhON
-         QYJo/DbyeU4OQ4JZsqTVWGu/Kv9CNTWg80/cjysNgFnUD6yidHWidl498AUv4KRaFF
-         7xow5Hbq74eW71JphrqwENmUhRgaXWklx2hMIAS4=
+        b=J643/gmkipb+mzGpEH4s9eDGd6YXKsDi9Nlypg2kz/EqivLqCuB9UpqOzkyy/TBqU
+         KzzrxJr+unAObog/BohtiJX/QN0ZKqsDfDNsWCHynIKYUGPjHTJEOF84EUn3D517+l
+         6ZQQwDyFPDIkGLkT4eAnCSvV3boa2KD/s3hB56TA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 129/350] staging: iio: ad9834: add a check for devm_clk_get
-Date:   Tue, 10 Dec 2019 16:03:54 -0500
-Message-Id: <20191210210735.9077-90-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 131/350] perf tests: Disable bp_signal testing for arm64
+Date:   Tue, 10 Dec 2019 16:03:56 -0500
+Message-Id: <20191210210735.9077-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,37 +71,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit a96de139301385e5992768c0f60240ddfbb33325 ]
+[ Upstream commit 6a5f3d94cb69a185b921cb92c39888dc31009acb ]
 
-ad9834_probe misses a check for devm_clk_get and may cause problems.
-Add a check like what ad9832 does to fix it.
+As there are several discussions for enabling perf breakpoint signal
+testing on arm64 platform: arm64 needs to rely on single-step to execute
+the breakpointed instruction and then reinstall the breakpoint exception
+handler.  But if we hook the breakpoint with a signal, the signal
+handler will do the stepping rather than the breakpointed instruction,
+this causes infinite loops as below:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+         Kernel space              |            Userspace
+  ---------------------------------|--------------------------------
+                                   |  __test_function() -> hit
+				   |                       breakpoint
+  breakpoint_handler()             |
+    `-> user_enable_single_step()  |
+  do_signal()                      |
+                                   |  sig_handler() -> Step one
+				   |                instruction and
+				   |                trap to kernel
+  single_step_handler()            |
+    `-> reinstall_suspended_bps()  |
+                                   |  __test_function() -> hit
+				   |     breakpoint again and
+				   |     repeat up flow infinitely
+
+As Will Deacon mentioned [1]: "that we require the overflow handler to
+do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
+hw_breakpoint code is a complete disaster so my preference would be to
+rip out the perf part and just implement something directly in ptrace,
+but it's a pretty horrible job".  Though Will commented this on arm
+architecture, but the comment also can apply on arm64 architecture.
+
+For complete information, I searched online and found a few years back,
+Wang Nan sent one patch 'arm64: Store breakpoint single step state into
+pstate' [2]; the patch tried to resolve this issue by avoiding single
+stepping in signal handler and defer to enable the signal stepping when
+return to __test_function().  The fixing was not merged due to the
+concern for missing to handle different usage cases.
+
+Based on the info, the most feasible way is to skip Perf breakpoint
+signal testing for arm64 and this could avoid the duplicate
+investigation efforts when people see the failure.  This patch skips
+this case on arm64 platform, which is same with arm architecture.
+
+[1] https://lkml.org/lkml/2018/11/15/205
+[2] https://lkml.org/lkml/2015/12/23/477
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/frequency/ad9834.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/bp_signal.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
-index 038d6732c3fdb..23026978a5a5f 100644
---- a/drivers/staging/iio/frequency/ad9834.c
-+++ b/drivers/staging/iio/frequency/ad9834.c
-@@ -417,6 +417,10 @@ static int ad9834_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	mutex_init(&st->lock);
- 	st->mclk = devm_clk_get(&spi->dev, NULL);
-+	if (IS_ERR(st->mclk)) {
-+		ret = PTR_ERR(st->mclk);
-+		goto error_disable_reg;
-+	}
- 
- 	ret = clk_prepare_enable(st->mclk);
- 	if (ret) {
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index c1c2c13de254c..166f411568a50 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -49,14 +49,6 @@ asm (
+ 	"__test_function:\n"
+ 	"incq (%rdi)\n"
+ 	"ret\n");
+-#elif defined (__aarch64__)
+-extern void __test_function(volatile long *ptr);
+-asm (
+-	".globl __test_function\n"
+-	"__test_function:\n"
+-	"str x30, [x0]\n"
+-	"ret\n");
+-
+ #else
+ static void __test_function(volatile long *ptr)
+ {
+@@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
+ 	 * stepping into the SIGIO handler and getting stuck on the
+ 	 * breakpointed instruction.
+ 	 *
++	 * Since arm64 has the same issue with arm for the single-step
++	 * handling, this case also gets suck on the breakpointed
++	 * instruction.
++	 *
+ 	 * Just disable the test for these architectures until these
+ 	 * issues are resolved.
+ 	 */
+-#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
++#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
++    defined(__aarch64__)
+ 	return false;
+ #else
+ 	return true;
 -- 
 2.20.1
 
