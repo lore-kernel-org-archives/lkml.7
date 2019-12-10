@@ -2,131 +2,121 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5118CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731ABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205912053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017758;
-	bh=mQCliQUuDvr0riFtN9VdVoENc7SI8ZrshGbUX15EB5c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjxYxukAshH7ZtG6mq5lC4Nr9nGtgA6avcZP3of1krfuh5LUnGVRVrVFd9lUMdDvp
-	 LxmeMlyT5hracVlm82xcUHVIkuiJjTm/RS6gpryIgiRg11lN8yTr24RKpv7NEZri1O
-	 3HxT3F/L2/fWUKzkozx3Jki3ifYOs0rTxBdvco8Y=
+	by mail.kernel.org (Postfix) with ESMTP id 4D4FB2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbfLJWmh (ORCPT
+        id S1730513AbfLJWml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbfLJWbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 186C02073D;
-        Tue, 10 Dec 2019 22:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017082;
-        bh=mQCliQUuDvr0riFtN9VdVoENc7SI8ZrshGbUX15EB5c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Go7+EBkpl6IcWC7kvHCvDCJDOZAtbUSrgqecb6ECYd1gduVBKiLeAsPx8oM13dvTl
-         QUtwt9wnLdoOoDVFU40jPc5odaQ/uK6Wvq1/X3/UgntPyQdgaqpJMba88muY/TBzgh
-         bfSaP+yRoOFc8ctSsozXEeSxFdZZQzCczQmtpEDo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 39/91] iio: pressure: zpa2326: fix iio_triggered_buffer_postenable position
-Date:   Tue, 10 Dec 2019 17:29:43 -0500
-Message-Id: <20191210223035.14270-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+        Tue, 10 Dec 2019 17:42:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729511AbfLJWmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:42:39 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbZh9004984
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:42:38 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wtbt187c6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:42:38 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 10 Dec 2019 22:42:36 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 22:42:32 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMgVBZ47382822
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 22:42:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76564A4069;
+        Tue, 10 Dec 2019 22:42:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49ECBA4068;
+        Tue, 10 Dec 2019 22:42:30 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.214.111])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Dec 2019 22:42:30 +0000 (GMT)
+Subject: Re: [PATCH v10 1/6] IMA: Check IMA policy flag
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Tue, 10 Dec 2019 17:42:29 -0500
+In-Reply-To: <20191204224131.3384-2-nramas@linux.microsoft.com>
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+         <20191204224131.3384-2-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121022-0028-0000-0000-000003C757F1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121022-0029-0000-0000-0000248A899B
+Message-Id: <1576017749.4579.40.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
+> Return immediately from process_buffer_measurement()
+> if the IMA policy flag is set to zero. Not doing this
+> can result in kernel panic when process_buffer_measurement()
+> is called before IMA is initialized (for instance, when
+> the IMA hook is called when a key is added to
+> the .builtin_trusted_keys keyring).
+> 
+> This change adds the check in process_buffer_measurement()
+> to return immediately if ima_policy_flag is set to zero.
 
-[ Upstream commit fe2392c67db9730d46f11fc4fadfa7bffa8843fa ]
+Patch descriptions aren't suppose to be written as pseudo code.  Start
+with the current status and problem description.
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+For example, "process_buffer_measurement() may be called prior to IMA being initialized, which would result in a kernel panic.  This patch ..."
 
-The iio_triggered_buffer_postenable() should be called before (to attach
-the poll func) and then the
+Mimi
 
-The iio_triggered_buffer_predisable() function is hooked directly without
-anything, which is probably fine, as the postenable() version seems to also
-do some reset/wake-up of the device.
-This will mean it will be easier when removing it; i.e. it just gets
-removed.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iio/pressure/zpa2326.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
-index cc002b958f7e8..e79729ee151ed 100644
---- a/drivers/iio/pressure/zpa2326.c
-+++ b/drivers/iio/pressure/zpa2326.c
-@@ -1255,6 +1255,11 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
- 	const struct zpa2326_private *priv = iio_priv(indio_dev);
- 	int                           err;
- 
-+	/* Plug our own trigger event handler. */
-+	err = iio_triggered_buffer_postenable(indio_dev);
-+	if (err)
-+		goto err;
-+
- 	if (!priv->waken) {
- 		/*
- 		 * We were already power supplied. Just clear hardware FIFO to
-@@ -1262,7 +1267,7 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
- 		 */
- 		err = zpa2326_clear_fifo(indio_dev, 0);
- 		if (err)
--			goto err;
-+			goto err_buffer_predisable;
- 	}
- 
- 	if (!iio_trigger_using_own(indio_dev) && priv->waken) {
-@@ -1272,16 +1277,13 @@ static int zpa2326_postenable_buffer(struct iio_dev *indio_dev)
- 		 */
- 		err = zpa2326_config_oneshot(indio_dev, priv->irq);
- 		if (err)
--			goto err;
-+			goto err_buffer_predisable;
- 	}
- 
--	/* Plug our own trigger event handler. */
--	err = iio_triggered_buffer_postenable(indio_dev);
--	if (err)
--		goto err;
--
- 	return 0;
- 
-+err_buffer_predisable:
-+	iio_triggered_buffer_predisable(indio_dev);
- err:
- 	zpa2326_err(indio_dev, "failed to enable buffering (%d)", err);
- 
--- 
-2.20.1
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  security/integrity/ima/ima_main.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index d7e987baf127..9b35db2fc777 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -655,6 +655,9 @@ void process_buffer_measurement(const void *buf, int size,
+>  	int action = 0;
+>  	u32 secid;
+>  
+> +	if (!ima_policy_flag)
+> +		return;
+> +
+>  	/*
+>  	 * Both LSM hooks and auxilary based buffer measurements are
+>  	 * based on policy.  To avoid code duplication, differentiate
 
