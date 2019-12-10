@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4058DC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCBEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153DA2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223E32053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015777;
-	bh=UGhY1xIRxw+VCwPGH7IYI4poCQU1DOo54vja+AWdE6U=;
+	s=default; t=1576015780;
+	bh=7rK+JIe/KmRszDNh9Cway0FAlgeYkapuIm7N6OuYmjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DpHzklZQZJMkJPl8IuoDOToLK9DOUjXin0cqRjYIKGXi845BdxHQLOlAQRQQba6kz
-	 mdBpaN8MUXGEnQVN2FiIBfN5IZI721q81yxePKm4+ZePlqSG8UDtGc274/kjmTRAWj
-	 +SZOT9j1gNB8v0Ew6qtBnU/Mp+KjFBOaiElGM2xA=
+	b=B3rDDXcYqa+exdlYIhLJhnlw29fIKPJJ9qDQNSO00JPrR2WbyVyWgMO0fzpyvJCHv
+	 KwgS5WjHKuANs1kFvByiVCWAIkMmQaM1HmOXThp1qxX+iNfpawa+jX784zg/zEHqRh
+	 73XxSHXt6XSXPF1jNuSp86EpbL9VzeWMnvDI9IDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfLJWE2 (ORCPT
+        id S1728791AbfLJWEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfLJWEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:20 -0500
+        id S1728684AbfLJWES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B9320828;
-        Tue, 10 Dec 2019 22:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212CD20838;
+        Tue, 10 Dec 2019 22:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015459;
-        bh=UGhY1xIRxw+VCwPGH7IYI4poCQU1DOo54vja+AWdE6U=;
+        s=default; t=1576015457;
+        bh=7rK+JIe/KmRszDNh9Cway0FAlgeYkapuIm7N6OuYmjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dV9ch+RmZVALsIwOv1gHceZOAeN+lznZ7xwU357rsj7Qs8JC75GpBao5VuykV5mBC
-         0AvT+J80DyIKx6lOvozUfWoDreDrb8fYcIvWV5a2kqQfs3Nm4usfgTxet4nCJILss9
-         8D9ziGj0v0dUP4Hl55qV4ygLzUk+k4u+ck5Pud8M=
+        b=EPnQJxO0G49d65hxUvOkoy9SihUrPnXsywebu8HYjm/f95+A4bnlnOay6h5kkTWyZ
+         P+721f560RjN3XzUu+VMfKwwuOO0gvvnvZ7IMiYnmCxF/5JzBFVEIg+l66ztldOGrw
+         Ax8TCT2VwoPgEGtWDO/Rf8WrOUXSn7jqGaQsrUVw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 066/130] s390/mm: add mm_pxd_folded() checks to pxd_free()
-Date:   Tue, 10 Dec 2019 17:01:57 -0500
-Message-Id: <20191210220301.13262-66-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 064/130] phy: qcom-usb-hs: Fix extcon double register after power cycle
+Date:   Tue, 10 Dec 2019 17:01:55 -0500
+Message-Id: <20191210220301.13262-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,70 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
+[ Upstream commit 64f86b9978449ff05bfa6c64b4c5439e21e9c80b ]
 
-Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
-page tables. This is not an issue so far, as those functions will actually
-never be called, since no code will reach them when page tables are folded.
+Commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+switched from extcon_register_notifier() to the resource-managed
+API, i.e. devm_extcon_register_notifier().
 
-In order to avoid future issues, and to make the s390 code more similar to
-other architectures, add mm_pxd_folded() checks, similar to how it is done
-in pxd_free_tlb().
+This is problematic in this case, because the extcon notifier
+is dynamically registered/unregistered whenever the PHY is powered
+on/off. The resource-managed API does not unregister the notifier
+until the driver is removed, so as soon as the PHY is power cycled,
+attempting to register the notifier again results in:
 
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add tests validating architecture
-page table helpers").
+	double register detected
+	WARNING: CPU: 1 PID: 182 at kernel/notifier.c:26 notifier_chain_register+0x74/0xa0
+	Call trace:
+	 ...
+	 extcon_register_notifier+0x74/0xb8
+	 devm_extcon_register_notifier+0x54/0xb8
+	 qcom_usb_hs_phy_power_on+0x1fc/0x208
+	 ...
 
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+... and USB stops working after plugging the cable out and in
+another time.
+
+The easiest way to fix this is to make a partial revert of
+commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+and avoid using the resource-managed API in this case.
+
+Fixes: f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-usb-hs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index bbe99cb8219d9..11857fea993c5 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -70,7 +70,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
- 	return (p4d_t *) table;
- }
--#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
-+
-+static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
-+{
-+	if (!mm_p4d_folded(mm))
-+		crst_table_free(mm, (unsigned long *) p4d);
-+}
- 
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+index 2d0c70b5589f4..643934a2a70c3 100644
+--- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
++++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+@@ -159,8 +159,8 @@ static int qcom_usb_hs_phy_power_on(struct phy *phy)
+ 		/* setup initial state */
+ 		qcom_usb_hs_phy_vbus_notifier(&uphy->vbus_notify, state,
+ 					      uphy->vbus_edev);
+-		ret = devm_extcon_register_notifier(&ulpi->dev, uphy->vbus_edev,
+-				EXTCON_USB, &uphy->vbus_notify);
++		ret = extcon_register_notifier(uphy->vbus_edev, EXTCON_USB,
++					       &uphy->vbus_notify);
+ 		if (ret)
+ 			goto err_ulpi;
+ 	}
+@@ -181,6 +181,9 @@ static int qcom_usb_hs_phy_power_off(struct phy *phy)
  {
-@@ -79,7 +84,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
- 	return (pud_t *) table;
- }
--#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
-+
-+static inline void pud_free(struct mm_struct *mm, pud_t *pud)
-+{
-+	if (!mm_pud_folded(mm))
-+		crst_table_free(mm, (unsigned long *) pud);
-+}
+ 	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
  
- static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- {
-@@ -97,6 +107,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- 
- static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
- {
-+	if (mm_pmd_folded(mm))
-+		return;
- 	pgtable_pmd_page_dtor(virt_to_page(pmd));
- 	crst_table_free(mm, (unsigned long *) pmd);
- }
++	if (uphy->vbus_edev)
++		extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
++					   &uphy->vbus_notify);
+ 	regulator_disable(uphy->v3p3);
+ 	regulator_disable(uphy->v1p8);
+ 	clk_disable_unprepare(uphy->sleep_clk);
 -- 
 2.20.1
 
