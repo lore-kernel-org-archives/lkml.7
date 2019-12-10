@@ -2,71 +2,116 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D2CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2847C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CD820409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4EAC20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkWDO0W2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfLJCJ2 (ORCPT
+        id S1726691AbfLJCM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:09:28 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7653 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726538AbfLJCJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:09:28 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3727580365B3C590DBB2;
-        Tue, 10 Dec 2019 10:09:27 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 10 Dec
- 2019 10:09:23 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/6] f2fs: call f2fs_balance_fs outside of
- locked page
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191209222345.1078-1-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0f842142-4931-dcb8-9843-47510851e93b@huawei.com>
-Date:   Tue, 10 Dec 2019 10:09:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 9 Dec 2019 21:12:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50580 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726602AbfLJCM1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 21:12:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575943946;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AqNXb1DdFGH0UEVoh/67mONToQvKGHBSfZkAshMis24=;
+        b=OkWDO0W2Y/Td11zNJQipGS2QyxGSwwGIyTvxtYMLqp5NKx9EiFQ8oQ6iL9xQ3tr7r6XlvD
+        mJzHGWfIeEYv2HzYab/EJZUOQV/+PjNNxU7n0KcU5LMATyAIBu6mucWf8btKW16LP17+In
+        MMG0l9+nEB9Tx8qsQLOwkcfK3N+0izc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-YLXilXRBOQ-dHbPintc99A-1; Mon, 09 Dec 2019 21:12:23 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E60FE801E53;
+        Tue, 10 Dec 2019 02:12:21 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 522541001925;
+        Tue, 10 Dec 2019 02:12:14 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 10:12:10 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] block: fix "check bi_size overflow before merge"
+Message-ID: <20191210021210.GB25022@ming.t460p>
+References: <20191209191114.17266-1-agruenba@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191209222345.1078-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191209191114.17266-1-agruenba@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: YLXilXRBOQ-dHbPintc99A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/10 6:23, Jaegeuk Kim wrote:
-> Otherwise, we can hit deadlock by waiting for the locked page in
-> move_data_block in GC.
-> 
->  Thread A                     Thread B
->  - do_page_mkwrite
->   - f2fs_vm_page_mkwrite
->    - lock_page
->                               - f2fs_balance_fs
->                                   - mutex_lock(gc_mutex)
->                                - f2fs_gc
->                                 - do_garbage_collect
->                                  - ra_data_block
->                                   - grab_cache_page
->    - f2fs_balance_fs
->     - mutex_lock(gc_mutex)
-> 
-> Fixes: 39a8695824510 ("f2fs: refactor ->page_mkwrite() flow")
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+On Mon, Dec 09, 2019 at 08:11:14PM +0100, Andreas Gruenbacher wrote:
+> This partially reverts commit e3a5d8e386c3fb973fa75f2403622a8f3640ec06.
+>=20
+> Commit e3a5d8e386c3 ("check bi_size overflow before merge") adds a bio_fu=
+ll
+> check to __bio_try_merge_page.  This will cause __bio_try_merge_page to f=
+ail
+> when the last bi_io_vec has been reached.  Instead, what we want here is =
+only
+> the bi_size overflow check.
+>=20
+> Fixes: e3a5d8e386c3 ("block: check bi_size overflow before merge")
+> Cc: stable@vger.kernel.org # v5.4+
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> ---
+>  block/bio.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/block/bio.c b/block/bio.c
+> index 9d54aa37ce6c..a5d75f6bf4c7 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -754,10 +754,12 @@ bool __bio_try_merge_page(struct bio *bio, struct p=
+age *page,
+>  =09if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+>  =09=09return false;
+> =20
+> -=09if (bio->bi_vcnt > 0 && !bio_full(bio, len)) {
+> +=09if (bio->bi_vcnt > 0) {
+>  =09=09struct bio_vec *bv =3D &bio->bi_io_vec[bio->bi_vcnt - 1];
+> =20
+>  =09=09if (page_is_mergeable(bv, page, len, off, same_page)) {
+> +=09=09=09if (bio->bi_iter.bi_size > UINT_MAX - len)
+> +=09=09=09=09return false;
+>  =09=09=09bv->bv_len +=3D len;
+>  =09=09=09bio->bi_iter.bi_size +=3D len;
+>  =09=09=09return true;
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+page merging doesn't consume new bvec, so this patch is correct:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 Thanks,
+Ming
+
