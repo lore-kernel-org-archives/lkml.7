@@ -2,120 +2,95 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07EEC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19055C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6ACC20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575969009;
-	bh=I36588TTIo0cK+5GnknvOkgilqWUQvL68z6gF6Pj/Co=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AX5Z0f5hgM8b87QN/UuWj/s30YPa8Rsi77nCfYVGBBqls0SubAadaJBPAsFDlmHuP
-	 QLkggNdC/c0r/hOnUaCknF0KhpPcCYsNChuj75kz+Dg/ZjOtPnByfj5KOJU+6JTAYq
-	 EQf1+85Ill0QLA2Nzj/B8GDmvaNwSdFlgfYo6DSY=
+	by mail.kernel.org (Postfix) with ESMTP id DF1C8206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:12:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a0Aqyhqd";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="D+urQUfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfLJJKI (ORCPT
+        id S1727039AbfLJJMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:10:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfLJJKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:10:04 -0500
-Received: from cam-smtp0.cambridge.arm.com (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5112077B;
-        Tue, 10 Dec 2019 09:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575969004;
-        bh=I36588TTIo0cK+5GnknvOkgilqWUQvL68z6gF6Pj/Co=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XlaplHcinfoZpk4Z1LoXQWgM9WK5F8Kzg+N5/yoiXxCLzS2/u6JQM98DeF9iOGa6R
-         hzEN6nl3LH5BoQhpPx3e/nPzn6cgTrr/VFO88GVlCJHDp9W1pxmi4k9TAQ5b7wvODc
-         mYwfS28G3Os1daBKloSWjW41tfmIyux6axGHgrUA=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Richard Narron <comet.berkeley@gmail.com>
-Subject: [PATCH 1/1] efi: don't attempt to map RCI2 config table if it doesn't exist
-Date:   Tue, 10 Dec 2019 10:09:45 +0100
-Message-Id: <20191210090945.11501-2-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210090945.11501-1-ardb@kernel.org>
-References: <20191210090945.11501-1-ardb@kernel.org>
+        Tue, 10 Dec 2019 04:12:48 -0500
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:48098
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726915AbfLJJMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:12:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1575969167;
+        h=Subject:To:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=TScBMPq/nDfTHkFDfyWyAehGaHrxqEhpqCA1FJw7BXc=;
+        b=a0AqyhqdFlrQxBmWxTaxrTl0BEV+0ewpTnKIpfdrLBtWe1004l7TBDc0DgIUwJhX
+        TQnV35idQSvZUMb7C7/rrfJqV8CE6a/9ggb7kk4QiSfzvlpNlcVubTiTKDCASUio2wl
+        0+ewklI6kuLNcqiHWRz/BD+EuL54E4deqqR1tDHs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1575969167;
+        h=Subject:To:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=TScBMPq/nDfTHkFDfyWyAehGaHrxqEhpqCA1FJw7BXc=;
+        b=D+urQUfn2K4emL7em/QbbMhu2Vrm9Tx36Ol+U2ZwmLQSQZpINwrf9UE98T2h3TPZ
+        DwMKL9j18+Q7YeU5lGJNoBqJjrS/gz2LPe0UNg8C0bV3AAyldDRnfXGOhkiSAH5PdeZ
+        OIOCt3bcUwY4thcyDvHQv5OT6A1PGrce9GcPxUFg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B56BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH 1/3] time/jiffies: Fixes some typo
+To:     john.stultz@linaro.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1571124603-9334-1-git-send-email-mojha@codeaurora.org>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <0101016eef1518c1-29cd20a1-7171-43d5-9f1d-e75048a8ae31-000000@us-west-2.amazonses.com>
+Date:   Tue, 10 Dec 2019 09:12:47 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <1571124603-9334-1-git-send-email-mojha@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-SES-Outgoing: 2019.12.10-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1c5fecb61255aa12
+Gentle reminder.
 
-  "efi: Export Runtime Configuration Interface table to sysfs"
-
-added support for a Dell specific UEFI configuration table, but
-failed to take into account that mapping the table should not be
-attempted unless the table actually exists. If it doesn't exist,
-the code usually fails silently unless pr_debug() prints are
-enabled. However, on 32-bit PAE x86, the splat below is produced due
-to the attempt to map the placeholder value EFI_INVALID_TABLE_ADDR
-which we use for non-existing UEFI configuration tables, and which
-equals ULONG_MAX.
-
-  [    2.852491] memremap attempted on mixed range 0x00000000ffffffff size: 0x1e
-  [    2.852501] WARNING: CPU: 1 PID: 1 at kernel/iomem.c:81 memremap+0x1a3/0x1c0
-  [    2.852501] Modules linked in:
-  [    2.852503] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.4.2-smp-mine #1
-  [    2.852504] Hardware name: Hewlett-Packard HP Z400 Workstation/0B4Ch, BIOS 786G3 v03.61 03/05/2018
-  [    2.852505] EIP: memremap+0x1a3/0x1c0
-  ...
-  [    2.852507] EAX: 0000003f EBX: 0000001e ECX: c5225bc0 EDX: 00000001
-  [    2.852507] ESI: 01000200 EDI: 00000000 EBP: ee551f0c ESP: ee551eec
-  [    2.852508] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010296
-  [    2.852509] CR0: 80050033 CR2: 00000000 CR3: 0520c000 CR4: 000006f0
-  [    2.852509] Call Trace:
-  [    2.852513]  ? map_properties+0x473/0x473
-  [    2.852515]  ? efi_rci2_sysfs_init+0x2c/0x154
-  [    2.852516]  ? map_properties+0x473/0x473
-  [    2.852517]  ? do_one_initcall+0x49/0x1d4
-  [    2.852519]  ? parse_args+0x1e8/0x2a0
-  [    2.852521]  ? do_early_param+0x7a/0x7a
-  [    2.852522]  ? kernel_init_freeable+0x139/0x1c2
-  [    2.852525]  ? rest_init+0x8e/0x8e
-  [    2.852526]  ? kernel_init+0xd/0xf2
-  [    2.852529]  ? ret_from_fork+0x2e/0x38
-  [    2.852530] ---[ end trace 5c4c3f26439c3728 ]---
-
-Fix this by checking whether the table exists before attempting to map it.
-
-Fixes: 1c5fecb61255aa12 ("efi: Export Runtime Configuration Interface table to sysfs")
-Reported-by: Richard Narron <comet.berkeley@gmail.com>
-Tested-by: Richard Narron <comet.berkeley@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/rci2-table.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/firmware/efi/rci2-table.c b/drivers/firmware/efi/rci2-table.c
-index 76b0c354a027..de1a9a1f9f14 100644
---- a/drivers/firmware/efi/rci2-table.c
-+++ b/drivers/firmware/efi/rci2-table.c
-@@ -81,6 +81,9 @@ static int __init efi_rci2_sysfs_init(void)
- 	struct kobject *tables_kobj;
- 	int ret = -ENOMEM;
- 
-+	if (rci2_table_phys == EFI_INVALID_TABLE_ADDR)
-+		return 0;
-+
- 	rci2_base = memremap(rci2_table_phys,
- 			     sizeof(struct rci2_table_global_hdr),
- 			     MEMREMAP_WB);
--- 
-2.17.1
-
+On 10/15/2019 1:00 PM, Mukesh Ojha wrote:
+> accuratly => accurately
+>
+> while at it change `clock source` to clocksource to make
+> it align with its usage at other places.
+>
+> Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+> ---
+>   kernel/time/jiffies.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+> index d23b434..e7f08f2 100644
+> --- a/kernel/time/jiffies.c
+> +++ b/kernel/time/jiffies.c
+> @@ -39,12 +39,12 @@ static u64 jiffies_read(struct clocksource *cs)
+>   
+>   /*
+>    * The Jiffies based clocksource is the lowest common
+> - * denominator clock source which should function on
+> + * denominator clocksource which should function on
+>    * all systems. It has the same coarse resolution as
+>    * the timer interrupt frequency HZ and it suffers
+>    * inaccuracies caused by missed or lost timer
+>    * interrupts and the inability for the timer
+> - * interrupt hardware to accuratly tick at the
+> + * interrupt hardware to accurately tick at the
+>    * requested HZ value. It is also not recommended
+>    * for "tick-less" systems.
+>    */
