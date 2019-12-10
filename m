@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17606C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7795C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD43A20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DC92073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr0SyHBM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Masq6otl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfLJQmV (ORCPT
+        id S1727860AbfLJQm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:42:21 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40245 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbfLJQmU (ORCPT
+        Tue, 10 Dec 2019 11:42:27 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40252 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbfLJQmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:42:20 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so89964plp.7;
-        Tue, 10 Dec 2019 08:42:20 -0800 (PST)
+        Tue, 10 Dec 2019 11:42:25 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so90066plp.7;
+        Tue, 10 Dec 2019 08:42:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KAZmhDLq44fHUuJGfTTESQPx/1QL+Ta6yKiRVIXpUF0=;
-        b=Tr0SyHBMO2y3mbJLXSrmGeiJsEDUyMma4adOG4cGUtAzqIO7+9T5sEC3/ov3VSkQxQ
-         OsaQxqAoD/WIEqsupov1DkcXzKWG6w8VkEdnfsbOmlI1rU4TgLkqCQzAHlybWsBEazsL
-         S6OhwyJjS8c3Qq04r5HQY92yv+iUAO9nKrMAfXnlG0sUj6z5a2qSIJDVrfYGqn3rhcbV
-         PAGYgUpgCfzmQ/5yUBDAqvXjnTzckmXZBSfX0hvzziA8HF+mNPfxddPy2jDeUpatGUlS
-         UYfNwz8KBCGv7JE54c9d+Pt9m6KG1SShDYbJJOcUUJ+/5mRSP9giNkbOsPPXunBASOdu
-         sZzQ==
+        bh=jdPbCHrU2X5cb40jCnETs7i2ifIUn3Ola/UP2b4mOwM=;
+        b=Masq6otl9D8o4RjM+csEhLQJelHQhLQftYTI7Vq2zmqnRdCp8gLt3kIYVKEWnyqFI8
+         lnFLUTaL6kiDNNp2bTBipgRDTIQ+BgbNrDT9sQJ89p/PvFgNxPmvl2z+FIj+rkVWaUtn
+         Vv+WqZpFpa0nPcUHiVVvNxM2OHrMJzqIAT4PMLyy+0BVXqA7DgmVYhfaEkzgBpuWGU6u
+         OBAU5FRp1vuraJ+xXeZeVu4O85V4cWC6b6hJiyUFMagOrwO9XkpXTvkqtyX7Z+x4YaAT
+         fKhKGHZ7F9pgNyofbFKjJu1jpE7P0vUqy/yJWUgA7Wt81uBxp04hwKwO40PUx5hjlZMY
+         +AFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KAZmhDLq44fHUuJGfTTESQPx/1QL+Ta6yKiRVIXpUF0=;
-        b=AZpDK8fIEdsHUeO1DIW9zMlRuKz49mXtW0c1ZjIEheF6glWVd9Lpf7xKBctyGDdx8e
-         X+NmM0bbko30uwlXpRKYXqbAbRM1slQS3KPPbS3hI/wZhW0EZ6JT0Hgg7fye/WxYkL8e
-         t5jlyH5LqtABr+D1zekCTT3ZHhg7v+evrWtaZryZ7a1jZvmCyUiR4Wavx3gDFkeQpHWE
-         M0TpJAHZvXO4NTRZzQxhnwjc+eYLFVSGqdQn0VrYyYA/qHUyBnBrZj6DLEMx1G5aoyCs
-         hzHjPUuyPmYAdgNvr3pI7izdXsYWJrLSci9iETynOIA+KbVy4beAvSfAQUv4sbSHAHZO
-         Le9g==
-X-Gm-Message-State: APjAAAWBupaLSpRfJyqQP70JEWRwzHGkW2P7xJYzsK6hw6xF+l3C3phY
-        rJFb2xL4Lr4shcyYB2Ud4z6F/9ntLjM=
-X-Google-Smtp-Source: APXvYqxuSY0ZTZjSLzycVFH0h3HqUrDh3xGSHPfzvt4EscYbB9Cpb50MHFQhK01A7nBPxwIPWLqN0w==
-X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr6623044pjz.116.1575996139886;
-        Tue, 10 Dec 2019 08:42:19 -0800 (PST)
+        bh=jdPbCHrU2X5cb40jCnETs7i2ifIUn3Ola/UP2b4mOwM=;
+        b=gTV4zw4RibJeNVB6JDiOAZBtSxskwuo28ePYjTqEBKTGCvJ00tgftUnDnTJgVbLyEm
+         065W3HyLdVd6unYBgs2Q5EbHXm0bC8bL4Bu96rpQ9+jR32WRPnAXPZ7W4AAlDm5W408R
+         ap2/4SuDUKFmnMu1LPQbOYwRlntCRe44TaMQvt7+y6nETiS68cWYEtNeS49wcl4dHPHf
+         zAAILV4sA2TqRz22ClEAsgykQHltTFQ+0YpERJMc3Ov0Kk7TrlFcSkxalz128UBFwYbJ
+         NfQhZXmZMIru7AFdjH89aC73zkrxKkgSDFlZNfLmC9YWj1PafhWWmnRlFr/Lh091/K9W
+         EfGw==
+X-Gm-Message-State: APjAAAV4IcLLcVGvq6RUQfCFas6+te68IhnbX7KaB0Jr+vTjXshOJO5i
+        Nfef00+niPeuhnWN0C5F62s=
+X-Google-Smtp-Source: APXvYqzg1kGqZqDCA++XjokNIDG/tNGgx+rNswAZxzPTKl4YOXbWBUDHmIBvd2JsRIGtJ9Auwf5bgA==
+X-Received: by 2002:a17:90a:8989:: with SMTP id v9mr6398145pjn.119.1575996144681;
+        Tue, 10 Dec 2019 08:42:24 -0800 (PST)
 Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id j38sm4034634pgj.27.2019.12.10.08.42.18
+        by smtp.gmail.com with ESMTPSA id j38sm4034634pgj.27.2019.12.10.08.42.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 08:42:18 -0800 (PST)
+        Tue, 10 Dec 2019 08:42:23 -0800 (PST)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Eduardo Valentin <edubezval@gmail.com>,
         Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 07/12] thermal: qoriq: Drop unnecessary drvdata cleanup
-Date:   Tue, 10 Dec 2019 08:41:48 -0800
-Message-Id: <20191210164153.10463-8-andrew.smirnov@gmail.com>
+Subject: [PATCH v8 10/12] thermal: qoriq: Do not report invalid temperature reading
+Date:   Tue, 10 Dec 2019 08:41:51 -0800
+Message-Id: <20191210164153.10463-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191210164153.10463-1-andrew.smirnov@gmail.com>
 References: <20191210164153.10463-1-andrew.smirnov@gmail.com>
@@ -78,8 +78,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver data of underlying struct device will be set to NULL by Linux's
-driver infrastructure. Clearing it here is unnecessary.
+Before returning measured temperature data to upper layer we need to
+make sure that the reading was marked as "valid" to avoid reporting
+bogus data.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
@@ -93,22 +94,47 @@ Cc: linux-imx@nxp.com
 Cc: linux-pm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/thermal/qoriq_thermal.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/thermal/qoriq_thermal.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index de8c9cd115aa..11749c673b3b 100644
+index 6c5e53ea7711..b684d3ceda69 100644
 --- a/drivers/thermal/qoriq_thermal.c
 +++ b/drivers/thermal/qoriq_thermal.c
-@@ -327,8 +327,6 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+@@ -48,6 +48,7 @@
+ #define REGS_TRITSR(n)	(0x100 + 16 * (n)) /* Immediate Temperature
+ 					    * Site Register
+ 					    */
++#define TRITSR_V	BIT(31)
+ #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+ 					   * Control Register
+ 					   */
+@@ -80,8 +81,24 @@ static int tmu_get_temp(void *p, int *temp)
+ 	struct qoriq_sensor *qsensor = p;
+ 	struct qoriq_tmu_data *qdata = qoriq_sensor_to_data(qsensor);
+ 	u32 val;
++	/*
++	 * REGS_TRITSR(id) has the following layout:
++	 *
++	 * 31  ... 7 6 5 4 3 2 1 0
++	 *  V          TEMP
++	 *
++	 * Where V bit signifies if the measurement is ready and is
++	 * within sensor range. TEMP is an 8 bit value representing
++	 * temperature in C.
++	 */
++	if (regmap_read_poll_timeout(qdata->regmap,
++				     REGS_TRITSR(qsensor->id),
++				     val,
++				     val & TRITSR_V,
++				     USEC_PER_MSEC,
++				     10 * USEC_PER_MSEC))
++		return -ENODATA;
  
- 	clk_disable_unprepare(data->clk);
+-	regmap_read(qdata->regmap, REGS_TRITSR(qsensor->id), &val);
+ 	*temp = (val & 0xff) * 1000;
  
--	platform_set_drvdata(pdev, NULL);
--
  	return 0;
- }
- 
 -- 
 2.21.0
 
