@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0FAC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13763C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277522053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB65520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015604;
-	bh=qr7qJDSjLvNf1OErcECADv5XMiD5LWAvAZgPsolMcz4=;
+	s=default; t=1576015608;
+	bh=zV8A7mKAvJi5fGwgLRCUQ6iODeRngAsJUKOjqNntEVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUJZQNXDjPFcu8HkG03beLmT1UFgYMk9NvpCpe7csm42J3LqlsbAGS2+nh92M4Yzx
-	 TdOzWa1vYLEZmRMx3HzFKyuKqO83TAg10NgIe0pwlUdagUgGFTWxzmnmBaw72FyFN8
-	 c+ZPr0ri0f30ZzQEN6zt7f03oe08Y2u7O6LOSqso=
+	b=slY4l7oySa7z7Ahkh9sNZDeknt5kqffaDhC2MMugkuc9BsUUSMqHHM4Nr9GlGUYXp
+	 dpcR23N6wajDKdyuhuq5Vannjw4Dpwzmn5So9FOkJvl0mJH2CcoSp7mxrMlH4sM3ma
+	 DYFWQclzQhIKq5Q84PXHLqpjhr4sYmNeg6qmXMq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfLJWFZ (ORCPT
+        id S1729505AbfLJWFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36302 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfLJWFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:05 -0500
+        id S1729334AbfLJWFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67857208C3;
-        Tue, 10 Dec 2019 22:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF78522464;
+        Tue, 10 Dec 2019 22:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015505;
-        bh=qr7qJDSjLvNf1OErcECADv5XMiD5LWAvAZgPsolMcz4=;
+        s=default; t=1576015501;
+        bh=zV8A7mKAvJi5fGwgLRCUQ6iODeRngAsJUKOjqNntEVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBZW5lKBfVejGC9LbsHedjqNY3u+2QCO0tI63MOEaUr3UZOCVusFKPbX/MVapYKRb
-         c3084H9MhjjzJeTMERNtoL9TqdWzCNhlWoE1D46dj/h6SKO/crY8AdhR/ZVcgyVVfr
-         zakB7jzDv5+hTFnubgCBNYJHG+inaiSDTY51JdSQ=
+        b=kYEcH6xGaYAtxoWsBPIhIgx3Fl9WNCCS6hIjsmQUcgJCW2odFF+ZgTSKWvsGZQR/W
+         liJ34BFpeYitCxENt76xlgJ/9lm9IHRCQCwMlQ5SQFvccu0xI4+nBOWq0ko30yMXV9
+         RJqqKDmpNIyMlHa7Q8vL1Og3SU2pT/LF0RuY8TOY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 104/130] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add dmic format constraint
-Date:   Tue, 10 Dec 2019 17:02:35 -0500
-Message-Id: <20191210220301.13262-104-sashal@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 101/130] EDAC/ghes: Fix grain calculation
+Date:   Tue, 10 Dec 2019 17:02:32 -0500
+Message-Id: <20191210220301.13262-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,38 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit e2db787bdcb4f2722ecf410168f0583764634e45 ]
+[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
 
-On KBL platform, the microphone is attached to external codec(rt5514)
-instead of PCH. However, TDM slot between PCH and codec is 16 bits only.
-In order to avoid setting wrong format, we should add a constraint to
-force to use 16 bits format forever.
+The current code to convert a physical address mask to a grain
+(defined as granularity in bytes) is:
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190923162940.199580-1-yuhsuan@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+
+This is broken in several ways:
+
+1) It calculates to wrong grain values. E.g., a physical address mask
+of ~0xfff should give a grain of 0x1000. Without considering
+PAGE_MASK, there is an off-by-one. Things are worse when also
+filtering it with ~PAGE_MASK. This will calculate to a grain with the
+upper bits set. In the example it even calculates to ~0.
+
+2) The grain does not depend on and is unrelated to the kernel's
+page-size. The page-size only matters when unmapping memory in
+memory_failure(). Smaller grains are wrongly rounded up to the
+page-size, on architectures with a configurable page-size (e.g. arm64)
+this could round up to the even bigger page-size of the hypervisor.
+
+Fix this with:
+
+	e->grain = ~mem_err->physical_addr_mask + 1;
+
+The grain_bits are defined as:
+
+	grain = 1 << grain_bits;
+
+Change also the grain_bits calculation accordingly, it is the same
+formula as in edac_mc.c now and the code can be unified.
+
+The value in ->physical_addr_mask coming from firmware is assumed to
+be contiguous, but this is not sanity-checked. However, in case the
+mask is non-contiguous, a conversion to grain_bits effectively
+converts the grain bit mask to a power of 2 by rounding it up.
+
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/edac/ghes_edac.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-index 41cb1fefbd427..405196283688c 100644
---- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-+++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-@@ -422,6 +422,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
- 	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
- 			dmic_constraints);
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 6f80eb65c26ca..acae392786695 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -187,6 +187,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
+ 	/* Cleans the error report buffer */
+ 	memset(e, 0, sizeof (*e));
+ 	e->error_count = 1;
++	e->grain = 1;
+ 	strcpy(e->label, "unknown label");
+ 	e->msg = pvt->msg;
+ 	e->other_detail = pvt->other_detail;
+@@ -282,7 +283,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
  
-+	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
+ 	/* Error grain */
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+-		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
++		e->grain = ~mem_err->physical_addr_mask + 1;
+ 
+ 	/* Memory error location, mapped on e->location */
+ 	p = e->location;
+@@ -389,8 +390,13 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) = '\0';
+ 
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
 +
- 	return snd_pcm_hw_constraint_list(substream->runtime, 0,
- 			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
- }
++	grain_bits = fls_long(e->grain - 1);
++
+ 	/* Generate the trace event */
+-	grain_bits = fls_long(e->grain);
+ 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+ 		 "APEI location: %s %s", e->location, e->other_detail);
+ 	trace_mc_event(type, e->msg, e->label, e->error_count,
 -- 
 2.20.1
 
