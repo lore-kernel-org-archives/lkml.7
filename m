@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0526C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB7E207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CEC207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017342;
-	bh=g+6Q1nqTZIyboOk9ybA2T2qqr2ssXMoBmdNKNjbQx3g=;
+	s=default; t=1576017349;
+	bh=A47+vKFAqvpWsAajzfDUfLGO+4fxidIRoS8mEKh+bEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1hYQkKH6DBgQ26SpFxRSLr3pVJo+RddL4cqVwTMO4QvJUEO1Ps8IGNsKRBKCNbp5E
-	 kF4EoZb7TMQvvG9Dd39jAg6tw/Ssxk7CJCoohz0xITqjCd6WKKTEEn4R/yA1rgauzN
-	 u2FAgf1KG770TwD6a95jB4kLClyjXpE50ar9hqOI=
+	b=J0aqn3/KOA9dAOO4n8Fpnc5Axw8vQFAfVzXqq+0WAoCamBeMTGcol7jbnxirjw2D+
+	 22/jliUDM6fWX3n4LwY9cAt/2uJ+6l+l7S5iwLlQW8fDpJg0qjkGfCyOAvLDhwu3UN
+	 0/R+cOYVb17i+Dcmk2+6Bgz0Traue4LjpJUuWIDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfLJWfh (ORCPT
+        id S1730503AbfLJWfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:35:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:35:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfLJWec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:32 -0500
+        id S1730346AbfLJWea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A732077B;
-        Tue, 10 Dec 2019 22:34:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B886D20828;
+        Tue, 10 Dec 2019 22:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017271;
-        bh=g+6Q1nqTZIyboOk9ybA2T2qqr2ssXMoBmdNKNjbQx3g=;
+        s=default; t=1576017269;
+        bh=A47+vKFAqvpWsAajzfDUfLGO+4fxidIRoS8mEKh+bEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IA7rio29VRkQ+fU5Cl7H0ZZObvU9DJerVsbDOZD5UKfNZGLG2FOp9P757r5q/+GrD
-         lAQvZPQvEQ6huRGfHdJvLCARAjO/CnxUjA+ev2Zej5PB2j4K986y5TXa9sL4PrwTPB
-         IP712Zvq7SwlscivWxdf5HBeOjD0jeVzofHJ19VI=
+        b=tPMdn8U69z/pjadcYEq7T+DwYN440AZRwRSk21DiCRNidcbjxSNLbmo8kxqTxAvzS
+         4Igj0jlizF3ztVd1ydm4vrfIT9Mn7EVtIUqz4HapVozgJo9aiaIYJXu97CVDdSqkXe
+         H+mgLme3ocgdbN+Jfx6eMRHnfYEbvGlIVhfukHfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omar Sandoval <osandov@fb.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 63/71] btrfs: don't prematurely free work in end_workqueue_fn()
-Date:   Tue, 10 Dec 2019 17:33:08 -0500
-Message-Id: <20191210223316.14988-63-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 61/71] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Tue, 10 Dec 2019 17:33:06 -0500
+Message-Id: <20191210223316.14988-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -60,52 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
+[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
 
-Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
-the work item) and then calls bio_endio(). This is another potential
-instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-In particular, the endio call may depend on other work items. For
-example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
-__btrfs_correct_data_nocsum() -> dio_read_error() ->
-submit_dio_repair_bio(), which submits a bio that is also completed
-through a end_workqueue_fn() work item. However,
-__btrfs_correct_data_nocsum() waits for the newly submitted bio to
-complete, thus it depends on another work item.
+Protect against that by always validating the show/store callbacks.
 
-This example currently usually works because we use different workqueue
-helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
-However, it may deadlock with stacked filesystems and is fragile
-overall. The proper fix is to free the work item at the very end of the
-work function, so let's do that.
-
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 78722aaffecd3..d50fc503f73b8 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1698,8 +1698,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
- 	bio->bi_error = end_io_wq->error;
- 	bio->bi_private = end_io_wq->private;
- 	bio->bi_end_io = end_io_wq->end_io;
--	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
- 	bio_endio(bio);
-+	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index 81f56cdff2bc2..3ae82202cdb55 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
  }
  
- static int cleaner_kthread(void *arg)
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
+ 
 -- 
 2.20.1
 
