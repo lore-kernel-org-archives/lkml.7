@@ -2,85 +2,113 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EC5C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B97C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8622073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:11:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575990663;
-	bh=e5IcAHdSxCVaQr71MDw/u4OSVbxGZ7HWDDux3wC+gVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Q6+F0ijf00ByaIiybIO2YvEX+pHwQEBLDFDXS9l2F58soLQ2JgBYqc7j4MUBaTUv
-	 FY0Irqs51zV9VF3Ob13OsIP2fwp0Y/zF7y7VgLqh18Zs521KyqN5OY5zOE/eiGj58Q
-	 FiJ947ENGAA5CXAqzXMh1JPx7G3aONkslN/gaEm4=
+	by mail.kernel.org (Postfix) with ESMTP id 55F7A207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:12:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYtJmv6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfLJPLC (ORCPT
+        id S1727386AbfLJPMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:11:02 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42377 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727178AbfLJPLC (ORCPT
+        Tue, 10 Dec 2019 10:12:08 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38640 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfLJPMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:11:02 -0500
-Received: by mail-ed1-f65.google.com with SMTP id e10so16247552edv.9;
-        Tue, 10 Dec 2019 07:11:00 -0800 (PST)
+        Tue, 10 Dec 2019 10:12:07 -0500
+Received: by mail-qk1-f195.google.com with SMTP id k6so16697270qki.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:12:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=DqJ7eGZMr1qeqh+aIXxS2c2AcIbcPXeu9bzyHF9Ax44=;
+        b=DYtJmv6nYnCFMrqz7yj7vRcbzCofqG0i3za6QMJp02W+m73MNzloxjFVx83RicwfP2
+         o9DyiFkodPq3CTBMeNFscRZY04HWm3PB1S8jMePSSWj+CNym71N9Zmb9AGNTFTiwaW49
+         n/fqbqtX39bewtOuJDctXSswjFyZFdh3iB/U3MNV+nOxv+vk/8bUQCZegmAZTLEpCIRQ
+         p9mibYCYITZ+SEYPDadSeKr0+pmD96/+QeQBd2T2SopXXzv6o3UejRjp/HmZx/E5R0Xi
+         eWQc0GWrlFI+dEUfZpm+BvV8jLBFy7f4fOvkKVHB/FYRYRJG+nrNz4RL2pFjT6GE9Sfa
+         7ZUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e5IcAHdSxCVaQr71MDw/u4OSVbxGZ7HWDDux3wC+gVQ=;
-        b=qdA9GFosMcL8jVZusvCRyXhXejxqshpWIwt8LMMrH24Mf+cSy1g8p73QHvC33XrRWp
-         DqWq5LUQIi4wPSsyJYYnHT7ZmvQxqcLf/ozh8itv2cbliw/i1PSoFatBn7mftBH++mZt
-         bhurOrhe2EQ0SKokaTvai6qX09rv0kFPF0xecIFz7oStCazIbSnY5TpzObi07CAWNSrM
-         ZW2raEf2tE5sMTFxAKh2ecneNv+PBCJpSCh4uhvOKh9yF0SA7hODjmnagpJa2zqZEyVs
-         DnprZJ9FQK8vt+zfTaquM1/WWk9KaUvK0LqqI5BSZdkyT0YZRSKQK+bqU2ie/BZumy+1
-         WtSQ==
-X-Gm-Message-State: APjAAAWoV8H8eJNJZgeHAr57HbIP0SfiXk9+XUWhEDp2iBR+2IbZNYbQ
-        upZX3g/9PAMO383/t8p7194=
-X-Google-Smtp-Source: APXvYqw5jbPq4FswRVWVBj9g7UTnNhv9eRpXy/D1mfxGrUvwdSteqcL3i+CjwMzPw/KYvZxjGO+jRQ==
-X-Received: by 2002:a05:6402:305b:: with SMTP id bu27mr39330099edb.191.1575990660199;
-        Tue, 10 Dec 2019 07:11:00 -0800 (PST)
-Received: from pi3 ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id ck28sm85351edb.45.2019.12.10.07.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 07:10:59 -0800 (PST)
-Date:   Tue, 10 Dec 2019 16:10:57 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/10] tty: serial: samsung_tty: use 'unsigned int' not
- 'unsigned'
-Message-ID: <20191210151057.GG11222@pi3>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
- <20191210143706.3928480-8-gregkh@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=DqJ7eGZMr1qeqh+aIXxS2c2AcIbcPXeu9bzyHF9Ax44=;
+        b=au5NoQIydHtbCsjZF24KWC5keCWhbLptMc54D+cjhGMuc9PqRE6rTrf0BahZ6hEV6o
+         CsphyMKUdb90Pri1dG8HiBHZB6Kja6ZTI266C8vQVNinl2m2irY3g40/ol0xyaRds+NZ
+         1/mhZxk3ryLOkXOyncof+7ZpLFGEPVqfGNzFLko+BVzZNv8jVigFjZAopEPLvRvhKsmC
+         LcT/PfQueYg4z2TIz8yJcgx4H54j/JkbGfJkJnXqGTcGR7I2F7SFOK/CJys346xB13pL
+         3eP6jz1hQAm1fFwiWdzPLwgJ7wT/LnsXH0MTBWh2ATn0pmRrUG3yZnEXTgP0APtRqAZs
+         DUsg==
+X-Gm-Message-State: APjAAAWyBgJbbEIM1TvoDFZ6P2sZD/xYe7PqXqlE+GR80ub8Y+y04trK
+        JDci4UxpVZhee6AwzJ3DJeiw9KaGph7fbSRFS6NpxA==
+X-Google-Smtp-Source: APXvYqz42MGesULJvAZKpybp705MD/l+eR9isKEXXoyZQjybjJ6bkgrJCAv90qChWLOnSEzlJZPoVFtV3AsEPJ9BgD0=
+X-Received: by 2002:ae9:e50c:: with SMTP id w12mr28795896qkf.407.1575990726561;
+ Tue, 10 Dec 2019 07:12:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191210143706.3928480-8-gregkh@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <00000000000096009b056df92dc1@google.com> <beffba5d-e3d7-8b06-655b-bd04349177ea@kernel.org>
+ <20191205100047.GA11438@Johanness-MacBook-Pro.local> <CACT4Y+Z-9g59XTwpfW+3fv1_jhbsskkvt8E8fx5F44BjofZ0ow@mail.gmail.com>
+ <20191205113838.GC11438@Johanness-MacBook-Pro.local> <20191205115033.GJ2734@suse.cz>
+ <CACT4Y+Z9QezPoc-8nASbK0Bi_ihF=knQ2ngeO8ibdRWbdkEH5g@mail.gmail.com>
+In-Reply-To: <CACT4Y+Z9QezPoc-8nASbK0Bi_ihF=knQ2ngeO8ibdRWbdkEH5g@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 10 Dec 2019 16:11:55 +0100
+Message-ID: <CACT4Y+Zv3xJ5bDbHfUbPxC=Xwb06VB31A2rLo+f2fhBaB4g=sw@mail.gmail.com>
+Subject: Re: kernel BUG at fs/btrfs/volumes.c:LINE!
+To:     dsterba@suse.cz, Johannes Thumshirn <jthumshirn@suse.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        syzbot <syzbot+5b658d997a83984507a6@syzkaller.appspotmail.com>,
+        Chris Mason <clm@fb.com>, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:37:04PM +0100, Greg Kroah-Hartman wrote:
-> The function uart_console_write() expects an unsigned int, so use that
-> variable type, not 'unsigned', which is generally frowned apon in the
-> kernel now.
+On Thu, Dec 5, 2019 at 1:06 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > The correct syntax would be (no dash + colon):
+> > > >
+> > > > #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/jth/linux.git
+> > > > close_fs_devices
+> > >
+> > > Ah ok, thanks.
+> > >
+> > > Although syzbot already said it can't test because it has no reproducer.
+> > > Anyways good to know for future reports.
+> >
+> > According to
+> >
+> > https://syzkaller.appspot.com/bug?id=d50670eeb21302915bde3f25871dfb7ea43db1e4
+> >
+> > there is a way how to test it, many reports and the last one about a
+> > week old. Is there a way to instruct syzbot to run the same tests on a
+> > given branch?
+> >
+> > (The reproducer is basically setting up environment with limited amount
+> > of memory available for allocation and this hits the BUG_ON.)
+>
+> syzkaller does this ("rerun the same tests") for every bug always. If
+> it succeeds (kernel crashes again), it results in a reproducer, that
+> can later be used for cause/fix bisection and patch testing. In this
+> case it does not reproduce, so rerunning the same tests will not lead
+> to anything useful (only if to false confirmation that a patch fixes
+> the crash).
+>
+> There is a large number of reasons why a kernel crash may not
+> reproduce. It may be global accumulated state, non-hermetic tests,
+> poor syzkaller btrfs descriptions (most likely true) and others.
+>
+> Need to take a closer look, on first sight it looks like something
+> that should be reproduced...
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
-
+Yes, there was a bug around image mount reproduction. Should be fixed
+now by https://github.com/google/syzkaller/commit/cb704a294c54aed90281c016a6dc0c40ae295601
