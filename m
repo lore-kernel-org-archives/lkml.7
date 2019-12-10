@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF64C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A92920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D378C2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017328;
-	bh=jCzLfAggXpyzRbW0s/0dOx18Kynq/fRmLOPTebHAvn0=;
+	s=default; t=1576017334;
+	bh=WQ3Li1psb4hv/QIV9QWOgQ+DgDXxIcwAt7zduwsnj0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChxIbPj/tvdWatmMP2DJICI2QZdo55WseYEWCSyUpCXpytRnOwuRIjErL3QRSYDV6
-	 lW70xIG3lJlJ+xlnvoQZtwcv9TDgro8JD+Ju72zvOQp9UyEGQgV+dDmaxpraxb1ZL0
-	 5bqtJPbiiPze1oyslgIWMc63Ux5PUG9bn5pQl/qw=
+	b=0HhtT9oFsS/MV07vv+t4d597MjKwgqM9kNOquHDHerx1wiIIlz8MWBkz2yvqjiMKu
+	 mVklcqMkOXBrpZuJXdPGRm2y+OxOocCnjdx5JfSduft7hwxrFJCSj0ehRxL0ueoJ3t
+	 LYQETzjAkxRWHzmEmvuGeffP8K8jNJt5vci7Qm28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfLJWf1 (ORCPT
+        id S1730385AbfLJWed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56094 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbfLJWee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:34 -0500
+        id S1730240AbfLJWeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C1C214AF;
-        Tue, 10 Dec 2019 22:34:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8C0208C3;
+        Tue, 10 Dec 2019 22:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017274;
-        bh=jCzLfAggXpyzRbW0s/0dOx18Kynq/fRmLOPTebHAvn0=;
+        s=default; t=1576017258;
+        bh=WQ3Li1psb4hv/QIV9QWOgQ+DgDXxIcwAt7zduwsnj0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ISFwKY4g/begc+eXA4+yKblipVbD6YATUW+7S3m5H5lVsCMrF7WmcxxZhJrMMuutz
-         E2QzW76T0v4Rc7tX+urt5vp6Fi8Nz1glA1Li7Q5fVVVE3oZsBpW4PCIi2hFmDn1jeP
-         wkaqFYJJfNVCT1d1ghKTs6yIaAuTikQAdPM598rc=
+        b=ftmJPGBPdEA92M/Cwx9VcwKaUMygs1gsAnyRcRBwAw2pjnd7PyxgsVWGDxcORnfG4
+         GCsQkmC+beUaqXZpcz9ijONlBtttGj6DYtRzS3rDlUdXWEzGYDBM1G9q3MfZD0DESX
+         ggBEaCH0heaZemNAaawozvmQYwfdyHxzZVWbuPlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.4 65/71] fbtft: Make sure string is NULL terminated
-Date:   Tue, 10 Dec 2019 17:33:10 -0500
-Message-Id: <20191210223316.14988-65-sashal@kernel.org>
+Cc:     Mike Isely <isely@pobox.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 52/71] media: pvrusb2: Fix oops on tear-down when radio support is not present
+Date:   Tue, 10 Dec 2019 17:32:57 -0500
+Message-Id: <20191210223316.14988-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,41 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Mike Isely <isely@pobox.com>
 
-[ Upstream commit 21f585480deb4bcf0d92b08879c35d066dfee030 ]
+[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
 
-New GCC warns about inappropriate use of strncpy():
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-drivers/staging/fbtft/fbtft-core.c: In function ‘fbtft_framebuffer_alloc’:
-drivers/staging/fbtft/fbtft-core.c:665:2: warning: ‘strncpy’ specified bound 16 equals destination size [-Wstringop-truncation]
-  665 |  strncpy(info->fix.id, dev->driver->name, 16);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
 
-Later on the copy is being used with the assumption to be NULL terminated.
-Make sure string is NULL terminated by switching to snprintf().
+[hverkuil: fix two checkpatch warnings]
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20191120095716.26628-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/fbtft/fbtft-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 15937e0ef4d96..36bf71989637d 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -765,7 +765,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	fbdefio->deferred_io =     fbtft_deferred_io;
- 	fb_deferred_io_init(info);
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index 1c5f85bf7ed4b..2d6195e9a1953 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -886,8 +886,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    (vp->dev_radio &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
+ }
  
--	strncpy(info->fix.id, dev->driver->name, 16);
-+	snprintf(info->fix.id, sizeof(info->fix.id), "%s", dev->driver->name);
- 	info->fix.type =           FB_TYPE_PACKED_PIXELS;
- 	info->fix.visual =         FB_VISUAL_TRUECOLOR;
- 	info->fix.xpanstep =	   0;
+@@ -961,7 +965,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    (!vp->dev_radio ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
