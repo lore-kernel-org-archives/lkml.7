@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2B8C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657F0246A8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D37246A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012149;
-	bh=e97XmwMHx0vI+6xD3HXRhhHq8dw7yVxvDqvo9+ujASs=;
+	s=default; t=1576012152;
+	bh=DpWi6ezc5UrqjllVnRmWxaAxXBRUJq+N0u534sJ4NT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpHUK/8XfBY843KolXU/olrHmyASqPgBfO9BT9Apgx2z5w+1nLtMQV05qggedF4Pf
-	 d/2O9L11hjdpNAGtrt6wCyZW9VEL3Pe3oz0DVoTRP0a8kpY5JlLDuDKMR7Tb3SDB/R
-	 Axvi9Hov74LcS5QISHhS1jEF4gnegP38gj4ah0XE=
+	b=SfweRf20IO8jVJoCr4yBacH3bXvOzSNNxPDxfzAxKauoIfQ4hvvQMl110xG07rjts
+	 BdvAHQ2Nc1Z6+KjEHDTgeGEKfp1B5Hu4ezsmQiAo+UpSbshlG/EGQwUEv1rK/VmFHA
+	 J1Xur2KV80ZASEv6SD82UYt/bwROcK7NXtOq6gRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfLJVJI (ORCPT
+        id S1728074AbfLJVJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57090 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbfLJVJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:04 -0500
+        id S1727555AbfLJVJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4FF4246A0;
-        Tue, 10 Dec 2019 21:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91C0A2469E;
+        Tue, 10 Dec 2019 21:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012143;
-        bh=e97XmwMHx0vI+6xD3HXRhhHq8dw7yVxvDqvo9+ujASs=;
+        s=default; t=1576012142;
+        bh=DpWi6ezc5UrqjllVnRmWxaAxXBRUJq+N0u534sJ4NT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QBB+9qroNE/pvujFKA2UVaKMFMmlwdTy4l5ZzsiJvub+qsp5jIr7OyXJAg5r4KrEl
-         a6OEpz9tw1nEGo68A2talaqZ1S2GNTNp5Io0g2OJHlGIXuDuPmdKA2MXMebgr2a/Y7
-         J50qHFu4av+IWsmx9A+NdJVvaqhoHZq0Jz5YyYeI=
+        b=DhKitbBzyZfIWkq4nG3dHl/RYY0iN43FzIlPyBMkIGkX8ytsRJZLd1mi+c7J1DLAI
+         0mJvocEd8AqULRXClo3wA2KgMPugoNTy2rEqDLzdMEuu3x6qmmPU5zqnovBPVF6vqk
+         FBIvWgg0NMA22wibg+D0MxjCQzuOpnRYiagpxYKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Kurtz <djkurtz@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 108/350] drm/bridge: dw-hdmi: Restore audio when setting a mode
-Date:   Tue, 10 Dec 2019 16:03:33 -0500
-Message-Id: <20191210210735.9077-69-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 107/350] rtw88: coex: Set 4 slot mode for A2DP
+Date:   Tue, 10 Dec 2019 16:03:32 -0500
+Message-Id: <20191210210735.9077-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,45 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit fadfee3f9d8f114435a8a3e9f83a227600d89de7 ]
+[ Upstream commit 12078aae453556a88fb46777b7cc5fc97f867b7c ]
 
-When setting a new display mode, dw_hdmi_setup() calls
-dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
-the audio clock.
+With shallow buffer size, certain BT devices have active
+A2DP flow control to fill buffer frequently. If the slot
+is not at BT side, data can't be sent successfully to BT
+devices, and will cause audio glitch.
 
-We should only (re-)enable the audio clock if audio was already enabled
-when setting the new mode.
+To resolve this issue, this commit splits TUs into 4-slots
+instead of 2-slot for all of the A2DP related coexistence
+strategies. That makes BT have higher opportunity to fill
+the A2DP buffer in time, and the audio quality could be
+more stable and smooth.
 
-Without this patch, on RK3288, there will be HDMI audio on some monitors
-if i2s was played to headphone when the monitor was plugged.
-ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191008102145.55134-1-cychiang@chromium.org
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/coex.c | 24 ++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 3e82d604201ee..1326f2c734bf8 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2033,7 +2033,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wireless/realtek/rtw88/coex.c
+index 793b40bdbf7cc..3e95ad1989123 100644
+--- a/drivers/net/wireless/realtek/rtw88/coex.c
++++ b/drivers/net/wireless/realtek/rtw88/coex.c
+@@ -1308,6 +1308,7 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+ 	bool wl_hi_pri = false;
+ 	u8 table_case, tdma_case;
++	u32 slot_type = 0;
  
- 		/* HDMI Initialization Step E - Configure audio */
- 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
--		hdmi_enable_audio_clk(hdmi, true);
-+		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
- 	}
+ 	if (coex_stat->wl_linkscan_proc || coex_stat->wl_hi_pri_task1 ||
+ 	    coex_stat->wl_hi_pri_task2)
+@@ -1318,14 +1319,16 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
+ 		if (wl_hi_pri) {
+ 			table_case = 15;
+ 			if (coex_stat->bt_a2dp_exist &&
+-			    !coex_stat->bt_pan_exist)
++			    !coex_stat->bt_pan_exist) {
++				slot_type = TDMA_4SLOT;
+ 				tdma_case = 11;
+-			else if (coex_stat->wl_hi_pri_task1)
++			} else if (coex_stat->wl_hi_pri_task1) {
+ 				tdma_case = 6;
+-			else if (!coex_stat->bt_page)
++			} else if (!coex_stat->bt_page) {
+ 				tdma_case = 8;
+-			else
++			} else {
+ 				tdma_case = 9;
++			}
+ 		} else if (coex_stat->wl_connected) {
+ 			table_case = 10;
+ 			tdma_case = 10;
+@@ -1361,7 +1364,7 @@ static void rtw_coex_action_bt_inquiry(struct rtw_dev *rtwdev)
+ 	rtw_coex_set_ant_path(rtwdev, false, COEX_SET_ANT_2G);
+ 	rtw_coex_set_rf_para(rtwdev, chip->wl_rf_para_rx[0]);
+ 	rtw_coex_table(rtwdev, table_case);
+-	rtw_coex_tdma(rtwdev, false, tdma_case);
++	rtw_coex_tdma(rtwdev, false, tdma_case | slot_type);
+ }
  
- 	/* not for DVI mode */
+ static void rtw_coex_action_bt_hfp(struct rtw_dev *rtwdev)
+@@ -1475,13 +1478,13 @@ static void rtw_coex_action_bt_a2dp(struct rtw_dev *rtwdev)
+ 
+ 	if (efuse->share_ant) {
+ 		/* Shared-Ant */
++		slot_type = TDMA_4SLOT;
++
+ 		if (coex_stat->wl_gl_busy && coex_stat->wl_noisy_level == 0)
+ 			table_case = 10;
+ 		else
+ 			table_case = 9;
+ 
+-		slot_type = TDMA_4SLOT;
+-
+ 		if (coex_stat->wl_gl_busy)
+ 			tdma_case = 13;
+ 		else
+@@ -1585,13 +1588,14 @@ static void rtw_coex_action_bt_a2dp_hid(struct rtw_dev *rtwdev)
+ 
+ 	if (efuse->share_ant) {
+ 		/* Shared-Ant */
++		slot_type = TDMA_4SLOT;
++
+ 		if (coex_stat->bt_ble_exist)
+ 			table_case = 26;
+ 		else
+ 			table_case = 9;
+ 
+ 		if (coex_stat->wl_gl_busy) {
+-			slot_type = TDMA_4SLOT;
+ 			tdma_case = 13;
+ 		} else {
+ 			tdma_case = 14;
+@@ -1794,10 +1798,12 @@ static void rtw_coex_action_wl_linkscan(struct rtw_dev *rtwdev)
+ 	struct rtw_efuse *efuse = &rtwdev->efuse;
+ 	struct rtw_chip_info *chip = rtwdev->chip;
+ 	u8 table_case, tdma_case;
++	u32 slot_type = 0;
+ 
+ 	if (efuse->share_ant) {
+ 		/* Shared-Ant */
+ 		if (coex_stat->bt_a2dp_exist) {
++			slot_type = TDMA_4SLOT;
+ 			table_case = 9;
+ 			tdma_case = 11;
+ 		} else {
+@@ -1818,7 +1824,7 @@ static void rtw_coex_action_wl_linkscan(struct rtw_dev *rtwdev)
+ 	rtw_coex_set_ant_path(rtwdev, true, COEX_SET_ANT_2G);
+ 	rtw_coex_set_rf_para(rtwdev, chip->wl_rf_para_rx[0]);
+ 	rtw_coex_table(rtwdev, table_case);
+-	rtw_coex_tdma(rtwdev, false, tdma_case);
++	rtw_coex_tdma(rtwdev, false, tdma_case | slot_type);
+ }
+ 
+ static void rtw_coex_action_wl_not_connected(struct rtw_dev *rtwdev)
 -- 
 2.20.1
 
