@@ -2,127 +2,134 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CFBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A33CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730252053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017841;
-	bh=HU9zdePqA6XbDcZNb+CMkH9XK1c2bLdiZEalOsxEZUY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnT7B0aK8D/ZxNff4Wiv+aLic8UFCC04mH1rvRzVvI/xoGkVeumhk4IR7WqPDG3wV
-	 n9KIvDyZ0aAtrRO4r6RhrZqA1bdMpFJVh9zmEXAVeg66Jllk+xK5uN2sfmspaSMUqF
-	 9CNXX/QggdtAgh9tLii719wLaM3vp+bxfoiIxPPg=
+	by mail.kernel.org (Postfix) with ESMTP id EA3702053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfLJWoA (ORCPT
+        id S1730533AbfLJWoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:44:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbfLJWay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:54 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F4BB214D8;
-        Tue, 10 Dec 2019 22:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017054;
-        bh=HU9zdePqA6XbDcZNb+CMkH9XK1c2bLdiZEalOsxEZUY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnkFB/MlEUVsVmF8Fe7vjOYC8bkUBafCnpthTJGbNkDi6b4KgPhw+J8z+Hc1RXjPe
-         kHYEOdADWhq/SLKzIeKCP0AbZRwD0DCQgwdsVOoo6EynJQw68sWpAeBCuHK0PULM+Z
-         PWIeHZIy8dbKmm2Y81Z015W1JxpeNHW0OC+zobho=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/91] media: ov6650: Fix stored frame format not in sync with hardware
-Date:   Tue, 10 Dec 2019 17:29:19 -0500
-Message-Id: <20191210223035.14270-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+        Tue, 10 Dec 2019 17:44:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728649AbfLJWoD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:44:03 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbeMl117049
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:44:02 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsrdpag9t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:44:02 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 10 Dec 2019 22:43:59 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 22:43:56 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMhtZX56492178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 22:43:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15BE8A4057;
+        Tue, 10 Dec 2019 22:43:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05E25A405F;
+        Tue, 10 Dec 2019 22:43:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.214.111])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Dec 2019 22:43:53 +0000 (GMT)
+Subject: Re: [PATCH v10 6/6] IMA: Read keyrings= option from the IMA policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Tue, 10 Dec 2019 17:43:53 -0500
+In-Reply-To: <20191204224131.3384-7-nramas@linux.microsoft.com>
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+         <20191204224131.3384-7-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121022-0020-0000-0000-0000039654FA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121022-0021-0000-0000-000021ED9844
+Message-Id: <1576017833.4579.45.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
+> Read "keyrings=" option, if specified in the IMA policy, and store in
+> the list of IMA rules when the configured IMA policy is read.
+> 
+> This patch defines a new policy token enum namely Opt_keyrings
+> and an option flag IMA_KEYRINGS for reading "keyrings=" option
+> from the IMA policy.
+> 
+> Updated ima_parse_rule() to parse "keyrings=" option in the policy.
+> Updated ima_policy_show() to display "keyrings=" option.
+> 
+> The following example illustrates how key measurement can be verified.
+> 
+> Sample "key" measurement rule in the IMA policy:
+> 
+> measure func=KEY_CHECK uid=0 keyrings=.ima|.evm template=ima-buf
+> 
+> Display "key" measurement in the IMA measurement list:
+> 
+> cat /sys/kernel/security/ima/ascii_runtime_measurements
+> 
+> 10 faf3...e702 ima-buf
+> sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3
+> b7b .ima 308202863082...4aee
+> 
+> Verify "key" measurement data for a key added to ".ima" keyring:
+> 
+> cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
+> grep ".ima" | cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der |
+> sha256sum | cut -d' ' -f 1
+> 
 
-[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
+The dot needs to be quoted, otherwise it matches any character.  I
+would also limit the above command to the first instance (eg. grep -m
+1 "\.ima).
 
-The driver stores frame format settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, those settings are updated before they are actually applied
-on hardware.  If an error occurs on device update, the stored settings
-my not reflect hardware state anymore and consecutive calls to
-.get_fmt() may return incorrect information.  That in turn may affect
-ability of a bridge device to use correct DMA transfer settings if such
-incorrect informmation on active frame format returned by .get_fmt() is
-used.
+> The output of the above command should match the sha256 hash
+> in the "key" measurement entry in the IMA measurement list.
 
-Assuming a failed device update means its state hasn't changed, update
-frame format related settings stored in the device private structure
-only after they are successfully applied so the stored values always
-reflect hardware state as closely as possible.
+There are multiple hashes in a measurement list record.  Perhaps refer
+to the 2nd hash as the "template hash".
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/i2c/soc_camera/ov6650.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Mimi
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index fc187c5aeb1e9..7a119466f9734 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -612,7 +612,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
- 		return -EINVAL;
- 	}
--	priv->code = code;
- 
- 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
- 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
-@@ -638,7 +637,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_dbg(&client->dev, "max resolution: CIF\n");
- 		coma_mask |= COMA_QCIF;
- 	}
--	priv->half_scale = half_scale;
- 
- 	if (sense) {
- 		if (sense->master_clock == 8000000) {
-@@ -678,8 +676,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
- 	if (!ret)
- 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
--	if (!ret)
-+	if (!ret) {
-+		priv->half_scale = half_scale;
-+
- 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
-+	}
-+	if (!ret)
-+		priv->code = code;
- 
- 	if (!ret) {
- 		mf->colorspace	= priv->colorspace;
--- 
-2.20.1
+> 
+> The file namely "ima-cert.der" generated by the above command
+> should be a valid x509 certificate (in DER format) and should match
+> the one that was used to import the key to the .ima keyring.
+> The certificate file can be verified using openssl tool.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
