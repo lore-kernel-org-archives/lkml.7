@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB03C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8A7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E6920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B237F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012718;
-	bh=vF3g0hw+3Ff1ci2v6urh1aDwao9IiHAd2H18RgCtfsY=;
+	s=default; t=1576012722;
+	bh=spq33mRE4jswIY1k+EL5yI+NvlUv7m8qp/o3HldSGQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nB56kEy/S0JwgUD8h7916YB251fVNKEddrDrI4k/x28f0ZKdwMA/luV2LLxm5a1st
-	 dX9vtNSWQmGTAwlUiBpXxcpL6B/1KXtiyuTC8XwNLuje4g3CA2GWL6CcqD7GJsFPMR
-	 66C8Vd2NiHmCGej51XVJH2RL/vd1nYpS9EqO8fS4=
+	b=C7Awt4Jlx57sQJmBwD7DKZSnxGRIzbVuiIMrSRfcnZJZqsXBxZf2OlVXre45q24to
+	 qH0pugulcoN0tVatCGkAIsbTT8J5+HknOLEGOXdu6olmAfLCwogc0XsuhZc56osXeZ
+	 5/mz6QxyINEIye/LeULiNWS5SHueQvqMpe84VIvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfLJVMj (ORCPT
+        id S1727319AbfLJVSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36498 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728757AbfLJVM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:28 -0500
+        id S1729049AbfLJVMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02BCC205C9;
-        Tue, 10 Dec 2019 21:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC51020838;
+        Tue, 10 Dec 2019 21:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012347;
-        bh=vF3g0hw+3Ff1ci2v6urh1aDwao9IiHAd2H18RgCtfsY=;
+        s=default; t=1576012359;
+        bh=spq33mRE4jswIY1k+EL5yI+NvlUv7m8qp/o3HldSGQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6bsVPqm20ZEifarnMBu5UKxCDrFQxvzrxgchxZ9J7uAOLSGlamiPZNUBcQJoVrBh
-         OY1Xob5LxM0PFL0A99xs4tFfugd8RaxavqTBcTt9MNI44qBZ+72dzXdsUiFFXOfRQS
-         MhIxbftY9ZdsjpNKtfS1D0E4FjfXW1cI1ZzHd2I8=
+        b=Kcy28pLZN2sP6e+DM96JtSbO3DAC/K7WrtpVBU3G1kFm65Eyy/7IXqsAWHkqcDCEN
+         BqJL+ouVZX0MphwheRynTITiNQn8+ZlO3FzFKjqwv8kw+6WgVjOCOPI3KOYHo52KAW
+         Y63HjCDW0E9m2RRnRrz0qoHCTcarUMfgMz+ow3fs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-integrity@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM power is managed by firmware
-Date:   Tue, 10 Dec 2019 16:06:22 -0500
-Message-Id: <20191210210735.9077-238-sashal@kernel.org>
+Cc:     Yuming Han <yuming.han@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 287/350] tracing: use kvcalloc for tgid_map array allocation
+Date:   Tue, 10 Dec 2019 16:06:32 -0500
+Message-Id: <20191210210735.9077-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -67,81 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Yuming Han <yuming.han@unisoc.com>
 
-[ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
+[ Upstream commit 6ee40511cb838f9ced002dff7131bca87e3ccbdd ]
 
-On some platforms, the TPM power is managed by firmware and therefore we
-don't need to stop the TPM on suspend when going to a light version of
-suspend such as S0ix ("freeze" suspend state). Add a chip flag,
-TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
-platforms can probe for the usage of this light suspend and avoid
-touching the TPM state across suspend/resume.
+Fail to allocate memory for tgid_map, because it requires order-6 page.
+detail as:
 
-Cc: Andrey Pronin <apronin@chromium.org>
-Cc: Duncan Laurie <dlaurie@chromium.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+c3 sh: page allocation failure: order:6,
+   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
+c3 sh cpuset=/ mems_allowed=0
+c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
+c3 Hardware name: Generic DT based system
+c3 Backtrace:
+c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
+c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
+c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
+c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
+c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
+c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
+c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
+c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
+c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
+c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
+c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
+c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
+
+Switch to use kvcalloc to avoid unexpected allocation failures.
+
+Link: http://lkml.kernel.org/r/1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com
+
+Signed-off-by: Yuming Han <yuming.han@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-interface.c | 8 +++++++-
- drivers/char/tpm/tpm.h           | 1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index d7a3888ad80f0..7f105490604c8 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -23,6 +23,7 @@
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/spinlock.h>
-+#include <linux/suspend.h>
- #include <linux/freezer.h>
- #include <linux/tpm_eventlog.h>
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a0ee91783656..2fa72419bbd79 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4609,7 +4609,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
  
-@@ -394,7 +395,11 @@ int tpm_pm_suspend(struct device *dev)
- 		return -ENODEV;
- 
- 	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
--		return 0;
-+		goto suspended;
-+
-+	if ((chip->flags & TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED) &&
-+	    !pm_suspend_via_firmware())
-+		goto suspended;
- 
- 	if (!tpm_chip_start(chip)) {
- 		if (chip->flags & TPM_CHIP_FLAG_TPM2)
-@@ -405,6 +410,7 @@ int tpm_pm_suspend(struct device *dev)
- 		tpm_chip_stop(chip);
- 	}
- 
-+suspended:
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(tpm_pm_suspend);
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index a7fea3e0ca86a..f3bf2f7f755c8 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -162,6 +162,7 @@ enum tpm_chip_flags {
- 	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
- 	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
- 	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
-+	TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED	= BIT(6),
- };
- 
- #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
+ 	if (mask == TRACE_ITER_RECORD_TGID) {
+ 		if (!tgid_map)
+-			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
++			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
+ 					   sizeof(*tgid_map),
+ 					   GFP_KERNEL);
+ 		if (!tgid_map) {
 -- 
 2.20.1
 
