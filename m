@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13BC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1C4C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120782073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26352073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bPAQRmcU"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="PclJIQfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfLJKIG (ORCPT
+        id S1727257AbfLJKIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:08:06 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42318 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfLJKIF (ORCPT
+        Tue, 10 Dec 2019 05:08:36 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40949 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbfLJKIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:08:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a15so19277835wrf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:08:04 -0800 (PST)
+        Tue, 10 Dec 2019 05:08:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c14so19304889wrn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:08:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f0Q3rlyg/cD4ZOuBBjfL4TrA9kTX5CvG82OdXXHMeyo=;
-        b=bPAQRmcUhvcJNrCY8U7uC5UcrXODzhonZEpp5pvH3eBhWeItFe9oJZ+7mU+grlWMUB
-         LyGr7XOybE5aYoGNDEzvfr16Lb5+PNyqbaexFf5v3U0AKjVqFh79aRh6Cdoi+mZDT4QY
-         7Pxc7HuvIxH2JF581adlgDJA/Zq9+vfWPSJxxWOUaYSPAbNLqn6ATy+31BnEWDXSt11a
-         ARILRU7f90mkzQNytOD5nOmmmT9DqDGLuYwifxNxo7TfKkr6LdKkayAQpSzPXqM0gFaN
-         Iy4OuxVSYpkx0CqrwwmL/n/hMvtzPK45NiaGAzVJwlTovdlyLEy8Qukf3T5s9sf4GDC5
-         TEzg==
+        bh=53E6+zgRkhJFW2BBywNsfl5Bmu09Uj7I3LhsYlPv/yI=;
+        b=PclJIQfTM0ArnzA+0SrFj5O66enTwXrsB0tQfetxDJXzjjrrcXYlwzz1iuZxD+Hlst
+         698sdGPLLZrFcLNFVSTmXoG7mMq7cMhokXIrA2nQ5CzB0N2qnaHbWKsWh3Mr8cDxOYE2
+         4lwW4A+bqR33Oy5L/qg+ZdgEUMpwK+x/ypBv7VXNaVnME8bK98ydZnQThf5GmTnb/s1z
+         E2/kUXqDHmq5OWGF4DVXGS2NIocuP01L/9FWH9YLoe6whpeaxAcSUMBZuoe93gzC9C8K
+         M7bpnpGTrwCz6CgKAprOu7Wj1bgaU+k3JwT0zt/P1f8sQPaN0xjYEbth7pqKA8QZuwfh
+         oMfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f0Q3rlyg/cD4ZOuBBjfL4TrA9kTX5CvG82OdXXHMeyo=;
-        b=QmkgNtSiKyNLbG4zJm05dhDiiAFcB0KckDbnlOIYeDh4xN+bkWDRItg7Hbc2qSbTMn
-         f8zC/GKnod3icjpABNka58HnqAvXmge5MnaEQq+yIfR8EM/GGYiZRRAycg/Nqc4Szwoi
-         clQNpEAgsaCbGJVofPXnYkbi0/rApkDXOK7Ok3Yqq+A9d3gyMUzKgaJH4AUx0ebmOrlg
-         eYNVVfUno2vkfj70ChK+rtqFa0N2TtlOdgQfoZOtcq8Z1FNSbmFmCHsGX5XYOduvUS8x
-         2kv25hNzCp0aleE24pmIkgsfbVnSipEjQcplKd+lU7t3iv3lLh9nXwaIg4pbBQHiKBwM
-         CoLA==
-X-Gm-Message-State: APjAAAWBMkKytRujgxDMIT8E+rrtS/MJukITR8ph2TnHqxH0HzahvZ0c
-        BT/Y6sDPlQSzv2Oba9Yltr2uwA==
-X-Google-Smtp-Source: APXvYqxuVThypfwC7Fvv6ys4Y0xFGCC49P5yn1lExjo9Q6sxcbnAKDrS3fV7I0Yhnd4ByPDj/bTPJw==
-X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr2371552wru.6.1575972484233;
-        Tue, 10 Dec 2019 02:08:04 -0800 (PST)
+        bh=53E6+zgRkhJFW2BBywNsfl5Bmu09Uj7I3LhsYlPv/yI=;
+        b=oBmRWh7JIZpUj/Oie1Y/GzO17NS3+mzGWh8p7OlUSvf2pk7lP+K4UiZwnOrTyIlGkT
+         uKu9o7oa3fPxH4dCwQuFb6E+1FneCqjEajkwYYjp5cAsmFojRbnFNQ82Fxht8892JjF7
+         pO3vGUr7HVgdp9DAYBtQMSb5AeYDAGGyPGDIhp16uZspjlYgVTrgMrA1fbEGiTtjlw7H
+         BcALdbDcfTYzkXGV3RHrf3d9A5A2LPBq7kRUOivAx1Z5/IMjYKfL9kEzLrTdFIL1SzM2
+         Iw3ohzAwdhRn5k+i71qvIgmauvbEFHkONLTzZw6fOJz+wuJ/tp8SaXaJo/uE3Fqmy8C/
+         5vHg==
+X-Gm-Message-State: APjAAAUpOpIG/2tzATIjM4sEnO9weYUeHCAZpcL7jAxXUSvMRUjBxIfY
+        +hOuqixCeS66B8N2InCb3PrZiQ==
+X-Google-Smtp-Source: APXvYqz7GffBLgKokflLsYKh1DdYRrjX5Uq0IhqIeRUDbHP6ssACz2EgED3lcBsxC5OIi70niFkMNQ==
+X-Received: by 2002:adf:f5cb:: with SMTP id k11mr2139960wrp.71.1575972514193;
+        Tue, 10 Dec 2019 02:08:34 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id t8sm2658949wrp.69.2019.12.10.02.08.03
+        by smtp.gmail.com with ESMTPSA id z11sm2485533wrt.82.2019.12.10.02.08.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 02:08:03 -0800 (PST)
+        Tue, 10 Dec 2019 02:08:33 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] input: max77650-onkey: add of_match table
-Date:   Tue, 10 Dec 2019 11:07:53 +0100
-Message-Id: <20191210100753.11090-1-brgl@bgdev.pl>
+Subject: [PATCH] led: max77650: add of_match table
+Date:   Tue, 10 Dec 2019 11:08:32 +0100
+Message-Id: <20191210100832.11186-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,33 +75,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
 We need the of_match table if we want to use the compatible string in
-the pmic's child node and get the onkey driver loaded automatically.
+the pmic's child node and get the led driver loaded automatically.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/input/misc/max77650-onkey.c | 7 +++++++
+ drivers/leds/leds-max77650.c | 7 +++++++
  1 file changed, 7 insertions(+)
 
-diff --git a/drivers/input/misc/max77650-onkey.c b/drivers/input/misc/max77650-onkey.c
-index 4d875f2ac13d..ee55f22dbca5 100644
---- a/drivers/input/misc/max77650-onkey.c
-+++ b/drivers/input/misc/max77650-onkey.c
-@@ -108,9 +108,16 @@ static int max77650_onkey_probe(struct platform_device *pdev)
- 	return input_register_device(onkey->input);
+diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
+index 4c2d0b3c6dad..a0d4b725c917 100644
+--- a/drivers/leds/leds-max77650.c
++++ b/drivers/leds/leds-max77650.c
+@@ -135,9 +135,16 @@ static int max77650_led_probe(struct platform_device *pdev)
+ 	return rv;
  }
  
-+static const struct of_device_id max77650_onkey_of_match[] = {
-+	{ .compatible = "maxim,max77650-onkey" },
++static const struct of_device_id max77650_led_of_match[] = {
++	{ .compatible = "maxim,max77650-led" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, max77650_onkey_of_match);
++MODULE_DEVICE_TABLE(of, max77650_led_of_match);
 +
- static struct platform_driver max77650_onkey_driver = {
+ static struct platform_driver max77650_led_driver = {
  	.driver = {
- 		.name = "max77650-onkey",
-+		.of_match_table = max77650_onkey_of_match,
+ 		.name = "max77650-led",
++		.of_match_table = max77650_led_of_match,
  	},
- 	.probe = max77650_onkey_probe,
+ 	.probe = max77650_led_probe,
  };
 -- 
 2.23.0
