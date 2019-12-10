@@ -2,109 +2,78 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40889C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3B02073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1582020838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hgTjGNuJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="R+wBcWNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfLJQoz (ORCPT
+        id S1727716AbfLJQoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:44:55 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:35162 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfLJQox (ORCPT
+        Tue, 10 Dec 2019 11:44:54 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:40944 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbfLJQox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 11:44:53 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAGboui035560;
-        Tue, 10 Dec 2019 16:44:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=DvRWT6CyyrCzRdhYiXvqt+Gm4VF8bj63CS4+c8VSgaM=;
- b=hgTjGNuJT9MEJ69ULPu8bGkLQFLcjAcl4cOkzbMEvyW0My104Br80ZyQAIMd83A6conH
- L7KVIo5eR7BeKAuOL1pN0n5vXUGXMMZNu5eFMYJaNWZfmZJZ+xTrSJ+xdHSZIcE3SMnd
- TPWWzdHN3H9MKopJLpVmA3Y4/y/O0z7IRfKFHf6lj7FiWzb0QH3nRMtZKfEW2qALY0Qt
- dPuJJyR6u3co72kOGXqrz87HGKFUPQIdsGWrEy3hkAiLXTvL2Wsy+KHTCbb6T/EAN/i3
- Kxh9gIaUOB10E2HoeTmwxO19G4zFHZol2oPs6YEgGesDiX3oCXI0DxEaQ6ZDSWVODfsW 8Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2wr4qrfadv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 16:44:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBAGP27w005185;
-        Tue, 10 Dec 2019 16:44:36 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2wt6bckhc2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 16:44:36 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBAGiWlJ007455;
-        Tue, 10 Dec 2019 16:44:32 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Dec 2019 08:44:31 -0800
-Date:   Tue, 10 Dec 2019 11:44:41 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-crypto@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v2 5/5] padata: update documentation
-Message-ID: <20191210164441.gikjbbusik4fan5y@ca-dmjordan1.us.oracle.com>
-References: <20191203193114.238912-1-daniel.m.jordan@oracle.com>
- <20191203193114.238912-6-daniel.m.jordan@oracle.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1575996291; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=Yr6/VS+jagRoWwD7pseE/w8pqhWnmY5HA9IgqzhlO6E=;
+        b=R+wBcWNqvJZOwNxHG7BBsm+aWggVxuqzQuVp1AU8gQ8CRhV48w5ZiWWhJ/M0uFsP8BGOUR
+        Rt3JYWr1b+Q+mDWTlfqAxxl+P+JUqho6uFTzNwmGMkXTT/MuVdxTaL8bekzwj9+dRgRLLh
+        GgHzR00spYQQO7yHVNnls4PspNd5VaY=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config
+Date:   Tue, 10 Dec 2019 17:44:46 +0100
+Message-Id: <20191210164446.53912-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203193114.238912-6-daniel.m.jordan@oracle.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912100141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912100142
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small fixup for this patch.
+JZ4760 support was added in parallel of the previous patch so this one
+slipped through. The first SoC to use the new register is the JZ4760 and
+not the JZ4770, fix it here.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Fixes: 7009d046a601 ("pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT
+config")
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- MAINTAINERS | 2 +-
+
+Notes:
+    The commit it fixes was added in v5.5-rc1, so I didn't Cc
+    linux-stable - I wasn't sure if I had to.
+
+ drivers/pinctrl/pinctrl-ingenic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d3a5c54a41d..eefd665d41a1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12253,7 +12253,7 @@ L:	linux-crypto@vger.kernel.org
- S:	Maintained
- F:	kernel/padata.c
- F:	include/linux/padata.h
--F:	Documentation/padata.txt
-+F:	Documentation/core-api/padata.rst
- 
- PAGE POOL
- M:	Jesper Dangaard Brouer <hawk@kernel.org>
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 24e0e2ef47a4..369e04350e3d 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1809,7 +1809,7 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+ static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
+ 				     unsigned int pin, bool high)
+ {
+-	if (jzpc->version >= ID_JZ4770)
++	if (jzpc->version >= ID_JZ4760)
+ 		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT0, high);
+ 	else
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DATA, high);
 -- 
 2.24.0
 
