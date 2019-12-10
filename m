@@ -2,131 +2,187 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E988C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80B7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7224220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575962485;
-	bh=KsI6sxjYQ9tBfzTk1W4uVyWgH5WinlSmKliYhqmdvQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Gp0FoqmYsCOk9OTcFgcO50ZnEWygAnpxH7WzKnXME/v65VwzkPTTRXPkiZf7BX6DZ
-	 FiInMins2Qg1hrYTsjapfVe2liPzfmnFjW+uvAb8mrYvAz+LHF62Up4cJzqDGJN90b
-	 RqH/XXW1f1ZntQiyj53PgzXW0ZBDL5p/QvxHlem0=
+	by mail.kernel.org (Postfix) with ESMTP id 9D4E820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLJHVY (ORCPT
+        id S1727386AbfLJHV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:21:24 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36414 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbfLJHVY (ORCPT
+        Tue, 10 Dec 2019 02:21:27 -0500
+Received: from twhmllg4.macronix.com ([122.147.135.202]:59910 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbfLJHV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:21:24 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so18787283wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 23:21:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0wzzYMYPOjwNkj7Xx3adHoIqgjf64yRUp1Mn9AIQMBk=;
-        b=TrJKbPXQuNU2MI0whFuy8Pmww7i0cZhZQrEBMjMRLn1C8wq5SmwDN+3oOZJhky272N
-         9piWMmRafRzxZezVKl2uVdsz/F/tVOJr4FfInsbzNfplu7Cf12dx2lbAuBtn4ktAo56+
-         3GFGCjlIoljPn1Um8F+EZjRe+pyGZE0dQIYZdQH2DPCenVsBqOLxPLiSZ019/yjSmhtw
-         J1EQXgZahSCTV9ZXeEjEbW5u1bq690IPR61WCxy16UHqcLS6IHVShKxgZICfGIqjf2Vl
-         3OdII1oeU3oRaCQgqPtuif/VlQdNpmz87p5FbVPcsuexyR52ZEe1uw+FcGn+gK0tGG/c
-         68tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0wzzYMYPOjwNkj7Xx3adHoIqgjf64yRUp1Mn9AIQMBk=;
-        b=pN7beMTPGukx3f7QBsAKJkPr/WojgrE6uNk3KNIbCSt0rLHnPwn4eEq8TvN7JNC2oq
-         scYu8VoayKFTMyy79c636RsBkw/8Z0TEsjyO7Xc4gECNANNY4clHBlYbc4m1fzkHsaDs
-         BPnQSFGK/6J6sUfceRZH/NHEyGEeqKIXKe/Dc/FOJ2m29cSDfB/YbCt7+EwiC6rNC/DI
-         44iJK8vBr18D9lYKJZKihqDg/zBkPYmXpvpkyDSJqeAPitSoDxdG6UVwbk+rIEzbRATV
-         KK15CYHgOgbgeKqRusAnU63QrBxeVFj779zmiEgW/D9nH/uW0q4IaI/w3SDbLf+NG8rd
-         TVkg==
-X-Gm-Message-State: APjAAAWalZAWRjr/TrejxdQb8OM8I+h6YsdWxLvGGDTrpUAWeNxtTF+P
-        QWjB08+fbzIveY+MoSbdsC0=
-X-Google-Smtp-Source: APXvYqyzTRZQdHx1wPH5LNDW3EZ7lT+kBqbKJoBM+b9yUc7IjQ8zmHxkDaJDLAumks3fcelUWX4UjA==
-X-Received: by 2002:a5d:4749:: with SMTP id o9mr1352317wrs.242.1575962481867;
-        Mon, 09 Dec 2019 23:21:21 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id n1sm2201159wrw.52.2019.12.09.23.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 23:21:21 -0800 (PST)
-Date:   Tue, 10 Dec 2019 08:21:19 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: Re: [RFC PATCH] sched/wait: Make interruptible exclusive waitqueue
- wakeups reliable
-Message-ID: <20191210072119.GA114501@gmail.com>
-References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
- <20191209091813.GA41320@gmail.com>
- <20191209102759.GA123769@gmail.com>
- <20191209130005.GB5388@redhat.com>
+        Tue, 10 Dec 2019 02:21:26 -0500
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id xBA7LH4e024326;
+        Tue, 10 Dec 2019 15:21:17 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 37D7791CBB9A5183FF28;
+        Tue, 10 Dec 2019 15:21:18 +0800 (CST)
+In-Reply-To: <20f3873f-66eb-3af9-c50d-1321a859093d@ti.com>
+References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw> <1573808288-19365-3-git-send-email-masonccyang@mxic.com.tw> <3f514579-d3a4-1319-a55a-265a3f1ce00e@ti.com> <OFFE6363DF.95763BC3-ON482584CB.002A47E5-482584CB.002BAA8C@mxic.com.tw> <20f3873f-66eb-3af9-c50d-1321a859093d@ti.com>
+To:     "Vignesh Raghavendra" <vigneshr@ti.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        tudor.ambarus@microchip.com
+Subject: Re: [PATCH 2/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209130005.GB5388@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KeepSent: 5ED38CB6:65E10D03-482584CC:002846EC;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF5ED38CB6.65E10D03-ON482584CC.002846EC-482584CC.00286710@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 10 Dec 2019 15:21:18 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/12/10 PM 03:21:18,
+        Serialize complete at 2019/12/10 PM 03:21:18
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com xBA7LH4e024326
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Oleg Nesterov <oleg@redhat.com> wrote:
+Hi Vignesh,
 
-> On 12/09, Ingo Molnar wrote:
-> >
-> > Any consumed exclusive event is handled in finish_wait_exclusive() now:
-> >
-> > +               } else {
-> > +                       /* We got removed from the waitqueue already, wake up the next exclusive waiter (if any): */
-> > +                       if (interrupted && waitqueue_active(wq_head))
-> > +                               __wake_up_locked_key(wq_head, TASK_NORMAL, NULL);
-> 
-> See my previous email, I don't think we need this...
-> 
-> But if we do this, then __wake_up_locked_key(key => NULL) doesn't look right.
-> It should use the same "key" which was passed to __wake_up(key) which removed
-> us from list.
-> 
-> Currently this doesn't really matter, the only user of prepare_to_wait_event()
-> which relies on the "keyed" wakeup is ___wait_var_event() and it doesn't have
-> "exclusive" waiters, but still.
-> 
-> Hmm. and it seems that init_wait_var_entry() is buggy? Again, currently this
-> doesn't matter, but don't we need the trivial fix below?
-> 
-> Oleg.
-> 
-> --- x/kernel/sched/wait_bit.c
-> +++ x/kernel/sched/wait_bit.c
-> @@ -179,6 +179,7 @@ void init_wait_var_entry(struct wait_bit
->  			.bit_nr = -1,
->  		},
->  		.wq_entry = {
-> +			.flags	 = flags,
->  			.private = current,
->  			.func	 = var_wake_function,
->  			.entry	 = LIST_HEAD_INIT(wbq_entry->wq_entry.entry),
 
-Yeah, agreed.
+> >> On 15/11/19 2:28 pm, Mason Yang wrote:
+> >>> According to JESD216C (JEDEC Basic Flash Parameter Table 18th DWORD)
+> >>> Octal DTR(8D-8D-8D) command and command extension (00b: same, 01b: 
+> > inverse)
+> >>> to add extension command mode in spi_nor struct and to add write_cr2
+> >>> (Write CFG Reg 2) for 8-8-8/8D-8D-8D mode sequences enable.
+> >>>
+> >>
+> >> But I don't see any code setting "nor->ext_cmd_mode" based on BFPT?
+> >>
+> >> Any new feature that we add to spi-nor should make use of 
+autodiscovery
+> >> feature made possible by SFDP tables. Could you modify the patch to
+> >> discover capabilities supported by flash and opcodes to be used from
+> >> SFDP table?
+> > 
+> > Got it but our device will return a empty SFDP table.
+> > 
+> 
+> If flash you tested on does not support JEDEC 216C then don't mention
+> about it. Above commit message gives an impression that flash in JEDEC
+> 216C compliant.
+> 
 
-Thanks,
+okay, got it.
 
-	Ingo
+> >>
+> >>
+> >>> Define the relevant macrons and enum to add such modes and make sure
+> >>> op->xxx.dtr fields, command nbytes and extension command are 
+properly
+> >>> filled and unmask DTR and X-X-X modes in 
+> > spi_nor_spimem_adjust_hwcaps()
+> >>> so that DTR and X-X-X support detection is done through
+> >>> spi_mem_supports_op().
+> >>>
+> [...]
+> >>> @@ -404,6 +436,30 @@ static int read_sr(struct spi_nor *nor)
+> >>>                 SPI_MEM_OP_NO_DUMMY,
+> >>>                 SPI_MEM_OP_DATA_IN(1, nor->bouncebuf, 1));
+> >>>
+> >>
+> >> This is not based on the latest tree.
+> >>
+> >>> +      if (spi_nor_protocol_is_8_8_8(nor->read_proto)) {
+> >>> +         op.cmd.buswidth = 8;
+> >>> +         op.addr.buswidth = 8;
+> >>> +         op.dummy.buswidth = 8;
+> >>> +         op.data.buswidth = 8;
+> >>> +         op.cmd.nbytes = 2;
+> >>> +         op.addr.nbytes = 4;
+> >>> +         op.dummy.nbytes = 4;
+> >>> +         op.addr.val = 0;
+> >>
+> >> This is not scalable... There will be bunch of if...else ladders when 
+we
+> >> want to support other X-X-X modes... Can't these be derived from
+> >> nor->reg_proto? And then borrow the logic from 
+> > spi_nor_spimem_read_data()?
+> >>
+> > 
+> > Got it !
+> > 
+> >>
+> >> Could you have a look at Boris's initial submission to add 8-8-8 mode 
+at
+> >> https://patchwork.kernel.org/cover/10638055/ ?
+> >> You could use that series as the base for your changes/additions.
+> > 
+> > Got it.
+> > My idea is to support 8D-8D-8D mode with a minimum patches because 
+> > there is no define for 1D-1D-1D, 2D-2D-2D and 4D-4D-4D mode in JEDEC 
+> > if I am right.
+> > 
+> 
+> JESD251-A1 does talk about 4S-4D-4D right? Also none of the JEDEC
+> standards prohibit flash vendors from supporting other X-X-X modes.
+> 
+> I think you haven't thought about bigger picture here. Flash devices
+> that support other mode exist today and we would need the framework to
+> be built such that these modes can be added in future.
+> 
+> I suggest you start with Boris's series [1] as base and port it to
+> latest kernel. Isn't that series alone enough to support Macronix Octal
+> flashes at least?
+> If required, you could also always include additional patches adding new
+> features.
+
+okay.
+
+> 
+> [1] https://patchwork.kernel.org/cover/10638055/
+> 
+> -- 
+> Regards
+> Vignesh
+
+thanks for your time & comments.
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
