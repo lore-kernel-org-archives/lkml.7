@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A4FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D39C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D67206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E007D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013255;
-	bh=1TL1cfOTkjPwCJCaGLP0Z6byKDzAchxlwBZbQAlNnoA=;
+	s=default; t=1576013258;
+	bh=SNku1A80aBY1NpeoUIxNgyT9QiMOSAAxcUYbnDY+Zp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ea3XgE9qKMn3nmy9rer9IZvHJB/CsLKeWzfUAiPF6jC7p4F4ifhh3HlQBS7fORMM9
-	 IIHtN2PwBIxLGeVGz4OqDs7Z0o9MK9MSZu6A8bOk6/TAfrXN0b40IsuuP1DN6poJbQ
-	 oLbJFfLMBLuuqMQJRg2zI9/dlRBAh/ibJXpImFpw=
+	b=Wtlun4zeCRwv5un+qKzGlMQB3Gymag2xPCfAbJVK5AJNfXC5NdrzSwIrwgH6yZn48
+	 zivyU6WICzkyTUHqlqp9YTpeqwO+QRvrpKaHYd5ZtIN7tr25yZ2juGmhnwMUCCfIPZ
+	 REw5RGaXcVuOWyCE9+IWaD0hux4jkoN9NbKsdYfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfLJV1e (ORCPT
+        id S1728593AbfLJV1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:27:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728889AbfLJVZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:17 -0500
+        id S1729355AbfLJVZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84AEA207FF;
-        Tue, 10 Dec 2019 21:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE74F206D5;
+        Tue, 10 Dec 2019 21:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013116;
-        bh=1TL1cfOTkjPwCJCaGLP0Z6byKDzAchxlwBZbQAlNnoA=;
+        s=default; t=1576013119;
+        bh=SNku1A80aBY1NpeoUIxNgyT9QiMOSAAxcUYbnDY+Zp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnAmdD6Ky6wIj0bBYUt1xR52X27tDj+oJ70oQ7VZ/Inmot+/D9WhkJRROu03d+zNr
-         S1qWS+dcxVN1uzRSAEFg6gKd6CPgZbBKyVh90rUKN2/87JJyzmtkRi6l9ze9R7aqmE
-         0PBID3oUrkBAWcQ9ztg0hMfAr81fAn6fKkqedswQ=
+        b=nJ5qewbLBX5n0akdskl9TScv/rKJeYL4iX40J0jI/zlaZGHI3CB1+OR9TIJyiarmF
+         oPxRSBkRgHDoGJX8tv+tmiyfM4ltAgaoyMmC/L3+viUHlYgeLNqVqbnwEh+jVzuWym
+         hRwMBToM1xGQBw4+cyX2d5OOHUNcR4Oag/xUpBaE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Jing Zhou <Jing.Zhou@amd.com>, Wenjing Liu <Wenjing.Liu@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 003/292] drm/mipi-dbi: fix a loop in debugfs code
-Date:   Tue, 10 Dec 2019 16:20:22 -0500
-Message-Id: <20191210212511.11392-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 006/292] drm/amd/display: verify stream link before link test
+Date:   Tue, 10 Dec 2019 16:20:25 -0500
+Message-Id: <20191210212511.11392-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jing Zhou <Jing.Zhou@amd.com>
 
-[ Upstream commit d72cf01f410aa09868d98b672f3f92328c96b32d ]
+[ Upstream commit b131932215c993ea5adf8192d1de2e8d6b23048d ]
 
-This code will likely crash if we try to do a zero byte write.  The code
-looks like this:
+[Why]
+DP1.2 LL CTS test failure.
 
-        /* strip trailing whitespace */
-        for (i = count - 1; i > 0; i--)
-                if (isspace(buf[i]))
-			...
+[How]
+The failure is caused by not verify stream link is equal
+to link, only check stream and link is not null.
 
-We're writing zero bytes so count = 0.  You would think that "count - 1"
-would be negative one, but because "i" is unsigned it is a large
-positive numer instead.  The "i > 0" condition is true and the "buf[i]"
-access will be out of bounds.
-
-The fix is to make "i" signed and now everything works as expected.  The
-upper bound of "count" is capped in __kernel_write() at MAX_RW_COUNT so
-we don't have to worry about it being higher than INT_MAX.
-
-Fixes: 02dd95fe3169 ("drm/tinydrm: Add MIPI DBI support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-[noralf: Adjust title]
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190821072456.GJ26957@mwanda
+Signed-off-by: Jing Zhou <Jing.Zhou@amd.com>
+Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tinydrm/mipi-dbi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tinydrm/mipi-dbi.c b/drivers/gpu/drm/tinydrm/mipi-dbi.c
-index ca9da654fc6f4..d6b7c706c674b 100644
---- a/drivers/gpu/drm/tinydrm/mipi-dbi.c
-+++ b/drivers/gpu/drm/tinydrm/mipi-dbi.c
-@@ -1033,8 +1033,7 @@ static ssize_t mipi_dbi_debugfs_command_write(struct file *file,
- 	struct mipi_dbi *mipi = m->private;
- 	u8 val, cmd = 0, parameters[64];
- 	char *buf, *pos, *token;
--	unsigned int i;
--	int ret, idx;
-+	int i, ret, idx;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
+index a9135764e5806..767de9d6b07a7 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
+@@ -312,7 +312,8 @@ void dp_retrain_link_dp_test(struct dc_link *link,
+ 		if (pipes[i].stream != NULL &&
+ 			!pipes[i].top_pipe &&
+ 			pipes[i].stream->link != NULL &&
+-			pipes[i].stream_res.stream_enc != NULL) {
++			pipes[i].stream_res.stream_enc != NULL &&
++			pipes[i].stream->link == link) {
+ 			udelay(100);
  
- 	if (!drm_dev_enter(&mipi->drm, &idx))
- 		return -ENODEV;
+ 			pipes[i].stream_res.stream_enc->funcs->dp_blank(
 -- 
 2.20.1
 
