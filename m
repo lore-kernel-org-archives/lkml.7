@@ -2,181 +2,94 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32E9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C77C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6B720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244EA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MTD9ktrw"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="QFhl7FGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLJUGd (ORCPT
+        id S1726816AbfLJUHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:06:33 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43662 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfLJUGd (ORCPT
+        Tue, 10 Dec 2019 15:07:33 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46277 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbfLJUHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:06:33 -0500
-Received: by mail-pl1-f193.google.com with SMTP id q16so285382plr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:06:32 -0800 (PST)
+        Tue, 10 Dec 2019 15:07:32 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a124so10988077oii.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:07:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KYuCvJCnn+Faxgj02yKxGaH8zvOq4VASGRA5HJAqsCg=;
-        b=MTD9ktrwv9Qe/EGdE/2bZh4yhicS6KKK9nz5TQxiiS1ecQnyibdyrMQY72EQIOhZd/
-         PS9LxNpumkkm6U94oNtI1W0xasDtfC+JQSaLHlLi8/sP/7nUMzha0t11YlEdsJ2KTLHx
-         ngORqYuNTJFAP5OG/HktQQlw9+kLZuB63iEPTZFxyOnaPzPdcgoMOcLbLzxqeNB+MaGb
-         hxsyAAq427/mFeHszAcFuhybujDavy5AqNdde5bsymH127c9hICpStzUAFxAl/Kzb+zb
-         4UngusSLcZvC9XvNpMXnBQvNEQbqCBnftfTmkNl2impvBFgZsGUIBh+8h56xmzcA4zC7
-         bYsw==
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uQ5MRu7eBmHm6OUR1kwdbNENkUMzLBkNbzI6ewewfew=;
+        b=QFhl7FGH4yA/EbDNh1tBvUtjp++JicNkBw3DI3RZqee01B04Au/qmKS3Xhe1MHcy4O
+         ECOdiTwlIsP+XNKNVO15a4iowSTfQeQ/g2wtPzddiGndpmXwL30rHoIVk3OcgT5+KHFL
+         mV4d4CyJIKaRjL6KBD6PxtcxGo8Lhq0fRDs6IWX5zPTuVPRGUAu2VvwLgMK7nSCpDgI5
+         VvJ3FWJa/UsBY8xavAWhFP7VMuhS0FxHMiNEvEx6JRnEHKEG4odz+hhxRaKipFMLCNXF
+         TJxFrCwWn8XjhXw+ZZHjWfv7ZBvqQTKMqpyfxyap6U7Ri+65xeqpPwIXvGcW1TLOg76b
+         Y+rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KYuCvJCnn+Faxgj02yKxGaH8zvOq4VASGRA5HJAqsCg=;
-        b=jdh8I4nINyf+hzV4lWHoH4oeCLgdtgdlLYSHCVF1SNZuTV9FPSLrGWsVhthT3XWVZB
-         PnTR8kN6fxOxTtkMp4gWGfYQI4zhGN2qR+G3OjmThZ1cKf+p2bstA7c1cpQ+7cmghgJI
-         ZMEaCgAHvC8XpbMLZZvgVPmnH8MtUQ7lHbxJAjdZZpXcxcMW6wM73UQplJWWQ3LXM0eD
-         S+JnCpvnTqKoPjuM2qb/HSgqI/bHNZWnCqhpFMwkvVbP2SzhzPEA8JyG8mv8OGtJ9kjm
-         UFx3qEz5AJitNgXgFKJ2kReXcTAqh5B9w2pk/+t77/tTc1IKSM0hJfwCHOreAVq8MnPP
-         syVg==
-X-Gm-Message-State: APjAAAXkiO6Qy0o2sD4fYmBUm9dwpHawXRTzT5uKlJKWc3x3lcrCAvsj
-        GWW9ygg3sL43WRv9SRGxLQ13lr0GH8w8MKoaS66eyA==
-X-Google-Smtp-Source: APXvYqytg3awAocSi7YUInZyP1bVBjSPyqFgrC7zY8QdBIKePfmb2aWjEP6W2ZEt7kUcS+0WS6Z8R75KRdXwZP7s//U=
-X-Received: by 2002:a17:90a:1a1a:: with SMTP id 26mr7368500pjk.129.1576008391887;
- Tue, 10 Dec 2019 12:06:31 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uQ5MRu7eBmHm6OUR1kwdbNENkUMzLBkNbzI6ewewfew=;
+        b=K0OBAGQC7ZI+XEvHNTy2jYCdTbwwaQ72YQN35XBaMWNVLIkbnAwY0jwpAFmChy2ZX9
+         o9FtjBwA97ArCRI+zxlXt5x9LBFQdrk2VDUXVJ9H59WFYCbCUn8Ol5opNGLZYfkryioR
+         PLQpQbOzTHMOGcvWGbOOkxDo1AJgdj3viNvUjgvED3ljoMJGp26YafAHA9xwXh4PzP7q
+         j1vEnw3774vgH0s8dMSdx9petqYuYQbwpAiwe5xcnqzUKnqo6IRSqVijr7VLA5I1ioqj
+         3Ns/4OUrsSTXE8KgrlFrUIzG9XFcYtP3/xRnCypf0LlkWdIyHVnnwZs3pAsySY7bE4dj
+         BwqQ==
+X-Gm-Message-State: APjAAAW42tpeJqSTOA/prsj3mIvHUB3fk6KQaqhLkzG77DkxyjqdZgOI
+        jhIZdae9CtKhoL37DW8ov8uO3cIyEv4=
+X-Google-Smtp-Source: APXvYqz5nQOo/8Xd2Gow6+zdGyPViUZp2xjc9+dGPEHwXmsSqAF5+nQC6/w6YTilfrBBZnw6M4SOTg==
+X-Received: by 2002:a05:6808:210:: with SMTP id l16mr597004oie.95.1576008451827;
+        Tue, 10 Dec 2019 12:07:31 -0800 (PST)
+Received: from ?IPv6:2605:6000:e947:6500:6680:99ff:fe6f:cb54? ([2605:6000:e947:6500:6680:99ff:fe6f:cb54])
+        by smtp.googlemail.com with ESMTPSA id m2sm1728359oim.13.2019.12.10.12.07.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 12:07:31 -0800 (PST)
+Subject: Re: [PATCH][resend] sh: kgdb: Mark expected switch fall-throughs
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <87muc1yqip.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <4b099e66-973a-8e75-9f62-801fc3b2f594@landley.net>
+Date:   Tue, 10 Dec 2019 14:10:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <0000000000006ab7cc05994cbae2@google.com> <Pine.LNX.4.44L0.1912101440100.1647-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1912101440100.1647-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 10 Dec 2019 21:06:20 +0100
-Message-ID: <CAAeHK+wY+35uBvr0=FnKsWOj91QhXuVE++V7frn5AihAPLvo5Q@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87muc1yqip.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 8:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 9 Dec 2019, syzbot wrote:
->
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KASAN: use-after-free in __mutex_lock_common
-> > kernel/locking/mutex.c:1043 [inline]
-> > BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
-> > kernel/locking/mutex.c:1106
-> > Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
-> >
-> > CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xef/0x16e lib/dump_stack.c:118
-> >   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-> >   kasan_report+0xe/0x20 mm/kasan/common.c:638
-> >   __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
-> >   __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
-> >   usbvision_v4l2_open+0x77/0x340
-> > drivers/media/usb/usbvision/usbvision-video.c:314
-> >   v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
-> >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> >   do_dentry_open+0x494/0x1120 fs/open.c:797
-> >   do_last fs/namei.c:3412 [inline]
-> >   path_openat+0x142b/0x4030 fs/namei.c:3529
-> >   do_filp_open+0x1a1/0x280 fs/namei.c:3559
-> >   do_sys_open+0x3c0/0x580 fs/open.c:1097
-> >   do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> This looks like a race in v4l2_open(): The function drops the
-> videodev_lock mutex before calling the video driver's open routine, and
-> the device can be unregistered during the short time between.
->
-> This patch tries to make the race much more likely to happen, for
-> testing and verification.
->
-> Andrey, will syzbot run the same test with this patch, even though it
-> says it doesn't have a reproducer?
+On 12/9/19 6:26 PM, Kuninori Morimoto wrote:
+> 
+> Hi Greg
+> 
+> I'm posting this patch from few month ago,
+> but it seems SH ML maintainer is not working in these days...
 
-Hi Alan,
+There's two of them and they both are? (I spoke to Rich on IRC last week?)
 
-No, unfortunately there's nothing to run if there's no reproducer.
-It's technically possible to run the same program log that triggered
-the bug initially, but since the bug wasn't reproduced with this log
-even without the patch, there isn't much sense in running it with the
-patch applied.
-
-Thanks!
-
->
-> Alan Stern
->
-> #syz test: https://github.com/google/kasan.git 1f22d15c
->
-> Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
-> +++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-> @@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
->                 wake_up_interruptible(&usbvision->wait_frame);
->                 wake_up_interruptible(&usbvision->wait_stream);
->         } else {
-> +               msleep(100);
->                 usbvision_release(usbvision);
->         }
->
-> Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
-> +++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-> @@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
->         video_get(vdev);
->         mutex_unlock(&videodev_lock);
->         if (vdev->fops->open) {
-> -               if (video_is_registered(vdev))
-> +               if (video_is_registered(vdev)) {
-> +                       msleep(200);
->                         ret = vdev->fops->open(filp);
-> -               else
-> +               } else
->                         ret = -ENODEV;
->         }
->
->
+Rob
