@@ -2,52 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92644C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288E0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE15207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FA420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015992;
-	bh=uTlGLfGAE2nW558+g5y+/xKF1wWkFem5YS3fRPar4FU=;
+	s=default; t=1576015998;
+	bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m4q/IyEB39Kg3KBKqvp2qbNPBrHtXu++qx9ucpnJ3NmK8ajuCJSeGk6mdHHOfth/j
-	 CCb88QIs7HhndUmBoWvaVsovWAkvpD/A+LjWsuQ7xjEDI4/+2v5z1cUf/nkATY3h6Z
-	 1GR3Q27CnfO6Nl9gF7A9sIXLWxcaEb5qpQn++93E=
+	b=pBn/kGX9OXEvrZKMiOFz2A4tX90FuIpKKLeB4+WNTxTOKHHsduTpkQFWHOdAmkZpi
+	 K0x+J/TLzfRSgM5cHeeO4XL/SduIwxTefxL4wVaWIibV4pICoioGS19KQhapmw9qL+
+	 A9FZWSx4wwRaDAFtTzvRg/soPNkQJUA2ZZNaGxOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfLJWD0 (ORCPT
+        id S1729212AbfLJWNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:03:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33384 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727565AbfLJWDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:20 -0500
+        id S1727631AbfLJWDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59544214D8;
-        Tue, 10 Dec 2019 22:03:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE84720828;
+        Tue, 10 Dec 2019 22:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015400;
-        bh=uTlGLfGAE2nW558+g5y+/xKF1wWkFem5YS3fRPar4FU=;
+        s=default; t=1576015403;
+        bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NvgJMAFr4e86Pfb4h0AoyYklVu34YFywKsgNaHn2COyjg4od6UXUqIhJKRP3C3E7F
-         It6940yQMRiJ3UxaCbIecJoEydYMiw50lRSPDWTm9p3qLcf6FKyHuV3Tz6yhNUrKwf
-         ekftX4anIWVnqnt7+PGjbbPfBbfnoHSCpK9FgmTU=
+        b=00zn+CZnbUUpsPihA386qLxperAQaPjX64eOJCIN6Kd0kVjoDXSq/z24FzV217uaQ
+         ARCO+UH9+ToioieDV05umaWJiu/WRuiL6PsJ749iE9weWEVhB39Benjn2RaAUSRDwn
+         iDT6Ciubxn0HX+qddkX+XvZSMYYHm04AIM22gOvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/130] media: i2c: ov2659: Fix missing 720p register config
-Date:   Tue, 10 Dec 2019 17:01:06 -0500
-Message-Id: <20191210220301.13262-15-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 018/130] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
+Date:   Tue, 10 Dec 2019 17:01:09 -0500
+Message-Id: <20191210220301.13262-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,45 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
+[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+When building cpupower with clang, the following warning appears:
 
-This was not done properly for the 720p case.
+ utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
+ prior initialization of this subobject [-Winitializer-overrides]
+                 .desc                   = N_("Processor Package C2"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                              ^~~~~~
+ utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
+ is here
+                 .desc                   = N_("Processor Package C9"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                             ^~~~~~
+ 1 warning generated.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This appears to be a copy and paste or merge mistake because the name
+and id fields both have PC9 in them, not PC2. Remove the second
+assignment to fix the warning.
+
+Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/718
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 04d493aea45eb..44b0584eb8a6c 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
- 
+diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+index f794d6bbb7e9f..3e4ff4a1cdf4b 100644
+--- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
+ 	{
+ 		.name			= "PC9",
+ 		.desc			= N_("Processor Package C9"),
+-		.desc			= N_("Processor Package C2"),
+ 		.id			= PC9,
+ 		.range			= RANGE_PACKAGE,
+ 		.get_count_percent	= hsw_ext_get_count_percent,
 -- 
 2.20.1
 
