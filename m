@@ -5,67 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDF2C04E30
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D0CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FB320726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AFB2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g271pfas"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYYqfaxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfLJC2D (ORCPT
+        id S1726957AbfLJC2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:28:03 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40559 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbfLJC2C (ORCPT
+        Mon, 9 Dec 2019 21:28:05 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42493 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfLJC2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:28:02 -0500
-Received: by mail-io1-f65.google.com with SMTP id x1so17110877iop.7;
-        Mon, 09 Dec 2019 18:28:02 -0800 (PST)
+        Mon, 9 Dec 2019 21:28:03 -0500
+Received: by mail-io1-f67.google.com with SMTP id f82so17105055ioa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 18:28:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=04rJ1IYwNSIyJOHKJi4xXfEFHxSBSW+n5iwgukHRDYo=;
-        b=g271pfas04vYMUSXwPtChhe1b2ZNy5dgqbW+jolbsj9hSY+XC+oqUSime39t7tELTQ
-         0n/M//oeYDvhCY886wJrRpIIxWV3vytHnw597xacTMZFbqLNhwQdMdQfj2GocbVkLgMs
-         8IRl1Ve5hK/WhqWBDyLSmFmTKF4Ly8tJp3zeFNBEakioUnTlnjIfg7e2bz6VcL6BlUCN
-         BqdKymLcR+IeVuOkXkDBfoujUgNxcJblC+TAc7csDYZJz5nb/tlEKFsFvMso0AFVv++p
-         c6OxlzIyuZQBGdMgODVorfUBdW252yGDiMs/LxKLp/lXnGoWWay7QPCAknN3mYre9zc/
-         wdVw==
+        bh=dPQmr4Gy2qdgWTqBpMzYGw3HanW+MuNpIpNa1l5uMF4=;
+        b=MYYqfaxx7amuvodVkBYoxleUyRqC1pfVbXXs6vA78zeNMaCMVokY5XNvz7um9vR73v
+         x7f1VDPu9sk0VH8rjVjvc+il7QkCS9UuGbf/oLI17Kp1MXqba07WFcc0lmzRcOQc9J7q
+         n3zyA7RFd6tcjOhb3SkBQZcP4UZbP5bnA8CzAhGq7VElw+/DNIcmboNOlLw40PQXtTqH
+         apHGqf3a47qfKN7VJUqf5vslAuu4MWW29R/Qv7lXjyLFHOyx/8KOV/UpChBgS32QoVYg
+         ClJYVGA+8Czbqb5k4pZUo5bEGUslq5hee/zxiW6plEd/q+oz2SHpGEoyDskV9nxzsDKJ
+         +tnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=04rJ1IYwNSIyJOHKJi4xXfEFHxSBSW+n5iwgukHRDYo=;
-        b=iSkkTpAaxs0oOLZGwXEI8ybTDhkD9+XlLGq/GOWly8Ly9HLDtdkHvaI74bj/3Iu4g3
-         SA/XjhCN+To3mzUa/fncZRinGmvm8KiHM2eQ/QlPP24fVv+wSrDvzhHF6kc2kVf1w8S6
-         IZsmULQbERLaJcJuvb83wlOJSmnzgm2O8yjMIgNSD4P9LIPnM/NBK3bOMiOLNoMfp4cH
-         qjJ8rutOQpttMYsDnf2Q+HpYg+ShRCfcjxOah0usLaqHN5tJIhmvnLebCN4qHG8ZUTPB
-         gCMKosmJ2ErpossEPzkjIt1aZuMft+uuw2zK3rEUoyYxAY6BKhN7gFkIkr5JJ4qXbFhn
-         zzww==
-X-Gm-Message-State: APjAAAWxYVynHo3tUNE5hUlUBygpEC0JBXJHnGsfMNyCX20iUftUborD
-        xR/omAN5WUsJMY87y7IxRuE=
-X-Google-Smtp-Source: APXvYqx5I2O5dQp+GMaFmZgAFGJEd9esF+AcqosZZP1zuH+/vhb1FySDAaFFO3prBsaVJJYw4M5Ofg==
-X-Received: by 2002:a02:cc75:: with SMTP id j21mr29650457jaq.113.1575944881724;
-        Mon, 09 Dec 2019 18:28:01 -0800 (PST)
+        bh=dPQmr4Gy2qdgWTqBpMzYGw3HanW+MuNpIpNa1l5uMF4=;
+        b=dAS0iEBKPETlGykAUg9mP9C2VtSH5XH7TCT3TZ4wMzeLF8D260zDSNAVC6K92QlHk0
+         AsQGP3FelfrwBIvvs82hvb9ZaJBoSgwrL8vbOS3ELf46KnUsgLzIE2CK01oRmP2kcapu
+         GB/WuGq6A309BdNaf2whSkMeq1clX6FfaY1kbGG3t6nt9V5xUYXglOEUvuaN3LaTbIuZ
+         9WrO4VnswUzM0qTevmHISfbqzxqFjmWnL49wVzyaz50C/TgnQOAZoF56f2MM86pp8IVz
+         UWZ2sp5VJemaawa7okdqkDO7g7vwHfadhsLwsby4GgcYTUiUS/1Gx5bLUh+EmexY11KS
+         4mXQ==
+X-Gm-Message-State: APjAAAXDfWBgN7MfrUEbH9npo8zDYD7ufcbCrxo0B3ejXiG25kCLmxSP
+        SX5UFR0+gi8FlQtlabmoQs8=
+X-Google-Smtp-Source: APXvYqycyNVWdtY9UJzlAuGvgSsBafeNbAI4+XjnmsrZ8M3cccL8/OhzgmZwUFg+TCHW/LRZhEeKqQ==
+X-Received: by 2002:a6b:6b16:: with SMTP id g22mr24611269ioc.192.1575944883102;
+        Mon, 09 Dec 2019 18:28:03 -0800 (PST)
 Received: from localhost.localdomain (c-24-9-77-57.hsd1.co.comcast.net. [24.9.77.57])
-        by smtp.googlemail.com with ESMTPSA id l9sm334052ioh.77.2019.12.09.18.28.00
+        by smtp.googlemail.com with ESMTPSA id l9sm334052ioh.77.2019.12.09.18.28.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 18:28:01 -0800 (PST)
+        Mon, 09 Dec 2019 18:28:02 -0800 (PST)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org
 Cc:     gregkh@linuxfoundation.org, linux@rasmusvillemoes.dk,
-        Jim Cromie <jim.cromie@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH v4 01/16] dyndbg-docs: eschew file /full/path query in docs
-Date:   Mon,  9 Dec 2019 19:27:27 -0700
-Message-Id: <20191210022742.822686-2-jim.cromie@gmail.com>
+        Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v4 02/16] dyndbg: drop obsolete comment on ddebug_proc_open
+Date:   Mon,  9 Dec 2019 19:27:28 -0700
+Message-Id: <20191210022742.822686-3-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191210022742.822686-1-jim.cromie@gmail.com>
 References: <20191210022742.822686-1-jim.cromie@gmail.com>
@@ -76,74 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Regarding:
-commit 2b6783191da7 ("dynamic_debug: add trim_prefix() to provide source-root relative paths")
-commit a73619a845d5 ("kbuild: use -fmacro-prefix-map to make __FILE__ a relative path")
+commit 4bad78c55002 ("lib/dynamic_debug.c: use seq_open_private() instead of seq_open()")'
 
-2nd commit broke dynamic-debug's "file $fullpath" query form, but
-nobody noticed because 1st commit trimmed prefixes from control-file
-output, so the click-copy-pasting of fullpaths into new queries had
-ceased; that query form became unused.
-
-Removing the function is cleanest, but it could be useful in
-old-compiler corner cases, where __FILE__ still has /full/path,
-and it safely does nothing otherwize.
-
-So instead, quietly deprecate "file /full/path" query form, by
-removing all /full/paths examples in the docs.  I skipped adding a
-back-compat note.
+The commit was one of a tree-wide set which replaced open-coded
+boilerplate with a single tail-call.  It therefore obsoleted the
+comment about that boilerplate, clean that up now.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- .../admin-guide/dynamic-debug-howto.rst       | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ lib/dynamic_debug.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index 252e5ef324e5..e011f8907116 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -62,10 +62,10 @@ statements via::
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index c60409138e13..6cefceffadcb 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -853,13 +853,6 @@ static const struct seq_operations ddebug_proc_seqops = {
+ 	.stop = ddebug_proc_stop
+ };
  
-   nullarbor:~ # cat <debugfs>/dynamic_debug/control
-   # filename:lineno [module]function flags format
--  /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svc_rdma.c:323 [svcxprt_rdma]svc_rdma_cleanup =_ "SVCRDMA Module Removed, deregister RPC RDMA transport\012"
--  /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svc_rdma.c:341 [svcxprt_rdma]svc_rdma_init =_ "\011max_inline       : %d\012"
--  /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svc_rdma.c:340 [svcxprt_rdma]svc_rdma_init =_ "\011sq_depth         : %d\012"
--  /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svc_rdma.c:338 [svcxprt_rdma]svc_rdma_init =_ "\011max_requests     : %d\012"
-+  net/sunrpc/svc_rdma.c:323 [svcxprt_rdma]svc_rdma_cleanup =_ "SVCRDMA Module Removed, deregister RPC RDMA transport\012"
-+  net/sunrpc/svc_rdma.c:341 [svcxprt_rdma]svc_rdma_init =_ "\011max_inline       : %d\012"
-+  net/sunrpc/svc_rdma.c:340 [svcxprt_rdma]svc_rdma_init =_ "\011sq_depth         : %d\012"
-+  net/sunrpc/svc_rdma.c:338 [svcxprt_rdma]svc_rdma_init =_ "\011max_requests     : %d\012"
-   ...
- 
- 
-@@ -85,7 +85,7 @@ the debug statement callsites with any non-default flags::
- 
-   nullarbor:~ # awk '$3 != "=_"' <debugfs>/dynamic_debug/control
-   # filename:lineno [module]function flags format
--  /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svcsock.c:1603 [sunrpc]svc_send p "svc_process: st_sendto returned %d\012"
-+  net/sunrpc/svcsock.c:1603 [sunrpc]svc_send p "svc_process: st_sendto returned %d\012"
- 
- Command Language Reference
- ==========================
-@@ -158,13 +158,12 @@ func
- 	func svc_tcp_accept
- 
- file
--    The given string is compared against either the full pathname, the
--    src-root relative pathname, or the basename of the source file of
--    each callsite.  Examples::
-+    The given string is compared against either the src-root relative
-+    pathname, or the basename of the source file of each callsite.
-+    Examples::
- 
- 	file svcsock.c
--	file kernel/freezer.c
--	file /usr/src/packages/BUILD/sgi-enhancednfs-1.4/default/net/sunrpc/svcsock.c
-+	file kernel/freezer.c	# ie column 1 of control file
- 
- module
-     The given string is compared against the module name
+-/*
+- * File_ops->open method for <debugfs>/dynamic_debug/control.  Does
+- * the seq_file setup dance, and also creates an iterator to walk the
+- * _ddebugs.  Note that we create a seq_file always, even for O_WRONLY
+- * files where it's not needed, as doing so simplifies the ->release
+- * method.
+- */
+ static int ddebug_proc_open(struct inode *inode, struct file *file)
+ {
+ 	vpr_info("called\n");
 -- 
 2.23.0
 
