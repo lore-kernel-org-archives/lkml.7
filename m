@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4EFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DBBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A20206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8CE2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013027;
-	bh=O+ShWLda6d+UTjYF4L4NDPbM6P7Zibhn1erEIHuUVjc=;
+	s=default; t=1576013033;
+	bh=pWi9qhhj81ENv7TajptmcAzqW4lHgpIn41k71w0kQ/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPNJffZs12IHS/wNns2srVd9HoCZocMuB9Efu/UxL/goT8ucn5vJNxwnZOk/4s5hZ
-	 KBIH5oIIYZFdvTeBXNe65EAZSq2NZ9GcxRUDGdYOQIOLysfyw7WXEBzN3pDuRmVrv/
-	 Q3DtkYzNn05rc5hOXHPscJCl2M2rKPDeSpdR2SmU=
+	b=Li/0a0ZswHtRXWq+n2WUTboyIrl4AyPWcWyO2Bt60frRUvmNKDUCkL+7OPscSuC7Y
+	 XD/A0I0qT7N/3VZPC+GgVn+DLXeQW/2kpoaPQb1BBjXlBmms3FT7j6CNP3ExcOAQcY
+	 Y1NiQsSRTkHjILqgx8ygSi50gdHSM97oPC9I4ADE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfLJVLH (ORCPT
+        id S1728943AbfLJVXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:23:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbfLJVK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:56 -0500
+        id S1728671AbfLJVLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D465F246AF;
-        Tue, 10 Dec 2019 21:10:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D7CA2077B;
+        Tue, 10 Dec 2019 21:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012255;
-        bh=O+ShWLda6d+UTjYF4L4NDPbM6P7Zibhn1erEIHuUVjc=;
+        s=default; t=1576012264;
+        bh=pWi9qhhj81ENv7TajptmcAzqW4lHgpIn41k71w0kQ/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSStA3FKgX1hOF3+eB21CDDUgO/6bHPTivUnOCzN8ic2qkDfNVF2xfVWWCB+sGcgw
-         xdrihmn9hpc2hZfO7XG5xXdAthKGeK+UN28sZqKjlO6r1BnDEGFFxVyOFFH2e+QnoA
-         /WBPLvsQ4Z98Tf/cA7uBUYtZ81mudS3whf57kOis=
+        b=gxGyVDZIWWwD/ZrAA/2bDUsA2aGFbh2JGPpQIxdmOKRJ6OXWiVKApIdTzqVm5wDKE
+         3dt7WqmqTt93YNcFAHXGAyMwgUaBpgTmzfkhDfnEPbFJYltzeSioRpBT8Rrq09XYB3
+         0vRxib7u4KQg1D7hPyZVIZa1R2jiTyOuKunY13rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 202/350] media: rcar_drif: fix a memory disclosure
-Date:   Tue, 10 Dec 2019 16:05:07 -0500
-Message-Id: <20191210210735.9077-163-sashal@kernel.org>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 210/350] spi: dw: Fix Designware SPI loopback
+Date:   Tue, 10 Dec 2019 16:05:15 -0500
+Message-Id: <20191210210735.9077-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,35 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
+[ Upstream commit 1403cfa69d310781f9548951c97725c67ffcf613 ]
 
-"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
-like msi2500 and airspy do, the fix initializes it to avoid
-memory disclosures.
+The SPI_LOOP is set in spi->mode but not propagated to the register.
+A previous patch removed the bit during a cleanup.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: e1bc204894ea ("spi: dw: fix potential variable assignment error")
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Link: https://lore.kernel.org/r/1572985330-5525-1-git-send-email-thor.thayer@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_drif.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-dw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
-index 608e5217ccd50..0f267a237b424 100644
---- a/drivers/media/platform/rcar_drif.c
-+++ b/drivers/media/platform/rcar_drif.c
-@@ -912,6 +912,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
- {
- 	struct rcar_drif_sdr *sdr = video_drvdata(file);
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 9a49e073e8b73..076652d3d051e 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -308,7 +308,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 	cr0 = (transfer->bits_per_word - 1)
+ 		| (chip->type << SPI_FRF_OFFSET)
+ 		| ((((spi->mode & SPI_CPOL) ? 1 : 0) << SPI_SCOL_OFFSET) |
+-			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET))
++			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET) |
++			(((spi->mode & SPI_LOOP) ? 1 : 0) << SPI_SRL_OFFSET))
+ 		| (chip->tmode << SPI_TMOD_OFFSET);
  
-+	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
- 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
- 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
- 
+ 	/*
 -- 
 2.20.1
 
