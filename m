@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8A7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8D4C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B237F206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE1B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012722;
-	bh=spq33mRE4jswIY1k+EL5yI+NvlUv7m8qp/o3HldSGQo=;
+	s=default; t=1576012725;
+	bh=Xc+R0wxmcm7rjXDmYijo1uCkTy8c9s8xszZck25u3nU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7Awt4Jlx57sQJmBwD7DKZSnxGRIzbVuiIMrSRfcnZJZqsXBxZf2OlVXre45q24to
-	 qH0pugulcoN0tVatCGkAIsbTT8J5+HknOLEGOXdu6olmAfLCwogc0XsuhZc56osXeZ
-	 5/mz6QxyINEIye/LeULiNWS5SHueQvqMpe84VIvY=
+	b=wB2YmDQjFGTHXUv1e3ANQBThrbXKJ2Ga/PhQeSpRl62o9fH87U9iGCGl+LX4hvwkt
+	 q+lPM3bknZTlTGHw1KXISIW+TTfvj6t1tcXLz7F+fCkuTA361GRb9cABcw8aaLb9ms
+	 kfiagN+B1GzPOL+PMtXOtL1IMpqd8whv1ErviLsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfLJVSl (ORCPT
+        id S1729028AbfLJVMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37360 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbfLJVMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:39 -0500
+        id S1728944AbfLJVMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC51020838;
-        Tue, 10 Dec 2019 21:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5828246A2;
+        Tue, 10 Dec 2019 21:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012359;
-        bh=spq33mRE4jswIY1k+EL5yI+NvlUv7m8qp/o3HldSGQo=;
+        s=default; t=1576012343;
+        bh=Xc+R0wxmcm7rjXDmYijo1uCkTy8c9s8xszZck25u3nU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kcy28pLZN2sP6e+DM96JtSbO3DAC/K7WrtpVBU3G1kFm65Eyy/7IXqsAWHkqcDCEN
-         BqJL+ouVZX0MphwheRynTITiNQn8+ZlO3FzFKjqwv8kw+6WgVjOCOPI3KOYHo52KAW
-         Y63HjCDW0E9m2RRnRrz0qoHCTcarUMfgMz+ow3fs=
+        b=UDxLI5GjCkQV+JpbZzuAzu5NzthKym3OISk7mGURqABUdcKp631uRLdPyEBZLEJjs
+         MsA+s3mu6oKh6/oHl/roovml2SoNT/xNeK6CndTwYrjKM7qHn9Jp1DBjQI05Cn0J0A
+         Dj+EMzPVq4lQCwjh07afWqRzAczqvqAPfANQsDXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuming Han <yuming.han@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 287/350] tracing: use kvcalloc for tgid_map array allocation
-Date:   Tue, 10 Dec 2019 16:06:32 -0500
-Message-Id: <20191210210735.9077-248-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 274/350] net: ethernet: ti: Add dependency for TI_DAVINCI_EMAC
+Date:   Tue, 10 Dec 2019 16:06:19 -0500
+Message-Id: <20191210210735.9077-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,57 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuming Han <yuming.han@unisoc.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 6ee40511cb838f9ced002dff7131bca87e3ccbdd ]
+[ Upstream commit b2ef81dcdf3835bd55e5f97ff30131bb327be7fa ]
 
-Fail to allocate memory for tgid_map, because it requires order-6 page.
-detail as:
+If TI_DAVINCI_EMAC=y and GENERIC_ALLOCATOR is not set,
+below erros can be seen:
+drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_desc_pool_destroy.isra.14':
+davinci_cpdma.c:(.text+0x359): undefined reference to `gen_pool_size'
+davinci_cpdma.c:(.text+0x365): undefined reference to `gen_pool_avail'
+davinci_cpdma.c:(.text+0x373): undefined reference to `gen_pool_avail'
+davinci_cpdma.c:(.text+0x37f): undefined reference to `gen_pool_size'
+drivers/net/ethernet/ti/davinci_cpdma.o: In function `__cpdma_chan_free':
+davinci_cpdma.c:(.text+0x4a2): undefined reference to `gen_pool_free_owner'
+drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_chan_submit_si':
+davinci_cpdma.c:(.text+0x66c): undefined reference to `gen_pool_alloc_algo_owner'
+davinci_cpdma.c:(.text+0x805): undefined reference to `gen_pool_free_owner'
+drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_ctlr_create':
+davinci_cpdma.c:(.text+0xabd): undefined reference to `devm_gen_pool_create'
+davinci_cpdma.c:(.text+0xb79): undefined reference to `gen_pool_add_owner'
+drivers/net/ethernet/ti/davinci_cpdma.o: In function `cpdma_check_free_tx_desc':
+davinci_cpdma.c:(.text+0x16c6): undefined reference to `gen_pool_avail'
 
-c3 sh: page allocation failure: order:6,
-   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
-c3 sh cpuset=/ mems_allowed=0
-c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
-c3 Hardware name: Generic DT based system
-c3 Backtrace:
-c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
-c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
-c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
-c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
-c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
-c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
-c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
-c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
-c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
-c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
-c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
-c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
+This patch mades TI_DAVINCI_EMAC select GENERIC_ALLOCATOR.
 
-Switch to use kvcalloc to avoid unexpected allocation failures.
-
-Link: http://lkml.kernel.org/r/1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com
-
-Signed-off-by: Yuming Han <yuming.han@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 99f629718272 ("net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6a0ee91783656..2fa72419bbd79 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4609,7 +4609,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 834afca3a0195..137632b09c729 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -22,6 +22,7 @@ config TI_DAVINCI_EMAC
+ 	depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 ) || COMPILE_TEST
+ 	select TI_DAVINCI_MDIO
+ 	select PHYLIB
++	select GENERIC_ALLOCATOR
+ 	---help---
+ 	  This driver supports TI's DaVinci Ethernet .
  
- 	if (mask == TRACE_ITER_RECORD_TGID) {
- 		if (!tgid_map)
--			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
-+			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
- 					   sizeof(*tgid_map),
- 					   GFP_KERNEL);
- 		if (!tgid_map) {
 -- 
 2.20.1
 
