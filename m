@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA44C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EEC206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4420D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575978289;
-	bh=rbUycGx9gUlIfbdz81Q/uowA7hYIYjXqn/v/eFl7Jvk=;
+	s=default; t=1575978298;
+	bh=egy0NrKkLQXTSdqhOQ4Z+RjieKlyJfsQSL53TruPycw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5yV27S/WtXtLHGNWkEd3ZSIJYtXZeH1l43GKVKLB1fZ3UX64ZSWkFUcIMOZsTWEY
-	 aUU/l82wAdsI1KNt0u/rEmZhNraLt0p8qVHUQA6lyg39O43nlt0haEAo2l97Pgy2uv
-	 htjPtZ9ryPbom3MDNmPIo8o+WvO6svNIw9zK/y5k=
+	b=MBOv79Takh+sagnf0kebQdSAiCF7BSGIMru+hXTIlUsV00Of5XnE1CobimJzx8fzM
+	 FrStphYA3C8CYlV3vCQkMAaErzFCWCAuOKSBrRb1VVpvLTIjhUDk8m7BBMjToydwpB
+	 wL488Tshx/JYzHnyFXVidR7d0tQVREeF6kb2hhFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfLJLot (ORCPT
+        id S1727851AbfLJLo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:44:49 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43490 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfLJLoq (ORCPT
+        Tue, 10 Dec 2019 06:44:57 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37980 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbfLJLos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:44:46 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a13so19498747ljm.10;
-        Tue, 10 Dec 2019 03:44:44 -0800 (PST)
+        Tue, 10 Dec 2019 06:44:48 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k8so19469742ljh.5;
+        Tue, 10 Dec 2019 03:44:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P3dSQCHRI36SjPWYo0brD43NEdcMsLd/xYS8Df+31B4=;
-        b=WlI/+IAY2YpfyFWJfmsfGOhePWAYppvUGULiDGAnStzwa455XbZ2t6gJMLPcCbaPwG
-         m4Bnm4rlGeRS9Xb2EQFGp87dMQ4/KpWY+LWg0piNiBaqd5eMVLSzfpiiUPA7TeLQWT8b
-         LLZNjoDtz1bS/weBFHu62kuaj22U4KERbVb2q7fuQ1n5XC6BTr5/gnZAy1UE1+P2WdaT
-         3FeTK7HAV8yh4sC+iJsh5MHv+eBWGgRg1tg0D7Pq5tm6NK+lj4MC1XKPROZyBNO9Hqoh
-         l8zeuUmPpvvXpmtsG6PIX8ss+Ig1dxS5lmLTdb7V0666bZGPtdWKH8FuQ/o45b9wNBEc
-         Jr5w==
-X-Gm-Message-State: APjAAAWFl2e9vXxKpWUITq0+9EU/eSt+WPVrOP/TtIShUxij5h+aMYGt
-        lWU5fSghRi65lASh6b/r8po=
-X-Google-Smtp-Source: APXvYqxLiCnWQg2+yXPqCdb9teaUE2XcyjKhLXsnKd7FWH2vE9SYKCnmXjufUvjYd9E8cLy+G53n5g==
-X-Received: by 2002:a2e:585e:: with SMTP id x30mr20943600ljd.141.1575978283741;
-        Tue, 10 Dec 2019 03:44:43 -0800 (PST)
+        bh=F3MUQ+LoTrV2G6U9Nx6QBaOEztQsCtDS4fhJs3lb6uk=;
+        b=WQjHRa1Rd9HrJDvYvp+V5fv1u0o04jD+0dPjwlccq09x1hliNur938by9zCheSeX/N
+         jpmtRaKQVjXuBsAluezv6budmd/28xuiVRf2znnpT/3xGF+ILsOEn7WgsHVHU9d+EaQ9
+         Gn87D+pZY/al0I99Hh5WUZwtHidEsaJRU0Yv5Y9/ZTubJ6zfpGt/Zo0g0sefE5g0NB7j
+         CkGFAKf3DuSxWkcei37F/h05y/r5BvZVERRuaDzbgUid5n87FH+KHezgYTCtcWzQVFd9
+         ogBGB0xB7RJ2RLKJNFBX5NQwkFarda+tmqBZFYm23PcF2LrzDbYA3/z8TdWdMjN00Qao
+         dd9g==
+X-Gm-Message-State: APjAAAUZKOACTcvFph2mhOEQaNZpVSCdAG2lgAeLtMJ6gRw8UUqWeWNo
+        l7ZcLRfClfVU3kuc/PCvo5A=
+X-Google-Smtp-Source: APXvYqw03jFaxhFit7cE2chDwKeaHkFNy6WoFDjYlzs0rvx/sssv7BW88ZQ6ko03rUmUBzFNEZlD+g==
+X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr20374152ljo.169.1575978286314;
+        Tue, 10 Dec 2019 03:44:46 -0800 (PST)
 Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id n14sm1419005lfe.5.2019.12.10.03.44.41
+        by smtp.gmail.com with ESMTPSA id q27sm1634622ljm.25.2019.12.10.03.44.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:44:42 -0800 (PST)
+        Tue, 10 Dec 2019 03:44:43 -0800 (PST)
 Received: from johan by xi.terra with local (Exim 4.92.3)
         (envelope-from <johan@xi.terra>)
-        id 1iedwa-0001Hs-Eq; Tue, 10 Dec 2019 12:44:44 +0100
+        id 1iedwa-0001I8-No; Tue, 10 Dec 2019 12:44:44 +0100
 From:   Johan Hovold <johan@kernel.org>
 To:     Kalle Valo <kvalo@codeaurora.org>
 Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
@@ -68,10 +68,11 @@ Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
         Ulrich Kunitz <kune@deine-taler.de>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 2/7] at76c50x-usb: fix endpoint debug message
-Date:   Tue, 10 Dec 2019 12:44:21 +0100
-Message-Id: <20191210114426.4713-3-johan@kernel.org>
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH 5/7] rtl8xxxu: fix interface sanity check
+Date:   Tue, 10 Dec 2019 12:44:24 +0100
+Message-Id: <20191210114426.4713-6-johan@kernel.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191210114426.4713-1-johan@kernel.org>
 References: <20191210114426.4713-1-johan@kernel.org>
@@ -82,28 +83,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to use the current alternate setting, which may not be the
-same as the first alternate setting, also when printing the number of
-endpoints at probe.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+
+Fixes: 26f1fad29ad9 ("New driver: rtl8xxxu (mac80211)")
+Cc: stable <stable@vger.kernel.org>     # 4.4
+Cc: Jes Sorensen <Jes.Sorensen@redhat.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/net/wireless/atmel/at76c50x-usb.c | 2 +-
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/atmel/at76c50x-usb.c b/drivers/net/wireless/atmel/at76c50x-usb.c
-index db2c3b8d491e..3b2680772f03 100644
---- a/drivers/net/wireless/atmel/at76c50x-usb.c
-+++ b/drivers/net/wireless/atmel/at76c50x-usb.c
-@@ -2236,7 +2236,7 @@ static int at76_alloc_urbs(struct at76_priv *priv,
- 	at76_dbg(DBG_PROC_ENTRY, "%s: ENTER", __func__);
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index aa2bb2ae9809..54a1a4ea107b 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -6384,7 +6384,7 @@ static int rtl8xxxu_parse_usb(struct rtl8xxxu_priv *priv,
+ 	u8 dir, xtype, num;
+ 	int ret = 0;
  
- 	at76_dbg(DBG_URB, "%s: NumEndpoints %d ", __func__,
--		 interface->altsetting[0].desc.bNumEndpoints);
-+		 interface->cur_altsetting->desc.bNumEndpoints);
+-	host_interface = &interface->altsetting[0];
++	host_interface = interface->cur_altsetting;
+ 	interface_desc = &host_interface->desc;
+ 	endpoints = interface_desc->bNumEndpoints;
  
- 	ep_in = NULL;
- 	ep_out = NULL;
 -- 
 2.24.0
 
