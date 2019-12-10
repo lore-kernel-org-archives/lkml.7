@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A7EC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D108C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C3F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C828214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013571;
-	bh=pQ1pvdjKGzpID1HN57d6QHcZlh3exmFS2eHqlORDF2M=;
+	s=default; t=1576013576;
+	bh=lLkoJQElicBxj4yEKTOq9Qs5dm4FLEJf01xJj+bPK+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Plo6tRfj8gNoZvywmregI4e2BLa6r43ua40mVbZTzzNCszI8wTTEhmp7z9DPHjNKa
-	 qTvMJjlOXYR9o48ihMbwCB0H5l46FbOEdaItjCnIzmUywTNg3HivruR0vDVIAi+oAE
-	 N53V4FwcD4J1F2RM15wkxLTrNfwLxrfRAux1jBd0=
+	b=NNKCKoi5fG5fPpMPnNFsicnhdfiNeOrk+2Kcre3FQ6QVJ9o+zynIiwHQTktNBlCaQ
+	 eirl4fQDQlfk8EHvbKRR6QYL1OG6QOPYqdXrzBM81wa6QBCjrsq0Z7t9/UEuahZe+q
+	 ZlPfXNX/vOljJvvC1IBVnG28OXtSg6B6nvx368Ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfLJVcu (ORCPT
+        id S1729558AbfLJVcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:32:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbfLJVco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:44 -0500
+        id S1729440AbfLJVcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990C322464;
-        Tue, 10 Dec 2019 21:32:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56019205C9;
+        Tue, 10 Dec 2019 21:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013563;
-        bh=pQ1pvdjKGzpID1HN57d6QHcZlh3exmFS2eHqlORDF2M=;
+        s=default; t=1576013568;
+        bh=lLkoJQElicBxj4yEKTOq9Qs5dm4FLEJf01xJj+bPK+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7vtDTR0wn/pqS40y9ssqZQWRywnXgkLnyaNGrL8E4FxjOolKlStZ/M95LdJX5akt
-         Wz54iaJwx5rUd8EClV6bPhgh+Ep4SDPH1s5mCcWe5KgB/AWU42mPGau7j4c/wC9hQF
-         gyIK14Wr3pqU5THGR1No3UCk13dUGWWHJGB85j5s=
+        b=A1cAIwBhLRsjfGegIQT1yIL/O1d3UCUmq0bHENIpRioXz3ksQM3uWPUmXjVgLG17v
+         Fgi1JA9tAPuSTg6haPJDIqm79oqJdcBVklFjiJ9yfT341owHxwbwpmuUmX9N8Q1h3S
+         skS+ScV3EwKDXNfTh98ZX25+u+F0bTN6rGBuiSww=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 018/177] media: i2c: ov2659: Fix missing 720p register config
-Date:   Tue, 10 Dec 2019 16:29:42 -0500
-Message-Id: <20191210213221.11921-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 022/177] media: venus: core: Fix msm8996 frequency table
+Date:   Tue, 10 Dec 2019 16:29:46 -0500
+Message-Id: <20191210213221.11921-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,45 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
+[ Upstream commit c690435ed07901737e5c007a65ec59f53b33eb71 ]
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+In downstream driver, there are two frequency tables defined,
+one for the encoder and one for the decoder:
 
-This was not done properly for the 720p case.
+/* Encoders /
+<972000 490000000 0x55555555>, / 4k UHD @ 30 /
+<489600 320000000 0x55555555>, / 1080p @ 60 /
+<244800 150000000 0x55555555>, / 1080p @ 30 /
+<108000 75000000 0x55555555>, / 720p @ 30 */
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+/* Decoders /
+<1944000 490000000 0xffffffff>, / 4k UHD @ 60 /
+< 972000 320000000 0xffffffff>, / 4k UHD @ 30 /
+< 489600 150000000 0xffffffff>, / 1080p @ 60 /
+< 244800 75000000 0xffffffff>; / 1080p @ 30 */
+
+It shows that encoder always needs a higher clock than decoder.
+
+In current venus driver, the unified frequency table is aligned
+with the downstream decoder table which causes performance issues
+in encoding scenarios. Fix that by aligning frequency table on
+worst case (encoding).
+
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/platform/qcom/venus/core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index ca079996c7cee..4b6be3b0fd528 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index 5b8350e87e750..60069869596cb 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -430,10 +430,11 @@ static const struct venus_resources msm8916_res = {
  };
  
+ static const struct freq_tbl msm8996_freq_table[] = {
+-	{ 1944000, 490000000 },	/* 4k UHD @ 60 */
+-	{  972000, 320000000 },	/* 4k UHD @ 30 */
+-	{  489600, 150000000 },	/* 1080p @ 60 */
+-	{  244800,  75000000 },	/* 1080p @ 30 */
++	{ 1944000, 520000000 },	/* 4k UHD @ 60 (decode only) */
++	{  972000, 520000000 },	/* 4k UHD @ 30 */
++	{  489600, 346666667 },	/* 1080p @ 60 */
++	{  244800, 150000000 },	/* 1080p @ 30 */
++	{  108000,  75000000 },	/* 720p @ 30 */
+ };
+ 
+ static const struct reg_val msm8996_reg_preset[] = {
 -- 
 2.20.1
 
