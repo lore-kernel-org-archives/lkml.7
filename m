@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BEDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F0EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E262465C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BF020652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011992;
-	bh=S3vpO74YFSeyelz9fJZYMGlkUWvZr3I0b5tGoSAXwAA=;
+	s=default; t=1576011997;
+	bh=G3pxgIYne46zikRD4f0dDWJlvjJHvRooIorjQRkUWwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mnaMdIkZdQpJO1gpfGMGaNc2/09xCfQ6hNIbNSQ9qnYkrzdvg3qBPwrSaeciYj872
-	 +yaGEhe7TC7GDXdSYVhiuOhiprS69i2que3+8wFSsMU530ie1YEZd9HeIwNwROC5S9
-	 waBvrvWV8CuwrrSk8bhKlCkypa6dDG3FAB6Wl74Y=
+	b=b43OV8hnmEhxJNDTfXWKt67J2atyOtuWj1l4aIT+A0nOjplRa7ZxJdz5GYidfUTjZ
+	 2y71s+ARSF/fJvdMVuFcEILy52OpnZdmDuxMVXRlnB/a7wZZ5nst3bfWYIzakylDZF
+	 xTlfzuSigAy0e0T+UXsTOI0HVrMHt8OV9ro2KQEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfLJVGb (ORCPT
+        id S1726831AbfLJVGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:06:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49324 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbfLJVEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:23 -0500
+        id S1727193AbfLJVEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 424F7214AF;
-        Tue, 10 Dec 2019 21:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31E1724679;
+        Tue, 10 Dec 2019 21:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011863;
-        bh=S3vpO74YFSeyelz9fJZYMGlkUWvZr3I0b5tGoSAXwAA=;
+        s=default; t=1576011861;
+        bh=G3pxgIYne46zikRD4f0dDWJlvjJHvRooIorjQRkUWwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmGTRgb541ZIFb869zNJtlcYNS+AC/iFFTcbHjS/QuX/9kAe8vZ7h4pE/1PtZFDuB
-         yzrkE6S/OIKM38SDrTK8NY4UzuO/QejYUhBScKcX39Jz/H2B6l52Qkv3++qMNm1Gi4
-         xq4sLy/O0+1u8M1pZD9g5Mc26URm8Rw957kCwU9U=
+        b=1CyRwNEC0MH3udFRIzaIsCPy/bmeyAgnQYwENOJ68DWc+b9pYcsHXPgdP2n4pKOiJ
+         2iMRld30xxreONK4bbXhnDnzvCuq8BWxEqrCqdK/kY5sqZdMZKt/MsNmJs/9WKQYeF
+         MmcQkTSd25X4xJddrzxX0Hvy2yikMiopuXlMsHjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mikita Lipski <mikita.lipski@amd.com>, Leo Li <sunpeng.li@amd.com>,
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 016/350] drm/amd/display: Rebuild mapped resources after pipe split
-Date:   Tue, 10 Dec 2019 15:58:28 -0500
-Message-Id: <20191210210402.8367-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 015/350] drm/ttm: return -EBUSY on pipelining with no_gpu_wait (v2)
+Date:   Tue, 10 Dec 2019 15:58:27 -0500
+Message-Id: <20191210210402.8367-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,40 +62,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikita Lipski <mikita.lipski@amd.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit 387596ef2859c37d564ce15abddbc9063a132e2c ]
+[ Upstream commit 3084cf46cf8110826a42de8c8ef30e8fa48974c2 ]
 
-[why]
-The issue is specific for linux, as on timings such as 8K@60
-or 4K@144 DSC should be working in combination with ODM Combine
-in order to ensure that we can run those timings. The validation
-for those timings was passing, but when pipe split was happening
-second pipe wasn't being programmed.
+Setting the no_gpu_wait flag means that the allocate BO must be available
+immediately and we can't wait for any GPU operation to finish.
 
-[how]
-Rebuild mapped resources if we split stream for ODM.
+v2: squash in mem leak fix, rebase
 
-Signed-off-by: Mikita Lipski <mikita.lipski@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/ttm/ttm_bo.c | 44 +++++++++++++++++++++---------------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 3980c7b782599..ebe67c34dabf6 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -2474,6 +2474,7 @@ bool dcn20_fast_validate_bw(
- 							&context->res_ctx, dc->res_pool,
- 							pipe, hsplit_pipe))
- 						goto validate_fail;
-+					dcn20_build_mapped_resource(dc, context, pipe->stream);
- 				} else
- 					dcn20_split_stream_for_mpc(
- 						&context->res_ctx, dc->res_pool,
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 98819462f025f..f078036998092 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -926,7 +926,8 @@ EXPORT_SYMBOL(ttm_bo_mem_put);
+  */
+ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+ 				 struct ttm_mem_type_manager *man,
+-				 struct ttm_mem_reg *mem)
++				 struct ttm_mem_reg *mem,
++				 bool no_wait_gpu)
+ {
+ 	struct dma_fence *fence;
+ 	int ret;
+@@ -935,19 +936,22 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
+ 	fence = dma_fence_get(man->move);
+ 	spin_unlock(&man->move_lock);
+ 
+-	if (fence) {
+-		dma_resv_add_shared_fence(bo->base.resv, fence);
++	if (!fence)
++		return 0;
+ 
+-		ret = dma_resv_reserve_shared(bo->base.resv, 1);
+-		if (unlikely(ret)) {
+-			dma_fence_put(fence);
+-			return ret;
+-		}
++	if (no_wait_gpu)
++		return -EBUSY;
++
++	dma_resv_add_shared_fence(bo->base.resv, fence);
+ 
+-		dma_fence_put(bo->moving);
+-		bo->moving = fence;
++	ret = dma_resv_reserve_shared(bo->base.resv, 1);
++	if (unlikely(ret)) {
++		dma_fence_put(fence);
++		return ret;
+ 	}
+ 
++	dma_fence_put(bo->moving);
++	bo->moving = fence;
+ 	return 0;
+ }
+ 
+@@ -978,7 +982,7 @@ static int ttm_bo_mem_force_space(struct ttm_buffer_object *bo,
+ 			return ret;
+ 	} while (1);
+ 
+-	return ttm_bo_add_move_fence(bo, man, mem);
++	return ttm_bo_add_move_fence(bo, man, mem, ctx->no_wait_gpu);
+ }
+ 
+ static uint32_t ttm_bo_select_caching(struct ttm_mem_type_manager *man,
+@@ -1120,14 +1124,18 @@ int ttm_bo_mem_space(struct ttm_buffer_object *bo,
+ 		if (unlikely(ret))
+ 			goto error;
+ 
+-		if (mem->mm_node) {
+-			ret = ttm_bo_add_move_fence(bo, man, mem);
+-			if (unlikely(ret)) {
+-				(*man->func->put_node)(man, mem);
+-				goto error;
+-			}
+-			return 0;
++		if (!mem->mm_node)
++			continue;
++
++		ret = ttm_bo_add_move_fence(bo, man, mem, ctx->no_wait_gpu);
++		if (unlikely(ret)) {
++			(*man->func->put_node)(man, mem);
++			if (ret == -EBUSY)
++				continue;
++
++			goto error;
+ 		}
++		return 0;
+ 	}
+ 
+ 	for (i = 0; i < placement->num_busy_placement; ++i) {
 -- 
 2.20.1
 
