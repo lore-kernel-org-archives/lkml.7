@@ -2,135 +2,213 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA06C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7330EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EF6206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FEA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OfzLetq3"
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="t8UqM11Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfLJHfM (ORCPT
+        id S1727443AbfLJHfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:35:12 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49039 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727004AbfLJHfM (ORCPT
+        Tue, 10 Dec 2019 02:35:50 -0500
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:53070 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727407AbfLJHfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:35:12 -0500
-X-UUID: 69c6bb708b764bc3890d296e244412b5-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=QWIkdb1t9y7Z5PmgxzFRNPEmfCRlFO7By6gkPdVB3po=;
-        b=OfzLetq3yriMCLm6rZNRBhT+HA92GNylrthtR/dY+0y6n0zNPRngZ2hh7626svLKMl9zlNnJ8n+5umaP/MdzbBeqshcKc03ThJZvGM5ximpNdSjnxpre2Bx2Ecd2lYY/RKB/Lk4a0bc5owQdumOR5BY2guIgMNCQ22e4APt99Ig=;
-X-UUID: 69c6bb708b764bc3890d296e244412b5-20191210
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1397588667; Tue, 10 Dec 2019 15:35:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 15:34:43 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 15:34:46 +0800
-Message-ID: <1575963305.31101.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 08/14] soc: mediatek: cmdq: add write_s function
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 10 Dec 2019 15:35:05 +0800
-In-Reply-To: <1574819937-6246-10-git-send-email-dennis-yc.hsieh@mediatek.com>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-10-git-send-email-dennis-yc.hsieh@mediatek.com>
+        Tue, 10 Dec 2019 02:35:48 -0500
+Received: by mail-wm1-f47.google.com with SMTP id p9so1959920wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 23:35:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=d+OM3TJFU1vkI9A89fT5ICGoCi5aHL4tqG7UgZRXYL0=;
+        b=t8UqM11QS+yV0fc3CdiRNHuUj38nfErOyAWIneES11xK/WAI5MPlvpiVQQiN7Gq2po
+         Fwm/MTnMsG1Oc2XfogvI9vyIF5eM9ATwaZBkcNWI//BEGm41Hfz4+yRwCTVSjGju+Vyc
+         ERnb7XXHlWykXxHA3Om2vnmBkytMc+aC2WOY5BdJRGv3vc3T83QBn3zdtjeADpnVdDgA
+         ja5TmDuwOUuYlzGg5srDKIswj/P+gYLZA+OdDXbrADNRCrEMMbI2K5Ae/EfeGv/eY1tB
+         YV4OowJLd2hjgJ7GDey9YP11zASBz578iOBr1csG6u7D2GF+t56rt6hbsrvv1UB2Zudj
+         uBzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=d+OM3TJFU1vkI9A89fT5ICGoCi5aHL4tqG7UgZRXYL0=;
+        b=AboomuMv7CaANzMAgs+X5NXs1ns7Gv8HE9chVKJEQLPK8k5jdYUH9eGXQRptsKiucB
+         ++WrNY7HWtT/XvyR2qiDERqqGD6+qc6BbDovzPJLSaTxMjqhnzG99oZtt/Y1gorbWurJ
+         GuakVlUlg2w2QTguwuxX9I8gS3k3Al6BnE0sytjpukMjCCBL5Fmq4cxfeBD5ZivL7TAP
+         IIO07PteFaA5r/fXXxzuzHI7ILfvGX8ann0dEVb35sZxQXkNwfzJpFySlXjleQ5+17DN
+         mT7JH+2yPrFPhDusgNqcEz84W/sXufRGpksDkgS9uKfMpzruTyWghR5Ir8xOfudIPL38
+         E4rw==
+X-Gm-Message-State: APjAAAWMVxXm/waU/qcQv8bAz5sbvLNAjRva2/bPXHirH4Rq9c4Q3OY3
+        vAOZZCxWLk1y+ueBCAh2UDoBxg==
+X-Google-Smtp-Source: APXvYqxk4VGoYiQytFKE5BR9zei7bG9EHliSlY2rPcmeje/05wJhrPc1NAH72jLiME24eqA9kZRLVQ==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr3194064wmb.41.1575963344842;
+        Mon, 09 Dec 2019 23:35:44 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id y139sm2198041wmd.24.2019.12.09.23.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 23:35:44 -0800 (PST)
+Message-ID: <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>
+Date:   Tue, 10 Dec 2019 08:35:43 +0100
+In-Reply-To: <20191203022337.GE25002@ming.t460p>
+References: <20191126023253.GA24501@ming.t460p>
+         <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
+         <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+         <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+         <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+         <20191128091712.GD15549@ming.t460p>
+         <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+         <20191129005734.GB1829@ming.t460p> <20191129023555.GA8620@ming.t460p>
+         <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
+         <20191203022337.GE25002@ming.t460p>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6
-DQo+IGFkZCB3cml0ZV9zIGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1bmN0aW9ucyB3aGljaA0K
-PiB3cml0ZXMgdmFsdWUgY29udGFpbnMgaW4gaW50ZXJuYWwgcmVnaXN0ZXIgdG8gYWRkcmVzcw0K
-PiB3aXRoIGxhcmdlIGRtYSBhY2Nlc3Mgc3VwcG9ydC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERl
-bm5pcyBZQyBIc2llaCA8ZGVubmlzLXljLmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBk
-cml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgNDAgKysrKysrKysrKysr
-KysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5o
-IHwgIDIgKysNCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggICAgfCAx
-MiArKysrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDU0IGluc2VydGlvbnMoKykNCj4gDQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZl
-cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IDljYzIzNGYwOGVjNS4u
-MmVkYmMwOTU0ZDk3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21k
-cS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIu
-Yw0KPiBAQCAtMTUsMTEgKzE1LDE4IEBADQo+ICAjZGVmaW5lIENNRFFfRU9DX0NNRAkJKCh1NjQp
-KChDTURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkpIFwNCj4gIAkJCQk8PCAzMiB8
-IENNRFFfRU9DX0lSUV9FTikNCj4gICNkZWZpbmUgQ01EUV9SRUdfVFlQRQkJMQ0KPiArI2RlZmlu
-ZSBDTURRX0FERFJfSElHSChhZGRyKQkoKHUzMikoKChhZGRyKSA+PiAxNikgJiBHRU5NQVNLKDMx
-LCAwKSkpDQo+ICsjZGVmaW5lIENNRFFfQUREUl9MT1dfQklUCUJJVCgxKQ0KPiArI2RlZmluZSBD
-TURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRyKSB8IENNRFFfQUREUl9MT1dfQklUKQ0KPiAg
-DQo+ICBzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiB7DQo+ICAJdW5pb24gew0KPiAgCQl1MzIgdmFs
-dWU7DQo+ICAJCXUzMiBtYXNrOw0KPiArCQlzdHJ1Y3Qgew0KPiArCQkJdTE2IGFyZ19jOw0KPiAr
-CQkJdTE2IGFyZ19iOw0KPiArCQl9Ow0KPiAgCX07DQo+ICAJdW5pb24gew0KPiAgCQl1MTYgb2Zm
-c2V0Ow0KPiBAQCAtMjI0LDYgKzIzMSwzOSBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1
-Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLA0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJPTChjbWRx
-X3BrdF93cml0ZV9tYXNrKTsNCj4gIA0KPiAraW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNt
-ZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90IGFkZHIsIHUxNiByZWdfaWR4LA0KPiArCQkgICAgIHUz
-MiBtYXNrKQ0KPiArew0KPiArCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9
-Ow0KPiArCWNvbnN0IHUxNiBkc3RfcmVnX2lkeCA9IENNRFFfU1BSX1RFTVA7DQo+ICsJaW50IGVy
-cjsNCj4gKw0KPiArCWlmIChtYXNrICE9IFUzMl9NQVgpIHsNCj4gKwkJaW5zdC5vcCA9IENNRFFf
-Q09ERV9NQVNLOw0KPiArCQlpbnN0Lm1hc2sgPSB+bWFzazsNCj4gKwkJZXJyID0gY21kcV9wa3Rf
-YXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gKwkJaWYgKGVyciA8IDApDQo+ICsJCQlyZXR1
-cm4gZXJyOw0KPiArDQo+ICsJCWluc3QubWFzayA9IDA7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NP
-REVfV1JJVEVfU19NQVNLOw0KPiArCX0gZWxzZSB7DQo+ICsJCWluc3Qub3AgPSBDTURRX0NPREVf
-V1JJVEVfUzsNCj4gKwl9DQo+ICsNCj4gKwllcnIgPSBjbWRxX3BrdF9hc3NpZ24ocGt0LCBkc3Rf
-cmVnX2lkeCwgQ01EUV9BRERSX0hJR0goYWRkcikpOw0KPiArCWlmIChlcnIgPCAwKQ0KPiArCQly
-ZXR1cm4gZXJyOw0KPiArDQo+ICsJaW5zdC5hcmdfYl90ID0gQ01EUV9SRUdfVFlQRTsNCj4gKwlp
-bnN0LnNvcCA9IGRzdF9yZWdfaWR4Ow0KPiArCWluc3Qub2Zmc2V0ID0gQ01EUV9BRERSX0xPVyhh
-ZGRyKTsNCj4gKwlpbnN0LmFyZ19iID0gcmVnX2lkeDsNCj4gKw0KPiArCXJldHVybiBjbWRxX3Br
-dF9hcHBlbmRfY29tbWFuZChwa3QsIGluc3QpOw0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjbWRx
-X3BrdF93cml0ZV9zKTsNCj4gKw0KPiAgaW50IGNtZHFfcGt0X3dmZShzdHJ1Y3QgY21kcV9wa3Qg
-KnBrdCwgdTE2IGV2ZW50KQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3Qg
-PSB7IHswfSB9Ow0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRx
-LW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4g
-aW5kZXggMTIxYzNiYjZkM2RlLi44ZWY4N2UxYmQwM2IgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUv
-bGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9t
-YWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBAQCAtNTksNiArNTksOCBAQCBlbnVtIGNtZHFf
-Y29kZSB7DQo+ICAJQ01EUV9DT0RFX0pVTVAgPSAweDEwLA0KPiAgCUNNRFFfQ09ERV9XRkUgPSAw
-eDIwLA0KPiAgCUNNRFFfQ09ERV9FT0MgPSAweDQwLA0KPiArCUNNRFFfQ09ERV9XUklURV9TID0g
-MHg5MCwNCj4gKwlDTURRX0NPREVfV1JJVEVfU19NQVNLID0gMHg5MSwNCj4gIAlDTURRX0NPREVf
-TE9HSUMgPSAweGEwLA0KPiAgfTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
-bWRxLmgNCj4gaW5kZXggYzY2YjNhMGRhMmEyLi41NmZmMTk3MDE5N2MgMTAwNjQ0DQo+IC0tLSBh
-L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9s
-aW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiBAQCAtMTA2LDYgKzEwNiwxOCBAQCBpbnQg
-Y21kcV9wa3Rfd3JpdGUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHU4IHN1YnN5cywgdTE2IG9mZnNl
-dCwgdTMyIHZhbHVlKTsNCj4gIGludCBjbWRxX3BrdF93cml0ZV9tYXNrKHN0cnVjdCBjbWRxX3Br
-dCAqcGt0LCB1OCBzdWJzeXMsDQo+ICAJCQl1MTYgb2Zmc2V0LCB1MzIgdmFsdWUsIHUzMiBtYXNr
-KTsNCj4gIA0KPiArLyoqDQo+ICsgKiBjbWRxX3BrdF93cml0ZV9zX21hc2soKSAtIGFwcGVuZCB3
-cml0ZV9zIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQpJIHRoaW5rIHdlIG5lZWQgYWRkIG1v
-cmUgZGVzY3JpcHRpb25zIGFib3V0IGRpZmZlcmVuY2UgYmV0d2VlbiB3cml0ZS4NCg0KQmliYnkN
-Cj4gKyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiArICogQGFkZHI6CXRoZSBwaHlzaWNhbCBh
-ZGRyZXNzIG9mIHJlZ2lzdGVyIG9yIGRtYQ0KPiArICogQHJlZ19pZHg6CXRoZSBDTURRIGludGVy
-bmFsIHJlZ2lzdGVyIElEIHdoaWNoIGNhY2hlIHNvdXJjZSB2YWx1ZQ0KPiArICogQG1hc2s6CXRo
-ZSBzcGVjaWZpZWQgdGFyZ2V0IHJlZ2lzdGVyIG1hc2sNCj4gKyAqDQo+ICsgKiBSZXR1cm46IDAg
-Zm9yIHN1Y2Nlc3M7IGVsc2UgdGhlIGVycm9yIGNvZGUgaXMgcmV0dXJuZWQNCj4gKyAqLw0KPiAr
-aW50IGNtZHFfcGt0X3dyaXRlX3Moc3RydWN0IGNtZHFfcGt0ICpwa3QsIHBoeXNfYWRkcl90IGFk
-ZHIsIHUxNiByZWdfaWR4LA0KPiArCQkgICAgIHUzMiBtYXNrKTsNCj4gKw0KPiAgLyoqDQo+ICAg
-KiBjbWRxX3BrdF93ZmUoKSAtIGFwcGVuZCB3YWl0IGZvciBldmVudCBjb21tYW5kIHRvIHRoZSBD
-TURRIHBhY2tldA0KPiAgICogQHBrdDoJdGhlIENNRFEgcGFja2V0DQoNCg==
+Il giorno mar, 03/12/2019 alle 10.23 +0800, Ming Lei ha scritto:
+> On Fri, Nov 29, 2019 at 03:41:01PM +0100, Andrea Vai wrote:
+> > Il giorno ven, 29/11/2019 alle 10.35 +0800, Ming Lei ha scritto:
+> > > On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
+> > > 
+> > > > [...]
+> > > 
+> > > > Andrea, can you collect the following log when running the
+> test
+> > > > on current new(bad) kernel?
+> > > > 
+> > > > 	/usr/share/bcc/tools/stackcount  -K
+> blk_mq_make_request
+> > > 
+> > > Instead, please run the following trace, given insert may be
+> > > called from other paths, such as flush plug:
+> > > 
+> > > 	/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
+> > 
+> > Attached, for new (patched) bad kernel.
+> > 
+> > Produced by: start the trace script (with the pendrive already
+> > plugged), wait some seconds, run the test (1 trial, 1 GB), wait
+> for
+> > the test to finish, stop the trace.
+> > 
+> > The copy took ~1700 seconds.
+> 
+> See the two path[1][2] of inserting request, and path[1] is
+> triggered
+> 4358 times, and the path[2] is triggered 5763 times.
+> 
+> The path[2] is expected behaviour. Not sure path [1] is correct,
+> given
+> ext4_release_file() is supposed to be called when this inode is
+> released. That means the file is closed 4358 times during 1GB file
+> copying to usb storage.
+> 
+> Cc filesystem list.
+> 
+> 
+> [1] insert requests when returning to user mode from syscall
+> 
+>   b'blk_mq_sched_request_inserted'
+>   b'blk_mq_sched_request_inserted'
+>   b'dd_insert_requests'
+>   b'blk_mq_sched_insert_requests'
+>   b'blk_mq_flush_plug_list'
+>   b'blk_flush_plug_list'
+>   b'io_schedule_prepare'
+>   b'io_schedule'
+>   b'rq_qos_wait'
+>   b'wbt_wait'
+>   b'__rq_qos_throttle'
+>   b'blk_mq_make_request'
+>   b'generic_make_request'
+>   b'submit_bio'
+>   b'ext4_io_submit'
+>   b'ext4_writepages'
+>   b'do_writepages'
+>   b'__filemap_fdatawrite_range'
+>   b'ext4_release_file'
+>   b'__fput'
+>   b'task_work_run'
+>   b'exit_to_usermode_loop'
+>   b'do_syscall_64'
+>   b'entry_SYSCALL_64_after_hwframe'
+>     4358
+> 
+> [2] insert requests from writeback wq context
+> 
+>   b'blk_mq_sched_request_inserted'
+>   b'blk_mq_sched_request_inserted'
+>   b'dd_insert_requests'
+>   b'blk_mq_sched_insert_requests'
+>   b'blk_mq_flush_plug_list'
+>   b'blk_flush_plug_list'
+>   b'io_schedule_prepare'
+>   b'io_schedule'
+>   b'rq_qos_wait'
+>   b'wbt_wait'
+>   b'__rq_qos_throttle'
+>   b'blk_mq_make_request'
+>   b'generic_make_request'
+>   b'submit_bio'
+>   b'ext4_io_submit'
+>   b'ext4_bio_write_page'
+>   b'mpage_submit_page'
+>   b'mpage_process_page_bufs'
+>   b'mpage_prepare_extent_to_map'
+>   b'ext4_writepages'
+>   b'do_writepages'
+>   b'__writeback_single_inode'
+>   b'writeback_sb_inodes'
+>   b'__writeback_inodes_wb'
+>   b'wb_writeback'
+>   b'wb_workfn'
+>   b'process_one_work'
+>   b'worker_thread'
+>   b'kthread'
+>   b'ret_from_fork'
+>     5763
+> 
+> Thanks,
+> Ming
+> 
+
+Is there any update on this? Sorry if I am making noise, but I would
+like to help to improve the kernel (or fix it) if I can help.
+Otherwise, please let me know how to consider this case,
+
+Thanks, and bye
+Andrea
 
