@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3851DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826C1C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014BB205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C15A24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012483;
-	bh=2G+Ssin6Hdyto20sFdPBX7wJMIBffV857m+HMbLO2LM=;
+	s=default; t=1576012484;
+	bh=puIRiE8buRungqTMnVSyp89+O+XIRVd0ghEbEtscM90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySVDeLDX6HtvihAf7bX6E6cgT9bfDysuSO5J2qMwrJZC7yH2dQ4xjVwLE4dgMLcvW
-	 x7xHZ7Jg01s4dXyTeT05QkVMLLQjPgfHFOesl3Ht8Sm4nwAb73AlAKNBLkTu3X6i9F
-	 7ltpNnvwAKdSdC0V61RYlx8iKudQ8GFRtkYce6m8=
+	b=de4jnzm27ZcQRrrXjb+u1+RmekH7hCGeGHh+FPLqTOlzjAjNPMVmFRZSssfQ9/CJ5
+	 7y6ku4tak1A/HDqhpuo4Hl7imtJAl1qhAbdt5J3XTjBzdTkhyMehCAYjkCP1VMz4uE
+	 KdMI42HO94E3wt7HEvsOdmT4es+dvPC48u9aqlVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfLJVNt (ORCPT
+        id S1729366AbfLJVOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40398 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:14:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbfLJVNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:43 -0500
+        id S1728970AbfLJVNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED91222B48;
-        Tue, 10 Dec 2019 21:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A205920828;
+        Tue, 10 Dec 2019 21:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012422;
-        bh=2G+Ssin6Hdyto20sFdPBX7wJMIBffV857m+HMbLO2LM=;
+        s=default; t=1576012429;
+        bh=puIRiE8buRungqTMnVSyp89+O+XIRVd0ghEbEtscM90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNx/VThqi5A+XxPcWQGsv/f5JTeXPhUAVnIb6gM1jI8oQ1Lbldg+WdDgOPvgBJaoC
-         c2hy7PCZVDLOEoZyhoArT/qvBf2n3G32lLUiEoZ2FO4cZvDnLEbstDNDHWfr30LyYK
-         RUMABBRUR+8wEt5astdGCfeLO42KO6y1epdFvtUg=
+        b=JkG3L0EGR5b1KKienflle01k5xU6LM8rE48sMxXMYidwEuqUqRnlRhFa5Gt4tfqng
+         5uT9yhehGku498TcCIagYi4HDsJ4CxxJincctTDYOeOqCeYON8v8l/CzcH1Yf29o+H
+         Gh7+zjH45re3sVnSp8+t1hJ+e34H72Fph6VYBPg4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 337/350] drm/amdgpu: fix bad DMA from INTERRUPT_CNTL2
-Date:   Tue, 10 Dec 2019 16:07:22 -0500
-Message-Id: <20191210210735.9077-298-sashal@kernel.org>
+Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 343/350] tools, bpf: Fix build for 'make -s tools/bpf O=<dir>'
+Date:   Tue, 10 Dec 2019 16:07:28 -0500
+Message-Id: <20191210210735.9077-304-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,40 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit 3d0e3ce52ce3eb4b9de3caf9c38dbb5a4d3e13c3 ]
+[ Upstream commit a89b2cbf71d64b61e79bbe5cb7ff4664797eeaaf ]
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+Building selftests with 'make TARGETS=bpf kselftest' was fixed in commit
+55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine
+srctree"). However, by updating $(srctree) in tools/bpf/Makefile for
+in-tree builds only, we leave out the case where we pass an output
+directory to build BPF tools, but $(srctree) is not set. This
+typically happens for:
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
+    $ make -s tools/bpf O=/tmp/foo
+    Makefile:40: /tools/build/Makefile.feature: No such file or directory
 
-Fixes: 27ae10641e9c ("drm/amdgpu: add interupt handler implementation for si v3")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix it by updating $(srctree) in the Makefile not only for out-of-tree
+builds, but also if $(srctree) is empty.
+
+Detected with test_bpftool_build.sh.
+
+Fixes: 55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine srctree")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Link: https://lore.kernel.org/bpf/20191119105626.21453-1-quentin.monnet@netronome.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/si_ih.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/bpf/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
-index 57bb5f9e08b2d..88ae27a5a03db 100644
---- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
-@@ -64,7 +64,8 @@ static int si_ih_irq_init(struct amdgpu_device *adev)
- 	u32 interrupt_cntl, ih_cntl, ih_rb_cntl;
- 
- 	si_ih_disable_interrupts(adev);
--	WREG32(INTERRUPT_CNTL2, adev->irq.ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, adev->dummy_page_addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	interrupt_cntl &= ~IH_DUMMY_RD_OVERRIDE;
- 	interrupt_cntl &= ~IH_REQ_NONSNOOP_EN;
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index 5d1995fd369c6..5535650800ab2 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -16,7 +16,13 @@ CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
+ # isn't set and when invoked from selftests build, where srctree
+ # is set to ".". building_out_of_srctree is undefined for in srctree
+ # builds
++ifeq ($(srctree),)
++update_srctree := 1
++endif
+ ifndef building_out_of_srctree
++update_srctree := 1
++endif
++ifeq ($(update_srctree),1)
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
 -- 
 2.20.1
 
