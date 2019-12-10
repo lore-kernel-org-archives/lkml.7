@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27881C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90E3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFF1206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E43A214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017136;
-	bh=1GJLTD0YCq/aHKXPaGnQo20jDPP0aimF/HpTBL6vbnY=;
+	s=default; t=1576017140;
+	bh=P52QaYQYRzEDfJhAUcaMO3WYFhJuIDoGFFYgQMkcWy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmeqRAIn00GcfSt10Gk979UXJB5N9yOi3YGEHf1cO7+mORJuO1k2IJOVN/Gog3+yg
-	 CsP4gSz9r+s4XYFFSBCTb5o/FBCQD42qnm/htbOhn3dRRlYXoVXh0by6gJZ4F8Eh+E
-	 ReHZv/P9U+iMbZdOQjcB1nxooqo0jbAFkDsMrTRU=
+	b=A1OBE6yKDiTMdAqtXHnEoHx9VBYD41lV6YVDFKaLqWz2/5fpHOS6YXnImNDwGAuMV
+	 ZdtwoT1d5HHvgpQQQ5sjCmQGgwRtkVwD9jrt1sUIRkOroHM0YirhSBEaQXnOtWnshu
+	 DadckbUo4w2ujHMjnR7O//CM2wWSD09R7M3y6L9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfLJWcO (ORCPT
+        id S1729370AbfLJWcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729006AbfLJWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:56 -0500
+        id S1729055AbfLJWb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 434BE24653;
-        Tue, 10 Dec 2019 22:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF8B21D7D;
+        Tue, 10 Dec 2019 22:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017115;
-        bh=1GJLTD0YCq/aHKXPaGnQo20jDPP0aimF/HpTBL6vbnY=;
+        s=default; t=1576017118;
+        bh=P52QaYQYRzEDfJhAUcaMO3WYFhJuIDoGFFYgQMkcWy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9gORHs/K7SCGmO0H+G8yy/tFRjad/XZY+kdeQD7ok4gh/DBpdBV8Qjbf3XFXuee1
-         mz5OG01NvATsE0uHZvMjPk+kMyK56/D8GTHnnPmQZC+U8DCGaCkXN2z+WD5p7nsqKW
-         DwFz6W03JEQohjELWQ/od56n9+93+5qMSk5WDrfY=
+        b=P4m54EQprhnRLrMSQSsSWJSid+5i9DtkHsLEWtGjAIfKZ67NjMp4AP1bAZRKkapo1
+         tpLHDF1xxhGtwW+4NKQnLDEeAZYhCbfgkOGdBN+AktMeRnuMB7k0+tXeFB0TumkjY5
+         V1taZd1TkA4wkFw0bronhOLCnW4pNcebb7t94GxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 67/91] EDAC/ghes: Fix grain calculation
-Date:   Tue, 10 Dec 2019 17:30:11 -0500
-Message-Id: <20191210223035.14270-67-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 70/91] s390/disassembler: don't hide instruction addresses
+Date:   Tue, 10 Dec 2019 17:30:14 -0500
+Message-Id: <20191210223035.14270-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -63,93 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
+[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
 
-The current code to convert a physical address mask to a grain
-(defined as granularity in bytes) is:
+Due to kptr_restrict, JITted BPF code is now displayed like this:
 
-	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
+000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
+00000000fbad41b0: a7fbffa0      aghi    %r15,-96
 
-This is broken in several ways:
+Leaking kernel addresses to dmesg is not a concern in this case, because
+this happens only when JIT debugging is explicitly activated, which only
+root can do.
 
-1) It calculates to wrong grain values. E.g., a physical address mask
-of ~0xfff should give a grain of 0x1000. Without considering
-PAGE_MASK, there is an off-by-one. Things are worse when also
-filtering it with ~PAGE_MASK. This will calculate to a grain with the
-upper bits set. In the example it even calculates to ~0.
+Use %px in this particular instance, and also to print an instruction
+address in show_code and PCREL (e.g. brasl) arguments in print_insn.
+While at present functionally equivalent to %016lx, %px is recommended
+by Documentation/core-api/printk-formats.rst for such cases.
 
-2) The grain does not depend on and is unrelated to the kernel's
-page-size. The page-size only matters when unmapping memory in
-memory_failure(). Smaller grains are wrongly rounded up to the
-page-size, on architectures with a configurable page-size (e.g. arm64)
-this could round up to the even bigger page-size of the hypervisor.
-
-Fix this with:
-
-	e->grain = ~mem_err->physical_addr_mask + 1;
-
-The grain_bits are defined as:
-
-	grain = 1 << grain_bits;
-
-Change also the grain_bits calculation accordingly, it is the same
-formula as in edac_mc.c now and the code can be unified.
-
-The value in ->physical_addr_mask coming from firmware is assumed to
-be contiguous, but this is not sanity-checked. However, in case the
-mask is non-contiguous, a conversion to grain_bits effectively
-converts the grain bit mask to a power of 2 by rounding it up.
-
-Suggested-by: James Morse <james.morse@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ghes_edac.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/s390/kernel/dis.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index e3fa4390f8460..4ddbf6604e2ab 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -189,6 +189,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
- 	/* Cleans the error report buffer */
- 	memset(e, 0, sizeof (*e));
- 	e->error_count = 1;
-+	e->grain = 1;
- 	strcpy(e->label, "unknown label");
- 	e->msg = pvt->msg;
- 	e->other_detail = pvt->other_detail;
-@@ -284,7 +285,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
- 
- 	/* Error grain */
- 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
--		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-+		e->grain = ~mem_err->physical_addr_mask + 1;
- 
- 	/* Memory error location, mapped on e->location */
- 	p = e->location;
-@@ -391,8 +392,13 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
- 	if (p > pvt->other_detail)
- 		*(p - 1) = '\0';
- 
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
+diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
+index aaf9dab3c1933..f9dca1aed9a4b 100644
+--- a/arch/s390/kernel/dis.c
++++ b/arch/s390/kernel/dis.c
+@@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
+ 				ptr += sprintf(ptr, "%%c%i", value);
+ 			else if (operand->flags & OPERAND_VR)
+ 				ptr += sprintf(ptr, "%%v%i", value);
+-			else if (operand->flags & OPERAND_PCREL)
+-				ptr += sprintf(ptr, "%lx", (signed int) value
+-								      + addr);
+-			else if (operand->flags & OPERAND_SIGNED)
++			else if (operand->flags & OPERAND_PCREL) {
++				void *pcrel = (void *)((int)value + addr);
 +
-+	grain_bits = fls_long(e->grain - 1);
-+
- 	/* Generate the trace event */
--	grain_bits = fls_long(e->grain);
- 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
- 		 "APEI location: %s %s", e->location, e->other_detail);
- 	trace_mc_event(type, e->msg, e->label, e->error_count,
++				ptr += sprintf(ptr, "%px", pcrel);
++			} else if (operand->flags & OPERAND_SIGNED)
+ 				ptr += sprintf(ptr, "%i", value);
+ 			else
+ 				ptr += sprintf(ptr, "%u", value);
+@@ -2005,7 +2006,7 @@ void show_code(struct pt_regs *regs)
+ 		else
+ 			*ptr++ = ' ';
+ 		addr = regs->psw.addr + start - 32;
+-		ptr += sprintf(ptr, "%016lx: ", addr);
++		ptr += sprintf(ptr, "%px: ", (void *)addr);
+ 		if (start + opsize >= end)
+ 			break;
+ 		for (i = 0; i < opsize; i++)
+@@ -2033,7 +2034,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
+ 		opsize = insn_length(*code);
+ 		if (opsize > len)
+ 			break;
+-		ptr += sprintf(ptr, "%p: ", code);
++		ptr += sprintf(ptr, "%px: ", code);
+ 		for (i = 0; i < opsize; i++)
+ 			ptr += sprintf(ptr, "%02x", code[i]);
+ 		*ptr++ = '\t';
 -- 
 2.20.1
 
