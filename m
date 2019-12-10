@@ -2,132 +2,98 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C82C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF49AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79193206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A82B20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575948709;
+	bh=SK9zlfAidZcR8wXbm7RRCApD4saMH6Z/ATfM1G4weYc=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=m01kJ40lI+FPiiXhjbylzbCIjJKQH7LlPufyH7juJVqQ2W3gZeSCcq8PGz5FYsars
+	 4WQHt+aHb8Iiwhf7ObVEt68Y1xAIwYafp7KBxi8KRGRhdZCYHOfGFcQpPuYNuU154a
+	 fwNSRfLPKse1SbGsydv7CqklN/DI1tMHQkjFeKuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLJD11 (ORCPT
+        id S1726819AbfLJDbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:27:27 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9814 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726637AbfLJD1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:27:24 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBA3RALt003622
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Dec 2019 22:27:23 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsknab5m8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 22:27:23 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 10 Dec 2019 03:27:21 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 03:27:16 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBA3RFfO44630442
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 03:27:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7358552051;
-        Tue, 10 Dec 2019 03:27:15 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id BACC15204E;
-        Tue, 10 Dec 2019 03:27:12 +0000 (GMT)
-Date:   Tue, 10 Dec 2019 08:57:12 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
+        Mon, 9 Dec 2019 22:31:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbfLJDbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 22:31:47 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55F1F206E0;
+        Tue, 10 Dec 2019 03:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575948707;
+        bh=SK9zlfAidZcR8wXbm7RRCApD4saMH6Z/ATfM1G4weYc=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=hnvSDakzl3sAYuFKLcZYxQ5gFZ8psJrwDkQRCnYagO0lE5sRsEHBM5uHJX5jJmCRT
+         0TP2kLSLQ90MwYTSbkXGTe0yCJwzJxR17ni4La1H6iYlWhcP1MlE9AzvSpnNf+Q0SY
+         heSXFwYKGnguP5X8kUYcMo1Km3fWi1+CSIWzoj2E=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7B0433522768; Mon,  9 Dec 2019 19:31:46 -0800 (PST)
+Date:   Mon, 9 Dec 2019 19:31:46 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     jon.maloy@ericsson.com, ying.xue@windriver.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        torvalds@linux-foundation.org, mingo@kernel.org, kernel-team@fb.com
+Subject: [PATCH net/tipc] Replace rcu_swap_protected() with
+ rcu_replace_pointer()
+Message-ID: <20191210033146.GA32522@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209231743.GA19256@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19121003-4275-0000-0000-0000038D7597
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121003-4276-0000-0000-000038A124D9
-Message-Id: <20191210032712.GE27253@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_05:2019-12-09,2019-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=964 spamscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100030
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dave Chinner <david@fromorbit.com> [2019-12-10 10:17:43]:
+This commit replaces the use of rcu_swap_protected() with the more
+intuitively appealing rcu_replace_pointer() as a step towards removing
+rcu_swap_protected().
 
-> On Mon, Dec 09, 2019 at 10:21:22PM +0530, Srikar Dronamraju wrote:
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 44123b4d14e8..efd740aafa17 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -2664,7 +2664,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-> >   */
-> >  int wake_up_process(struct task_struct *p)
-> >  {
-> > -	return try_to_wake_up(p, TASK_NORMAL, 0);
-> > +	int wake_flags = 0;
-> > +
-> > +	if (is_per_cpu_kthread(p))
-> > +		wake_flags = WF_KTHREAD;
-> > +
-> > +	return try_to_wake_up(p, TASK_NORMAL, WF_KTHREAD);
-> 
-> This is buggy. It always sets WF_KTHREAD, even for non-kernel
-> processes. I think you meant:
-> 
-> 	return try_to_wake_up(p, TASK_NORMAL, wake_flags);
+Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Jon Maloy <jon.maloy@ericsson.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: <netdev@vger.kernel.org>
+Cc: <tipc-discussion@lists.sourceforge.net>
 
-Yes, I meant the above. Thanks for catching.
-Will test with this and repost.
-
-> 
-> I suspect this bug invalidates the test results presented, too...
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-
--- 
-Thanks and Regards
-Srikar Dronamraju
-
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index 990a872..64cf831 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -258,7 +258,7 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
+ 	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
+ 
+ #define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
+-	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
++	rcu_replace_pointer((rcu_ptr), (ptr), lockdep_is_held(lock))
+ 
+ #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
+ do {									\
+@@ -1189,7 +1189,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
+ 
+ 	/* Move passive key if any */
+ 	if (key.passive) {
+-		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
++		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, &rx->lock);
+ 		x = (key.passive - key.pending + new_pending) % KEY_MAX;
+ 		new_passive = (x <= 0) ? x + KEY_MAX : x;
+ 	}
