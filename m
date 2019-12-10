@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7399FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471C1214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A05F20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017144;
-	bh=x3aG7lm2+c8CM6MgbuvFVGF/tQTmsmjJE5Xxk9vXbg4=;
+	s=default; t=1576017149;
+	bh=rjSfrTk6hccsxIsy5t+vFA2js1jYVgkiV+mzv5rSymM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jut02Yh/S230CtMXcbpNxOQ1KKHRbhRVeINeN+EMuHUABcZjXKBvDZrji6e73Pgkh
-	 dVddkYOgzCyzWw2bW2pd2svnQHS8piDYDDXRISWYFtedUkFZhkqLfdUozMqQpPz4Qz
-	 8k5YUC3TX0zBoDGLQeIkQNaYaPwlUnN4RJsSHE2g=
+	b=glGcsKYui23yN8917GFV45HTh1AURhm9QUiu+oiLplmmDo721bmg0TYABbCa25POi
+	 d7Lh3DEB/NjDfj7BWBjO/QCbz3B0XU2hcAbhLetyuxEcEAPdySqNz/cHYQzVaT/Unk
+	 LnjdqNeDvbb7AegMippB5QPMRsXJjrKaUbdHtz3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfLJWcX (ORCPT
+        id S1729504AbfLJWc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbfLJWcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:01 -0500
+        id S1727606AbfLJWcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CB420828;
-        Tue, 10 Dec 2019 22:32:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1A8A24653;
+        Tue, 10 Dec 2019 22:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017120;
-        bh=x3aG7lm2+c8CM6MgbuvFVGF/tQTmsmjJE5Xxk9vXbg4=;
+        s=default; t=1576017128;
+        bh=rjSfrTk6hccsxIsy5t+vFA2js1jYVgkiV+mzv5rSymM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOe66+B6kEKgo5sLFtCC+bq6fjBimDLmWWFXcYiDbJCxvevm3EB/v4ojI3AKm/+mh
-         dH046yFgHsndzDrS6F0shMl/YNQqOGd76ITczYtFiEDI8wMld8jNMfHAh/C+MQ2Fxf
-         oskfupvH198Tc8DKUiFVQDW6Dn+LZJwk7j4o1z64=
+        b=yoCu+lQzfdghVqhGkN8+90T5yA4h61w45i4u8slxWBg0Xd6+3GL/FimP8u1VEI+nd
+         k3bLgODc78Un0WP4ns7c3XbpKJDsErIpmx1iRgkIFEJPub+MCfM0QoyJvKcUAwwOYt
+         xLNAgma6c0qK5fO7J7XIgICpmQL4gkopgoSFBGbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 72/91] parport: load lowlevel driver if ports not found
-Date:   Tue, 10 Dec 2019 17:30:16 -0500
-Message-Id: <20191210223035.14270-72-sashal@kernel.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 78/91] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
+Date:   Tue, 10 Dec 2019 17:30:22 -0500
+Message-Id: <20191210223035.14270-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,70 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
+[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
 
-Usually all the distro will load the parport low level driver as part
-of their initialization. But we can get into a situation where all the
-parallel port drivers are built as module and we unload all the modules
-at a later time. Then if we just do "modprobe parport" it will only
-load the parport module and will not load the low level driver which
-will actually register the ports. So, check the bus if there is any
-parport registered, if not, load the low level driver.
+Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
+adding MMC_CAP_ERASE to the TMIO mmc core:
 
-We can get into the above situation with all distro but only Suse has
-setup the alias for "parport_lowlevel" and so it only works in Suse.
-Users of Debian based distro will need to load the lowlevel module
-manually.
+On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
+ -- snip --
+ This test and due to the discussions with Wolfram and you in this
+ thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+ tmio variants, rather than just for this particular one.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ In other words, set the cap in tmio_mmc_host_probe() should be fine,
+ as it seems none of the tmio variants supports HW busy detection at
+ this point.
+ -- snip --
+
+Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
+
+root@rcar-gen3:~# lsblk
+NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
+mmcblk0boot0 179:8    0    4M  1 disk
+mmcblk0boot1 179:16   0    4M  1 disk
+mmcblk1      179:24   0   30G  0 disk  <--- SD card
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
+real    0m8.659s
+user    0m0.001s
+sys     0m1.920s
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
+real    0m1.176s
+user    0m0.001s
+sys     0m0.124s
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/mmc/host/tmio_mmc_pio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index daa2eb3050df3..a7ceed7182acb 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -230,6 +230,18 @@ static int port_check(struct device *dev, void *dev_drv)
- 	return 0;
- }
+diff --git a/drivers/mmc/host/tmio_mmc_pio.c b/drivers/mmc/host/tmio_mmc_pio.c
+index 0fc1f73b0d237..3e025766181b9 100644
+--- a/drivers/mmc/host/tmio_mmc_pio.c
++++ b/drivers/mmc/host/tmio_mmc_pio.c
+@@ -1076,7 +1076,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host,
+ 	tmio_mmc_ops.start_signal_voltage_switch = _host->start_signal_voltage_switch;
+ 	mmc->ops = &tmio_mmc_ops;
  
-+/*
-+ * Iterates through all the devices connected to the bus and return 1
-+ * if the device is a parallel port.
-+ */
-+
-+static int port_detect(struct device *dev, void *dev_drv)
-+{
-+	if (is_parport(dev))
-+		return 1;
-+	return 0;
-+}
-+
- /**
-  *	parport_register_driver - register a parallel port device driver
-  *	@drv: structure describing the driver
-@@ -282,6 +294,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
- 		if (ret)
- 			return ret;
- 
-+		/*
-+		 * check if bus has any parallel port registered, if
-+		 * none is found then load the lowlevel driver.
-+		 */
-+		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-+				       port_detect);
-+		if (!ret)
-+			get_lowlevel_driver();
-+
- 		mutex_lock(&registration_lock);
- 		if (drv->match_port)
- 			bus_for_each_dev(&parport_bus_type, NULL, drv,
+-	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
++	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+ 	mmc->caps2 |= pdata->capabilities2;
+ 	mmc->max_segs = 32;
+ 	mmc->max_blk_size = 512;
 -- 
 2.20.1
 
