@@ -7,51 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319FDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D02C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D555B20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322D5214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017058;
-	bh=AHUNbmppfEpP+t+XO42kmTgb66/uWoJiiZ5QJVUfK80=;
+	s=default; t=1576017061;
+	bh=wcFbWOkMfUYvWT1xFdFjskMwASESJIhFheQC/bZDhyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTDoN0N1tpR8ioYC5e+MCKfNZl92gE50Q1PrAH56i4HOJyPmWAuORbNMXylfG23FK
-	 ySwlwA94Q2mx4v7ZwmzEEvHN2k/H/m9jbKBO/T/QMHFb4YPPOFSgsRe0JoUQv/s5xn
-	 C2ZVKduf2vq357EPuAel/t1xLgmO7Olj/AR48r1I=
+	b=hm/VJC2Z3HDSpnlbhaNwJVejzjJBOObVBifLiqQB/m98oeIoT4xZE33pSPnmF6+bu
+	 ZvNgRxxdq8eEttMO1MsuSQ4CjB4tnY3+99qwupAsywUW+xvN3JUaykpxO7MHHna8BO
+	 Csbr7JcXTuiVabBqFdEEPEMLEtJkQSCOXTBI1Y04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfLJWa4 (ORCPT
+        id S1727758AbfLJWbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfLJWax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:53 -0500
+        id S1727678AbfLJWa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB64208C3;
-        Tue, 10 Dec 2019 22:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41332077B;
+        Tue, 10 Dec 2019 22:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017052;
-        bh=AHUNbmppfEpP+t+XO42kmTgb66/uWoJiiZ5QJVUfK80=;
+        s=default; t=1576017057;
+        bh=wcFbWOkMfUYvWT1xFdFjskMwASESJIhFheQC/bZDhyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNnqU687R4TayBr+/ZYHeBehpM1WlXnLuzdJHPlYIz8i2O1sS+NtonFGRRVodtMZO
-         OHg/Pjsufu6CZhtl1lhRkMXtYhQSzywhMRgcu0G7szIHpFrvEGn3uWkOUEyjggURtC
-         jXokIcJOZr6hjTpAUtfRlP68lkADtB3h43Fdk8xY=
+        b=TLJcDqU8tUALT5iBIWbXM5GBYuBnhUeOnGrIFNnWshh6E9zRaeUqopYGmVLXnGXy4
+         Ik4WFrjZ4qJyMnHfQS8OxG442hutNCxOhNgF9UpvzRnPltKtJvVWBcLe2ll/oY9xC8
+         IkeBeW2tWMXB8Fd7Z2bG9XNEskDwHxOP3SX5dCK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/91] media: i2c: ov2659: Fix missing 720p register config
-Date:   Tue, 10 Dec 2019 17:29:18 -0500
-Message-Id: <20191210223035.14270-14-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 18/91] hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not idled
+Date:   Tue, 10 Dec 2019 17:29:22 -0500
+Message-Id: <20191210223035.14270-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
+[ Upstream commit eaecce12f5f0d2c35d278e41e1bc4522393861ab ]
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+When unloading omap3-rom-rng, we'll get the following:
 
-This was not done properly for the 720p case.
+WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This is because the clock may be already disabled by omap3_rom_rng_idle().
+Let's fix the issue by checking for rng_idle on exit.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 49196afd15a8a..ade3c48e2e0cf 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
+diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
+index 37a58d78aab31..3324a7f4bee37 100644
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -114,7 +114,8 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
+ {
+ 	cancel_delayed_work_sync(&idle_work);
+ 	hwrng_unregister(&omap3_rom_rng_ops);
+-	clk_disable_unprepare(rng_clk);
++	if (!rng_idle)
++		clk_disable_unprepare(rng_clk);
+ 	return 0;
+ }
  
 -- 
 2.20.1
