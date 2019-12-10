@@ -2,125 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB94C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F78C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A902073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839332073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLJK7v (ORCPT
+        id S1727349AbfLJK7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:59:51 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7658 "EHLO huawei.com"
+        Tue, 10 Dec 2019 05:59:52 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726915AbfLJK7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727227AbfLJK7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 05:59:51 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 76933FF6CC4C6D65F05D;
-        Tue, 10 Dec 2019 18:59:49 +0800 (CST)
-Received: from localhost.localdomain (10.90.53.225) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 10 Dec 2019 18:59:42 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <oded.gabbay@gmail.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <rppt@linux.ibm.com>,
-        <ttayar@habana.ai>, <oshpigelman@habana.ai>, <dbenzoor@habana.ai>,
-        <linux-kernel@vger.kernel.org>
-CC:     <chenwandun@huawei.com>
-Subject: [PATCH] habanalabs: remove variable 'val' set but not used
-Date:   Tue, 10 Dec 2019 19:06:56 +0800
-Message-ID: <1575976016-110900-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.7.4
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 7663FC5F3FC24E60EDEE;
+        Tue, 10 Dec 2019 10:59:50 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Dec 2019 10:59:50 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
+ 2019 10:59:49 +0000
+Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
+ for managed interrupt
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Ming Lei <ming.lei@redhat.com>, <tglx@linutronix.de>,
+        <chenxiang66@hisilicon.com>, <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <hare@suse.com>, <hch@lst.de>,
+        <axboe@kernel.dk>, <bvanassche@acm.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>
+References: <1575642904-58295-1-git-send-email-john.garry@huawei.com>
+ <1575642904-58295-2-git-send-email-john.garry@huawei.com>
+ <20191207080335.GA6077@ming.t460p>
+ <78a10958-fdc9-0576-0c39-6079b9749d39@huawei.com>
+ <20191210014335.GA25022@ming.t460p>
+ <28424a58-1159-c3f9-1efb-f1366993afcf@huawei.com>
+ <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <ce1b93c6-8ff9-6106-84af-909ec52d49e5@huawei.com>
+Date:   Tue, 10 Dec 2019 10:59:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
+In-Reply-To: <048746c22898849d28985c0f65cf2c2a@www.loen.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/misc/habanalabs/goya/goya.c: In function goya_pldm_init_cpu:
-drivers/misc/habanalabs/goya/goya.c:2195:6: warning: variable val set but not used [-Wunused-but-set-variable]
-drivers/misc/habanalabs/goya/goya.c: In function goya_hw_init:
-drivers/misc/habanalabs/goya/goya.c:2505:6: warning: variable val set but not used [-Wunused-but-set-variable]
+>>
+>> There is no lockup, just a potential performance boost in this change.
+>>
+>> My colleague Xiang Chen can provide specifics of the test, as he is
+>> the one running it.
+>>
+>> But one key bit of info - which I did not think most relevant before
+>> - that is we have 2x SAS controllers running the throughput test on
+>> the same host.
+>>
+>> As such, the completion queue interrupts would be spread identically
+>> over the CPUs for each controller. I notice that ARM GICv3 ITS
+>> interrupt controller (which we use) does not use the generic irq
+>> matrix allocator, which I think would really help with this.
+>>
+>> Hi Marc,
+>>
+>> Is there any reason for which we couldn't utilise of the generic irq
+>> matrix allocator for GICv3?
+> 
 
-Fixes: 9494a8dd8d22 ("habanalabs: add h/w queues module")
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
----
- drivers/misc/habanalabs/goya/goya.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Hi Marc,
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index c8d16aa..7344e8a 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2192,7 +2192,7 @@ static int goya_push_linux_to_device(struct hl_device *hdev)
- 
- static int goya_pldm_init_cpu(struct hl_device *hdev)
- {
--	u32 val, unit_rst_val;
-+	u32 unit_rst_val;
- 	int rc;
- 
- 	/* Must initialize SRAM scrambler before pushing u-boot to SRAM */
-@@ -2200,14 +2200,14 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
- 
- 	/* Put ARM cores into reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL, CPU_RESET_ASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	/* Reset the CA53 MACRO */
- 	unit_rst_val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, CA53_RESET);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, unit_rst_val);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 
- 	rc = goya_push_uboot_to_device(hdev);
- 	if (rc)
-@@ -2228,7 +2228,7 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
- 	/* Release ARM core 0 from reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL,
- 					CPU_RESET_CORE0_DEASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	return 0;
- }
-@@ -2502,13 +2502,12 @@ int goya_mmu_init(struct hl_device *hdev)
- static int goya_hw_init(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	u32 val;
- 	int rc;
- 
- 	dev_info(hdev->dev, "Starting initialization of H/W\n");
- 
- 	/* Perform read from the device to make sure device is up */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	/*
- 	 * Let's mark in the H/W that we have reached this point. We check
-@@ -2560,7 +2559,7 @@ static int goya_hw_init(struct hl_device *hdev)
- 		goto disable_queues;
- 
- 	/* Perform read from the device to flush all MSI-X configuration */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	return 0;
- 
--- 
-2.7.4
+> For a start, the ITS code predates the matrix allocator by about three
+> years. Also, my understanding of this allocator is that it allows
+> x86 to cope with a very small number of possible interrupt vectors
+> per CPU. The ITS doesn't have such issue, as:
+> 
+> 1) the namespace is global, and not per CPU
+> 2) the namespace is *huge*
+> 
+> Now, what property of the matrix allocator is the ITS code missing?
+> I'd be more than happy to improve it.
 
+I think specifically the property that the matrix allocator will try to 
+find a CPU for irq affinity which "has the lowest number of managed IRQs 
+allocated" - I'm quoting the comment on matrix_find_best_cpu_managed().
+
+The ITS code will make the lowest online CPU in the affinity mask the 
+target CPU for the interrupt, which may result in some CPUs handling so 
+many interrupts.
+
+Thanks,
+John
