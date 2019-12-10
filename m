@@ -2,146 +2,80 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06E1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0475BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04FF2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C362073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfLJMwg convert rfc822-to-8bit (ORCPT
+        id S1727370AbfLJMyf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:52:36 -0500
-Received: from mail-oln040092253070.outbound.protection.outlook.com ([40.92.253.70]:18084
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727131AbfLJMwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:52:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OQbaM9e5uBxodnO0N2DbOzssO60ZL89Azi8rqE2BGc4dem4c1aK6t0Sncdm2wi8gvZ8SJd0mnbBL4VipdYWoVyvhUeH6V4ckD/Abx/HcJTPhQswmuImNzZ+oVUWGVMrhl5KWSDHEMLnJlZyAwKk1mMsc3qa3nbCIc2idAGnnhJIMuP7/iRHK+kcI9WmwuZ1GPXVaRHrybMijMZemnH1xcKtAe+QFvuC60heHUcciuj+Iix4CdFxRnuf6r7/F9WpLQaRaVgNw0qXtuQMoaqfYGYf0oO/FJFbAWjLsNGJqq9FatiAhlvumpXQyhINTt7S9T7XAjfTrzUJgD4UjGawvgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Udk/pGGZTG+tDX7ddrXE2H7K0bDjgFcjAYANpzoaRHs=;
- b=V4H991gOF1Oj/gV3i0OsGbV6xICBW1C7E+0lhZM6HMJt+o8MGLNG1ICcDYCNh1qOvr17KHnZ+U9pLH70SW58Z/Jg5A5Z1QETH9+rV6Tmd+ET24MLQsBe6XESm92vOvYltysTBWzxSatVwsEV6D71csJh0aBvazvS15nbjSlAGw1lapXyJ9MjSeRYetERkNd1do/54IXFOSn9pybits507u0nL0AnTUmLQarYL7M1AlHRzbtp+dNulcq6bfjrhmlQYed/jQKoPXOJyhDwOt6V3cL5lE4YMvdQLy55IOkzRIR7Z2+Hda3Y1VuNTPZHI61VJvs8+/bH3uOM5f9cSAEqOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT106.eop-APC01.prod.protection.outlook.com
- (10.152.248.55) by HK2APC01HT148.eop-APC01.prod.protection.outlook.com
- (10.152.249.170) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Tue, 10 Dec
- 2019 12:52:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.52) by
- HK2APC01FT106.mail.protection.outlook.com (10.152.249.181) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.25 via Frontend Transport; Tue, 10 Dec 2019 12:52:30 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2516.018; Tue, 10 Dec
- 2019 12:52:30 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "tiwai@suse.de" <tiwai@suse.de>
-Subject: Re: Linux v5.5 serious PCI bug
-Thread-Topic: Linux v5.5 serious PCI bug
-Thread-Index: AQHVrozxq7Q7SfMf80m5ItEmvTDCAqexx4+AgAAF4YCAASwpAIAATBAAgAAIOoCAAAZVgA==
-Date:   Tue, 10 Dec 2019 12:52:30 +0000
-Message-ID: <PSXP216MB04382AFE08EAC9E3D7BB190E805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191209131239.GP2665@lahna.fi.intel.com>
- <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191210072800.GY2665@lahna.fi.intel.com>
- <PSXP216MB04384F89D9D9DDA6999347CF805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191210122941.zzybs4z5jphpjsu2@wunner.de>
-In-Reply-To: <20191210122941.zzybs4z5jphpjsu2@wunner.de>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SY4P282CA0012.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:a0::22) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:3E776928496272AEC0437930044BFDEC396E6BFE29A1DC25F2EB446BAE08F92C;UpperCasedChecksum:BF18C1BF94ACF765AA95042115FB67E159505D19FD27059C0AA56C76D459A0AD;SizeAsReceived:7980;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [RPXDFIKaM2bbipOWDjzuehCjcYQcHz/l3gq05f1BRWhH4jxikfFS4QsT4xdvAHV+Lha5sUfQBMo=]
-x-microsoft-original-message-id: <20191210125218.GA2390@nicholas-usb>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: c4f99184-0c02-48b7-0c18-08d77d6fd160
-x-ms-traffictypediagnostic: HK2APC01HT148:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w5gUwVgnQhl0FmXVvVcZ3GzkvzCx4qGmsCZtVJnm7yS99xl2qIEVZ0cO4VnjMI+nlv6G1GPaKrie65bq8cFN1s3B0+8K2Bt2QTf92yBXAeBMSgc5UVylkKhTGHuXtOUhV6BZTtAAyjJz2wZB5jiK5POvj0AKfgEju7X8MMApixOA6bnFv0BqiSy4iHEEbcYZ
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7A63601F34FFC44EA9A5257000013AC0@KORP216.PROD.OUTLOOK.COM>
+        Tue, 10 Dec 2019 07:54:35 -0500
+Received: from mxout017.mail.hostpoint.ch ([217.26.49.177]:52618 "EHLO
+        mxout017.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727131AbfLJMye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 07:54:34 -0500
+Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
+        by mxout017.mail.hostpoint.ch with esmtp (Exim 4.92.3 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1ief1x-000Mw2-Mt; Tue, 10 Dec 2019 13:54:21 +0100
+Received: from [83.150.60.147] (helo=[10.167.67.21])
+        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3 (FreeBSD))
+        (envelope-from <sandro@volery.com>)
+        id 1ief1x-0001ma-Ja; Tue, 10 Dec 2019 13:54:21 +0100
+X-Authenticated-Sender-Id: sandro@volery.com
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4f99184-0c02-48b7-0c18-08d77d6fd160
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 12:52:30.7027
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT148
+From:   Sandro Volery <sandro@volery.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH 1/2] staging: octeon: delete driver
+Date:   Tue, 10 Dec 2019 13:54:19 +0100
+Message-Id: <AF642334-CD43-417E-B924-D59517D21E2D@volery.com>
+References: <20191210120120.GA3779155@kroah.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        David Daney <ddaney@caviumnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Florian Westphal <fw@strlen.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Branden Bonaby <brandonbonaby94@gmail.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Paul Burton <paulburton@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Giovanni Gherdovich <bobdc9664@seznam.cz>,
+        Valery Ivanov <ivalery111@gmail.com>
+In-Reply-To: <20191210120120.GA3779155@kroah.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:29:41PM +0100, Lukas Wunner wrote:
-> [cc += Alex, Takashi]
-> 
-> On Tue, Dec 10, 2019 at 12:00:23PM +0000, Nicholas Johnson wrote:
-> > On Tue, Dec 10, 2019 at 09:28:00AM +0200, mika.westerberg@linux.intel.com wrote:
-> > > On Mon, Dec 09, 2019 at 01:33:49PM +0000, Nicholas Johnson wrote:
-> > > > On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
-> > > > > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
-> > > > > > I have compiled Linux v5.5-rc1 and thought all was good until I 
-> > > > > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
-> > > > > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
-> > > > > > GPU driver.
-> > > > > > 
-> > > > > > We had:
-> > > > > > - kernel NULL pointer dereference
-> > > > > > - refcount_t: underflow; use-after-free.
-> > 
-> > The following is the culprit responsible for the issues:
-> > 
-> > commit 586bc4aab878efcf672536f0cdec3d04b6990c94
-> > Author: Alex Deucher <alexander.deucher@amd.com>
-> > Date:   Fri Nov 22 16:43:50 2019 -0500
-> > 
-> >     ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD
-> 
-> Does the below fix the issue?
-> 
-> -- >8 --
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 35b4526f0d28..b856b89378ac 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
->  				return true;
->  			}
->  		}
-> -		pci_dev_put(pdev);
->  	}
->  	return false;
->  }
-Yes, removing the pci_dev_put() as above solves the issue.
 
-Thanks.
+Well if documentation is missing then it's their fault.. 
+Go ahead and delete it, even tho it kills me since my first 
+patch was in there :)
 
-Kind regards,
-Nicholas.
+Sandro V
+
+> On 10 Dec 2019, at 13:01, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> 
+> ﻿On Tue, Dec 10, 2019 at 12:40:54PM +0100, Sandro Volery wrote:
+>> Doesn't octeon have drivers out of staging already?
+>> What is this module for?
+> 
+> I have no idea :(
+> 
+
