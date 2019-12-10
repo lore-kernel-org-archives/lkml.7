@@ -2,53 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA624C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF25C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757CE246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80F7246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012272;
-	bh=4AT+BhJk04uH2Tcdyxf4+IP04hgHCY4zWu3WRrHazF0=;
+	s=default; t=1576012277;
+	bh=SiUpEET3u+eXnAzJ/9n1WjoyrMjKh998f7eWCTivKz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uT6LMF+lVJYlsdhIU15VcFyO2nfNLq6Xx8zP+zK9HeJ5XlSnHyReJEjCB6BYzyBLn
-	 gUzEUqsqBUjNLGVumlF4581WtsULMA8xm+CHOMe/+fvAiCNeJdb2EIJukyBXlAXXcH
-	 Nx6Ac+puSf7zJUaA3Un+aoPQlYWKAHj+ZGHGiC3g=
+	b=th314bpxsQDUEb5ETfKYYYn3ex2japOUtqgPSwDEHaNE4tU9twg+o5khiPHLtMIRa
+	 wUmnWTXtrp9FL1BTLhCvWqCtPnhf8rcYCAspxbBWnFWxDTgvfqNQFmP4y035TEjsgW
+	 DbA4N/BwAjFUe2m8klw/X0Gb5gd5ZC8x59Xr0Y98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfLJVLL (ORCPT
+        id S1728749AbfLJVLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfLJVLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:00 -0500
+        id S1728358AbfLJVLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9241B246B8;
-        Tue, 10 Dec 2019 21:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60266246A2;
+        Tue, 10 Dec 2019 21:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012259;
-        bh=4AT+BhJk04uH2Tcdyxf4+IP04hgHCY4zWu3WRrHazF0=;
+        s=default; t=1576012266;
+        bh=SiUpEET3u+eXnAzJ/9n1WjoyrMjKh998f7eWCTivKz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fziFEhL0rEKr08sgpZ/w3Ha1aiwS8uDZgXMnOyWheyn+4ZKHTE5ZFMHt2Io6mZRX5
-         3ItYlQAVmcX1ztNAY5eYKyPjl2P13ve7A7pbntB/uoiK2nazvWtkzMcC5/oWF9B8Zd
-         wx3sdrX1BldUpVWCqsn3XqsuqHOWcVEt3hvsFlVA=
+        b=pz941lXcXFdTminYKZyNg1q0sow0yaAcuWsX/6ednGo0+sfdzYahP9xyq9T1MCSWQ
+         wkTjpBeR3U033tLccO2nWUecLFiGyW4MNYUimhb5qFqE/VbgUfA3Btifx1CNLV//m3
+         qfw4hJfPtQ4i4AbvDfWl4+ZkX14ZMqucAMLwK0bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 205/350] media: staging/imx: Use a shorter name for driver
-Date:   Tue, 10 Dec 2019 16:05:10 -0500
-Message-Id: <20191210210735.9077-166-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 211/350] rfkill: allocate static minor
+Date:   Tue, 10 Dec 2019 16:05:16 -0500
+Message-Id: <20191210210735.9077-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,56 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit ce22c6f242b6d7b5e0318da2c92b5b00b5bbc698 ]
+[ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
 
-Currently v4l2-compliance tool returns the following output:
+udev has a feature of creating /dev/<node> device-nodes if it finds
+a devnode:<node> modalias. This allows for auto-loading of modules that
+provide the node. This requires to use a statically allocated minor
+number for misc character devices.
 
-Compliance test for imx-media-captu device /dev/video0:
+However, rfkill uses dynamic minor numbers and prevents auto-loading
+of the module. So allocate the next static misc minor number and use
+it for rfkill.
 
-Driver Info:
-        Driver name      : imx-media-captu
-        Card type        : imx-media-capture
-...
-
-The driver name string is limited to 16 characters, so provide
-a shorter name so that we can have a better output.
-
-While at it, use the same shorter name for driver and card.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx-media-capture.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/miscdevice.h | 1 +
+ net/rfkill/core.c          | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
-index b33a07bc9105d..46576e32581f0 100644
---- a/drivers/staging/media/imx/imx-media-capture.c
-+++ b/drivers/staging/media/imx/imx-media-capture.c
-@@ -26,6 +26,8 @@
- #include <media/imx.h>
- #include "imx-media.h"
+diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
+index 3247a3dc79348..b06b75776a32f 100644
+--- a/include/linux/miscdevice.h
++++ b/include/linux/miscdevice.h
+@@ -57,6 +57,7 @@
+ #define UHID_MINOR		239
+ #define USERIO_MINOR		240
+ #define VHOST_VSOCK_MINOR	241
++#define RFKILL_MINOR		242
+ #define MISC_DYNAMIC_MINOR	255
  
-+#define IMX_CAPTURE_NAME "imx-capture"
+ struct device;
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index f9b08a6d8dbe4..0bf9bf1ceb8f0 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1316,10 +1316,12 @@ static const struct file_operations rfkill_fops = {
+ 	.llseek		= no_llseek,
+ };
+ 
++#define RFKILL_NAME "rfkill"
 +
- struct capture_priv {
- 	struct imx_media_video_dev vdev;
+ static struct miscdevice rfkill_miscdev = {
+-	.name	= "rfkill",
+ 	.fops	= &rfkill_fops,
+-	.minor	= MISC_DYNAMIC_MINOR,
++	.name	= RFKILL_NAME,
++	.minor	= RFKILL_MINOR,
+ };
  
-@@ -69,8 +71,8 @@ static int vidioc_querycap(struct file *file, void *fh,
- {
- 	struct capture_priv *priv = video_drvdata(file);
- 
--	strscpy(cap->driver, "imx-media-capture", sizeof(cap->driver));
--	strscpy(cap->card, "imx-media-capture", sizeof(cap->card));
-+	strscpy(cap->driver, IMX_CAPTURE_NAME, sizeof(cap->driver));
-+	strscpy(cap->card, IMX_CAPTURE_NAME, sizeof(cap->card));
- 	snprintf(cap->bus_info, sizeof(cap->bus_info),
- 		 "platform:%s", priv->src_sd->name);
- 
+ static int __init rfkill_init(void)
+@@ -1371,3 +1373,6 @@ static void __exit rfkill_exit(void)
+ 	class_unregister(&rfkill_class);
+ }
+ module_exit(rfkill_exit);
++
++MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
++MODULE_ALIAS("devname:" RFKILL_NAME);
 -- 
 2.20.1
 
