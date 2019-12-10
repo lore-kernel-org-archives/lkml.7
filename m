@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019EC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD3C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7142207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9359520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017783;
-	bh=TwpJsn+VWHD6/a00zAejKGYPYa89KcNwRWbQTMR1IVk=;
+	s=default; t=1576017786;
+	bh=8dhK3SFwIDOYA+xe70pN7rpZmKzS2l0W+H3z7vvRJa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RBcauOLFyrioDvuR7ElPAxSsRX0eVEXrBv0QHxZ3y2yCYGGXzBc5GRkjFT1fv1xLW
-	 DDnFs9EFrLQ+s2nVbSmW+OkGtbz68lNHVp673g9SMchblmrEaC2zFhr84HVaSrL8Qt
-	 iaETI1uuaCmASXu+M7QpH0BD8xFnZYBTarW4scyc=
+	b=WqbsLnv/6/u8gLoZyZ1vgb80LyJQMRaBn/xf1ii/qpR94+++pley4aU/6FeqRsez6
+	 cPXVpXd5IInjMC0AO5WVKKdd5pY6obnCoEwZ5RSIPxAwuEbGDkXBVaBNsF/HOPMj7o
+	 4GYTw4ZVdLWvQkSvGZ8r51VWLhWvRY3d2rtfnuII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfLJWbK (ORCPT
+        id S1728037AbfLJWbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfLJWbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:06 -0500
+        id S1727847AbfLJWbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B787E207FF;
-        Tue, 10 Dec 2019 22:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F57720838;
+        Tue, 10 Dec 2019 22:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017065;
-        bh=TwpJsn+VWHD6/a00zAejKGYPYa89KcNwRWbQTMR1IVk=;
+        s=default; t=1576017064;
+        bh=8dhK3SFwIDOYA+xe70pN7rpZmKzS2l0W+H3z7vvRJa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3jUTg3NI7UKDdggR0pJ0WP28+U+55kkf01cYerHDjGP1CFAOsO30n+aXYxbkhyh3
-         T3Mi7m8UfvD6jFPJA0tysb9JbZJeBRQaGrQjFZvLnqP4Kvp1m8/E83DQlnJuelBsd9
-         A4NdTE7af/uny9P4iuOGCvhVmuhRAQEXqrOn9iiw=
+        b=Ncgdvu5BRxAg+9zUdGTD4zET/NjcqBrUlgKjd2ZgMB0iF09xr0Uf8Ylxt4C2xCwqP
+         RJ9gDjJAJF/SRusKwPkNJnr4tBj0t9A9rANaA/lV8pcE8iiBLUkZM2TIalFsLGhOqc
+         3cffp0DKYBkTT1oPxEV9ktUrkZh0Won2MnHDzmvA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/91] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
-Date:   Tue, 10 Dec 2019 17:29:29 -0500
-Message-Id: <20191210223035.14270-25-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/91] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
+Date:   Tue, 10 Dec 2019 17:29:28 -0500
+Message-Id: <20191210223035.14270-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,79 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
+[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
 
-v4l2-compliance warns with this message:
+In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release for skb and
+card->evtbd_ring_vbase is added.
 
-   warn: v4l2-test-formats.cpp(717): \
- 	TRY_FMT cannot handle an invalid pixelformat.
-   warn: v4l2-test-formats.cpp(718): \
- 	This may or may not be a problem. For more information see:
-   warn: v4l2-test-formats.cpp(719): \
- 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
-	...
-   test VIDIOC_TRY_FMT: FAIL
-
-We need to make sure that the returns a valid pixel format in all
-instance. Based on the v4l2 framework convention drivers must return a
-valid pixel format when the requested pixel format is either invalid or
-not supported.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 0189f7f7cb03f..da308fa6561fc 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -330,20 +330,25 @@ enum {
- };
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index cb681b265b108..38d45a77c06ba 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -632,8 +632,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
+ 		skb_put(skb, MAX_EVENT_SIZE);
  
- /* find our format description corresponding to the passed v4l2_format */
--static struct vpe_fmt *find_format(struct v4l2_format *f)
-+static struct vpe_fmt *__find_format(u32 fourcc)
- {
- 	struct vpe_fmt *fmt;
- 	unsigned int k;
+ 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
+-					   PCI_DMA_FROMDEVICE))
++					   PCI_DMA_FROMDEVICE)) {
++			kfree_skb(skb);
++			kfree(card->evtbd_ring_vbase);
+ 			return -1;
++		}
  
- 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
- 		fmt = &vpe_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
-+		if (fmt->fourcc == fourcc)
- 			return fmt;
- 	}
+ 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
  
- 	return NULL;
- }
- 
-+static struct vpe_fmt *find_format(struct v4l2_format *f)
-+{
-+	return __find_format(f->fmt.pix.pixelformat);
-+}
-+
- /*
-  * there is one vpe_dev structure in the driver, it is shared by
-  * all instances.
-@@ -1433,9 +1438,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 	int i, depth, depth_bytes;
- 
- 	if (!fmt || !(fmt->types & type)) {
--		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
-+		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
- 			pix->pixelformat);
--		return -EINVAL;
-+		fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	}
- 
- 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE)
 -- 
 2.20.1
 
