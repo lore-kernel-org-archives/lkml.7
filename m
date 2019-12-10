@@ -2,99 +2,108 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB41C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA6FC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8AC2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SjVyZzwl"
+	by mail.kernel.org (Postfix) with ESMTP id CD0412077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLJMnX (ORCPT
+        id S1727436AbfLJMon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:43:23 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:38871 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfLJMnW (ORCPT
+        Tue, 10 Dec 2019 07:44:43 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:60958 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727310AbfLJMon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:43:22 -0500
-Received: by mail-vk1-f195.google.com with SMTP id e5so1446675vkn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rmEiSSp96CqMy1Ppsk8W6nnDKAAqnPQ9Fp0EYBdV+7E=;
-        b=SjVyZzwl1gFe4ZV18t5rV4aLho7lO9k6u7FJV6ZAqeuFB7bj2OpZ7m0NdHHPB5P/9J
-         F1GRcZF8vBqkPBqBMbXJp1yuJ+IAcubDftWI51y+mNDpGrT6YxHSHu3zzeoVuKOXTUL6
-         ofai+5OMyCUrw7aMsKCreGKjupSo3Hr8MQseWJ2xCsncPzWOMFL/Zih9GO6A6c/ZjqzK
-         JyQZpoeWVRpPl0H1oX5XjRDyHL02eQQ9+RL/TZcZdazLKImnbYsdmtz0DQPBGEJMtLj3
-         8uxieE2T+RpsIhE9/Ytd6ACKGxx+oh90ka0loPrxuxNct8VjQ+3Ll7M3kAKlYy5U84kC
-         DmBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rmEiSSp96CqMy1Ppsk8W6nnDKAAqnPQ9Fp0EYBdV+7E=;
-        b=iSvj4BCi+gTIpSia8H8EvMV8Bx+3MPtxAE6+4ajNyY6nnuQvrJz1g8QznGs7MR4L5A
-         UgCpcntqHUdg3a+MPMdfcf0o5LBYTzkm9ihA4A2Df0cYT8rYyp+K0A0wQX4ZSGyQcTQe
-         v+3DudvLnf746XgF4iohreQofoKKM4HY17bmZwMWrnXyqdOmhoNu2H1FEcnKE7UUciMz
-         fIYZmKeNeJjgw4GowO2cKE1Ws7X0hepQ1tiaN6kit1qHlvLznI9Wru9LVsgUk9RLdz3d
-         ICaaCKD2VwD6bwJ1DT4U5IEbjoPlbpwr0yF3hCe3MqwIfDxOrbohjrGr2nl+zGZFotAA
-         ZE+Q==
-X-Gm-Message-State: APjAAAUaZsGssmdX3+gnaq720L3NmfN+E/yZR9fRUkq6qZz8bdJ2uy0i
-        owzEISZj549TIl0fZE1QsbNxE3dUJdTUjATCuoDfrg==
-X-Google-Smtp-Source: APXvYqwYeuWm53/m5Bq2qBEuOXIjm6v1jerpImsqqYFfOVtKgHeSeKsZzlwtHErJOzdB13a85RtG6b5LG2BU3bpzpc4=
-X-Received: by 2002:a1f:4541:: with SMTP id s62mr8918335vka.59.1575981801902;
- Tue, 10 Dec 2019 04:43:21 -0800 (PST)
+        Tue, 10 Dec 2019 07:44:43 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1ieesZ-0004w5-Vj; Tue, 10 Dec 2019 13:44:40 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id xBACicTS005661
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Tue, 10 Dec 2019 13:44:38 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+Subject: [PATCH 1/3] arm64: dts: rockchip: Remove always-on properties from
+ regulator nodes on rk3399-roc-pc.
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Organization: five technologies GmbH
+Message-ID: <f985665c-86c0-1657-14f8-f77e2ce5a3f7@fivetechno.de>
+Date:   Tue, 10 Dec 2019 13:44:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191204071958.18553-1-chaotian.jing@mediatek.com>
- <CAPDyKFo9Z2yj7zC5VOS-iX_LyavPp1A4n73eAp7VD-Q+dpoqpw@mail.gmail.com> <1575979419.7714.1.camel@mhfsdcap03>
-In-Reply-To: <1575979419.7714.1.camel@mhfsdcap03>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 13:42:45 +0100
-Message-ID: <CAPDyKFpCjzpxOLi+bfawgHJNXve16tkJmg-Z0Jqjf3zJ5UxV_g@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-To:     Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>, hsinyi@google.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1575981883;34bf8aa0;
+X-HE-SMSGID: 1ieesZ-0004w5-Vj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 at 13:03, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->
-> On Tue, 2019-12-10 at 10:51 +0100, Ulf Hansson wrote:
-> > On Wed, 4 Dec 2019 at 08:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> > >
-> > > there is a chance that always get response CRC error after HS200 tuning,
-> > > the reason is that need set CMD_TA to 2. this modification is only for
-> > > MT8173.
-> > >
-> > > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> >
-> > I have applied this for fixes, however it seems like this should also
-> > be tagged for stable, right?
-> > Yes! should be tagged for stable.
-> > Is there a specific commit this fixes or should we just find the
-> > version it applies to?
-> >
->  this patch should be a fix to commit:
-> 1ede5cb88a29bba1aad1b68965c5fc8e00b20ed9
+Some regulators don't need the always-on property, remove it.
 
-Perfect, I add that!
+Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+---
+  arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 2 --
+  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 3 ---
+  2 files changed, 5 deletions(-)
 
-[...]
-
-Kind regards
-Uffe
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+index 2c9c13a0fca9..2db9d32ad54a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
+@@ -32,8 +32,6 @@ vcc3v3_pcie: vcc3v3-pcie {
+  		gpio = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+  		pinctrl-names = "default";
+  		pinctrl-0 = <&vcc3v3_pcie_en>;
+-		regulator-always-on;
+-		regulator-boot-on;
+  		regulator-min-microvolt = <3300000>;
+  		regulator-max-microvolt = <3300000>;
+  		vin-supply = <&dc_12v>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+index 9a1ce3a4ae12..8e01b04144b7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
+@@ -176,7 +176,6 @@ vcc5v0_host: vcc5v0-host-regulator {
+  		pinctrl-names = "default";
+  		pinctrl-0 = <&vcc5v0_host_en &hub_rst>;
+  		regulator-name = "vcc5v0_host";
+-		regulator-always-on;
+  		vin-supply = <&vcc_sys>;
+  	};
+  
+@@ -198,7 +197,6 @@ vcc_sys: vcc-sys {
+  		pinctrl-names = "default";
+  		pinctrl-0 = <&vcc_sys_en>;
+  		regulator-name = "vcc_sys";
+-		regulator-always-on;
+  		regulator-boot-on;
+  		regulator-min-microvolt = <5000000>;
+  		regulator-max-microvolt = <5000000>;
+@@ -392,7 +390,6 @@ regulator-state-mem {
+  
+  			vcc_sdio: LDO_REG4 {
+  				regulator-name = "vcc_sdio";
+-				regulator-always-on;
+  				regulator-boot-on;
+  				regulator-min-microvolt = <1800000>;
+  				regulator-max-microvolt = <3000000>;
+-- 
+2.24.0
