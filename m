@@ -2,279 +2,132 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5AEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B89C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91D42073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C751620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iryaSD52"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ZdBShLQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfLJUJZ (ORCPT
+        id S1726777AbfLJULa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:09:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38309 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfLJUJX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:09:23 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so21561368wrh.5;
-        Tue, 10 Dec 2019 12:09:20 -0800 (PST)
+        Tue, 10 Dec 2019 15:11:30 -0500
+Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:2513
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726364AbfLJULa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 15:11:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TENl+fk5ps4GBjrb7J4Ksn6hAyjTO87eVTOoy8gRy8YuKncvDCSSOPfMBCpT9whYQ+ihaDWu5bcEofkOjwKn4elKYI34q1Rgk4UrufpV/HH6No5E1XFPq0O9d/JlYtBdqyrC6XQrCqq3+7MlDranKfkW0Z3XV8OI9UmJ3vGwYkaS4vkuQ+ayhGbqK64c2bCZgdLq9u2H4GEUSWs0MAcSeGmCVgXHb7c6wZCJbY6fAgep97TLZX79ouJUir+x40uSTx1rLeFmJW0Lb8zGqSFiNaWpDmeRJivtF5SfEbInKNqHOVXyY1wA4soZfeQfvnjVNyVkm2sW3Yofg+ed5c8BfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xtkc3FFrT8Ge0fFYbXzKM91r3Fb4uYCErErWY2NKvIQ=;
+ b=IS9iLhtwP4vvqYrrxrrDWOrmfNY2jF2vohyMuxrWKWRyfrabgjhDcZLiakp27kX34inw3ILGfK/ympT4zWRhRnzhul8z+qQ1szM28jjIxXr0OVFK3s40VFV9ILglvp7zQoaDgIkAAn8H7gLsZdaTElPWxVkwbyNZEFjO8T4Obe0CbzsXjwiqzIbxhrBcGUzwKC78nLx5umd6M0Hfo+uTJnflJegaahDNoQ3bSsq8SY++M05QSRpvU+ZvRLLUpjkwD/JSAhaDIIrbbc6WfkQkZJi6qo4p6syNawhVomTLKI3gLL90kQ8JGZu1X+2XDZLrDbX3253G1/BXKscPP33mVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=u/LjPuF3/fCHoU0gjJ+jhVHgMQTJmMf2Obyi4CIeoxM=;
-        b=iryaSD524QzJLWrvBJeXCxs6EkdwiQqRjSmDFZXGuvbUw21wuS9yN10e3SW/37q6P9
-         eWloyjbs5DoLPeR572uw1d5acE+ae35FV6018cV2NlXlw32USWCaLtnN4pKcTeW6sezR
-         9c0omx2nBvsPnID3HTeIIPHzm8NU8i19qB4jC5esPPhsXMR6uKeU/TXsxRd4nXuqtaLg
-         x8OaoJ0FzU9e/+nuyJEYyZr9mu6tcmOsUNDsG/BDRA5w+VnFsNU/yBR8xLJuoKwFG5C0
-         X1MZeD8ui/GUMoCJ0JAzIdVIRSQXXzsHxzmXktm//gmUE93sthMSiLczVC9lH1B2b3IY
-         6sEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=u/LjPuF3/fCHoU0gjJ+jhVHgMQTJmMf2Obyi4CIeoxM=;
-        b=cdmupNeKLgstIJMy76UENIGly6L4hCC06eKlh854Jb5ZbYi/1miCgIsE3A3CN3eaUO
-         RMMZnk9GN+qjbg4TDvbyI7zmUu+sFRGOqpW0n+C6SAoBojGca4ROxhONv5n0dutAmyGR
-         NIpnN3gUE+qFZCTDOhtdPIkYotr1Ets40j4QnrFxzHaT9JKuRt/jH2tzxfHUfYJ965qf
-         hte7eMZRXnTTMO8Y8VU2WIRUilJfWcKLNrTCsbcOb4BHIfueCqhB5l6Re8DN0WQuny3z
-         4maD0NuDnCyAK9NZMDs6ZjGv2uk/o0VFNM8C9HJZbIKJ5rBM90IDM//9y5S778kifK1u
-         qwRA==
-X-Gm-Message-State: APjAAAX8UM8ai9imYkfQvoupYYSkHT2mEkNlLT0kLRnWbjAlmlf+XDJM
-        jormGI/jYBqYNEXo+E1LHdU=
-X-Google-Smtp-Source: APXvYqz1HahWkU6kOI2OPxbyEF894A8hHjOhrlhREULuOqq0LKqnnSaxBzfWtlfLB1Lx0VXZjwD33g==
-X-Received: by 2002:adf:ee92:: with SMTP id b18mr5465886wro.281.1576008559977;
-        Tue, 10 Dec 2019 12:09:19 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w19sm4113643wmc.22.2019.12.10.12.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 12:09:19 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     kishon@ti.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 2/2] phy: brcm-sata: Implement 7216 initialization sequence
-Date:   Tue, 10 Dec 2019 12:08:52 -0800
-Message-Id: <20191210200852.24945-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210200852.24945-1-f.fainelli@gmail.com>
-References: <20191210200852.24945-1-f.fainelli@gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xtkc3FFrT8Ge0fFYbXzKM91r3Fb4uYCErErWY2NKvIQ=;
+ b=ZdBShLQ7v7bKozHxIlC8FqZxUHPum0dxJY1HN1+SYAmJ1Wqu5dDkh21FYQKGuD5TNkVJmsE+7/pse83dnBbMpmoyY+2/FQfaT+Ygusk4fe84crmgmFiQbJEPmNjW634wJbXWtWf9zyO+8xR7ZzC7jptKJm9Wg+N+S32b7xPV85w=
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
+ OSAPR01MB3105.jpnprd01.prod.outlook.com (52.134.248.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Tue, 10 Dec 2019 20:11:25 +0000
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::52c:1c46:6bf0:f01f]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::52c:1c46:6bf0:f01f%4]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
+ 20:11:25 +0000
+From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Richard Cochran <richardcochran@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yangbo Lu <yangbo.lu@nxp.com>,
+        Antonio Borneo <antonio.borneo@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ptp: clockmatrix: add I2C dependency
+Thread-Topic: [PATCH] ptp: clockmatrix: add I2C dependency
+Thread-Index: AQHVr5QAx2lSMFz0fk6orfzUzEVPlqezzMcA
+Date:   Tue, 10 Dec 2019 20:11:25 +0000
+Message-ID: <20191210201111.GA20611@renesas.com>
+References: <20191210195648.811120-1-arnd@arndb.de>
+In-Reply-To: <20191210195648.811120-1-arnd@arndb.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [173.195.53.163]
+x-clientproxiedby: BYAPR05CA0006.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::19) To OSAPR01MB3025.jpnprd01.prod.outlook.com
+ (2603:1096:604:2::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vincent.cheng.xh@renesas.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ec537052-0f92-4956-68b3-08d77dad2209
+x-ms-traffictypediagnostic: OSAPR01MB3105:
+x-microsoft-antispam-prvs: <OSAPR01MB3105557C481FCA4363CB9AABD25B0@OSAPR01MB3105.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(199004)(189003)(2616005)(5660300002)(8936002)(52116002)(1076003)(6512007)(2906002)(66476007)(6506007)(33656002)(6486002)(71200400001)(66556008)(8676002)(316002)(6916009)(54906003)(64756008)(4326008)(186003)(66446008)(26005)(86362001)(81156014)(81166006)(66946007)(478600001)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB3105;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ErJ7pia/t9FKIa2qws7WflJ5X3ONLOCJHWWGHxpBnJm2dPLBgl4mDtU2Y/rAWVN+AEMBo5bHdlGDe7mPXUEwzfa6A4QtEo1wm9KBOrUPdYzUzk2awL1nBrQtH2j+IKWds9pwDY3Opnrqu9904IdoYXVC1IHr0ycwbkCsgjIVphHDZNH2+CkKBjyKCMJr9kf4J5cw90zzpLcHl6KRzZiOIl1/vXoAEiKI4xayT/j9ZbXgmhGxAg/dho/T71bIBZseIDNZaLOaMVffkvc3KwvmHndY0i/tkJHBMpKIQsLQFEeiLMC9YwcJfRu0hVk4QjTFpEkc2HE3cDO5xrA9or1VwUglKNUK/6kCX4IaO+dhI3Wee+eUxXj84TvkxfG0R80/rrKshug7HMHlXDnkul15TDaZyVAvQ2cvilw2Nuh5TLVsDcSPP3+C1Cz+ki2vjz9T
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <861C0A262AFA624491479A97B5F79F13@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec537052-0f92-4956-68b3-08d77dad2209
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 20:11:25.3248
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QXn98qYNjiGbhRfvzaSMEIBLf2o1SuKyq2TLyR9DddNGPHPzZ3wy2WROXcEZFznrofue+jpE/ic54viOteIe1sM/uDUMsnlgoXYTHxI+6AU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB3105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-7216 is a 16nm process chip with a slightly different version of the PHY
-SerdDeS/AFE that requires a specific tuning sequence. Key on the
-compatible string to perform that initialization.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/phy/broadcom/phy-brcm-sata.c | 120 +++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
-
-diff --git a/drivers/phy/broadcom/phy-brcm-sata.c b/drivers/phy/broadcom/phy-brcm-sata.c
-index 50ac75bbb0c9..4710cfcc3037 100644
---- a/drivers/phy/broadcom/phy-brcm-sata.c
-+++ b/drivers/phy/broadcom/phy-brcm-sata.c
-@@ -33,6 +33,7 @@
- #define SATA_PHY_CTRL_REG_28NM_SPACE_SIZE		0x8
- 
- enum brcm_sata_phy_version {
-+	BRCM_SATA_PHY_STB_16NM,
- 	BRCM_SATA_PHY_STB_28NM,
- 	BRCM_SATA_PHY_STB_40NM,
- 	BRCM_SATA_PHY_IPROC_NS2,
-@@ -104,10 +105,13 @@ enum sata_phy_regs {
- 	PLL1_ACTRL5				= 0x85,
- 	PLL1_ACTRL6				= 0x86,
- 	PLL1_ACTRL7				= 0x87,
-+	PLL1_ACTRL8				= 0x88,
- 
- 	TX_REG_BANK				= 0x070,
- 	TX_ACTRL0				= 0x80,
- 	TX_ACTRL0_TXPOL_FLIP			= BIT(6),
-+	TX_ACTRL5				= 0x85,
-+	TX_ACTRL5_SSC_EN			= BIT(11),
- 
- 	AEQRX_REG_BANK_0			= 0xd0,
- 	AEQ_CONTROL1				= 0x81,
-@@ -116,6 +120,7 @@ enum sata_phy_regs {
- 	AEQ_FRC_EQ				= 0x83,
- 	AEQ_FRC_EQ_FORCE			= BIT(0),
- 	AEQ_FRC_EQ_FORCE_VAL			= BIT(1),
-+	AEQ_RFZ_FRC_VAL				= BIT(8),
- 	AEQRX_REG_BANK_1			= 0xe0,
- 	AEQRX_SLCAL0_CTRL0			= 0x82,
- 	AEQRX_SLCAL1_CTRL0			= 0x86,
-@@ -152,7 +157,28 @@ enum sata_phy_regs {
- 	TXPMD_TX_FREQ_CTRL_CONTROL3_FMAX_MASK	= 0x3ff,
- 
- 	RXPMD_REG_BANK				= 0x1c0,
-+	RXPMD_RX_CDR_CONTROL1			= 0x81,
-+	RXPMD_RX_PPM_VAL_MASK			= 0x1ff,
-+	RXPMD_RXPMD_EN_FRC			= BIT(12),
-+	RXPMD_RXPMD_EN_FRC_VAL			= BIT(13),
-+	RXPMD_RX_CDR_CDR_PROP_BW		= 0x82,
-+	RXPMD_G_CDR_PROP_BW_MASK		= 0x7,
-+	RXPMD_G1_CDR_PROP_BW_SHIFT		= 0,
-+	RXPMD_G2_CDR_PROP_BW_SHIFT		= 3,
-+	RXPMD_G3_CDR_PROB_BW_SHIFT		= 6,
-+	RXPMD_RX_CDR_CDR_ACQ_INTEG_BW		= 0x83,
-+	RXPMD_G_CDR_ACQ_INT_BW_MASK		= 0x7,
-+	RXPMD_G1_CDR_ACQ_INT_BW_SHIFT		= 0,
-+	RXPMD_G2_CDR_ACQ_INT_BW_SHIFT		= 3,
-+	RXPMD_G3_CDR_ACQ_INT_BW_SHIFT		= 6,
-+	RXPMD_RX_CDR_CDR_LOCK_INTEG_BW		= 0x84,
-+	RXPMD_G_CDR_LOCK_INT_BW_MASK		= 0x7,
-+	RXPMD_G1_CDR_LOCK_INT_BW_SHIFT		= 0,
-+	RXPMD_G2_CDR_LOCK_INT_BW_SHIFT		= 3,
-+	RXPMD_G3_CDR_LOCK_INT_BW_SHIFT		= 6,
- 	RXPMD_RX_FREQ_MON_CONTROL1		= 0x87,
-+	RXPMD_MON_CORRECT_EN			= BIT(8),
-+	RXPMD_MON_MARGIN_VAL_MASK		= 0xff,
- };
- 
- enum sata_phy_ctrl_regs {
-@@ -166,6 +192,7 @@ static inline void __iomem *brcm_sata_pcb_base(struct brcm_sata_port *port)
- 	u32 size = 0;
- 
- 	switch (priv->version) {
-+	case BRCM_SATA_PHY_STB_16NM:
- 	case BRCM_SATA_PHY_STB_28NM:
- 	case BRCM_SATA_PHY_IPROC_NS2:
- 	case BRCM_SATA_PHY_DSL_28NM:
-@@ -287,6 +314,94 @@ static int brcm_stb_sata_init(struct brcm_sata_port *port)
- 	return brcm_stb_sata_rxaeq_init(port);
- }
- 
-+static int brcm_stb_sata_16nm_ssc_init(struct brcm_sata_port *port)
-+{
-+	void __iomem *base = brcm_sata_pcb_base(port);
-+	u32 tmp, value;
-+
-+	/* Reduce CP tail current to 1/16th of its default value */
-+	brcm_sata_phy_wr(base, PLL1_REG_BANK, PLL1_ACTRL6, 0, 0x141);
-+
-+	/* Turn off CP tail current boost */
-+	brcm_sata_phy_wr(base, PLL1_REG_BANK, PLL1_ACTRL8, 0, 0xc006);
-+
-+	/* Set a specific AEQ equalizer value */
-+	tmp = AEQ_FRC_EQ_FORCE_VAL | AEQ_FRC_EQ_FORCE;
-+	brcm_sata_phy_wr(base, AEQRX_REG_BANK_0, AEQ_FRC_EQ,
-+			 ~(tmp | AEQ_RFZ_FRC_VAL |
-+			   AEQ_FRC_EQ_VAL_MASK << AEQ_FRC_EQ_VAL_SHIFT),
-+			 tmp | 32 << AEQ_FRC_EQ_VAL_SHIFT);
-+
-+	/* Set RX PPM val center frequency */
-+	if (port->ssc_en)
-+		value = 0x52;
-+	else
-+		value = 0;
-+	brcm_sata_phy_wr(base, RXPMD_REG_BANK, RXPMD_RX_CDR_CONTROL1,
-+			 ~RXPMD_RX_PPM_VAL_MASK, value);
-+
-+	/* Set proportional loop bandwith Gen1/2/3 */
-+	tmp = RXPMD_G_CDR_PROP_BW_MASK << RXPMD_G1_CDR_PROP_BW_SHIFT |
-+	      RXPMD_G_CDR_PROP_BW_MASK << RXPMD_G2_CDR_PROP_BW_SHIFT |
-+	      RXPMD_G_CDR_PROP_BW_MASK << RXPMD_G3_CDR_PROB_BW_SHIFT;
-+	if (port->ssc_en)
-+		value = 2 << RXPMD_G1_CDR_PROP_BW_SHIFT |
-+			2 << RXPMD_G2_CDR_PROP_BW_SHIFT |
-+			2 << RXPMD_G3_CDR_PROB_BW_SHIFT;
-+	else
-+		value = 1 << RXPMD_G1_CDR_PROP_BW_SHIFT |
-+			1 << RXPMD_G2_CDR_PROP_BW_SHIFT |
-+			1 << RXPMD_G3_CDR_PROB_BW_SHIFT;
-+	brcm_sata_phy_wr(base, RXPMD_REG_BANK, RXPMD_RX_CDR_CDR_PROP_BW, ~tmp,
-+			 value);
-+
-+	/* Set CDR integral loop acquisition bandwidth for Gen1/2/3 */
-+	tmp = RXPMD_G_CDR_ACQ_INT_BW_MASK << RXPMD_G1_CDR_ACQ_INT_BW_SHIFT |
-+	      RXPMD_G_CDR_ACQ_INT_BW_MASK << RXPMD_G2_CDR_ACQ_INT_BW_SHIFT |
-+	      RXPMD_G_CDR_ACQ_INT_BW_MASK << RXPMD_G3_CDR_ACQ_INT_BW_SHIFT;
-+	if (port->ssc_en)
-+		value = 1 << RXPMD_G1_CDR_ACQ_INT_BW_SHIFT |
-+			1 << RXPMD_G2_CDR_ACQ_INT_BW_SHIFT |
-+			1 << RXPMD_G3_CDR_ACQ_INT_BW_SHIFT;
-+	else
-+		value = 0;
-+	brcm_sata_phy_wr(base, RXPMD_REG_BANK, RXPMD_RX_CDR_CDR_ACQ_INTEG_BW,
-+			 ~tmp, value);
-+
-+	/* Set CDR integral loop locking bandwidth to 1 for Gen 1/2/3 */
-+	tmp = RXPMD_G_CDR_LOCK_INT_BW_MASK << RXPMD_G1_CDR_LOCK_INT_BW_SHIFT |
-+	      RXPMD_G_CDR_LOCK_INT_BW_MASK << RXPMD_G2_CDR_LOCK_INT_BW_SHIFT |
-+	      RXPMD_G_CDR_LOCK_INT_BW_MASK << RXPMD_G3_CDR_LOCK_INT_BW_SHIFT;
-+	if (port->ssc_en)
-+		value = 1 << RXPMD_G1_CDR_LOCK_INT_BW_SHIFT |
-+			1 << RXPMD_G2_CDR_LOCK_INT_BW_SHIFT |
-+			1 << RXPMD_G3_CDR_LOCK_INT_BW_SHIFT;
-+	else
-+		value = 0;
-+	brcm_sata_phy_wr(base, RXPMD_REG_BANK, RXPMD_RX_CDR_CDR_LOCK_INTEG_BW,
-+			 ~tmp, value);
-+
-+	/* Set no guard band and clamp CDR */
-+	tmp = RXPMD_MON_CORRECT_EN | RXPMD_MON_MARGIN_VAL_MASK;
-+	if (port->ssc_en)
-+		value = 0x51;
-+	else
-+		value = 0;
-+	brcm_sata_phy_wr(base, RXPMD_REG_BANK, RXPMD_RX_FREQ_MON_CONTROL1,
-+			 ~tmp, RXPMD_MON_CORRECT_EN | value);
-+
-+	/* Turn on/off SSC */
-+	brcm_sata_phy_wr(base, TX_REG_BANK, TX_ACTRL5, ~TX_ACTRL5_SSC_EN,
-+			 port->ssc_en ? TX_ACTRL5_SSC_EN : 0);
-+
-+	return 0;
-+}
-+
-+static int brcm_stb_sata_16nm_init(struct brcm_sata_port *port)
-+{
-+	return brcm_stb_sata_16nm_ssc_init(port);
-+}
-+
- /* NS2 SATA PLL1 defaults were characterized by H/W group */
- #define NS2_PLL1_ACTRL2_MAGIC	0x1df8
- #define NS2_PLL1_ACTRL3_MAGIC	0x2b00
-@@ -544,6 +659,9 @@ static int brcm_sata_phy_init(struct phy *phy)
- 	struct brcm_sata_port *port = phy_get_drvdata(phy);
- 
- 	switch (port->phy_priv->version) {
-+	case BRCM_SATA_PHY_STB_16NM:
-+		rc = brcm_stb_sata_16nm_init(port);
-+		break;
- 	case BRCM_SATA_PHY_STB_28NM:
- 	case BRCM_SATA_PHY_STB_40NM:
- 		rc = brcm_stb_sata_init(port);
-@@ -601,6 +719,8 @@ static const struct phy_ops phy_ops = {
- };
- 
- static const struct of_device_id brcm_sata_phy_of_match[] = {
-+	{ .compatible	= "brcm,bcm7216-sata-phy",
-+	  .data = (void *)BRCM_SATA_PHY_STB_16NM },
- 	{ .compatible	= "brcm,bcm7445-sata-phy",
- 	  .data = (void *)BRCM_SATA_PHY_STB_28NM },
- 	{ .compatible	= "brcm,bcm7425-sata-phy",
--- 
-2.17.1
-
+T24gVHVlLCBEZWMgMTAsIDIwMTkgYXQgMDI6NTY6MzRQTSBFU1QsIEFybmQgQmVyZ21hbm4gd3Jv
+dGU6DQo+V2l0aG91dCBJMkMsIHdlIGdldCBhIGxpbmsgZmFpbHVyZToNCj4NCj5kcml2ZXJzL3B0
+cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24gYGlkdGNtX3hmZXIuaXNyYS4zJzoNCj5w
+dHBfY2xvY2ttYXRyaXguYzooLnRleHQrMHhjYyk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYGky
+Y190cmFuc2ZlcicNCj5kcml2ZXJzL3B0cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24g
+YGlkdGNtX2RyaXZlcl9pbml0JzoNCj5wdHBfY2xvY2ttYXRyaXguYzooLmluaXQudGV4dCsweDE0
+KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgaTJjX3JlZ2lzdGVyX2RyaXZlcicNCj5kcml2ZXJz
+L3B0cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24gYGlkdGNtX2RyaXZlcl9leGl0JzoN
+Cj5wdHBfY2xvY2ttYXRyaXguYzooLmV4aXQudGV4dCsweDEwKTogdW5kZWZpbmVkIHJlZmVyZW5j
+ZSB0byBgaTJjX2RlbF9kcml2ZXInDQo+DQo+Rml4ZXM6IDNhNmJhN2RjNzc5OSAoInB0cDogQWRk
+IGEgcHRwIGNsb2NrIGRyaXZlciBmb3IgSURUIENsb2NrTWF0cml4LiIpDQo+U2lnbmVkLW9mZi1i
+eTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4tLS0NCj4gZHJpdmVycy9wdHAvS2Nv
+bmZpZyB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
+KC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHRwL0tjb25maWcgYi9kcml2ZXJzL3B0cC9L
+Y29uZmlnDQo+aW5kZXggZGMzZDhlY2I0MjMxLi5lMzc3OTdjMGE4NWMgMTAwNjQ0DQo+LS0tIGEv
+ZHJpdmVycy9wdHAvS2NvbmZpZw0KPisrKyBiL2RyaXZlcnMvcHRwL0tjb25maWcNCj5AQCAtMTA3
+LDcgKzEwNyw3IEBAIGNvbmZpZyBQVFBfMTU4OF9DTE9DS19LVk0NCj4gDQo+IGNvbmZpZyBQVFBf
+MTU4OF9DTE9DS19JRFRDTQ0KPiAJdHJpc3RhdGUgIklEVCBDTE9DS01BVFJJWCBhcyBQVFAgY2xv
+Y2siDQo+LQlkZXBlbmRzIG9uIFBUUF8xNTg4X0NMT0NLDQo+KwlkZXBlbmRzIG9uIFBUUF8xNTg4
+X0NMT0NLICYmIEkyQw0KPiAJZGVmYXVsdCBuDQo+IAloZWxwDQo+IAkgIFRoaXMgZHJpdmVyIGFk
+ZHMgc3VwcG9ydCBmb3IgdXNpbmcgSURUIENMT0NLTUFUUklYKFRNKSBhcyBhIFBUUA0KPi0tIA0K
+DQpTb3JyeSwgdGhhdCB3YXMgZmxhZ2dlZCBieSAia2J1aWxkIHRlc3Qgcm9ib3QiIE5vdiAyNS4N
+Cg0KSSB3YXMgaW4gdGhlIHByb2Nlc3Mgb2YgY3JlYXRpbmcgYSBwYXRjaCBzZXJpZXMgd2l0aCBv
+dGhlciB1cGRhdGVzLA0KYnV0IHlvdSBiZWF0IG1lIHRvIHRoZSBwdW5jaC4gIFRoYW5rLXlvdS4N
+Cg0KUmV2aWV3ZWQtYnk6IFZpbmNlbnQgQ2hlbmcgIDx2aW5jZW50LmNoZW5nLnhoQHJlbmVzYXMu
+Y29tPg0KDQpSZWdhcmRzLA0KVmluY2VudA0K
