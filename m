@@ -2,200 +2,274 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F767C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C98C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273FC20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF7120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:30:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="R1UGjhLc";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="DaH0rflG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfLJGYd (ORCPT
+        id S1727119AbfLJGaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:24:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33252 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726085AbfLJGYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:24:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D5E6BAC82;
-        Tue, 10 Dec 2019 06:24:29 +0000 (UTC)
-Subject: Re: [PATCH v4 2/2] xen/blkback: Squeeze page pools if a memory
- pressure is detected
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     axboe@kernel.dk, konrad.wilk@oracle.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pdurrant@amazon.com, roger.pau@citrix.com, sj38.park@gmail.com,
-        xen-devel@lists.xenproject.org, SeongJae Park <sjpark@amazon.de>
-References: <20191209194305.20828-1-sjpark@amazon.com>
- <20191209194305.20828-3-sjpark@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <c5e4d67b-42b2-053f-6eb7-5a4bea75b9b5@suse.com>
-Date:   Tue, 10 Dec 2019 07:24:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191209194305.20828-3-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 10 Dec 2019 01:30:19 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:1280 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfLJGaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 01:30:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1575959417; x=1607495417;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=/lOAaq5Ly+oCFMPHj9awA2iaQfi5bN51W8AbdSJ6tDI=;
+  b=R1UGjhLcbPUF3rf5Zzrk0dGonV9kolyMwnPdmQVAumiYDPBCOtngpDOC
+   WGTEQyqqkI5Mzx77HvCtRemZZ1AmS0b3LMwDfEFMEiWW4RL8Y2xrdnLV0
+   AKQhvvVKobCPNIb5DA/3gXA66CoxKJo8vw1RxBhW/THfB6FyT8zDCtAL7
+   CryBgtlt+nqkwb33x/cuxdd5MXaCy3I+pbcT9JMKbKPq/Dp4J9qBn78HF
+   kvvz6Zqfc7UTYGxitiP9gU0N3G1M0JQNd6ejpsH/ecN0L2R8eanqFKyF0
+   otD4+R0+CpOh3YWC0NDEJ7UyrW0IbLQNM7hc+zP8+ziNVOIL3skNHSNC/
+   Q==;
+IronPort-SDR: z19yxgtNvvePU7r84bFejZK1NuRVimlKXCnUHgLCjeVzdex3514s4J+8tWjvk6x1N1XPHaElzD
+ fhu2alv7Rjc/cBeeA4oVyjXHCDFw53+PFoF60up37G080ewNVFcIY+QiavTn65Grfb0CvbG6r/
+ jGhC2gZrfvlLB3k+e/gXa+ArssWOw8S6rRgKwzJH+UDZNADy7erpvZNcd7HMyqTdwIg75EThcJ
+ kubR065wa0ykaLHwZCGvdGstwFiwooOj3gTEMpHo73LCxD5s29vkChI3XhDggcNCglM4aDJbLB
+ YYc=
+X-IronPort-AV: E=Sophos;i="5.69,298,1571673600"; 
+   d="scan'208";a="126591537"
+Received: from mail-sn1nam04lp2057.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.57])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Dec 2019 14:30:16 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cvbM/ZEwQowiuaEfUSbWXqCatQXsKa4ry7jkTssn7lmJ5J653NkK49vLXh3GhhrvDz23ARMKMwigt2tTcwV5QXyGmLQi5g/OHfA/QN5Kc9redOhB4saC9ZM8dbJC44dhDP/cpDvHXY+eXzm+DjSZiMw4MpMpXil36mVMs01kR0r38MfcYIovNRMZ7FZDdr8yYwlkaCKYtK8ZESjEmgJB0XzYt6YvbNHBaNktgHDjA1RTW1Msz6f3QT7/QpTi/jvGJgNXnNsqwYjr8PZ/gSn6vjgsLRDiqMki8mBKrJTN5/1DU/nK1g96XcHs6eltv+LCERW1oKDwoOHOtOsw2HWLMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/lOAaq5Ly+oCFMPHj9awA2iaQfi5bN51W8AbdSJ6tDI=;
+ b=TfuIJQ4+WmuJgNZNAx/vwqbPtArq1frA6BATZcSaVvOBsKBhm5L3wao//JBOOCYxpDcgYc4HGBH0MW/1DLHTg315oir+0e9rn1oxi5eiFb43jzj8svo3SBwydOdpS28W/iT7KXG1OKW5frhBgIVXRauxoohavtb/gSyYF3hdDmHdA8sW5AN2u23goihCjh5nEGZGqyHh2VUREqfQyUgXmWRGLM0rFzb62g+wJzEhtJ+keqXvWclgDoWKS9jRS/h8VQCG0IV/IBiahDzDNLdXJy5Umk128mfh7yzHQ+GwhtNROZZwIyGiIMi74bIWP/O+KaOf7lOf4ERSHIBUlSmUoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/lOAaq5Ly+oCFMPHj9awA2iaQfi5bN51W8AbdSJ6tDI=;
+ b=DaH0rflGhcCKQ452tf42akwUvXKsIBig2oECzWZUHy88+tGcjV7quxILUnU0A/QvcVIeD7SzsY0TWwm+Pr24N9kCXZVQ65+JNihCS4+i3RO0zpYFTOVqBQIH3buuDyOyg7Ye3o4s/WveAg5l1hKIy+kYpDagLS14lkKrmW1WI9E=
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
+ BYAPR04MB5254.namprd04.prod.outlook.com (20.178.48.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.20; Tue, 10 Dec 2019 06:30:13 +0000
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::1d22:29b6:df03:86f7]) by BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::1d22:29b6:df03:86f7%3]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
+ 06:30:13 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "maz@kernel.org" <maz@kernel.org>
+CC:     "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>
+Subject: Re: [PATCH] irqchip/sifive-plic: Add support for multiple PLICs
+Thread-Topic: [PATCH] irqchip/sifive-plic: Add support for multiple PLICs
+Thread-Index: AQHVq92W2nDI7XTAjkKidHPMzXPLSaes2IaAgAYWSwA=
+Date:   Tue, 10 Dec 2019 06:30:13 +0000
+Message-ID: <4d0a8176e56bb70c4e3ee446d6a7313b2cd69d82.camel@wdc.com>
+References: <20191206023156.24732-1-atish.patra@wdc.com>
+         <1839bf9ef91de2358a7e8ecade361f7a@www.loen.fr>
+In-Reply-To: <1839bf9ef91de2358a7e8ecade361f7a@www.loen.fr>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [2601:641:500:3bd0:dad8:b06b:ee8b:9add]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0fac52c2-2450-41ea-d993-08d77d3a6a16
+x-ms-traffictypediagnostic: BYAPR04MB5254:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB52542DEEB63F9165637E62D5FA5B0@BYAPR04MB5254.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02475B2A01
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(51914003)(229853002)(4326008)(66556008)(54906003)(2906002)(5660300002)(76116006)(66476007)(86362001)(8676002)(8936002)(6916009)(81166006)(1730700003)(64756008)(5640700003)(66946007)(6506007)(118296001)(81156014)(71190400001)(305945005)(66446008)(6486002)(53546011)(2616005)(316002)(36756003)(478600001)(186003)(71200400001)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5254;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fxLZXuISvSlNmeGakzf7OvQ3VNMhJKSTHCliRJLOFqr9Ilv+9Cp+IcrrH3x65PQponysWB7NgDvyRKLGsfO2aoVWZGc6A+xRwglY5j1O+Eo7mmwhWFkK/nFc2WPPQbXddnlJxCwFsIfM8ZSiLI/XraYIpBw0LjKEyeqQfkvxm/3f6uZ/2xM10uPONwoqdf3Sf98AvQyhTB8fTuJRRFzCoi9JOhiC7gF42/ZGvhAD9rlA0KLzHKuQoZiX/inZBa+XJQoW2/XMDAsED+KeIII+kqyIUhk0Ohr+PJlXePy/sSaSmwIRJM8A9WlgMUu3IlItqEvaGEu96ZeXrfvC86o/hAxZJ/XFSlJsdktQ+ypCXU1NYvl8TcLprn78ov5gDIYhKI85RRRQzY69VcHi5ejecgHMtDYfMTVUU5KSxrvOobAPVwY+eNHCPJ7Ep9lOcrLHokhFrm3VRpr4uJTcLybceJT9xHhDUQ4y5BV7o/UUWGkD1JynDxSMZ6e9Y3N85+te
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9C39D6A718254D4FAAE0C79472A4AD43@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fac52c2-2450-41ea-d993-08d77d3a6a16
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 06:30:13.6522
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RbWvWY8Mvb4a9xxDRybXp45fvH/Iifdpkep4RNtuNNf+qrIuor6tNJfJ6tM8g5BPgIRlFnWFMKvoijvnnHCbkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5254
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 20:43, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> Each `blkif` has a free pages pool for the grant mapping.  The size of
-> the pool starts from zero and be increased on demand while processing
-> the I/O requests.  If current I/O requests handling is finished or 100
-> milliseconds has passed since last I/O requests handling, it checks and
-> shrinks the pool to not exceed the size limit, `max_buffer_pages`.
-> 
-> Therefore, `blkfront` running guests can cause a memory pressure in the
-> `blkback` running guest by attaching a large number of block devices and
-> inducing I/O.  System administrators can avoid such problematic
-> situations by limiting the maximum number of devices each guest can
-> attach.  However, finding the optimal limit is not so easy.  Improper
-> set of the limit can results in the memory pressure or a resource
-> underutilization.  This commit avoids such problematic situations by
-> squeezing the pools (returns every free page in the pool to the system)
-> for a while (users can set this duration via a module parameter) if a
-> memory pressure is detected.
-> 
-> Discussions
-> ===========
-> 
-> The `blkback`'s original shrinking mechanism returns only pages in the
-> pool, which are not currently be used by `blkback`, to the system.  In
-> other words, the pages are not mapped with foreign pages.  Because this
-> commit is changing only the shrink limit but uses the mechanism as is,
-> this commit does not introduce improper mappings related security
-> issues.
-> 
-> Once a memory pressure is detected, this commit keeps the squeezing
-> limit for a user-specified time duration.  The duration should be
-> neither too long nor too short.  If it is too long, the squeezing
-> incurring overhead can reduce the I/O performance.  If it is too short,
-> `blkback` will not free enough pages to reduce the memory pressure.
-> This commit sets the value as `10 milliseconds` by default because it is
-> a short time in terms of I/O while it is a long time in terms of memory
-> operations.  Also, as the original shrinking mechanism works for at
-> least every 100 milliseconds, this could be a somewhat reasonable
-> choice.  I also tested other durations (refer to the below section for
-> more details) and confirmed that 10 milliseconds is the one that works
-> best with the test.  That said, the proper duration depends on actual
-> configurations and workloads.  That's why this commit is allowing users
-> to set it as their optimal value via the module parameter.
-> 
-> Memory Pressure Test
-> ====================
-> 
-> To show how this commit fixes the memory pressure situation well, I
-> configured a test environment on a xen-running virtualization system.
-> On the `blkfront` running guest instances, I attach a large number of
-> network-backed volume devices and induce I/O to those.  Meanwhile, I
-> measure the number of pages that swapped in and out on the `blkback`
-> running guest.  The test ran twice, once for the `blkback` before this
-> commit and once for that after this commit.  As shown below, this commit
-> has dramatically reduced the memory pressure:
-> 
->                  pswpin  pswpout
->      before      76,672  185,799
->      after          212    3,325
-> 
-> Optimal Aggressive Shrinking Duration
-> -------------------------------------
-> 
-> To find a best squeezing duration, I repeated the test with three
-> different durations (1ms, 10ms, and 100ms).  The results are as below:
-> 
->      duration    pswpin  pswpout
->      1           852     6,424
->      10          212     3,325
->      100         203     3,340
-> 
-> As expected, the memory pressure has decreased as the duration is
-> increased, but the reduction stopped from the `10ms`.  Based on this
-> results, I chose the default duration as 10ms.
-> 
-> Performance Overhead Test
-> =========================
-> 
-> This commit could incur I/O performance degradation under severe memory
-> pressure because the squeezing will require more page allocations per
-> I/O.  To show the overhead, I artificially made a worst-case squeezing
-> situation and measured the I/O performance of a `blkfront` running
-> guest.
-> 
-> For the artificial squeezing, I set the `blkback.max_buffer_pages` using
-> the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  We set
-> the value to `1024` and `0`.  The `1024` is the default value.  Setting
-> the value as `0` is same to a situation doing the squeezing always
-> (worst-case).
-> 
-> For the I/O performance measurement, I use a simple `dd` command.
-> 
-> Default Performance
-> -------------------
-> 
->      [dom0]# echo 1024 > /sys/module/xen_blkback/parameters/max_buffer_pages
->      [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k count=$((256*512)); sync; done
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8827 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8781 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8737 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8702 s, 38.7 MB/s
-> 
-> Worst-case Performance
-> ----------------------
-> 
->      [dom0]# echo 0 > /sys/module/xen_blkback/parameters/max_buffer_pages
->      [instance]$ for i in {1..5}; do dd if=/dev/zero of=file bs=4k count=$((256*512)); sync; done
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 11.7257 s, 45.8 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.878 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8746 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8786 s, 38.7 MB/s
->      131072+0 records in
->      131072+0 records out
->      536870912 bytes (537 MB) copied, 13.8749 s, 38.7 MB/s
-> 
-> In short, even worst case squeezing makes no visible performance
-> degradation.  I think this is due to the slow speed of the I/O.  In
-> other words, the additional page allocation overhead is hidden under the
-> much slower I/O latency.
-> 
-> Nevertheless, pleaset note that this is just a very simple and minimal
-> test.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-When dropping the domid parameter you can keep the Reviewed-by, of
-course.
-
-
-Juergen
+T24gRnJpLCAyMDE5LTEyLTA2IGF0IDA5OjMyICswMDAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
+IFtGaXhpbmcgUGFsbWVyJ3MgZW1haWwgYWRkcmVzc10NCj4gDQo+IE9uIDIwMTktMTItMDYgMDI6
+MzEsIEF0aXNoIFBhdHJhIHdyb3RlOg0KPiA+IEN1cnJlbnQsIFBMSUMgZHJpdmVyIGNhbiBzdXBw
+b3J0IG9ubHkgMSBQTElDIG9uIHRoZSBib2FyZC4gSG93ZXZlciwNCj4gPiB0aGVyZSBjYW4gYmUg
+bXVsdGlwbGUgUExJQ3MgcHJlc2VudCBvbiBhIHR3byBzb2NrZXQgc3lzdGVtcyBpbiANCj4gPiBS
+SVNDLVYuDQo+ID4gDQo+ID4gTW9kaWZ5IHRoZSBkcml2ZXIgc28gdGhhdCBlYWNoIFBMSUMgaGFu
+ZGxlciBjYW4gaGF2ZSBhIGluZm9ybWF0aW9uDQo+ID4gYWJvdXQgaW5kaXZpZHVhbCBQTElDIHJl
+Z2lzdGVycyBhbmQgYW4gaXJxZG9tYWluIGFzc29jaWF0ZWQgd2l0aA0KPiA+IGl0Lg0KPiA+IA0K
+PiA+IFRlc3RlZCBvbiB0d28gc29ja2V0IFJJU0MtViBzeXN0ZW0gYmFzZWQgb24gVkNVMTE4IEZQ
+R0EgY29ubmVjdGVkDQo+ID4gdmlhDQo+ID4gT21uaVh0ZW5kIHByb3RvY29sLg0KPiA+IA0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEFudXAgUGF0ZWwgPGFudXAucGF0ZWxAd2RjLmNvbT4NCj4gDQo+IFRoZXJl
+IHNlZW0gdG8gYmUgc29tZSBjb25mdXNpb24gaGVyZSBhYm91dCB3aG8gdGhlIGF1dGhvciBvZiB0
+aGUNCj4gcGF0Y2ggDQo+IGlzLg0KPiBJZiB0aGlzIGlzIGEgY28tZGV2ZWxvcG1lbnQsIHBsZWFz
+ZSB1c2UgdGhlIGFwcHJvcHJpYXRlIHRhZy4NCj4gDQoNCm9rLiBJIHdpbGwgZml4IHRoaXMgaW4g
+dGhlIG5leHQgdmVyc2lvbi4NCg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lycWNoaXAvaXJxLXNp
+Zml2ZS1wbGljLmMgfCA4MSANCj4gPiArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCAzMCBkZWxldGlvbnMoLSkNCj4g
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2lycS1zaWZpdmUtcGxpYy5jDQo+
+ID4gYi9kcml2ZXJzL2lycWNoaXAvaXJxLXNpZml2ZS1wbGljLmMNCj4gPiBpbmRleCBjNzJjMDM2
+YWVhNzYuLmFlYTFmMmYwZjBkNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lycWNoaXAvaXJx
+LXNpZml2ZS1wbGljLmMNCj4gPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLXNpZml2ZS1wbGlj
+LmMNCj4gPiBAQCAtNTUsNyArNTUsMTEgQEANCj4gPiAgI2RlZmluZSAgICAgQ09OVEVYVF9USFJF
+U0hPTEQJCTB4MDANCj4gPiAgI2RlZmluZSAgICAgQ09OVEVYVF9DTEFJTQkJMHgwNA0KPiA+IA0K
+PiA+IC1zdGF0aWMgdm9pZCBfX2lvbWVtICpwbGljX3JlZ3M7DQo+ID4gK3N0cnVjdCBwbGljX2h3
+IHsNCj4gPiArCXN0cnVjdCBjcHVtYXNrIGxtYXNrOw0KPiA+ICsJc3RydWN0IGlycV9kb21haW4g
+KmlycWRvbWFpbjsNCj4gPiArCXZvaWQgX19pb21lbSAqcmVnczsNCj4gPiArfTsNCj4gDQo+IFRo
+ZSAnX2h3JyBzdWZmaXggaXMgYSBiaXQgdW5mb3J0dW5hdGUsIGFzIHRoZXJlIGlzIG1vc3RseSBT
+Vw0KPiBjb25zdHJ1Y3RzDQo+IGluIHRoaXMgc3RydWN0dXJlLiBNYXliZSBzb21ldGhpbmcgbW9y
+ZSBnZW5lcmFsIGxpa2UgJ2NvbnRleHQnIHdvdWxkDQo+IGJlIG1vcmUgYXBwcm9wcmlhdGUuDQo+
+IA0KDQpTdXJlLiBJIHdpbGwgcmVuYW1lIGl0IHRvIHNvbWV0aGluZyBtb3JlIG1lYW5pbmdmdWwu
+DQoNCj4gPiAgc3RydWN0IHBsaWNfaGFuZGxlciB7DQo+ID4gIAlib29sCQkJcHJlc2VudDsNCj4g
+PiBAQCAtNjYsNiArNzAsNyBAQCBzdHJ1Y3QgcGxpY19oYW5kbGVyIHsNCj4gPiAgCSAqLw0KPiA+
+ICAJcmF3X3NwaW5sb2NrX3QJCWVuYWJsZV9sb2NrOw0KPiA+ICAJdm9pZCBfX2lvbWVtCQkqZW5h
+YmxlX2Jhc2U7DQo+ID4gKwlzdHJ1Y3QgcGxpY19odwkJKmh3Ow0KPiA+ICB9Ow0KPiA+ICBzdGF0
+aWMgREVGSU5FX1BFUl9DUFUoc3RydWN0IHBsaWNfaGFuZGxlciwgcGxpY19oYW5kbGVycyk7DQo+
+ID4gDQo+ID4gQEAgLTg0LDMxICs4OSw0MCBAQCBzdGF0aWMgaW5saW5lIHZvaWQgcGxpY190b2dn
+bGUoc3RydWN0DQo+ID4gcGxpY19oYW5kbGVyICpoYW5kbGVyLA0KPiA+ICB9DQo+ID4gDQo+ID4g
+IHN0YXRpYyBpbmxpbmUgdm9pZCBwbGljX2lycV90b2dnbGUoY29uc3Qgc3RydWN0IGNwdW1hc2sg
+Km1hc2ssDQo+ID4gLQkJCQkgICBpbnQgaHdpcnEsIGludCBlbmFibGUpDQo+ID4gKwkJCQkgICBz
+dHJ1Y3QgaXJxX2RhdGEgKmQsIGludCBlbmFibGUpDQo+ID4gIHsNCj4gPiAgCWludCBjcHU7DQo+
+ID4gKwlzdHJ1Y3QgcGxpY19odyAqaHcgPSBkLT5kb21haW4tPmhvc3RfZGF0YTsNCj4gDQo+IFRo
+ZSB1c3VhbCBjb25zdHJ1Y3QgaXMgdG8gdHJhbnNmZXIgdGhlIGRvbWFpbi0+aG9zdF9kYXRhIHBv
+aW50ZXIgdG8NCj4gdGhlIGlycV9kYXRhLT5jaGlwX2RhdGEgcG9pbnRlciBhdCBtYXAoKSB0aW1l
+LCB1c2luZyANCj4gaXJxX3NldF9jaGlwX2RhdGEoKS4NCj4gDQo+IFlvdSBjYW4gdGhlbiByZXRy
+aWV2ZSB0aGUgcG9pbnRlciB3aXRoIGlycV9nZXRfY2hpcF9kYXRhKCksIGFuZCBzYXZlDQo+IHlv
+dXJzZWx2ZXMgc29tZSBwb2ludGVyIGNoYXNpbmcuDQo+IA0KDQpTdXJlLiBJIHdpbGwgZG8gdGhh
+dC4NCg0KPiA+IC0Jd3JpdGVsKGVuYWJsZSwgcGxpY19yZWdzICsgUFJJT1JJVFlfQkFTRSArIGh3
+aXJxICogDQo+ID4gUFJJT1JJVFlfUEVSX0lEKTsNCj4gPiArCXdyaXRlbChlbmFibGUsIGh3LT5y
+ZWdzICsgUFJJT1JJVFlfQkFTRSArIGQtPmh3aXJxICogDQo+ID4gUFJJT1JJVFlfUEVSX0lEKTsN
+Cj4gPiAgCWZvcl9lYWNoX2NwdShjcHUsIG1hc2spIHsNCj4gPiAgCQlzdHJ1Y3QgcGxpY19oYW5k
+bGVyICpoYW5kbGVyID0NCj4gPiBwZXJfY3B1X3B0cigmcGxpY19oYW5kbGVycywgY3B1KTsNCj4g
+PiANCj4gPiAtCQlpZiAoaGFuZGxlci0+cHJlc2VudCkNCj4gPiAtCQkJcGxpY190b2dnbGUoaGFu
+ZGxlciwgaHdpcnEsIGVuYWJsZSk7DQo+ID4gKwkJaWYgKGhhbmRsZXItPnByZXNlbnQgJiYNCj4g
+PiArCQkgICAgY3B1bWFza190ZXN0X2NwdShjcHUsICZoYW5kbGVyLT5ody0+bG1hc2spKQ0KPiA+
+ICsJCQlwbGljX3RvZ2dsZShoYW5kbGVyLCBkLT5od2lycSwgZW5hYmxlKTsNCj4gPiAgCX0NCj4g
+PiAgfQ0KPiA+IA0KPiA+ICBzdGF0aWMgdm9pZCBwbGljX2lycV9lbmFibGUoc3RydWN0IGlycV9k
+YXRhICpkKQ0KPiA+ICB7DQo+ID4gLQl1bnNpZ25lZCBpbnQgY3B1ID0NCj4gPiBjcHVtYXNrX2Fu
+eV9hbmQoaXJxX2RhdGFfZ2V0X2FmZmluaXR5X21hc2soZCksDQo+ID4gLQkJCQkJICAgY3B1X29u
+bGluZV9tYXNrKTsNCj4gPiArCXN0cnVjdCBjcHVtYXNrIGFtYXNrOw0KPiA+ICsJdW5zaWduZWQg
+aW50IGNwdTsNCj4gPiArCXN0cnVjdCBwbGljX2h3ICpodyA9IGQtPmRvbWFpbi0+aG9zdF9kYXRh
+Ow0KPiA+ICsNCj4gPiArCWNwdW1hc2tfYW5kKCZhbWFzaywgJmh3LT5sbWFzaywgY3B1X29ubGlu
+ZV9tYXNrKTsNCj4gPiArCWNwdSA9IGNwdW1hc2tfYW55X2FuZChpcnFfZGF0YV9nZXRfYWZmaW5p
+dHlfbWFzayhkKSwNCj4gPiArCQkJCQkgICAmYW1hc2spOw0KPiA+ICAJaWYgKFdBUk5fT05fT05D
+RShjcHUgPj0gbnJfY3B1X2lkcykpDQo+ID4gIAkJcmV0dXJuOw0KPiA+IC0JcGxpY19pcnFfdG9n
+Z2xlKGNwdW1hc2tfb2YoY3B1KSwgZC0+aHdpcnEsIDEpOw0KPiA+ICsJcGxpY19pcnFfdG9nZ2xl
+KGNwdW1hc2tfb2YoY3B1KSwgZCwgMSk7DQo+ID4gIH0NCj4gPiANCj4gPiAgc3RhdGljIHZvaWQg
+cGxpY19pcnFfZGlzYWJsZShzdHJ1Y3QgaXJxX2RhdGEgKmQpDQo+ID4gIHsNCj4gPiAtCXBsaWNf
+aXJxX3RvZ2dsZShjcHVfcG9zc2libGVfbWFzaywgZC0+aHdpcnEsIDApOw0KPiA+ICsJc3RydWN0
+IHBsaWNfaHcgKmh3ID0gZC0+ZG9tYWluLT5ob3N0X2RhdGE7DQo+ID4gKw0KPiA+ICsJcGxpY19p
+cnFfdG9nZ2xlKCZody0+bG1hc2ssIGQsIDApOw0KPiA+ICB9DQo+ID4gDQo+ID4gICNpZmRlZiBD
+T05GSUdfU01QDQo+ID4gQEAgLTExNiwxOCArMTMwLDIyIEBAIHN0YXRpYyBpbnQgcGxpY19zZXRf
+YWZmaW5pdHkoc3RydWN0IGlycV9kYXRhIA0KPiA+ICpkLA0KPiA+ICAJCQkgICAgIGNvbnN0IHN0
+cnVjdCBjcHVtYXNrICptYXNrX3ZhbCwgYm9vbA0KPiA+IGZvcmNlKQ0KPiA+ICB7DQo+ID4gIAl1
+bnNpZ25lZCBpbnQgY3B1Ow0KPiA+ICsJc3RydWN0IGNwdW1hc2sgYW1hc2s7DQo+ID4gKwlzdHJ1
+Y3QgcGxpY19odyAqaHcgPSBkLT5kb21haW4tPmhvc3RfZGF0YTsNCj4gPiArDQo+ID4gKwljcHVt
+YXNrX2FuZCgmYW1hc2ssICZody0+bG1hc2ssIG1hc2tfdmFsKTsNCj4gDQo+IFNvIHRoaXMgbWVh
+bnMgdGhhdCBhbiBpbnRlcnJ1cHQgY2Fubm90IG1vdmUgYmV0d2VlbiBzb2NrZXRzPw0KDQpVbmZv
+cnR1bmF0ZWx5LCB0aGF0J3MgY29ycmVjdCBmb3IgdGhlIGZpcnN0IHZlcnNpb24gb2YgdGhlIGV4
+cGVyaW1lbnRhbA0KcGxhdGZvcm0uIEhvcGVmdWxseSwgZnV0dXJlIHBsYXRmb3JtcyB3aWxsIGhh
+dmUgYmV0dGVyIHN1cHBvcnQuDQoNCj4gSG93IGlzIHRoYXQgZ29pbmcgdG8gd29yayB3aXRoIENQ
+VSBob3RwbHVnPyBUaGlzIHNlZW1zIGxpa2UNCj4gYSBwcmV0dHkgYmFkIHJlc3RyaWN0aW9uIGZv
+ciBhbnl0aGluZyBidXQgdGhlIG1vc3QgYmFzaWMNCj4gZXhwZXJpbWVudGFsIHBsYXRmb3JtLg0K
+PiANCj4gPiAgCWlmIChmb3JjZSkNCj4gPiAtCQljcHUgPSBjcHVtYXNrX2ZpcnN0KG1hc2tfdmFs
+KTsNCj4gPiArCQljcHUgPSBjcHVtYXNrX2ZpcnN0KCZhbWFzayk7DQo+ID4gIAllbHNlDQo+ID4g
+LQkJY3B1ID0gY3B1bWFza19hbnlfYW5kKG1hc2tfdmFsLCBjcHVfb25saW5lX21hc2spOw0KPiA+
+ICsJCWNwdSA9IGNwdW1hc2tfYW55X2FuZCgmYW1hc2ssIGNwdV9vbmxpbmVfbWFzayk7DQo+ID4g
+DQo+ID4gIAlpZiAoY3B1ID49IG5yX2NwdV9pZHMpDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+
+ID4gDQo+ID4gIAlpZiAoIWlycWRfaXJxX2Rpc2FibGVkKGQpKSB7DQo+ID4gLQkJcGxpY19pcnFf
+dG9nZ2xlKGNwdV9wb3NzaWJsZV9tYXNrLCBkLT5od2lycSwgMCk7DQo+ID4gLQkJcGxpY19pcnFf
+dG9nZ2xlKGNwdW1hc2tfb2YoY3B1KSwgZC0+aHdpcnEsIDEpOw0KPiA+ICsJCXBsaWNfaXJxX3Rv
+Z2dsZSgmaHctPmxtYXNrLCBkLCAwKTsNCj4gPiArCQlwbGljX2lycV90b2dnbGUoY3B1bWFza19v
+ZihjcHUpLCBkLCAxKTsNCj4gPiAgCX0NCj4gPiANCj4gPiAgCWlycV9kYXRhX3VwZGF0ZV9lZmZl
+Y3RpdmVfYWZmaW5pdHkoZCwgY3B1bWFza19vZihjcHUpKTsNCj4gPiBAQCAtMTYzLDggKzE4MSw2
+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaXJxX2RvbWFpbl9vcHMgDQo+ID4gcGxpY19pcnFkb21h
+aW5fb3BzID0gew0KPiA+ICAJLnhsYXRlCQk9IGlycV9kb21haW5feGxhdGVfb25lY2VsbCwNCj4g
+PiAgfTsNCj4gPiANCj4gPiAtc3RhdGljIHN0cnVjdCBpcnFfZG9tYWluICpwbGljX2lycWRvbWFp
+bjsNCj4gPiAtDQo+ID4gIC8qDQo+ID4gICAqIEhhbmRsaW5nIGFuIGludGVycnVwdCBpcyBhIHR3
+by1zdGVwIHByb2Nlc3M6IGZpcnN0IHlvdSBjbGFpbQ0KPiA+IHRoZQ0KPiA+IGludGVycnVwdA0K
+PiA+ICAgKiBieSByZWFkaW5nIHRoZSBjbGFpbSByZWdpc3RlciwgdGhlbiB5b3UgY29tcGxldGUg
+dGhlIGludGVycnVwdA0KPiA+IGJ5IA0KPiA+IHdyaXRpbmcNCj4gPiBAQCAtMTgxLDcgKzE5Nyw3
+IEBAIHN0YXRpYyB2b2lkIHBsaWNfaGFuZGxlX2lycShzdHJ1Y3QgcHRfcmVncw0KPiA+ICpyZWdz
+KQ0KPiA+IA0KPiA+ICAJY3NyX2NsZWFyKHNpZSwgU0lFX1NFSUUpOw0KPiA+ICAJd2hpbGUgKCho
+d2lycSA9IHJlYWRsKGNsYWltKSkpIHsNCj4gPiAtCQlpbnQgaXJxID0gaXJxX2ZpbmRfbWFwcGlu
+ZyhwbGljX2lycWRvbWFpbiwgaHdpcnEpOw0KPiA+ICsJCWludCBpcnEgPSBpcnFfZmluZF9tYXBw
+aW5nKGhhbmRsZXItPmh3LT5pcnFkb21haW4sDQo+ID4gaHdpcnEpOw0KPiA+IA0KPiA+ICAJCWlm
+ICh1bmxpa2VseShpcnEgPD0gMCkpDQo+ID4gIAkJCXByX3dhcm5fcmF0ZWxpbWl0ZWQoImNhbid0
+IGZpbmQgbWFwcGluZyBmb3INCj4gPiBod2lycSAlbHVcbiIsDQo+ID4gQEAgLTIxMiwxNSArMjI4
+LDE3IEBAIHN0YXRpYyBpbnQgX19pbml0IHBsaWNfaW5pdChzdHJ1Y3QNCj4gPiBkZXZpY2Vfbm9k
+ZSANCj4gPiAqbm9kZSwNCj4gPiAgew0KPiA+ICAJaW50IGVycm9yID0gMCwgbnJfY29udGV4dHMs
+IG5yX2hhbmRsZXJzID0gMCwgaTsNCj4gPiAgCXUzMiBucl9pcnFzOw0KPiA+ICsJc3RydWN0IHBs
+aWNfaHcgKmh3Ow0KPiA+IA0KPiA+IC0JaWYgKHBsaWNfcmVncykgew0KPiA+IC0JCXByX3dhcm4o
+IlBMSUMgYWxyZWFkeSBwcmVzZW50LlxuIik7DQo+ID4gLQkJcmV0dXJuIC1FTlhJTzsNCj4gPiAt
+CX0NCj4gPiArCWh3ID0ga3phbGxvYyhzaXplb2YoKmh3KSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlp
+ZiAoIWh3KQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+IA0KPiA+IC0JcGxpY19yZWdzID0g
+b2ZfaW9tYXAobm9kZSwgMCk7DQo+ID4gLQlpZiAoV0FSTl9PTighcGxpY19yZWdzKSkNCj4gPiAt
+CQlyZXR1cm4gLUVJTzsNCj4gPiArCWh3LT5yZWdzID0gb2ZfaW9tYXAobm9kZSwgMCk7DQo+ID4g
+KwlpZiAoV0FSTl9PTighaHctPnJlZ3MpKSB7DQo+ID4gKwkJZXJyb3IgPSAtRUlPOw0KPiA+ICsJ
+CWdvdG8gb3V0X2ZyZWVodzsNCj4gPiArCX0NCj4gPiANCj4gPiAgCWVycm9yID0gLUVJTlZBTDsN
+Cj4gPiAgCW9mX3Byb3BlcnR5X3JlYWRfdTMyKG5vZGUsICJyaXNjdixuZGV2IiwgJm5yX2lycXMp
+Ow0KPiA+IEBAIC0yMzQsOSArMjUyLDkgQEAgc3RhdGljIGludCBfX2luaXQgcGxpY19pbml0KHN0
+cnVjdCBkZXZpY2Vfbm9kZSANCj4gPiAqbm9kZSwNCj4gPiAgCQlnb3RvIG91dF9pb3VubWFwOw0K
+PiA+IA0KPiA+ICAJZXJyb3IgPSAtRU5PTUVNOw0KPiA+IC0JcGxpY19pcnFkb21haW4gPSBpcnFf
+ZG9tYWluX2FkZF9saW5lYXIobm9kZSwgbnJfaXJxcyArIDEsDQo+ID4gLQkJCSZwbGljX2lycWRv
+bWFpbl9vcHMsIE5VTEwpOw0KPiA+IC0JaWYgKFdBUk5fT04oIXBsaWNfaXJxZG9tYWluKSkNCj4g
+PiArCWh3LT5pcnFkb21haW4gPSBpcnFfZG9tYWluX2FkZF9saW5lYXIobm9kZSwgbnJfaXJxcyAr
+IDEsDQo+ID4gKwkJCSZwbGljX2lycWRvbWFpbl9vcHMsIGh3KTsNCj4gPiArCWlmIChXQVJOX09O
+KCFody0+aXJxZG9tYWluKSkNCj4gPiAgCQlnb3RvIG91dF9pb3VubWFwOw0KPiA+IA0KPiA+ICAJ
+Zm9yIChpID0gMDsgaSA8IG5yX2NvbnRleHRzOyBpKyspIHsNCj4gPiBAQCAtMjc5LDEzICsyOTcs
+MTQgQEAgc3RhdGljIGludCBfX2luaXQgcGxpY19pbml0KHN0cnVjdA0KPiA+IGRldmljZV9ub2Rl
+IA0KPiA+ICpub2RlLA0KPiA+ICAJCQlnb3RvIGRvbmU7DQo+ID4gIAkJfQ0KPiA+IA0KPiA+ICsJ
+CWNwdW1hc2tfc2V0X2NwdShjcHUsICZody0+bG1hc2spOw0KPiA+ICAJCWhhbmRsZXItPnByZXNl
+bnQgPSB0cnVlOw0KPiA+ICAJCWhhbmRsZXItPmhhcnRfYmFzZSA9DQo+ID4gLQkJCXBsaWNfcmVn
+cyArIENPTlRFWFRfQkFTRSArIGkgKg0KPiA+IENPTlRFWFRfUEVSX0hBUlQ7DQo+ID4gKwkJCWh3
+LT5yZWdzICsgQ09OVEVYVF9CQVNFICsgaSAqIENPTlRFWFRfUEVSX0hBUlQ7DQo+ID4gIAkJcmF3
+X3NwaW5fbG9ja19pbml0KCZoYW5kbGVyLT5lbmFibGVfbG9jayk7DQo+ID4gIAkJaGFuZGxlci0+
+ZW5hYmxlX2Jhc2UgPQ0KPiA+IC0JCQlwbGljX3JlZ3MgKyBFTkFCTEVfQkFTRSArIGkgKiBFTkFC
+TEVfUEVSX0hBUlQ7DQo+ID4gLQ0KPiA+ICsJCQlody0+cmVncyArIEVOQUJMRV9CQVNFICsgaSAq
+IEVOQUJMRV9QRVJfSEFSVDsNCj4gPiArCQloYW5kbGVyLT5odyA9IGh3Ow0KPiA+ICBkb25lOg0K
+PiA+ICAJCS8qIHByaW9yaXR5IG11c3QgYmUgPiB0aHJlc2hvbGQgdG8gdHJpZ2dlciBhbiBpbnRl
+cnJ1cHQNCj4gPiAqLw0KPiA+ICAJCXdyaXRlbCh0aHJlc2hvbGQsIGhhbmRsZXItPmhhcnRfYmFz
+ZSArDQo+ID4gQ09OVEVYVF9USFJFU0hPTEQpOw0KPiA+IEBAIC0zMDAsNyArMzE5LDkgQEAgc3Rh
+dGljIGludCBfX2luaXQgcGxpY19pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSANCj4gPiAqbm9kZSwN
+Cj4gPiAgCXJldHVybiAwOw0KPiA+IA0KPiA+ICBvdXRfaW91bm1hcDoNCj4gPiAtCWlvdW5tYXAo
+cGxpY19yZWdzKTsNCj4gPiArCWlvdW5tYXAoaHctPnJlZ3MpOw0KPiA+ICtvdXRfZnJlZWh3Og0K
+PiA+ICsJa2ZyZWUoaHcpOw0KPiA+ICAJcmV0dXJuIGVycm9yOw0KPiA+ICB9DQo+IA0KPiBUaGlz
+IG90aGVyd2lzZSBzZWVtcyBsaWtlIGEgdmVyeSBzdHJhaWdodGZvcndhcmQgY2hhbmdlLg0KPiAN
+ClRoYW5rcyBmb3IgdGhlIHJldmlldy4gSSB3aWxsIHNlbmQgb3V0IHRoZSB2MiBzb29uLg0KDQo+
+IFRoYW5rcywNCj4gDQo+ICAgICAgICAgIE0uDQoNCi0tIA0KUmVnYXJkcywNCkF0aXNoDQo=
