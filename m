@@ -2,149 +2,89 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06280C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE8C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7A82073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A3D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TN/QOr87"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="e+CNvBHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfLJVwO (ORCPT
+        id S1730255AbfLJVwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:52:14 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33514 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbfLJVwK (ORCPT
+        Tue, 10 Dec 2019 16:52:16 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38278 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729567AbfLJVwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 16:52:10 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so9542004pgk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:52:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=x1llI4VQgR/NNv9VK0TWAuEng4/7tgvnedskGQElizQ=;
-        b=TN/QOr87yPqhW/2lzNiPS+Jz3xhAwg45MFbe+8DISDcdLzuEBd561ejk5h0oCDb20M
-         cyLB2KMxESf4Ub5nYgtAAseJcF8JrG2TpoOOK8qfqxLY6L6KKBaLA7FApvFfMTJYJ/nD
-         rzvsG3Hy5V1bVEoDwP+bo3VLKfoUq4aXJ0+Xo3Cp173dvNPBZF+DAqX8e0nbD2CZKk9O
-         p8kMwBsQHh50nLmmwHguAwJKH8eve5hwTsj2EHRkq2Yn4/MIPkhixNEv6PV5mPIdAWdX
-         BfndNieAlydYIPORzdzVGct5J8O1VK1nNaPidFt04JpeZqNZDd0NoNb9YkalSivZSsmd
-         CHKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=x1llI4VQgR/NNv9VK0TWAuEng4/7tgvnedskGQElizQ=;
-        b=tH+G/j6RbBvbksIQ/e219BV8vqD3JrN7forRcm9ebS0zV1HGekGJDZAN9VHaOJdHH/
-         s/uYUTFqWGzy57YADRgPU94KkyPuOc0OsWf+PoNVsOf2t86MMMmSZGuc1G1ohL4wdIk8
-         dm3nw/ob+kdo49StCU8kJbJv7zqMIdofMzpQbR/eI0q/zquu7Ud8fgOD0gQJ29g9L0Ie
-         BwVlnjiULrMN8LNBVET8b3PwPYefL67VxFHsHCx9Xkh9XhZ/Jy88PvFP5YGA9LHdw6bw
-         Sn0q1gC82+Ji0loTRneB7U7lH9IR7qBpPlIG3A/5SVP6DgNUb14JjBkyXBnkOZnGYAFx
-         Oa7A==
-X-Gm-Message-State: APjAAAVJm4ib1Gbals3b0+PonZ/8KslhQuceHkuEypfIHoJmEtFnj55B
-        Y/YeIyZTHkQ+jpwh8u0EwPMOvw==
-X-Google-Smtp-Source: APXvYqxXcor3tR+WOkruu/D28GkGpulVaBRaudEGLcLcwEBe3xdOjEwVkq8bKvNdtbH3cY30xIG6Mg==
-X-Received: by 2002:a63:213:: with SMTP id 19mr329909pgc.160.1576014729720;
-        Tue, 10 Dec 2019 13:52:09 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id z13sm3865986pjz.15.2019.12.10.13.52.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:52:09 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:52:05 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
-Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
- ksyms
-Message-ID: <20191210135205.529044a4@cakuba.netronome.com>
-In-Reply-To: <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
-References: <20191210181412.151226-1-toke@redhat.com>
-        <20191210125457.13f7821a@cakuba.netronome.com>
-        <87eexbhopo.fsf@toke.dk>
-        <20191210132428.4470a7b0@cakuba.netronome.com>
-        <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
-Organization: Netronome Systems, Ltd.
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 65324DBF;
+        Tue, 10 Dec 2019 22:52:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1576014727;
+        bh=Ih8EqcfA4nD8hACm8d/yLl08r2Db3KdImZJ3njZhk8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e+CNvBHvYgFhT/I85xrhtTzkQLHns7WVHJpYg3UMd4sJbpHR6Qd23yypDPmqv0757
+         GVaIZwYM2MzQ5Shu5N/q/keQ5SHPHq86mwcwACrbDvIG4VRowIPbQuRgVes+Pi+7UZ
+         CvHmfF8nUh6qaN5KnXOf/GZJLZ1wiHpMqXg4W3o0=
+Date:   Tue, 10 Dec 2019 23:51:58 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v5 2/4] Revert "drm/tegra: Move drm_dp_link helpers to
+ Tegra DRM"
+Message-ID: <20191210215158.GA13051@pendragon.ideasonboard.com>
+References: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
+ <1575957299-12977-3-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1575957299-12977-3-git-send-email-allen.chen@ite.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 13:31:50 -0800, Alexei Starovoitov wrote:
-> On Tue, Dec 10, 2019 at 01:24:28PM -0800, Jakub Kicinski wrote:
-> > On Tue, 10 Dec 2019 22:09:55 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wr=
-ote: =20
-> > > Jakub Kicinski <jakub.kicinski@netronome.com> writes: =20
-> > > > On Tue, 10 Dec 2019 19:14:12 +0100, Toke H=C3=B8iland-J=C3=B8rgense=
-n wrote:   =20
-> > > >> When the kptr_restrict sysctl is set, the kernel can fail to return
-> > > >> jited_ksyms or jited_prog_insns, but still have positive values in
-> > > >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash wh=
-en trying
-> > > >> to dump the program because it only checks the len fields not the =
-actual
-> > > >> pointers to the instructions and ksyms.
-> > > >>=20
-> > > >> Fix this by adding the missing checks.
-> > > >>=20
-> > > >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> =
-  =20
-> > > >
-> > > > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-> > > >
-> > > > and
-> > > >
-> > > > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using i=
-mm field")
-> > > >
-> > > > ?   =20
-> > >=20
-> > > Yeah, guess so? Although I must admit it's not quite clear to me whet=
-her
-> > > bpftool gets stable backports, or if it follows the "only moving
-> > > forward" credo of libbpf? =20
-> >=20
-> > bpftool does not have a GH repo, and seeing strength of Alexei's
-> > arguments in the recent discussion - I don't think it will. So no
-> > reason for bpftool to be "special" =20
->=20
-> bpftool always was and will be a special user of libbpf.
+Hello Allen,
 
-There we go again. Making proclamations without any justification or
-explanation.
+Thank you for the patch.
 
-Maybe there is a language barrier between us, but I wrote the initial
-bpftool code, so I don't see how you (who authored one patch) can say
-what it was or is. Do you mean to say what you intend to make it?
+On Tue, Dec 10, 2019 at 01:53:40PM +0800, allen wrote:
+> This reverts commit 9a42c7c647a9ad0f7ebb147a52eda3dcb7c84292.
 
-bpftool was intended to be a CLI to BPF _kernel_ interface. libbpf was
-just the library that we all agreed to use moving forward for ELF
-loading.
+Why ?
 
-I'm not going to argue with you again. You kept bad mouthing iproute2
-and then your only argument was the reviews sometimes take longer than
-24 hours. Which I'm sure you have a lot of experience with:
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> ---
+>  drivers/gpu/drm/drm_dp_helper.c | 128 ++++++
+>  drivers/gpu/drm/tegra/Makefile  |   1 -
+>  drivers/gpu/drm/tegra/dp.c      | 876 ----------------------------------------
+>  drivers/gpu/drm/tegra/dp.h      | 177 --------
+>  drivers/gpu/drm/tegra/dpaux.c   |   1 -
+>  drivers/gpu/drm/tegra/sor.c     |   1 -
+>  include/drm/drm_dp_helper.h     |  16 +
+>  7 files changed, 144 insertions(+), 1056 deletions(-)
+>  delete mode 100644 drivers/gpu/drm/tegra/dp.c
+>  delete mode 100644 drivers/gpu/drm/tegra/dp.h
 
-  iproute2$ git log --author=3DStarov --oneline=20
-4bfe68253670 iptnl: add support for collect_md flag in IPv4 and IPv6 tunnels
+[snip]
 
-  iproute2$ git log --author=3Dfb.com --oneline=20
-3da6d055d93f bpf: add btf func and func_proto kind support
-7a04dd84a7f9 bpf: check map symbol type properly with newer llvm compiler
-73451259daaa tc: fix ipv6 filter selector attribute for some prefix lengths
-0b4ea60b5a48 bpf: Add support for IFLA_XDP_PROG_ID
-4bfe68253670 iptnl: add support for collect_md flag in IPv4 and IPv6 tunnels
-414aeec90f82 ss: Add tcp_info fields data_segs_in/out
-409998c5a4eb iproute: ip-gue/ip-fou manpages
+-- 
+Regards,
 
-Upstreaming bpftool was a big mistake, but we live and we learn.
+Laurent Pinchart
