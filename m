@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47DEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FBEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D35246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FFE246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012337;
-	bh=8YueWeiyPjHFoKErqtZ0QScw+0iYHoNybihygGv1PZ8=;
+	s=default; t=1576012340;
+	bh=IwXQYZBTdOEeyTpQWl5WVVtM3dvJFv3nmjOMAVyAIzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vW+vel/10rWoeGrg6EM8Arv7Yx1bvHUH2ma/tg3R1SE7T8qp+g48c6FNbsNbuVM5J
-	 rIBhbxDvv8QlmN2KpXvN/MkXurt6eS2ZMGL64cGjtXx2FwC5/4q+Hkza6WVUunX44e
-	 hE9WP07hWUNR8aAQHilJnuOwDVjmEjfDfrtinRJM=
+	b=Yz1jb0FuPCyg/SNraoYfgdevysBf4d7ELxPKQ5w11D1SrpEqrio2bO9m2OHGEYTZ2
+	 X3nD/dDmLQsS2N/O4vTinOVUbjrPzCleZQpm8qMHJpfv+b5hKoqStHzl43vHl/eMLO
+	 R6LB4uYYBwYIivfKyO4j6A6hxSSzYxIIFnNIAzy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfLJVMQ (ORCPT
+        id S1728436AbfLJVMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728886AbfLJVMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:02 -0500
+        id S1728496AbfLJVMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E718246AA;
-        Tue, 10 Dec 2019 21:11:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F2C7246A8;
+        Tue, 10 Dec 2019 21:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012320;
-        bh=8YueWeiyPjHFoKErqtZ0QScw+0iYHoNybihygGv1PZ8=;
+        s=default; t=1576012323;
+        bh=IwXQYZBTdOEeyTpQWl5WVVtM3dvJFv3nmjOMAVyAIzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTInnoSCgzU2MixyVlyNfH3VlMygnfH7MV4pEdxLncoSuXZR/uTdLoLChZ2sumZSz
-         2up+qg9YITCgV2UBwI79o1wSinOsFwPlhnJZCpAI4Qphtz8mrq/RLHZve1Ydc+Fufs
-         B1mjgkc8yQPBcSuBG0GS9llUvpHgmhnbKKfbcdWU=
+        b=tMNoo1dO1X1KMrFP9/nE3j6Dbip6oL4E8OMzTyg7y5Ixifo81t4ErvWJBkaiJMTNq
+         lnmtSIbMojfAYzcsq/6OKXcmSGIacxh93mvKhLEXspLyyGXLyNjwa/jUa/9KqxO4ud
+         c80M4HohDRfyrTrCH8Gj6qGOu4KUhpS9AKqbcmPw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 254/350] crypto: atmel - Fix authenc support when it is set to m
-Date:   Tue, 10 Dec 2019 16:05:59 -0500
-Message-Id: <20191210210735.9077-215-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 256/350] iio: imu: st_lsm6dsx: fix ODR check in st_lsm6dsx_write_raw
+Date:   Tue, 10 Dec 2019 16:06:01 -0500
+Message-Id: <20191210210735.9077-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,134 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 1520c72596dde7f22b8bd6bed3ef7df2b8b7ef39 ]
+[ Upstream commit fc3f6ad7f5dc6c899fbda0255865737bac88c2e0 ]
 
-As it is if CONFIG_CRYPTO_DEV_ATMEL_AUTHENC is set to m it is in
-effect disabled.  This patch fixes it by using IS_ENABLED instead
-of ifdef.
+Since st_lsm6dsx i2c master controller relies on accel device as trigger
+and slave devices can run at different ODRs we must select an accel_odr >=
+slave_odr. Report real accel ODR in st_lsm6dsx_check_odr() in order to
+properly set sensor frequency in st_lsm6dsx_write_raw and avoid to
+report unsupported frequency
 
-Fixes: 89a82ef87e01 ("crypto: atmel-authenc - add support to...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 6ffb55e5009ff ("iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-aes.c     | 18 +++++++++---------
- drivers/crypto/atmel-authenc.h |  2 +-
- drivers/crypto/atmel-sha.c     |  2 +-
- 3 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
-index 026f193556f9d..b85a516614d86 100644
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -145,7 +145,7 @@ struct atmel_aes_xts_ctx {
- 	u32			key2[AES_KEYSIZE_256 / sizeof(u32)];
- };
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+index fd5ebe1e1594f..28e011b35f21b 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -985,8 +985,7 @@ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
+ 		return -EINVAL;
  
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- struct atmel_aes_authenc_ctx {
- 	struct atmel_aes_base_ctx	base;
- 	struct atmel_sha_authenc_ctx	*auth;
-@@ -157,7 +157,7 @@ struct atmel_aes_reqctx {
- 	u32			lastc[AES_BLOCK_SIZE / sizeof(u32)];
- };
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- struct atmel_aes_authenc_reqctx {
- 	struct atmel_aes_reqctx	base;
- 
-@@ -486,13 +486,13 @@ static inline bool atmel_aes_is_encrypt(const struct atmel_aes_dev *dd)
- 	return (dd->flags & AES_FLAGS_ENCRYPT);
+ 	*val = odr_table->odr_avl[i].val;
+-
+-	return 0;
++	return odr_table->odr_avl[i].hz;
  }
  
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- static void atmel_aes_authenc_complete(struct atmel_aes_dev *dd, int err);
- #endif
+ static u16 st_lsm6dsx_check_odr_dependency(struct st_lsm6dsx_hw *hw, u16 odr,
+@@ -1149,8 +1148,10 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
+ 	case IIO_CHAN_INFO_SAMP_FREQ: {
+ 		u8 data;
  
- static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
- {
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	if (dd->ctx->is_aead)
- 		atmel_aes_authenc_complete(dd, err);
- #endif
-@@ -1973,7 +1973,7 @@ static struct crypto_alg aes_xts_alg = {
+-		err = st_lsm6dsx_check_odr(sensor, val, &data);
+-		if (!err)
++		val = st_lsm6dsx_check_odr(sensor, val, &data);
++		if (val < 0)
++			err = val;
++		else
+ 			sensor->odr = val;
+ 		break;
  	}
- };
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- /* authenc aead functions */
- 
- static int atmel_aes_authenc_start(struct atmel_aes_dev *dd);
-@@ -2460,7 +2460,7 @@ static void atmel_aes_unregister_algs(struct atmel_aes_dev *dd)
- {
- 	int i;
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	if (dd->caps.has_authenc)
- 		for (i = 0; i < ARRAY_SIZE(aes_authenc_algs); i++)
- 			crypto_unregister_aead(&aes_authenc_algs[i]);
-@@ -2507,7 +2507,7 @@ static int atmel_aes_register_algs(struct atmel_aes_dev *dd)
- 			goto err_aes_xts_alg;
- 	}
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	if (dd->caps.has_authenc) {
- 		for (i = 0; i < ARRAY_SIZE(aes_authenc_algs); i++) {
- 			err = crypto_register_aead(&aes_authenc_algs[i]);
-@@ -2519,7 +2519,7 @@ static int atmel_aes_register_algs(struct atmel_aes_dev *dd)
- 
- 	return 0;
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	/* i = ARRAY_SIZE(aes_authenc_algs); */
- err_aes_authenc_alg:
- 	for (j = 0; j < i; j++)
-@@ -2709,7 +2709,7 @@ static int atmel_aes_probe(struct platform_device *pdev)
- 
- 	atmel_aes_get_cap(aes_dd);
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	if (aes_dd->caps.has_authenc && !atmel_sha_authenc_is_ready()) {
- 		err = -EPROBE_DEFER;
- 		goto iclk_unprepare;
-diff --git a/drivers/crypto/atmel-authenc.h b/drivers/crypto/atmel-authenc.h
-index cbd37a2edadaf..d6de810df44fe 100644
---- a/drivers/crypto/atmel-authenc.h
-+++ b/drivers/crypto/atmel-authenc.h
-@@ -12,7 +12,7 @@
- #ifndef __ATMEL_AUTHENC_H__
- #define __ATMEL_AUTHENC_H__
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 
- #include <crypto/authenc.h>
- #include <crypto/hash.h>
-diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
-index 84cb8748a7959..d32626458e67c 100644
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -2212,7 +2212,7 @@ static struct ahash_alg sha_hmac_algs[] = {
- },
- };
- 
--#ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- /* authenc functions */
- 
- static int atmel_sha_authenc_init2(struct atmel_sha_dev *dd);
 -- 
 2.20.1
 
