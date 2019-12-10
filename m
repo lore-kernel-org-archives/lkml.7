@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C82CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2369C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9B9206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7929A206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012886;
-	bh=ZgnB4lFM8X3vrrBvyCDddzp2I40k+9vWfvOWfY48zDg=;
+	s=default; t=1576012889;
+	bh=xsdow0IJ77bvirW4eYEduP638RtJRXOzATouebVsj6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iX/4JXNidv+o5ZW6q1tiUwYBTIB2NS3k174efqywy+GY7HS+ujdW1TyhE7AT8U2Yn
-	 PBMO8wtKl1iLxUbtxzsRcWZObn4EbAfcbpOfrkz02ZQ5ZFl0SFvyAA0Adr7lp2JPTR
-	 F47Ql+peu5eZdiSh8dBWaAVIdnUuoiI/dEiMbOAY=
+	b=nA5j3K3BKQTI/qZUxaTvM3O2Muu/0bFh0ROHFVlcXRDnGPrHkjyNhcsRGat3T23qo
+	 I6sxJdz8OtoQzzX7IAiijWWebpJtX+DjpISxkakTvtf/NmtxNQHBe1QPBZMGTEqUsr
+	 0rlasD4QVAZQmhLgviZMOBBBUNSb1C5QLHbhSAgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbfLJVVY (ORCPT
+        id S1728841AbfLJVV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:21:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:21:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfLJVLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:48 -0500
+        id S1727942AbfLJVLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A20CA24697;
-        Tue, 10 Dec 2019 21:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A85F246B8;
+        Tue, 10 Dec 2019 21:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012307;
-        bh=ZgnB4lFM8X3vrrBvyCDddzp2I40k+9vWfvOWfY48zDg=;
+        s=default; t=1576012306;
+        bh=xsdow0IJ77bvirW4eYEduP638RtJRXOzATouebVsj6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIx0yhS2vzMelBtWSrSnYlS4Y5BkGNWh1HmNUJEsYtQXWdHs5fDn+LVeuQMpKfbjg
-         cg0TE1ltgzk75StLY+3fD/DfV66WvM5tnOMkJAHXi0FjNtM6t64T23WrvC/YFvssPY
-         e4hiYqNFewrwRsMGoafgTHnEBFSOzkGLPpgBbqB8=
+        b=KNUtXVrwa1LHxxt/ekDYJ9e5o2bmNZC3mTxWDawAzPx8w3kuN+mDOes45HxHL33jh
+         WsdSX0bx+vB1gV2SKW5UTDFhH5dN/oorm6iz6D2/KlhwSyd3hXDET4qQ03O9oWxXED
+         +62oMOQutYqcpYw4z3HkEZ+aYlJDwNc/EgJhoVy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 243/350] s390/bpf: Use kvcalloc for addrs array
-Date:   Tue, 10 Dec 2019 16:05:48 -0500
-Message-Id: <20191210210735.9077-204-sashal@kernel.org>
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 242/350] libbpf: Fix negative FD close() in xsk_setup_xdp_prog()
+Date:   Tue, 10 Dec 2019 16:05:47 -0500
+Message-Id: <20191210210735.9077-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,58 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 166f11d11f6f70439830d09bfa5552ec1b368494 ]
+[ Upstream commit 9656b346b280c3e49c8a116c3a715f966633b161 ]
 
-A BPF program may consist of 1m instructions, which means JIT
-instruction-address mapping can be as large as 4m. s390 has
-FORCE_MAX_ZONEORDER=9 (for memory hotplug reasons), which means maximum
-kmalloc size is 1m. This makes it impossible to JIT programs with more
-than 256k instructions.
+Fix issue reported by static analysis (Coverity). If bpf_prog_get_fd_by_id()
+fails, xsk_lookup_bpf_maps() will fail as well and clean-up code will attempt
+close() with fd=-1. Fix by checking bpf_prog_get_fd_by_id() return result and
+exiting early.
 
-Fix by using kvcalloc, which falls back to vmalloc for larger
-allocations. An alternative would be to use a radix tree, but that is
-not supported by bpf_prog_fill_jited_linfo.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Fixes: 10a13bb40e54 ("libbpf: remove qidconf and better support external bpf programs.")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191107141838.92202-1-iii@linux.ibm.com
+Link: https://lore.kernel.org/bpf/20191107054059.313884-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/lib/bpf/xsk.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index ce88211b9c6cd..c8c16b5eed6be 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -23,6 +23,7 @@
- #include <linux/filter.h>
- #include <linux/init.h>
- #include <linux/bpf.h>
-+#include <linux/mm.h>
- #include <asm/cacheflush.h>
- #include <asm/dis.h>
- #include <asm/facility.h>
-@@ -1369,7 +1370,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 	}
- 
- 	memset(&jit, 0, sizeof(jit));
--	jit.addrs = kcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
-+	jit.addrs = kvcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
- 	if (jit.addrs == NULL) {
- 		fp = orig_fp;
- 		goto out;
-@@ -1422,7 +1423,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 	if (!fp->is_func || extra_pass) {
- 		bpf_prog_fill_jited_linfo(fp, jit.addrs + 1);
- free_addrs:
--		kfree(jit.addrs);
-+		kvfree(jit.addrs);
- 		kfree(jit_data);
- 		fp->aux->jit_data = NULL;
- 	}
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index 9d53480862030..a73b79d293337 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -466,6 +466,8 @@ static int xsk_setup_xdp_prog(struct xsk_socket *xsk)
+ 		}
+ 	} else {
+ 		xsk->prog_fd = bpf_prog_get_fd_by_id(prog_id);
++		if (xsk->prog_fd < 0)
++			return -errno;
+ 		err = xsk_lookup_bpf_maps(xsk);
+ 		if (err) {
+ 			close(xsk->prog_fd);
 -- 
 2.20.1
 
