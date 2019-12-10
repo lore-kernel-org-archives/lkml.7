@@ -2,228 +2,170 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E2DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B477EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1B92073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="L5zPBPHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 87D022077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575977944;
+	bh=p4ZI08kCrTStm4YBIWYZvtY50nnsN/Ta3QzcAmX9ra4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=v+bavn6JvgYkM7u0qS/Ukd6i4397ymaYqePKgfJnpULeT2XruOPOKjxhTA+7fW/bB
+	 NANycQzQ3XB4xDydW+r8dupXy3XMVZmc21/gdxYh0nH48PyH4XXJMY077w9U3OZySq
+	 udh6Ce1WvtJoUA/q7sjaRH9DrWky8PLJTpWSimK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfLJLiv (ORCPT
+        id S1727638AbfLJLjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:38:51 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50132 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfLJLiv (ORCPT
+        Tue, 10 Dec 2019 06:39:03 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45180 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbfLJLjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:38:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p+0WpSxXXUtagba3vOEjLFjDjbBNemDiOSF0zcD4DU0=; b=L5zPBPHJbFQFRq5C1XIVb3Jrq
-        pBxmhj20Ls77kWZl2ea6m7UyOvC+BOI+2L40+fJX7m9rJG3fC8tOPSXhjXW97bBMlziZu4ADvkC81
-        kcMBXEIy5tBmvsTTi4qLtICAzhVze6G555r+TXAnBUUdh33UbaW9uxkocM4UP5q3lmfJNttd5QE1U
-        Mzc8rhnY3EF1cfN9Km8NFK0j5IHhVccyV2j4SgNn/5duP8vkTKEX/zbZ0nrYSZ5I5crQc/TNUntk+
-        XpHkPc6e97SXV/qPEog9bIf1Prog4MznrzKTwuDhy9YZXmgQ+bcjkkoCjMu4Lsx0dHJEFU6kPZS3M
-        pGgZhoEfw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46900)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iedqd-000140-NI; Tue, 10 Dec 2019 11:38:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iedqY-0004at-24; Tue, 10 Dec 2019 11:38:30 +0000
-Date:   Tue, 10 Dec 2019 11:38:30 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Milind Parab <mparab@cadence.com>
-Cc:     "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
-        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
-        "brad.mouring@ni.com" <brad.mouring@ni.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Subject: Re: [PATCH 1/3] net: macb: fix for fixed-link mode
-Message-ID: <20191210113829.GT25745@shell.armlinux.org.uk>
-References: <1575890033-23846-1-git-send-email-mparab@cadence.com>
- <1575890061-24250-1-git-send-email-mparab@cadence.com>
- <20191209112615.GE25745@shell.armlinux.org.uk>
- <BY5PR07MB6514923C4D3127F43C54FE5ED35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
+        Tue, 10 Dec 2019 06:39:03 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so13388149lfa.12;
+        Tue, 10 Dec 2019 03:39:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=paNqhFZXRyT6E8o7LJGyUT8QuWl+b8l39w8bSosKx14=;
+        b=SxP3aG/tYco+shyDZW0JDd7hC0NmrwFqKdXDdflrJT0VgS9+2aa9PPcSfkbv6SM1ly
+         S1K9BGc0enhfrnyyXCN7xxa+EH8MWl1Y1yITChe8YrldAgCSfG99FnOQa1u1xP4Vlpw1
+         Uyg9OElyCQh8tJRVdWbcc+OYPMigbyHjsbX0IYduKgqQdUWSxUX1GCA9XgafG0sWHSDo
+         12Z+AU4TMbaGLRaUJ/fvH9XB4zSv+bVAloQNJBFxuEnPiHal/pqRsm0nvJ2+lyEMtf5J
+         JgQnJ807b/jVr/8Dz7Nr10tb08FR9W+e20de2TDFLnB0ZSwkxE4TaGkyxjuqQokP8ULR
+         Uwug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=paNqhFZXRyT6E8o7LJGyUT8QuWl+b8l39w8bSosKx14=;
+        b=OMI1vaXtHDO8hhBBjPc4nApEc+1Y0WKw3Wg43vcTMhZ7r+KqUTS9yN7kLmtMMBiFSh
+         JU+eNvX345uNznxviw2e7s3lHRQR4USOZZgpACcglqzT0R/KQrzAdtx0xZMNOkoSP9M7
+         TfVnvPTWqcNzA+xL5tRof0Xl7xm6Phxe4zQjaQaIkkRfbFojlJp2lKR4jBFLN9ZI2uX+
+         WUAajodwAx30RBLITKdaD2l7/w+ZhUWwHYV7Ag4QHnRfDwZR9NLOXmnvCeDAS8Y5jzLP
+         DH07MjOiKpxfYPIbqBDvjd521YugHdAZDqvWl568gnztTXMv8IEEFd1Q2ikHmpk7y+Y4
+         xb+g==
+X-Gm-Message-State: APjAAAWRiK0cjI86CsBu90EQFGhuB41pyp0i8Vo/3aJwHpBveUwHJ5fR
+        se8qWWF1YPyI79GGoBVViLEtIEu7X4g=
+X-Google-Smtp-Source: APXvYqxthsAEkGc+kltqcDBPVN+6AY4Dy5v9qfgB8teyAZxHCmQS9eSDcJsDXKz8bReOAMmkbgsN2w==
+X-Received: by 2002:a05:6512:21d:: with SMTP id a29mr11710124lfo.186.1575977940594;
+        Tue, 10 Dec 2019 03:39:00 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id a19sm1929493ljd.90.2019.12.10.03.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 03:38:59 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
+        linux-usb@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     kernel@puri.sm, linux-kernel@vger.kernel.org,
+        p.zabel@pengutronix.de
+Subject: Re: suspend problem with dwc3 gadget / g_multi when usb disconnected
+In-Reply-To: <38edc05e-680b-d881-49fc-e8230a93b2c8@puri.sm>
+References: <38edc05e-680b-d881-49fc-e8230a93b2c8@puri.sm>
+Date:   Tue, 10 Dec 2019 13:39:47 +0200
+Message-ID: <87blsgl88s.fsf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR07MB6514923C4D3127F43C54FE5ED35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:14:13AM +0000, Milind Parab wrote:
-> >> This patch fix the issue with fixed link. With fixed-link
-> >> device opening fails due to macb_phylink_connect not
-> >> handling fixed-link mode, in which case no MAC-PHY connection
-> >> is needed and phylink_connect return success (0), however
-> >> in current driver attempt is made to search and connect to
-> >> PHY even for fixed-link.
-> >>
-> >> Signed-off-by: Milind Parab <mparab@cadence.com>
-> >> ---
-> >>  drivers/net/ethernet/cadence/macb_main.c | 17 ++++++++---------
-> >>  1 file changed, 8 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> >> index 9c767ee252ac..6b68ef34ab19 100644
-> >> --- a/drivers/net/ethernet/cadence/macb_main.c
-> >> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> >> @@ -615,17 +615,13 @@ static int macb_phylink_connect(struct macb *bp)
-> >>  {
-> >>  	struct net_device *dev = bp->dev;
-> >>  	struct phy_device *phydev;
-> >> +	struct device_node *dn = bp->pdev->dev.of_node;
-> >>  	int ret;
-> >>
-> >> -	if (bp->pdev->dev.of_node &&
-> >> -	    of_parse_phandle(bp->pdev->dev.of_node, "phy-handle", 0)) {
-> >> -		ret = phylink_of_phy_connect(bp->phylink, bp->pdev-
-> >>dev.of_node,
-> >> -					     0);
-> >> -		if (ret) {
-> >> -			netdev_err(dev, "Could not attach PHY (%d)\n", ret);
-> >> -			return ret;
-> >> -		}
-> >> -	} else {
-> >> +	if (dn)
-> >> +		ret = phylink_of_phy_connect(bp->phylink, dn, 0);
-> >> +
-> >> +	if (!dn || (ret && !of_parse_phandle(dn, "phy-handle", 0))) {
-> >
-> >Hi,
-> >If of_parse_phandle() returns non-null, the device_node it returns will
-> >have its reference count increased by one.  That reference needs to be
-> >put.
-> >
-> 
-> Okay, as per your suggestion below addition will be okay to store the "phy_node" and then of_node_put(phy_node) on error
-> 
-> phy_node = of_parse_phandle(dn, "phy-handle", 0);
->         if (!dn || (ret && !phy_node)) {
->                 phydev = phy_find_first(bp->mii_bus);
-...
->         if (phy_node)
->                 of_node_put(phy_node);
-
-As you're only interested in whether phy-handle exists or not, you
-could do this instead:
-
-	phy_node = of_parse_phandle(dn, "phy-handle", 0);
-	of_node_put(phy_node);
-	if (!dn || (ret && !phy_node)) {
-		...
-
-Yes, it looks a bit weird, but the only thing you're interested in
-here is whether of_parse_phandle() returned NULL or non-NULL. You're
-not interested in dereferencing the pointer.
-
-Some may raise some eye-brows at that, so it may be better to have
-this as a helper:
-
-static bool macb_phy_handle_exists(struct device_node *dn)
-{
-	dn = of_parse_phandle(dn, "phy-handle", 0);
-	of_node_put(dn);
-	return dn != NULL;
-}
-
-and use it as:
-
-	if (!dn || (ret && !macb_phy_handle_exists(dn))) {
-
-which is more obvious what is going on.
-
-> 
->         return ret;
-> 
-> >I assume you're trying to determine whether phylink_of_phy_connect()
-> >failed because of a missing phy-handle rather than of_phy_attach()
-> >failing?  Maybe those two failures ought to be distinguished by errno
-> >return value?
-> 
-> Yes, PHY will be scanned only if phylink_of_phy_connect() returns error due to missing "phy-handle". 
-> Currently, phylink_of_phy_connect() returns same error for missing "phy-handle" and of_phy_attach() failure.
-> 
-> >of_phy_attach() may fail due to of_phy_find_device() failing to find
-> >the PHY, or phy_attach_direct() failing.  We could switch from using
-> >of_phy_attach(), to using of_phy_find_device() directly so we can then
-> >propagate phy_attach_direct()'s error code back, rather than losing it.
-> >That would then leave the case of of_phy_find_device() failure to be
-> >considered in terms of errno return value.
-
-Here's a patch I quickly knocked up that does this - may not apply to
-the kernel you're using as there's a whole bunch of work I have
-outstanding, but gives the outline idea.  Does this help?
-
-8<===
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH] net: phylink: avoid of_phy_attach()
-
-of_phy_attach() hides the return value of phy_attach_direct(), forcing
-us to return a "generic" ENODEV error code that is indistinguishable
-from the lack-of-phy-property case.
-
-Switch to using of_phy_find_device() to find the PHY device, and then
-propagating any phy_attach_direct() error back to the caller.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- drivers/net/phy/phylink.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index e9036b72114c..5a5109428d9e 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -887,14 +887,17 @@ int phylink_of_phy_connect(struct phylink *pl, struct device_node *dn,
- 		return 0;
- 	}
- 
--	phy_dev = of_phy_attach(pl->netdev, phy_node, flags,
--				pl->link_interface);
-+	phy_dev = of_phy_find_device(phy_node);
- 	/* We're done with the phy_node handle */
- 	of_node_put(phy_node);
--
- 	if (!phy_dev)
- 		return -ENODEV;
- 
-+	ret = phy_attach_direct(pl->netdev, phy_dev, flags,
-+				pl->link_interface);
-+	if (ret)
-+		return ret;
-+
- 	ret = phylink_bringup_phy(pl, phy_dev, pl->link_config.interface);
- 	if (ret)
- 		phy_detach(phy_dev);
--- 
-2.20.1
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Hi,
+
+Martin Kepplinger <martin.kepplinger@puri.sm> writes:
+> I'm running today's linux-next with this defconfig on a librem 5 devkit:
+>
+> https://source.puri.sm/martin.kepplinger/linux-next/blob/next-20191205/li=
+brem5/arch/arm64/configs/librem5_defconfig
+>
+> So I want to have host and gadget mode (G_MULTI, most importantly a
+> serial ACM console), and I'm having trouble with S3 suspend:
+>
+> * The most interesting case here: When I boot with USB disconnected
+> (from the battery) I can't suspend or unload dwc3. After "echo mem >
+> /sys/power/state" I get nothing in the my logs except
+>
+> [   18.107380] PM: suspend entry (deep)
+>
+> and the system hangs. similarly, I can't work around this by rmmod -f
+> dwc3. What can go wrong here? I don't know enough about usb hci and why
+> this shouldn't work. What can I do to help you here?
+>
+> * When I boot with USB connected, then unplug USB, I get:
+>
+> [   19.289602] dwc3 38100000.usb: request 000000006a19695c was not
+> queued to ep3in
+
+please capture ftrace logs from dwc3. We have documentation for this:
+
+https://www.kernel.org/doc/html/latest/driver-api/usb/dwc3.html
+
+(note to self: update email address :-)
+
+> and then try to suspend:
+>
+> root@pureos:/home/purism# echo mem > /sys/power/state
+> [   37.863066] xhci-hcd xhci-hcd.0.auto: xHCI host controller not
+> responding, assume dead
+> [   37.871345] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> [   37.877260] PM: dpm_run_callback(): platform_pm_suspend+0x0/0x78
+> returns -22
+> [   37.884626] PM: Device xhci-hcd.0.auto failed to suspend async: error =
+-22
+> [   37.891728] PM: Some devices failed to suspend, or early wake event
+> detected
+> bash: echo: write error: Invalid argument
+>
+>
+> * When I keep USB connected, the behaviour is similar actually, but
+> rmmod works (but that use-case is not that interesting to me).
+>
+>
+> Since my experience with USB drivers is limited, I'm glad to hear about
+> any of your experience with dwc3- or more general gadget-problems with
+> suspend and that or a similar configuration.
+>
+> Without G_MULTI and dwc3 host-only, suspend works btw. And all the above
+> is basically identical on previous stable kernels too.
+
+Have you tried any other gadget drivers or just g-multi? Care to try
+with something simple like g-zero?
+
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl3vhAMACgkQzL64meEa
+mQYPVQ/+KolGBV6DSxWa+ZuofyRKG3rnfK7xflYuCxqLBrMW7gTOyWmm5DnzKVtv
+f9KusJuNOQbNEDwT0qFhIDYbiBAO3yPHeOqhXwWN9Hmj3SdtEeD0MVXY/PgQLX0Y
+OBDyNrOUsC4MWf60kaghPJXnUJBTaUTJFVkTWPKJ3b/m+ZrSn7R+L1BJKApTSpZg
+ByHB+IM04svwQXQst59g3p03rHg01YI9V7lJMPbmHVhykXjY0Hal9u8b7q+EjoCc
+lH886XMe25FvS6JuZYnns4Cu58LjtVCYEU5XVbE+K8liJLm5JYCtyJTPXeIv7Fzd
+jROhaDW1LYDjsUpb+9XZS4AW09RaqOK6NkPbxwfq1i0B/8j15ofzTF2mb1buNCw2
+tV8guoiXgCsiA6Lwk2PNh69joqMotLLqzjPnmOt/iDtCAR2JNr3ppLHxb1OlUQFo
+oCMDePQYbZ2gJlHnJADLD3vZjmIeol0fM9d4WQIUURfanrOwan6kuo8c18gZGQYW
+rdJIWPE/E4PZ1oq4147Hv/Ar8xK0UAeSCmSLG1cm6E+XZfZXqJ0Tuti7ybs8LzDk
+5Db9PCKjp15mN+D+EukKCTQXfV2OwQ4EVJN1NkS+BlEz5cYy2JlF+awRYMDDwcOU
+jvTy3fgS+mOWIglfIuH8YhScSTm+2GpOl8PB0+6ECNpQMEbpmXg=
+=69+K
+-----END PGP SIGNATURE-----
+--=-=-=--
