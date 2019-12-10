@@ -2,125 +2,75 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF87C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD832C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714C1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MIfhd6N3"
+	by mail.kernel.org (Postfix) with ESMTP id 8886220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfLJLw0 (ORCPT
+        id S1727541AbfLJLww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:52:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50350 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727788AbfLJLv4 (ORCPT
+        Tue, 10 Dec 2019 06:52:52 -0500
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:39126 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727334AbfLJLww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:51:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575978715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gVYI3Cyf0iNefbb75CJSebcgOumNQNbDN8xNdVc1X/Q=;
-        b=MIfhd6N38+Fbf+krSzJUo728D1KwPp++l7phTeqt9jVxPVosHJgras0jLTINeoIrVFpVDQ
-        ic7QgIWZ0Xg+mvD7lBxTo2+6NL5ozp41ooBa5d9kAD5+QboGaA2ViXJrWLbjOSlBk91rfY
-        V3DEBWIIjtdLEDBfrqFTZi+WUE1Z3xA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-q712hvhTPOqBpKF6r6cXrw-1; Tue, 10 Dec 2019 06:51:52 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA52F18044B5;
-        Tue, 10 Dec 2019 11:51:48 +0000 (UTC)
-Received: from shalem.localdomain.com (unknown [10.36.118.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 377465DA60;
-        Tue, 10 Dec 2019 11:51:45 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Tue, 10 Dec 2019 06:52:52 -0500
+Received: from faui04g.informatik.uni-erlangen.de (faui04g.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:137])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 4ECCD241838
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:52:50 +0100 (CET)
+Received: by faui04g.informatik.uni-erlangen.de (Postfix, from userid 66991)
+        id 5E406843353; Tue, 10 Dec 2019 12:44:20 +0100 (CET)
+From:   Simon Geis <simon.geis@fau.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Simon Geis <simon.geis@fau.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-Subject: [PATCH v10 06/10] selftests: firmware: Add firmware_request_platform tests
-Date:   Tue, 10 Dec 2019 12:51:13 +0100
-Message-Id: <20191210115117.303935-7-hdegoede@redhat.com>
-In-Reply-To: <20191210115117.303935-1-hdegoede@redhat.com>
-References: <20191210115117.303935-1-hdegoede@redhat.com>
+        Colin Ian King <colin.king@canonical.com>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
+        Lukas Panzer <lukas.panzer@fau.de>
+Subject: [PATCH v2 08/10] PCMCIA/i82092: include <linux/io.h> instead of <asm/io.h>
+Date:   Tue, 10 Dec 2019 12:43:33 +0100
+Message-Id: <20191210114333.12239-9-simon.geis@fau.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210114333.12239-1-simon.geis@fau.de>
+References: <20191210114333.12239-1-simon.geis@fau.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: q712hvhTPOqBpKF6r6cXrw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests cases for checking the new firmware_request_platform api.
+Include the more general linux/io.h instead of asm/io.h
+as checkpatch suggests.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Co-developed-by: Lukas Panzer <lukas.panzer@fau.de>
+Signed-off-by: Lukas Panzer <lukas.panzer@fau.de>
+Signed-off-by: Simon Geis <simon.geis@fau.de>
+
 ---
- .../selftests/firmware/fw_filesystem.sh       | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/pcmcia/i82092.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/test=
-ing/selftests/firmware/fw_filesystem.sh
-index 56894477c8bd..fcc281373b4d 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -86,6 +86,29 @@ else
- =09fi
- fi
-=20
-+# Try platform (EFI embedded fw) loading too
-+if [ ! -e "$DIR"/trigger_request_platform ]; then
-+=09echo "$0: firmware loading: platform trigger not present, ignoring test=
-" >&2
-+else
-+=09if printf '\000' >"$DIR"/trigger_request_platform 2> /dev/null; then
-+=09=09echo "$0: empty filename should not succeed (platform)" >&2
-+=09=09exit 1
-+=09fi
-+
-+=09# Note we echo a non-existing name, since files on the file-system
-+=09# are preferred over firmware embedded inside the platform's firmware
-+=09# The test adds a fake entry with the requested name to the platform's
-+=09# fw list, so the name does not matter as long as it does not exist
-+=09if ! echo -n "nope-$NAME" >"$DIR"/trigger_request_platform ; then
-+=09=09echo "$0: could not trigger request platform" >&2
-+=09=09exit 1
-+=09fi
-+
-+=09# The test verifies itself that the loaded firmware contents matches
-+=09# the contents for the fake platform fw entry it added.
-+=09echo "$0: platform loading works"
-+fi
-+
- ### Batched requests tests
- test_config_present()
- {
---=20
-2.23.0
+diff --git a/drivers/pcmcia/i82092.c b/drivers/pcmcia/i82092.c
+index 562e696a7156..f523a810ab66 100644
+--- a/drivers/pcmcia/i82092.c
++++ b/drivers/pcmcia/i82092.c
+@@ -18,7 +18,7 @@
+ 
+ #include <pcmcia/ss.h>
+ 
+-#include <asm/io.h>
++#include <linux/io.h>
+ 
+ #include "i82092aa.h"
+ #include "i82365.h"
+-- 
+2.20.1
 
