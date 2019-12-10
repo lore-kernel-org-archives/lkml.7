@@ -2,135 +2,90 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D25C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2047C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F052077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DCD3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zQ7/HkMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfLJQQy (ORCPT
+        id S1727558AbfLJQUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:16:54 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46956 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727178AbfLJQQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:16:53 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ieiBu-0006Vu-C4; Tue, 10 Dec 2019 16:16:50 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ieiBt-0007Lp-Om; Tue, 10 Dec 2019 16:16:49 +0000
-Message-ID: <0e0b5aca785e41cdb0819820dfed1059683f5f58.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 31/72] KVM: x86: Manually calculate reserved bits
- when loading PDPTRS
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Doug Reiland <doug.reiland@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>
-Date:   Tue, 10 Dec 2019 16:16:44 +0000
-In-Reply-To: <20191209154913.GB4042@linux.intel.com>
-References: <lsq.1575813164.154362148@decadent.org.uk>
-         <lsq.1575813165.887619822@decadent.org.uk>
-         <20191209154913.GB4042@linux.intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-UA+Tt2Mq8es9NoOWXu2U"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 10 Dec 2019 11:20:24 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45018 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727178AbfLJQUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:20:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=c6CPgm0IhvA3nyR/Q2z35omEWncDMQnrCCrPzyQjsqw=; b=zQ7/HkMyx7E/bQvQ8wnGiAEg69
+        wrwuBNQHvjITFooDPHqXzjP+oYp8DjZlT8EbI6jDKG02xyQTeqeW4P2UMdJpe4ajwHur01GjPAu8P
+        N5sULJJQTlq8XNVqXTSzm1RXsVpcuKum6ZnFH+oeLhI31klnpZfgG3VW/6sI72DN7mig=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ieiF8-0005FM-Vd; Tue, 10 Dec 2019 17:20:10 +0100
+Date:   Tue, 10 Dec 2019 17:20:10 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+Subject: Re: [PATCH net-next 3/6] dt-bindings: net: dsa: add new MT7531
+ binding to support MT7531
+Message-ID: <20191210162010.GB27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> +Example 4:
+> +
+> +&eth {
+> +	gmac0: mac@0 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <0>;
+> +		phy-mode = "2500base-x";
+> +
+> +		fixed-link {
+> +			speed = <1000>;
+> +			full-duplex;
+> +			pause;
+> +		};
+> +	};
 
---=-UA+Tt2Mq8es9NoOWXu2U
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+2500Base-X, but fixed link speed 1000?
 
-On Mon, 2019-12-09 at 07:49 -0800, Sean Christopherson wrote:
-> On Sun, Dec 08, 2019 at 01:53:15PM +0000, Ben Hutchings wrote:
-> > 3.16.79-rc1 review patch.  If anyone has any objections, please let me =
-know.
-> >=20
-> > ------------------
-> >=20
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >=20
-> > commit 16cfacc8085782dab8e365979356ce1ca87fd6cc upstream.
->=20
-> You'll also want to pull in two PAE related fixes (in this order):
->=20
->   d35b34a9a70e ("kvm: mmu: Don't read PDPTEs when paging is not enabled")
+> +				port@6 {
+> +					reg = <6>;
+> +					label = "cpu";
+> +					ethernet = <&gmac0>;
+> +					phy-mode = "2500base-x";
+> +
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +						pause;
+> +					};
 
-I've added this, thanks.
+Same here!
 
->   bf03d4f93347 ("KVM: x86: introduce is_pae_paging")
->
-> The "introduce is_pae_paging" has an undocumented bug fix.  IIRC it
-> manifests as an unexpected #GP on MOV CR3 in 64-bit mode.  Here's the blu=
-rb
-> I added to the backports for 4.x.
->=20
->   Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
->   where it fails to check is_long_mode() and results in KVM incorrectly
->   attempting to load PDPTRs for a 64-bit guest.
-
-The 3.16, 4.4, and 4.9 branches have slightly different conditions in
-kvm_set_cr3():
-
-	if (is_long_mode(vcpu)) {
-		if (cr3 & CR3_L_MODE_RESERVED_BITS)
-			return 1;
-	} else if (is_pae(vcpu) && is_paging(vcpu) &&
-		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-		return 1;
-
-So load_pdptrs() already won't be called if is_long_mode() returns
-true, and this fix shouldn't be needed.
-
-Ben.
-
---=20
-Ben Hutchings
-Experience is directly proportional to the value of equipment destroyed
-                                                    - Carolyn Scheppner
-
-
-
---=-UA+Tt2Mq8es9NoOWXu2U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3vxO0ACgkQ57/I7JWG
-EQno9BAAr6xdbmEcPcqgqcPzAiO5vPE2l2HY72KBwZumi24kIw7J3N8s5I12ad2f
-gwE/mOb5lPQV+3cuT3qxnp3so4XCPydF0xpdVDMbt0zQMKZC/Jer4ydER5Pg6b6n
-Je3/tgtcvOkR1X7Um9BppCBewPJhQHLmOa7xRguh6wffEM+JJv4a1WlRboYcjTXU
-fD6U1IFgWnxYrOhhTuHcj/jNHpyVqrlM1Bde+O/ZZTg5fxGklkeLquSzoGbhgTrb
-nBjGDtjoJnM+p4dqzz38tBZeghAhOSu6op6PFaQs8/k6l48muF+vAFihdn2ymNV3
-dN4H5yevMlLowL66emhKXXsva/zywYxs8HMKGxwY0llw4fKqiMaNIG4TMWA4cisP
-5aemU5W5xlIzAXG6emkVVvKv7R+C2TuY+mcX4Zg3V7WfvDcbMiSHJfVkZynInVzP
-vji+3W7gz5AfuiU+iTplVkxGYoUMjqfsW79B+lC58oQBi9G+7m+MQoNSs5GhmoGo
-UOO6wTMlogc2+gOrCOlXHdXXwp8z/X8EQuAc+1szQy6UXsoxySDsfzIV5UcZC9FM
-/UUW6X1FgXHj5wPEh3fbB4HqNWH9EKuua8utBPu1HNt5t/3I+LpknWKbErG1zoPB
-7VcpfU4l++zAWqiBIUhUk/EEFFdCT4ZTY/PnGNL+0wTqXgr+Zn0=
-=k9xZ
------END PGP SIGNATURE-----
-
---=-UA+Tt2Mq8es9NoOWXu2U--
+     Andrew
