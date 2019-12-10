@@ -2,109 +2,76 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757E7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55874C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527292073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2773E2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1n+vVP4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLJNdK (ORCPT
+        id S1727486AbfLJNds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 08:33:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34860 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727159AbfLJNdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:33:10 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2B2D2B1C2;
-        Tue, 10 Dec 2019 13:33:08 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     Will Deacon <will@kernel.org>
-Cc:     Felix Schnizlein <fschnizlein@suse.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 3/3] arm64 cpuinfo: implement sysfs nodes for arm64
-Date:   Tue, 10 Dec 2019 14:33:07 +0100
-Message-ID: <11195456.EmMzWPVPDU@skinner.arch.suse.de>
-In-Reply-To: <20191209173804.GD7489@willie-the-truck>
-References: <20191206162421.15050-1-trenn@suse.de> <25032400.G9DUGnJgnc@skinner.arch.suse.de> <20191209173804.GD7489@willie-the-truck>
+        Tue, 10 Dec 2019 08:33:48 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:44736 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727007AbfLJNdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:33:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XtjevayN4uCPE9VpLwJtgSoB2OMml81bphwofgYd/Do=; b=1n+vVP4ZobANSv9CF92JSs0Vzp
+        OLZ9QOqeqWVLZult6N1sSsBFnTsRiRwXXTJA24x60RGIIcV1paymZTpqyIgdC2F3NMdgJusE4N8LM
+        p3J7m0Bi+ZjfyPKHo6MCtt61eukGbU5dd43A46peB5p/nJfKQO3BY4/r01xlhPQZJhAs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iefdu-0004I5-Rx; Tue, 10 Dec 2019 14:33:34 +0100
+Date:   Tue, 10 Dec 2019 14:33:34 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Milind Parab <mparab@cadence.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "nicolas.nerre@microchip.com" <nicolas.nerre@microchip.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
+        "a.fatoum@pengutronix.de" <a.fatoum@pengutronix.de>,
+        "brad.mouring@ni.com" <brad.mouring@ni.com>,
+        Parshuram Raju Thombare <pthombar@cadence.com>
+Subject: Re: [PATCH 3/3] net: macb: add support for high speed interface
+Message-ID: <20191210133334.GA16369@lunn.ch>
+References: <1575890033-23846-1-git-send-email-mparab@cadence.com>
+ <1575890176-25630-1-git-send-email-mparab@cadence.com>
+ <20191209113606.GF25745@shell.armlinux.org.uk>
+ <BY5PR07MB651448607BAF87DC9C60F2AFD35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BY5PR07MB651448607BAF87DC9C60F2AFD35B0@BY5PR07MB6514.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, December 9, 2019 6:38:05 PM CET Will Deacon wrote:
-> On Mon, Dec 09, 2019 at 12:28:44PM +0100, Thomas Renninger wrote:
-> > On Monday, December 9, 2019 11:31:11 AM CET Will Deacon wrote:
-> > > On Fri, Dec 06, 2019 at 05:24:21PM +0100, Thomas Renninger wrote:
-> > > > From: Felix Schnizlein <fschnizlein@suse.de>
-> > > > 
-> > > > Export all information from /proc/cpuinfo to sysfs:
-> > > > implementer, architecture, variant, part, revision,
-> > > > bogomips and flags are exported.
-> > > > 
-> > > > Example:
-> > > > /sys/devices/system/cpu/cpu1/info/:[0]# head *
-> > 
-> > ...
-> > 
-> > > > ==> flags <==
-> > > > fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid asimdrdm
-> > 
-> > ...
-> > 
-> > > I don't understand why we need this on arm64
+> >How has this been tested?
+> >
+> 
+> This patch is tested in 10G fixed mode on SFP+ module. 
+> 
+> In our own lab, we have various hardware test platforms supporting SGMII (through a TI PHY and another build that connects to a Marvell 1G PHY), GMII (through a Marvell PHY), 10GBASE-R (direct connection to SFP+), USXGMII (currently we can emulate this using an SFP+ connection from/to our own hardware)
 
-Again: proc is moving to sys.
-You probably export feature flags in /proc/cpuinfo for a good reason.
-So where in sysfs should this show up?
+Are any of these PHY using C45?
 
-> Even if we exposed them via sysfs, existing
-> software will continue to grep them out of /proc/cpuinfo because it's more
-> reliable and new software would still be encouraged to use either the HWCAPs
-> directly or, even better, our CPUID (MRS) emulation.
-
-Ok, so /proc/cpuinfo
-Features:
-
-is deprecated on arm64. Is that correct?
-Then it would indeed not make sense to port it/anything to sys.
- 
-It is this comment you are referring to:
-
-arch/arm64/kernel/cpuinfo.c
-                 * Dump out the common processor features in a single line.
-                 * Userspace should read the hwcaps with getauxval(AT_HWCAP)
-                 * rather than attempting to parse this, but there's a body of
-                 * software which does already (at least for 32-bit).
-
-Then let's shorten this.
-Sorry for keep digging/asking.
-
-Felix made this up rather neat, so that other archs can implement to expose 
-sysfs CPU info easy and consistent.
-While x86 also ported parts of cpuinfo, e.g. microcode version, most general
-info is still missing in sysfs.
-
-If I find the time, I may check for other archs like ppc64le or s390x to find
-data which still should show up in sysfs and could then be put in the same
-directory/file structure.
-
-ARM people may still want to make use of this at some point of time, if 
-appropriate. I'll drop patch 3/3.
-
-Thanks for explaining me the ARM details,
-
-   Thomas
-
-
+    Thanks
+	Andrew
