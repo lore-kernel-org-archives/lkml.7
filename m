@@ -2,84 +2,112 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDACAC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E9420637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19A820828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u5Y4Sp2r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X2LURZ9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfLJTKX (ORCPT
+        id S1727719AbfLJTLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:10:23 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:44976 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727647AbfLJTKX (ORCPT
+        Tue, 10 Dec 2019 14:11:47 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34660 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727633AbfLJTLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:10:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=a35QQIVRZAfUwW6/AE1+O5h1J9PVr+kiDXT0hU/xuAk=; b=u5Y4Sp2rJd5Pz1+Bj6lrdl5xF
-        PQ06SchtmJ7RQjs3rGJMHTxj9dXHoD/8ZRpyGq4dGZgtyY5TueTqrttP69kNFYkpWKPINZpfYufrY
-        YZ8f/h7dRzikcn1LFfFXkmn7zUWjbkAs0HhNRJmV2zDndEmqItPhGAEwAXoZm/6+wwTFHTEBHLKiG
-        97wqZtBKAhLKnXngCYvueNY6Nv6WFBa07xKvXoNyfstlzJCbD5Ejgmxdf7IQWayLj8jzgmBW7/6tN
-        MdTBGGWBZwgViaJgaZFJc3+PSN45AWuZs7q3WmyCn9yrr9dtxWSNYjLBw0qerEDjx4Iu8LeIUg6iZ
-        9uc8hrtQg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iektm-0002Sn-3z; Tue, 10 Dec 2019 19:10:18 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2C1F3980D21; Tue, 10 Dec 2019 20:10:09 +0100 (CET)
-Date:   Tue, 10 Dec 2019 20:10:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-afs@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] rxrpc: Mutexes are unusable from softirq context, so use
- rwsem instead
-Message-ID: <20191210191009.GA11457@worktop.programming.kicks-ass.net>
-References: <157599917879.6327.69195741890962065.stgit@warthog.procyon.org.uk>
+        Tue, 10 Dec 2019 14:11:47 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r11so9358209pgf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:11:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wqyrsFbKvAgp1XOGnCH1wihydXPeMNhbMwSDb6gzLcg=;
+        b=X2LURZ9NmX6JBqBK3oxesIlMMR02B+nouIyC4ZFJa8JQnpsZPNoDo7vG7uH78lI//0
+         EHGMq5EtoA1LEtSTATvh53dflMWpvv4dxei5fiGtwxdumT6QTNN0f15rtqWFX+xqE8zT
+         A94HXIB24npveHSn1Zh2MhQjUTjPQE1liCZAUP5F8Wcslb82YS9rLKhWGR9ms5pHmD3U
+         5NbkIz7oKAvoN8FEUN7wNn+JO3ZMCTp23A2EZUOpWt/a6Wxmyr+b4/PrAzKmpZNpheSK
+         e4UppKMOciQExedz02GtK+SmHVx8n1sKczl7Fws73NsMhE8t2lsvADK/n7JCEsnbISCD
+         TVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wqyrsFbKvAgp1XOGnCH1wihydXPeMNhbMwSDb6gzLcg=;
+        b=f0ozgKLxVPDsNcNw42/UIFeTODRWsJDyEsuzYnd8nOQDOs3AQvgoxEopFdJ7qcoypS
+         vrqyibykNGWaEDqQXwwIh4mPVacfhz0wnk9IaUCk8rLMhx9Yo1RkYAddzjSP6bb+w8A2
+         f4bFQ+ESqZuLWKXJ4UIjTpD8I/Jhsp74ScH0yTINg5wHSHGW6PnxrZIauGgUFrY4SkO1
+         0H39Cq2wQIxsl/Nu0sBNVMsukc5TUw+qZZfMME1430G2VyBBcQH2tgRPdI4MMgnHB5P5
+         ljI1F/Lbe+s23971Ajv/7LlL9kzn95DiBxqZlqxxEZjEl6Y0Ntl6ZlAykueR+0qLRSPn
+         sW+A==
+X-Gm-Message-State: APjAAAV4kFtxnR99BhHNFSgBIcAD3Pu0IdhGu/FgUMLAE0FHoslZGhHy
+        g2LALSqhyclQWrsfa17qoV5K2Q==
+X-Google-Smtp-Source: APXvYqyrDn4v27jGvSfMZp0Xc8hNq7oBuPploYRqtNc5nHYG0C8cSi5ilO4ThU7xeu5otzhHy6atng==
+X-Received: by 2002:a63:496:: with SMTP id 144mr27081792pge.207.1576005106666;
+        Tue, 10 Dec 2019 11:11:46 -0800 (PST)
+Received: from yoga ([2607:fb90:8497:e902:4ce0:3dff:fe1c:88ba])
+        by smtp.gmail.com with ESMTPSA id e10sm4574017pfm.3.2019.12.10.11.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 11:11:46 -0800 (PST)
+Date:   Tue, 10 Dec 2019 11:11:42 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 2/5] phy: qcom-qmp: Increase PHY ready timeout
+Message-ID: <20191210191142.GF314059@yoga>
+References: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
+ <20191107000917.1092409-3-bjorn.andersson@linaro.org>
+ <CAE=gft5mLSqsJzj=DtesH3G68_wSKUr8rZ5iubOerimQmZKegA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <157599917879.6327.69195741890962065.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAE=gft5mLSqsJzj=DtesH3G68_wSKUr8rZ5iubOerimQmZKegA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:32:58PM +0000, David Howells wrote:
-> rxrpc_call::user_mutex is of type struct mutex, but it's required to start
-> off locked on an incoming call as it is being set up in softirq context to
-> prevent sendmsg and recvmsg interfering with it until it is ready.  It is
-> then unlocked in rxrpc_input_packet() to make the call live.
-> 
-> Unfortunately, commit a0855d24fc22d49cdc25664fb224caee16998683
-> ("locking/mutex: Complain upon mutex API misuse in IRQ contexts") causes
-> big warnings to be splashed in dmesg for each a new call that comes in from
-> the server.
-> 
-> It *seems* like it should be okay, since the accept path trylocks the mutex
-> when no one else can see it and drops the mutex before it leaves softirq
-> context.
-> 
-> Fix this by switching to using an rw_semaphore instead as that is permitted
-> to be used in softirq context.
+On Tue 10 Dec 10:47 PST 2019, Evan Green wrote:
 
-This really has the very same problem. It just avoids the WARN. We do PI
-boosting for rwsem write side identical to what we do for mutexes.
+> On Wed, Nov 6, 2019 at 4:09 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > It's typical for the QHP PHY to take slightly above 1ms to initialize,
+> > so increase the timeout of the PHY ready check to 10ms - as already done
+> > in the downstream PCIe driver.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Tested-by: Evan Green <evgreen@chromium.org>
+> 
 
-I would rather we revert David's patch for now and more carefully
-consider what to do about this.
+Thanks.
 
+> Should this have a Fixes tag for 14ced7e3a1ae9 ("phy: qcom-qmp:
+> Correct ready status, again")?
+
+For UFS it would be 885bd765963b ("phy: qcom-qmp: Correct READY_STATUS
+poll break condition"), but I think that before the two we would exit
+the poll immediately, so we would only hit the timeout in the "error"
+case - where the PHY did come up in a timely fashion.
+
+So I don't think there is a particular commit to "Fixes:"...
+
+
+But given that this is no longer only needed for the (new) QHP PCIe
+instance it would be reasonable to Cc: stable, to get it into v5.4
+
+Regards,
+Bjorn
