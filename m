@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11312C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7773CC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A85205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E5A1205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013467;
-	bh=oW7QC7ZN3sDu53rgPYqBtojvRFrE+jG2HcylGdisCL0=;
+	s=default; t=1576013471;
+	bh=ZkQNR1TZKmTtQmGs/IMX1SC2ZreDZnDVq2Ta/ZZTK8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otsyGNnnsbKv3rFKv1eLkUXQAuQy4DXouGj+9qk0piwXem8nyybf+UCl53LDzM5Tg
-	 kzFGYKTjkn5i2Oz+JGn/6NBjML9hptuxbeM/68QknaGXpd7k5p6jMAqeQjH//bWXx2
-	 K4eYYq8/ABo7apB5jSqV7UvrkORNy7z1ECoiPIq0=
+	b=eO/ljhS7Pkg/SFSqJT9A5j4VtiVZKcVF55ccN29XzvX3Y4t8wFdkgQMcoLZEOEGnW
+	 kA4Ux89ntg2PKw93IdeoCskScN7V5dt7S5ud/9allFkwqKkJYCg5aTC9eE/qUhWktA
+	 L318vin1HbL5lxku7t5vkOGSVCpgbmvuAdJBJkRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfLJVJh (ORCPT
+        id S1728224AbfLJVJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbfLJVJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:35 -0500
+        id S1727075AbfLJVJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5565246AF;
-        Tue, 10 Dec 2019 21:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E43A246B6;
+        Tue, 10 Dec 2019 21:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012174;
-        bh=oW7QC7ZN3sDu53rgPYqBtojvRFrE+jG2HcylGdisCL0=;
+        s=default; t=1576012171;
+        bh=ZkQNR1TZKmTtQmGs/IMX1SC2ZreDZnDVq2Ta/ZZTK8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W13duTr1XBqXhgqkrQaTsEqgF+fXheSzF8lFe2Mg5u6YODrQh7oshGRmE8G+M6YqL
-         slm3+4vxpN4i9I8fVhbMnhUJDwE+wYskAyz10Hrgt76xT5ZFb0Xh9G/hTlMoOgdPnC
-         mQjO8WHg1/J4Bk42ZnuHEng0iIYu97CR3vPLRqUU=
+        b=H4xCL4TiTIpvs4gkvK5qWXoIMYF7IAO2RsNHv+LR8wvTfVMSd8pEo2QlIaPJLBedk
+         5Zlo8L1woZYpxL4fsgZTpd3FTK1TyGSsEaKBS6cg0+xSEDxAHByqVmtLAMkFjK57NF
+         cNMor3WHzt3yqoQ559Q+owcfLv6pcihKZ8p4EvGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 132/350] selftests/bpf: Make a copy of subtest name
-Date:   Tue, 10 Dec 2019 16:03:57 -0500
-Message-Id: <20191210210735.9077-93-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 130/350] power: supply: cpcap-battery: Check voltage before orderly_poweroff
+Date:   Tue, 10 Dec 2019 16:03:55 -0500
+Message-Id: <20191210210735.9077-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,72 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit f90415e9600c5227131531c0ed11514a2d3bbe62 ]
+[ Upstream commit 639c1524da3b273d20c42ff2387d08eb4b12e903 ]
 
-test_progs never created a copy of subtest name, rather just stored
-pointer to whatever string test provided. This is bad as that string
-might be freed or modified by the end of subtest. Fix this by creating
-a copy of given subtest name when subtest starts.
+We can get the low voltage interrupt trigger sometimes way too early,
+maybe because of CPU load spikes. This causes orderly_poweroff() be
+called too easily.
 
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191021033902.3856966-6-andriin@fb.com
+Let's check the voltage before orderly_poweroff in case it was not
+yet a permanent condition. We will be getting more interrupts anyways
+if the condition persists.
+
+Let's also show the measured voltages for low battery and battery
+empty warnings since we have them.
+
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/power/supply/cpcap-battery.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index af75a1c7a4587..3bf18364c67c9 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -20,7 +20,7 @@ struct prog_test_def {
- 	bool tested;
- 	bool need_cgroup_cleanup;
- 
--	const char *subtest_name;
-+	char *subtest_name;
- 	int subtest_num;
- 
- 	/* store counts before subtest started */
-@@ -81,16 +81,17 @@ void test__end_subtest()
- 	fprintf(env.stdout, "#%d/%d %s:%s\n",
- 	       test->test_num, test->subtest_num,
- 	       test->subtest_name, sub_error_cnt ? "FAIL" : "OK");
-+
-+	free(test->subtest_name);
-+	test->subtest_name = NULL;
- }
- 
- bool test__start_subtest(const char *name)
- {
- 	struct prog_test_def *test = env.test;
- 
--	if (test->subtest_name) {
-+	if (test->subtest_name)
- 		test__end_subtest();
--		test->subtest_name = NULL;
--	}
- 
- 	test->subtest_num++;
- 
-@@ -104,7 +105,13 @@ bool test__start_subtest(const char *name)
- 	if (!should_run(&env.subtest_selector, test->subtest_num, name))
- 		return false;
- 
--	test->subtest_name = name;
-+	test->subtest_name = strdup(name);
-+	if (!test->subtest_name) {
-+		fprintf(env.stderr,
-+			"Subtest #%d: failed to copy subtest name!\n",
-+			test->subtest_num);
-+		return false;
-+	}
- 	env.test->old_error_cnt = env.test->error_cnt;
- 
- 	return true;
+diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cpcap-battery.c
+index 61d6447d1966f..00a96e4a1cdc3 100644
+--- a/drivers/power/supply/cpcap-battery.c
++++ b/drivers/power/supply/cpcap-battery.c
+@@ -562,12 +562,14 @@ static irqreturn_t cpcap_battery_irq_thread(int irq, void *data)
+ 	switch (d->action) {
+ 	case CPCAP_BATTERY_IRQ_ACTION_BATTERY_LOW:
+ 		if (latest->current_ua >= 0)
+-			dev_warn(ddata->dev, "Battery low at 3.3V!\n");
++			dev_warn(ddata->dev, "Battery low at %imV!\n",
++				latest->voltage / 1000);
+ 		break;
+ 	case CPCAP_BATTERY_IRQ_ACTION_POWEROFF:
+-		if (latest->current_ua >= 0) {
++		if (latest->current_ua >= 0 && latest->voltage <= 3200000) {
+ 			dev_emerg(ddata->dev,
+-				  "Battery empty at 3.1V, powering off\n");
++				  "Battery empty at %imV, powering off\n",
++				  latest->voltage / 1000);
+ 			orderly_poweroff(true);
+ 		}
+ 		break;
 -- 
 2.20.1
 
