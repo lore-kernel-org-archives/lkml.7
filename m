@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE967C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD02C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837D42053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA96E20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017665;
-	bh=MvssEjwJnh3VVajzPGoLHSWU+szWHgDoAPcp1b0ZPVM=;
+	s=default; t=1576017672;
+	bh=hI/7EWNt/TI9vDxdAhazcZOYO4iL0nD67lazcndffBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkraHj54ot5FcufGAaElBKDSpLIjoIb5rBDe3nA0zsqBp/2CJFVjuqgCLZuwXSOD0
-	 S/8dH/a4lUUDpVdG3l/5eslL6eT66tnDrxTlJXYLoict2pNCVprBtY9wu/EBt+1VVl
-	 CmOH1yUUOLMw58L/1g7xR0SIV7CvG7H9mmJiAfYM=
+	b=QRdihJgwHUYD3d/hosJgxpjdzarNorttC5LYKZuuwygWkujReIxXTaHhSVfY7uVaT
+	 OfzC0HazYykwKH9n7QDqyq0uD1H4zCHWvEcKPnDpx/NvxDlwpuLIkNEfUrl9KN/NI6
+	 T97QI/DkWvl2J99gxftIKmdD/fSJ6Rd3jdlVtlhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfLJWlE (ORCPT
+        id S1728987AbfLJWbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729042AbfLJWb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:57 -0500
+        id S1728729AbfLJWbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB78F206EC;
-        Tue, 10 Dec 2019 22:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA07A20838;
+        Tue, 10 Dec 2019 22:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017117;
-        bh=MvssEjwJnh3VVajzPGoLHSWU+szWHgDoAPcp1b0ZPVM=;
+        s=default; t=1576017097;
+        bh=hI/7EWNt/TI9vDxdAhazcZOYO4iL0nD67lazcndffBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFUy24LwWYw1aeHbDzu9J/pypcUIkMD4OhjW+eDWhngXgJGZUa5oEcuyL2nw6LtJO
-         hfhrU9BvX3CPEnZFQw899zr/LN0a0WAtWEGAb0QKChth/uLiB47x3NnCWmW+8kStDL
-         nW1zH15TbakuWA45oRLmDWFPz1l2q1W1OEWL6IKA=
+        b=mFCJtQQ89DGEtVvFQOkUc1v0EWgbGaTGyNYYSJHCHtce6t0Yq9K8W4NWgfbX+CqYi
+         HcuK/bWn8ByhwB82UaOX08H+0BTNcnVzABO4xvvgvBfes7tOi4tTr6X5zFJiGzRtho
+         M7m841t1d3kPwTg6kARW1haJj+aEoaqpXCZtowcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 69/91] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
-Date:   Tue, 10 Dec 2019 17:30:13 -0500
-Message-Id: <20191210223035.14270-69-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 52/91] perf probe: Fix to find range-only function instance
+Date:   Tue, 10 Dec 2019 17:29:56 -0500
+Message-Id: <20191210223035.14270-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,41 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Zhang <benzh@chromium.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
+[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
 
-The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
-while it's streaming audio over SPI. The DSP firmware turns
-on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
-does not believe that register can change by itself. When
-BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
-read the register first before write, so PLL2 power bit is
-cleared by accident.
+Fix die_is_func_instance() to find range-only function instance.
 
-Marking MX-64h as volatile in regmap solved the issue.
+In some case, a function instance can be made without any low PC or
+entry PC, but only with address ranges by optimization.  (e.g. cold text
+partially in "text.unlikely" section) To find such function instance, we
+have to check the range attribute too.
 
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
-Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5677.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/dwarf-aux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 65ac4518ad060..49ab26e69f2fc 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -305,6 +305,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
- 	case RT5677_I2C_MASTER_CTRL7:
- 	case RT5677_I2C_MASTER_CTRL8:
- 	case RT5677_HAP_GENE_CTRL2:
-+	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
- 	case RT5677_PWR_DSP_ST:
- 	case RT5677_PRIV_DATA:
- 	case RT5677_ASRC_22:
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 41e068e943499..3d0a9e09d00a1 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -328,10 +328,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
++	Dwarf_Attribute attr_mem;
+ 
+ 	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
++	return !dwarf_func_inline(dw_die) &&
++	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
+ }
++
+ /**
+  * die_get_data_member_location - Get the data-member offset
+  * @mb_die: a DIE of a member of a data structure
 -- 
 2.20.1
 
