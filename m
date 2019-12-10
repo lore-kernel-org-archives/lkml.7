@@ -2,121 +2,125 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D24C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE74C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C3020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C7A20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfLJSd3 (ORCPT
+        id S1727643AbfLJSf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:33:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41586 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfLJSd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:33:29 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iekJy-0007ko-Tq; Tue, 10 Dec 2019 19:33:19 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id D438D101165; Tue, 10 Dec 2019 19:33:17 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: Problem with WARN_ON in mutex_trylock() and rxrpc
-In-Reply-To: <20191205132212.GK2827@hirez.programming.kicks-ass.net>
-References: <26229.1575547344@warthog.procyon.org.uk> <20191205132212.GK2827@hirez.programming.kicks-ass.net>
-Date:   Tue, 10 Dec 2019 19:33:17 +0100
-Message-ID: <87wob4hvyq.fsf@nanos.tec.linutronix.de>
+        Tue, 10 Dec 2019 13:35:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:53390 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727558AbfLJSf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 13:35:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 932A31FB;
+        Tue, 10 Dec 2019 10:35:56 -0800 (PST)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75E6F3F6CF;
+        Tue, 10 Dec 2019 10:35:55 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] sched/fair: Make feec() consider uclamp
+ restrictions
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, qperret@google.com,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191203155907.2086-1-valentin.schneider@arm.com>
+ <20191203155907.2086-5-valentin.schneider@arm.com>
+ <f15b639d-edb2-4b9d-8983-5589590ac41e@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <035f4ff1-3303-c855-13fd-2ab03bef82a8@arm.com>
+Date:   Tue, 10 Dec 2019 18:35:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <f15b639d-edb2-4b9d-8983-5589590ac41e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
+On 10/12/2019 18:23, Dietmar Eggemann wrote:
+> On 03/12/2019 16:59, Valentin Schneider wrote:
+> 
+> Could you replace feec (find_energy_efficient_cpu) with EAS wakeup path
+> in the subject line? The term EAS is described in
+> Documentation/scheduler/sched-energy.rst so its probably easier to match
+> the patch to functionality.
+> 
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Thu, Dec 05, 2019 at 12:02:24PM +0000, David Howells wrote:
->> commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain upon
->> mutex API misuse in IRQ contexts") is a bit of a problem for rxrpc, though
->> nothing that shouldn't be reasonably easy to solve, I think.
->> 
->> What happens is that rxrpc_new_incoming_call(), which is called in softirq
->> context, calls mutex_trylock() to prelock a new incoming call:
->> 
->> 	/* Lock the call to prevent rxrpc_kernel_send/recv_data() and
->> 	 * sendmsg()/recvmsg() inconveniently stealing the mutex once the
->> 	 * notification is generated.
->> 	 *
->> 	 * The BUG should never happen because the kernel should be well
->> 	 * behaved enough not to access the call before the first notification
->> 	 * event and userspace is prevented from doing so until the state is
->> 	 * appropriate.
->> 	 */
->> 	if (!mutex_trylock(&call->user_mutex))
->> 		BUG();
->> 
->> before publishing it.  This used to work fine, but now there are big splashy
->> warnings every time a new call comes in.
->> 
->> No one else can see the lock at this point, but I need to lock it so that
->> lockdep doesn't complain later.  However, I can't lock it in the preallocator
->> - again because that upsets lockdep.
->
-> To recap the IRC discussion; the intended mutex semantics are such to
-> allow Priority Inheritance. This means that the mutex must be locked and
-> unlocked in the same (task) context. Otherwise there is no distinct
-> owner to boost for contending mutex_lock() operations.
->
-> Since (soft)irq context doesn't (necessarily) have a task context, these
-> operations don't strictly make sense, and that is what the patch in
-> question tries to WARN about.
+Will do.
 
-Not only that. Acquiring something which is _NOT_ designed for non
-thread context works by chance not by design. IOW it makes assumptions
-about the underlying mutex implementation and any change to that which
-actually assumes thread context will break that. So, no we don't want
-I'm clever and can do that as the implementation allows, simply because
-this is a blatant layering violation.
+>> We've just made task_fits_capacity() uclamp-aware, and
+>> find_energy_efficient_cpu() needs to go through the same treatment.
+>> Things are somewhat different here however - we can't directly use
+>> the now uclamp-aware task_fits_capacity(). Consider the following setup:
+>>
+>>   rq.cpu_capacity_orig = 512
+>>   rq.util_avg = 200
+>>   rq.uclamp.max = 768
+>>
+>>   p.util_est = 600
+>>   p.uclamp.max = 256
+>>
+>>   (p not yet enqueued on rq)
+>>
+>> Using task_fits_capacity() here would tell us that p fits on the above CPU.
+>> However, enqueuing p on that CPU *will* cause it to become overutilized
+>> since rq clamp values are max-aggregated, so we'd remain with
+> 
+> I assume it doesn't harm to explicitly mention that this rq.uclamp.max =
+> 768 value comes from another task already enqueued on a cfs_rq of this
+> rq. This gives same substance to the term max-aggregated here.
+> 
 
-> As it happens, you do mutex_unlock() from the very same softirq context
-> you do that mutex_trylock() in, so lockdep will never have had cause to
-> complain, 'current' is the same at acquire and release.
->
-> Now, either we're in non-preemptible softirq context and a contending
-> mutex_lock() would spuriously boost a random task, which is harmless due
-> to the non-preemptive nature of softirq, or we're running in ksoftirqd
-> and that gets boosted, which actually makes some sense.
->
-> For PREEMPT_RT (the only case that really matters, since that actually
-> replaces struct mutex with rt_mutex) this would result in boosting
-> whatever (soft)irq thread ended up running the thing.
+I've changed the setup example to:
 
-Well, that'd "work". Actually in RT this makes even sense as the
-contending waiter wants the owner out of the critical region ASAP>
+  The target runqueue, rq:
+    rq.cpu_capacity_orig = 512
+    rq.cfs.avg.util_avg = 200
+    rq.uclamp.max = 768 // the max p.uclamp.max of all enqueued p's is 768
 
-> (Also, I'm not entire sure on the current softirq model for -RT)
->
-> Is this something we want to allow?
+  The waking task, p (not yet enqueued on rq):
+    p.util_est = 600
+    p.uclamp.max = 100
 
-I'm not a fan. See above.
 
-Thanks,
+I'll also flesh out the rest.
 
-        tglx
+>>   rq.uclamp.max = 768
+>>
+>> Thus we could reach a high enough frequency to reach beyond 0.8 * 512
+>> utilization (== overutilized). What feec() needs here is
+> 
+> s/feec()/find_energy_efficient_cpu() ?
+> 
+
+Will do.
+
+>> uclamp_rq_util_with() which lets us peek at the future utilization
+>> landscape, including rq-wide uclamp values.
+>>
+>> Make find_energy_efficient_cpu() use uclamp_rq_util_with() for its
+>> fits_capacity() check. This is in line with what compute_energy() ends up
+>> using for estimating utilization.
+> 
+> This is also aligned with schedutil_cpu_util() (you do mention this in
+> the code later in this patch.
+> 
+
+That's what I imply with compute_energy() (which ends up calling
+schedutil_cpu_util()).
+
+> [...]
+> 
