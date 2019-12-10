@@ -2,105 +2,147 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09606C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04983C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01282053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83BF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XjKOtmLC"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KFb25BYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfLJKQK (ORCPT
+        id S1727403AbfLJKQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:16:10 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40428 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfLJKQK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:16:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=e5Wq1cFS0C0HbXjy/2CErHJ0P8SNw5EcJk6ucsk+DLA=; b=XjKOtmLCV6KJsOr0IgZ1g+Czv
-        py8wpJ4igkoM+98DAQ+BsAzq6ROeHYgbzIAhjYxN915g62HCEIAxmY9Llk5cZ3HEwx/LDiXYYk5C6
-        XuKD71KCcuXEF2Ni9lejLTzL1EWYRFbyF63fFY9a3p14X9SCLyJ/4qMIGtE5bgu1sFKXLMJkn2keY
-        pgON83/ZTvCIZrSDe7BrSIcYsGYNldb2Rl4AyP3GWDUIcBvdJLH5+r6xzReej6ZFurrXfZ+Ia9orE
-        PGYNm4mIA30Uhbt3CHeP0fudDHhD/L4VSLDjrZCUW2EMd+SIBkKG45DYrBrLOxXeqSnMDmUQI5Egs
-        tyYXlInxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iecYX-0002cL-52; Tue, 10 Dec 2019 10:15:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2373305FD1;
-        Tue, 10 Dec 2019 11:14:25 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 342092010F142; Tue, 10 Dec 2019 11:15:45 +0100 (CET)
-Date:   Tue, 10 Dec 2019 11:15:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag
- (topic/kasan-bitops)
-Message-ID: <20191210101545.GL2844@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
- <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <87wob4pwnl.fsf@mpe.ellerman.id.au>
+        Tue, 10 Dec 2019 05:16:15 -0500
+Received: from mout.web.de ([212.227.15.4]:45433 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727281AbfLJKQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:16:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1575972961;
+        bh=3lu1/bDzlHQWncDoTWVRGXTFeZBsALALSvK0V4xQUsY=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=KFb25BYRz38RT7bBf9g68vibTN2tb4JGx9opUc1mZNJ4Not8GUBMr7buSnrGJUqQx
+         7axuRPjrS5qBaXUm59c8a/RaxEmtkkRg7iTR1WqRYdIGTgMCcre1VaK47DMHJqGnNI
+         f0BU9UDZvOg/etK6APcDSsREplsuuJu18HeoRsQs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.137.56]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LZvfZ-1htANw25Az-00lm0J; Tue, 10
+ Dec 2019 11:16:01 +0100
+Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module
+ at sdio0
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191209223822.27236-1-smoch@web.de> <2668270.pdtvSLGib8@diego>
+ <2cf70216-8d98-4122-4f4e-b8254089a017@web.de> <6162240.GiEx4hqPFh@diego>
+ <0101016eef171394-2c71e1b8-45b9-4e38-96f9-2841dd0607ba-000000@us-west-2.amazonses.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <e8742d18-9dd9-bd97-1d4a-0c5312501b24@web.de>
+Date:   Tue, 10 Dec 2019 11:15:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wob4pwnl.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0101016eef171394-2c71e1b8-45b9-4e38-96f9-2841dd0607ba-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:BmouxPORzFnUtMfMs9rkSg06N45biyMWFv+dkxM532l+MBmsCq9
+ NKrsNRGYig8S6iERHaN1OEDubM+pu6B4PQehaKPwuJUFbld0HZvWXcyJ1iCZKgK+h1b76D6
+ OwuGqbC6k/i4YNYXPy1kRnaSgy69AyTCLqMbYxtDKTTvk8OoS2CaXCk90NFm9+Y6kvbd5Y2
+ 0ekhcoci7MjDZSaZonzrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JdUVEkMY6j4=:YPPupy08imKC1CuXy723Fb
+ oojqA1+dEiyvgS6ZUBJAZ5A65eTviEtBJV4o4OCd9ZA0kmqfrU80oq0mQclUw/wMuiqNbxiCR
+ y3Da5meb5biCNAXVnAmQdeYt3q/eFc2EPwS3yjNRHv1nfPso7gsgJz7qXwGCRNvtMiKifD0Nb
+ ma8Hl8QLWIb4RYsLeGebnCYbfNUx+9uxFhYtM3unf340sOM0G4jBgHmJQa7k3pV0dP/WByyFR
+ 3KD3zRjPgaOaS2P8Hos9QmYpyzRkb7ibRvaAzLfiDmqDqD4M+z5/oP6gZ5+6N/zurIPDpEgNc
+ 7Dkum/I2cTVCcVwNCJSmuRR+KW6hgNJbCneE4NBvWpHMbjOtAO/86+inVWXFOVLEN+jtOU9qZ
+ be7EN7NjWMk7OBd5jHdWtj62PoGnd3/SZaF8tHEjWOrEnsGROV6ElDlSQpM8muQlkuqzH++H6
+ /F9+ghMAT/MTY+U162haEdsMeN3DSYtZuNWhs9Pp6CVre4pB3eisliYdbTAzIunnA7iKFNf0c
+ q6/Dyf2qv0hWHMqQBamdigB/TMxAgzmlPP/4BbFeYHgEAcbQvuMC6q1Y+qGeWtMBr+pUSMgCD
+ pRgSgyJtjBQzR92BWJG8jV4viPa/pHr9iQCcVowjH8n8GvHAh+2WXMn4LXCQiMrfXpp7IJG1E
+ qRhinRvo+RsPHe5n3//NEkdSVJiqi8j9cc3mu9nDbm7svfuTupNsQNrmbL+qxs36z0Eunprxm
+ djgO6OSSSrhJUbglhLouU3/dNMWySsEpF+UDGOoTb37xsgE4t3uK+gCGNK2lsm7a5EMLPJ6gh
+ IjfH2+CYhAPEs36M+7OykUU8DD3p5fQ7PDsYvJ60leWKTChqOSAlmZ8kBYftkBmGy6f/kA0SW
+ z0qnFc4vt16ogKGe9d+Psh2aB4cZup83qt7ybXBfqe42hDs6vlYAZakOIbBiOHYq9Pmbbfhmi
+ OBTDn4mXyonqoD6LY5e06xvv779fPeFeIvIejlH+9Owo50mtK17RDqY1Ug0uRb3CrsJi/5DGt
+ Sk7WpDtlOam9IzBt9otYxh7d+pVc+1hEiZxZlTTZAvr9ORNWwaYrVh4VdBisOI5LMVoCbUq63
+ dbXBbt7JW2CX/pqtLvdti16g+lFrtaL1m7J4fYosqSG9ICUMKQhoxdbqXXlJD00XM66nK/Zu7
+ /Tr4MHJlY7TFY4F3JsCPRei2XP0PUQ9BBeFZwM80D9dA21UTof7jWkvPnZHcRiU3JOV7mEaXB
+ rnyk7ZdfPzyWIuqkjyOqA9ffuicoDRxB6qKykZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:38:54PM +1100, Michael Ellerman wrote:
 
-> Good question, I'll have a look.
-> 
-> There seems to be confusion about what the type of the bit number is,
-> which is leading to sign extension in some cases and not others.
 
-Shiny.
+On 10.12.19 10:14, Kalle Valo wrote:
+> Heiko St=C3=BCbner <heiko@sntech.de> writes:
+>
+>> Hi Soeren,
+>>
+>> Am Dienstag, 10. Dezember 2019, 00:29:21 CET schrieb Soeren Moch:
+>>> On 10.12.19 00:08, Heiko St=C3=BCbner wrote:
+>>>> Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
+>>>>> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
+>>>>> The BCM4359/9 wifi controller in this module is connected to sdio0,
+>>>>> enable this interface.
+>>>>>
+>>>>> Signed-off-by: Soeren Moch <smoch@web.de>
+>>>>> ---
+>>>>> Not sure where to place exactly the sdio0 node in the dts because
+>>>>> existing sd nodes are not sorted alphabetically.
+>>>>>
+>>>>> This last patch in this brcmfmac patch series probably should be pic=
+ked
+>>>>> up by Heiko independently of the rest of this series. It was sent to=
+gether
+>>>>> to show how this brcmfmac extension for 4359-sdio support with RSDB =
+is
+>>>>> used and tested.
+>>>> node placement looks good so I can apply it, just a general questions
+>>>> I only got patch 8/8 are patches 1-7 relevant for this one and what a=
+re they?
+>>> Patches 1-7 are the patches to support the BCM4359 chipset with SDIO
+>>> interface in the linux brcmfmac net-wireless driver, see [1].
+>>>
+>>> So this patch series has 2 parts:
+>>> patches 1-7: add support for the wifi chipset in the wireless driver,
+>>> this has to go through net-wireless
+>>> patch 8: enable the wifi module with this chipset on RockPro64, this p=
+atch
+>> Thanks for the clarification :-) .
+>>
+>> As patch 8 "only" does the core sdio node, it doesn't really depend on =
+the
+>> earlier ones and you can submit any uart-hooks for bluetooth once the
+>> other patches land I guess.
+>>
+>>
+>>> If this was confusing, what would be the ideal way to post such series=
+?
+>> I think every maintainer has some slightly different perspective on thi=
+s,
+>> but personally I like getting the whole series to follow the discussion=
+ but
+>> also to just see when the driver-side changes get merged, as the dts-pa=
+rts
+>> need to wait for that in a lot of cases.
+> FWIW I prefer the same as Heiko. If I don't see all the patches in the
+> patchset I start worrying if patchwork lost them, or something, and then
+> it takes more time from me to investigate what happened. So I strongly
+> recommend sending the whole series to everyone as it saves time.
+>
+Thanks for your explanation.
+I will keep this in mind for future submissions.
 
-> It looks like the type should be unsigned long?
-
-I'm thinking unsigned makes most sense, I mean, negative bit offsets
-should 'work' but that's almost always guaranteed to be an out-of-bound
-operation.
-
-As to 'long' vs 'int', I'm not sure, 4G bits is a long bitmap. But I
-suppose since the bitmap itself is 'unsigned long', we might as well use
-'unsigned long' for the bitnr too.
-
->   Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
->   arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->   arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
->   arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->   arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
->   include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
->   include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
-> 
-> So I guess step one is to convert our versions to use unsigned long, so
-> we're at least not tripping over that difference when comparing the
-> assembly.
-
-Yeah, I'll look at fixing the generic code, bitops/atomic.h and
-bitops/non-atomic.h don't even agree on the type of bitnr.
+Soeren
