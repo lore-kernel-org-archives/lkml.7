@@ -2,51 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66A6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CF0C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1B62077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7C020836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017824;
-	bh=Z4AwZg9KTFpbst/V8GTwKby71ma0T/fFdaxxaNMqHuM=;
+	s=default; t=1576017827;
+	bh=dGlrQtKk+2i3iVauwHrp2MuaUdZqTCOvi9Gm7Ko0JIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGJqHlRftLJVs14ZV29/yWiJTYGNgFbhArvnBjfqp/g0bk+RHwse9FWHlxE0VnQWf
-	 a7N9gqja4lV7tDBtRtaKUTYneiZkGaLWwVCSBMpwnLHa6SSHxoyIQdBF+yf/zX06oH
-	 fRNKh1DTTWxgxBv4FRGRL9WC2EvJoUwn0FPi6Hwg=
+	b=cvOi5GdUbKLQk7hbrnHlUJC63RC4ohtRf+ModwihxltSgeH1G8KtYL+XN9c51JDFh
+	 B5GP/ayzsuFuDbAsOuYtQknmqbAEVrWMyHqWZSE+7H8lsdkcgXPWKT0AVOMcgqOx4P
+	 el7t8iroFVdW0Bg4U9EW87MNihPW1Lvp8/NIIQ0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729831AbfLJWnn (ORCPT
+        id S1727716AbfLJWa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:43:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:30:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727766AbfLJWbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:01 -0500
+        id S1727594AbfLJWa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 732CA207FF;
-        Tue, 10 Dec 2019 22:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 680662077B;
+        Tue, 10 Dec 2019 22:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017061;
-        bh=Z4AwZg9KTFpbst/V8GTwKby71ma0T/fFdaxxaNMqHuM=;
+        s=default; t=1576017055;
+        bh=dGlrQtKk+2i3iVauwHrp2MuaUdZqTCOvi9Gm7Ko0JIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n1DNEaZ9Ye3AMUfJPV7Up/MCLhUbZx8ErwTpr8A0JuyK0sdeTFLiQpsHfYMQJkWyw
-         kNVdxoiOu2XXK+eMPD6IjwQZyhLglMgsCTPLj4v7YUN0OHW/FTxPKfgQDbPgdL52TD
-         MhO5H2ezFtG7WhiaVIFP/qo9lNLjfJ2VAJvpi3M8=
+        b=SQTRQFrjQefJbSI6OWlFjnZH61v1HZekXlaYeTLy/uaqqsDK50KQ9141BNJqc4Cqy
+         Y19EGHanmQuQLVAjZjbQRVY+mi+fXw6B4H0mUHqshdnvmkzuypAc91GVesfznCw7aQ
+         3MGQAvIzi/LQxcA1GG1Z80t2YNVzCyQ6FA3ir08k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 21/91] media: cec-funcs.h: add status_req checks
-Date:   Tue, 10 Dec 2019 17:29:25 -0500
-Message-Id: <20191210223035.14270-21-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 16/91] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
+Date:   Tue, 10 Dec 2019 17:29:20 -0500
+Message-Id: <20191210223035.14270-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,52 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 9b211f9c5a0b67afc435b86f75d78273b97db1c5 ]
+[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
 
-The CEC_MSG_GIVE_DECK_STATUS and CEC_MSG_GIVE_TUNER_DEVICE_STATUS commands
-both have a status_req argument: ON, OFF, ONCE. If ON or ONCE, then the
-follower will reply with a STATUS message. Either once or whenever the
-status changes (status_req == ON).
+When building cpupower with clang, the following warning appears:
 
-If status_req == OFF, then it will stop sending continuous status updates,
-but the follower will *not* send a STATUS message in that case.
+ utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
+ prior initialization of this subobject [-Winitializer-overrides]
+                 .desc                   = N_("Processor Package C2"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                              ^~~~~~
+ utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
+ is here
+                 .desc                   = N_("Processor Package C9"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                             ^~~~~~
+ 1 warning generated.
 
-This means that if status_req == OFF, then msg->reply should be 0 as well
-since no reply is expected in that case.
+This appears to be a copy and paste or merge mistake because the name
+and id fields both have PC9 in them, not PC2. Remove the second
+assignment to fix the warning.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/718
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cec-funcs.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/cec-funcs.h b/include/linux/cec-funcs.h
-index 138bbf721e70c..a844749a28559 100644
---- a/include/linux/cec-funcs.h
-+++ b/include/linux/cec-funcs.h
-@@ -956,7 +956,8 @@ static inline void cec_msg_give_deck_status(struct cec_msg *msg,
- 	msg->len = 3;
- 	msg->msg[1] = CEC_MSG_GIVE_DECK_STATUS;
- 	msg->msg[2] = status_req;
--	msg->reply = reply ? CEC_MSG_DECK_STATUS : 0;
-+	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
-+				CEC_MSG_DECK_STATUS : 0;
- }
- 
- static inline void cec_ops_give_deck_status(const struct cec_msg *msg,
-@@ -1060,7 +1061,8 @@ static inline void cec_msg_give_tuner_device_status(struct cec_msg *msg,
- 	msg->len = 3;
- 	msg->msg[1] = CEC_MSG_GIVE_TUNER_DEVICE_STATUS;
- 	msg->msg[2] = status_req;
--	msg->reply = reply ? CEC_MSG_TUNER_DEVICE_STATUS : 0;
-+	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
-+				CEC_MSG_TUNER_DEVICE_STATUS : 0;
- }
- 
- static inline void cec_ops_give_tuner_device_status(const struct cec_msg *msg,
+diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+index ebeaba6571a38..475e18e043187 100644
+--- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
+ 	{
+ 		.name			= "PC9",
+ 		.desc			= N_("Processor Package C9"),
+-		.desc			= N_("Processor Package C2"),
+ 		.id			= PC9,
+ 		.range			= RANGE_PACKAGE,
+ 		.get_count_percent	= hsw_ext_get_count_percent,
 -- 
 2.20.1
 
