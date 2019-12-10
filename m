@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD49C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A76C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F922206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B8420838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012516;
-	bh=qLpA8Hj/Bemhj0QN8KheWl81yCIKzadDZCnWM+wT4+o=;
+	s=default; t=1576012518;
+	bh=pcimSvtmvHyTfcID1/4C4C7CHV6UgOeam0rX/Tp8pQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZXGiEukr2SVLcZvm6Ema3XFlWasPKtA22HjEXkOZK725x2BwRfS346mF3xwJ0APY
-	 LUU8/drCkWBV95ef1YPfW0KfouaGC+csm1lyzkNLy3MJHj0LosglLpu6lun6y8es9H
-	 yl8VyOQ4+WvA1/Ifj/sBi/cXFKrOIMa7xdhNKJVU=
+	b=DrJyfRpSnyb3mAi2O3DtvTU9576FpAfzY91rkQLwYBzucdM31GEjYGeeowEovSQHR
+	 fLf7jbIEHAMF2t5NkSoeSH4qY564N4wTsz/qCLFfQfbGSSHCyxpeCrEioHBoIEt1iQ
+	 5B1bL7rsNkeVLNkeXN4O/ZiyR9WrYywRFYP7sdLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfLJVNi (ORCPT
+        id S1729399AbfLJVPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:15:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729311AbfLJVN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:26 -0500
+        id S1729015AbfLJVNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2110214AF;
-        Tue, 10 Dec 2019 21:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE2012077B;
+        Tue, 10 Dec 2019 21:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012405;
-        bh=qLpA8Hj/Bemhj0QN8KheWl81yCIKzadDZCnWM+wT4+o=;
+        s=default; t=1576012418;
+        bh=pcimSvtmvHyTfcID1/4C4C7CHV6UgOeam0rX/Tp8pQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWTPuRBRL9oqkiZsne/R6P40FbVQJsAhf44cR38Ypa/s9F6PzUnC+jmbnIp0ExGjU
-         YjU/YQFBwb5zWE5P3e6Uj7bs1w6zrftrePRgAGUhEs2vwV0R5b5WTptKTwNqXJRPFo
-         khOH5MrfjQ686J8ltzFHiEPiOO3HGTT285+1tRzE=
+        b=wtjd8mNVW4APctzobbk4uGFdG87VKqpYI6E/993fWVKIJ0zVdS6YGvxBoR9w9qIbd
+         vWdlbTqdh+8hnZSBVxlUA7Wdth1o8c9v4gOxvOEpInoblNRO02F9ash52EzfDHnftL
+         tWY5p5Cyn2+RZZY9wpyE+e7qz+8dO2wz7907EHd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 324/350] mt76: fix possible out-of-bound access in mt7615_fill_txs/mt7603_fill_txs
-Date:   Tue, 10 Dec 2019 16:07:09 -0500
-Message-Id: <20191210210735.9077-285-sashal@kernel.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 334/350] libtraceevent: Fix memory leakage in copy_filter_type
+Date:   Tue, 10 Dec 2019 16:07:19 -0500
+Message-Id: <20191210210735.9077-295-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,55 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit e8b970c8e367e85fab9b8ac4f36080e5d653c38e ]
+[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
 
-Fix possible out-of-bound access of status rates array in
-mt7615_fill_txs/mt7603_fill_txs routines
+It is necessary to free the memory that we have allocated when error occurs.
 
-Fixes: c5211e997eca ("mt76: mt7603: rework and fix tx status reporting")
-Fixes: 4af81f02b49c ("mt76: mt7615: sync with mt7603 rate control changes")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c | 4 +++-
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-index c328192307c48..ff3f3d98b6252 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-@@ -1032,8 +1032,10 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
- 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
- 			    cur_rate->flags != info->status.rates[i].flags)) {
- 			i++;
--			if (i == ARRAY_SIZE(info->status.rates))
-+			if (i == ARRAY_SIZE(info->status.rates)) {
-+				i--;
- 				break;
-+			}
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 552592d153fb8..f3cbf86e51acf 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
  
- 			info->status.rates[i] = *cur_rate;
- 			info->status.rates[i].count = 0;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-index e07ce2c100133..111e38ff954a2 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
-@@ -914,8 +914,10 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
- 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
- 			    cur_rate->flags != info->status.rates[i].flags)) {
- 			i++;
--			if (i == ARRAY_SIZE(info->status.rates))
-+			if (i == ARRAY_SIZE(info->status.rates)) {
-+				i--;
- 				break;
-+			}
+ 		arg->type = TEP_FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_filter *filter,
+ 			arg->boolean.value = 0;
  
- 			info->status.rates[i] = *cur_rate;
- 			info->status.rates[i].count = 0;
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
+ 
+ 		filter_type->filter = arg;
+ 
 -- 
 2.20.1
 
