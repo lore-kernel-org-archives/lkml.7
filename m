@@ -2,55 +2,60 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F85C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C87DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3867620836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E552073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014465;
-	bh=uMDhw3/AatnRTsP/eeEhRsJFDcnjfi0/Wf4rBikrZ1E=;
+	s=default; t=1576014472;
+	bh=CqC1QaSNSdiClsWs9lcedYOIFVertyaxPunXnTmuUs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZn2pkxKZXSVLjiqnhHsp9dawRxXRrWRTL2w6CYZH7NL+UQdUTkZEy1y79L8z6jmw
-	 H6OTnmO/Zeh3qnl7rC+96HxToHfC2yoJ6v92hUZqT2/CqcaPw+hg5z6CW4vukhVZnr
-	 VpZQZZ8/cH81gD25LD/egTVGU7MpAwf+l7XXCw9Y=
+	b=nCHCERKA09deZ2ltM2FB9SPpTHkpWWjsASAebRCqNcA/Kmck66cQx9kclDrWbImYW
+	 1IkFYfdWtjupx6xFDozwi/GeyZh3QwfnGOVu69do/UZlcetdUS9hDc3LY1zGVrkZHR
+	 +pJ45lyhClP+GStavuYqLJA3hwQHfomWrms3dj9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfLJVrk (ORCPT
+        id S1729500AbfLJVrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:47:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:47:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfLJVJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:14 -0500
+        id S1728073AbfLJVJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E1F246A6;
-        Tue, 10 Dec 2019 21:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB44246A3;
+        Tue, 10 Dec 2019 21:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012153;
-        bh=uMDhw3/AatnRTsP/eeEhRsJFDcnjfi0/Wf4rBikrZ1E=;
+        s=default; t=1576012150;
+        bh=CqC1QaSNSdiClsWs9lcedYOIFVertyaxPunXnTmuUs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKVtoaQmGdbPjrUlmIPqX38pOz6oenHlO21c9GEAFZzQG1StNmg8HltOT770WHQCu
-         dSEHWhXy4SezUyyUcbu1TesvtAzYzpa9tjf9pMfKo0CHY9JSViJgaRLqFAT/AGMabX
-         4y7MUXvXi0Tm4qav/GPj9Q/3oOnf89fRGzSeuccY=
+        b=A/P7Geybmv8vpe9cg4Gbx0Q4OZ3bAOHGYNu+P+fYByrb+DnyTx+HFVgEc9vCDu6aE
+         uZ8RewX7StJk6Vqcf1eDiNA6GNrt8CTgjPAFZ6JXmx3f1OJyC2mB0vqDau7gxHeWmu
+         CxAJSJD9uUvCAQ996SX4mvwFF6d+ChmW1f+6cP90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 116/350] iio: adc: max1027: Reset the device at probe time
-Date:   Tue, 10 Dec 2019 16:03:41 -0500
-Message-Id: <20191210210735.9077-77-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 113/350] perf trace: Filter own pid to avoid a feedback look in 'perf trace record -a'
+Date:   Tue, 10 Dec 2019 16:03:38 -0500
+Message-Id: <20191210210735.9077-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,40 +64,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit 7fbfe22cf4cfe01a88704dd76ca65d108039d297 ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+When doing a system wide 'perf trace record' we need, just like in 'perf
+trace' live mode, to filter out perf trace's own pid, so set up a
+tracepoint filter for the raw_syscalls tracepoints right after adding
+them to the argv array that is set up to then call cmd_record().
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-uysx5w8f2y5ndoln5cq370tv@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/builtin-trace.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 2148834585825..e3be8eedd773f 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -458,6 +458,14 @@ static int max1027_probe(struct spi_device *spi)
- 		return ret;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index bb5130d021554..e47a08f6fca8a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2576,21 +2576,23 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
+ 		"-m", "1024",
+ 		"-c", "1",
+ 	};
+-
++	pid_t pid = getpid();
++	char *filter = asprintf__tp_filter_pids(1, &pid);
+ 	const char * const sc_args[] = { "-e", };
+ 	unsigned int sc_args_nr = ARRAY_SIZE(sc_args);
+ 	const char * const majpf_args[] = { "-e", "major-faults" };
+ 	unsigned int majpf_args_nr = ARRAY_SIZE(majpf_args);
+ 	const char * const minpf_args[] = { "-e", "minor-faults" };
+ 	unsigned int minpf_args_nr = ARRAY_SIZE(minpf_args);
++	int err = -1;
+ 
+-	/* +1 is for the event string below */
+-	rec_argc = ARRAY_SIZE(record_args) + sc_args_nr + 1 +
++	/* +3 is for the event string below and the pid filter */
++	rec_argc = ARRAY_SIZE(record_args) + sc_args_nr + 3 +
+ 		majpf_args_nr + minpf_args_nr + argc;
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 
+-	if (rec_argv == NULL)
+-		return -ENOMEM;
++	if (rec_argv == NULL || filter == NULL)
++		goto out_free;
+ 
+ 	j = 0;
+ 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+@@ -2607,11 +2609,13 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
+ 			rec_argv[j++] = "syscalls:sys_enter,syscalls:sys_exit";
+ 		else {
+ 			pr_err("Neither raw_syscalls nor syscalls events exist.\n");
+-			free(rec_argv);
+-			return -1;
++			goto out_free;
+ 		}
  	}
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
++	rec_argv[j++] = "--filter";
++	rec_argv[j++] = filter;
 +
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ 	if (trace->trace_pgfaults & TRACE_PFMAJ)
+ 		for (i = 0; i < majpf_args_nr; i++)
+ 			rec_argv[j++] = majpf_args[i];
+@@ -2623,7 +2627,11 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
+ 	for (i = 0; i < (unsigned int)argc; i++)
+ 		rec_argv[j++] = argv[i];
+ 
+-	return cmd_record(j, rec_argv);
++	err = cmd_record(j, rec_argv);
++out_free:
++	free(filter);
++	free(rec_argv);
++	return err;
+ }
+ 
+ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
 -- 
 2.20.1
 
