@@ -2,113 +2,116 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25117C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAB6C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA4C20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13E820637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="H6mwJP3s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0uoT9B7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfLJWLG (ORCPT
+        id S1730364AbfLJWLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:11:06 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45156 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbfLJWLE (ORCPT
+        Tue, 10 Dec 2019 17:11:11 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:42733 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbfLJWLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:11:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 59so16961643otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:11:04 -0800 (PST)
+        Tue, 10 Dec 2019 17:11:10 -0500
+Received: by mail-pl1-f201.google.com with SMTP id b3so586478plr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:11:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jSKHjYgVXPlCtWKcNtNTh1vGxe8+YnF4aFxtCgHQkqI=;
-        b=H6mwJP3szbcrHV0L5CCnmkWCAoaddD0zQE1e/J1v2E8TO1Xq67ygQDZE6pEjP3j762
-         Qve11GKLwOMxQOKTrO0xVM+pI9CKkl/N6E0YRtkgH6mL+zByb0WURtxXTMcWlwvh9ZjZ
-         dqDfkvmxnNukVuIlBdlHurgCdj7jFCU7wEyFOrK8UyY6X5+Zu9F22DTWLRDKWSIYdkJ7
-         ahKrFJ7bkhLvfRXYZY86Ko6/OBPFhEo/zgpN4Wk/LrpmtOihqDs/HqAQdP0KeyAO3xCv
-         vIn3ugrDALs/rHuA2Kq4CNzYtQGGwqYb3uRUHAXIii7cx89V4DARWheEwMmXky+ejX+w
-         XKgw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=b73r53Ks39MzD1p7Mnxh3aUtTHdkJg2TG1gTQXCA0JA=;
+        b=i0uoT9B7VkzZLco87pN4yTJXrhjzrCyboyzAodwErTl0USjyKxQpB8BzII9F79iW5Q
+         StJAIzVxBqZBcrl61TgA0+Xjrodo4IBl2vMz9KUV1XjHxjmrRVLhRZwkNmgun+G2244b
+         672pjof/K4JjBwR+7wFlGQzL8CepOAOffo4t9eGjXSsRk+R8pIpb3y3WM1ZGatYVqoh6
+         n9ZaZiJ1rnLaTy+QLc6aSkhDKvipXqctmsMdXZM2oYgN3j+BYFQ4mok4xCtYYdVB4pov
+         F1gaQm0kN2iKRNPeaCrl+d3NAzFOHghLUAkV7ZA//lAPjircz9IcwetG+vyx9pKIDapk
+         WioA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jSKHjYgVXPlCtWKcNtNTh1vGxe8+YnF4aFxtCgHQkqI=;
-        b=ZZBjxkSIyOLoDRYeX/Dr7drN67HmGHaeM8oChIdZT3hLGSAH6tyeJInYu9liHiYqJo
-         ok/3HvCVUhl4WCDX2A/TBWQANm8XDliRT7M+mznq5pnCK/W3B25B4XHYYY74/itKtEPg
-         eMCnfbpVN1B5eJCTEjsiwjwz6AO9nIg7+PHDxhgGK3cdsxYctQILh9HczE/2CzzuEpjF
-         Mh+EGBjfMlA39rYTC2B5rrnnFygl7TPnbN/7xjCNPEy0yHkVPk2B0sRLZMFL7ibA6KOu
-         MYSkBDBkZQ1wndX/2nsq451XLTdiawMSyr/qvdLQbksy+ABr1Wzim0GXleYvQ35xSQn5
-         TAVA==
-X-Gm-Message-State: APjAAAUcWKggVkF6u/bEaYHcEfpYkK7ibnv0F9tksUvNKpWpcL2TNTBX
-        HsQEecoADdRdbJhZkp6Yy4er+Aj7n4bVpw==
-X-Google-Smtp-Source: APXvYqx3dsMqGrQ9+KOyqrcwDpDXDa7GifVMgMbRs2EWOTfWSKiuA9uSWVcTGCCbC0kx2MHZI9ytcg==
-X-Received: by 2002:a9d:6a4c:: with SMTP id h12mr22065otn.81.1576015863860;
-        Tue, 10 Dec 2019 14:11:03 -0800 (PST)
-Received: from ziepe.ca ([217.140.111.136])
-        by smtp.gmail.com with ESMTPSA id t7sm64608otk.6.2019.12.10.14.11.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 14:11:03 -0800 (PST)
-Received: from jgg by LT-JGG-7470.mtl.com with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1ienif-00002g-QL; Tue, 10 Dec 2019 18:11:01 -0400
-Date:   Tue, 10 Dec 2019 18:11:01 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+68dce7caebd8543121de@syzkaller.appspotmail.com>
-Cc:     akpm@linux-foundation.org, ast@kernel.org, boqun.feng@gmail.com,
-        byungchul.park@lge.com, daniel@iogearbox.net, davem@davemloft.net,
-        dledford@redhat.com, kernel-team@lge.com, kirill@shutemov.name,
-        kuznet@ms2.inr.ac.ru, leon@kernel.org, leonro@mellanox.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, mingo@kernel.org,
-        netdev@vger.kernel.org, npiggin@gmail.com, parav@mellanox.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        walken@google.com, willy@infradead.org, yoshfuji@linux-ipv6.org
-Subject: Re: KASAN: slab-out-of-bounds Read in ip6_tnl_parse_tlv_enc_lim
-Message-ID: <20191210221101.GA147@ziepe.ca>
-References: <0000000000005175bf057617c71d@google.com>
- <000000000000e22b3c059960bebd@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000e22b3c059960bebd@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=b73r53Ks39MzD1p7Mnxh3aUtTHdkJg2TG1gTQXCA0JA=;
+        b=mMu56K6zTPO/b1V7unVsQIDVTl+yzB9V7vVVAPH+0OfdfrIZqnTOvDFkHD9ZZaQJs5
+         3TbbqkyGLkbffGJZtexL+pMTasNZ5wLmzTPe7bOyA0V1mtqJyCev7RtRJ4KN36bK6ubt
+         SsAHN/p+DQ3gKMFJ6Dv/I5WVseRdR/xxe62NQfPGvjTJHt0sJQsiXlPa/3/hfgDpZvb4
+         Lc4RqHF4Dahp1oFMRHZMT+lrwBSYlcYVlmz3FtP46h7PFf1RAYIaU+r0MjQSWYXb9cfw
+         tF2BJPNYfwh4pETbwD/AcTKmBIB6txCp/lKnqpaQocote9gmg80j7XW+apXqqVlKQFtN
+         s+Sw==
+X-Gm-Message-State: APjAAAXbNQjyOX+PFd7d/BldyWer66gFIGuYckrqU5ESiXHw4FMgS2F9
+        HojPk8bZw55Y+XqVK6vLERuqp062hD45oVe/aVyHoA==
+X-Google-Smtp-Source: APXvYqxIkhq83HNF7Fpw49kmXHGQa5sYZO4wUfdhjjk6/E84bpG99rvKGJ2oOA55p8kIVLS2Md1/2sQ489DZZWBwOZ50WQ==
+X-Received: by 2002:a65:6249:: with SMTP id q9mr405022pgv.340.1576015869302;
+ Tue, 10 Dec 2019 14:11:09 -0800 (PST)
+Date:   Tue, 10 Dec 2019 14:10:48 -0800
+Message-Id: <20191210221048.83628-1-thomasanderson@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
+Subject: [PATCH] drm/edid: Increase size of VDB and CMDB bitmaps to 256 bits
+From:   Thomas Anderson <thomasanderson@google.com>
+To:     "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
+        <ville.syrjala@linux.intel.com>
+Cc:     Bhawanpreet Lakha <Bhawanpreet.lakha@amd.com>,
+        Harry Wentland <hwentlan@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Sean Pau <sean@poorly.run>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Thomas Anderson <thomasanderson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 02:08:01PM -0800, syzbot wrote:
-> syzbot suspects this bug was fixed by commit:
-> 
-> commit 30471d4b20335d9bd9ae9b2382a1e1e97d18d86d
-> Author: Leon Romanovsky <leonro@mellanox.com>
-> Date:   Sun Feb 3 12:55:50 2019 +0000
-> 
->     RDMA/core: Share driver structure size with core
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16b7bb7ae00000
-> start commit:   3a5af36b Merge tag '4.19-rc3-smb3-cifs' of git://git.samba..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9c4a80625153107e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=68dce7caebd8543121de
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1068a44e400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=146386c6400000
-> 
-> If the result looks correct, please mark the bug fixed by replying with:
-> 
-> #syz fix: RDMA/core: Share driver structure size with core
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+CEA-861-G adds modes up to 219, so increase the size of the
+maps in preparation for adding the new modes to drm_edid.c.
 
-Seems pretty unlikely
+Signed-off-by: Thomas Anderson <thomasanderson@google.com>
+---
+ include/drm/drm_connector.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Jason
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 5f8c3389d46f..17b728d9c73d 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -188,19 +188,19 @@ struct drm_hdmi_info {
+ 
+ 	/**
+ 	 * @y420_vdb_modes: bitmap of modes which can support ycbcr420
+-	 * output only (not normal RGB/YCBCR444/422 outputs). There are total
+-	 * 107 VICs defined by CEA-861-F spec, so the size is 128 bits to map
+-	 * upto 128 VICs;
++	 * output only (not normal RGB/YCBCR444/422 outputs). The max VIC
++	 * defined by the CEA-861-G spec is 219, so the size is 256 bits to map
++	 * up to 256 VICs.
+ 	 */
+-	unsigned long y420_vdb_modes[BITS_TO_LONGS(128)];
++	unsigned long y420_vdb_modes[BITS_TO_LONGS(256)];
+ 
+ 	/**
+ 	 * @y420_cmdb_modes: bitmap of modes which can support ycbcr420
+-	 * output also, along with normal HDMI outputs. There are total 107
+-	 * VICs defined by CEA-861-F spec, so the size is 128 bits to map upto
+-	 * 128 VICs;
++	 * output also, along with normal HDMI outputs. The max VIC defined by
++	 * the CEA-861-G spec is 219, so the size is 256 bits to map up to 256
++	 * VICs.
+ 	 */
+-	unsigned long y420_cmdb_modes[BITS_TO_LONGS(128)];
++	unsigned long y420_cmdb_modes[BITS_TO_LONGS(256)];
+ 
+ 	/** @y420_cmdb_map: bitmap of SVD index, to extraxt vcb modes */
+ 	u64 y420_cmdb_map;
+-- 
+2.24.0.525.g8f36a354ae-goog
+
