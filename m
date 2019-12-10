@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DE3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CF0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EABD24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD82924681
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012010;
-	bh=VQ5a4xBBMy6ZGg8kyYiUVjmv92AEpnGHsls0CSS71jk=;
+	s=default; t=1576012015;
+	bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqlEk91Y2netMXAZTSb0zgE8EEwXfppR9nKuVqySDgtGILdxngjuKJIbRHYCv95/5
-	 h7ePtoI0exYEhoxJOA6K4GD9b2N4694GzvcIcUOyK1IDPU1hfIRh8gNoFXqs3O//PL
-	 hIHfJQR1fF7Godx7LI5XIM8kelqJOoV/KyT+Ikr4=
+	b=lEAIvvkJmhrzmPQ9dyKsqXMP6F71nOx3R26gHeJYYRqotT0SS0LMtYhL+VHnUfr/l
+	 nXIVpywkQFoYHjx3WcFr2cZiuI967uSZ4vCQTOgFs8uRAnH2OpzEe79KLekNsL1ogj
+	 T4lUEqiZIZYV/NlHIiGLcw43YygpU69UGjZsFrd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfLJVEP (ORCPT
+        id S1727043AbfLJVGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48864 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfLJVEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:09 -0500
+        id S1726877AbfLJVEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76E9206EC;
-        Tue, 10 Dec 2019 21:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C20214D8;
+        Tue, 10 Dec 2019 21:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011848;
-        bh=VQ5a4xBBMy6ZGg8kyYiUVjmv92AEpnGHsls0CSS71jk=;
+        s=default; t=1576011855;
+        bh=Q8Q7aNebccwD6/X1QwWVe44pv8AWPGwmTkkkV/bDDBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtY7XvbT+Cw7dIpZUlRVZpWvMDkqEytfH7oXA/gP8Y+ZORMowdMDUCxFjbcadBjiE
-         V1+2BvlED74IvHGoormdAz6tev4aEhfLdzAVhP0mmHR16m6ICra/7yJgFihEodKH71
-         6FSDppgGE22+4jj0AKbav1TBfwcJyv4qnHuo4g4A=
+        b=eT+4zNgWmPO4baFXnuqgUBG0Ybfi+7B6RFfl5hxs9knxOqFx6DGnrcny3FbtGugad
+         TJwkSpPZtS6QTFCkrNTyy8QWpwzgnGb74dcU3dBPiP0kajpjAnsLTF/ahtHpj1RsAi
+         UfkdEgvSLedMaufT2I86Gt865gseaiRU6G9sqED8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 004/350] drm/mipi-dbi: fix a loop in debugfs code
-Date:   Tue, 10 Dec 2019 15:58:16 -0500
-Message-Id: <20191210210402.8367-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 009/350] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Tue, 10 Dec 2019 15:58:21 -0500
+Message-Id: <20191210210402.8367-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit d72cf01f410aa09868d98b672f3f92328c96b32d ]
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-This code will likely crash if we try to do a zero byte write.  The code
-looks like this:
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-        /* strip trailing whitespace */
-        for (i = count - 1; i > 0; i--)
-                if (isspace(buf[i]))
-			...
-
-We're writing zero bytes so count = 0.  You would think that "count - 1"
-would be negative one, but because "i" is unsigned it is a large
-positive numer instead.  The "i > 0" condition is true and the "buf[i]"
-access will be out of bounds.
-
-The fix is to make "i" signed and now everything works as expected.  The
-upper bound of "count" is capped in __kernel_write() at MAX_RW_COUNT so
-we don't have to worry about it being higher than INT_MAX.
-
-Fixes: 02dd95fe3169 ("drm/tinydrm: Add MIPI DBI support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-[noralf: Adjust title]
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190821072456.GJ26957@mwanda
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_mipi_dbi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index 1961f713aaab4..c4ee2709a6f32 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -1187,8 +1187,7 @@ static ssize_t mipi_dbi_debugfs_command_write(struct file *file,
- 	struct mipi_dbi_dev *dbidev = m->private;
- 	u8 val, cmd = 0, parameters[64];
- 	char *buf, *pos, *token;
--	unsigned int i;
--	int ret, idx;
-+	int i, ret, idx;
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index 3c7cc5af735ce..56df07cdab68f 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -715,7 +715,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
++
+ 		return PTR_ERR(pdata->dvdd10);
+ 	}
  
- 	if (!drm_dev_enter(&dbidev->drm, &idx))
- 		return -ENODEV;
+@@ -1332,7 +1334,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++
+ 		return err;
+ 	}
+ 
 -- 
 2.20.1
 
