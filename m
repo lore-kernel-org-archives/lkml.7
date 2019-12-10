@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5449C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C49C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770512071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFEE2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575951128;
-	bh=OVD6KEtAOYqNiZX6otgsMUJ/x4w6OflIm8Y3UChCx9o=;
+	s=default; t=1575951135;
+	bh=JKuN4lBujLD638NBg3cjQ2Oo07HtN/wZRzRaYxqIeHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLGYP/vGvWMSkOo/Qly1UrD8C62XbF6Ng7yshCH6abeDjL5Q+8njMlG6sdygMarVv
-	 EgB8i2wPGo7w9IJdGs44hCyfHYj1pQbdjvj5nHO8X9DDspGNNNrguEu6urNlYRM3L+
-	 zwcMmvDDmkzgKVW6alJkIXovBAU1lqSFlDCAtPOk=
+	b=NUUeHDuxihX7uxciElSOpyQNNpFcwysw9W5g/G8h8p/dAQvIlzZjfTS57zBtvScRS
+	 c7102wL7Tz8gLauub+c9Pq3W1iGJbbuDxfM+6oSJPkWIIEd+mT1AS9960suSTvLfhL
+	 lMlKk4yQDnBz4p2kCllD5R3PVpUWKCcTViBjuDAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfLJEL7 (ORCPT
+        id S1727162AbfLJEMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:11:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44942 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:12:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbfLJELy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:11:54 -0500
+        id S1726860AbfLJELw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 23:11:52 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D13222C4;
-        Tue, 10 Dec 2019 04:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7FAD20836;
+        Tue, 10 Dec 2019 04:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575951113;
-        bh=OVD6KEtAOYqNiZX6otgsMUJ/x4w6OflIm8Y3UChCx9o=;
+        s=default; t=1575951111;
+        bh=JKuN4lBujLD638NBg3cjQ2Oo07HtN/wZRzRaYxqIeHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2+N5DrRKV5FcDLB5/NRy4/G1wtzG5u66XVwwmhcifIXjTIZwPrOH1m7gHPY1npJT
-         HYa4mZDX71dN2OT6z7u2L0ub4peI+tsqgzWKqZGJKYVwbVnoESlxKQ6gHXFXcogM1H
-         f8VQcO41MKJIm4yKnzColDnRU68r7TcDHVZFZ4Fk=
+        b=TE06S0QqrMLqJwxKH7vA5U9fQgnAPnDoXxx9sd3XGfeRT37Lzy7/aomeD9I8NEsK+
+         XPghmi97S2P0uw2Cnjze3IMngxqtiYv0d/oUsaqEMjHa9mX3QE3b/4kD+DjQBVQTfE
+         nQO26IXR+kKRXK9Q/mJOBfk9W6QH+Od64kNLt8fQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 7/7] rcu: Remove kfree_call_rcu_nobatch()
-Date:   Mon,  9 Dec 2019 20:11:47 -0800
-Message-Id: <20191210041147.3181-7-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 3/7] rcu: Make kfree_rcu() use a non-atomic ->monitor_todo
+Date:   Mon,  9 Dec 2019 20:11:43 -0800
+Message-Id: <20191210041147.3181-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210041118.GA3115@paulmck-ThinkPad-P72>
 References: <20191210041118.GA3115@paulmck-ThinkPad-P72>
@@ -59,135 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: Joel Fernandes <joel@joelfernandes.org>
 
-Now that the kfree_rcu() special-casing has been removed from tree RCU,
-this commit removes kfree_call_rcu_nobatch() since it is no longer needed.
+Because the ->monitor_todo field is always protected by krcp->lock,
+this commit downgrades from xchg() to non-atomic unmarked assignment
+statements.
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Joel Fernandes <joel@joelfernandes.org>
+[ paulmck: Update to include early-boot kick code. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 ----
- include/linux/rcutiny.h                         |  5 -----
- include/linux/rcutree.h                         |  1 -
- kernel/rcu/rcuperf.c                            | 10 +---------
- kernel/rcu/tree.c                               | 18 ++++--------------
- 5 files changed, 5 insertions(+), 33 deletions(-)
+ kernel/rcu/tree.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3ce270b..ed83d6d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3991,10 +3991,6 @@
- 			Number of loops doing rcuperf.kfree_alloc_num number
- 			of allocations and frees.
- 
--	rcuperf.kfree_no_batch= [KNL]
--			Use the non-batching (less efficient) version of kfree_rcu().
--			This is useful for comparing with the batched version.
--
- 	rcuperf.nreaders= [KNL]
- 			Set number of RCU readers.  The value -1 selects
- 			N, where N is the number of CPUs.  A value
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index 1bd166a..b2b2dc9 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -39,11 +39,6 @@ static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	call_rcu(head, func);
- }
- 
--static inline void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
--{
--	call_rcu(head, func);
--}
--
- void rcu_qs(void);
- 
- static inline void rcu_softirq_qs(void)
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 6a65d3a..2f787b9 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -34,7 +34,6 @@ static inline void rcu_virt_note_context_switch(int cpu)
- 
- void synchronize_rcu_expedited(void);
- void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
--void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func);
- 
- void rcu_barrier(void);
- bool rcu_eqs_special_set(int cpu);
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index c1e25fd..da94b89 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -593,7 +593,6 @@ rcu_perf_shutdown(void *arg)
- torture_param(int, kfree_nthreads, -1, "Number of threads running loops of kfree_rcu().");
- torture_param(int, kfree_alloc_num, 8000, "Number of allocations and frees done in an iteration.");
- torture_param(int, kfree_loops, 10, "Number of loops doing kfree_alloc_num allocations and frees.");
--torture_param(int, kfree_no_batch, 0, "Use the non-batching (slower) version of kfree_rcu().");
- 
- static struct task_struct **kfree_reader_tasks;
- static int kfree_nrealthreads;
-@@ -632,14 +631,7 @@ kfree_perf_thread(void *arg)
- 			if (!alloc_ptr)
- 				return -ENOMEM;
- 
--			if (!kfree_no_batch) {
--				kfree_rcu(alloc_ptr, rh);
--			} else {
--				rcu_callback_t cb;
--
--				cb = (rcu_callback_t)(unsigned long)offsetof(struct kfree_obj, rh);
--				kfree_call_rcu_nobatch(&(alloc_ptr->rh), cb);
--			}
-+			kfree_rcu(alloc_ptr, rh);
- 		}
- 
- 		cond_resched();
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index a8dd612..31d2d92 100644
+index 0af016f..6106b9e 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2763,8 +2763,10 @@ static void kfree_rcu_work(struct work_struct *work)
- 		rcu_lock_acquire(&rcu_callback_map);
- 		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+@@ -2708,7 +2708,7 @@ struct kfree_rcu_cpu {
+ 	struct rcu_head *head_free;
+ 	spinlock_t lock;
+ 	struct delayed_work monitor_work;
+-	int monitor_todo;
++	bool monitor_todo;
+ 	bool initialized;
+ };
  
--		/* Could be possible to optimize with kfree_bulk in future */
--		kfree((void *)head - offset);
-+		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
-+			/* Could be optimized with kfree_bulk() in future. */
-+			kfree((void *)head - offset);
-+		}
+@@ -2765,6 +2765,7 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+ 					  unsigned long flags)
+ {
+ 	// Attempt to start a new batch.
++	krcp->monitor_todo = false;
+ 	if (queue_kfree_rcu_work(krcp)) {
+ 		// Success! Our job is done here.
+ 		spin_unlock_irqrestore(&krcp->lock, flags);
+@@ -2772,8 +2773,8 @@ static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+ 	}
  
- 		rcu_lock_release(&rcu_callback_map);
- 		cond_resched_tasks_rcu_qs();
-@@ -2836,16 +2838,6 @@ static void kfree_rcu_monitor(struct work_struct *work)
+ 	// Previous RCU batch still in progress, try again later.
+-	if (!xchg(&krcp->monitor_todo, true))
+-		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
++	krcp->monitor_todo = true;
++	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+ 	spin_unlock_irqrestore(&krcp->lock, flags);
  }
  
- /*
-- * This version of kfree_call_rcu does not do batching of kfree_rcu() requests.
-- * Used only by rcuperf torture test for comparison with kfree_rcu_batch().
-- */
--void kfree_call_rcu_nobatch(struct rcu_head *head, rcu_callback_t func)
--{
--	__call_rcu(head, func);
--}
--EXPORT_SYMBOL_GPL(kfree_call_rcu_nobatch);
--
--/*
-  * Queue a request for lazy invocation of kfree() after a grace period.
-  *
-  * Each kfree_call_rcu() request is added to a batch. The batch will be drained
-@@ -2864,8 +2856,6 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	unsigned long flags;
- 	struct kfree_rcu_cpu *krcp;
+@@ -2788,7 +2789,7 @@ static void kfree_rcu_monitor(struct work_struct *work)
+ 						 monitor_work.work);
  
--	head->func = func;
--
- 	local_irq_save(flags);	// For safely calling this_cpu_ptr().
- 	krcp = this_cpu_ptr(&krc);
+ 	spin_lock_irqsave(&krcp->lock, flags);
+-	if (xchg(&krcp->monitor_todo, false))
++	if (krcp->monitor_todo)
+ 		kfree_rcu_drain_unlock(krcp, flags);
+ 	else
+ 		spin_unlock_irqrestore(&krcp->lock, flags);
+@@ -2837,8 +2838,10 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 
+ 	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+ 	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
+-	    !xchg(&krcp->monitor_todo, true))
++	    !krcp->monitor_todo) {
++		krcp->monitor_todo = true;
+ 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
++	}
+ 
  	if (krcp->initialized)
+ 		spin_unlock(&krcp->lock);
+@@ -2855,10 +2858,11 @@ void __init kfree_rcu_scheduler_running(void)
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		spin_lock_irqsave(&krcp->lock, flags);
+-		if (!krcp->head || xchg(&krcp->monitor_todo, true)) {
++		if (!krcp->head || krcp->monitor_todo) {
+ 			spin_unlock_irqrestore(&krcp->lock, flags);
+ 			continue;
+ 		}
++		krcp->monitor_todo = true;
+ 		schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+ 		spin_unlock_irqrestore(&krcp->lock, flags);
+ 	}
 -- 
 2.9.5
 
