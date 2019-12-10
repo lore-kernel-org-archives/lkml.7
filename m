@@ -2,97 +2,152 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F62C04E30
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A485AC2BD09
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B55C2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l+ifuIi8"
+	by mail.kernel.org (Postfix) with ESMTP id 7B543207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575939168;
+	bh=0fCKRrO+qbAUzYrgrBX7cVTSkGUF7f+hVZZmtOT+t68=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=RL2Av00/2qpxIuG5tkyZNVNIbfvLLS0k5ukwYlU5qMrZxaE1FT1AU52Gzjh1W9KaA
+	 T17OAnqoT+scIX+nw+cKxawv36uTc3vPLgv5i1O1ZtFzzcLPVmF50zSM0YV5/FURXE
+	 LxdmdPB6ouCcMKQcvrNq5UP0niMG5mxsD1YcExxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfLJAvq (ORCPT
+        id S1727524AbfLJAwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:51:46 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:56814 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfLJAvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:51:45 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBA0ixgg071299;
-        Tue, 10 Dec 2019 00:51:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=/E5tyMAH9RiXvb61SAiwAfhRym6/2hA1l0zXBSn/A3c=;
- b=l+ifuIi8LWyHUReeLi9aoLOpoQCUuu1cnBjHpGnXT/i+PYCD0qvvjnruTVMecgSHegr9
- WIjsKge3qrEZ8vBE0MCKOzb7BKZwxthvA77yfuSktyzL8wiROTSdLZJZb6hHXMQOkRDo
- zjWVM0bIit8y7XnEwsFCvSAD1yekmjm97D22pcVhC3/G1kDcCSQmCTXMLSRDr+eukxOk
- 5vtq5HoQPq/FwNs2v0u390b7Xdt9n6seV3WgWE2xG0wl65FpXqqGSm6j02Iyh9Ot6oAI
- FfBpX1A3oJdsDcYxCVkwPCUBcQ+8yKQalsLU2uZDy9mDuYlY0ldxAi+wUzkcvDO6Ws1S tA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wrw4myuac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 00:51:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBA0hTgN164290;
-        Tue, 10 Dec 2019 00:51:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2wsw6g1mep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 00:51:27 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBA0pNhc025788;
-        Tue, 10 Dec 2019 00:51:24 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Dec 2019 16:51:23 -0800
-To:     Bean Huo <huobean@gmail.com>
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ufs: delete unused structure filed tr
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191205220912.5696-1-huobean@gmail.com>
-Date:   Mon, 09 Dec 2019 19:51:20 -0500
-In-Reply-To: <20191205220912.5696-1-huobean@gmail.com> (Bean Huo's message of
-        "Thu, 5 Dec 2019 23:09:12 +0100")
-Message-ID: <yq1h829ngtz.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 9 Dec 2019 19:52:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfLJAwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 19:52:47 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A3920637;
+        Tue, 10 Dec 2019 00:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575939166;
+        bh=0fCKRrO+qbAUzYrgrBX7cVTSkGUF7f+hVZZmtOT+t68=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fWlr7CAkvOSknyYBHXTRNgavvE6mrK/r1AXrtBH6eUb+QsI0YBjenvLz4Ffo/2APl
+         LR0r5YeA3jG0qPNX+P99Rz3GlrTOSKghEMpjjpWH4ALe1L8aaili6f0vkaCwq1/yL8
+         xd06QqNxVPuYRk4Yn/GdJ537OQjyDQOzqTj02KzA=
+Subject: Re: [PATCH 4.14 000/209] 4.14.158-stable review
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191204175321.609072813@linuxfoundation.org>
+ <1dac10cd-7183-9dfd-204c-05fae75bcd74@kernel.org>
+ <20191206152823.GA75339@kroah.com>
+ <785c9534-1eb2-ea9b-8c9b-6713fdefdd01@kernel.org>
+ <e04a233b-0854-2dd4-060e-47e1013879ee@roeck-us.net>
+ <f7e72654-42a6-864a-4b4c-41adcce74404@kernel.org>
+ <5e923897-6bc6-5756-1283-39e5ff1481b7@roeck-us.net>
+From:   shuah <shuah@kernel.org>
+Message-ID: <453edaee-3622-dcde-1f46-4bf3aceb8c6a@kernel.org>
+Date:   Mon, 9 Dec 2019 17:52:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912100005
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9466 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912100005
+In-Reply-To: <5e923897-6bc6-5756-1283-39e5ff1481b7@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/6/19 9:56 AM, Guenter Roeck wrote:
+> On 12/6/19 8:23 AM, shuah wrote:
+>> On 12/6/19 9:10 AM, Guenter Roeck wrote:
+>>> On 12/6/19 7:35 AM, shuah wrote:
+>>>> On 12/6/19 8:28 AM, Greg Kroah-Hartman wrote:
+>>>>> On Fri, Dec 06, 2019 at 08:24:36AM -0700, shuah wrote:
+>>>>>> On 12/4/19 10:53 AM, Greg Kroah-Hartman wrote:
+>>>>>>> This is the start of the stable review cycle for the 4.14.158 
+>>>>>>> release.
+>>>>>>> There are 209 patches in this series, all will be posted as a 
+>>>>>>> response
+>>>>>>> to this one.  If anyone has any issues with these being applied, 
+>>>>>>> please
+>>>>>>> let me know.
+>>>>>>>
+>>>>>>> Responses should be made by Fri, 06 Dec 2019 17:50:10 +0000.
+>>>>>>> Anything received after that time might be too late.
+>>>>>>>
+>>>>>>> The whole patch series can be found in one patch at:
+>>>>>>>     https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.158-rc1.gz 
+>>>>>>>
+>>>>>>> or in the git tree and branch at:
+>>>>>>>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
+>>>>>>> linux-4.14.y
+>>>>>>> and the diffstat can be found below.
+>>>>>>>
+>>>>>>> thanks,
+>>>>>>>
+>>>>>>> greg k-h
+>>>>>>>
+>>>>>>
+>>>>>> Starting with Linux 4.14.157, 4.9.204, and 4.4.204 stables stopped
+>>>>>> booting on my system. It can't find the root disk. No config changes
+>>>>>> in between.
+>>>>>>
+>>>>>> I have been bisecting 4.14 and 4.9 with no luck so far. I updated
+>>>>>> to Ubuntu 19.10 in between.
+>>>>>>
+>>>>>> The only other thing I see is CONFIG_GCC_VERSION which is supported
+>>>>>> starting 4.18. I don't this boot failing issue on 4.19 + up. I am
+>>>>>> also chasing any links between this config and scripts and tools
+>>>>>> that generate the initramfs.
+>>>>>
+>>>>> Did you also upgrade your version of gcc?  I know I build those older
+>>>>> kernels with the latest version of gcc for build tests, but I do not
+>>>>> boot them.  I think everyone who still uses them uses older 
+>>>>> versions of
+>>>>> gcc.
+>>>>
+>>>> Yes. gcc version changed. That has been my strong suspect since I 
+>>>> started poking around the CONFIG_GCC_VERSION.
+>>>>
+>>>
+>>> What version of gcc are you using ? I currently use gcc 8.3.0 for all
+>>> qemu boot tests (except for 3.16 which doesn't support it, or at least
+>>> it didn't when I last checked), and have not observed any problems.
+>>>
+>>
+>> With the upgrade gcc version went from 8.3.0 to 9.2.1
+>>
+>> Interestingly enough all the older 4.14, 4.9, and 4.4 kernel I have
+>> on the system boot just fine. It fails when build newer rcs with new
+>> gcc, boot fails.
+>>
+>> I would really like to understand it just in case something in our
+>> kbuild scrips is the issue.
+>>
+> 
+> v4.4.206 boots for me into qemu when compiled with gcc 9.2.0 (9.2.1 does 
+> not
+> appear to be an official release). So at least it isn't that simple. Let me
+> know if I can test anything else.
+> 
 
-Bean,
+Update on this. I managed to boot 4.14.158 by installing stripping
+modules INSTALL_MOD_STRIP=1. I also disabled KASAN.
 
-> Delete unused structure field tr in structure utp_upiu_req, since no
-> person uses it for task management.
+The above doesn't work on Linux 4.9.206 or Linux 4.4.206. Investigating
+still.
 
-Applied to 5.6/scsi-queue, thanks!
+thanks,
+-- Shuah
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
