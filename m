@@ -2,159 +2,120 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AAAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E1AC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAED20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58527206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576022094;
+	bh=Y0rL3OsX7JSwZVE3fA0lUgy0MkmQlbXJklmzyjR5bNM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=uPqa8FeUBIRTBurr6QAW4kUwjU6KyO33ml89D7zhOmFy9Mjayh1ZYRpWw19IsXEW4
+	 vRPr20pMY6JFulNUpCZVd/mX3IGQ+kqca4ggOB9mfH6Q7tl6MfJ3KeUu6HzUf+iav9
+	 pyAcFQi2Ga/dhHm5YgiSuejLgTA+c3APgJeLaKy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfLJXx2 (ORCPT
+        id S1726879AbfLJXyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:53:28 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:45848 "EHLO ale.deltatee.com"
+        Tue, 10 Dec 2019 18:54:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfLJXx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:53:27 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iepJ1-0006ir-2c; Tue, 10 Dec 2019 16:52:40 -0700
-To:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
- <20191210100432.GC10404@dhcp22.suse.cz>
- <6da2b279-6a6d-d89c-a34c-962ed021d91d@redhat.com>
- <20191210103452.GF10404@dhcp22.suse.cz>
- <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
-Date:   Tue, 10 Dec 2019 16:52:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725999AbfLJXyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 18:54:53 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB3420663;
+        Tue, 10 Dec 2019 23:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576022092;
+        bh=Y0rL3OsX7JSwZVE3fA0lUgy0MkmQlbXJklmzyjR5bNM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PJRJUvGNLkzF/3KyseqNWDsju4IpL9e6Xix4DS0afggoIue7jI5efsorgmYncOfVO
+         4vbwciByxssxuA17svyBeoRAvAB/ycZHidQjdnM4xTjbwBYshIVWlgSgaajTJG5cVQ
+         VGVJi+XxOAKgyP4g/ejd6T/yEx5/UpaH0ZT587y0=
+Date:   Tue, 10 Dec 2019 17:54:50 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [Patch v2 1/2] PCI: hv: decouple the func definition in
+ hv_dr_state from VSP message
+Message-ID: <20191210235450.GA177105@google.com>
 MIME-Version: 1.0
-In-Reply-To: <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, akpm@linux-foundation.org, hch@lst.de, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, mhocko@kernel.org, david@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t
- in arch_add_memory()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Run "git log --oneline drivers/pci/controller/pci-hyperv.c" and make
+yours match.  Capitalize the first word, etc.
 
-
-On 2019-12-10 4:25 a.m., David Hildenbrand wrote:
-> On 10.12.19 11:34, Michal Hocko wrote:
->> On Tue 10-12-19 11:09:46, David Hildenbrand wrote:
->>> On 10.12.19 11:04, Michal Hocko wrote:
->>>> On Mon 09-12-19 12:43:40, Dan Williams wrote:
->>>>> On Mon, Dec 9, 2019 at 12:24 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
->>>>>>> On 09.12.19 20:13, Logan Gunthorpe wrote:
->>>> [...]
->>>>>>>>  #ifdef CONFIG_MEMORY_HOTPLUG
->>>>>>>> -int arch_add_memory(int nid, u64 start, u64 size,
->>>>>>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
->>>>>>>>                      struct mhp_restrictions *restrictions)
->>>>>>>
->>>>>>> Can we fiddle that into "struct mhp_restrictions" instead?
->>>>>>
->>>>>> Yes, if that's what people want, it's pretty trivial to do. I chose not
->>>>>> to do it that way because it doesn't get passed down to add_pages() and
->>>>>> it's not really a "restriction". If I don't hear any objections, I will
->>>>>> do that for v2.
->>>>>
->>>>> +1 to storing this information alongside the altmap in that structure.
->>>>> However, I agree struct mhp_restrictions, with the MHP_MEMBLOCK_API
->>>>> flag now gone, has lost all of its "restrictions". How about dropping
->>>>> the 'flags' property and renaming the struct to 'struct
->>>>> mhp_modifiers'?
->>>>
->>>> Hmm, this email somehow didn't end up in my inbox so I have missed it
->>>> before replying.
->>>>
->>>> Well, mhp_modifiers makes some sense and it would reduce the API
->>>> proliferation but how do you expect the prot part to be handled?
->>>> I really do not want people to think about PAGE_KERNEL or which
->>>> protection to use because my experience tells that this will get copied
->>>> without much thinking or simply will break with some odd usecases.
->>>> So how exactly this would be used?
->>>
->>> I was thinking about exactly the same "issue".
->>>
->>> 1. default initialization via a function
->>>
->>> memhp_modifier_default_init(&modified);
->>>
->>> 2. a flag that unlocks the prot field (default:0). Without the flag, it
->>> is ignored. We can keep the current initialization then.
->>>
->>> Other ideas?
->>
->> 3. a prot mask to apply on top of PAGE_KERNEL? Or would that be
->> insufficient/clumsy?
->>
+On Tue, Dec 03, 2019 at 06:53:36PM -0800, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> If it works for the given use case, I guess this would be simple and ok.
+> hv_dr_state is used to find present PCI devices on the bus. The structure
+> reuses struct pci_function_description from VSP message to describe a device.
+> 
+> To prepare support for pci_function_description v2, we need to decouple this
+> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
+> 
+> There is no functionality change.
+> 
+> Signed-off-by: Long Li <longli@microsoft.com>
 
-I don't see how we can do that without a ton of work. The pgport_t is
-architecture specific so we'd need to add mask functions to every
-architecture for every page cache type we need to use. I don't think
-that's a good idea.
+> + * hv_pci_devices_present() - Handles list of new children
+> + * @hbus:	Root PCI bus, as understood by this driver
+> + * @relations:	Packet from host listing children
+> + *
+> + * This function is invoked whenever a new list of devices for
+> + * this bus appears.
 
-I think I slightly prefer option 2 over the above.  But I'd actually
-prefer callers have to think about the caching type seeing when we grew
-the second user (memremap_pages()) and it was paired with
-track_pfn_remap(), it was actually subtly wrong because it could create
-a mapping that track_pfn_remap() disagreed with. In fact, PAGE_KERNEL
-has already been specified in memremap_pages() for ages, it was just
-ignored when it got to the arch_add_memory() step which is were this
-issue comes from.
+The comment should tell us what the function *does*, not when it is
+called.
 
-In my opinion, having a coder and reviewer see PAGE_KERNEL and ask if
-that makes sense is a benefit. Having it hidden because we don't want
-people to think about it is worse, harder to understand and results in
-bugs that are more difficult to spot.
-
-Though, we may be overthinking this: arch_add_memory() is a low level
-non-exported API that's currently used in exactly two places. I don't
-think there's going to be many, if any, valid new use cases coming up
-for it in the future. That's more what memremap_pages() is for.
-
-Logan
+> + */
+> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
+> +				   struct pci_bus_relations *relations)
+> +{
+> +	struct hv_dr_state *dr;
+> +	int i;
+> +
+> +	dr = kzalloc(offsetof(struct hv_dr_state, func) +
+> +		     (sizeof(struct hv_pcidev_description) *
+> +		      (relations->device_count)), GFP_NOWAIT);
+> +
+> +	if (!dr)
+> +		return;
+> +
+> +	dr->device_count = relations->device_count;
+> +	for (i = 0; i < dr->device_count; i++) {
+> +		dr->func[i].v_id = relations->func[i].v_id;
+> +		dr->func[i].d_id = relations->func[i].d_id;
+> +		dr->func[i].rev = relations->func[i].rev;
+> +		dr->func[i].prog_intf = relations->func[i].prog_intf;
+> +		dr->func[i].subclass = relations->func[i].subclass;
+> +		dr->func[i].base_class = relations->func[i].base_class;
+> +		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
+> +		dr->func[i].win_slot = relations->func[i].win_slot;
+> +		dr->func[i].ser = relations->func[i].ser;
+> +	}
+> +
+> +	if (hv_pci_start_relations_work(hbus, dr))
+> +		kfree(dr);
+>  }
