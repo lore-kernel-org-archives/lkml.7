@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A26C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B830DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280B720838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804FE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012447;
-	bh=LPeNf+C9NhRIiQSMABV1XMqyuVoNoMCQgKrIxBmfE3w=;
+	s=default; t=1576012450;
+	bh=NvVxvSIMbRFIn8DTwS2PrikjHm61ZD9bX1FQlBWdU4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orqsZkYmnVL5hdrVyw8MInyBCwya3dZreIH/epBaH0lIyxTpZ9oqC82KHI/AlYKaA
-	 QXWiTGXYcSLribGQ3ntmwELSCpoRmDBmuuTmsNMKTxKTlvaEP6dbhK1ubyNKqlNrEk
-	 rU60xSLYSihRsi9ObQWaVqD9W19NLVx8dlhXVM28=
+	b=TNOi1A26mvyiDduqE3Qp0ft7onhk1UdZdDZDuPl382+urKPkN5isxb9n8WiJhj/lG
+	 0pESXAzObIBpJXj7AXwOnizpkKxc16tTkS7GLRljsenmNrqymtS1KmwCrU3L0Ni3iT
+	 WW3ASvl240U87gPDQS+KWbUmgQPgtBWaUbw2M4zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfLJVOF (ORCPT
+        id S1729510AbfLJVOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:14:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfLJVN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:59 -0500
+        id S1728982AbfLJVNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F24E9206EC;
-        Tue, 10 Dec 2019 21:13:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3020020838;
+        Tue, 10 Dec 2019 21:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012438;
-        bh=LPeNf+C9NhRIiQSMABV1XMqyuVoNoMCQgKrIxBmfE3w=;
+        s=default; t=1576012431;
+        bh=NvVxvSIMbRFIn8DTwS2PrikjHm61ZD9bX1FQlBWdU4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9qfEyl9cVKMwCWRS63Hw89VYgGfTyrd61i4t/3tH70RcedeNQHyGR3cOuGZgwmxu
-         3p78RO7CcREwcof+jhpm/eOF+cwOBFGF/G27+lVt0qCqBoEjIDcg7cze7hM0cOWbSc
-         RqE45SxtUHdPpzr8OWPz+qGL8qFjGqNzgVTN7P/w=
+        b=ZL9TMrfQfXD2/jOp+ypi+tjXYvzOE6KSgc4qqwzPCXICs1JICuW4rfcJvInWUYLqp
+         ovLy2GOa031IsuEtcfsOVajPU9xXaCnOo3tbEMmV/sxkyKRjRlPOgYRHcRRVsgObB/
+         o3VmQTrkjukTQVG/gMB2jaNpaCsmqdp+SXeUYp70=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Burton <paul.burton@mips.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 350/350] MIPS: futex: Restore \n after sync instructions
-Date:   Tue, 10 Dec 2019 16:07:35 -0500
-Message-Id: <20191210210735.9077-311-sashal@kernel.org>
+Cc:     Devesh Sharma <devesh.sharma@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 345/350] RDMA/bnxt_re: Fix stat push into dma buffer on gen p5 devices
+Date:   Tue, 10 Dec 2019 16:07:30 -0500
+Message-Id: <20191210210735.9077-306-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -58,62 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Devesh Sharma <devesh.sharma@broadcom.com>
 
-[ Upstream commit fd7710cb491f900eb63d2ce5aac0e682003e84e9 ]
+[ Upstream commit 98998ffe5216c7fa2c0225bb5b049ca5cdf8d195 ]
 
-Commit 3c1d3f097972 ("MIPS: futex: Emit Loongson3 sync workarounds
-within asm") inadvertently removed the newlines following
-__WEAK_LLSC_MB, which causes build failures for configurations in which
-__WEAK_LLSC_MB expands to a sync instruction:
+Due to recent advances in the firmware for Broadcom's gen p5 series of
+adaptors the driver code to report hardware counters has been broken
+w.r.t. roce devices.
 
-  {standard input}: Assembler messages:
-  {standard input}:9346: Error: symbol `sync3' is already defined
-  {standard input}:9380: Error: symbol `sync3' is already defined
-  ...
+The new firmware command expects dma length to be specified during stat
+dma buffer allocation.
 
-Fix this by restoring the newlines to separate the sync instruction from
-anything following it (such as the 3: label), preventing inadvertent
-concatenation.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: 3c1d3f097972 ("MIPS: futex: Emit Loongson3 sync workarounds within asm")
+Fixes: 2792b5b95ed5 ("bnxt_en: Update firmware interface spec. to 1.10.0.89.")
+Link: https://lore.kernel.org/r/1574317343-23300-3-git-send-email-devesh.sharma@broadcom.com
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/futex.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/include/asm/futex.h b/arch/mips/include/asm/futex.h
-index 54cf205309316..110220705e978 100644
---- a/arch/mips/include/asm/futex.h
-+++ b/arch/mips/include/asm/futex.h
-@@ -33,7 +33,7 @@
- 		"	.set	arch=r4000			\n"	\
- 		"2:	sc	$1, %2				\n"	\
- 		"	beqzl	$1, 1b				\n"	\
--		__stringify(__WEAK_LLSC_MB)				\
-+		__stringify(__WEAK_LLSC_MB) "			\n"	\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -63,7 +63,7 @@
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
- 		"2:	"user_sc("$1", "%2")"			\n"	\
- 		"	beqz	$1, 1b				\n"	\
--		__stringify(__WEAK_LLSC_MB)				\
-+		__stringify(__WEAK_LLSC_MB) "			\n"	\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -148,7 +148,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 		"	.set	arch=r4000				\n"
- 		"2:	sc	$1, %2					\n"
- 		"	beqzl	$1, 1b					\n"
--		__stringify(__WEAK_LLSC_MB)
-+		__stringify(__WEAK_LLSC_MB) "				\n"
- 		"3:							\n"
- 		"	.insn						\n"
- 		"	.set	pop					\n"
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index b31e215882004..27e2df44d043d 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -477,6 +477,7 @@ static int bnxt_re_net_stats_ctx_alloc(struct bnxt_re_dev *rdev,
+ 	bnxt_re_init_hwrm_hdr(rdev, (void *)&req, HWRM_STAT_CTX_ALLOC, -1, -1);
+ 	req.update_period_ms = cpu_to_le32(1000);
+ 	req.stats_dma_addr = cpu_to_le64(dma_map);
++	req.stats_dma_length = cpu_to_le16(sizeof(struct ctx_hw_stats_ext));
+ 	req.stat_ctx_flags = STAT_CTX_ALLOC_REQ_STAT_CTX_FLAGS_ROCE;
+ 	bnxt_re_fill_fw_msg(&fw_msg, (void *)&req, sizeof(req), (void *)&resp,
+ 			    sizeof(resp), DFLT_HWRM_CMD_TIMEOUT);
 -- 
 2.20.1
 
