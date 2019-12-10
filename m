@@ -2,164 +2,158 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1006C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657EEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 874752077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PcDOdUTM"
+	by mail.kernel.org (Postfix) with ESMTP id 413B2207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfLJUAv (ORCPT
+        id S1726892AbfLJUBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:00:51 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38966 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfLJUAe (ORCPT
+        Tue, 10 Dec 2019 15:01:16 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:51867 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfLJUBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:00:34 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d5so3043298wmb.4;
-        Tue, 10 Dec 2019 12:00:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+tCXSRcOGp8AB2agMQyFNpx6A5VvIGH5Te8hf64YcWw=;
-        b=PcDOdUTMeTW9ZZMJ7mDGB217v44GZWE94XzfRXSgj82kQD4ttkGWJ3WiY0/FnItCQX
-         04BAre3cfoGvEIFSfolLLH22vaX4z0t//H7P+QZXopaMY79J9SkUnTP+iT5tMdQO5vs5
-         oZS5mYDsL/6+4VhGFEleiew50AuJGi8pJHeMravjd2P8Ck+n/P7GyvOEstUMaMMGLN9q
-         Br6Z98gUcts9ysgG+t6lV9hSnkCMY9KI11hlDFdmvAIyuonFdk0RyE6bRy/KIxWgSdxQ
-         eLsNh8sDH2+BERz5j/23/mxBRz8mC2zqlD5Zvz2sen8OaB7jWNX8FrnZwCvrMwu8IvWs
-         z1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+tCXSRcOGp8AB2agMQyFNpx6A5VvIGH5Te8hf64YcWw=;
-        b=LbLCe5zn6S+0SZIxn2kElWgWps/jPCYI3CwoU5PjpGCVlA6i4bdZRjDPuAQHCq46ee
-         KAQvnL0fA93ZzhGaOtZdcWq82eOqPkjdHRV/61H+4N4LhzbplX5sUj7vpAX8NHYMvlVK
-         /AVYvbUQbsNfutFzQUky1IcPL6MpegkyLF6OqTq/sZtuVmHxiFUN3NtjuCHB8RXCFqpm
-         XFKLKP33UvApcI9OWrzvz5xKJFxOeBvPlh9DuzSVmRMpWGK7yJ/01LehCu9GubbPWQ+A
-         FlR1gUU5XYSyjpdP2wy9x3Y6ubFhFwuYADa5sSwgt47HSxhGVuFed4pz9RFHKEx98ohO
-         CXLw==
-X-Gm-Message-State: APjAAAU+88aPkRPMFtJUn7Z5u3Kl51gTFmyaAzbedWQ63AJ/GzYaPcNg
-        6EunshroAP7SLX5sEY2Kuso=
-X-Google-Smtp-Source: APXvYqzrsvco5XJD7/5sA83REuKxpORSzOHblfQuIBFlT49tQcREjH5VmRYckMc89eWDPNGust+UUw==
-X-Received: by 2002:a7b:cf01:: with SMTP id l1mr6861581wmg.86.1576008032761;
-        Tue, 10 Dec 2019 12:00:32 -0800 (PST)
-Received: from localhost.localdomain (p200300F1371AD700428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:371a:d700:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id t81sm4428610wmg.6.2019.12.10.12.00.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 12:00:32 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org
-Cc:     robh+dt@kernel.org, jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC MMC host controller
-Date:   Tue, 10 Dec 2019 21:00:21 +0100
-Message-Id: <20191210200022.29696-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210200022.29696-1-martin.blumenstingl@googlemail.com>
-References: <20191210200022.29696-1-martin.blumenstingl@googlemail.com>
+        Tue, 10 Dec 2019 15:01:15 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MRSdf-1iQ6xB0jJ7-00NPmT; Tue, 10 Dec 2019 21:00:40 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: cadence: fix address space mixup
+Date:   Tue, 10 Dec 2019 20:59:55 +0100
+Message-Id: <20191210200014.949529-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:txJklOowuSRLj0koCfpHwgfGy1GnDaqSKN+I1klemQktVt55+vk
+ bZmUdtxS4iQFjc1FoYZvgb+xJpGxxHn78pz0xmXekGDzvWH/CDrOP9kmh5qorGelqV+XNCH
+ GL0HstVAgcyk9+C45VfS3sCwsxgwEz+uipE//D1XPjAXt/JSEhsGM8hC7nLKGHmbvlwmnFB
+ Oa4HqVUMw0L7GwerspFbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mbiYpSZ6SPE=:3HvWkAOW/EugY9Lv84f9OP
+ B3UlxY8qECwn2z8cz0Fae2n9XvtANC5HTx0fQDIYopO5GyCmQqW2/PLTNapJ1iSi6oM3KaudH
+ 23TjgcsKuOAkLpIdL0BPE0vHjzNgd9Iggv6Pv1tWUg7Vk+QYGQBmyTTbtCaEOiuAODfjQKIzz
+ Yc/p7TbIMQbqS1Bvgfh60f3Wkw4Uy3VA6e3AfepxrO760XhG0gDPPYo2hsGLlesPbpurhx0G7
+ 7WzwnEP0OeYu+TzOcPi143Ox66qi4O83RihWTZ9IgMjtNd3Iyd6LgZrLkDb43naCuDGm5wVZm
+ 5yTm/+PVhIGbGYbw2qMoqYzetq9BhTQkYCV8Pxq2rCfRMbgAhPTDIrznCXRqdKrS2yBfNxqIy
+ gFJbArlc88EqB6ZywlBJ2XSIKKga8g8qi4IgziLSO5AjryXBuxLcJ97BDU+CRsWabsIH3wFeC
+ ZSGWWrj01TMIN71IFJOcr6ihdqzK+FH29qG+NWtI/8u/8QqkE15HXr3FW6dYoz+Yt37Kf+SMw
+ b3SlMEVJ9Gp0+bOjDh1hS0M48CYQllItcJWlSk1DzPimvUYzuGyx5pFQYgsoPcZUfddDFZXOo
+ FvMb1CA8VVu0niNGJEzm3AqWmQhRbznNprA7/3dBXZEBDLJceYPkewJjnouNsdNWGUHDPujbY
+ FGTxRm5vKVI+9D67wmCaEdAhiE2lgUPZgc7isZ4kcmLbYiNwmdNvRNlJzn/edCcGThI+XlPxj
+ A96xDoHaLxaBxp93eQxBavi0XtBjs7txOn7iDq6D5yjob7MDshpLwYAmL5NuSoilwPyruTZ7P
+ ldecQ1xGWZnkZ1egU1Y7F9yW0hSEaVGstioKeupCfPTTQG5omSNmywcCa4pC7EvjS4YvE8ZAF
+ yEI7JSi/Elqr1KAqL1XQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This documents the devicetree bindings for the SDHC MMC host controller
-found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-HS200 mode (up to 100MHz clock).
+dma_addr_t and pointers can are not interchangeable, and can
+be different sizes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+drivers/mtd/nand/raw/cadence-nand-controller.c: In function 'cadence_nand_cdma_transfer':
+drivers/mtd/nand/raw/cadence-nand-controller.c:1283:12: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+            (void *)dma_buf, (void *)dma_ctrl_dat,
+            ^
+drivers/mtd/nand/raw/cadence-nand-controller.c:1283:29: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+            (void *)dma_buf, (void *)dma_ctrl_dat,
+                             ^
+
+Use dma_addr_t consistently here, which cleans up a couple of casts
+as a side-effect.
+
+Fixes: ec4ba01e894d ("mtd: rawnand: Add new Cadence NAND driver to MTD subsystem")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+ .../mtd/nand/raw/cadence-nand-controller.c    | 21 ++++++++-----------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-new file mode 100644
-index 000000000000..862aedba680f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/amlogic,meson-mx-sdhc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic Meson SDHC controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "mmc-controller.yaml"
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+description: |
-+  The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-+  card interface with 1/4/8-bit bus width.
-+  It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - amlogic,meson8-sdhc
-+        - amlogic,meson8b-sdhc
-+        - amlogic,meson8m2-sdhc
-+      - const: amlogic,meson-mx-sdhc
-+
-+  reg:
-+    minItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+
-+  clocks:
-+    minItems: 5
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: clkin0
-+      - const: clkin1
-+      - const: clkin2
-+      - const: clkin3
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    mmc@8e00 {
-+      compatible = "amlogic,meson8-sdhc", "amlogic,meson-mx-sdhc";
-+      reg = <0x8e00 0x42>;
-+      interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+      clocks = <&sdhc_pclk>, <&xtal>, <&fclk_div4>, <&fclk_div3>, <&fclk_div5>;
-+      clock-names = "pclk", "clkin0", "clkin1", "clkin2", "clkin3";
-+    };
+diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
+index 3a36285a8d8a..5a2d7e7ffaee 100644
+--- a/drivers/mtd/nand/raw/cadence-nand-controller.c
++++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
+@@ -402,7 +402,7 @@ struct cadence_nand_cdma_desc {
+ 	u16 rsvd2;
+ 
+ 	/* System/host memory address required for data DMA commands. */
+-	u64 memory_pointer;
++	u64 memory_addr;
+ 
+ 	/* Status of operation. */
+ 	u32 status;
+@@ -416,7 +416,7 @@ struct cadence_nand_cdma_desc {
+ 	u32 rsvd4;
+ 
+ 	/* Control data pointer. */
+-	u64 ctrl_data_ptr;
++	u64 ctrl_data_addr;
+ };
+ 
+ /* Interrupt status. */
+@@ -914,8 +914,8 @@ static void cadence_nand_get_caps(struct cdns_nand_ctrl *cdns_ctrl)
+ /* Prepare CDMA descriptor. */
+ static void
+ cadence_nand_cdma_desc_prepare(struct cdns_nand_ctrl *cdns_ctrl,
+-			       char nf_mem, u32 flash_ptr, char *mem_ptr,
+-			       char *ctrl_data_ptr, u16 ctype)
++			       char nf_mem, u32 flash_ptr, dma_addr_t mem_addr,
++			       dma_addr_t ctrl_data_addr, u16 ctype)
+ {
+ 	struct cadence_nand_cdma_desc *cdma_desc = cdns_ctrl->cdma_desc;
+ 
+@@ -931,13 +931,13 @@ cadence_nand_cdma_desc_prepare(struct cdns_nand_ctrl *cdns_ctrl,
+ 	cdma_desc->command_flags |= CDMA_CF_DMA_MASTER;
+ 	cdma_desc->command_flags  |= CDMA_CF_INT;
+ 
+-	cdma_desc->memory_pointer = (uintptr_t)mem_ptr;
++	cdma_desc->memory_addr = mem_addr;
+ 	cdma_desc->status = 0;
+ 	cdma_desc->sync_flag_pointer = 0;
+ 	cdma_desc->sync_arguments = 0;
+ 
+ 	cdma_desc->command_type = ctype;
+-	cdma_desc->ctrl_data_ptr = (uintptr_t)ctrl_data_ptr;
++	cdma_desc->ctrl_data_addr = ctrl_data_addr;
+ }
+ 
+ static u8 cadence_nand_check_desc_error(struct cdns_nand_ctrl *cdns_ctrl,
+@@ -1280,8 +1280,7 @@ cadence_nand_cdma_transfer(struct cdns_nand_ctrl *cdns_ctrl, u8 chip_nr,
+ 	}
+ 
+ 	cadence_nand_cdma_desc_prepare(cdns_ctrl, chip_nr, page,
+-				       (void *)dma_buf, (void *)dma_ctrl_dat,
+-				       ctype);
++				       dma_buf, dma_ctrl_dat, ctype);
+ 
+ 	status = cadence_nand_cdma_send_and_wait(cdns_ctrl, thread_nr);
+ 
+@@ -1358,10 +1357,8 @@ static int cadence_nand_erase(struct nand_chip *chip, u32 page)
+ 	int status;
+ 	u8 thread_nr = cdns_chip->cs[chip->cur_cs];
+ 
+-	cadence_nand_cdma_desc_prepare(cdns_ctrl,
+-				       cdns_chip->cs[chip->cur_cs],
+-				       page, NULL, NULL,
+-				       CDMA_CT_ERASE);
++	cadence_nand_cdma_desc_prepare(cdns_ctrl, cdns_chip->cs[chip->cur_cs],
++				       page, 0, 0, CDMA_CT_ERASE);
+ 	status = cadence_nand_cdma_send_and_wait(cdns_ctrl, thread_nr);
+ 	if (status) {
+ 		dev_err(cdns_ctrl->dev, "erase operation failed\n");
 -- 
-2.24.0
+2.20.0
 
