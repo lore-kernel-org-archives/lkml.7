@@ -2,213 +2,81 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7330EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE8C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FEA206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:35:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="t8UqM11Q"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC56206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 07:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfLJHfu (ORCPT
+        id S1727334AbfLJHoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 02:35:50 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:53070 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbfLJHfs (ORCPT
+        Tue, 10 Dec 2019 02:44:08 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:40189 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfLJHoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 02:35:48 -0500
-Received: by mail-wm1-f47.google.com with SMTP id p9so1959920wmc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 23:35:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=d+OM3TJFU1vkI9A89fT5ICGoCi5aHL4tqG7UgZRXYL0=;
-        b=t8UqM11QS+yV0fc3CdiRNHuUj38nfErOyAWIneES11xK/WAI5MPlvpiVQQiN7Gq2po
-         Fwm/MTnMsG1Oc2XfogvI9vyIF5eM9ATwaZBkcNWI//BEGm41Hfz4+yRwCTVSjGju+Vyc
-         ERnb7XXHlWykXxHA3Om2vnmBkytMc+aC2WOY5BdJRGv3vc3T83QBn3zdtjeADpnVdDgA
-         ja5TmDuwOUuYlzGg5srDKIswj/P+gYLZA+OdDXbrADNRCrEMMbI2K5Ae/EfeGv/eY1tB
-         YV4OowJLd2hjgJ7GDey9YP11zASBz578iOBr1csG6u7D2GF+t56rt6hbsrvv1UB2Zudj
-         uBzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=d+OM3TJFU1vkI9A89fT5ICGoCi5aHL4tqG7UgZRXYL0=;
-        b=AboomuMv7CaANzMAgs+X5NXs1ns7Gv8HE9chVKJEQLPK8k5jdYUH9eGXQRptsKiucB
-         ++WrNY7HWtT/XvyR2qiDERqqGD6+qc6BbDovzPJLSaTxMjqhnzG99oZtt/Y1gorbWurJ
-         GuakVlUlg2w2QTguwuxX9I8gS3k3Al6BnE0sytjpukMjCCBL5Fmq4cxfeBD5ZivL7TAP
-         IIO07PteFaA5r/fXXxzuzHI7ILfvGX8ann0dEVb35sZxQXkNwfzJpFySlXjleQ5+17DN
-         mT7JH+2yPrFPhDusgNqcEz84W/sXufRGpksDkgS9uKfMpzruTyWghR5Ir8xOfudIPL38
-         E4rw==
-X-Gm-Message-State: APjAAAWMVxXm/waU/qcQv8bAz5sbvLNAjRva2/bPXHirH4Rq9c4Q3OY3
-        vAOZZCxWLk1y+ueBCAh2UDoBxg==
-X-Google-Smtp-Source: APXvYqxk4VGoYiQytFKE5BR9zei7bG9EHliSlY2rPcmeje/05wJhrPc1NAH72jLiME24eqA9kZRLVQ==
-X-Received: by 2002:a1c:f003:: with SMTP id a3mr3194064wmb.41.1575963344842;
-        Mon, 09 Dec 2019 23:35:44 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id y139sm2198041wmd.24.2019.12.09.23.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 23:35:44 -0800 (PST)
-Message-ID: <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>
-Date:   Tue, 10 Dec 2019 08:35:43 +0100
-In-Reply-To: <20191203022337.GE25002@ming.t460p>
-References: <20191126023253.GA24501@ming.t460p>
-         <0598fe2754bf0717d81f7e72d3e9b3230c608cc6.camel@unipv.it>
-         <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
-         <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
-         <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
-         <20191128091712.GD15549@ming.t460p>
-         <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
-         <20191129005734.GB1829@ming.t460p> <20191129023555.GA8620@ming.t460p>
-         <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
-         <20191203022337.GE25002@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
-MIME-Version: 1.0
+        Tue, 10 Dec 2019 02:44:08 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 9618DCED2A;
+        Tue, 10 Dec 2019 08:53:16 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2 1/1] ARM: dts: rockchip: Add brcm bluetooth for
+ rk3288-veyron
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1788857.Va9C3Z3akr@diego>
+Date:   Tue, 10 Dec 2019 08:44:05 +0100
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <B42F187B-C289-4140-841D-D1BF219E72D7@holtmann.org>
+References: <20191127223909.253873-1-abhishekpandit@chromium.org>
+ <20191127223909.253873-2-abhishekpandit@chromium.org>
+ <61639BAF-5AA0-4264-906F-E24E2A30088D@holtmann.org>
+ <1788857.Va9C3Z3akr@diego>
+To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno mar, 03/12/2019 alle 10.23 +0800, Ming Lei ha scritto:
-> On Fri, Nov 29, 2019 at 03:41:01PM +0100, Andrea Vai wrote:
-> > Il giorno ven, 29/11/2019 alle 10.35 +0800, Ming Lei ha scritto:
-> > > On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
-> > > 
-> > > > [...]
-> > > 
-> > > > Andrea, can you collect the following log when running the
-> test
-> > > > on current new(bad) kernel?
-> > > > 
-> > > > 	/usr/share/bcc/tools/stackcount  -K
-> blk_mq_make_request
-> > > 
-> > > Instead, please run the following trace, given insert may be
-> > > called from other paths, such as flush plug:
-> > > 
-> > > 	/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
-> > 
-> > Attached, for new (patched) bad kernel.
-> > 
-> > Produced by: start the trace script (with the pendrive already
-> > plugged), wait some seconds, run the test (1 trial, 1 GB), wait
-> for
-> > the test to finish, stop the trace.
-> > 
-> > The copy took ~1700 seconds.
-> 
-> See the two path[1][2] of inserting request, and path[1] is
-> triggered
-> 4358 times, and the path[2] is triggered 5763 times.
-> 
-> The path[2] is expected behaviour. Not sure path [1] is correct,
-> given
-> ext4_release_file() is supposed to be called when this inode is
-> released. That means the file is closed 4358 times during 1GB file
-> copying to usb storage.
-> 
-> Cc filesystem list.
-> 
-> 
-> [1] insert requests when returning to user mode from syscall
-> 
->   b'blk_mq_sched_request_inserted'
->   b'blk_mq_sched_request_inserted'
->   b'dd_insert_requests'
->   b'blk_mq_sched_insert_requests'
->   b'blk_mq_flush_plug_list'
->   b'blk_flush_plug_list'
->   b'io_schedule_prepare'
->   b'io_schedule'
->   b'rq_qos_wait'
->   b'wbt_wait'
->   b'__rq_qos_throttle'
->   b'blk_mq_make_request'
->   b'generic_make_request'
->   b'submit_bio'
->   b'ext4_io_submit'
->   b'ext4_writepages'
->   b'do_writepages'
->   b'__filemap_fdatawrite_range'
->   b'ext4_release_file'
->   b'__fput'
->   b'task_work_run'
->   b'exit_to_usermode_loop'
->   b'do_syscall_64'
->   b'entry_SYSCALL_64_after_hwframe'
->     4358
-> 
-> [2] insert requests from writeback wq context
-> 
->   b'blk_mq_sched_request_inserted'
->   b'blk_mq_sched_request_inserted'
->   b'dd_insert_requests'
->   b'blk_mq_sched_insert_requests'
->   b'blk_mq_flush_plug_list'
->   b'blk_flush_plug_list'
->   b'io_schedule_prepare'
->   b'io_schedule'
->   b'rq_qos_wait'
->   b'wbt_wait'
->   b'__rq_qos_throttle'
->   b'blk_mq_make_request'
->   b'generic_make_request'
->   b'submit_bio'
->   b'ext4_io_submit'
->   b'ext4_bio_write_page'
->   b'mpage_submit_page'
->   b'mpage_process_page_bufs'
->   b'mpage_prepare_extent_to_map'
->   b'ext4_writepages'
->   b'do_writepages'
->   b'__writeback_single_inode'
->   b'writeback_sb_inodes'
->   b'__writeback_inodes_wb'
->   b'wb_writeback'
->   b'wb_workfn'
->   b'process_one_work'
->   b'worker_thread'
->   b'kthread'
->   b'ret_from_fork'
->     5763
-> 
-> Thanks,
-> Ming
-> 
+Hi Heiko,
 
-Is there any update on this? Sorry if I am making noise, but I would
-like to help to improve the kernel (or fix it) if I can help.
-Otherwise, please let me know how to consider this case,
+>>> This enables the Broadcom uart bluetooth driver on uart0 and gives it
+>>> ownership of its gpios. In order to use this, you must enable the
+>>> following kconfig options:
+>>> - CONFIG_BT_HCIUART_BCM
+>>> - CONFIG_SERIAL_DEV
+>>> 
+>>> This is applicable to rk3288-veyron series boards that use the bcm43540
+>>> wifi+bt chips.
+>>> 
+>>> As part of this change, also refactor the pinctrl across the various
+>>> boards. All the boards using broadcom bluetooth shouldn't touch the
+>>> bt_dev_wake pin.
+>> 
+>> so have these changes being merged?
+> 
+> not yet
+> 
+> Doug wanted to give a Reviewed-by, once the underlying bluetooth
+> changes got merged - not sure what the status is though.
 
-Thanks, and bye
-Andrea
+the Bluetooth changes have been merged into net-next.
+
+Regards
+
+Marcel
 
