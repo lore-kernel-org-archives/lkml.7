@@ -6,89 +6,113 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF8DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F185C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BDE207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5842077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLJT5R (ORCPT
+        id S1726881AbfLJT6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:57:17 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:59543 "EHLO
+        Tue, 10 Dec 2019 14:58:13 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:41215 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJT5R (ORCPT
+        with ESMTP id S1726500AbfLJT6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:57:17 -0500
+        Tue, 10 Dec 2019 14:58:12 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Ma1wY-1iHYLx10lQ-00VvBX; Tue, 10 Dec 2019 20:56:53 +0100
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M3lHZ-1idwhK3twp-000urC; Tue, 10 Dec 2019 20:58:06 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Yangbo Lu <yangbo.lu@nxp.com>,
-        Antonio Borneo <antonio.borneo@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ptp: clockmatrix: add I2C dependency
-Date:   Tue, 10 Dec 2019 20:56:34 +0100
-Message-Id: <20191210195648.811120-1-arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Tom Murphy <murphyt7@tcd.ie>,
+        Julien Grall <julien.grall@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iommu: fix min_not_zero() type mismatch warning
+Date:   Tue, 10 Dec 2019 20:57:56 +0100
+Message-Id: <20191210195803.866126-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:F4zdzK4avnZouVz7gJ/tCWTYGHWNnMwIjsDbazN3EHBrippnh5/
- lUJz/ddp+CP2nzgpMvIPRfYeRRE+wJmlgzTDuS/Jj/Tq9VHJALETTEsCNKK3V8DV1v27k9S
- /vc3Ux0rpKBUWTGD47QU72pkLQRXNRP1ULCcpzDFF4wDp+UYS47T6ZyEU4RHVMnhh26AFSP
- xNhKgI9liz6uMd8sSKbyA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2+YG34Ahkjo=:6P3HL8aGD4qANpM1IX7CfY
- tU566mWrm6GxrPVqN1d7MK/2ZTp7O2DhGLAqPOYIRAYJxddTp4SuO7zXyG6IwPEzohpcgSfV7
- mR7/q6UXM8VDJQ3Lc5NdvtjevuQo3v90ygbYLG0SXWW7QnxSgSSGENmzkub6aOTRQLK9Wmw/Z
- npE9FzH27WPaHU93/xUf41wVdGOGccyBW36AyRtDtuu1KBE8dpGLEFCP+3ZzviUhYghngVjOG
- wEM2z11OMMxhvcUYKuqFy0BeyAgTJTNriVV4NznnQ4FTXjR5M6qmD96e5hog+NRwHaNB3acLc
- 9oGN+l2nucRIC7G+Rr/E2AAd8UMQs+CiDvrN1bDgRPkLEUqzQSB+BJIXOWX53PmWAJTja8mB1
- wsP7VxZjjHOfS9XsNSk/o9VysWM5Who/seVXht+fovEB0en2USpo2n2R/T8D5c2gWaw4f4MWe
- TrsTS6qP9s134jbu0GLLTf9a7z87PfpstRvijkEeS647urGjN3a3gfLMQ1ESfP4FNpnR1/79A
- Oz/5dqNUfLbGdtEsYP2aIGeF9FNVl93ZpNGx6ERhemhBm2N7xApqiP3tYNKUiVZ3sDOIKYEJ2
- iMmc5gfUC5tJv+f0loVibAdyoo9c7cq+i3E9RD9b/6SJ5dYGKhivKgdXXEPDW1dV93QLhdFSL
- PZGXTFr+0g6K3T8g93DDsQF0HJgA2IZFdrqnWQ2jKoCzAqyRtfAuwcwq/8XJ95f8Zt2sa1q5j
- i5QbSsQ5EVA626l5M30P5LL74plbSy3gJRedbR+RbE9+qGJYMRnyscuXEwN2UXzxRaPNLactn
- LA1PR1bgPTXwH7IfAuK6UlEzlKM90faLz4ZBqZU8mwGNRq3juy04A/EguRAQlxpHrIWT6Ldvt
- d29lej7o1dU5YkgnKqNQ==
+X-Provags-ID: V03:K1:V0PTrzRDmYv2osv56dZM7Vo+oE2UI7e/kklN8s5/0zdjDkWO6PK
+ Syr2cpC870aQUfBxI/LQKX9UnQ52eZYLqOSd2qvQkBpN//NCWo0iM81Nxw+2YBrXdGcQ4RB
+ pg0vsdCSmVp9qll1ByW2hslofn4NGZNapb5tmHEmAu28G2OCyKJQ2/VNjecSBSVvQ+huvVa
+ bOG58DgSx5dcelzI2jpqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NXJLDdAXMEU=:NSSpjT2T1r5c0ziBNCNW/r
+ 5vnGk8xhvaVmVr+eAbSykEY0l8MXV0Wx2rALNBcOoWZLDtTbils0slf3We/yHQ0rs7OGAsgYf
+ 5BlmvFI+7ar5wj3br9ulKnVBH1vDniBmMjOmeTjw5BF/n83OaZw/FTW/VPkUBnGpCiYQwa1Bm
+ TtbQRFXz1pB9U8xQASCg9cMF+tXDUpiL+wvTbvcLYmhg8FbgQbTcAmTx8R19l3DW4foPflf2J
+ 7m+PywNID43s/9dvT18yzrYBJImDKwLg7zWCAgC0/dIgW7X2Xfl8TwuMZZti4aROTSOj5TbzL
+ V//i43puiGW4XEntyk/qJzHB62ulXThNiQeIYgzwOJWK+0INVtjJoa7GYtf6I1Tt4cmA8Fc9z
+ xf17zZt2tyfoPl6Sl/YzBTxoUMIOlnNwjYOSHmv/s8bmFg1glL7zuRxFtSdkwDuTzHKKLxk4P
+ OVnL+x7WQUXg48TuZhF4KXwo2uD7dLYZf/gZZdq8KfjhgIt+T8NrPi3mydPt2+kHY2D/zqAu8
+ QN4FGFLqeKLlce1sU0SrUWhrhOPeBH06pkZR8YBLrnvBdR9exwt/T2okQ2SmxBG0/KZiAEwdt
+ ODgDVfocrwulKZkzpuWKllnc7mpI8nJFeejNINauyVZVxqwjbSfLEqXxpTCOIlAgDEG91gpA5
+ pXgdP8WGTsOK2C4wPIF4wgFDaXpmPX3JdJ/IPRv9sJ2Wtysigw43HPuRfwR7vf6LFykoeABW7
+ HqP1mV1W5NEmJ08yjYYay3e8yVEpVCGDEx/Ra6f9NTK4FiRNRaOxRupAJsPwWjHncFdRIrG/r
+ ZEH8CT6uQv3PclquS/i8WgYVHUM/WAVkYqVNjSsA+aV3RNVBXjAhyVc9C3JQskKFCHOpdvtef
+ m75EGNB98XOtH3nYdf4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without I2C, we get a link failure:
+min()/max() require the arguments to be of the same type.
 
-drivers/ptp/ptp_clockmatrix.o: In function `idtcm_xfer.isra.3':
-ptp_clockmatrix.c:(.text+0xcc): undefined reference to `i2c_transfer'
-drivers/ptp/ptp_clockmatrix.o: In function `idtcm_driver_init':
-ptp_clockmatrix.c:(.init.text+0x14): undefined reference to `i2c_register_driver'
-drivers/ptp/ptp_clockmatrix.o: In function `idtcm_driver_exit':
-ptp_clockmatrix.c:(.exit.text+0x10): undefined reference to `i2c_del_driver'
+When dma_addr_t is not compatible with __u64, this causes
+a warning:
 
-Fixes: 3a6ba7dc7799 ("ptp: Add a ptp clock driver for IDT ClockMatrix.")
+In file included from include/linux/list.h:9,
+                 from include/linux/kobject.h:19,
+                 from include/linux/of.h:17,
+                 from include/linux/irqdomain.h:35,
+                 from include/linux/acpi.h:13,
+                 from include/linux/acpi_iort.h:10,
+                 from drivers/iommu/dma-iommu.c:11:
+drivers/iommu/dma-iommu.c: In function 'iommu_dma_alloc_iova':
+include/linux/kernel.h:844:29: error: comparison of distinct pointer types lacks a cast [-Werror]
+   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                             ^~
+include/linux/kernel.h:858:4: note: in expansion of macro '__typecheck'
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^~~~~~~~~~~
+include/linux/kernel.h:868:24: note: in expansion of macro '__safe_cmp'
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^~~~~~~~~~
+include/linux/kernel.h:877:19: note: in expansion of macro '__careful_cmp'
+ #define min(x, y) __careful_cmp(x, y, <)
+                   ^~~~~~~~~~~~~
+include/linux/kernel.h:910:39: note: in expansion of macro 'min'
+  __x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
+                                       ^~~
+drivers/iommu/dma-iommu.c:424:14: note: in expansion of macro 'min_not_zero'
+  dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
+              ^~~~~~~~~~~~
+
+Add an explicit cast to work around it, as there is no min_not_zero_t()
+equivalent of min_t().
+
+Fixes: a7ba70f1787f ("dma-mapping: treat dev->bus_dma_mask as a DMA limit")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/ptp/Kconfig | 2 +-
+ drivers/iommu/dma-iommu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index dc3d8ecb4231..e37797c0a85c 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -107,7 +107,7 @@ config PTP_1588_CLOCK_KVM
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 0cc702a70a96..6fa32231dc9f 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -421,7 +421,7 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
+ 	if (iova_len < (1 << (IOVA_RANGE_CACHE_MAX_SIZE - 1)))
+ 		iova_len = roundup_pow_of_two(iova_len);
  
- config PTP_1588_CLOCK_IDTCM
- 	tristate "IDT CLOCKMATRIX as PTP clock"
--	depends on PTP_1588_CLOCK
-+	depends on PTP_1588_CLOCK && I2C
- 	default n
- 	help
- 	  This driver adds support for using IDT CLOCKMATRIX(TM) as a PTP
+-	dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
++	dma_limit = min_not_zero((u64)dma_limit, dev->bus_dma_limit);
+ 
+ 	if (domain->geometry.force_aperture)
+ 		dma_limit = min(dma_limit, domain->geometry.aperture_end);
 -- 
 2.20.0
 
