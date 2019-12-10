@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7FCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4DBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9E220637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5E320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014504;
-	bh=n8jM/pM/933dPhgHxARs3z0hJiHmUnRkMko2CIIqKa0=;
+	s=default; t=1576014516;
+	bh=fDlCz48UzNqMTToEOtxJXxL6opyU7MqwTF3ydeStP4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQIdljvBUlKlR/kW5rAM0rxyfGLVMw+bSxZ6zRHVEZcMPluudwed95daoLMB8Vhpj
-	 fLtef8Ph7rQFfZIi7tkUwU63zkWnPMt9vahEqUEV89/AsWsf8tszvC9YfWC+Hd4kk3
-	 tSL0TI8QzFE0U5vdw1ME+f8zFW01N9f+Y1o4+izc=
+	b=x23aUrCnCgMXd5x4Td+6o75ehi2WpprJQhQGvu/NVvvJ/5B5o30HxAE9HRpyuAkPZ
+	 nMMIsBVM6jSNUDrUDtpV7caM10s5dgyQkN4xzfG2gfgoLmfwC4dMjnxr0nufK/FpDX
+	 dpPqA5vbHBfmr06S/PdzNE+5Vdk98A8ckSNJomEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfLJVsT (ORCPT
+        id S1729690AbfLJVse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:48:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:48:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbfLJVJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:01 -0500
+        id S1727977AbfLJVIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FCD0246A0;
-        Tue, 10 Dec 2019 21:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A26C124681;
+        Tue, 10 Dec 2019 21:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012141;
-        bh=n8jM/pM/933dPhgHxARs3z0hJiHmUnRkMko2CIIqKa0=;
+        s=default; t=1576012132;
+        bh=fDlCz48UzNqMTToEOtxJXxL6opyU7MqwTF3ydeStP4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZztRpgRNHJyx6AJqFdRafcyMWrQZzL5k1TJ6G71HTU0d6Ek9EkI10TlcxYMVPoLI
-         XMwrTIlpiLgn2g4znViceRu2YlgFGBGVdafkjvfFXwV+m0Meunu71D2AOjN3TUEbom
-         oO7G9MYk8j4Z1E9JMIq2ETQ+q9b/7dg6225YpE5U=
+        b=v3/nxT3fD2dJCd9ZTn0ZJAvMBdfSiLsweYiMpQuSZl62BedSFkJn9L1ybXqux/vaL
+         IZ0bDtf5llnQRbQjiKE9STS/QFyuf0LTSKPmwMAjgJpSnN93fZGPzEYk5l6WxozJ9s
+         TBTodpBGf4ettpkbcqwAR5EGAKxD1VQD/Na8ci8s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 106/350] ath10k: Correct error handling of dma_map_single()
-Date:   Tue, 10 Dec 2019 16:03:31 -0500
-Message-Id: <20191210210735.9077-67-sashal@kernel.org>
+Cc:     David Galiffi <david.galiffi@amd.com>, Jun Lei <Jun.Lei@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 100/350] drm/amd/display: Fix dongle_caps containing stale information.
+Date:   Tue, 10 Dec 2019 16:03:25 -0500
+Message-Id: <20191210210735.9077-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,42 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: David Galiffi <david.galiffi@amd.com>
 
-[ Upstream commit d43810b2c1808ac865aa1a2a2c291644bf95345c ]
+[ Upstream commit dd998291dbe92106d8c4a7581c409b356928d711 ]
 
-The return value of dma_map_single() should be checked for errors using
-dma_mapping_error() and the skb has been dequeued so it needs to be
-freed.
+[WHY]
 
-This was found when enabling CONFIG_DMA_API_DEBUG and it warned about the
-missing dma_mapping_error() call.
+During detection:
+function: get_active_converter_info populates link->dpcd_caps.dongle_caps
+only when dpcd_rev >= DPCD_REV_11 and DWN_STRM_PORTX_TYPE is
+DOWN_STREAM_DETAILED_HDMI or DOWN_STREAM_DETAILED_DP_PLUS_PLUS.
+Otherwise, it is not cleared, and stale information remains.
 
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+During mode validation:
+function: dp_active_dongle_validate_timing reads
+link->dpcd_caps.dongle_caps->dongle_type to determine the maximum
+pixel clock to support. This information is now stale and no longer
+valid.
+
+[HOW]
+dp_active_dongle_validate_timing should be using
+link->dpcd_caps->dongle_type instead.
+
+Signed-off-by: David Galiffi <david.galiffi@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c    | 2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index a40e1a998f4cd..2b53ea6ca2057 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3903,8 +3903,10 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
- 			     ar->running_fw->fw_file.fw_features)) {
- 			paddr = dma_map_single(ar->dev, skb->data,
- 					       skb->len, DMA_TO_DEVICE);
--			if (!paddr)
-+			if (dma_mapping_error(ar->dev, paddr)) {
-+				ieee80211_free_txskb(ar->hw, skb);
- 				continue;
-+			}
- 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
- 			if (ret) {
- 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index de1b61595ffbf..efc1d30544bb6 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -2219,7 +2219,7 @@ static bool dp_active_dongle_validate_timing(
+ 		break;
+ 	}
+ 
+-	if (dongle_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
++	if (dpcd_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
+ 		dongle_caps->extendedCapValid == false)
+ 		return true;
+ 
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 9e261dbf2e493..5a583707d198a 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2545,6 +2545,7 @@ static void get_active_converter_info(
+ 	uint8_t data, struct dc_link *link)
+ {
+ 	union dp_downstream_port_present ds_port = { .byte = data };
++	memset(&link->dpcd_caps.dongle_caps, 0, sizeof(link->dpcd_caps.dongle_caps));
+ 
+ 	/* decode converter info*/
+ 	if (!ds_port.fields.PORT_PRESENT) {
 -- 
 2.20.1
 
