@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46226C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD34C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1502A20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D2E20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013953;
-	bh=W+MCgi8gWmKuX1hkzI5Fp8rT7VdolDvphHPJra1QdFI=;
+	s=default; t=1576013959;
+	bh=nFxcgDnb6O25p6af5qRs7FXhfkUAYgJz96qP3fowiQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmzsYix0/4O3AgesIXPNyNK7DTQCAWOA8DbRlO5/C2nA2aCxLjDeHHGoBz7vptR2x
-	 7rFAUkJXQrVorGtbF7gkkkiM9HTGkZN5DDxxC5Ll5eKJhqYdtii1iJc74DrkWQqMG7
-	 hxXsKKhotmnk66rqhdoqtUfreAx7/iTyilB95sfg=
+	b=Nlf0W+H7Kao4cnkiqcFwcIb93YC0HfNlO/dfa6JuCCEVHYBb7WsHz66Wwmwe4Hx4o
+	 DgEqnxktIA/he1eYlEWx4B9cMhcLnpoA0IhT6PZOaQ/Y7PSLapWc0qiGjHMotTDNwz
+	 79xbEcSq0kMtAKi34XqpYLpED+55L0INvkex7PcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfLJVjL (ORCPT
+        id S1729110AbfLJVfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:39:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40612 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:35:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfLJVfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:06 -0500
+        id S1730101AbfLJVes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95F3214AF;
-        Tue, 10 Dec 2019 21:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F412465C;
+        Tue, 10 Dec 2019 21:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013705;
-        bh=W+MCgi8gWmKuX1hkzI5Fp8rT7VdolDvphHPJra1QdFI=;
+        s=default; t=1576013688;
+        bh=nFxcgDnb6O25p6af5qRs7FXhfkUAYgJz96qP3fowiQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfEUqvaTUGxVKgZRHhv/JYyPhliOqh7WVTvD4gIdwp1ldkp3RLH1xpdlxJ06/1LXy
-         klL1b42Nj/1d820Ip8DjxyOMWaMZlHSh8Eo9DOl3q7WHEWfJsIykGZHfB9gnVEVxVe
-         CMFn7pJyoDXDk+s33JXSPm9k4xATdbzmzUF/UWoA=
+        b=MazmakwaiuCvyWxmx2PlB4w7Jak4st3DrrDIrv9vKm+54QoF/5PekZyxipIM02Rpq
+         JmpZskURjES1nrzfBUgXZikqFySGUiX67IGZerN63G3XnUHzBg4GFeiZYQfX7WDBr+
+         d6yOLDPDYvxnjCR/Wijsiwse5R7u9zPRpACujVnE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 134/177] EDAC/ghes: Fix grain calculation
-Date:   Tue, 10 Dec 2019 16:31:38 -0500
-Message-Id: <20191210213221.11921-134-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 120/177] xen/gntdev: Use select for DMA_SHARED_BUFFER
+Date:   Tue, 10 Dec 2019 16:31:24 -0500
+Message-Id: <20191210213221.11921-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -63,93 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
+[ Upstream commit fa6614d8ef13c63aac52ad7c07c5e69ce4aba3dd ]
 
-The current code to convert a physical address mask to a grain
-(defined as granularity in bytes) is:
+DMA_SHARED_BUFFER can not be enabled by the user (it represents a library
+set in the kernel). The kconfig convention is to use select for such
+symbols so they are turned on implicitly when the user enables a kconfig
+that needs them.
 
-	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
+Otherwise the XEN_GNTDEV_DMABUF kconfig is overly difficult to enable.
 
-This is broken in several ways:
-
-1) It calculates to wrong grain values. E.g., a physical address mask
-of ~0xfff should give a grain of 0x1000. Without considering
-PAGE_MASK, there is an off-by-one. Things are worse when also
-filtering it with ~PAGE_MASK. This will calculate to a grain with the
-upper bits set. In the example it even calculates to ~0.
-
-2) The grain does not depend on and is unrelated to the kernel's
-page-size. The page-size only matters when unmapping memory in
-memory_failure(). Smaller grains are wrongly rounded up to the
-page-size, on architectures with a configurable page-size (e.g. arm64)
-this could round up to the even bigger page-size of the hypervisor.
-
-Fix this with:
-
-	e->grain = ~mem_err->physical_addr_mask + 1;
-
-The grain_bits are defined as:
-
-	grain = 1 << grain_bits;
-
-Change also the grain_bits calculation accordingly, it is the same
-formula as in edac_mc.c now and the code can be unified.
-
-The value in ->physical_addr_mask coming from firmware is assumed to
-be contiguous, but this is not sanity-checked. However, in case the
-mask is non-contiguous, a conversion to grain_bits effectively
-converts the grain bit mask to a power of 2 by rounding it up.
-
-Suggested-by: James Morse <james.morse@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
+Fixes: 932d6562179e ("xen/gntdev: Add initial support for dma-buf UAPI")
+Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ghes_edac.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/xen/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index 574bce603337f..78c339da19b56 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -210,6 +210,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 	/* Cleans the error report buffer */
- 	memset(e, 0, sizeof (*e));
- 	e->error_count = 1;
-+	e->grain = 1;
- 	strcpy(e->label, "unknown label");
- 	e->msg = pvt->msg;
- 	e->other_detail = pvt->other_detail;
-@@ -305,7 +306,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+index 90d387b50ab74..0505eeb593b5c 100644
+--- a/drivers/xen/Kconfig
++++ b/drivers/xen/Kconfig
+@@ -158,7 +158,8 @@ config XEN_GNTDEV
  
- 	/* Error grain */
- 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
--		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
-+		e->grain = ~mem_err->physical_addr_mask + 1;
- 
- 	/* Memory error location, mapped on e->location */
- 	p = e->location;
-@@ -412,8 +413,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
- 	if (p > pvt->other_detail)
- 		*(p - 1) = '\0';
- 
-+	/* Sanity-check driver-supplied grain value. */
-+	if (WARN_ON_ONCE(!e->grain))
-+		e->grain = 1;
-+
-+	grain_bits = fls_long(e->grain - 1);
-+
- 	/* Generate the trace event */
--	grain_bits = fls_long(e->grain);
- 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
- 		 "APEI location: %s %s", e->location, e->other_detail);
- 	trace_mc_event(type, e->msg, e->label, e->error_count,
+ config XEN_GNTDEV_DMABUF
+ 	bool "Add support for dma-buf grant access device driver extension"
+-	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC && DMA_SHARED_BUFFER
++	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC
++	select DMA_SHARED_BUFFER
+ 	help
+ 	  Allows userspace processes and kernel modules to use Xen backed
+ 	  dma-buf implementation. With this extension grant references to
 -- 
 2.20.1
 
