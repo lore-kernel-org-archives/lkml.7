@@ -2,105 +2,98 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACB0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBC920726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575977626;
-	bh=68JjJmoT8I3qU5Q/P5bOk80sj0dcYg8A7oRgziUQR4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ef+XyE1D+x6HmpxpbIO9KStHi929VB7XhR6yjJ1EYX4u2gsPvs3esaoEU+2OH60qV
-	 E8yjhPLZXWCI7b75wq9v975YBrDfDaZSU7wUMK2t0cex22cWwWc9fLn2u8+KrVf9RT
-	 VTSbBcW3Vpm5imBue+pfHX0BCie3/75WHICSowA8=
+	by mail.kernel.org (Postfix) with ESMTP id F26412464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A0wGIOnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfLJLdp (ORCPT
+        id S1727482AbfLJLeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:33:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37178 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfLJLdp (ORCPT
+        Tue, 10 Dec 2019 06:34:11 -0500
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:58954 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfLJLeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:33:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so19717079wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 03:33:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5FjJVeyO3t8h7dBh1OV5fyqjNeQvVR1/7i0vehSFQ7Q=;
-        b=SdNy8mJXxAQwBFs58J+/WXSJWszpKCYnwYNNYT4a5WCuP0ZMapJ6UJv3qTt30epR99
-         OuNpt87tnWqi+6KGaNvuRWkPvx8EooGWpUfLDU9wzZCtAT7TY+H3bfocdJyuNc652hIr
-         2Ofy6EA1XRrqRTCziGwLA+WiYlAUMpGNpcmyuYLVSi7TQCAUA4HgePI1uBfdhBBj4rjm
-         scZArcpZn0P3/m1KTYaHeMvFCGmXVSajx7hoDFXk4n9Y4rv6WD9Yx/2iLqfJIG9t+VIP
-         PmQ2CVquRncRyiqO9KLcwlI3ml1oBX2s9rzZDSv1Y5VRhV7H2cNkUZPY/2ua2vDO3kf2
-         YTrA==
-X-Gm-Message-State: APjAAAURbasMriVRbSONr200nc1WtcbLPPdHMo8CUqfzMOxtVxVG2GQQ
-        Ce1I6tEQO7CgfpEZXnx2UO1VZnMQ
-X-Google-Smtp-Source: APXvYqzkugwvlsjND7ToEIirpqoYxESepaGkmHvs85JyAcauF8rYz8Sxxgefxkb/nARkaEk8hRhsRw==
-X-Received: by 2002:adf:c74f:: with SMTP id b15mr2709672wrh.272.1575977623129;
-        Tue, 10 Dec 2019 03:33:43 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id v188sm2784884wma.10.2019.12.10.03.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:33:42 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:33:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191210113341.GG10404@dhcp22.suse.cz>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <20191210072453.GI2984@MiWiFi-R3L-srv>
- <20191210102834.GE10404@dhcp22.suse.cz>
- <20191210104303.GN2984@MiWiFi-R3L-srv>
+        Tue, 10 Dec 2019 06:34:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1575977651; x=1607513651;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LiFxV5CMEgQkjnYID39q3GkTj66kaKL32UVp4mkfoWE=;
+  b=A0wGIOnq0ydzsrWDBRlaFB5NPQR3q2WojLbHqReGvRanBYIZdu4VppPU
+   wi3jQ5Zhg8DdJLTlVtISAzSxqvWsMmwhbDkhk354Gz0aTevyrjRu2KNf6
+   2dxfz3QaO88sx7WLlkVISIBdN3Cqo+o6qF4XNRR753hLyvKURp7zVqpxU
+   c=;
+IronPort-SDR: WWOuSsbCzQsAsTwmiQW5IQY5gg45/0r6yBSltupOCgJaPa5P85qzAkkAeK5mgT2E7hELLdE8o4
+ scVo+4P4NYOw==
+X-IronPort-AV: E=Sophos;i="5.69,299,1571702400"; 
+   d="scan'208";a="7827202"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 10 Dec 2019 11:34:09 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 57613A1F2B;
+        Tue, 10 Dec 2019 11:34:07 +0000 (UTC)
+Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 10 Dec 2019 11:34:06 +0000
+Received: from EX13MTAUEE001.ant.amazon.com (10.43.62.200) by
+ EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 10 Dec 2019 11:34:05 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.62.226) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 10 Dec 2019 11:34:04 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+CC:     Paul Durrant <pdurrant@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>
+Subject: [PATCH v2 0/4] xen-blkback: support live update
+Date:   Tue, 10 Dec 2019 11:33:43 +0000
+Message-ID: <20191210113347.3404-1-pdurrant@amazon.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210104303.GN2984@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 18:43:03, Baoquan He wrote:
-> On 12/10/19 at 11:28am, Michal Hocko wrote:
-> > On Tue 10-12-19 15:24:53, Baoquan He wrote:
-[...]
-> > > But after system bootup, we should be able to hot add/remove any memory
-> > > board. This should not be restricted by a boot-time kernel parameter
-> > > 'mme='. This is what I am trying to fix.
-> > 
-> > This is a simple statement without any actual explanation on why. Why is
-> > hotplug memory special? What is the usecase? Who would want to use mem
-> > parameter and later expect a memory above the restrected area to be
-> > hotplugable?
-> 
-> The why is 'mem=' is used to restrict the amount of system ram during
-> boot. We have two ways to add system memory, one is installing DIMMs
-> before boot, the other is hot adding memory after boot. Without David's 
-> use case, we may need redefine 'mem=' and change its documentation in
-> kernel-parameters.txt, if we don't want to fix it like this. Otherwise,
-> 'mem=' will limit the system's upper system ram always, that is not
-> expected.
+Patch #1 is clean-up for an apparent mis-feature.
 
-I really do not see why. It seems a pretty consistent behavior to me.
-Because it essentially cut any memory above the given size. If a new
-hotplugable memory fits into that cap then it just shows up. Quite
-contrary I would consider it unexpected that a memory higher than the
-given mem=XYZ is really there. But I do recognize a real usecase
-mentioned elsewhere which beats the consistency argument here because
-all setups where such a restriction would be really important are
-debugging/workaround AFAICS.
+Paul Durrant (4):
+  xenbus: move xenbus_dev_shutdown() into frontend code...
+  xenbus: limit when state is forced to closed
+  xen/interface: re-define FRONT/BACK_RING_ATTACH()
+  xen-blkback: support dynamic unbind/bind
+
+ drivers/block/xen-blkback/xenbus.c         | 59 +++++++++++++++-------
+ drivers/xen/xenbus/xenbus.h                |  2 -
+ drivers/xen/xenbus/xenbus_probe.c          | 35 ++++---------
+ drivers/xen/xenbus/xenbus_probe_backend.c  |  1 -
+ drivers/xen/xenbus/xenbus_probe_frontend.c | 24 ++++++++-
+ include/xen/interface/io/ring.h            | 29 ++++-------
+ include/xen/xenbus.h                       |  1 +
+ 7 files changed, 84 insertions(+), 67 deletions(-)
+---
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: "Roger Pau Monné" <roger.pau@citrix.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
