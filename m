@@ -2,52 +2,53 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2809C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA624C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7C5246AD
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757CE246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012265;
-	bh=stqJirSBigCjUNifC1OoMutB1fJmmXeU1I9ydq6AYUs=;
+	s=default; t=1576012272;
+	bh=4AT+BhJk04uH2Tcdyxf4+IP04hgHCY4zWu3WRrHazF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vSCCUvIvSZ5ARlghGvMVwIYBeVNKXVHxN9B9tVvcvkpy8Ii81/sZWBBx4qdHTvHLw
-	 p7eoHypE40rdqrDTKMmRGBKkq5nbAdHRk/3jS/Qn1brGBngJV6OhBO7yHAKhPRJJ8S
-	 rESMWgqZ2Hzfz/VsOINAoHBLNMR0xWbQpOFgvOIk=
+	b=uT6LMF+lVJYlsdhIU15VcFyO2nfNLq6Xx8zP+zK9HeJ5XlSnHyReJEjCB6BYzyBLn
+	 gUzEUqsqBUjNLGVumlF4581WtsULMA8xm+CHOMe/+fvAiCNeJdb2EIJukyBXlAXXcH
+	 Nx6Ac+puSf7zJUaA3Un+aoPQlYWKAHj+ZGHGiC3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfLJVLF (ORCPT
+        id S1728720AbfLJVLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbfLJVKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:50 -0500
+        id S1728645AbfLJVLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5C0D246AE;
-        Tue, 10 Dec 2019 21:10:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9241B246B8;
+        Tue, 10 Dec 2019 21:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012249;
-        bh=stqJirSBigCjUNifC1OoMutB1fJmmXeU1I9ydq6AYUs=;
+        s=default; t=1576012259;
+        bh=4AT+BhJk04uH2Tcdyxf4+IP04hgHCY4zWu3WRrHazF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlbFKKgn2thnft8UuIIwlYj0GXTEJh2YQtSYCnf+aKbhjhyW9qagx12qytufVjgOD
-         VkMg/oCjnsM+sW+3nYq9VxNqjzswS2vyUi9QQHJJeG6PuHZeHrPNMnxeJv+bq9lesl
-         Jde12IFb8TKLFNHQkNw78PYreD3oqSM+rwjSs/rA=
+        b=fziFEhL0rEKr08sgpZ/w3Ha1aiwS8uDZgXMnOyWheyn+4ZKHTE5ZFMHt2Io6mZRX5
+         3ItYlQAVmcX1ztNAY5eYKyPjl2P13ve7A7pbntB/uoiK2nazvWtkzMcC5/oWF9B8Zd
+         wx3sdrX1BldUpVWCqsn3XqsuqHOWcVEt3hvsFlVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 197/350] ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency
-Date:   Tue, 10 Dec 2019 16:05:02 -0500
-Message-Id: <20191210210735.9077-158-sashal@kernel.org>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 205/350] media: staging/imx: Use a shorter name for driver
+Date:   Tue, 10 Dec 2019 16:05:10 -0500
+Message-Id: <20191210210735.9077-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,56 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit f9ad75468453b019b92c5296e6a04bf7c37f49e4 ]
+[ Upstream commit ce22c6f242b6d7b5e0318da2c92b5b00b5bbc698 ]
 
-updated solution to the problem reported with randconfig:
+Currently v4l2-compliance tool returns the following output:
 
-CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
-turn referenced by the sof-of-dev driver. This creates a reverse
-dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
-is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+Compliance test for imx-media-captu device /dev/video0:
 
-sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+Driver Info:
+        Driver name      : imx-media-captu
+        Card type        : imx-media-capture
+...
 
-use def_trisate to propagate the right settings without select.
+The driver name string is limited to 16 characters, so provide
+a shorter name so that we can have a better output.
 
-Fixes: f4df4e4042b0 ("ASoC: SOF: imx8: Fix COMPILE_TEST error")
-Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191101173045.27099-6-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+While at it, use the same shorter name for driver and card.
+
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/imx/Kconfig | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/media/imx/imx-media-capture.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index 5acae75f5750d..71f318bc2c74f 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -11,8 +11,8 @@ config SND_SOC_SOF_IMX_TOPLEVEL
+diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+index b33a07bc9105d..46576e32581f0 100644
+--- a/drivers/staging/media/imx/imx-media-capture.c
++++ b/drivers/staging/media/imx/imx-media-capture.c
+@@ -26,6 +26,8 @@
+ #include <media/imx.h>
+ #include "imx-media.h"
  
- if SND_SOC_SOF_IMX_TOPLEVEL
- 
--config SND_SOC_SOF_IMX8
--	tristate "SOF support for i.MX8"
-+config SND_SOC_SOF_IMX8_SUPPORT
-+	bool "SOF support for i.MX8"
- 	depends on IMX_SCU
- 	depends on IMX_DSP
- 	help
-@@ -20,4 +20,8 @@ config SND_SOC_SOF_IMX8
-           Say Y if you have such a device.
-           If unsure select "N".
- 
-+config SND_SOC_SOF_IMX8
-+	def_tristate SND_SOC_SOF_OF
-+	depends on SND_SOC_SOF_IMX8_SUPPORT
++#define IMX_CAPTURE_NAME "imx-capture"
 +
- endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
+ struct capture_priv {
+ 	struct imx_media_video_dev vdev;
+ 
+@@ -69,8 +71,8 @@ static int vidioc_querycap(struct file *file, void *fh,
+ {
+ 	struct capture_priv *priv = video_drvdata(file);
+ 
+-	strscpy(cap->driver, "imx-media-capture", sizeof(cap->driver));
+-	strscpy(cap->card, "imx-media-capture", sizeof(cap->card));
++	strscpy(cap->driver, IMX_CAPTURE_NAME, sizeof(cap->driver));
++	strscpy(cap->card, IMX_CAPTURE_NAME, sizeof(cap->card));
+ 	snprintf(cap->bus_info, sizeof(cap->bus_info),
+ 		 "platform:%s", priv->src_sd->name);
+ 
 -- 
 2.20.1
 
