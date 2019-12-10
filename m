@@ -2,61 +2,153 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46912C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2169C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2438B206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791BC205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575966449;
+	bh=or6L9eieFZZXUooLS+byYyKuRp8UtECOv7Vuyh4idac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r0g2JYuaubXxmPZTC5PTGMImuEW9AlxwmCeMa/ojO9XAKNn8M9zNFpCKynMUYmY0O
+	 IaDpGaHlrcvBdEFh5AGub2JtfbeQDOAkD/IapLCyAEiwQzWlkwbqO2hycX/rYF0XH5
+	 9gWI4bnE10w0soYxo0gy0GXLC7WIdOcNN7x5rf4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfLJIYL (ORCPT
+        id S1726915AbfLJI12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:24:11 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:41132 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfLJIYL (ORCPT
+        Tue, 10 Dec 2019 03:27:28 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41087 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfLJI12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:24:11 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B68A8153A9D44;
-        Tue, 10 Dec 2019 00:24:10 -0800 (PST)
-Date:   Tue, 10 Dec 2019 00:24:08 -0800 (PST)
-Message-Id: <20191210.002408.743399545997526376.davem@davemloft.net>
-To:     rdunlap@infradead.org
-Cc:     sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: linux-next: Tree for Dec 10 (ethernet/8390/8390p.c)
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <ce89aa80-558c-1ccb-afbe-0af6bc4f3e19@infradead.org>
-References: <20191210140225.1aa0c90e@canb.auug.org.au>
-        <ce89aa80-558c-1ccb-afbe-0af6bc4f3e19@infradead.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 00:24:10 -0800 (PST)
+        Tue, 10 Dec 2019 03:27:28 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i1so9015244oie.8;
+        Tue, 10 Dec 2019 00:27:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BX8/IGebb3UQLoc8g0MqAatjMar/ymE4GzyE+cDdTqE=;
+        b=V3yISq+chPoAk5G46RySgKigPauyG4Zz+V0byCVxo1RhU//1uJ2/JJu7CL/Baip4wU
+         5xyQa6vNU1S1wU5wEOclUxDJRiB851GAfTUbSKL0lECQpX1WXVMWpheLco6GXDGKt/cM
+         cnconTPra/LmljSyup2Cork5J2xbMNdcd3HmfdBeQz+vBUEi3XDcm8PRO5kom5GGfjxP
+         0o1cPvnjhqwpqnIzhb1E0Fbcr9VFbtk9grOvUUOF/fgqJJcxsAgMCAaOSbOmSCaaEsmL
+         BckGfKHxWM25qoSTVFpcJVo5XTjDDLWBgiLvxB8yAyBkF614+hAanTMYG5D0ZsXXW3FG
+         bcgg==
+X-Gm-Message-State: APjAAAXIGn0On9hu1d2pymXxV7kc7ztoXCU1redqsLBIzkwjxzRrgbPA
+        SdIAwuRVrbUOOQE3BwRwBFRBu5gZDkEW2sesk/Q=
+X-Google-Smtp-Source: APXvYqzU6tITS3t6fgzrokkHjgpAwUMcdlINIIqsozcCzH9hIQNEy73SC8+zMkWieMWuUP5o5YSXVVolWYfcR+Toz94=
+X-Received: by 2002:a05:6808:b38:: with SMTP id t24mr3038315oij.110.1575966447761;
+ Tue, 10 Dec 2019 00:27:27 -0800 (PST)
+MIME-Version: 1.0
+References: <20191202070348.32148-1-tao3.xu@intel.com> <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
+ <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com> <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
+ <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com>
+In-Reply-To: <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 10 Dec 2019 09:27:15 +0100
+Message-ID: <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
+ Write Policy
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQpEYXRlOiBNb24sIDkg
-RGVjIDIwMTkgMjM6MTM6MzQgLTA4MDANCg0KPiBPbiAxMi85LzE5IDc6MDIgUE0sIFN0ZXBoZW4g
-Um90aHdlbGwgd3JvdGU6DQo+PiBIaSBhbGwsDQo+PiANCj4+IENoYW5nZXMgc2luY2UgMjAxOTEy
-MDk6DQo+PiANCj4gDQo+IG9uIGkzODY6DQo+IA0KPiAuLi9kcml2ZXJzL25ldC9ldGhlcm5ldC84
-MzkwLzgzOTBwLmM6NDQ6NjogZXJyb3I6IGNvbmZsaWN0aW5nIHR5cGVzIGZvciChZWlwX3R4X3Rp
-bWVvdXSiDQo+ICB2b2lkIGVpcF90eF90aW1lb3V0KHN0cnVjdCBuZXRfZGV2aWNlICpkZXYsIHVu
-c2lnbmVkIGludCB0eHF1ZXVlKQ0KPiAgICAgICBefn5+fn5+fn5+fn5+fg0KPiBJbiBmaWxlIGlu
-Y2x1ZGVkIGZyb20gLi4vZHJpdmVycy9uZXQvZXRoZXJuZXQvODM5MC9saWI4MzkwLmM6NzU6MCwN
-Cj4gICAgICAgICAgICAgICAgICBmcm9tIC4uL2RyaXZlcnMvbmV0L2V0aGVybmV0LzgzOTAvODM5
-MHAuYzoxMjoNCj4gLi4vZHJpdmVycy9uZXQvZXRoZXJuZXQvODM5MC84MzkwLmg6NTM6Njogbm90
-ZTogcHJldmlvdXMgZGVjbGFyYXRpb24gb2YgoWVpcF90eF90aW1lb3V0oiB3YXMgaGVyZQ0KPiAg
-dm9pZCBlaXBfdHhfdGltZW91dChzdHJ1Y3QgbmV0X2RldmljZSAqZGV2KTsNCj4gICAgICAgXn5+
-fn5+fn5+fn5+fn4NCg0KRG9lc24ndCBzZWVtIHRvIGJlIGR1ZSB0byBhIGNoYW5nZSBpbiBhbnkg
-b2YgbXkgbmV0d29ya2luZyB0cmVlcy4gOi0pDQo=
+On Tue, Dec 10, 2019 at 9:19 AM Tao Xu <tao3.xu@intel.com> wrote:
+>
+> On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
+> > On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
+> >>
+> >> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
+> >>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
+> >>>>
+> >>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
+> >>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex Cache
+> >>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
+> >>>> 2 is "Write Through" for Write Policy.
+> >>>
+> >>> Well, I'm not sure what the connection between the above statement,
+> >>> which is correct AFAICS, and the changes made by the patch is.
+> >>>
+> >>> Is that the *_OTHER symbol names are confusing or something deeper?
+> >>>
+> >>
+> >> Because in include/acpi/actbl1.h:
+> >>
+> >> #define ACPI_HMAT_CA_NONE                     (0)
+> >>
+> >> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
+> >>
+> >>      enum cache_indexing {
+> >>             NODE_CACHE_DIRECT_MAP,
+> >>             NODE_CACHE_INDEXED,
+> >>             NODE_CACHE_OTHER,
+> >>      };
+> >> NODE_CACHE_OTHER is 2, and for otner enum:
+> >>
+> >>            case ACPI_HMAT_CA_DIRECT_MAPPED:
+> >>                    tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+> >>                    break;
+> >>            case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+> >>                    tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+> >>                    break;
+> >> in include/acpi/actbl1.h:
+> >>
+> >>    #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
+> >>    #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
+> >>
+> >> but in include/linux/node.h:
+> >>
+> >> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is incorrect.
+> >
+> > Why is it incorrect?
+>
+> Sorry I paste the wrong pre-define.
+>
+> This is the incorrect line:
+>
+> case ACPI_HMAT_CA_DIRECT_MAPPED:
+> tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+>
+> ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means
+> if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in
+> cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole
+> switch codes:
+
+This is a mapping between the ACPI-defined values and the generic ones
+defined in the kernel.  There is not rule I know of by which they must
+be the same numbers.  Or is there such a rule which I'm missing?
+
+As long as cache_attrs.indexing is used consistently going forward,
+the difference between the ACPI-defined numbers and its values
+shouldn't matter, should it?
+
+>
+>          switch ((attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8) {
+>          case ACPI_HMAT_CA_DIRECT_MAPPED(1):
+>                  tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP(0);
+>                  break;
+>          case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING(2):
+>                  tcache->cache_attrs.indexing = NODE_CACHE_INDEXED(1);
+>                  break;
+>          case ACPI_HMAT_CA_NONE(0):
+>          default:
+>                  tcache->cache_attrs.indexing = NODE_CACHE_OTHER(2);
+>                  break;
+>          }
