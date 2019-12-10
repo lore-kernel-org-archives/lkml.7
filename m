@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C4FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BF5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BFE206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFBB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013259;
-	bh=v6LmL/NeMzNNjx/i1AH1Pv8OWWxPbJ9jR8WnQcgNOWY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Vd2SHwg58wJAJaYOvvg37ji6AZ2ZDENK8iTkcLnBJuiLZ0Md5t/3ZH1xUx87D0uxk
-	 r9xw/NfBFAmb/Ix3NkeW/NGoVAc3uj32NjyMTxlRYgzXH5ZqA3/dS4gKOcd8+B1FkN
-	 HjR4q0UuzeRDJs9U5+KvQL0kYCoT5UmMvW6X7TdE=
+	s=default; t=1576013268;
+	bh=aC3eF3AXy1D1tdrKUgWEMgfafwOFEfwvJ0RSRxPOri8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BeRRuu/HlvQLQzNkXaMs6zTXx7UxlNUpDbNJ6SNJ5lN82CebKwTlCCIERfCsAELC+
+	 I0hDvqu1P7geWSmHBDsTpgpjSdQU+nHWM+LCxbcepmckp2XyRfPCyq6wQN5joqRsOh
+	 Xj1ZvG/M32zNqHF+y9w4v/pgN8fWs9jgNT9NVFm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfLJVZQ (ORCPT
+        id S1728529AbfLJVKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55794 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbfLJVZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:14 -0500
+        id S1728086AbfLJVKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC9D6206D5;
-        Tue, 10 Dec 2019 21:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C78246AF;
+        Tue, 10 Dec 2019 21:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013113;
-        bh=v6LmL/NeMzNNjx/i1AH1Pv8OWWxPbJ9jR8WnQcgNOWY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cT/m7ieJ2a9/g2XB0LOwMVw+ffcHD61EEP4FISl3Udqma2+unvklcyEO5QPw9WURp
-         pChq2yItKrCcEZnc+lJxmeaF53p2Z/6ZxgmaVwjje+JUqRW0xm5Umg90aFTx7Wlkxb
-         /r0RsBihnhIoItc6FNfcfYxMvxxCSiJPjpEB7nGQ=
+        s=default; t=1576012231;
+        bh=aC3eF3AXy1D1tdrKUgWEMgfafwOFEfwvJ0RSRxPOri8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XgNDheJT2t4UbySnwFMde2nXRrLOBenU7Z2BwQc8t+r4qRej4u9zidKW8a5UB7hiz
+         6U5tJ9thYK9EmlR8yqSPHgy6Xljua2SxJK+ozKhSG3+YiZNsKr+DukdsILU117pfAA
+         lduHAMHY3z/Am++6E6kXmMinmDxAlw+iEM4LjnrU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dariusz Marcinkiewicz <darekm@google.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Eric Anholt <eric@anholt.net>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.3 001/292] drm/vc4/vc4_hdmi: fill in connector info
-Date:   Tue, 10 Dec 2019 16:20:20 -0500
-Message-Id: <20191210212511.11392-1-sashal@kernel.org>
+Cc:     Biju Das <biju.das@bp.renesas.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 180/350] phy: renesas: phy-rcar-gen2: Fix the array off by one warning
+Date:   Tue, 10 Dec 2019 16:04:45 -0500
+Message-Id: <20191210210735.9077-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,59 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dariusz Marcinkiewicz <darekm@google.com>
+From: Biju Das <biju.das@bp.renesas.com>
 
-[ Upstream commit 66c2dee4ae10a2d841c40b9dd9c7141eb23eee76 ]
+[ Upstream commit c9baab38fe0e28762d0d67611cbe2aef0fb3fc72 ]
 
-Fill in the connector info, allowing userspace to associate
-the CEC device with the drm connector.
+Fix the below smatch warning by adding variable check rather than the
+hardcoded value.
+warn: array off by one? 'data->select_value[channel_num]'
 
-Tested on a Raspberry Pi 3B.
-
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Acked-by: Eric Anholt <eric@anholt.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823112427.42394-2-hverkuil-cisco@xs4all.nl
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen2.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index ee7d4e7b0ee33..0853b980bcb31 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1285,6 +1285,9 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
+diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
+index 2926e49373017..2e279ac0fa4d6 100644
+--- a/drivers/phy/renesas/phy-rcar-gen2.c
++++ b/drivers/phy/renesas/phy-rcar-gen2.c
+@@ -71,6 +71,7 @@ struct rcar_gen2_phy_driver {
+ struct rcar_gen2_phy_data {
+ 	const struct phy_ops *gen2_phy_ops;
+ 	const u32 (*select_value)[PHYS_PER_CHANNEL];
++	const u32 num_channels;
+ };
  
- static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- {
-+#ifdef CONFIG_DRM_VC4_HDMI_CEC
-+	struct cec_connector_info conn_info;
-+#endif
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	struct vc4_dev *vc4 = drm->dev_private;
-@@ -1403,13 +1406,15 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- #ifdef CONFIG_DRM_VC4_HDMI_CEC
- 	hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
- 					      vc4, "vc4",
--					      CEC_CAP_TRANSMIT |
--					      CEC_CAP_LOG_ADDRS |
--					      CEC_CAP_PASSTHROUGH |
--					      CEC_CAP_RC, 1);
-+					      CEC_CAP_DEFAULTS |
-+					      CEC_CAP_CONNECTOR_INFO, 1);
- 	ret = PTR_ERR_OR_ZERO(hdmi->cec_adap);
- 	if (ret < 0)
- 		goto err_destroy_conn;
-+
-+	cec_fill_conn_info_from_drm(&conn_info, hdmi->connector);
-+	cec_s_conn_info(hdmi->cec_adap, &conn_info);
-+
- 	HDMI_WRITE(VC4_HDMI_CPU_MASK_SET, 0xffffffff);
- 	value = HDMI_READ(VC4_HDMI_CEC_CNTRL_1);
- 	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
+ static int rcar_gen2_phy_init(struct phy *p)
+@@ -271,11 +272,13 @@ static const u32 usb20_select_value[][PHYS_PER_CHANNEL] = {
+ static const struct rcar_gen2_phy_data rcar_gen2_usb_phy_data = {
+ 	.gen2_phy_ops = &rcar_gen2_phy_ops,
+ 	.select_value = pci_select_value,
++	.num_channels = ARRAY_SIZE(pci_select_value),
+ };
+ 
+ static const struct rcar_gen2_phy_data rz_g1c_usb_phy_data = {
+ 	.gen2_phy_ops = &rz_g1c_phy_ops,
+ 	.select_value = usb20_select_value,
++	.num_channels = ARRAY_SIZE(usb20_select_value),
+ };
+ 
+ static const struct of_device_id rcar_gen2_phy_match_table[] = {
+@@ -389,7 +392,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		channel->selected_phy = -1;
+ 
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+-		if (error || channel_num > 2) {
++		if (error || channel_num >= data->num_channels) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
+ 			of_node_put(np);
+ 			return error;
 -- 
 2.20.1
 
