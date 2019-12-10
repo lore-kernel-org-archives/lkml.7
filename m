@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCF6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01BAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526082077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A404F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012830;
-	bh=4nmCBGDmTjlj8RxkgiEgGZZWDF4POOuLpQPwXgDNb1s=;
+	s=default; t=1576012837;
+	bh=alF0iVCcCKNzMmvm++PJFTaNJLFbEjzDjBZ5N5Wh7Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTYXv1nBdhmyjT33e34Qk/fwzbu9Cj4K9zWM095HeT3xjQvZr06LWRf6xQQGEX90a
-	 6aaQxiTVCwXuJ1xsdphFmfnVENQ0Zl4zEK+H3VpMnEmyxmSE2z1KwSjr2K50Dkn3zc
-	 Nmdu1L5HuwFrg0gt2ci39ow0MNn22k5DaIMvoUTI=
+	b=GFpUr13B5k7tIFZG+G8FEn9TFqMPK5LrbQuSqNjEi6vgZpIPSj1xh2AHARWHB/LPS
+	 Eqrj/UCtk1WwhMgwpU8HU6ZDUaU8rcceUWYzQ0ZZIl7lFRUnAjx6Bxctg8K8Ip+tWy
+	 xDPyOTZvwpNTSE8Mk6q8ZY73fsCfhS5cDBkkEXsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfLJVU3 (ORCPT
+        id S1727890AbfLJVUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:20:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:20:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728663AbfLJVMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:07 -0500
+        id S1728660AbfLJVMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DFF246A2;
-        Tue, 10 Dec 2019 21:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEAEE246B4;
+        Tue, 10 Dec 2019 21:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012326;
-        bh=4nmCBGDmTjlj8RxkgiEgGZZWDF4POOuLpQPwXgDNb1s=;
+        s=default; t=1576012325;
+        bh=alF0iVCcCKNzMmvm++PJFTaNJLFbEjzDjBZ5N5Wh7Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vBbiGxwWBujMiClJ1FkL24gLhGdyCgE9YMJAKN+QIsasdXpCq0uM3Sq/5T35boGSr
-         UJI4jdRZXp2CxYlp65e9xHNGYtPgm4rVEU6b9PoC2j2YnhQm5nlxCCOcBWLAhyFLVr
-         bJGRY4jjeMnBxewXg4c1H1AS0wbf0uhwQVWuQyD0=
+        b=c6ogMpVVVNXNkM3gHTDPez/XuK+/xjvVC6G7wk32griTt20HMUm/fHq7oA6n5ptV3
+         kSYMNfvy7dABNHOUqVBcZDPPsFIxmcKbOaUZ3dNmNgTXPh8HFAJ0bGcuEGnFq69XK5
+         DGGr/C43+LutRINGQA7fhA2JpZhdlBVqjG8m7Pww=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 259/350] media: v4l2-ctrl: Lock main_hdl on operations of requests_queued.
-Date:   Tue, 10 Dec 2019 16:06:04 -0500
-Message-Id: <20191210210735.9077-220-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 258/350] media: cedrus: Use helpers to access capture queue
+Date:   Tue, 10 Dec 2019 16:06:03 -0500
+Message-Id: <20191210210735.9077-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,77 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit df4a3e7f88e3b0d7ae46d70b9ff8e3c0ea730785 ]
+[ Upstream commit 1fd50a2c294457508f06b8b631d01a58de81cdd2 ]
 
-There's a race condition between the list_del_init in the
-v4l2_ctrl_request_complete, and the list_add_tail in the
-v4l2_ctrl_request_queue, since they can be called in different thread
-and the requests_queued list is not protected by a lock. This can lead
-to that the v4l2_ctrl_handler is still in the requests_queued list while
-the request_is_queued is already set to false, which would cause
-use-after-free if the v4l2_ctrl_handler is later released.
+Accessing capture queue structue directly is not safe. Use helpers for
+that.
 
-Fix this by locking the ->lock of main_hdl (which is the owner of the
-requests_queued list) when doing list operations on the
-->requests_queued list.
-
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/staging/media/sunxi/cedrus/cedrus.h      | 8 ++++++--
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 8 ++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index 1d8f388246313..cd84dbbf6a890 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -3144,6 +3144,7 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
- 	struct v4l2_ctrl_handler *prev_hdl = NULL;
- 	struct v4l2_ctrl_ref *ref_ctrl, *ref_ctrl_prev = NULL;
- 
-+	mutex_lock(main_hdl->lock);
- 	if (list_empty(&main_hdl->requests_queued))
- 		goto queue;
- 
-@@ -3175,18 +3176,22 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
- queue:
- 	list_add_tail(&hdl->requests_queued, &main_hdl->requests_queued);
- 	hdl->request_is_queued = true;
-+	mutex_unlock(main_hdl->lock);
- }
- 
- static void v4l2_ctrl_request_unbind(struct media_request_object *obj)
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+index 2f017a6518486..3758a1c4e2d05 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -179,12 +179,16 @@ static inline dma_addr_t cedrus_buf_addr(struct vb2_buffer *buf,
+ static inline dma_addr_t cedrus_dst_buf_addr(struct cedrus_ctx *ctx,
+ 					     int index, unsigned int plane)
  {
- 	struct v4l2_ctrl_handler *hdl =
- 		container_of(obj, struct v4l2_ctrl_handler, req_obj);
-+	struct v4l2_ctrl_handler *main_hdl = obj->priv;
+-	struct vb2_buffer *buf;
++	struct vb2_buffer *buf = NULL;
++	struct vb2_queue *vq;
  
- 	list_del_init(&hdl->requests);
-+	mutex_lock(main_hdl->lock);
- 	if (hdl->request_is_queued) {
- 		list_del_init(&hdl->requests_queued);
- 		hdl->request_is_queued = false;
- 	}
-+	mutex_unlock(main_hdl->lock);
+ 	if (index < 0)
+ 		return 0;
+ 
+-	buf = ctx->fh.m2m_ctx->cap_q_ctx.q.bufs[index];
++	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
++	if (vq)
++		buf = vb2_get_buffer(vq, index);
++
+ 	return buf ? cedrus_buf_addr(buf, &ctx->dst_fmt, plane) : 0;
  }
  
- static void v4l2_ctrl_request_release(struct media_request_object *obj)
-@@ -4128,9 +4133,11 @@ void v4l2_ctrl_request_complete(struct media_request *req,
- 		v4l2_ctrl_unlock(ctrl);
- 	}
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+index d6a782703c9b0..08c6c9c410cc3 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -96,7 +96,7 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+ 	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+ 	const struct v4l2_ctrl_h264_slice_params *slice = run->h264.slice_params;
+ 	const struct v4l2_ctrl_h264_sps *sps = run->h264.sps;
+-	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
++	struct vb2_queue *cap_q;
+ 	struct cedrus_buffer *output_buf;
+ 	struct cedrus_dev *dev = ctx->dev;
+ 	unsigned long used_dpbs = 0;
+@@ -104,6 +104,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+ 	unsigned int output = 0;
+ 	unsigned int i;
  
-+	mutex_lock(main_hdl->lock);
- 	WARN_ON(!hdl->request_is_queued);
- 	list_del_init(&hdl->requests_queued);
- 	hdl->request_is_queued = false;
-+	mutex_unlock(main_hdl->lock);
- 	media_request_object_complete(obj);
- 	media_request_object_put(obj);
- }
++	cap_q = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
++
+ 	memset(pic_list, 0, sizeof(pic_list));
+ 
+ 	for (i = 0; i < ARRAY_SIZE(decode->dpb); i++) {
+@@ -167,12 +169,14 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+ 				   enum cedrus_h264_sram_off sram)
+ {
+ 	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+-	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
++	struct vb2_queue *cap_q;
+ 	struct cedrus_dev *dev = ctx->dev;
+ 	u8 sram_array[CEDRUS_MAX_REF_IDX];
+ 	unsigned int i;
+ 	size_t size;
+ 
++	cap_q = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
++
+ 	memset(sram_array, 0, sizeof(sram_array));
+ 
+ 	for (i = 0; i < num_ref; i++) {
 -- 
 2.20.1
 
