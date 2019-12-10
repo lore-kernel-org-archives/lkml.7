@@ -2,144 +2,90 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC86C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0D1C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2EC2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D4F20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575978492;
+	bh=WdQ8uzKRyzMp22Qhf5vcnt/N7u4psSl5tSqD7IiYtM4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=k/bbggT5u6papjOvTZDiVeCXe1S5l8uGaMWgxOwiSt8SIls/uRZ/g0/7bM9rolpht
+	 hgaIts5HkUYQhnzZ7c9EGUJkQEq9fk0HtPYD/2UMvBUNRviBJ7QSr9k/3q8qoHqayZ
+	 WnCdcBXk4Fan7A813/1aER+QEOUAggoT20tcK8O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfLJLsJ (ORCPT
+        id S1727531AbfLJLsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:09 -0500
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:43389 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727421AbfLJLsH (ORCPT
+        Tue, 10 Dec 2019 06:48:04 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33206 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfLJLsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:48:07 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TkXAQar_1575978470;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkXAQar_1575978470)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 10 Dec 2019 19:47:51 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v5 0/8] per lruvec lru_lock for memcg
-Date:   Tue, 10 Dec 2019 19:46:16 +0800
-Message-Id: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 10 Dec 2019 06:48:01 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so13511968lfl.0;
+        Tue, 10 Dec 2019 03:47:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fo/kQPoTgufoLl6OwS4X1boPbPzO5kmha82cPWUC2hI=;
+        b=OdNe0vn+8QvjfD8P6ecHAg/78T9yojBKTgVES0rTqrwJ1Zmy20dX2afqpFVknXapY2
+         W3OZQTRXrUhYcPcKcD4IgjlU+ioQDUYOLP1NmWBGHlhvoBsyu8k46DA+eaXWFEcnpe8/
+         zT4i5XuL1KmwBMabU7yV/yN4C86cCw0vxffqwWge9WYZR8gr7/k4ukoviGHai4kOO+Eg
+         1DOfZ/+aI6DCRAsP5FzTGeZ5yZFUfSWHRe/2jCUpcRiIztCGP3nRmEWUr7YKE+Ukuwm2
+         hykpNogYp3dWv6bLP7yr6B1eZtbqtGLOojYHj4Jxa/Q+Un10S7EsdDw2fmvbRN7ccE91
+         cRRA==
+X-Gm-Message-State: APjAAAXJ+LrgAJncIsn7f9e8n0hCcPlHf9ECqnTBt4QSzkR2JZaia4Xb
+        CbOjeZ5acO93W4UQIUzarFmM/hSS
+X-Google-Smtp-Source: APXvYqxRUBIZ41AnH3QnCgB0Q1gJnSjg59UHuxgq9xRqKYyhr1qDqMrwe00Je2S+QZyu/YP+ZLbnuA==
+X-Received: by 2002:ac2:4849:: with SMTP id 9mr18316401lfy.11.1575978478770;
+        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id e21sm1757836lfc.63.2019.12.10.03.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iedzk-0001LN-An; Tue, 10 Dec 2019 12:48:00 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        devel@driverdev.osuosl.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] staging: fix USB altsetting bugs
+Date:   Tue, 10 Dec 2019 12:47:49 +0100
+Message-Id: <20191210114751.5119-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+We had quite a few drivers using the first alternate setting instead of
+the current one when doing descriptor sanity checks. This is mostly an
+issue on kernels with panic_on_warn set due to a WARN() in
+usb_submit_urb(), but since we've started backporting such fixes (e.g.
+as reported by syzbot), I've marked these for stable as well.
 
-Sorry for send out later.
-
-This patchset move lru_lock into lruvec, give a lru_lock for each of
-lruvec, thus bring a lru_lock for each of memcg per node.
-
-This is the main patch to replace per node lru_lock with per memcg
-lruvec lock.
-
-We introduces function lock_page_lruvec, which will lock the page's
-memcg and then memcg's lruvec->lru_lock. (Thanks Johannes Weiner,
-Hugh Dickins and Konstantin Khlebnikov suggestion/reminder)
-
-According to Daniel Jordan's suggestion, I run 208 'dd' with on 104
-containers on a 2s * 26cores * HT box with a modefied case:
-  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-
-With this and later patches, the readtwice performance increases about
-80% with containers, but w/o memcg the readtwice performance drops
-about 5%.(and another 5% drops with the last debug patch). Slighty
-better than v4.(about 6% drop w/o memcg)
-
-Considering the memcg move task path:
-   mem_cgroup_move_task:
-     mem_cgroup_move_charge:
-	lru_add_drain_all();
-	atomic_inc(&mc.from->moving_account); //ask lruvec's move_lock
-	synchronize_rcu();
-	walk_parge_range: do charge_walk_ops(mem_cgroup_move_charge_pte_range):
-	   isolate_lru_page();
-	   mem_cgroup_move_account(page,)
-		spin_lock(&from->move_lock) 
-		page->mem_cgroup = to;
-		spin_unlock(&from->move_lock) 
-	   putback_lru_page(page)
-
-to guard 'page->mem_cgroup = to' by to_vec->lru_lock has the similar effect with
-move_lock. So for performance reason, both solutions are same.
-
-Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
-7 years ago.
-
-Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan, 
-Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
-and some testing support from Intel 0days!
-
-v5,
-  a, locking page's memcg according JohannesW suggestion
-  b, using macro for non memcg, according to Johanness and Metthew's suggestion.
-
-v4: 
-  a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
-  b, remove the irqsave flags changes, thanks Metthew Wilcox
-  c, merge/split patches for better understanding and bisection purpose
-
-v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
-
-v2: bypass a performance regression bug and fix some function issues
-
-v1: initial version, aim testing show 5% performance increase
+Johan
 
 
-Alex Shi (7):
-  mm/vmscan: remove unnecessary lruvec adding
-  mm/lru: replace pgdat lru_lock with lruvec lock
-  mm/lru: introduce the relock_page_lruvec function
-  mm/mlock: optimize munlock_pagevec by relocking
-  mm/swap: only change the lru_lock iff page's lruvec is different
-  mm/pgdat: remove pgdat lru_lock
-  mm/lru: debug checking for page memcg moving and lock_page_memcg
+Johan Hovold (2):
+  staging: rtl8188eu: fix interface sanity check
+  staging: rtl8712: fix interface sanity check
 
-Hugh Dickins (1):
-  mm/lru: revise the comments of lru_lock
-
- Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +---
- Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
- Documentation/trace/events-kmem.rst                |  2 +-
- Documentation/vm/unevictable-lru.rst               | 22 ++---
- include/linux/memcontrol.h                         | 63 ++++++++++++++
- include/linux/mm_types.h                           |  2 +-
- include/linux/mmzone.h                             |  5 +-
- mm/compaction.c                                    | 59 ++++++++-----
- mm/filemap.c                                       |  4 +-
- mm/huge_memory.c                                   | 18 ++--
- mm/memcontrol.c                                    | 88 +++++++++++++++-----
- mm/mlock.c                                         | 28 +++----
- mm/mmzone.c                                        |  1 +
- mm/page_alloc.c                                    |  1 -
- mm/page_idle.c                                     |  7 +-
- mm/rmap.c                                          |  2 +-
- mm/swap.c                                          | 75 +++++++----------
- mm/vmscan.c                                        | 97 ++++++++++++----------
- 18 files changed, 300 insertions(+), 195 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c | 2 +-
+ drivers/staging/rtl8712/usb_intf.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-1.8.3.1
+2.24.0
 
