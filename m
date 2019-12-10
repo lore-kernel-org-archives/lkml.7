@@ -2,132 +2,109 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBD6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD0C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727C320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PqTOcUvc"
+	by mail.kernel.org (Postfix) with ESMTP id 9DB8120663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfLJKtr (ORCPT
+        id S1727177AbfLJKvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:49:47 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21839 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbfLJKtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:49:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575974985;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fVctwGFkZUQARDKwSMhaffHofk1dC5Yr/3Iil1jZx9g=;
-        b=PqTOcUvc4bJzCkHrUeDY1cMin9MvH2+dzrAQEvVV6cGP0Pu1xfScV0XO5iGEk3xy/BBa2a
-        blvueo0JE6ZR3u+N8qFwMCsOpbA6FUyinTiDoTWypTGeKNXl5Mvn0pciOrQKm4XmvY414W
-        7wgEI+iyyrVlYVRGG3SVW5+EQ/8dKF0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-vgb72TJdMtuTNB1RjDxqqg-1; Tue, 10 Dec 2019 05:49:42 -0500
-Received: by mail-wr1-f71.google.com with SMTP id c17so8734851wrp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:49:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TXqUXLfieW4TVcQp6EMVYOtM+vJyQwpyvlc5ef5/YKE=;
-        b=LWRPA4fr9J8n2S/suVFiSxornBYSV8xB+6iCHGekfbCiYbHI5B0l+eaybrxuOL5X+E
-         Shl+tbI8nAi9CDixj4UujDC2F2isB71yEW1Ji0SXoW5QEN6gKYUEiarnhEVW6woch/nd
-         ZJlcOoKGCFQm8IQzTRpzqEaAMWOTUg3YBvvcekFXyOaatNBZ2u6MKFXuOqyLdsVqg2kb
-         KbOYgZhPfonkNEqH92BCl/5lAyA51SRSQTmG5pX2b5sgzBUD0F2OW3Iuy9U6WWcw+KIR
-         FfL2zakaqGXAk3yNB7aEWpJexA1rmbmnvuw1aOC51e2rN4aBCEzyzb4CbJtLgh4p2Mz3
-         SLkw==
-X-Gm-Message-State: APjAAAXgvS0ojDJ7OjsRSHjQPXAcH47MMBYMZeeISfnScix70QvhsnsW
-        q9AGgA0zgNg/4aseXftdhmsPMrajBqgLY6VRaBhPMiUVB66/bp9uLao0zeHcpPHIVpqgVYEoodp
-        7kqeoV5vbrSKTk0nFXzxbKzoa
-X-Received: by 2002:adf:a308:: with SMTP id c8mr943568wrb.240.1575974981379;
-        Tue, 10 Dec 2019 02:49:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzWrXqV875WoE1NtxDoSWnidAGuPO2VDjnYqV2h4y2diBP7Q+pt2V1baueET5JHkn8bVgrOpw==
-X-Received: by 2002:adf:a308:: with SMTP id c8mr943541wrb.240.1575974981114;
-        Tue, 10 Dec 2019 02:49:41 -0800 (PST)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id v3sm2554817wml.47.2019.12.10.02.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 02:49:40 -0800 (PST)
-Date:   Tue, 10 Dec 2019 11:49:39 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH NOTFORMERGE 0/5] Extend remote madvise API to KSM hints
-Message-ID: <20191210104939.jauw5hnv3smhtvtr@butterfly.localdomain>
-References: <20190616085835.953-1-oleksandr@redhat.com>
+        Tue, 10 Dec 2019 05:51:13 -0500
+Received: from mga01.intel.com ([192.55.52.88]:4952 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfLJKvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:51:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 02:51:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
+   d="scan'208";a="215533286"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 10 Dec 2019 02:51:10 -0800
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Fix PT PMI handling
+Date:   Tue, 10 Dec 2019 12:51:01 +0200
+Message-Id: <20191210105101.77210-1-alexander.shishkin@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20190616085835.953-1-oleksandr@redhat.com>
-X-MC-Unique: vgb72TJdMtuTNB1RjDxqqg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Minchan.
+Commit:
 
-On Sun, Jun 16, 2019 at 10:58:30AM +0200, Oleksandr Natalenko wrote:
-> This is a set of commits based on our discussion on your submission [1].
->=20
-> First 2 implement minor suggestions just for you to not forget to take
-> them into account.
->=20
-> uio.h inclusion was needed for me to be able to compile your series
-> successfully. Also please note I had to enable "Transparent Hugepage
-> Support" as well as "Enable idle page tracking" options, otherwise the
-> build failed. I guess this can be addressed by you better since the
-> errors are introduced with MADV_COLD introduction.
->=20
-> Last 2 commits are the actual KSM hints enablement. The first one
-> implements additional check for the case where the mmap_sem is taken for
-> write, and the second one just allows KSM hints to be used by the remote
-> interface.
->=20
-> I'm not Cc'ing else anyone except two mailing lists to not distract
-> people unnecessarily. If you are fine with this addition, please use it
-> for your next iteration of process_madvise(), and then you'll Cc all the
-> people needed.
->=20
-> Thanks.
->=20
-> [1] https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.o=
-rg/
->=20
-> Oleksandr Natalenko (5):
->   mm: rename madvise_core to madvise_common
->   mm: revert madvise_inject_error line split
->   mm: include uio.h to madvise.c
->   mm/madvise: employ mmget_still_valid for write lock
->   mm/madvise: allow KSM hints for remote API
->=20
->  mm/madvise.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
->=20
-> --=20
-> 2.22.0
->=20
+  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
 
-This is a gentle ping. Are you still planning to submit process_madvise() s=
-olution?
+skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
+also inadvertently skips the active_events bump for PT in that case, which
+is a bug. If there aren't any hardware events at the same time as PT, the
+PMI handler will ignore PT PMIs, as active_events reads zero in that case,
+resulting in the "Uhhuh" spurious NMI warning and PT data loss.
 
---=20
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+Fix this by always increasing active_events for PT events.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Cc: stable@vger.kernel.org # v4.7
+---
+ arch/x86/events/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 6e3f0c18908e..5a736197dfa4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -375,7 +375,7 @@ int x86_add_exclusive(unsigned int what)
+ 	 * LBR and BTS are still mutually exclusive.
+ 	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+-		return 0;
++		goto out;
+ 
+ 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
+ 		mutex_lock(&pmc_reserve_mutex);
+@@ -387,6 +387,7 @@ int x86_add_exclusive(unsigned int what)
+ 		mutex_unlock(&pmc_reserve_mutex);
+ 	}
+ 
++out:
+ 	atomic_inc(&active_events);
+ 	return 0;
+ 
+@@ -397,11 +398,15 @@ int x86_add_exclusive(unsigned int what)
+ 
+ void x86_del_exclusive(unsigned int what)
+ {
++	atomic_dec(&active_events);
++
++	/*
++	 * See the comment in x86_add_exclusive().
++	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+ 		return;
+ 
+ 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
+-	atomic_dec(&active_events);
+ }
+ 
+ int x86_setup_perfctr(struct perf_event *event)
+-- 
+2.24.0
 
