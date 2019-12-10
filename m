@@ -2,120 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E1AC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C75C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58527206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576022094;
-	bh=Y0rL3OsX7JSwZVE3fA0lUgy0MkmQlbXJklmzyjR5bNM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=uPqa8FeUBIRTBurr6QAW4kUwjU6KyO33ml89D7zhOmFy9Mjayh1ZYRpWw19IsXEW4
-	 vRPr20pMY6JFulNUpCZVd/mX3IGQ+kqca4ggOB9mfH6Q7tl6MfJ3KeUu6HzUf+iav9
-	 pyAcFQi2Ga/dhHm5YgiSuejLgTA+c3APgJeLaKy4=
+	by mail.kernel.org (Postfix) with ESMTP id 539CF20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hAbRMVrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLJXyx (ORCPT
+        id S1726897AbfLJXzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:54:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLJXyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:54:53 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DB3420663;
-        Tue, 10 Dec 2019 23:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576022092;
-        bh=Y0rL3OsX7JSwZVE3fA0lUgy0MkmQlbXJklmzyjR5bNM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PJRJUvGNLkzF/3KyseqNWDsju4IpL9e6Xix4DS0afggoIue7jI5efsorgmYncOfVO
-         4vbwciByxssxuA17svyBeoRAvAB/ycZHidQjdnM4xTjbwBYshIVWlgSgaajTJG5cVQ
-         VGVJi+XxOAKgyP4g/ejd6T/yEx5/UpaH0ZT587y0=
-Date:   Tue, 10 Dec 2019 17:54:50 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [Patch v2 1/2] PCI: hv: decouple the func definition in
- hv_dr_state from VSP message
-Message-ID: <20191210235450.GA177105@google.com>
+        Tue, 10 Dec 2019 18:55:06 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43887 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJXzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 18:55:06 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so15183670lfq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:55:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KNrohwDsHeZAs+ReIm2Q7EwJ5Hy4Jj8HAR5cu/mtLgY=;
+        b=hAbRMVrsm1W4JYpKwlAZvEdT933tVqy6w6wMCc7wU8/Lzg2mVB1osVcU1cB1VPIwef
+         /CJ1Z+GY10xo0IaUThsb3JldrQHfnpRtZ+VnPK7s3az7eI6tLGGac3UF6CMi+x8B/A/1
+         8+qpg93GpxCpp1pUX4fIrdIuGw4RKwqJ8QFN70tRaGYx3wAqVnCknrRCklxxZ39x2+Sf
+         YDS5h08LVLC1Bz4+lYzG2wPIQ//3LBMqGB4aSpxRJxEGo7cfDj8zA4SPv6LQrdn4zTsA
+         VHZQaf+j3+knILNMuVh6kZ5BZX6O6cnqzRPCFIPpaNnTzSJnNse3mOlmdzQONBiyngEE
+         dC8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KNrohwDsHeZAs+ReIm2Q7EwJ5Hy4Jj8HAR5cu/mtLgY=;
+        b=FBPNG5xqyssiSevE/DSmJCfeuTbG997KPwPcgNrmDvaNs0WGw3UTqbQg7B2IDxUlyA
+         XZt1egOaZ8pS1OFNRJBEjdrkw+jtF8NcoK9tqTs8N3NGSyWxHoSTmgO3GKxm4SrzYSjz
+         gDRxnB57kXr/xD78WtdbJmQwM68XGjiTPJJtavue692I5rJIhmVUuUFd6mDJjqGv5mt7
+         v1nazQ5BmCk1W7BmDZLx7nIWhXDBNsgckdU1TZSqP3UWmm9J9A6WXvK93VfkbCLd+6TC
+         5z20uvRzBPOS63gE2fB0jpExf1oJVf033BkV+hCMlQDzSqwwdkWGhvDd9zz6BsRZa7Fn
+         Wvkg==
+X-Gm-Message-State: APjAAAVqbkrNZU1oIzQnOG5XAAmwRZSvorGPmoPIJGJWlhqg/xgtMzko
+        fJz85maX5XKZsLpUcHjxtd5HeUzdOOqQ6zYa/4MxDw==
+X-Google-Smtp-Source: APXvYqwx5LuKLDN3XiVpf1hl60Rh8HBmOKd1FntsXqq8U8VXeEmmPKwaFk+urFzUVIAbBMMQifWAms3QKp/FaSKlGkM=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr325542lff.44.1576022103954;
+ Tue, 10 Dec 2019 15:55:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575428017-87914-1-git-send-email-longli@linuxonhyperv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
+ <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
+ <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com> <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
+ <20191203235113.GA12929@bogus>
+In-Reply-To: <20191203235113.GA12929@bogus>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Dec 2019 00:54:52 +0100
+Message-ID: <CACRpkdZOn8vGjxCUBd9c-SQSkmwxpS+bbRk7TiOWJcpTz9BsBQ@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
+To:     Rob Herring <robh@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Run "git log --oneline drivers/pci/controller/pci-hyperv.c" and make
-yours match.  Capitalize the first word, etc.
+On Wed, Dec 4, 2019 at 12:51 AM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Nov 28, 2019 at 11:06:35AM +0100, Linus Walleij wrote:
 
-On Tue, Dec 03, 2019 at 06:53:36PM -0800, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> hv_dr_state is used to find present PCI devices on the bus. The structure
-> reuses struct pci_function_description from VSP message to describe a device.
-> 
-> To prepare support for pci_function_description v2, we need to decouple this
-> dependence in hv_dr_state so it can work with both v1 and v2 VSP messages.
-> 
-> There is no functionality change.
-> 
-> Signed-off-by: Long Li <longli@microsoft.com>
+> > The ambition to use refcounted GPIOs to solve this
+> > usecase is probably wrong, I would say try to go for a
+> > GPIO-based reset controller instead.
+>
+> Yes, but I think we can have that AND use the existing binding.
+>
+> > The fact that some Linux drivers are already using explicit
+> > GPIO's for their reset handling is maybe unfortunate,
+> > they will simply have to grow code to deal with a reset
+> > alternatively to GPIO, like first try to grab a reset
+> > handle and if that doesn't fall back to use a GPIO.
+>
+> I think this could just be all handled within the reset subsystem given
+> that we've been consistent in using 'reset-gpios' (GPIO regulators are
+> similar, but we never had such consistency with GPIO names for
+> regulators). We can implement a reset driver for the 'reset-gpios'
+> property that deals with the sharing. Drivers to DT nodes doesn't have
+> to be 1:1. It's convenient when they are, but that's encoding the OS's
+> (current) driver structure into DT.
 
-> + * hv_pci_devices_present() - Handles list of new children
-> + * @hbus:	Root PCI bus, as understood by this driver
-> + * @relations:	Packet from host listing children
-> + *
-> + * This function is invoked whenever a new list of devices for
-> + * this bus appears.
+This seems like a good approach if it can be made to work.
+reset-gpios should have the right polarity flags (else drivers
+and/or device trees need to be fixed...) so the driver can simply
+scan over them and try to build a consensus on how to assert
+or deassert a shared reset-gpios line.
 
-The comment should tell us what the function *does*, not when it is
-called.
+It is also a natural placeholder for the connection to device
+core that will inevitably need to happen the day the device
+hierarchy needs to be torn up/down for a reset on some
+random device.
 
-> + */
-> +static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
-> +				   struct pci_bus_relations *relations)
-> +{
-> +	struct hv_dr_state *dr;
-> +	int i;
-> +
-> +	dr = kzalloc(offsetof(struct hv_dr_state, func) +
-> +		     (sizeof(struct hv_pcidev_description) *
-> +		      (relations->device_count)), GFP_NOWAIT);
-> +
-> +	if (!dr)
-> +		return;
-> +
-> +	dr->device_count = relations->device_count;
-> +	for (i = 0; i < dr->device_count; i++) {
-> +		dr->func[i].v_id = relations->func[i].v_id;
-> +		dr->func[i].d_id = relations->func[i].d_id;
-> +		dr->func[i].rev = relations->func[i].rev;
-> +		dr->func[i].prog_intf = relations->func[i].prog_intf;
-> +		dr->func[i].subclass = relations->func[i].subclass;
-> +		dr->func[i].base_class = relations->func[i].base_class;
-> +		dr->func[i].subsystem_id = relations->func[i].subsystem_id;
-> +		dr->func[i].win_slot = relations->func[i].win_slot;
-> +		dr->func[i].ser = relations->func[i].ser;
-> +	}
-> +
-> +	if (hv_pci_start_relations_work(hbus, dr))
-> +		kfree(dr);
->  }
+Peter, will you have a go at it?
+
+Yours,
+Linus Walleij
