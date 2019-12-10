@@ -2,134 +2,104 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A33CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F4DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3702053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA052053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017852;
+	bh=t3DU3mm49Jf8LSpEhFNe6t1CAZXyRUCKaeeofxN9ENc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q960qwmWk4xY8NYjHElnDmBhlVuR4k/8poD24wwWJyWzklKibF8h2U0U11+A+70GV
+	 2/rSLyyPVo9oLUJwKtW5aBjg/1gGB2o3YmsrA0fSUrlGXf/2ayyd3Bs5K+LvvcLROa
+	 +jDgIhQfnk5nMEZvfkU3gy+NbHMtxwc9DMrVdzBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfLJWoF (ORCPT
+        id S1730544AbfLJWoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:44:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728649AbfLJWoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:44:03 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAMbeMl117049
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:44:02 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsrdpag9t-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:44:02 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 10 Dec 2019 22:43:59 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 22:43:56 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAMhtZX56492178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 22:43:55 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15BE8A4057;
-        Tue, 10 Dec 2019 22:43:55 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05E25A405F;
-        Tue, 10 Dec 2019 22:43:54 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.214.111])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Dec 2019 22:43:53 +0000 (GMT)
-Subject: Re: [PATCH v10 6/6] IMA: Read keyrings= option from the IMA policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Tue, 10 Dec 2019 17:43:53 -0500
-In-Reply-To: <20191204224131.3384-7-nramas@linux.microsoft.com>
-References: <20191204224131.3384-1-nramas@linux.microsoft.com>
-         <20191204224131.3384-7-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 10 Dec 2019 17:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbfLJWaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:52 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F388D20836;
+        Tue, 10 Dec 2019 22:30:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017051;
+        bh=t3DU3mm49Jf8LSpEhFNe6t1CAZXyRUCKaeeofxN9ENc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UD6VvH0PxOYoTTBB+kNz6ylFC/+OZzhmNoXJV9yi/ubFysTYkZQmfeUsio5/5g4yz
+         EB2Sg1DIKVvjMZh5RSulf6R7PWFucK4kGo3LoN0DS+MlDfqKfafs6BsTDZ1/fPBKug
+         46zQJpLtRaTiiopjW1LzungDrli4fMbCznP5wWMg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/91] media: i2c: ov2659: fix s_stream return value
+Date:   Tue, 10 Dec 2019 17:29:17 -0500
+Message-Id: <20191210223035.14270-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121022-0020-0000-0000-0000039654FA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121022-0021-0000-0000-000021ED9844
-Message-Id: <1576017833.4579.45.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- impostorscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100186
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-04 at 14:41 -0800, Lakshmi Ramasubramanian wrote:
-> Read "keyrings=" option, if specified in the IMA policy, and store in
-> the list of IMA rules when the configured IMA policy is read.
-> 
-> This patch defines a new policy token enum namely Opt_keyrings
-> and an option flag IMA_KEYRINGS for reading "keyrings=" option
-> from the IMA policy.
-> 
-> Updated ima_parse_rule() to parse "keyrings=" option in the policy.
-> Updated ima_policy_show() to display "keyrings=" option.
-> 
-> The following example illustrates how key measurement can be verified.
-> 
-> Sample "key" measurement rule in the IMA policy:
-> 
-> measure func=KEY_CHECK uid=0 keyrings=.ima|.evm template=ima-buf
-> 
-> Display "key" measurement in the IMA measurement list:
-> 
-> cat /sys/kernel/security/ima/ascii_runtime_measurements
-> 
-> 10 faf3...e702 ima-buf
-> sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3
-> b7b .ima 308202863082...4aee
-> 
-> Verify "key" measurement data for a key added to ".ima" keyring:
-> 
-> cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
-> grep ".ima" | cut -d' ' -f 6 | xxd -r -p |tee ima-cert.der |
-> sha256sum | cut -d' ' -f 1
-> 
+From: Benoit Parrot <bparrot@ti.com>
 
-The dot needs to be quoted, otherwise it matches any character.  I
-would also limit the above command to the first instance (eg. grep -m
-1 "\.ima).
+[ Upstream commit 85c4043f1d403c222d481dfc91846227d66663fb ]
 
-> The output of the above command should match the sha256 hash
-> in the "key" measurement entry in the IMA measurement list.
+In ov2659_s_stream() return value for invoked function should be checked
+and propagated.
 
-There are multiple hashes in a measurement list record.  Perhaps refer
-to the 2nd hash as the "template hash".
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/ov2659.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Mimi
-
-> 
-> The file namely "ima-cert.der" generated by the above command
-> should be a valid x509 certificate (in DER format) and should match
-> the one that was used to import the key to the .ima keyring.
-> The certificate file can be verified using openssl tool.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 3554eea77e04c..49196afd15a8a 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1204,11 +1204,15 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+ 		goto unlock;
+ 	}
+ 
+-	ov2659_set_pixel_clock(ov2659);
+-	ov2659_set_frame_size(ov2659);
+-	ov2659_set_format(ov2659);
+-	ov2659_set_streaming(ov2659, 1);
+-	ov2659->streaming = on;
++	ret = ov2659_set_pixel_clock(ov2659);
++	if (!ret)
++		ret = ov2659_set_frame_size(ov2659);
++	if (!ret)
++		ret = ov2659_set_format(ov2659);
++	if (!ret) {
++		ov2659_set_streaming(ov2659, 1);
++		ov2659->streaming = on;
++	}
+ 
+ unlock:
+ 	mutex_unlock(&ov2659->lock);
+-- 
+2.20.1
 
