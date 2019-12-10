@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8BEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272ABC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F5C2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF96F2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017463;
-	bh=5bmSyDc+fPXrUgMVtYHzT3GVLLN1Sajj5eSGI2QVhdE=;
+	s=default; t=1576017471;
+	bh=KTnAKvILCardkPueMWJQLeWMrlCrn0p7kS17N3X9WQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wj5umV16E/s6/NllxJOuBqYDA0OodB0tnQMqpRXi8RLBr3GKhTGdnSvNnO402Z7zr
-	 hfAhMDkrd/QWpUi3sbk6ShG0NAvaOttFsqcq1EDZl2bG+tJWKZWc6Z6eCmpnFLLNMh
-	 yDs9hpKij6q/oKFhnFjh9wa6JykV9Y1BZiznZdtE=
+	b=1aAH8bcKK/N+78fYYx9hBgcyqzNF5YxVGUp+hxssZqbA3mNaApIGeZK8slJGUjSdE
+	 JeEIiwTG7bAv8q0fnzFgSjXLv5FsiXOZ2fmLHRnOuj4+iKq4RgU1zijWW1N1B/LLPe
+	 6qOYgL0C8+e+CN3xWoEPL4aqsaVk9OvxvOZD9OI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfLJWd7 (ORCPT
+        id S1730467AbfLJWht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54798 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729240AbfLJWdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:46 -0500
+        id S1729315AbfLJWdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DEB420836;
-        Tue, 10 Dec 2019 22:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E6B207FF;
+        Tue, 10 Dec 2019 22:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017225;
-        bh=5bmSyDc+fPXrUgMVtYHzT3GVLLN1Sajj5eSGI2QVhdE=;
+        s=default; t=1576017234;
+        bh=KTnAKvILCardkPueMWJQLeWMrlCrn0p7kS17N3X9WQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFZm1pmNvZ/ehRQZaSHWe7U4zeXiCGjZKwarc9BAMME06WlrC20/OGhjWcj/VzE88
-         s3iXi0fY7vuMYi/2HHs9ihWIb/1PpMn4cY06vI+6HyYlRZlKi+eHjjj2dZCjgZsFUs
-         SbrXEMvHH5iW7ZLAd99LpgfuCoucFkhPh0xI4/8g=
+        b=bnRWiJPE9uU53+Ni+28LEzIS0ppT1245V1o9MAtkRpZQ5cYM+T7xoUfY6F6wBwFWz
+         WsIjnGC3jgfGu8BmZJBYQeDnVUH/RZo017eRWjjXXvTwSGcWXed02GXdVp1ideRRgj
+         xurHHvdCmuZCDEfBLh4jD/vWlyrm94c9NnU1Eq/U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 24/71] x86/mm: Use the correct function type for native_set_fixmap()
-Date:   Tue, 10 Dec 2019 17:32:29 -0500
-Message-Id: <20191210223316.14988-24-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 32/71] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Tue, 10 Dec 2019 17:32:37 -0500
+Message-Id: <20191210223316.14988-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -67,63 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-We call native_set_fixmap indirectly through the function pointer
-struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
-'unsigned' instead of 'enum fixed_addresses'. This patch changes the
-function type for native_set_fixmap to match the pointer, which fixes
-indirect call mismatches with Control-Flow Integrity (CFI) checking.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
+
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fixmap.h | 2 +-
- arch/x86/mm/pgtable.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index f80d70009ff87..d0e39f54feee3 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -147,7 +147,7 @@ extern pgprot_t kmap_prot;
- extern pte_t *pkmap_page_table;
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index f67f35b6edb12..e6ad81556575c 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -151,7 +151,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
- void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
--void native_set_fixmap(enum fixed_addresses idx,
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- 		       phys_addr_t phys, pgprot_t flags);
- 
- #ifndef CONFIG_PARAVIRT
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 50f75768aadd1..3ed4753280aaf 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -567,8 +567,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
- 	fixmaps_set++;
- }
- 
--void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
--		       pgprot_t flags)
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-+		       phys_addr_t phys, pgprot_t flags)
+ static int cpu_psci_cpu_kill(unsigned int cpu)
  {
- 	__native_set_fixmap(idx, pfn_pte(phys >> PAGE_SHIFT, flags));
- }
+-	int err, i;
++	int err;
++	unsigned long start, end;
+ 
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -161,16 +162,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+ 
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
+ 
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
