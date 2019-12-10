@@ -7,78 +7,86 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA734C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9294C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB962073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FB92077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xggK1nB9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDIBXQba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfLJJv7 (ORCPT
+        id S1727569AbfLJJvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:51:59 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:40561 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfLJJv7 (ORCPT
+        Tue, 10 Dec 2019 04:51:50 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36398 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbfLJJvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:51:59 -0500
-Received: by mail-ua1-f65.google.com with SMTP id v18so2279136uaq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:58 -0800 (PST)
+        Tue, 10 Dec 2019 04:51:49 -0500
+Received: by mail-vs1-f68.google.com with SMTP id m5so12577962vsj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xUN3rGfqd0QTJZr6aZxtmVJn1us7qeeluWmJXj0Te7E=;
-        b=xggK1nB9ejv8RrFLLP7MF/oV73DlomCcEFt6HG/TCk2YTOnfjzU3+OzQE8gFIrWdVJ
-         TtWMwOMAm+lNOHbSBgqqfcWGtcvUCv75lA3LChaXWTTz0IACzZ6lxZQSbnTN3Fb3DP2O
-         IJuvDyC789CqjCdgQcDf5UoOTHebBGiol9I8m3u0iIMym5mvaHzTt67ZcXglu22tZM6l
-         vj4qeiLkVAYovR5jRIo0hNv66L1NOWtskL6JUwzFKzCajY4uwA3NIaWBXmgWfJSWKlEj
-         WWrieoWz89mX714X7EAYQ87oD6/+ERYpjZqPZoyFB1vPFlOGCcfg9yzMlnZJzgMAYDNB
-         /0XA==
+        bh=cBbBEnPUIIoW2OTGVU3g0EnMYCU75p2JMvnnrLqCOyA=;
+        b=TDIBXQbaiBCARQwCl+GxHekTgJMIj4Gx6RVVCVV0k2Gkg/7F5iss0Bu6hy3g1XXUCi
+         xvL+9lss/j/EfuGHgJZs9MLCHCL+uSx3jhjBN4w2uTjZw3Gorz6R/Kce5+SAFpr2llCo
+         1ECz79V7wYJbeKYrqxY0PnIKYwmBi3GayhduI6pOe5KYpRPsVqJCthFG1ZtoPzxccWkm
+         VNf0bCZQjSYJCVv2KmMttgTt3TST9rTBNP3Jp1vOoVxqa/ehjaso9JxYGPcg2+mH/0m1
+         9KDwgGUVTMATlT2TtcZC43JBPqmjwuYtSvxWH/l+JWuD9AHaVk4eZp5FfGf72MzZzGpG
+         whKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xUN3rGfqd0QTJZr6aZxtmVJn1us7qeeluWmJXj0Te7E=;
-        b=H0p5iZ+53kMUmjCUYJbr+c9mOdOG1fFJ9b7+yEy1mg04Rdn/mawGlaSomF++LUimQk
-         S0OmVGxjDuoxG74KuGF/j+ZMbXjpl+rs4Kdt6YLeWdXnBvcw/AjN9512CwG4u6J/uN6l
-         sAC5RLJLTwHK6qHW+vbqH4e0cX4ah+PLLqyezcg4t0rzmUbZdf4aJAiSw/WwE6uT7+bk
-         B6F4UiaCTq+VBeJK8Q2I36jNqUh7KwjnxYHoc/8uo1kzoaPuCjClwKtmpZwf9w0DckDE
-         cniYFhRk7PP8ZvyCnSO24vEzezGlff/T1sNpgOA1IdECOPDbemV7dnYBBD9bIqyA7Y6c
-         pesw==
-X-Gm-Message-State: APjAAAUxM7Lve0tvLs8zGfQ0Jmxw9ZYVrxW9C+Jk7LZTZEt6bLqkrsOL
-        ddxiz87EzDqTZa6Hbbs9P9SE4Ulo8GnY4ISD+XTnRw==
-X-Google-Smtp-Source: APXvYqxI9QdLGOMqq6QaCpjOk+V2l3LXtFs7IfnhUjP0TmSsF2jOR5CpH0EuMu4/BYNbPnekTo3AHs1xkdV1CNj9hNE=
-X-Received: by 2002:ab0:2759:: with SMTP id c25mr2903677uap.104.1575971518126;
- Tue, 10 Dec 2019 01:51:58 -0800 (PST)
+        bh=cBbBEnPUIIoW2OTGVU3g0EnMYCU75p2JMvnnrLqCOyA=;
+        b=tKGDsNPiodYvEaqUWHwvOAoR22Zeijm09njJ6mH8WfLI81tIZ7HdrIngP44E7u/jIT
+         A0A+roOROum7S9pvY2JWETEgzQXN7g79r+JAMwCrMk3C0vYcfSYNXZV+aJoPFZ/PWIwM
+         SBCJidiTYo1tT1XcwokdbYukzdZQRxzva0AHYCIc0xWanhK5ghd0Rr6InJ+6UymIfb4Z
+         FV496MYdQvRWVa5A4k5FXZjQlGwuN+Wj3XQ+h2kZIsZwn/R66auAZonoUy7ice+xqPGZ
+         SxWGH8XAbmNWhQFUlbb8MMKcKf+k0YaveKFD7fBUxqq8vo6HbLYTBFqbe0AveyK5LqUj
+         b+Ag==
+X-Gm-Message-State: APjAAAXDiaDbrAI+uMLldOyO1WDffZ2zEpcRFv/QhtrducNibj9B5rk1
+        fto1bUun4B4e/l6cm1sQEUglp4wBxwzZTCQHR9Ilfw==
+X-Google-Smtp-Source: APXvYqy0tPcfRrPqUT+wqLmJZOVLWIl9nnKy8avxTvgY9iiAaZYBwVPYvikhP55EtvU4At/IsV9f0l09cmygiEJBnoY=
+X-Received: by 2002:a67:2087:: with SMTP id g129mr24103910vsg.191.1575971508490;
+ Tue, 10 Dec 2019 01:51:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204071958.18553-1-chaotian.jing@mediatek.com>
-In-Reply-To: <20191204071958.18553-1-chaotian.jing@mediatek.com>
+References: <0101016ea738eb52-8c362755-205a-4383-9181-1a867e82eeed-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ea738eb52-8c362755-205a-4383-9181-1a867e82eeed-000000@us-west-2.amazonses.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 10:51:22 +0100
-Message-ID: <CAPDyKFo9Z2yj7zC5VOS-iX_LyavPp1A4n73eAp7VD-Q+dpoqpw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-To:     Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+Date:   Tue, 10 Dec 2019 10:51:12 +0100
+Message-ID: <CAPDyKFqdFc1RMNu38d7b+s2Bpr49v-w18frGsPSxsYf924HLWg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: Correct the offset and value for
+ DDR_CONFIG register
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>, hsinyi@google.com
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 08:20, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+On Tue, 26 Nov 2019 at 11:19, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
 >
-> there is a chance that always get response CRC error after HS200 tuning,
-> the reason is that need set CMD_TA to 2. this modification is only for
-> MT8173.
+> The DDR_CONFIG register offset got updated after a specific
+> minor version of sdcc V4. This offset change has not been properly
+> taken care of while updating register changes for sdcc V5.
 >
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> Correcting proper offset for this register.
+> Also updating this register value to reflect the recommended RCLK
+> delay.
+>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
 I have applied this for fixes, however it seems like this should also
 be tagged for stable, right?
@@ -86,34 +94,106 @@ be tagged for stable, right?
 Is there a specific commit this fixes or should we just find the
 version it applies to?
 
+
 Kind regards
 Uffe
 
 
 
 > ---
->  drivers/mmc/host/mtk-sd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mmc/host/sdhci-msm.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 >
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 189e42674d85..010fe29a4888 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -228,6 +228,7 @@
->  #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)  /* RW */
->  #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)  /* RW */
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index b75c82d..3d0bb5e 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -99,7 +99,7 @@
 >
-> +#define MSDC_PATCH_BIT1_CMDTA     (0x7 << 3)    /* RW */
->  #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
+>  #define CORE_PWRSAVE_DLL       BIT(3)
 >
->  #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
-> @@ -1881,6 +1882,7 @@ static int hs400_tune_response(struct mmc_host *mmc, u32 opcode)
+> -#define DDR_CONFIG_POR_VAL     0x80040853
+> +#define DDR_CONFIG_POR_VAL     0x80040873
 >
->         /* select EMMC50 PAD CMD tune */
->         sdr_set_bits(host->base + PAD_CMD_TUNE, BIT(0));
-> +       sdr_set_field(host->base + MSDC_PATCH_BIT1, MSDC_PATCH_BIT1_CMDTA, 2);
 >
->         if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
->             mmc->ios.timing == MMC_TIMING_UHS_SDR104)
+>  #define INVALID_TUNING_PHASE   -1
+> @@ -148,8 +148,9 @@ struct sdhci_msm_offset {
+>         u32 core_ddr_200_cfg;
+>         u32 core_vendor_spec3;
+>         u32 core_dll_config_2;
+> +       u32 core_dll_config_3;
+> +       u32 core_ddr_config_old; /* Applicable to sdcc minor ver < 0x49 */
+>         u32 core_ddr_config;
+> -       u32 core_ddr_config_2;
+>  };
+>
+>  static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
+> @@ -177,8 +178,8 @@ struct sdhci_msm_offset {
+>         .core_ddr_200_cfg = 0x224,
+>         .core_vendor_spec3 = 0x250,
+>         .core_dll_config_2 = 0x254,
+> -       .core_ddr_config = 0x258,
+> -       .core_ddr_config_2 = 0x25c,
+> +       .core_dll_config_3 = 0x258,
+> +       .core_ddr_config = 0x25c,
+>  };
+>
+>  static const struct sdhci_msm_offset sdhci_msm_mci_offset = {
+> @@ -207,8 +208,8 @@ struct sdhci_msm_offset {
+>         .core_ddr_200_cfg = 0x184,
+>         .core_vendor_spec3 = 0x1b0,
+>         .core_dll_config_2 = 0x1b4,
+> -       .core_ddr_config = 0x1b8,
+> -       .core_ddr_config_2 = 0x1bc,
+> +       .core_ddr_config_old = 0x1b8,
+> +       .core_ddr_config = 0x1bc,
+>  };
+>
+>  struct sdhci_msm_variant_ops {
+> @@ -253,6 +254,7 @@ struct sdhci_msm_host {
+>         const struct sdhci_msm_offset *offset;
+>         bool use_cdr;
+>         u32 transfer_mode;
+> +       bool updated_ddr_cfg;
+>  };
+>
+>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+> @@ -924,8 +926,10 @@ static int sdhci_msm_cdclp533_calibration(struct sdhci_host *host)
+>  static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
+>  {
+>         struct mmc_host *mmc = host->mmc;
+> -       u32 dll_status, config;
+> +       u32 dll_status, config, ddr_cfg_offset;
+>         int ret;
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>         const struct sdhci_msm_offset *msm_offset =
+>                                         sdhci_priv_msm_offset(host);
+>
+> @@ -938,8 +942,11 @@ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
+>          * bootloaders. In the future, if this changes, then the desired
+>          * values will need to be programmed appropriately.
+>          */
+> -       writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr +
+> -                       msm_offset->core_ddr_config);
+> +       if (msm_host->updated_ddr_cfg)
+> +               ddr_cfg_offset = msm_offset->core_ddr_config;
+> +       else
+> +               ddr_cfg_offset = msm_offset->core_ddr_config_old;
+> +       writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + ddr_cfg_offset);
+>
+>         if (mmc->ios.enhanced_strobe) {
+>                 config = readl_relaxed(host->ioaddr +
+> @@ -1899,6 +1906,9 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>                                 msm_offset->core_vendor_spec_capabilities0);
+>         }
+>
+> +       if (core_major == 1 && core_minor >= 0x49)
+> +               msm_host->updated_ddr_cfg = true;
+> +
+>         /*
+>          * Power on reset state may trigger power irq if previous status of
+>          * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
 > --
-> 2.18.0
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+>
