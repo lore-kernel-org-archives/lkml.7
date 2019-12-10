@@ -4,87 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88067C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F464C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5995120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536DA20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLJE3W (ORCPT
+        id S1726884AbfLJEcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:29:22 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:39810 "EHLO
+        Mon, 9 Dec 2019 23:32:04 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:39824 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbfLJE3V (ORCPT
+        with ESMTP id S1726691AbfLJEcE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 23:29:21 -0500
+        Mon, 9 Dec 2019 23:32:04 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 49291154F0CC5;
-        Mon,  9 Dec 2019 20:29:21 -0800 (PST)
-Date:   Mon, 09 Dec 2019 20:29:20 -0800 (PST)
-Message-Id: <20191209.202920.1031568566965416683.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 48685154F0CD6;
+        Mon,  9 Dec 2019 20:32:03 -0800 (PST)
+Date:   Mon, 09 Dec 2019 20:32:02 -0800 (PST)
+Message-Id: <20191209.203202.180894312618501297.davem@davemloft.net>
 To:     natechancellor@gmail.com
-Cc:     netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net: tulip: Adjust indentation in
- {dmfe,uli526x}_init_module
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] net: smc911x: Adjust indentation in
+ smc911x_phy_configure
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191209211623.44166-1-natechancellor@gmail.com>
-References: <20191209211623.44166-1-natechancellor@gmail.com>
+In-Reply-To: <20191209215027.10222-1-natechancellor@gmail.com>
+References: <20191209215027.10222-1-natechancellor@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Dec 2019 20:29:21 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Dec 2019 20:32:03 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
-Date: Mon,  9 Dec 2019 14:16:23 -0700
+Date: Mon,  9 Dec 2019 14:50:27 -0700
 
 > Clang warns:
 > 
-> ../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+> ../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
 > indentation; statement is not part of the previous 'if'
 > [-Wmisleading-indentation]
->         switch (mode) {
->         ^
-> ../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
-> statement is here
->         if (cr6set)
+>          if (!lp->ctl_rfduplx)
+>          ^
+> ../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
+> is here
+>         if (lp->ctl_rspeed != 100)
 >         ^
 > 1 warning generated.
 > 
-> ../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
-> indentation; statement is not part of the previous 'if'
-> [-Wmisleading-indentation]
->         switch(mode) {
->         ^
-> ../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
-> statement is here
->         if (cr6set)
->         ^
-> 1 warning generated.
+> This warning occurs because there is a space after the tab on this line.
+> Remove it so that the indentation is consistent with the Linux kernel
+> coding style and clang no longer warns.
 > 
-> This warning occurs because there is a space before the tab on these
-> lines. Remove them so that the indentation is consistent with the Linux
-> kernel coding style and clang no longer warns.
-> 
-> While we are here, adjust the default block in dmfe_init_module to have
-> a proper break between the label and assignment and add a space between
-> the switch and opening parentheses to avoid a checkpatch warning.
-> 
-> Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/795
+> Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/796
 > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Applied, but it's really crummy that the tool gets tripped up by the
-fact that a space preceeds the TAB.  It's what the code visually looks
-like, not what exact kinds of SPACE characters were used to get there.
+Applied.
