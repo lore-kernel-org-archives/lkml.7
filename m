@@ -2,94 +2,94 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C09C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68AC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4372073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08D820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQhie18D"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AtFIj0pZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfLJXVD (ORCPT
+        id S1727237AbfLJXXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:21:03 -0500
-Received: from mail-io1-f44.google.com ([209.85.166.44]:46947 "EHLO
-        mail-io1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJXVC (ORCPT
+        Tue, 10 Dec 2019 18:23:03 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:43078 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJXXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:21:02 -0500
-Received: by mail-io1-f44.google.com with SMTP id t26so9255386ioi.13;
-        Tue, 10 Dec 2019 15:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=foqkgB/JB6+t9GtkeI0/v69A3WTYRuMmhheGXZPoVyU=;
-        b=tQhie18DXLsqr3QaYFZA6shYyGcJ+iRyabhedxNyvH6IjbObZUxUQjzhi2jyk9mYb+
-         EL7ajBglWroU3sH0mh6mJittsTSrmOKQqZh7v9h5SWWdgWl8VUy3CIskfnpAgZuswAus
-         vLXEB4rvGNKXujmxKUHD4KeCCcZd3n8KlZi4xu4/vcHLIsnEV4e3wu3C1/YZlCLR5U0Q
-         +Wc9hGrCgO7KOzUpcy1DlenGfzGC1IJzbgt+vd0w7WT6Y5a10muqF2EogoumfRPzeVEs
-         B4qD/LGOw0nIKXKAIcoIF1m87qhvDH8eW5+RWNwob1EaThMCHw/uQcfhOszg+8KXbWyb
-         bxTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=foqkgB/JB6+t9GtkeI0/v69A3WTYRuMmhheGXZPoVyU=;
-        b=nHWbozfmAYippHIGhKyUS9FM3/lqG6zHUAR5l8fQaKuF2tJRN2wTDLU0ssFD2OO3HA
-         /WyK9Aj4WcfB3bxZj5MIU3XJm69+FfJ+vufzOREbnr4PVAmaKNI6V5+0zXwYV6ckiXyB
-         GHBHHiSapP6ssLznMvXukU52fSJGTTOnjO1icU4qemrS6IMq4M9h/N/9IwVIEREHrKKW
-         JxPj6G+SODxLDkO8fdIheEETiE5r4C3d9AJmJ1rGhI/EiXyJJW/UyLhKsonC8Z30B0AU
-         8IloFG5CmYNS4QJ+L4IOw1ckATD5LbKSoDpP9vMAjycSuphmLc+So3CCQ38RYt6J0NIj
-         54YA==
-X-Gm-Message-State: APjAAAVXpEIFQDGY+01Tcpyo6TReBp+lTNjFMvGTR7sBdl6ZIRrqNY72
-        tNcOz67Vjt3FX3YCAlLLH+oJ/VOqMp3whEep8ek=
-X-Google-Smtp-Source: APXvYqzYVyLjo70klJZxUmJnME71xKiN5+hJQHOQGSR2h3s+/POcE8veBRuwcVPYyp+N0Wog9Ozwzu4Z6ANoKYeVwYY=
-X-Received: by 2002:a05:6602:2346:: with SMTP id r6mr508394iot.133.1576020061746;
- Tue, 10 Dec 2019 15:21:01 -0800 (PST)
+        Tue, 10 Dec 2019 18:23:02 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C81CD20B7187;
+        Tue, 10 Dec 2019 15:23:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C81CD20B7187
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1576020181;
+        bh=IwjesaSjIEpWOT7ynG/Xbgg6ZKGL9pgenoKbV2q6g7U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AtFIj0pZTW3Hx8baUyJZNgJlKwVCHqk0JgEAfORoB1Ig+7wTL3Z+xEg252xhKXUHn
+         WpKnz8MLoEOt4VMwiw1H/qzFioq46Zk6Rr4kaFBZ+fiPbk7bf2tQp13QHoEvAswMw4
+         sJgAlHh3Wh83SR/ADhT6iy+dEOzCvUXUSaSx5d5s=
+Subject: Re: [PATCH v10 5/6] IMA: Add support to limit measuring keys
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+ <20191204224131.3384-6-nramas@linux.microsoft.com>
+ <1576017805.4579.44.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <07c231c9-509e-cd1f-9ea0-bfb20f9a0070@linux.microsoft.com>
+Date:   Tue, 10 Dec 2019 15:23:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191211101004.35db8a07@canb.auug.org.au>
-In-Reply-To: <20191211101004.35db8a07@canb.auug.org.au>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Wed, 11 Dec 2019 00:20:49 +0100
-Message-ID: <CAHpGcMKKwtxcaHRuhVWzRNLK=Cpw1sBd9zOKP-zTbgOstM7tzg@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the gfs2 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Steven Whitehouse <swhiteho@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1576017805.4579.44.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 12/10/19 2:43 PM, Mimi Zohar wrote:
 
-Am Mi., 11. Dez. 2019 um 00:10 Uhr schrieb Stephen Rothwell
-<sfr@canb.auug.org.au>:
-> Hi all,
->
-> After merging the gfs2 tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> fs/gfs2/lops.c: In function 'gfs2_find_jhead':
-> fs/gfs2/lops.c:536:13: warning: 'bio_chained' may be used uninitialized in this function [-Wmaybe-uninitialized]
->   536 |    if (!bio || (bio_chained && !off)) {
->       |        ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
->
-> Introduced by commit
->
->   1ee366c67176 ("gfs2: Another gfs2_find_jhead fix")
+>> +static bool ima_match_keyring(struct ima_rule_entry *rule,
+>> +			      const char *keyring, const struct cred *cred)
+>> +{
+>> +	char *keyrings, *next_keyring, *keyrings_ptr;
+>> +	bool matched = false;
+>> +
+>> +	/* If "keyrings=" is not specified all keys are measured. */
+> 
+> With the addiitonal "uid" support this isn't necessarily true any
+> more.
+> 
+> Mimi
 
-thanks. It's actually a false positive and I'm not getting this
-warning, but I'll make the code more explicit.
+Will move the check for uid ahead of the check for keyrings.
 
-Andreas
+if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
+	return false;
+
+> 
+>> +	if (!rule->keyrings)
+>> +		return true;
+>> +
+>> +	if (!keyring)
+>> +		return false;
+>> +
+>> +	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
+>> +		return false;
+>> +
+
+thanks,
+  -lakshmi
+
+
