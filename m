@@ -2,121 +2,132 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9B6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FCCC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94A320637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ2RcBVG"
+	by mail.kernel.org (Postfix) with ESMTP id BC5A22073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013855;
+	bh=8Nar7KQyexigtXQZAEJ9QBpT9ro7aQBOAsTgfZ6PZ/8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aw6oqoWexGaaUqfLxFuv6xrEvMMsv/TCkzXekbeMk6fJQLRPxsdBw4A91dNfGHXHz
+	 NkRTPcVPCk3g4Dd+Cto/bPmuRMZqKYuAoxd8LPizdIqzT8/Hp5rQfP9WnV/LuR7kzi
+	 okyjf8h9LNnKRhS195+FCxI9dA2fYWVAXtcgGaH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbfLJVh2 (ORCPT
+        id S1730108AbfLJVhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:37:28 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39351 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727617AbfLJVh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:37:26 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v16so17354550edy.6;
-        Tue, 10 Dec 2019 13:37:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DAqvBJfhNAOGF5MpGJ9HATnJQKl2CCNr6kYiDBl2DG4=;
-        b=nJ2RcBVGN5w/cHHhwNlitZ++xYkfcmWBQPzUx0q1WklcNfOFp4iBI8qLiaQgdH0xKz
-         VV0EES6LBWUqF5FsJv9B59d101Zskd2vjgXt+oASmPKcjX6ieRviRII079K5POvSNsqU
-         XqMMtkg68O4ohkJli8naxOPj8DFN6u+Lr+w9TnJrGXG+hgh7StBs7mvTCHaE98V/sLVK
-         7QqXcG3gywf/GtysF5T82g1xKztJA6yHwT4JeQyv9b2WfPt8SgUI54b2dfENvJEQa2iL
-         yIYsSlCtCOE43IfxR5tBuYIVYQVDyU3cnXkjmypLHVjxqisEyQrQAo9x/eaNvOWadIrr
-         UXMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DAqvBJfhNAOGF5MpGJ9HATnJQKl2CCNr6kYiDBl2DG4=;
-        b=G1SYksLvtR6FjhMHtYWLKcv57kSj2nuUeZleoYsTQUCwHcHn+4grxiLxVao806ogg6
-         4Bv59mGMDi37QrQQxlkxBWWvu5BP9mJEPvHAK6h9LSU9eYTDAZiXBdJTba2u2TSyAzBp
-         FDTMc5jUOdqvAHAXqrUunXVWCMuZ5LW6ozi8xKNnG28qeSJxxwH25vRSsYCgp9bXcHjD
-         5cNxbvydl9N+lqBF/kMxPooekAxS+bHqq0whmVvSJdtz/KxxQk2OoHZm9SId2umyCLjK
-         e76skuJj2OdwM5IqvVVwGo8PfW2B1FywKOFum+qcw1Gg5FnJYChkAqqTB0FVz75tj9xJ
-         alqg==
-X-Gm-Message-State: APjAAAV+yQJ9HaAAi1gBTVMGq2IQ41sCpzQC4GyabaaZpKAUqN+VqaLr
-        rAILl8h0i4xJf6tGo1Gh33aMsAJQ/KpOuwSjprU=
-X-Google-Smtp-Source: APXvYqxP8zj+d8UiYiYWLKUnX3/3yCG8sjv94TZFtkAfGBo9bO/cvbEXCYctDTnSBQi/mvtJEPNbH7RdQoDcHjWsaG0=
-X-Received: by 2002:a17:906:3052:: with SMTP id d18mr6270011ejd.86.1576013844298;
- Tue, 10 Dec 2019 13:37:24 -0800 (PST)
+        Tue, 10 Dec 2019 16:37:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730276AbfLJVfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:31 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF25B2467C;
+        Tue, 10 Dec 2019 21:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576013730;
+        bh=8Nar7KQyexigtXQZAEJ9QBpT9ro7aQBOAsTgfZ6PZ/8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gvcI/s+WOlPAp2QAOMOkDbEkCDDCt/2eINKuB60sC2qmEZk8I6haIYvZbgoVTLJun
+         A4YdzGcoM4C3OnG0saYRzYFNTAK7rLnfYpMlMmNIs85oVHhKmqnXzsht2H7frfiTmD
+         cmlgzSoUOJely4Ux2MDTu2A6ePTdDEVjBo3w+31A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 155/177] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
+Date:   Tue, 10 Dec 2019 16:31:59 -0500
+Message-Id: <20191210213221.11921-155-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191210203710.2987983-1-arnd@arndb.de>
-In-Reply-To: <20191210203710.2987983-1-arnd@arndb.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 10 Dec 2019 23:37:13 +0200
-Message-ID: <CA+h21hrJ45J2N4DD=pAtE8vN6hCjUYUq5vz17pY-7=TpkA51rA@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: ocelot: add NET_VENDOR_MICROSEMI dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-On Tue, 10 Dec 2019 at 22:37, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> Selecting MSCC_OCELOT_SWITCH is not possible when NET_VENDOR_MICROSEMI
-> is disabled:
->
-> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
->   Depends on [n]: NETDEVICES [=y] && ETHERNET [=n] && NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
->   Selected by [m]:
->   - NET_DSA_MSCC_FELIX [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && NET_DSA [=y] && PCI [=y]
->
-> Add a Kconfig dependency on NET_VENDOR_MICROSEMI, which also implies
-> CONFIG_NETDEVICES.
->
-> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
 
-This has been submitted before, here [0].
+Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
+adding MMC_CAP_ERASE to the TMIO mmc core:
 
-It isn't wrong, but in principle I agree with David that it is strange
-to put a "depends" relationship between a driver in drivers/net/dsa
-and the Kconfig vendor umbrella from drivers/net/ethernet/mscc ("why
-would the user care/need to enable NET_VENDOR_MICROSEMI to see the DSA
-driver" is a valid point to me). This is mainly because I don't
-understand the point of CONFIG_NET_VENDOR_* options, they're a bit
-tribalistic to my ears.
+On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
+ -- snip --
+ This test and due to the discussions with Wolfram and you in this
+ thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+ tmio variants, rather than just for this particular one.
 
-Nonetheless, alternatives may be:
-- Move MSCC_OCELOT_SWITCH core option outside of the
-NET_VENDOR_MICROSEMI umbrella, and make it invisible to menuconfig,
-just selectable from the 2 driver instances (MSCC_OCELOT_SWITCH_OCELOT
-and NET_DSA_MSCC_FELIX). MSCC_OCELOT_SWITCH has no reason to be
-selectable by the user anyway.
-- Remove NET_VENDOR_MICROSEMI altogether. There is a single driver
-under drivers/net/ethernet/mscc and it's already causing problems,
-it's ridiculous.
-- Leave it as it is. I genuinely ask: if the build system tells you
-that the build dependencies are not met, does it matter if it compiles
-or not?
+ In other words, set the cap in tmio_mmc_host_probe() should be fine,
+ as it seems none of the tmio variants supports HW busy detection at
+ this point.
+ -- snip --
 
-[0]: https://www.spinics.net/lists/netdev/msg614325.html
+Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
 
-Regards,
--Vladimir
+root@rcar-gen3:~# lsblk
+NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
+mmcblk0boot0 179:8    0    4M  1 disk
+mmcblk0boot1 179:16   0    4M  1 disk
+mmcblk1      179:24   0   30G  0 disk  <--- SD card
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
+real    0m8.659s
+user    0m0.001s
+sys     0m1.920s
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
+real    0m1.176s
+user    0m0.001s
+sys     0m0.124s
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/tmio_mmc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 35630ccbe9e5d..33c9ca8f14a97 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -1267,7 +1267,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host)
+ 			return ret;
+ 	}
+ 
+-	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
++	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+ 	mmc->caps2 |= pdata->capabilities2;
+ 	mmc->max_segs = pdata->max_segs ? : 32;
+ 	mmc->max_blk_size = 512;
+-- 
+2.20.1
+
