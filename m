@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EB2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A0C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F20120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521B220836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RjyYOYNM"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Ku9Nxyet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLJTeI (ORCPT
+        id S1727144AbfLJTer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:34:08 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:51230 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726071AbfLJTeI (ORCPT
+        Tue, 10 Dec 2019 14:34:47 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:44108 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726623AbfLJTeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 14:34:08 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6D88442D29;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 426DFC0BAB;
         Tue, 10 Dec 2019 19:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576006447; bh=4TZWon6MOey0x0LujXjOWRkAZwx8w/0T6xmIv7r2Tb8=;
+        t=1576006448; bh=vCs44WsolU5VcZ1RjvraNJ29UNvGkT8Makvl4mwtSgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=RjyYOYNMoD8iKAfUKpJiAHiwyklIXkyC9WzUf7h3c+OXWyYNWH3R4lFPCdLQOCI+K
-         Ycm2Gz/N2EJwk+lVSVUEH5vrexhyZwpIErUIr4An6p39oupqxJ0BMPCoymG0ghdBiV
-         oQAsfUTucZbDc0Apt2rHoVOptlhW+HPSHQm7t5xVxVK/mXPLeO/CXb+mgYnyLz4Id7
-         e4P0U1YXqMy5dFQ7oUWlkdP8uep1SvGxIz9emsSrC60M2W6yrWYszzIy+3iVtFLDXU
-         /HOeWKQST8XdD16/OJJG4UbbMazWyAsNhXTVjF+cuAyi11GHMf6XXAJh0Qsb07kaOj
-         D5+E7xvOdhDrg==
+        b=Ku9NxyetEALpDuGj9KjeXbHuofEbbAA11Lq8tx+orJPXVgu9iqvfoXZlhe+LxSsGk
+         8Y4KzGMeZXofkeJNcFMutWgyn4cy/ZyHunRGKEZrxIs9FvSwAPtWKHmoTTm7oBqDHN
+         Lnct2AzSXSMTQwRhUI2yJLFs0XBSmLxQ1NhfRumXXIjmwa1zr6JZIxIkDbwnsan7V/
+         aL4mEgD9rzxnYzRfJPsM06A3kU2J0YpjshLsBKJ4/63LCuWLNtDE4HxX0LwESwS5Tz
+         bHvQ6Yx6uDUiGgsndUTBYdwWHgQUVvj5TydNo/7OICkVK+2LYc/rFwdzYyEik4to9S
+         s3zbNPEL29hvA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 06D97A009F;
-        Tue, 10 Dec 2019 19:34:06 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id EA865A0096;
+        Tue, 10 Dec 2019 19:34:05 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 6/8] net: stmmac: RX buffer size must be 16 byte aligned
-Date:   Tue, 10 Dec 2019 20:33:58 +0100
-Message-Id: <9f57eff82b0349f4735007d237dfa644034da5eb.1576005975.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 4/8] net: stmmac: Only the last buffer has the FCS field
+Date:   Tue, 10 Dec 2019 20:33:56 +0100
+Message-Id: <bc4689a359d189c8ed1573aa6eecd81756a3277c.1576005975.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
 References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
@@ -65,8 +65,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to align the RX buffer size to at least 16 byte so that IP
-doesn't mis-behave. This is required by HW.
+Only the last received buffer contains the FCS field. Check for end of
+packet before trying to strip the FCS field.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -81,22 +81,25 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8c191e4d35d0..eb31d7fb321c 100644
+index 2ebac89049ed..8c191e4d35d0 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -46,7 +46,7 @@
- #include "dwxgmac2.h"
- #include "hwif.h"
- 
--#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
-+#define	STMMAC_ALIGN(x)		ALIGN_DOWN(ALIGN_DOWN(x, SMP_CACHE_BYTES), 16)
- #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
- 
- /* Module parameters */
+@@ -3644,8 +3644,9 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 		 * feature is always disabled and packets need to be
+ 		 * stripped manually.
+ 		 */
+-		if (unlikely(priv->synopsys_id >= DWMAC_CORE_4_00) ||
+-		    unlikely(status != llc_snap)) {
++		if (likely(!(status & rx_not_ls)) &&
++		    (likely(priv->synopsys_id >= DWMAC_CORE_4_00) ||
++		     unlikely(status != llc_snap))) {
+ 			if (buf2_len)
+ 				buf2_len -= ETH_FCS_LEN;
+ 			else
 -- 
 2.7.4
 
