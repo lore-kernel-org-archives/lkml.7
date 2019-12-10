@@ -2,78 +2,83 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1302EC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33AC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82A52073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30732073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="sThtOEeX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+y5aLUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfLJUd6 (ORCPT
+        id S1727045AbfLJUeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:33:58 -0500
-Received: from mail.nic.cz ([217.31.204.67]:51412 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLJUdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:33:54 -0500
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 5429F140AC8;
-        Tue, 10 Dec 2019 21:33:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1576010032; bh=gT9/qt/EE7APHbwGwmFdoeHh/5ij9tU8+0uQXcYhjVI=;
-        h=Date:From:To;
-        b=sThtOEeX+qYfIcojZT7f2Vbh9MTdECtF/Ctl0YngNsUBcL6Y7s6S5lCAiP0kfmx/v
-         KAyG5LPOqa6UrjRlit08uN0nTJHjzOo98m/IKDFtXdVfk1tYHqKKb1DttwKCg+MKk+
-         ufKzsCzDzfO82MDF5WYpvs/zZSe04O4Ms945Lx40=
-Date:   Tue, 10 Dec 2019 21:33:51 +0100
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Landen Chao <landen.chao@mediatek.com>, f.fainelli@gmail.com,
-        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of
- MT7531 switch
-Message-ID: <20191210213351.2df6acbf@nic.cz>
-In-Reply-To: <20191210163557.GC27714@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
-        <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
-        <20191210163557.GC27714@lunn.ch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 10 Dec 2019 15:34:17 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46041 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJUeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 15:34:17 -0500
+Received: by mail-il1-f194.google.com with SMTP id p8so17315786iln.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:34:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EINwPsE2o9b6h5y0t6kgOUNqky5nib0p/v1Xe6hDKmc=;
+        b=I+y5aLUWv90/bs4wDnkJybJ03d3qqe40pF4WwlPECm7/Bk82PnjnB33hEe8jy8woEB
+         zztHEiD2drxlz9mUkyz2bWQVt7/ee+xCb7eo1JNU69OsiTp5yFARbWF5QkNFGy3994Tc
+         lSHROKTc+7JyW2dUH1uMe0hPPeZrtA8U5MfvmLZMC6oVHo675XWSNWqHkUJMQ3H84SWP
+         4a1xrl/a7exXXUnOxl2BGMZvvCL12mKyF4MXsAfIzTGhN6E+HQ2YITU2+wR0OSfhKKfk
+         B2kkfvGSnMhpLsEU5T8BaZTgG24un45JrYhgHVbotUyNW13Y/8w4Yn+tkGoSjmSu6yV6
+         +DtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EINwPsE2o9b6h5y0t6kgOUNqky5nib0p/v1Xe6hDKmc=;
+        b=fQUVEKceFS32ZfVTzwE/X7ZfxHS35SwMHi6kAtiVF3sxkLWAV2U6PzNME9rk9INqK2
+         RhrWAUYAEc0pmhCevaD75QE5ZsLDE+t9liyjEzM3w4jmzKUgrFK1Oe/bBskan+yxzshW
+         MwK3JBmHI5a7dZgNIOax4b+KLpjskyJmuz1QI5k/hM4AsbDHqv9XTNRe5ZxiTk2RM2vd
+         hpKNL6pCCI3fav6DemE7n/GBFqUUlPLBxl4kAs5tHhmAvY+MXCkZjYZaGiOvGzOK+aj2
+         LvsIe1OhdxZ/44Oypv7gc0mgagn6xEAvtpCMoDsc9REq/JjKlToFMwfFq3/ztVVvob+J
+         AM3A==
+X-Gm-Message-State: APjAAAWddBr529ZJBWGZunWEmPoXfgsQAvaZnpCGINNyhB2Mta92qnj+
+        ECn5YPFeAtgj4qRcCMK/56LkHHCoeyD52AA5HRw=
+X-Google-Smtp-Source: APXvYqxzyYnXt1ev4ZSaP784KRn0QhAXKh+Y5dGO6ZcL+PEYLLJIMe9IZjwLGVd87ACUvB41iMQ8EMRIktW4tQDJ9D8=
+X-Received: by 2002:a92:4698:: with SMTP id d24mr37036359ilk.104.1576010056697;
+ Tue, 10 Dec 2019 12:34:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.3 at mail
-X-Virus-Status: Clean
+References: <20191210203149.7115-1-tiny.windzz@gmail.com> <20191210203149.7115-2-tiny.windzz@gmail.com>
+In-Reply-To: <20191210203149.7115-2-tiny.windzz@gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Wed, 11 Dec 2019 04:34:05 +0800
+Message-ID: <CAEExFWtjUSWvgn=zrci=mVTTnqjOcc1WRGSkSSZgR_PbWMv7+A@mail.gmail.com>
+Subject: Re: [PATCH 1/5] nvmem: sunxi_sid: convert to devm_platform_ioremap_resource
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        vz@mleia.com, khilman@baylibre.com,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        andriy.shevchenko@linux.intel.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        mans@mansr.com, treding@nvidia.com, suzuki.poulose@arm.com,
+        bgolaszewski@baylibre.com, tglx@linutronix.de
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 17:35:57 +0100
-Andrew Lunn <andrew@lunn.ch> wrote:
+There is no 5/5 in this patchset, a small mistake.
 
-> On Tue, Dec 10, 2019 at 04:14:40PM +0800, Landen Chao wrote:
-> > Add new support for MT7531:
-> > 
-> > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
-> > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
-> > port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
-> > or HSGMII in different HW sku.  
-> 
-> Hi Landen
-> 
-> Looking at the code, you seem to treat HSGMII as 2500Base-X. Is this
-> correct? Or is it SGMII over clocked to 2.5Gbps?
-> 
-> 	 Andrew
-
-How would that work? Would 10 and 100 be overclocked to 25 and 250?
+Thx,
+Yangtao
