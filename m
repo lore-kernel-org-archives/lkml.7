@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43E9C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3F9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6924C24682
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE2F24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011866;
-	bh=Uox/MUlOxAcA9VC8+NstKQ1ozhs/1ymmQvDGzA/Jz60=;
+	s=default; t=1576011870;
+	bh=AvGb7raIirwstg8kfXjUJzU+w5LDXx1ttWLfV2/55zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IgiAmw6mmqkay/aXSBDGbRfYgFVYndrmV6Qsml7RlvcLMKTRcZ2bNVGZkEBjS3mHp
-	 D9xjgOobdpjCJYmXvAKK3/AxJfxlLYjRMXn4nHBz469fdVzZmNNRGmCjuifcX+OjFv
-	 qV6C8/SbDgp4VRNYc/7VADIFIPuA3sA3qNL3Dpsk=
+	b=StkYTGg03FwcHUj5JcLmhTC/T5TmzmVAIwz6fDPhZQzsyzBTFaecDP71tEBu7vw26
+	 Nmj8ZbY2MiATe941KLmbiEHtYwP8Cb6Iq4pcsfJ5UGCwAoApTg8rkaMFS+8KTtvnJn
+	 bkJboyTl33HpazXz3bGQ62FCo2hQq1qy5TuW1+/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfLJVEZ (ORCPT
+        id S1727289AbfLJVE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:04:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbfLJVET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:19 -0500
+        id S1727168AbfLJVEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB701214AF;
-        Tue, 10 Dec 2019 21:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0E82467D;
+        Tue, 10 Dec 2019 21:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011858;
-        bh=Uox/MUlOxAcA9VC8+NstKQ1ozhs/1ymmQvDGzA/Jz60=;
+        s=default; t=1576011860;
+        bh=AvGb7raIirwstg8kfXjUJzU+w5LDXx1ttWLfV2/55zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AKFx/ejUEw+XR5d6yJH78LcF4TNL00BmvvWR6NfdNoH8sS3cItjq1XhFdygcEvAE8
-         vL2KQR9wVxGWb5ef6fkVIE05rk9QFTYG9hdB6bdTreo4tWf+acPfF69rFtNMLrrXqr
-         sUkiLWxsE4lf4R1Afh0rQjKR/WV2u1K4Z4ncITNg=
+        b=O+pOQ5kvJOM45DLs07Rc5gu9c/rTzWP5P8mFrKVTiahTbrA23ZxKb3b0UGFi4CENp
+         9jWPRJAXotSNIDY3eRei2C2HzOHMvVD8Wq2A+j4b8aM4u2u8+Zgg4as5t049qZfXwQ
+         O4UrGT8u2GJv+E6CDcjOv9/j2V3UJywae46vu9BQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 012/350] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Tue, 10 Dec 2019 15:58:24 -0500
-Message-Id: <20191210210402.8367-12-sashal@kernel.org>
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 014/350] drm/amdgpu: grab the id mgr lock while accessing passid_mapping
+Date:   Tue, 10 Dec 2019 15:58:26 -0500
+Message-Id: <20191210210402.8367-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -62,49 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Christian König <christian.koenig@amd.com>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+[ Upstream commit 6817bf283b2b851095825ec7f0e9f10398e09125 ]
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+Need to make sure that we actually dropping the right fence.
+Could be done with RCU as well, but to complicated for a fix.
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
-
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index 28347df78cff6..adb5ab9e34390 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -59,9 +59,9 @@ struct bh1750_chip_info {
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index 5251352f59228..7700c32dd7430 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -1034,10 +1034,8 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 		id->oa_base != job->oa_base ||
+ 		id->oa_size != job->oa_size);
+ 	bool vm_flush_needed = job->vm_needs_flush;
+-	bool pasid_mapping_needed = id->pasid != job->pasid ||
+-		!id->pasid_mapping ||
+-		!dma_fence_is_signaled(id->pasid_mapping);
+ 	struct dma_fence *fence = NULL;
++	bool pasid_mapping_needed;
+ 	unsigned patch_offset = 0;
+ 	int r;
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
+@@ -1047,6 +1045,12 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 		pasid_mapping_needed = true;
+ 	}
  
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
++	mutex_lock(&id_mgr->lock);
++	if (id->pasid != job->pasid || !id->pasid_mapping ||
++	    !dma_fence_is_signaled(id->pasid_mapping))
++		pasid_mapping_needed = true;
++	mutex_unlock(&id_mgr->lock);
++
+ 	gds_switch_needed &= !!ring->funcs->emit_gds_switch;
+ 	vm_flush_needed &= !!ring->funcs->emit_vm_flush  &&
+ 			job->vm_pd_addr != AMDGPU_BO_INVALID_OFFSET;
+@@ -1086,9 +1090,11 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 	}
+ 
+ 	if (pasid_mapping_needed) {
++		mutex_lock(&id_mgr->lock);
+ 		id->pasid = job->pasid;
+ 		dma_fence_put(id->pasid_mapping);
+ 		id->pasid_mapping = dma_fence_get(fence);
++		mutex_unlock(&id_mgr->lock);
+ 	}
+ 	dma_fence_put(fence);
+ 
 -- 
 2.20.1
 
