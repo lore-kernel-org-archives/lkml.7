@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955D7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4058DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7142053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153DA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015771;
-	bh=VJRtcpsfpAwpkoGFFGyFknZWq/Vw+SGLlryQ7+DE7Sc=;
+	s=default; t=1576015777;
+	bh=UGhY1xIRxw+VCwPGH7IYI4poCQU1DOo54vja+AWdE6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cJ96HK8cmFBxX6xUo07+IuZ3+1pia3d/uYN+YYirXjW12UMo+3pM+IL+4P/5m0XWz
-	 R8buF+PTOYwEaZtlIOgT8J1cpolqclMQ8juGSBYgar4bs0+4xpzptfY2dO8wSQL9l3
-	 B30RM/SZTW8n3uF+xnjlmE2K+M+MyK7U+BPbd3Gc=
+	b=DpHzklZQZJMkJPl8IuoDOToLK9DOUjXin0cqRjYIKGXi845BdxHQLOlAQRQQba6kz
+	 mdBpaN8MUXGEnQVN2FiIBfN5IZI721q81yxePKm4+ZePlqSG8UDtGc274/kjmTRAWj
+	 +SZOT9j1gNB8v0Ew6qtBnU/Mp+KjFBOaiElGM2xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbfLJWJa (ORCPT
+        id S1728829AbfLJWE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35354 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfLJWE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:29 -0500
+        id S1728703AbfLJWEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B18F20838;
-        Tue, 10 Dec 2019 22:04:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B9320828;
+        Tue, 10 Dec 2019 22:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015468;
-        bh=VJRtcpsfpAwpkoGFFGyFknZWq/Vw+SGLlryQ7+DE7Sc=;
+        s=default; t=1576015459;
+        bh=UGhY1xIRxw+VCwPGH7IYI4poCQU1DOo54vja+AWdE6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8ctW28QztQldPAcvIgk5fDFzseZkXwkjn8KJWRAjGVh3nWzccMupCsmr7qhs9M0z
-         Zhpo7Iw2N91yW4F+1CVIy4QeU8BQnuevi25O2W2CvzTKrfHV0At5XEUdxeQFCplmZW
-         5GrLB4fr8yx0WdktX/pxyY+Mo/cdW7xSGRE4KtIg=
+        b=dV9ch+RmZVALsIwOv1gHceZOAeN+lznZ7xwU357rsj7Qs8JC75GpBao5VuykV5mBC
+         0AvT+J80DyIKx6lOvozUfWoDreDrb8fYcIvWV5a2kqQfs3Nm4usfgTxet4nCJILss9
+         8D9ziGj0v0dUP4Hl55qV4ygLzUk+k4u+ck5Pud8M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 074/130] ixgbe: protect TX timestamping from API misuse
-Date:   Tue, 10 Dec 2019 17:02:05 -0500
-Message-Id: <20191210220301.13262-74-sashal@kernel.org>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 066/130] s390/mm: add mm_pxd_folded() checks to pxd_free()
+Date:   Tue, 10 Dec 2019 17:01:57 -0500
+Message-Id: <20191210220301.13262-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,44 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
+[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
 
-HW timestamping can only be requested for a packet if the NIC is first
-setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
-driver still allowed TX packets to request HW timestamping. In this
-situation, we see 'clearing Tx Timestamp hang' noise in the log.
+Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
+page tables. This is not an issue so far, as those functions will actually
+never be called, since no code will reach them when page tables are folded.
 
-Fix this by checking that the NIC is configured for HW TX timestamping
-before accepting a HW TX timestamping request.
+In order to avoid future issues, and to make the s390 code more similar to
+other architectures, add mm_pxd_folded() checks, similar to how it is done
+in pxd_free_tlb().
 
-Similar-to:
-   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
-   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add tests validating architecture
+page table helpers").
 
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 4801d96c4fa91..0edfd199937d5 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -8379,7 +8379,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
+index bbe99cb8219d9..11857fea993c5 100644
+--- a/arch/s390/include/asm/pgalloc.h
++++ b/arch/s390/include/asm/pgalloc.h
+@@ -70,7 +70,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
+ 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
+ 	return (p4d_t *) table;
+ }
+-#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
++
++static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
++{
++	if (!mm_p4d_folded(mm))
++		crst_table_free(mm, (unsigned long *) p4d);
++}
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	    adapter->ptp_clock) {
--		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
-+		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
-+		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
- 					   &adapter->state)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
+ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+ {
+@@ -79,7 +84,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+ 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
+ 	return (pud_t *) table;
+ }
+-#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
++
++static inline void pud_free(struct mm_struct *mm, pud_t *pud)
++{
++	if (!mm_pud_folded(mm))
++		crst_table_free(mm, (unsigned long *) pud);
++}
+ 
+ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
+ {
+@@ -97,6 +107,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
+ 
+ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ {
++	if (mm_pmd_folded(mm))
++		return;
+ 	pgtable_pmd_page_dtor(virt_to_page(pmd));
+ 	crst_table_free(mm, (unsigned long *) pmd);
+ }
 -- 
 2.20.1
 
