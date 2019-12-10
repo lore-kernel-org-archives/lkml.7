@@ -2,103 +2,79 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDD5C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC5BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F101D2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20542053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfLJKRr (ORCPT
+        id S1727486AbfLJKSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:17:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48892 "EHLO mx1.suse.de"
+        Tue, 10 Dec 2019 05:18:12 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:38158 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfLJKRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:17:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99CB6AD4A;
-        Tue, 10 Dec 2019 10:17:42 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8681F1E0B23; Tue, 10 Dec 2019 11:17:38 +0100 (CET)
-Date:   Tue, 10 Dec 2019 11:17:38 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>, stable@vger.kernel.org
-Subject: Re: [PATCH v8 17/26] media/v4l2-core: set pages dirty upon releasing
- DMA buffers
-Message-ID: <20191210101738.GE1551@quack2.suse.cz>
-References: <20191209225344.99740-1-jhubbard@nvidia.com>
- <20191209225344.99740-18-jhubbard@nvidia.com>
- <20191209165627.bf657cb8fdf660e8f91e966c@linux-foundation.org>
+        id S1727225AbfLJKSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:18:12 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9A84CF59EDAA5FFC5A7D;
+        Tue, 10 Dec 2019 18:18:09 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 10 Dec 2019 18:18:02 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <claudiu.manoil@nxp.com>, <davem@davemloft.net>, <po.liu@nxp.com>,
+        <vladimir.oltean@nxp.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] enetc: remove variable 'tc_max_sized_frame' set but not used
+Date:   Tue, 10 Dec 2019 18:24:50 +0800
+Message-ID: <1575973490-88354-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209165627.bf657cb8fdf660e8f91e966c@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-12-19 16:56:27, Andrew Morton wrote:
-> On Mon, 9 Dec 2019 14:53:35 -0800 John Hubbard <jhubbard@nvidia.com> wrote:
-> 
-> > After DMA is complete, and the device and CPU caches are synchronized,
-> > it's still required to mark the CPU pages as dirty, if the data was
-> > coming from the device. However, this driver was just issuing a
-> > bare put_page() call, without any set_page_dirty*() call.
-> > 
-> > Fix the problem, by calling set_page_dirty_lock() if the CPU pages
-> > were potentially receiving data from the device.
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Cc: <stable@vger.kernel.org>
-> 
-> What are the user-visible effects of this change?
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Presumably loss of captured video data if the page writeback hits in the
-wrong moment (i.e., after the page was faulted in but before the video HW
-stored data in the page) and the page then gets evicted from the page cache.
+drivers/net/ethernet/freescale/enetc/enetc_qos.c: In function enetc_setup_tc_cbs:
+drivers/net/ethernet/freescale/enetc/enetc_qos.c:195:6: warning: variable tc_max_sized_frame set but not used [-Wunused-but-set-variable]
 
-								Honza
+Fixes: c431047c4efe ("enetc: add support Credit Based Shaper(CBS) for hardware offload")
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+---
+ drivers/net/ethernet/freescale/enetc/enetc_qos.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index 2e99438..9190ffc 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -192,7 +192,6 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data)
+ 	u32 hi_credit_bit, hi_credit_reg;
+ 	u32 max_interference_size;
+ 	u32 port_frame_max_size;
+-	u32 tc_max_sized_frame;
+ 	u8 tc = cbs->queue;
+ 	u8 prio_top, prio_next;
+ 	int bw_sum = 0;
+@@ -250,7 +249,7 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data)
+ 		return -EINVAL;
+ 	}
+ 
+-	tc_max_sized_frame = enetc_port_rd(&si->hw, ENETC_PTCMSDUR(tc));
++	enetc_port_rd(&si->hw, ENETC_PTCMSDUR(tc));
+ 
+ 	/* For top prio TC, the max_interfrence_size is maxSizedFrame.
+ 	 *
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.7.4
+
