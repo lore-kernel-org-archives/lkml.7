@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517BEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5730DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26301207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277B8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017696;
-	bh=3D4BLrw6nIRMZyEUJCGiVCsjqBnckI5Hde+T4/No4ww=;
+	s=default; t=1576017703;
+	bh=Ah1sPJFaHwnwSuWPNyhrZOUUCvu2shaZUN7yagnrW98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x24/kEJR5+tuIoRh10GjN4BzOpR+6h3k5MMG2imrSSfBMltKIxpjffVaS8jqaTqK6
-	 uRk5DlqLGYMZb04Umr4EvJUjrYuFD7dbHZC0c9ZX2izM2G1n86FEO+vWrLN2cM2jac
-	 BbIonxqFI0JPaVHgyJktxR3fBf8GczJ6SGnmyYvg=
+	b=QvsFpphwvQsRIeZDGW5kRc1J0S1Vb4DDZS4A84d+qW9CRDpjNu0viaeptX/0Z/xwh
+	 afOJeGdZ6dTrP19Y7sTFnSxKI8ba3U6pnDWMLPg+iKsROOSAXfqUSf6328Un4vY2+o
+	 oaQf97+uN82wLWzhthN91HeMaIcYGrYb4GXcb+G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfLJWlf (ORCPT
+        id S1730370AbfLJWll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:41:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbfLJWbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:47 -0500
+        id S1728787AbfLJWbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6BD1214D8;
-        Tue, 10 Dec 2019 22:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 702D221D7D;
+        Tue, 10 Dec 2019 22:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017106;
-        bh=3D4BLrw6nIRMZyEUJCGiVCsjqBnckI5Hde+T4/No4ww=;
+        s=default; t=1576017103;
+        bh=Ah1sPJFaHwnwSuWPNyhrZOUUCvu2shaZUN7yagnrW98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4bZz5Ol5Lpd0Kr7nv/2CqDGxQosZpZijKsTn2ox2uqDe2D/WmsHuu61Ox2Driagt
-         Zp7PYBVoLN+yoWphM1NJrqQuGkFobfQxqlvTl1/8yXtGtcK4T1o36lyi8Rz5Rs5UPc
-         Q3qJUjqQgNH8YUZ96xrmXFOEMaEV8Gw5ZJ/C0ukg=
+        b=nE59gkg8fgPuTQfd97SFNINnK8Ncg6hQ9sUHukId5kgAM9jJlwLXszCDI0Lc/1MZw
+         5+nbVbOph1KZ/iWgJ21r7VoagSSJxjU0ydZojlnF5AH8xYygkLPA6/Dd1OV1F1iM4X
+         DXzqa/FCU5+S74CgKrX7MSQBH6DFilKKcaDrtLjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 60/91] perf probe: Return a better scope DIE if there is no best scope
-Date:   Tue, 10 Dec 2019 17:30:04 -0500
-Message-Id: <20191210223035.14270-60-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 57/91] perf probe: Fix to show inlined function callsite without entry_pc
+Date:   Tue, 10 Dec 2019 17:30:01 -0500
+Message-Id: <20191210223035.14270-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -65,80 +63,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit c701636aeec4c173208697d68da6e4271125564b ]
+[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
 
-Make find_best_scope() returns innermost DIE at given address if there
-is no best matched scope DIE. Since Gcc sometimes generates intuitively
-strange line info which is out of inlined function address range, we
-need this fixup.
+Fix 'perf probe --line' option to show inlined function callsite lines
+even if the function DIE has only ranges.
 
-Without this, sometimes perf probe failed to probe on a line inside an
-inlined function:
+Without this:
 
-  # perf probe -D ksys_open:3
-  Failed to find scope of probe point.
-    Error: Failed to add events.
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                        __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
-With this fix, 'perf probe' can probe it:
+With this patch:
 
-  # perf probe -D ksys_open:3
-  p:probe/ksys_open _text+25707308
-  p:probe/ksys_open_1 _text+25710596
-  p:probe/ksys_open_2 _text+25711114
-  p:probe/ksys_open_3 _text+25711343
-  p:probe/ksys_open_4 _text+25714058
-  p:probe/ksys_open_5 _text+2819653
-  p:probe/ksys_open_6 _text+2819701
+  # perf probe -L amd_put_event_constraints
+  ...
+      2  {
+      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+      4                 __amd_put_nb_event_constraints(cpuc, event);
+      5  }
 
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+                          __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -L amd_put_event_constraints
+  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
+        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
+                                                struct perf_event *event)
+        2  {
+        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
+        4                 __amd_put_nb_event_constraints(cpuc, event);
+        5  }
+
+           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
+           PMU_FORMAT_ATTR(umask, "config:8-15"   );
+
+  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  Added new event:
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+
+  [root@quaco ~]#
+
+  [root@quaco ~]# perf probe -l
+    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf trace -e probe:*
+  ^C[root@quaco ~]#
+
+Ok, Intel system here... :-)
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 440f0a92ade65..6ca804a01cf9f 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -764,6 +764,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
- 	return 0;
- }
- 
-+/* Return innermost DIE */
-+static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
-+{
-+	struct find_scope_param *fsp = data;
-+
-+	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
-+	fsp->found = true;
-+	return 1;
-+}
-+
- /* Find an appropriate scope fits to given conditions */
- static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- {
-@@ -775,8 +785,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- 		.die_mem = die_mem,
- 		.found = false,
- 	};
-+	int ret;
- 
--	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
-+	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
-+				   &fsp);
-+	if (!ret && !fsp.found)
-+		cu_walk_functions_at(&pf->cu_die, pf->addr,
-+				     find_inner_scope_cb, &fsp);
- 
- 	return fsp.found ? die_mem : NULL;
- }
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 574ba3ac4fbad..3aea343c71798 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -683,7 +683,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
+ 		fname = die_get_call_file(in_die);
+ 		lineno = die_get_call_lineno(in_die);
+-		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
++		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
+ 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
 -- 
 2.20.1
 
