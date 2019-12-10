@@ -2,147 +2,94 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114AEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5DAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CDD2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2A520652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfLJUeZ (ORCPT
+        id S1726911AbfLJUgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:34:25 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:47468 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJUeY (ORCPT
+        Tue, 10 Dec 2019 15:36:17 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:47765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJUgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:34:24 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 960AF20061;
-        Tue, 10 Dec 2019 21:34:20 +0100 (CET)
-Date:   Tue, 10 Dec 2019 21:34:19 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, lee.jones@linaro.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sandeep Sheriker Mallikarjun 
-        <sandeepsheriker.mallikarjun@microchip.com>
-Subject: Re: [PATCH 5/5] Revert "drm: atmel-hlcdc: enable sys_clk during
- initalization."
-Message-ID: <20191210203419.GB24756@ravnborg.org>
-References: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
- <1575984287-26787-6-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 10 Dec 2019 15:36:16 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M2ep5-1iiuph1YVD-004DY0; Tue, 10 Dec 2019 21:35:54 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf: Fix build in minimal configurations, again
+Date:   Tue, 10 Dec 2019 21:35:46 +0100
+Message-Id: <20191210203553.2941035-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1575984287-26787-6-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XYAwZIGsAAAA:8
-        a=vRqltxJg2XVFi9nfVjoA:9 a=CjuIK1q_8ugA:10 a=E8ToXWR_bxluHZ7gmE-Z:22
-        a=pHzHmUro8NiASowvMSCR:22 a=Ew2E2A-JSTLzCXPT_086:22
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/TPNkN7ip+x2EGFaeArJV7t8UOMDz3Xt3D+KTG86o+YtHi7AQpl
+ EA0traGRcVUYNiVhb1WcqtyedHFK/G7uo0ODPsfSwvljgdSlfpiB9jNCLcGrp8AhFzBC3Rd
+ 4nUPKrnESghS/cdlCX+dbI/zA0oHna+X0b/mFXnE8c9EQLoI9fPJU9FDHyh3lXC7+LwYcnO
+ MgvBxcOH6E8fFfruQkYlA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bT0fWJOkfpk=:6CchuXFwP8SMBieEroZBrH
+ AEk/STZiwVmNZ6TG+ImhFDC8ApYwPA7+2PF1wJ1oF4yezz4fciDC2lAIcsYU8l9tOdKyaAspc
+ 0SV4G8rpDiBjXWCLZFHS7Z0Te6aJKDsHTnwW5S830ljYf1BSx2ot7TrIb+leoxWvV/rJpv7G6
+ s93O3GFciGFrMcGQvg/4y5kuZTog+nYzBYsYTkoMhg94yai9Lt1IRXZ+Hfqgwboq+fyK9dxlB
+ l9BeW0HRcPSCTz/Ffv3pRWOc8grqW1Ch9/qcx8X/MvZc6NZI5Q0pkb9C1F3Luz2JswPZotGUe
+ 3b2aLkC6+GHufoBizFdA/b0KJSMyKqrgfbX/X/ZsxY1LNOZggZZ7D4Azve0M5vAtt9elY0gA9
+ 1O8BK9hMoUxBG7rBjdE86VP0HDrKI3nYXD6GFOXW1asqP8X0sPceT2JqFJ0WORXaDcISz8cMK
+ Ql2klZPu/IBSMdURuGUq/MX7eul0lx+jgH4enSmzY7dZ0A1LiJ9vyGUrwdLbj9qrwmyqRc+kg
+ TH7oDzkvFT7pPOAuqi3JXAyT2MEIRPqIp7Lg3RW6MlfCM+IO1BmLFprg6nq4n9FiNKMEZN+Jc
+ fwQldPMpfVPv/oy+cOmzm3pR+g+W/VRoQvQtsNui5r/0YTD6VxIC3t5mfw9z41bzv60Cdm+Ur
+ KrxfaMaRqcW23Ic55KNRGxmoqmwoIfzyZnL0e85ry9EBbcgd/hCYNDkuvB74++T31XmWyNWdZ
+ MsT72djQzrEtDUsHBD7Tznyn0vpyOO9cMJpdu1OWpNwJfp/kDX9ISul2HBStsFU+t+lf3z5xB
+ 8qrhMqfuRGHL0wlzT9vDVAF2ZruLF9m1EUVzvrSuay9XrZLsyZR0d53z/apMy4yDL2M51VGDd
+ 0BQYnKMJ8IWxWvoy3Jfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cladiu
+Building with -Werror showed another failure:
 
-On Tue, Dec 10, 2019 at 03:24:47PM +0200, Claudiu Beznea wrote:
-> This reverts commit d2c755e66617620b729041c625a6396c81d1231c.
-> ("drm: atmel-hlcdc: enable sys_clk during initalization."). With
-> commit "drm: atmel-hlcdc: enable clock before configuring timing engine"
-> there is no need for this patch. Code is also simpler.
-> 
-> Cc: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+kernel/bpf/btf.c: In function 'btf_get_prog_ctx_type.isra.31':
+kernel/bpf/btf.c:3508:63: error: array subscript 0 is above array bounds of 'u8[0]' {aka 'unsigned char[0]'} [-Werror=array-bounds]
+  ctx_type = btf_type_member(conv_struct) + bpf_ctx_convert_map[prog_type] * 2;
 
-Getting further in the patches tells me you looked at the
-patch I referenced in previous mail.
-Please squash the two patches together - that would make it
-easier to follow what is done.
+I don't actually understand why the array is empty, but a similar
+fix has addressed a related problem, so I suppose we can do the
+same thing here.
 
-With the two patches applied sysclk is enabled only in mode_set_nofb()
-and atomic_enable(). And disabled in atomic_disable().
-This is simpler and we drop the conditionals. Also good.
-So the end result looks OK.
+Fixes: ce27709b8162 ("bpf: Fix build in minimal configurations")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/bpf/btf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	Sam
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 7d40da240891..ed2075884724 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -3470,6 +3470,7 @@ static u8 bpf_ctx_convert_map[] = {
+ 	[_id] = __ctx_convert##_id,
+ #include <linux/bpf_types.h>
+ #undef BPF_PROG_TYPE
++	0, /* avoid empty array */
+ };
+ #undef BPF_MAP_TYPE
+ 
+-- 
+2.20.0
 
-> ---
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 +------------------
->  1 file changed, 1 insertion(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> index 8dc917a1270b..112aa5066cee 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> @@ -721,18 +721,10 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
->  	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
->  	dev->dev_private = dc;
->  
-> -	if (dc->desc->fixed_clksrc) {
-> -		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
-> -		if (ret) {
-> -			dev_err(dev->dev, "failed to enable sys_clk\n");
-> -			goto err_destroy_wq;
-> -		}
-> -	}
-> -
->  	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
->  	if (ret) {
->  		dev_err(dev->dev, "failed to enable periph_clk\n");
-> -		goto err_sys_clk_disable;
-> +		goto err_destroy_wq;
->  	}
->  
->  	pm_runtime_enable(dev->dev);
-> @@ -768,9 +760,6 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
->  err_periph_clk_disable:
->  	pm_runtime_disable(dev->dev);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> -err_sys_clk_disable:
-> -	if (dc->desc->fixed_clksrc)
-> -		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  
->  err_destroy_wq:
->  	destroy_workqueue(dc->wq);
-> @@ -795,8 +784,6 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
->  
->  	pm_runtime_disable(dev->dev);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> -	if (dc->desc->fixed_clksrc)
-> -		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  	destroy_workqueue(dc->wq);
->  }
->  
-> @@ -910,8 +897,6 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
->  	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
->  	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> -	if (dc->desc->fixed_clksrc)
-> -		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  
->  	return 0;
->  }
-> @@ -921,8 +906,6 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
->  	struct drm_device *drm_dev = dev_get_drvdata(dev);
->  	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
->  
-> -	if (dc->desc->fixed_clksrc)
-> -		clk_prepare_enable(dc->hlcdc->sys_clk);
->  	clk_prepare_enable(dc->hlcdc->periph_clk);
->  	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
->  
-> -- 
-> 2.7.4
