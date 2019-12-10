@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE1EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D31C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAB0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199B2207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013009;
-	bh=oxzgVn+qO7Gepr5CTlyp82xwEAlkCGtf+u+GmhSRmhw=;
+	s=default; t=1576013014;
+	bh=4v+wu3+/i+OF4T0mA3aDC6lXJenOvIh7tni3jmpi+V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTk7GfSg8lfMHlljofBaCOUS0NcWr/vpdXurTCDXeinKMicU6HuklGm7/oS3Os/bL
-	 AbtQ4W9um0nzzSv9wTHAz/D9nLYT5H3yyQEYVT2nBE0BfeXT4T9AYmN3LNkJeKIiYp
-	 z/8vSpUYN25e6pnmlgIrPeWW1qUfJ1qxZPIj/Yow=
+	b=AkCmJcJDr8B6DpPccQXZFUeEIgCEfI9ywTeGKfOw78+Ndf8yAYuPSSTlLXS3BiZ2v
+	 zDIA+MCPGekBWiNvTFKqBUrOWeDoW85KM/lNUPL8+gvo2A0seIUeLBHp3uaLqILz7M
+	 NwZqFoT8z+fyE+ELob7RkTarPmyKHYPnP7PH49+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfLJVX2 (ORCPT
+        id S1727441AbfLJVLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:23:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33596 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfLJVLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:11 -0500
+        id S1728640AbfLJVK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83AE5246A4;
-        Tue, 10 Dec 2019 21:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEFF246A2;
+        Tue, 10 Dec 2019 21:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012271;
-        bh=oxzgVn+qO7Gepr5CTlyp82xwEAlkCGtf+u+GmhSRmhw=;
+        s=default; t=1576012258;
+        bh=4v+wu3+/i+OF4T0mA3aDC6lXJenOvIh7tni3jmpi+V8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nI+YMaq28yeXdd9fPKYczo/xchlC/LOwlgFa85LOGD5ymAasMlJ+UkiyqA+BEolZN
-         tRV8OOsRHlYH7DLpg1z/mQwksCYNrx9Sn7GomBIGAdaDCWr4kJWw78bFpTwdVHSCXA
-         mpUauBVVbHO7K0XWoV5lFGLozbUoTx2ra8wCwrWI=
+        b=mYvHmgM0m4k/pbq6/M4OkpYxbdB9dW1r3mvswDCNSMCsLcaPkE8Br11VUY8avUOZF
+         /EpovlqrKiHrFW/VNaMKoPFNl4yCq8f+8bl1xGu+YFU8dq3oxBWjbmNlYPeCI8bNUA
+         +5q/l8jpakLw4aGv25hoNwh91Z8bPtb0Wg6HkmEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 216/350] drm: msm: a6xx: fix debug bus register configuration
-Date:   Tue, 10 Dec 2019 16:05:21 -0500
-Message-Id: <20191210210735.9077-177-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 204/350] nvme: introduce "Command Aborted By host" status code
+Date:   Tue, 10 Dec 2019 16:05:09 -0500
+Message-Id: <20191210210735.9077-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,67 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 7f4009c4bbea4438b50f3b12d1c57da3f5cd8db3 ]
+[ Upstream commit 2dc3947b53f573e8a75ea9cbec5588df88ca502e ]
 
-Fix the cx debugbus related register configuration, to collect accurate
-bus data during gpu snapshot. This helps with complete snapshot dump
-and also complete proper GPU recovery.
+Fix the status code of canceled requests initiated by the host according
+to TP4028 (Status Code 0x371):
+"Command Aborted By host: The command was aborted as a result of host
+action (e.g., the host disconnected the Fabric connection)."
 
-Fixes: 1707add81551 ("drm/msm/a6xx: Add a6xx gpu state")
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/339165
+Also in a multipath environment, unless otherwise specified, errors of
+this type (path related) should be retried using a different path, if
+one is available.
+
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c | 24 ++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/nvme/host/core.c      | 2 +-
+ drivers/nvme/host/multipath.c | 1 +
+ include/linux/nvme.h          | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
-index e686331fa0898..691c1a277d91b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
-@@ -352,26 +352,26 @@ static void a6xx_get_debugbus(struct msm_gpu *gpu,
- 		cxdbg = ioremap(res->start, resource_size(res));
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fa7ba09dca771..393913e2fb233 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -313,7 +313,7 @@ bool nvme_cancel_request(struct request *req, void *data, bool reserved)
+ 	if (blk_mq_request_completed(req))
+ 		return true;
  
- 	if (cxdbg) {
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_CNTLT,
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_CNTLT,
- 			A6XX_DBGC_CFG_DBGBUS_CNTLT_SEGT(0xf));
+-	nvme_req(req)->status = NVME_SC_HOST_PATH_ERROR;
++	nvme_req(req)->status = NVME_SC_HOST_ABORTED_CMD;
+ 	blk_mq_complete_request(req);
+ 	return true;
+ }
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index e0f064dcbd021..132ade51ee877 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -95,6 +95,7 @@ void nvme_failover_req(struct request *req)
+ 		}
+ 		break;
+ 	case NVME_SC_HOST_PATH_ERROR:
++	case NVME_SC_HOST_ABORTED_CMD:
+ 		/*
+ 		 * Temporary transport disruption in talking to the controller.
+ 		 * Try to send on a new path.
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index f61d6906e59d1..a260cd754f28b 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -1368,6 +1368,7 @@ enum {
+ 	NVME_SC_ANA_INACCESSIBLE	= 0x302,
+ 	NVME_SC_ANA_TRANSITION		= 0x303,
+ 	NVME_SC_HOST_PATH_ERROR		= 0x370,
++	NVME_SC_HOST_ABORTED_CMD	= 0x371,
  
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_CNTLM,
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_CNTLM,
- 			A6XX_DBGC_CFG_DBGBUS_CNTLM_ENABLE(0xf));
- 
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_IVTL_0, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_IVTL_1, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_IVTL_2, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_IVTL_3, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_IVTL_0, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_IVTL_1, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_IVTL_2, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_IVTL_3, 0);
- 
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_BYTEL_0,
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_BYTEL_0,
- 			0x76543210);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_BYTEL_1,
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_BYTEL_1,
- 			0xFEDCBA98);
- 
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_MASKL_0, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_MASKL_1, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_MASKL_2, 0);
--		cxdbg_write(cxdbg, REG_A6XX_DBGC_CFG_DBGBUS_MASKL_3, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_MASKL_0, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_MASKL_1, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_MASKL_2, 0);
-+		cxdbg_write(cxdbg, REG_A6XX_CX_DBGC_CFG_DBGBUS_MASKL_3, 0);
- 	}
- 
- 	a6xx_state->debugbus = state_kcalloc(a6xx_state,
+ 	NVME_SC_CRD			= 0x1800,
+ 	NVME_SC_DNR			= 0x4000,
 -- 
 2.20.1
 
