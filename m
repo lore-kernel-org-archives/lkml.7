@@ -2,99 +2,92 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C302C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FB5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394B520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235C1206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfLJIJS (ORCPT
+        id S1726975AbfLJIJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:09:18 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46632 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfLJIJR (ORCPT
+        Tue, 10 Dec 2019 03:09:51 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35719 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfLJIJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:09:17 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a124so8951104oii.13;
-        Tue, 10 Dec 2019 00:09:17 -0800 (PST)
+        Tue, 10 Dec 2019 03:09:50 -0500
+Received: by mail-ot1-f68.google.com with SMTP id o9so14758937ote.2;
+        Tue, 10 Dec 2019 00:09:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=npgnC/M6weBM9U5t1QrqcgCAOt54Yrn9ohY0tdJFDi8=;
-        b=imJ8gBKuldqCO7Nt0OP4JEBiipOJhRi0phkd8kGYDAA2hWgoT88e0yhQnZhSeq0J8E
-         UdpfuW7emxP1usvpipAgT/BwtSa4r7iLJlL5eujmC1jpjpYmo/WRDSjzxOylYQaGi2jq
-         OOsx6I8zW9oe52m828YLltCV/kfKBbBMU2NQIYbB4d6AoihwVkah8prCc3X2NfWY5XMn
-         jw8JC/KR2Jj6be9JPoxSjsVQW9N+PtYz+eoaBS/vL8FtQULDzPu3VFGNfqKV51zZRQHh
-         0vr59zJ/ZUGBoKN3jtXkK15ZQMEwPbKQd80da8OEj87cmLtw6DnyW1PEKZMbn4hBaJ35
-         YuuQ==
-X-Gm-Message-State: APjAAAVhf6CtBX7vJD3MWf+HhCo86ngoVEFMqzhZLtFA/J4VFzo+qDjI
-        mO9qjLD4SH78D0HPq8Sbx2Ic8VIWp71Tg+CM/QQ=
-X-Google-Smtp-Source: APXvYqxthoIVKKXeDcIl+kjD/s7TOweZAhxqeclY/aSRjGjlnUdM+wcDbbO+6eJiAsPK2NeG1dQiyb6ihCqUsltEqqA=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr3035210oia.102.1575965356727;
- Tue, 10 Dec 2019 00:09:16 -0800 (PST)
+        bh=SGZeZcjQTLU2zQCTpbiTGx9ss8zli/3jjKod1Govw4s=;
+        b=f6kWt518mrCTY+3vTFFGgxT7OkiRnpb4RBKYc6mkgoQtcrpN9hPD/oXLWa2SJERlJG
+         weEAIGn+Wdsd4iBqOS8P6hhrx6qWmY+eX3ztmhWRDtvRfFDK5vv2aoinPwhiWyoXQAmF
+         mF1yisYdqapB6pq/1asGiagOqa65x0xaps/M0L5iGAs1Gcxpr0Krcrhn747/ZuG2Ga9Y
+         MIK2UYfDza4HNmpVrj+z2PySVZ7glvjLTqYESRsAAmHMNA79Pe73xuFyY3iPwFTU4wfG
+         15Od88DJrAmmrvIwYiQ7n/yo+68/Vv5Dwlr2s7pdbKRd/431hL7+XI+d8R5KD/mTC501
+         GR0A==
+X-Gm-Message-State: APjAAAUNdG/z+BKdrbOjjDA9FcRQOHJsS5v9BAU/eC3T/PDbJiorFBFE
+        35wx2MEK93l0oIsigsE+/fxD1MPiRkwgXRzeKyA=
+X-Google-Smtp-Source: APXvYqzab4wGE6gtc+gI6DLVQsgBMXCSKx3441zfxkYGZfA8f+kNUT7FaIWvNrdR/enSyC+Lk6+T4Y69JX4XqTFiz8s=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr17111711ots.250.1575965389648;
+ Tue, 10 Dec 2019 00:09:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20191209222956.239798-1-ndesaulniers@google.com> <20191209222956.239798-2-ndesaulniers@google.com>
-In-Reply-To: <20191209222956.239798-2-ndesaulniers@google.com>
+References: <20191204133328.18668-1-linux@roeck-us.net>
+In-Reply-To: <20191204133328.18668-1-linux@roeck-us.net>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 10 Dec 2019 09:09:05 +0100
-Message-ID: <CAMuHMdUO=cZMsFx4t_uULNRuwnGLjbRYOJAo7j5gC-iSV3wy5w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] hexagon: define ioremap_uc
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     bcain@codeaurora.org, Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        ztuowen@gmail.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, alexios.zavras@intel.com,
-        Allison Randal <allison@lohutok.net>,
-        Will Deacon <will@kernel.org>, rfontana@redhat.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Date:   Tue, 10 Dec 2019 09:09:38 +0100
+Message-ID: <CAMuHMdXwJUzuSNS7CBpU5J6ofOZGrWMStJU9VaT2gp3m5U5=Lw@mail.gmail.com>
+Subject: Re: [PATCH] hexagon: io: Define ioremap_uc to fix build error
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Brian Cain <bcain@codeaurora.org>,
         "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 11:30 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
-> Similar to
-> commit 38e45d81d14e ("sparc64: implement ioremap_uc")
-> define ioremap_uc for hexagon to avoid errors from
-> -Wimplicit-function-definition.
+On Wed, Dec 4, 2019 at 2:34 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> ioremap_uc is now mandatory.
+>
+> lib/devres.c:44:3: error: implicit declaration of function 'ioremap_uc'
 >
 > Fixes: e537654b7039 ("lib: devres: add a helper function for ioremap_uc")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/797
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Tuowen Zhao <ztuowen@gmail.com>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > ---
->  arch/hexagon/include/asm/io.h | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/hexagon/include/asm/io.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/arch/hexagon/include/asm/io.h b/arch/hexagon/include/asm/io.h
-> index 539e3efcf39c..b0dbc3473172 100644
+> index 539e3efcf39c..39e5605c5d42 100644
 > --- a/arch/hexagon/include/asm/io.h
 > +++ b/arch/hexagon/include/asm/io.h
-> @@ -173,6 +173,7 @@ static inline void writel(u32 data, volatile void __iomem *addr)
+> @@ -173,7 +173,7 @@ static inline void writel(u32 data, volatile void __iomem *addr)
 >
 >  void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
 >  #define ioremap_nocache ioremap
-> +#define ioremap_uc(X, Y) ioremap((X), (Y))
+> -
+> +#define ioremap_uc ioremap
+>
+>  #define __raw_writel writel
 
 Do we really need this? There is only one user of ioremap_uc(), which
 Christoph is trying hard to get rid of, and the new devres helper that
