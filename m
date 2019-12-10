@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212FEC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC8FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4AC206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB18F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012347;
-	bh=pHpn+rzuC6YQTRftAIk78Kki8xbXONoabqYa5T6oz6k=;
+	s=default; t=1576012351;
+	bh=hpI3x1KQBGanvKU3gE981T5ZKcILSbMyCMdBEjfE7jQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iv9JfIWuyOXsv3O9AohTq6idOKdmehFekYPc6Ei0i+gnp9Ukrn6pFxMpITo24Cb6z
-	 hghQJXSeGSdFexca9TWOdkdl05lDhTO9DQwqIVNTHr1+RZU1RYj/3IMOocgW0KeSW+
-	 WaesHsGWiV/DYa6Wj7BZwXRdQr1hTgCNIH+Ls6bE=
+	b=juRO373HOTAUBqjNnA6qfe6717NNCe0jqyIlEVonuoMlw5sTVoZIIwk9FVHYsmpTt
+	 4B65QIlbWe57qcCA2nAQz24w4JlYo07+4oqqLsRi39kE1XC5AkrUlfChNTKopPYxLU
+	 H8UfofUBuRPQ9efST2KKIp3U/y1G/gsgVka1v6Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbfLJVMZ (ORCPT
+        id S1728988AbfLJVMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbfLJVMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:12 -0500
+        id S1728918AbfLJVMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8515B246C3;
-        Tue, 10 Dec 2019 21:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66712246A8;
+        Tue, 10 Dec 2019 21:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012332;
-        bh=pHpn+rzuC6YQTRftAIk78Kki8xbXONoabqYa5T6oz6k=;
+        s=default; t=1576012338;
+        bh=hpI3x1KQBGanvKU3gE981T5ZKcILSbMyCMdBEjfE7jQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qs7mbRYTY3h4uMw7WZUBwhxVuSfJLJ7x6ETZrgaPQM/+1/HKwNefkWu9RGx2IYQZz
-         5FoHNIqd2FZpHi0hl80v2SNSK4ynRAPZvUypaTbKz8+djYvO/ZcowHqIn/XfJ6VtZw
-         vN54vSOIRplR0RJm9LCUZDjsDKdo9IGdJ2FT4aEM=
+        b=mk5P++PJKfEBPmq2ws3BsSn7k7GxnSKPDZiz6Cz7mWzVAo1Th52Ir7FFYT97rX5aN
+         8KdsA1DJj/gBfV5+c8o6eUKK4Mc7kizFdmttEUtrqETNXhwy+i0Kl99iHZgFP0v192
+         EzQHiMUc9e2Y9dQX/YF/DrLwMyYZRVltqzhlk3gk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
+Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 264/350] spi: pxa2xx: Add missed security checks
-Date:   Tue, 10 Dec 2019 16:06:09 -0500
-Message-Id: <20191210210735.9077-225-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 269/350] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add dmic format constraint
+Date:   Tue, 10 Dec 2019 16:06:14 -0500
+Message-Id: <20191210210735.9077-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,43 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 
-[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
+[ Upstream commit e2db787bdcb4f2722ecf410168f0583764634e45 ]
 
-pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-platform_get_irq.
-Add checks for them to fix the bugs.
+On KBL platform, the microphone is attached to external codec(rt5514)
+instead of PCH. However, TDM slot between PCH and codec is 16 bits only.
+In order to avoid setting wrong format, we should add a constraint to
+force to use 16 bits format forever.
 
-Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
-So we cannot use _optional() for devm_clk_get and platform_get_irq.
-
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190923162940.199580-1-yuhsuan@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 068c210376799..452cef367696d 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
- #endif
+diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+index 74dda8784f1a0..67b276a65a8d2 100644
+--- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
++++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
+@@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
+ 	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
+ 			dmic_constraints);
  
- 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return NULL;
++	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
 +
- 	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return NULL;
-+
- 	ssp->type = type;
- 	ssp->pdev = pdev;
- 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+ 	return snd_pcm_hw_constraint_list(substream->runtime, 0,
+ 			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
+ }
 -- 
 2.20.1
 
