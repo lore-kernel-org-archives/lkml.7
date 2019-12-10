@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A88C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AC1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85703206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070BA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012757;
-	bh=xTn/GfSIOlOalx4DQGBotd4mEAi28u2VH+yoN/+OPzI=;
+	s=default; t=1576012763;
+	bh=Jqioyw8RE0uZ1wbjjFkGDn2AqzNGFoGlgpOFosiAVI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YuJGPmG+hBDcdbddi2NtAehei1P/agP6Cvi4W4Q0CIxB2VX6OvNQ++zYk8gXOeRy2
-	 NK+b338xuAObsWGsk6QbFKAGkJnF8QHX2+cleCqxxODfC6PsuHRrhKoaH2XOIz6m0X
-	 sFnMW8wZJ6gzWsx0D9B+covZ4rgTZRy9b4PI1/CA=
+	b=uaJwT1LyOL2ycoVaXQWfuP2gWNEh7rfUASOBO4BT6RiGjCnoUn6w+O3nzavXoCdPz
+	 r5NUWe37kK82+XLb8tn/E6XoCAwNmb6s6EMpW15gGWFThB8zQJYQL5LHrb0+3/ipSL
+	 bk0vGjoph4YxojlF/GS6AuFNbPYDcep4/g7CgoVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfLJVTQ (ORCPT
+        id S1728977AbfLJVM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:19:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36688 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbfLJVMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:31 -0500
+        id S1728745AbfLJVMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC42E2077B;
-        Tue, 10 Dec 2019 21:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0EAE24697;
+        Tue, 10 Dec 2019 21:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012350;
-        bh=xTn/GfSIOlOalx4DQGBotd4mEAi28u2VH+yoN/+OPzI=;
+        s=default; t=1576012335;
+        bh=Jqioyw8RE0uZ1wbjjFkGDn2AqzNGFoGlgpOFosiAVI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InWQqlR9fTZHRquky7Wb+X8HH/UJInJoJn2IYR5WWed0OzfFSv2s1mW+i7+ow7cEU
-         fliSyZDdvmFOiCaHN2xHiSO8GLzeeD4kWJctZxL7NAT6dmdXj7vl1w+82fIq8XwdyR
-         jrAl/UTV4wQ4gNKVYCopONzgjp8MbqNw/yuUDYHE=
+        b=FkWtwiQOBgJTH2iKwRqp7FlT3oP7Dalb1/7yGCr4K3IWcnHG1J0ePIrgIMv17egTU
+         NwGLNbidTruYBv1DMIEO7Dhe867CK0/A8X6ZrPSw0eSgPFNq+wjjyS3Bx8UQgpagdJ
+         TxgTFvj9Y9NUlG1hGuNwthlwO2MV7ksYLkoAMeQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 280/350] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Tue, 10 Dec 2019 16:06:25 -0500
-Message-Id: <20191210210735.9077-241-sashal@kernel.org>
+Cc:     Yonghong Song <yhs@fb.com>, Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 267/350] bpf, testing: Workaround a verifier failure for test_progs
+Date:   Tue, 10 Dec 2019 16:06:12 -0500
+Message-Id: <20191210210735.9077-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,67 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit b7a0d65d80a0c5034b366392624397a0915b7556 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+With latest llvm compiler, running test_progs will have the following
+verifier failure for test_sysctl_loop1.o:
 
-This happens due to following sequence of events:
+  libbpf: load bpf program failed: Permission denied
+  libbpf: -- BEGIN DUMP LOG ---
+  libbpf:
+  invalid indirect read from stack var_off (0x0; 0xff)+196 size 7
+  ...
+  libbpf: -- END LOG --
+  libbpf: failed to load program 'cgroup/sysctl'
+  libbpf: failed to load object 'test_sysctl_loop1.o'
 
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
+The related bytecode looks as below:
 
-... at a later point of time
+  0000000000000308 LBB0_8:
+      97:       r4 = r10
+      98:       r4 += -288
+      99:       r4 += r7
+     100:       w8 &= 255
+     101:       r1 = r10
+     102:       r1 += -488
+     103:       r1 += r8
+     104:       r2 = 7
+     105:       r3 = 0
+     106:       call 106
+     107:       w1 = w0
+     108:       w1 += -1
+     109:       if w1 > 6 goto -24 <LBB0_5>
+     110:       w0 += w8
+     111:       r7 += 8
+     112:       w8 = w0
+     113:       if r7 != 224 goto -17 <LBB0_8>
 
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
+And source code:
 
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
+     for (i = 0; i < ARRAY_SIZE(tcp_mem); ++i) {
+             ret = bpf_strtoul(value + off, MAX_ULONG_STR_LEN, 0,
+                               tcp_mem + i);
+             if (ret <= 0 || ret > MAX_ULONG_STR_LEN)
+                     return 0;
+             off += ret & MAX_ULONG_STR_LEN;
+     }
 
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
+Current verifier is not able to conclude that register w0 before '+'
+at insn 110 has a range of 1 to 7 and thinks it is from 0 - 255. This
+leads to more conservative range for w8 at insn 112, and later verifier
+complaint.
 
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Let us workaround this issue until we found a compiler and/or verifier
+solution. The workaround in this patch is to make variable 'ret' volatile,
+which will force a reload and then '&' operation to ensure better value
+range. With this patch, I got the below byte code for the loop:
+
+  0000000000000328 LBB0_9:
+     101:       r4 = r10
+     102:       r4 += -288
+     103:       r4 += r7
+     104:       w8 &= 255
+     105:       r1 = r10
+     106:       r1 += -488
+     107:       r1 += r8
+     108:       r2 = 7
+     109:       r3 = 0
+     110:       call 106
+     111:       *(u32 *)(r10 - 64) = r0
+     112:       r1 = *(u32 *)(r10 - 64)
+     113:       if w1 s< 1 goto -28 <LBB0_5>
+     114:       r1 = *(u32 *)(r10 - 64)
+     115:       if w1 s> 7 goto -30 <LBB0_5>
+     116:       r1 = *(u32 *)(r10 - 64)
+     117:       w1 &= 7
+     118:       w1 += w8
+     119:       r7 += 8
+     120:       w8 = w1
+     121:       if r7 != 224 goto -21 <LBB0_9>
+
+Insn 117 did the '&' operation and we got more precise value range
+for 'w8' at insn 120. The test is happy then:
+
+  #3/17 test_sysctl_loop1.o:OK
+
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20191107170045.2503480-1-yhs@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/testing/selftests/bpf/progs/test_sysctl_loop1.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index bc19d6c16aaa5..a7db4f22a0771 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2634,6 +2634,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
- 
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
+diff --git a/tools/testing/selftests/bpf/progs/test_sysctl_loop1.c b/tools/testing/selftests/bpf/progs/test_sysctl_loop1.c
+index 608a06871572d..d22e438198cf7 100644
+--- a/tools/testing/selftests/bpf/progs/test_sysctl_loop1.c
++++ b/tools/testing/selftests/bpf/progs/test_sysctl_loop1.c
+@@ -44,7 +44,10 @@ int sysctl_tcp_mem(struct bpf_sysctl *ctx)
+ 	unsigned long tcp_mem[TCP_MEM_LOOPS] = {};
+ 	char value[MAX_VALUE_STR_LEN];
+ 	unsigned char i, off = 0;
+-	int ret;
++	/* a workaround to prevent compiler from generating
++	 * codes verifier cannot handle yet.
 +	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
-+
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
++	volatile int ret;
+ 
+ 	if (ctx->write)
+ 		return 0;
 -- 
 2.20.1
 
