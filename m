@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50563C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C6CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135AE2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2D6205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014561;
-	bh=z88IOY+YMC7QchWuaCMq11vzPMHWIBYHvXtSH+ltZno=;
+	s=default; t=1576014571;
+	bh=CD9pA2/dHQW2yqQUcRti5TU0wbUQTrWO6caMvvxDoPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ky/V8QXf6TFMNjw3Rd30H59O5U/KaJwYyctAmhgJAHmh9J8Jeax5vRk8cWXKq514G
-	 R34LFqEsrBJ+gXe7rUFDReajcu5QjO+ACJKvsH5wn+ZQQLFDBcSvQPNANexU8/WYk8
-	 IEFEAAMVWK3plhjLrESMRsZsrxBDf4g9HwfweJtU=
+	b=2He8YL9ZYrY3UBQCni0PpAuPuMS9oMuJlpdmDYDmEPL/hiVaQI0XQOjl4eXAOD9q8
+	 efp9wjPiVQQe7Rmhh5+qWkyXKmOkacjdr5vMzSjS7Yv96xLq6mbUImSr/5aD+sSjZz
+	 dAQfHiDXdmNKsDvLeuATRU+x71x6QJasgaDYNTRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfLJVIk (ORCPT
+        id S1728102AbfLJVt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:08:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56022 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:49:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbfLJVIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:34 -0500
+        id S1727261AbfLJVIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218A024698;
-        Tue, 10 Dec 2019 21:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EC224699;
+        Tue, 10 Dec 2019 21:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012114;
-        bh=z88IOY+YMC7QchWuaCMq11vzPMHWIBYHvXtSH+ltZno=;
+        s=default; t=1576012118;
+        bh=CD9pA2/dHQW2yqQUcRti5TU0wbUQTrWO6caMvvxDoPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lgs/TjuJkw6n0n0QB9Vc0UakrsCZ0SF2PrXqV1YygnPg3ngDNUTlCw93rdCp2JWHO
-         +VuSmyLTQHuV3b/07gjeE3pSyXaYvisEbgpRYR3S2X2cu7H1vP+DMSZYFGSQBTym36
-         SjT7hOeYJ3rFdvuiZjeeyQvn6K9HfMNugC63AGFs=
+        b=XoPnCQS/hJKlYRWe0cff61gvSFTHWTAiFS6o4I/RQFv33VFvcPpgjIrE70+f3WSfs
+         Z4RVdjuxNsprnR7mNmUfJfo8XXuogZdg/wqF6/9W6HOIkr9gpp2vkYchg2j3GD3nh/
+         QRHLu4KaXluLxC86BJPCBO2G3AmNh9bv67GuXmK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        ci_notify@linaro.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 086/350] crypto: aegis128/simd - build 32-bit ARM for v8 architecture explicitly
-Date:   Tue, 10 Dec 2019 16:03:11 -0500
-Message-Id: <20191210210735.9077-47-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 090/350] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Tue, 10 Dec 2019 16:03:15 -0500
+Message-Id: <20191210210735.9077-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,47 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 830536770f968ab33ece123b317e252c269098db ]
+[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
 
-Now that the Clang compiler has taken it upon itself to police the
-compiler command line, and reject combinations for arguments it views
-as incompatible, the AEGIS128 no longer builds correctly, and errors
-out like this:
+v4l2-compliance warns with this message:
 
-  clang-10: warning: ignoring extension 'crypto' because the 'armv7-a'
-  architecture does not support it [-Winvalid-command-line-argument]
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-So let's switch to armv8-a instead, which matches the crypto-neon-fp-armv8
-FPU profile we specify. Since neither were actually supported by GCC
-versions before 4.8, let's tighten the Kconfig dependencies as well so
-we won't run into errors when building with an ancient compiler.
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: <ci_notify@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 9e524044d3128..29472fb795f34 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -309,6 +309,7 @@ config CRYPTO_AEGIS128
- config CRYPTO_AEGIS128_SIMD
- 	bool "Support SIMD acceleration for AEGIS-128"
- 	depends on CRYPTO_AEGIS128 && ((ARM || ARM64) && KERNEL_MODE_NEON)
-+	depends on !ARM || CC_IS_CLANG || GCC_VERSION >= 40800
- 	default y
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 5ba72445584da..328976a529414 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -338,20 +338,25 @@ enum {
+ };
  
- config CRYPTO_AEGIS128_AESNI_SSE2
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
+ 
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1574,9 +1579,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
 -- 
 2.20.1
 
