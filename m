@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9604EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865B9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CDA206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57881206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013779;
-	bh=ZfrP9nN12gdEb8F/g5u5BB4oefOf7dufnH7hKROPX6U=;
+	s=default; t=1576013792;
+	bh=UpZ6MNb/Yjt/rtvFNQG0xygwu3D/RzjBw3c7jSbs0vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfLP2iVCWL0GiBfpln2C23N/JT5cQFSiw91Z2m6FD+SP1u5wbhpn30ndpM16uLxm6
-	 RJCt9YCoNu/4Il1fRcSRR6vP2qI301GyIYqMtxlpkLW8UNLm7uVo3xlkOb9eHLLnV+
-	 mRLiQayzrpimU7YIgYquugzOzeH6WvOSq4wrWyZU=
+	b=Ttiu7BQOtd6Fa+hrdId6R1BeyDpAxSEaq4+ku0r+wAjnRumsW+F9J+iXxlN2xFIxm
+	 p3gqzfMp6kqWfrfx1bLPWVpHDcJDJMKsdnjZPG8eDVkAcLpYAapMexvoWeFGUy5zZm
+	 blJSlUA7ysVzm5t4LZzO1fU8h6Ck2cUQTbucK6to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbfLJVgS (ORCPT
+        id S1730087AbfLJVgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:36:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41962 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:36:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbfLJVfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:53 -0500
+        id S1729931AbfLJVfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C6E6208C3;
-        Tue, 10 Dec 2019 21:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D5D24653;
+        Tue, 10 Dec 2019 21:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013752;
-        bh=ZfrP9nN12gdEb8F/g5u5BB4oefOf7dufnH7hKROPX6U=;
+        s=default; t=1576013746;
+        bh=UpZ6MNb/Yjt/rtvFNQG0xygwu3D/RzjBw3c7jSbs0vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjKDGsWVNq5RsEKEH2PAYR5Ye/eY0GWRiRshahK7/WSrcVbzpEiQ+9Qw+eswy19Db
-         JEEvaxJwIFx8r8AXOJXHqvjnmpRUpNYaPzgBsmPWAKZfZP1Z+DCmFHElXWr/Eb52QG
-         y4gC8N1n7XvjxUR7rlL5wf0jufd30DMiaW1xNkO8=
+        b=S+Y3YuG5mA6aOCDfOp0hQVrBGcwqtqhHHHfHfFAMChIVFNWi56KcY+9TmU4pqp5KZ
+         tKISnf6ZFiupifFtoHb1paZLtqjLONDODixKMmAt4JC6WhCe9RC8e7aFC8SE6tHMLs
+         vhTuTDnMLiHObWbxHmUZ9qN//gAhRI9SvRz0mSJg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 173/177] perf parse: Fix potential memory leak when handling tracepoint errors
-Date:   Tue, 10 Dec 2019 16:32:17 -0500
-Message-Id: <20191210213221.11921-173-sashal@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 168/177] crypto: sun4i-ss - Fix 64-bit size_t warnings
+Date:   Tue, 10 Dec 2019 16:32:12 -0500
+Message-Id: <20191210213221.11921-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -68,83 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 4584f084aa9d8033d5911935837dbee7b082d0e9 ]
+[ Upstream commit d6e9da21ee8246b5e556b3b153401ab045adb986 ]
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
+This patch fixes all of the warnings.
 
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
-
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 95043cae57740..6f7292442b821 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -457,6 +457,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+index 5cf64746731a3..22e4918579254 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+@@ -81,7 +81,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
+ 	oi = 0;
+ 	oo = 0;
+ 	do {
+-		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
++		todo = min(rx_cnt, ileft);
++		todo = min_t(size_t, todo, (mi.length - oi) / 4);
+ 		if (todo) {
+ 			ileft -= todo;
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
+@@ -96,7 +97,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
+ 		rx_cnt = SS_RXFIFO_SPACES(spaces);
+ 		tx_cnt = SS_TXFIFO_SPACES(spaces);
  
- 	if (!e)
-@@ -470,18 +471,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
- 		break;
- 	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
- }
- 
- static int add_tracepoint(struct list_head *list, int *idx,
+-		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
++		todo = min(tx_cnt, oleft);
++		todo = min_t(size_t, todo, (mo.length - oo) / 4);
+ 		if (todo) {
+ 			oleft -= todo;
+ 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
+@@ -220,7 +222,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 			 * todo is the number of consecutive 4byte word that we
+ 			 * can read from current SG
+ 			 */
+-			todo = min3(rx_cnt, ileft / 4, (mi.length - oi) / 4);
++			todo = min(rx_cnt, ileft / 4);
++			todo = min_t(size_t, todo, (mi.length - oi) / 4);
+ 			if (todo && !ob) {
+ 				writesl(ss->base + SS_RXFIFO, mi.addr + oi,
+ 					todo);
+@@ -234,8 +237,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 				 * we need to be able to write all buf in one
+ 				 * pass, so it is why we min() with rx_cnt
+ 				 */
+-				todo = min3(rx_cnt * 4 - ob, ileft,
+-					    mi.length - oi);
++				todo = min(rx_cnt * 4 - ob, ileft);
++				todo = min_t(size_t, todo, mi.length - oi);
+ 				memcpy(buf + ob, mi.addr + oi, todo);
+ 				ileft -= todo;
+ 				oi += todo;
+@@ -255,7 +258,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 		spaces = readl(ss->base + SS_FCSR);
+ 		rx_cnt = SS_RXFIFO_SPACES(spaces);
+ 		tx_cnt = SS_TXFIFO_SPACES(spaces);
+-		dev_dbg(ss->dev, "%x %u/%u %u/%u cnt=%u %u/%u %u/%u cnt=%u %u\n",
++		dev_dbg(ss->dev,
++			"%x %u/%zu %u/%u cnt=%u %u/%zu %u/%u cnt=%u %u\n",
+ 			mode,
+ 			oi, mi.length, ileft, areq->cryptlen, rx_cnt,
+ 			oo, mo.length, oleft, areq->cryptlen, tx_cnt, ob);
+@@ -263,7 +267,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 		if (!tx_cnt)
+ 			continue;
+ 		/* todo in 4bytes word */
+-		todo = min3(tx_cnt, oleft / 4, (mo.length - oo) / 4);
++		todo = min(tx_cnt, oleft / 4);
++		todo = min_t(size_t, todo, (mo.length - oo) / 4);
+ 		if (todo) {
+ 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
+ 			oleft -= todo * 4;
+@@ -287,7 +292,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 				 * no more than remaining buffer
+ 				 * no need to test against oleft
+ 				 */
+-				todo = min(mo.length - oo, obl - obo);
++				todo = min_t(size_t,
++					     mo.length - oo, obl - obo);
+ 				memcpy(mo.addr + oo, bufo + obo, todo);
+ 				oleft -= todo;
+ 				obo += todo;
 -- 
 2.20.1
 
