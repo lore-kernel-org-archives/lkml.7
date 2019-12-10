@@ -2,70 +2,104 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21400C2D0BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAA7C2D0BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1E320652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575957774;
-	bh=syvbhAR/ADsJyMnOlOSI0B7aatrRGP2kpxTU6u/WAOE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fc6uPoXl4i+HshYHTqiDrCMjnEZQ9sIyvfc1SDyqFgZwfk5EWqeCWP2Y+9oIOmkVN
-	 RbGOmIsmMn2YoJihPh7AFlijmTltiiHtfsh/jDEkjT27sTknu7dSBnp6dgSh1mZlkk
-	 ZXgQum+EaMyZPtNlJrVbYLicKLzerjh2PTConKpI=
+	by mail.kernel.org (Postfix) with ESMTP id 7D92920652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLJGCw (ORCPT
+        id S1726989AbfLJGFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:02:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbfLJGCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:02:52 -0500
-Received: from localhost (unknown [106.201.45.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A9520652;
-        Tue, 10 Dec 2019 06:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575957772;
-        bh=syvbhAR/ADsJyMnOlOSI0B7aatrRGP2kpxTU6u/WAOE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NX5YT5DeCowC/Mi+uHgqUvsvtunko8BdoEGU+P34H0KdO31rcS7Zj/A1SAbX4B9p7
-         Asf/rhbEEjj/ZJenjdI7a8FexDk2KvvFlFHau+IYBJ9w2eV2fcCRAN3/V648JsjU1Z
-         qSZj1x+Gl5PHEwgDsADpk9m0xB+RLDzPio7BF+0Q=
-Date:   Tue, 10 Dec 2019 11:32:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: ti: edma: add missed operations
-Message-ID: <20191210060247.GQ82508@vkoul-mobl>
-References: <20191124052855.6472-1-hslester96@gmail.com>
+        Tue, 10 Dec 2019 01:05:18 -0500
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:60554 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725942AbfLJGFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 01:05:18 -0500
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 10 Dec 2019 14:05:16 +0800
+Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
+        by mse.ite.com.tw with ESMTP id xBA65Cwi017541;
+        Tue, 10 Dec 2019 14:05:12 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
+ id 14.3.352.0; Tue, 10 Dec 2019 14:05:12 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH v5 0/4] IT6505 cover letter
+Date:   Tue, 10 Dec 2019 13:53:38 +0800
+Message-ID: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191124052855.6472-1-hslester96@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [192.168.70.14]
+X-MAIL: mse.ite.com.tw xBA65Cwi017541
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-11-19, 13:28, Chuhong Yuan wrote:
-> The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
-> probe failure and remove.
-> Add the calls and modify probe failure handling to fix it.
-> 
-> To simplify the fix, the patch adjusts the calling order and merges checks
-> for devm_kcalloc.
+The IT6505 is a high-performance DisplayPort 1.1a transmitter, fully compliant
+with DisplayPort 1.1a, HDCP 1.3 specifications. The IT6505 supports color depth
+of up to 36 bits (12 bits/color) and ensures robust transmission of high-quality
+uncompressed video content, along with uncompressed and compressed digital audio
+content.
 
-Applied, thanks
+This series contains document bindings, revert commit, add vendor prefix,
+Kconfig to control the function enable or not.
+
+Allen Chen (1):
+  WIP: drm/bridge: add it6505 driver
+
+allen (3):
+  dt-bindings: Add vendor prefix for ITE Tech. Inc.
+  Revert "drm/tegra: Move drm_dp_link helpers to Tegra DRM"
+  WIP: dt-bindings: Add binding for IT6505.
+
+ .../bindings/display/bridge/ite,it6505.yaml        |   99 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ drivers/gpu/drm/bridge/Kconfig                     |    7 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/ite-it6505.c                | 2753 ++++++++++++++++++++
+ drivers/gpu/drm/drm_dp_helper.c                    |  128 +
+ drivers/gpu/drm/tegra/Makefile                     |    1 -
+ drivers/gpu/drm/tegra/dp.c                         |  876 -------
+ drivers/gpu/drm/tegra/dp.h                         |  177 --
+ drivers/gpu/drm/tegra/dpaux.c                      |    1 -
+ drivers/gpu/drm/tegra/sor.c                        |    1 -
+ include/drm/drm_dp_helper.h                        |   16 +
+ 12 files changed, 3006 insertions(+), 1056 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+ create mode 100644 drivers/gpu/drm/bridge/ite-it6505.c
+ delete mode 100644 drivers/gpu/drm/tegra/dp.c
+ delete mode 100644 drivers/gpu/drm/tegra/dp.h
 
 -- 
-~Vinod
+1.9.1
+
