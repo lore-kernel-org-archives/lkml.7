@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD01C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC732C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28D520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E8F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017221;
-	bh=zQckxtpNF9ip0jQkPJlZnvhwrP1eKs/exxzu8Wvf4DM=;
+	s=default; t=1576017225;
+	bh=/ionkiJBoIZVekyJOvcY7uYabENd7yYeZVVoTNntnLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2U545BBSFNMSGwMommhmV8QwVLgDshRy/FwzgiMtB6DeLEB5Cq1eOLYDCmG2Ikxd0
-	 t38tQBkUdL08s3dql3nleXoUT20MJnKC3Rz5Ugq72in9+d1vWjpg+QBxa0KVivC6us
-	 uCZHjdASlY9b9kMBZYX3MVs/jmsmj8LZeZxQ1Eqs=
+	b=yCP4fZqA1Wkd04skBewK14CYedn5wjBieX3RwOLF1KNDUHeujLmzKzeYPcD2aCksH
+	 h7D2zlGUN7ZpQORbPNvLK/gDBoRzG6PLKoDoR6K7cWTwcEfz/ToemN0azaGYLx2ecj
+	 zJrNhW8gNIHuK+fAg7DTgpDV9lh4Zkb1ezEnuwPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfLJWdk (ORCPT
+        id S1729236AbfLJWdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:33:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbfLJWdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:33 -0500
+        id S1729911AbfLJWdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABEBA20828;
-        Tue, 10 Dec 2019 22:33:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954C520828;
+        Tue, 10 Dec 2019 22:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017212;
-        bh=zQckxtpNF9ip0jQkPJlZnvhwrP1eKs/exxzu8Wvf4DM=;
+        s=default; t=1576017219;
+        bh=/ionkiJBoIZVekyJOvcY7uYabENd7yYeZVVoTNntnLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htUuyW3nYKv8S+ZeBxtibjUWi+XIL8M7T6ZXPJrxjUcQ51C66kZO2LKeJJtJ/45BP
-         ZAvbzlBeBZgJqiRyUtruO2rYQWWPXzbALrGNqWp9/aSlJwWYtAoKp4wa9IZj8rsVPF
-         1HMXbcgFOhtGxcMTQwDed3nktWKkeEvnNroyuTmI=
+        b=z+u6qyD3YjwwhTtPJnVVuQlYfpLmAUDLxtiKVdWUQyG9vv6HHxory1KCcFdrfenh1
+         CeAY7O378YF8uhVF5x0WHFwLKgfVO1norvvtg8caT/1dDHZfh7JsS2BEx1UpAtmA/V
+         0WZXKWVNjuCMu2H17+kekA8HD3FaMbYdhoMcSppo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/71] usb: renesas_usbhs: add suspend event support in gadget mode
-Date:   Tue, 10 Dec 2019 17:32:18 -0500
-Message-Id: <20191210223316.14988-13-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 19/71] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
+Date:   Tue, 10 Dec 2019 17:32:24 -0500
+Message-Id: <20191210223316.14988-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,87 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
+[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
 
-When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
-will be generated and Suspended state bit is set in interrupt status
-register. Interrupt handler will call driver->suspend(composite_suspend)
-if suspended state bit is set. composite_suspend will call
-ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
-by user space application via /dev/ep0.
+In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release for skb and
+card->evtbd_ring_vbase is added.
 
-To be able to detect host detach, extend the DVSQ_MASK to cover the
-Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
-Register 0 (INTSTS0) register and perform appropriate action in the
-DVST interrupt handler (usbhsg_irq_dev_state).
-
-Without this commit, disconnection of the phone from R-Car-H3 ES2.0
-Salvator-X CN9 port is not recognized and reverse role switch does
-not happen. If phone is connected again it does not enumerate.
-
-With this commit, disconnection will be recognized and reverse role
-switch will happen by a user space application. If phone is connected
-again it will enumerate properly and will become visible in the output
-of 'lsusb'.
-
-Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/common.h     |  3 ++-
- drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mwifiex/pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index b8620aa6b72e6..8424c165f732a 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -163,11 +163,12 @@ struct usbhs_priv;
- #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
- #define VALID	(1 << 3)	/* USB Request Receive */
+diff --git a/drivers/net/wireless/mwifiex/pcie.c b/drivers/net/wireless/mwifiex/pcie.c
+index 268e50ba88a51..4c0a656928996 100644
+--- a/drivers/net/wireless/mwifiex/pcie.c
++++ b/drivers/net/wireless/mwifiex/pcie.c
+@@ -577,8 +577,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
+ 		skb_put(skb, MAX_EVENT_SIZE);
  
--#define DVSQ_MASK		(0x3 << 4)	/* Device State */
-+#define DVSQ_MASK		(0x7 << 4)	/* Device State */
- #define  POWER_STATE		(0 << 4)
- #define  DEFAULT_STATE		(1 << 4)
- #define  ADDRESS_STATE		(2 << 4)
- #define  CONFIGURATION_STATE	(3 << 4)
-+#define  SUSPENDED_STATE	(4 << 4)
+ 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
+-					   PCI_DMA_FROMDEVICE))
++					   PCI_DMA_FROMDEVICE)) {
++			kfree_skb(skb);
++			kfree(card->evtbd_ring_vbase);
+ 			return -1;
++		}
  
- #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
- #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
-diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
-index efe8d815cf2c7..5731621984c6c 100644
---- a/drivers/usb/renesas_usbhs/mod_gadget.c
-+++ b/drivers/usb/renesas_usbhs/mod_gadget.c
-@@ -467,12 +467,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
- {
- 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
- 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
-+	int state = usbhs_status_get_device_state(irq_state);
+ 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
  
- 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
- 
--	dev_dbg(dev, "state = %x : speed : %d\n",
--		usbhs_status_get_device_state(irq_state),
--		gpriv->gadget.speed);
-+	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
-+
-+	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
-+	    (state & SUSPENDED_STATE)) {
-+		if (gpriv->driver && gpriv->driver->suspend)
-+			gpriv->driver->suspend(&gpriv->gadget);
-+		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
-+	}
- 
- 	return 0;
- }
 -- 
 2.20.1
 
