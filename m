@@ -2,198 +2,221 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799CFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59514C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF302073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2642E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABNDcXBa"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LZuhUqL7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfLJJfg (ORCPT
+        id S1727257AbfLJJgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:35:36 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46231 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJfg (ORCPT
+        Tue, 10 Dec 2019 04:36:01 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:37728 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:35:36 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f15so12312867lfl.13;
-        Tue, 10 Dec 2019 01:35:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=sPqiW8fjJ6bClKJe5WkINQ65vkoeIkKhHU7yZhPYmGg=;
-        b=ABNDcXBaBSFTY1MBOuehy4WQ2SFh6x6aVPCz/0w0olzbOzjmzqV5odtrNM5JpBQtjJ
-         9yVNHZYJ+hXqU9+/ETxhdBza83LPN/PRKXds16dNfcf9TTYEf9CyjvF5L98Jae+Wc19O
-         IIiOY/fNFDogBF/Qk0JhyV3/RVe0p0oRK8TFL2jmzqXdbMog4rxb7aAQFIA4b/UxfOvo
-         cjXEKKsu2cnN2A4AescnBek882x0vlYO15PHe5wRgyTWW41pATbeTF+ttmU2UFRbaCok
-         KRa6NF+JMCG9iUjkwZDsbU0r5+0k5eVzKKwIzLflfdCV2LgN2kV0nBUgi+Hmv5uIBHn8
-         2ajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sPqiW8fjJ6bClKJe5WkINQ65vkoeIkKhHU7yZhPYmGg=;
-        b=e/vzkSRB3JDqtKusxLoJXCrgcUvb+zWbtNWj7CfpNzXL4icX3XBCA5gb1hM8jd5Q7I
-         mDlyp+taqmqb9McfSOmU8wMLN/OIo/pKEnbW4y2sv8Qj4YWIsblcn/y1kG7IGvBDcOLA
-         p71x9uAa5CQzLTgeAP0UjwgIdPbnj6wgaO8DMl0GlsN+68iBEkAT6Z9LbpnF68Uv2EMt
-         ph4swfIqvAg9y/o9K0NUgXd/xVXBUTIVf7XkUpjv/Hc9uXLRgNd4UZjsghuqkJRsxL1/
-         f34VsE/7ugncdSmgxAp/xca/ZDtfYPUmLPVxqVernhHM8R/WuAxDVUpsxSMTIk3E04ck
-         GwGg==
-X-Gm-Message-State: APjAAAVUvI2V+sy7gEsJtWr1jvw+oobfKQZAjt56inYtIVm1jov7GL68
-        4vLUnuLGa4pCVidAShWw6FY=
-X-Google-Smtp-Source: APXvYqwioSlPYO6hoFk7LGARsxqMyzh3CVbgGfmrhGJmH3QfKEy1cMr4MWEHUZicpl9ULfHvpu8eWw==
-X-Received: by 2002:ac2:4316:: with SMTP id l22mr2852226lfh.115.1575970533025;
-        Tue, 10 Dec 2019 01:35:33 -0800 (PST)
-Received: from [192.168.68.106] ([193.119.54.228])
-        by smtp.gmail.com with ESMTPSA id 140sm1193677lfk.78.2019.12.10.01.35.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Dec 2019 01:35:32 -0800 (PST)
-Subject: Re: [PATCH v2 1/4] mm: define MAX_PTRS_PER_{PTE,PMD,PUD}
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
-        aneesh.kumar@linux.ibm.com
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-2-dja@axtens.net>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <50ac061a-caa9-ed4e-c9a4-1f86bb0552bd@gmail.com>
-Date:   Tue, 10 Dec 2019 20:35:22 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 04:36:00 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191210093557epoutp0375127d48b9683d31eb73538f409e2c8c~e_N81GUri2861028610epoutp03y
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:35:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191210093557epoutp0375127d48b9683d31eb73538f409e2c8c~e_N81GUri2861028610epoutp03y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575970557;
+        bh=S/zcAwknwHag4hPCqjtT6WQekQdAA80vjLRcE8LWAp4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LZuhUqL7T5RkowSsjFYg9BVm1Z1nncir7cRagsw76lp99oRoGlmMHk6RmUp+VMqAi
+         fE1IA6i92xCSiT/GTj7QzFzLTw5NSeUL/9OX2eLMhYjda8pKi2ZBmmruPC176vqTP8
+         oVOkW4piLgCxfpF15fEP4uDdsiAiqujyE80HIqH0=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191210093556epcas1p1960e9dc4ab635df8eedac28b2832c497~e_N8RS-ui1079610796epcas1p16;
+        Tue, 10 Dec 2019 09:35:56 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47XFL23XDTzMqYkn; Tue, 10 Dec
+        2019 09:35:54 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.8E.48019.AF66FED5; Tue, 10 Dec 2019 18:35:54 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191210093553epcas1p37d23659cdd8782d951c4e004d300fc0f~e_N5kAIHH2199621996epcas1p3S;
+        Tue, 10 Dec 2019 09:35:53 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191210093552epsmtrp1be3673b26ce9f3320c8f4d6b00e32080~e_N4p4EFo0605106051epsmtrp1B;
+        Tue, 10 Dec 2019 09:35:52 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-08-5def66faddf5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        24.65.06569.8F66FED5; Tue, 10 Dec 2019 18:35:52 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210093552epsmtip2b5edd78e8d7497be702d5b9873b16ebd~e_N4XdZ-C1063110631epsmtip2F;
+        Tue, 10 Dec 2019 09:35:52 +0000 (GMT)
+Subject: Re: [PATCH 1/4] PM / devfreq: reuse system workqueue machanism
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <6a8daabc-4a18-36de-8070-77803271e681@samsung.com>
+Date:   Tue, 10 Dec 2019 18:42:18 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <20191210044714.27265-2-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1e6f7bcd-78ef-17e2-c470-a546d58c70fa@samsung.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29k5O0arr6n5uh+ppwskmTvp6iiZdjcyEQKDSuykJyfuxs4m
+        drEsS81aN7vosBqEVOuqiZlUlkmyJE1WYFeiu6YN7IIVRduOkv+e9/K8z/t830sTqlOUms43
+        WgWLkdcz1Dh5072Zmphfm7xZGu9fNVdffYXknEPVJNfdfVXBPdw1oOA8LbUU99XejrhL7S8V
+        3POd56gUOrXBtZdKPdDoQqlfG6ZkEGsL5usEPlewRArGHFNuvjEviVm5Ontxtnauho1hE7h5
+        TKSRNwhJzJK0jJhl+XrfBkxkIa+3+VIZvCgysQvmW0w2qxCpM4nWJEYw5+rNCebZIm8Qbca8
+        2TkmQyKr0czR+ho3FOh2Xe4lzeURRQ9KNSWoLbwSBdGA46G6pV5WicbRKtyMwHH/nEIKhhAM
+        u98iKfiB4Mirn9Qo5X1VHyUVbiGob+8coXgRvLE/9A2j6WC8HG5dy/QTQnAMDDTXEf4eAp+S
+        wcDxR6S/QOFoaP3UG5g6EUfBk2G/HE0r8QJ4fULpT8vxdHBW2mV+HIozwd20G/mxEk8Cd807
+        uR8H4WQ4ar8dwAQOg2fvTsskHAHXB2sDuoC9FNRefBzYDfAS+OM0SWaCob+jUSFhNfQdLBvB
+        W+G8u52SuBUIGlulnQHHQWtdVWAOgWfClZZYKR0FN36fRJLuBPjyfT8pSSmhokwltUwFz+uX
+        MgmHw5nyvdQhxDjGuHGMceAY48DxX8yJ5C40WTCLhjxBZM3xY/+6AQVuM5prRje70toQphEz
+        XulM+ZKlIvlCcbOhDQFNMCHKjjJfSpnLb94iWEzZFpteENuQ1vfYhwl1aI7Jd+lGazarnRMX
+        F8fFs3O1LMuEKenhniwVzuOtQoEgmAXLKE9GB6lLUEt5UbXXuezYmhd3t8UX15H93VU4+M3n
+        86XMtHQyvTs8NnPpxo89xe6zybZ1sz5QqR0LucGTz3oG6jzvJ3ZuT8txpdxVDTr6/3b+uZBc
+        Y1ox9annx3rF929U4p0dQyHppasu7TF7aid0NfUtn3F5S8iTVp0ttNeVYE8kP4bt64r6vIiR
+        izqejSYsIv8PbuYWX7EDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXvdH2vtYg9XfFS02zljParHg0wxW
+        i/PnN7BbnG16w25xedccNovPvUcYLdYeuctucbtxBZsDh8emVZ1sHn1bVjF6fN4kF8AcxWWT
+        kpqTWZZapG+XwJXRtO4Ga0G7fMWpZoMGxkOSXYycHBICJhJPJ79k62Lk4hAS2M0ocb5pKyNE
+        QlJi2sWjzF2MHEC2sMThw8UQNW8ZJR4f+MEKEhcWcJfYuzkMpFxEQFfizY6lzCA1zAILmCTm
+        35zIApIQEpjOLLH1VQWIzSagJbH/xQ02EJtfQFHi6o/HjCBzeAXsJB5M5wUJswioSizo6mUC
+        sUUFwiR2LnkMZvMKCEqcnPkEbCSngL3ElN59YDazgLrEn3mXmCFscYlbT+YzQdjyEtvfzmGe
+        wCg8C0n7LCQts5C0zELSsoCRZRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnD8aGnt
+        YDxxIv4QowAHoxIPr4fdu1gh1sSy4srcQ4wSHMxKIrzH24BCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeeXzj0UKCaQnlqRmp6YWpBbBZJk4OKUaGCecK58zxWmP7gpmiYfqJ/iF9tW/4daX1lzD
+        LpX401XtdrLNnKfORmUvwuKntqssEsiXSji++dNtlrZZ/Cd0ImYnLWqM+7tJi+tM3MzrXLt4
+        lpx88st3HVPbobsXnDlllD7PuCZ7zCzm6iylS5LvloR6/V/P3KK4QDwt7r7v1fn6K5MSVgWr
+        RCmxFGckGmoxFxUnAgAl1itXmwIAAA==
+X-CMS-MailID: 20191210093553epcas1p37d23659cdd8782d951c4e004d300fc0f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
+References: <20191209144425.13321-1-k.konieczny@samsung.com>
+        <CGME20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2@eucas1p1.samsung.com>
+        <20191209144425.13321-2-k.konieczny@samsung.com>
+        <2eab8a20-1701-94dc-410a-bb072a5f5b4e@samsung.com>
+        <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
+        <9926005a-c030-a823-fd65-6b8578e39218@samsung.com>
+        <1e6f7bcd-78ef-17e2-c470-a546d58c70fa@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/12/19 3:47 pm, Daniel Axtens wrote:
-> powerpc has boot-time configurable PTRS_PER_PTE, PMD and PUD. The
-> values are selected based on the MMU under which the kernel is
-> booted. This is much like how 4 vs 5-level paging on x86_64 leads to
-> boot-time configurable PTRS_PER_P4D.
+On 12/10/19 6:28 PM, Kamil Konieczny wrote:
+> Hi Chanwoo,
 > 
-> So far, this hasn't leaked out of arch/powerpc. But with KASAN, we
-> have static arrays based on PTRS_PER_*, so for powerpc support must
-> provide constant upper bounds for generic code.
+> On 10.12.2019 08:53, Chanwoo Choi wrote:
+>> On 12/10/19 4:28 PM, Kamil Konieczny wrote:
+>>> On 10.12.2019 02:41, Chanwoo Choi wrote:
+>>>> On 12/9/19 11:44 PM, Kamil Konieczny wrote:
+>>>>> There is no need for creating another workqueue, it is enough
+>>>>> to reuse system_freezable_power_efficient one.
+>>>>>
+>>>>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+>>>>> ---
+>>>>>  drivers/devfreq/devfreq.c | 6 +++---
+>>>>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>>> index 46a7ff7c2994..955949c6fc1f 100644
+>>>>> --- a/drivers/devfreq/devfreq.c
+>>>>> +++ b/drivers/devfreq/devfreq.c
+>>>>> @@ -1532,11 +1532,11 @@ static int __init devfreq_init(void)
+>>>>>  		return PTR_ERR(devfreq_class);
+>>>>>  	}
+>>>>>  
+>>>>> -	devfreq_wq = create_freezable_workqueue("devfreq_wq");
+>>>>> +	devfreq_wq = system_freezable_power_efficient_wq;
+>>>>
+>>>> It affect the behaviors of whole device drivers using devfreq subsystem.
+>>>> It is not good to change the workqueue type without any reasonable
+>>>> data like experiment result, power-consumption result and performance
+>>>> result for almost device drivers using devfreq subsystem.
+>>>>
+>>>> Are there any problem or any benefit to change workqueue type?
+>>>
+>>> The workqueue is freezable with additional capability of 'power_efficient',
+>>> it is already developed by linux community so why not reuse it ?
+>>
+>> As you agreed below, why don't you suggest the any reasonable test result
+>> with this patch? As I commented, it affects the all device drivers. 
+>> It is necessary to suggest the test result on multiple scenarios
+>> in order to prevent the any power-consumption and performance regression.
+>> It is not easy to change them without any data.
+>>
+>> Frankly, if you test almost scenarios and suggest the reasonable result
+>> that anyone can understand, like there are never difference
+>> between "create_freezable_workqueue("devfreq_wq");" and system_freezable_power_efficient_wq.
+>> But you don't suggest any data.
 > 
-> Define MAX_PTRS_PER_{PTE,PMD,PUD} for this purpose.
+> I agree about tests data needed for deciding about change. As I already wrote in other
+> letter, I do not have such tests procedures, so if you have them and you may share
+> them with me or Marek, I can run them and gather tests results.
 > 
-> I have configured these constants:
->  - in asm-generic headers
->  - on arches that implement KASAN: x86, s390, arm64, xtensa and powerpc
+>> - The original devfreq_wq include the only work related to devfreq.
+>> - system_freezable_power_efficient_wq include the all works registered
+>> from both other subsystem and device drivers in linux kernel.
 > 
-> I haven't wired up any other arches just yet - there is no user of
-> the constants outside of the KASAN code I add in the next patch, so
-> missing the constants on arches that don't support KASAN shouldn't
-> break anything.
+> I do not know that good system wq, devfreq_wq have only one work item so
+> imho it is not beneficial to use separate wq. Seperate wq can be good
+> during debugging problems with wq.
 
-I would suggest limiting this to powerpc for now and use
-
-#ifndef MAX_PTRS_PER_PUD
-#define MAX_PTRS_PER_PUD	PTRS_PER_PUD
-#endif
-
-style code in KASAN. It just keeps the change surface to a limited
-value, till other arch's see value in migrating to support it.
+No, devfreq_wq has not ony one work item. If one target use the multiple
+devfreq device with simple_ondemand governor, devfreq_wq has the 
+the multiple work item. It depends on the number of devfreq device
+with simple_ondemand governor.
 
 > 
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> ---
->  arch/arm64/include/asm/pgtable-hwdef.h       | 3 +++
->  arch/powerpc/include/asm/book3s/64/hash.h    | 4 ++++
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 7 +++++++
->  arch/powerpc/include/asm/book3s/64/radix.h   | 5 +++++
->  arch/s390/include/asm/pgtable.h              | 3 +++
->  arch/x86/include/asm/pgtable_types.h         | 5 +++++
->  arch/xtensa/include/asm/pgtable.h            | 1 +
->  include/asm-generic/pgtable-nop4d-hack.h     | 9 +++++----
->  include/asm-generic/pgtable-nopmd.h          | 9 +++++----
->  include/asm-generic/pgtable-nopud.h          | 9 +++++----
->  10 files changed, 43 insertions(+), 12 deletions(-)
+>>>> Actually, it is not simple to change the like just one device driver
+>>>> because devfreq subsytem is very important for both performance
+>>>> and power-consumption.
+>>>
+>>> I agree. The name of this wq promises what you want, both freezable
+>>> and power efficiency.
+>>>
+>>>> If you hope to change the feature related to both performance 
+>>>> and power-consumption, please suggest the reasonable data
+>>>> with fundamental reason.
+>>>>
+>>>> So, I can't agree it.
+>>>>
+>>>>
+>>>>>  	if (!devfreq_wq) {
+>>>>>  		class_destroy(devfreq_class);
+>>>>> -		pr_err("%s: couldn't create workqueue\n", __FILE__);
+>>>>> -		return -ENOMEM;
+>>>>> +		pr_err("%s: system_freezable_power_efficient_wq isn't initialized\n", __FILE__);
+>>>>> +		return -EINVAL;
+>>>>>  	}
+>>>>>  	devfreq_class->dev_groups = devfreq_groups;
 > 
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index d9fbd433cc17..485e1f3c5c6f 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -41,6 +41,7 @@
->  #define ARM64_HW_PGTABLE_LEVEL_SHIFT(n)	((PAGE_SHIFT - 3) * (4 - (n)) + 3)
->  
->  #define PTRS_PER_PTE		(1 << (PAGE_SHIFT - 3))
-> +#define MAX_PTRS_PER_PTE	PTRS_PER_PTE
->  
->  /*
->   * PMD_SHIFT determines the size a level 2 page table entry can map.
-> @@ -50,6 +51,7 @@
->  #define PMD_SIZE		(_AC(1, UL) << PMD_SHIFT)
->  #define PMD_MASK		(~(PMD_SIZE-1))
->  #define PTRS_PER_PMD		PTRS_PER_PTE
-> +#define MAX_PTRS_PER_PMD	PTRS_PER_PMD
->  #endif
->  
->  /*
-> @@ -60,6 +62,7 @@
->  #define PUD_SIZE		(_AC(1, UL) << PUD_SHIFT)
->  #define PUD_MASK		(~(PUD_SIZE-1))
->  #define PTRS_PER_PUD		PTRS_PER_PTE
-> +#define MAX_PTRS_PER_PUD	PTRS_PER_PUD
->  #endif
->  
->  /*
-> diff --git a/arch/powerpc/include/asm/book3s/64/hash.h b/arch/powerpc/include/asm/book3s/64/hash.h
-> index 2781ebf6add4..fce329b8452e 100644
-> --- a/arch/powerpc/include/asm/book3s/64/hash.h
-> +++ b/arch/powerpc/include/asm/book3s/64/hash.h
-> @@ -18,6 +18,10 @@
->  #include <asm/book3s/64/hash-4k.h>
->  #endif
->  
-> +#define H_PTRS_PER_PTE		(1 << H_PTE_INDEX_SIZE)
-> +#define H_PTRS_PER_PMD		(1 << H_PMD_INDEX_SIZE)
-> +#define H_PTRS_PER_PUD		(1 << H_PUD_INDEX_SIZE)
-> +
->  /* Bits to set in a PMD/PUD/PGD entry valid bit*/
->  #define HASH_PMD_VAL_BITS		(0x8000000000000000UL)
->  #define HASH_PUD_VAL_BITS		(0x8000000000000000UL)
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index b01624e5c467..209817235a44 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -231,6 +231,13 @@ extern unsigned long __pmd_frag_size_shift;
->  #define PTRS_PER_PUD	(1 << PUD_INDEX_SIZE)
->  #define PTRS_PER_PGD	(1 << PGD_INDEX_SIZE)
->  
-> +#define MAX_PTRS_PER_PTE	((H_PTRS_PER_PTE > R_PTRS_PER_PTE) ? \
-> +				  H_PTRS_PER_PTE : R_PTRS_PER_PTE)
-> +#define MAX_PTRS_PER_PMD	((H_PTRS_PER_PMD > R_PTRS_PER_PMD) ? \
-> +				  H_PTRS_PER_PMD : R_PTRS_PER_PMD)
-> +#define MAX_PTRS_PER_PUD	((H_PTRS_PER_PUD > R_PTRS_PER_PUD) ? \
-> +				  H_PTRS_PER_PUD : R_PTRS_PER_PUD)
-> +
 
-How about reusing max
 
-#define MAX_PTRS_PER_PTE  max(H_PTRS_PER_PTE, R_PTRS_PER_PTE)
-#define MAX_PTRS_PER_PMD  max(H_PTRS_PER_PMD, R_PTRS_PER_PMD)
-#define MAX_PTRS_PER_PUD  max(H_PTRS_PER_PUD, R_PTRS_PER_PUD)
-
-Balbir Singh.
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
