@@ -2,101 +2,129 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721CAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8DEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4AD2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9485D2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NqY1B5Lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLJUCA (ORCPT
+        id S1726665AbfLJUFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:02:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:60609 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLJUB7 (ORCPT
+        Tue, 10 Dec 2019 15:05:02 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42316 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfLJUFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:01:59 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MRC3Y-1iQO6w3lB6-00NCmc; Tue, 10 Dec 2019 21:01:14 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "David S. Miller" <davem@davemloft.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: hp100: add back CONFIG_NET dependency
-Date:   Tue, 10 Dec 2019 21:00:52 +0100
-Message-Id: <20191210200110.994059-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 10 Dec 2019 15:05:02 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so16668201otd.9;
+        Tue, 10 Dec 2019 12:05:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ffu1c8lDFafmMWH7UIK/Jm4IFvQzvK0JEWcwhE/AfdQ=;
+        b=NqY1B5LjJU0vM1d4WpeD0ZeoqgIt8hI6csNKV63oMHCy3CIGP/mE+VFXtRsCWysuOH
+         cBLhJFhVVWspwhg/0iJ+LYahN59cIYX4PzSNnSoLhTclj18oWAVTNbPbGXKwVUcG1m5b
+         vIqO9tIcWm1mHn3TDhenvm/Kb7y5VviWObIh9zOffAVbOM+2BsUKYe/3mp7ItszjjpU7
+         4r0dzTo0MHzXV0SdMbgtbegD81UW42uChbRS654dX25anJKmSBszdBRt0XPRpcJGh616
+         Zi7BSVuJofr6eR1H3qChHVMLTUpJyFOV8FSWll960WfMQRcJGW+9xU5/6Be4ts7TsrE1
+         dVPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ffu1c8lDFafmMWH7UIK/Jm4IFvQzvK0JEWcwhE/AfdQ=;
+        b=WTd3AbWGofBBIl6yvzkncMGPhFjibDOCy5STmhtT3w+33Gze4vLtl159i+lZmpUn8Q
+         TZpbUyaP4HyzLC3vkoyzx8z1iudHznYi89OpHFbKUcXM6gBJm37C/OAg6Ldbts3VYLyl
+         +QnH51MuFMoqjHZNMPej/Nt20yh2V9VCqZ9g8iUp1xepRqB3tlt2YRgAWaFG0h1IXR21
+         yqyzTbYTPIbdMpG+VRJ0k8kNMCb9z97V+FnlzjvroO6YvUr5Gb4V2HaoIQpDEYLLYyJS
+         O0KChN2lgEav1NOmdUpFkP/xBl6rAbjC7TbFDqQg+mmNpOocNQFyneDvQKAZplB6ky6L
+         CQ7A==
+X-Gm-Message-State: APjAAAUA5jJ5r7LmNb57sehwLa1K+SUjJjeNus9fjnmtVCXB0zg2whZR
+        2a4v+WBsV//s9L6kUTf+6yejLO2u8PqwoBHBcy0=
+X-Google-Smtp-Source: APXvYqyQXxbMb0eeNtonRVid5JNsQL8VWcdzxoDr8Caq2Q5ouK3M+5t6gh12myZjJdQRIwE/4kJ8HDen46CJJDc7XCI=
+X-Received: by 2002:a05:6830:1b71:: with SMTP id d17mr19510797ote.42.1576008301566;
+ Tue, 10 Dec 2019 12:05:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+7Yu/LyZ/DDAc+hdUMCmrQTiZ9Z8tQKQouc+MwE9Tqy6NOcCjkr
- jU7XZlFizVeJeUVMyO2+l/oqxbNjs13gZjbCslIlycfem6n/UnUvv4wibz4fMO8uF7ydpvS
- 8zTDBasJCiyCHqvt7u/j+iykuRysWCvOYBcLh11RH1mv/fYB2CS+su3IhnK7u/rQJK33qRG
- sfQcyOX4XweFh9agjsKSA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sPhwV+30Z4w=:Tfk94g/xDVxgp5VMobrJ4M
- S+ec6kQCaIujpOAUHWfrYhdA3JQ0T4PUMwNwCgCH2hpaWCKt+tOWwflG65YB1u5s8ev/6knIr
- X6EfC4YBTsd4LU9EHDyPallDjdr+Ao3S08/xo9NYq/7/1yjV+ku/NEzA0EC1f7Bw3TQMfkG1m
- iJ+amkHWoxy8gsasWtzy+CB1J0O0spvRL/XHI1yuOz7bd7djvNN9fQQeLEh7o/giStqJzomt4
- uUsyrXg9Z6ZpKzViDzfRoiY8rFIwNRL2S0cCMs27f8hEEQxEDANlsZyvM8JmM3A+NSxIXXGDG
- pZKezdvjXWWh3PScoEiJmH0cj2fZtCKPPC/92UnEVUr0ZR5N1dFgkRDWQxqP6cbYMwfLiq+jw
- XdFaQm3OC9qqe3kvKfwr1WW5wqkkYzCG1AkMigADmlcQ8ECKj9ngDBQL65qUju1tqpo6rGsjW
- f+Htfu190Zq2GLf8VkxLPlG/MaJCNab4m18fTpSBrdOUGJFeI4Ea+8NmeN02vrwzlxjUfzSrA
- 36sC0m4HaVp2IETl17XccJ3AJYpVYD4UsS14+GRQTO8DUaNmxGn+YqUHpgmb3pWh/97c3Cw70
- 1OBsARa19mmVNRc0Ygv1vhPQpNyhOGEOZE5JwtuFtw29CN6Ng22nz9/uiUeQ72TBtaRErlhjY
- XnOmJ9BG3MZ0SqtUzlhZQrXwA7x+aznvljLBoP57tMeGr4wkJkJsxiV6GM5eNnmptfNJXddBg
- ytXapeELCnKzUksxsLB5VocLTDUX3AhP/ZsMvPpnDdPFLz3s9EFd861ZtdBSGjsW+xvKC7+SY
- 74r0lNJW95tBgc/A1TnVJ0+oqLgEEu6O3RpqaD/Z6/47Vo6xTF93WLQpEAFHa0uQITjEVUNEi
- MxRu1XZpDbh5GpqT9b1w==
+References: <20191101143126.2549-1-linux.amoon@gmail.com> <7hfthtrvvv.fsf@baylibre.com>
+ <c89791de-0a46-3ce2-b3e2-3640c364cd0f@baylibre.com> <CANAwSgQx3LjQe60TGgKyk6B5BD5y1caS2tA+O+GFES7=qCFeKg@mail.gmail.com>
+ <7hfthsqcap.fsf@baylibre.com>
+In-Reply-To: <7hfthsqcap.fsf@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 10 Dec 2019 21:04:50 +0100
+Message-ID: <CAFBinCBfgxXhPKpBLdoq9AimrpaneYFgzgJoDyC-2xhbHmihpA@mail.gmail.com>
+Subject: Re: [RFC-next 0/1] Odroid C2: Enable DVFS for cpu
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The move to staging lost an important dependency:
+On Tue, Dec 10, 2019 at 7:13 PM Kevin Hilman <khilman@baylibre.com> wrote:
+>
+> Anand Moon <linux.amoon@gmail.com> writes:
+>
+> > Hi Neil / Kevin,
+> >
+> > On Tue, 10 Dec 2019 at 14:13, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> On 09/12/2019 23:12, Kevin Hilman wrote:
+> >> > Anand Moon <linux.amoon@gmail.com> writes:
+> >> >
+> >> >> Some how this patch got lost, so resend this again.
+> >> >>
+> >> >> [0] https://patchwork.kernel.org/patch/11136545/
+> >> >>
+> >> >> This patch enable DVFS on GXBB Odroid C2.
+> >> >>
+> >> >> DVFS has been tested by running the arm64 cpuburn
+> >> >> [1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+> >> >> PM-QA testing
+> >> >> [2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
+> >> >>
+> >> >> Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
+> >> >
+> >> > Have you tested with the Harkernel u-boot?
+> >> >
+> >> > Last I remember, enabling CPUfreq will cause system hangs with the
+> >> > Hardkernel u-boot because of improperly enabled frequencies, so I'm not
+> >> > terribly inclined to merge this patch.
+> >
+> > HK u-boot have many issue with loading the kernel, with load address
+> > *it's really hard to build the kernel for HK u-boot*,
+> > to get the configuration correctly.
+> >
+> > Well I have tested with mainline u-boot with latest ATF .
+> > I would prefer mainline u-boot for all the Amlogic SBC, since
+> > they sync with latest driver changes.
+>
+> Yes, we would all prefer mainline u-boot, but the mainline kernel needs
+> to support the vendor u-boot that is shipping with the boards.  So
+> until Hardkernel (and other vendors) switch to mainline u-boot we do not
+> want to have upstream kernel defaults that will not boot with the vendor
+> u-boot.
+>
+> We can always support these features, but they just cannot be enabled
+> by default.
+(I don't have an Odroid-C2 but I'm curious)
+should Anand submit a patch to mainline u-boot instead? the
+&scpi_clocks node could be enabled at runtime by mainline u-boot
 
-ERROR: "eth_validate_addr" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "eth_mac_addr" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "alloc_etherdev_mqs" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "register_netdev" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "__skb_pad" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "consume_skb" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "dev_trans_start" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "__dev_kfree_skb_any" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "netif_rx" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "eth_type_trans" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "skb_trim" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "skb_put" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "__netdev_alloc_skb" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "free_netdev" [drivers/staging/hp/hp100.ko] undefined!
-ERROR: "unregister_netdev" [drivers/staging/hp/hp100.ko] undefined!
 
-Add it back explicitly.
-
-Fixes: 52340b82cf1a ("hp100: Move 100BaseVG AnyLAN driver to staging")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/staging/hp/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/staging/hp/Kconfig b/drivers/staging/hp/Kconfig
-index fb395cfe6b92..9566d4ab5ce5 100644
---- a/drivers/staging/hp/Kconfig
-+++ b/drivers/staging/hp/Kconfig
-@@ -6,6 +6,7 @@
- config NET_VENDOR_HP
- 	bool "HP devices"
- 	default y
-+	depends on NET
- 	depends on ISA || EISA || PCI
- 	---help---
- 	  If you have a network (Ethernet) card belonging to this class, say Y.
--- 
-2.20.0
-
+Martin
