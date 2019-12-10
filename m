@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E62C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7804C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B59F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015515;
-	bh=bUapwW9hxA9yG13dhWbibDtVoEwpmtvoM5yQzER5YyQ=;
+	s=default; t=1576015517;
+	bh=L20tOjEVEAi70ooVFlzfIgyn5KKlXFx0nlxe2Dzc2rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3M1a4oulNtHd9cceY1J7SYi9vWtD6yLlZVkJaAygrhC2fezoKkIfaFW9rCLcu5HM
-	 zVy/xG0rRZF6qGpevzhVUAIWHzD6YOAeBLBxHSnx+jW38BksKWWgWZOED81fVp6WGb
-	 Jp4FmHFshz16GbU63zIH6jNeu6ZyFTj2Tpc7850I=
+	b=eacfCo+7431EIixDiHgRwDUwVmlGtrHvqYWlomvMQ7N/e5iqH9OfvhN9VnQFQznHH
+	 SOiOFN5ZJqq1bO/cNievqlZKAZMLTXO99daGldxLyNCTaI+9zSGZpY6JcPODNf+yXi
+	 Ms7zFbS0OVCUFhlM7hSaIAVw4E9lMGMXm35IY6RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbfLJWFO (ORCPT
+        id S1729465AbfLJWFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbfLJWE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:57 -0500
+        id S1727307AbfLJWFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3330622B48;
-        Tue, 10 Dec 2019 22:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49F5214D8;
+        Tue, 10 Dec 2019 22:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015497;
-        bh=bUapwW9hxA9yG13dhWbibDtVoEwpmtvoM5yQzER5YyQ=;
+        s=default; t=1576015500;
+        bh=L20tOjEVEAi70ooVFlzfIgyn5KKlXFx0nlxe2Dzc2rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNbm2k1Lq9k0015M3DX8Me4Y/mBfil00atsH1qIzv9jg0tpVooqlDmIIRJPdVx3Mz
-         s0JzBP0PtfpNCmJimfI0py4YPEicn2O5csEqCwkRvWdfqNoO/BNJT/CW1VlLpOCGpL
-         RrSI31T/g0guPdzkM8T+apLL7JxuyoOmyetkuiW4=
+        b=fGvwCr3qe4y9D15/HBB8wiGMElA3M+2HjYG5VPPJGtOHXgC5RmK4S+NQuc+QrpOk2
+         W1sOGEEsSEQKjL8MI+sqAne05+kFC+EqSYiF0LhFx7Mq9JrBTXdQGEfCxycSfx5zEY
+         eBCo3VZVgM5rnSr9lGKIpUHFZQR0F81kkjIyqXzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Hou Bao Hou <houbao@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 097/130] ath10k: fix get invalid tx rate for Mesh metric
-Date:   Tue, 10 Dec 2019 17:02:28 -0500
-Message-Id: <20191210220301.13262-97-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 100/130] media: si470x-i2c: add missed operations in remove
+Date:   Tue, 10 Dec 2019 17:02:31 -0500
+Message-Id: <20191210220301.13262-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
+[ Upstream commit 2df200ab234a86836a8879a05a8007d6b884eb14 ]
 
-ath10k does not provide transmit rate info per MSDU
-in tx completion, mark that as -1 so mac80211
-will ignore the rates. This fixes mac80211 update Mesh
-link metric with invalid transmit rate info.
+The driver misses calling v4l2_ctrl_handler_free and
+v4l2_device_unregister in remove like what is done in probe failure.
+Add the calls to fix it.
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00035
-
-Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index d4986f626c35c..9999c8c40269d 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -100,6 +100,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 8ce6f9cff7463..b60fb6ed5aeb5 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -455,6 +455,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
+ 	video_unregister_device(&radio->videodev);
+ 	kfree(radio);
  
- 	info = IEEE80211_SKB_CB(msdu);
- 	memset(&info->status, 0, sizeof(info->status));
-+	info->status.rates[0].idx = -1;
-+
- 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
++	v4l2_ctrl_handler_free(&radio->hdl);
++	v4l2_device_unregister(&radio->v4l2_dev);
+ 	return 0;
+ }
  
- 	if (tx_done->status == HTT_TX_COMPL_STATE_DISCARD) {
 -- 
 2.20.1
 
