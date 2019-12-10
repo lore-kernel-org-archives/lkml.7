@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FBEC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212FEC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FFE246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4AC206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012340;
-	bh=IwXQYZBTdOEeyTpQWl5WVVtM3dvJFv3nmjOMAVyAIzM=;
+	s=default; t=1576012347;
+	bh=pHpn+rzuC6YQTRftAIk78Kki8xbXONoabqYa5T6oz6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yz1jb0FuPCyg/SNraoYfgdevysBf4d7ELxPKQ5w11D1SrpEqrio2bO9m2OHGEYTZ2
-	 X3nD/dDmLQsS2N/O4vTinOVUbjrPzCleZQpm8qMHJpfv+b5hKoqStHzl43vHl/eMLO
-	 R6LB4uYYBwYIivfKyO4j6A6hxSSzYxIIFnNIAzy4=
+	b=Iv9JfIWuyOXsv3O9AohTq6idOKdmehFekYPc6Ei0i+gnp9Ukrn6pFxMpITo24Cb6z
+	 hghQJXSeGSdFexca9TWOdkdl05lDhTO9DQwqIVNTHr1+RZU1RYj/3IMOocgW0KeSW+
+	 WaesHsGWiV/DYa6Wj7BZwXRdQr1hTgCNIH+Ls6bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbfLJVMT (ORCPT
+        id S1728962AbfLJVMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35424 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbfLJVMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:03 -0500
+        id S1728637AbfLJVMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2C7246A8;
-        Tue, 10 Dec 2019 21:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8515B246C3;
+        Tue, 10 Dec 2019 21:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012323;
-        bh=IwXQYZBTdOEeyTpQWl5WVVtM3dvJFv3nmjOMAVyAIzM=;
+        s=default; t=1576012332;
+        bh=pHpn+rzuC6YQTRftAIk78Kki8xbXONoabqYa5T6oz6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMNoo1dO1X1KMrFP9/nE3j6Dbip6oL4E8OMzTyg7y5Ixifo81t4ErvWJBkaiJMTNq
-         lnmtSIbMojfAYzcsq/6OKXcmSGIacxh93mvKhLEXspLyyGXLyNjwa/jUa/9KqxO4ud
-         c80M4HohDRfyrTrCH8Gj6qGOu4KUhpS9AKqbcmPw=
+        b=Qs7mbRYTY3h4uMw7WZUBwhxVuSfJLJ7x6ETZrgaPQM/+1/HKwNefkWu9RGx2IYQZz
+         5FoHNIqd2FZpHi0hl80v2SNSK4ynRAPZvUypaTbKz8+djYvO/ZcowHqIn/XfJ6VtZw
+         vN54vSOIRplR0RJm9LCUZDjsDKdo9IGdJ2FT4aEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 256/350] iio: imu: st_lsm6dsx: fix ODR check in st_lsm6dsx_write_raw
-Date:   Tue, 10 Dec 2019 16:06:01 -0500
-Message-Id: <20191210210735.9077-217-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 264/350] spi: pxa2xx: Add missed security checks
+Date:   Tue, 10 Dec 2019 16:06:09 -0500
+Message-Id: <20191210210735.9077-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,52 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit fc3f6ad7f5dc6c899fbda0255865737bac88c2e0 ]
+[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
 
-Since st_lsm6dsx i2c master controller relies on accel device as trigger
-and slave devices can run at different ODRs we must select an accel_odr >=
-slave_odr. Report real accel ODR in st_lsm6dsx_check_odr() in order to
-properly set sensor frequency in st_lsm6dsx_write_raw and avoid to
-report unsupported frequency
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-Fixes: 6ffb55e5009ff ("iio: imu: st_lsm6dsx: introduce ST_LSM6DSX_ID_EXT sensor ids")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index fd5ebe1e1594f..28e011b35f21b 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -985,8 +985,7 @@ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
- 		return -EINVAL;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 068c210376799..452cef367696d 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1565,7 +1565,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ #endif
  
- 	*val = odr_table->odr_avl[i].val;
--
--	return 0;
-+	return odr_table->odr_avl[i].hz;
- }
- 
- static u16 st_lsm6dsx_check_odr_dependency(struct st_lsm6dsx_hw *hw, u16 odr,
-@@ -1149,8 +1148,10 @@ static int st_lsm6dsx_write_raw(struct iio_dev *iio_dev,
- 	case IIO_CHAN_INFO_SAMP_FREQ: {
- 		u8 data;
- 
--		err = st_lsm6dsx_check_odr(sensor, val, &data);
--		if (!err)
-+		val = st_lsm6dsx_check_odr(sensor, val, &data);
-+		if (val < 0)
-+			err = val;
-+		else
- 			sensor->odr = val;
- 		break;
- 	}
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
++
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->pdev = pdev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 -- 
 2.20.1
 
