@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5185EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213362053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7022053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017750;
-	bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
+	s=default; t=1576017753;
+	bh=0YZFfgq7d40fJ7EltrHDzVO2zdHSpUWcOXdN0gPbhV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X812OVbgZimvD9NHGGXF4UgqheZy7n/d8Z+p/tKyvLypXrLPLNYYAZb4vM2quFFJA
-	 JfKranjOp9l0l5dTwG2XVK5R7IVyGJbKwC8CC+bDx+qRlIq0EVtu2Vly0oLV6CzHjY
-	 8gBozlcIkbGaB6mBnhJXX4DaCiCJ9hf9PQM2x7L0=
+	b=GQGJlVWLecuy7Mp6q5YIBBPbq1icT3Zn90AWaZKjxI+hW8yFkN6OI7FxXzzjuWBre
+	 iOvYaQsue1KT6qCiiZ6RSvnQOwRQHDo3HHzwLPGi2L7iuOzY+4mCZG2QqiIUS2p+/c
+	 d6tGseOfxxLXtN9cDcUWtT4Bpa+U0ZowkqW+GNjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfLJWbY (ORCPT
+        id S1729603AbfLJWmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51262 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:42:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728227AbfLJWbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:18 -0500
+        id S1728432AbfLJWbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17E0320836;
-        Tue, 10 Dec 2019 22:31:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B282077B;
+        Tue, 10 Dec 2019 22:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017077;
-        bh=26sIAPxWOxDTt0sfmsLSrbEC8BEZn+0RTlIRcTTz9hw=;
+        s=default; t=1576017085;
+        bh=0YZFfgq7d40fJ7EltrHDzVO2zdHSpUWcOXdN0gPbhV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZOzhHrn2GzbgvfotEsqru1PTXBscvVeUWjB1z+Y8a982cLc+DB9WWz2XHW/xK9gt
-         J/54KksarXEJ6bfCe1H/VymviWP1LGkDSyD5E831CqRLOR2BNRmFDtUxoau/0DCN9I
-         qJgkd9HaizrtA8vJKaIIrtYO+iDzR4v39C1CbyFA=
+        b=PP5MQHY0dO2h5ekp7bJuiV24dK02Z4pPNpuqYJK1lIt9zZRNwqjAp3sdGNsNaBvT1
+         I3RLipsyjmArv+EmHTfFkjvRr0Z7ZrfwGE0j/z0MeStonpAvwEpdy3rXDJ6SYkO5Yx
+         Ql/l+0dKPNowyuYv7FJjRfmqYtwkkCLsAkjNKvuE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/91] iio: dac: ad7303: replace mlock with own lock
-Date:   Tue, 10 Dec 2019 17:29:39 -0500
-Message-Id: <20191210223035.14270-35-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 41/91] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Tue, 10 Dec 2019 17:29:45 -0500
+Message-Id: <20191210223035.14270-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,85 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit c991bf9b650f39481cf3c1137092d4754a2c75de ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-This change replaces indio_dev's mlock with the driver's own lock. The lock
-is mostly needed to protect state when changing the `dac_cache` info.
-The lock has been extended to `ad7303_read_raw()`, to make sure that the
-cache is updated if an SPI-write is already in progress.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
+
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
+
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/ad7303.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/dac/ad7303.c b/drivers/iio/dac/ad7303.c
-index 4b0f942b89145..2e5e753ab7066 100644
---- a/drivers/iio/dac/ad7303.c
-+++ b/drivers/iio/dac/ad7303.c
-@@ -42,6 +42,7 @@ struct ad7303_state {
- 	struct regulator *vdd_reg;
- 	struct regulator *vref_reg;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 09dd95cabfc28..3401b28f13121 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1712,9 +1712,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
-+	struct mutex lock;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -80,7 +81,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->lock);
- 
- 	if (pwr_down)
- 		st->config |= AD7303_CFG_POWER_DOWN(chan->channel);
-@@ -91,7 +92,7 @@ static ssize_t ad7303_write_dac_powerdown(struct iio_dev *indio_dev,
- 	 * mode, so just write one of the DAC channels again */
- 	ad7303_write(st, chan->channel, st->dac_cache[chan->channel]);
- 
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return len;
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1751,7 +1752,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
  }
- 
-@@ -117,7 +118,9 @@ static int ad7303_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&st->lock);
- 		*val = st->dac_cache[chan->channel];
-+		mutex_unlock(&st->lock);
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		vref_uv = ad7303_get_vref(st, chan);
-@@ -145,11 +148,11 @@ static int ad7303_write_raw(struct iio_dev *indio_dev,
- 		if (val >= (1 << chan->scan_type.realbits) || val < 0)
- 			return -EINVAL;
- 
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(&st->lock);
- 		ret = ad7303_write(st, chan->address, val);
- 		if (ret == 0)
- 			st->dac_cache[chan->channel] = val;
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(&st->lock);
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -213,6 +216,8 @@ static int ad7303_probe(struct spi_device *spi)
- 
- 	st->spi = spi;
- 
-+	mutex_init(&st->lock);
-+
- 	st->vdd_reg = devm_regulator_get(&spi->dev, "Vdd");
- 	if (IS_ERR(st->vdd_reg))
- 		return PTR_ERR(st->vdd_reg);
+ #else
 -- 
 2.20.1
 
