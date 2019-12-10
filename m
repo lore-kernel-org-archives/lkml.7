@@ -2,106 +2,51 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B524C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA1DC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCCC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:16:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fZXzPK2K"
+	by mail.kernel.org (Postfix) with ESMTP id 4622E20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfLJPQJ (ORCPT
+        id S1727525AbfLJPRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:16:09 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55768 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbfLJPQI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:16:08 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBAFFiD7105272;
-        Tue, 10 Dec 2019 09:15:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575990944;
-        bh=SPqMpDNgTazLOmVVu6pQbTE2uwLvoIZ+26juZp6eI9Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fZXzPK2KFdy3xInOpXTsY1pPEtcjBrTOztIfg0dvQkTa9IopH059JXDkcwoucJQ5M
-         J+qv/8EtpIEWS/kIzP5kePnzoj1zoL6YGP8RO0mnQC0kw9NwczBHECRoAkYYRxxOk/
-         XT/a/JKX9CwAAQGwNc9Np2i9D07lHxDIlnKmbVRY=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBAFFikx055545
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 09:15:44 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 09:15:43 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 09:15:43 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBAFFh7d024012;
-        Tue, 10 Dec 2019 09:15:43 -0600
-Subject: Re: [PATCH][next] can: tcan45x: Fix inconsistent IS_ERR and PTR_ERR
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sean Nyekjaer <sean@geanix.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191210150532.GA12732@embeddedor>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f1c40cbe-28de-55e9-ec19-9401f2c0de03@ti.com>
-Date:   Tue, 10 Dec 2019 09:13:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 10:17:15 -0500
+Received: from muru.com ([72.249.23.125]:44596 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbfLJPRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:17:15 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3C33880E1;
+        Tue, 10 Dec 2019 15:17:53 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 07:17:11 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: am335x-sancloud-bbe: fix phy mode
+Message-ID: <20191210151711.GK35479@atomide.com>
+References: <20191201170706.7173-1-mans@mansr.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210150532.GA12732@embeddedor>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191201170706.7173-1-mans@mansr.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo
+* Mans Rullgard <mans@mansr.com> [191201 09:15]:
+> The phy mode should be rgmii-id.  For some reason, it used to work with
+> rgmii-txid but doesn't any more.
 
-On 12/10/19 9:05 AM, Gustavo A. R. Silva wrote:
-> Fix inconsistent IS_ERR and PTR_ERR in tcan4x5x_parse_config.
->
-> The proper pointer to be passed as argument is tcan4x5x->device_wake_gpio.
->
-> This bug was detected with the help of Coccinelle.
->
-> Fixes: 2de497356955 ("can: tcan45x: Make wake-up GPIO an optional GPIO")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->   drivers/net/can/m_can/tcan4x5x.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-> index 4e1789ea2bc3..6676ecec48c3 100644
-> --- a/drivers/net/can/m_can/tcan4x5x.c
-> +++ b/drivers/net/can/m_can/tcan4x5x.c
-> @@ -355,7 +355,7 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
->   	tcan4x5x->device_wake_gpio = devm_gpiod_get(cdev->dev, "device-wake",
->   						    GPIOD_OUT_HIGH);
->   	if (IS_ERR(tcan4x5x->device_wake_gpio)) {
-> -		if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
-> +		if (PTR_ERR(tcan4x5x->device_wake_gpio) == -EPROBE_DEFER)
->   			return -EPROBE_DEFER;
->   
->   		tcan4x5x_disable_wake(cdev);
+Applying into fixes thanks.
 
-
-Acked-by: Dan Murphy <dmurphy@ti.com>
-
+Tony
