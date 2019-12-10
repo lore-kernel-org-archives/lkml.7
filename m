@@ -2,376 +2,177 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FE8C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C43DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486DC20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E7D20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN0hu+Jb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LUHpmSPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLJBej (ORCPT
+        id S1727003AbfLJBfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:34:39 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38080 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfLJBei (ORCPT
+        Mon, 9 Dec 2019 20:35:13 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:46015 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfLJBfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:34:38 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k8so17880156ljh.5;
-        Mon, 09 Dec 2019 17:34:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PQna/XPf8c16BsDpXm+ibEkwCJpB2q8be04A7j7c/us=;
-        b=NN0hu+Jb5vYKVTElID1jsombs6qsGfBm2XtU6LKXnM2/iTKRVpWPbcMoJYV4TkfvTW
-         /m5+kU9MTUIgT4ubd38kFzQ7on82BuAhMDXKkIz4McR/CYUwCCmuz0HcT84M3imZbNbH
-         45saCY5RvUg1akP5lrns9ArD7XxflWHWfy0/q5Wfx9W64CNvsK5oKMipXMgJxPyNXrLw
-         iTie8RqChK7OHMbOtwip+O7W+m4LDKdDWt7a8l96vr4ZJSqqQkztXFDRFlry/C7X9e9M
-         zdGpjXf3Tq/E0+da9gAIdw0AgbJ9lPyalRlU2SYTrrIYPAXaQgBpg9X37vxUQGnVx4O5
-         p0GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PQna/XPf8c16BsDpXm+ibEkwCJpB2q8be04A7j7c/us=;
-        b=WqVaZmrVaIJO0DYNgRzvby+2eXZBzn121BAJT2+Z1FgQp7sr91VrvkPGz3g20QJ0uG
-         H7bW8/XNOb1SS+h8sy7MaH2NCTba8UgpsMVGH69Vewnas6fDAtORxedWYU9oI8vcrRTb
-         41pJmqAnrimDiLV5+hY7PqgOpytHaprMfn83oJjupVwiweqHD+JQnFB3O+vW2LIwd/FA
-         Q1GCwGCmelj8b/xJhJbxOAhBIu4zYkTom5yXCwG5XIO5PxqmsfbexeYqVgiiy7mo7l3l
-         Bc3t2a9h2/D9nEieGaXygK14x2z/ON9a3Q2BKrstZ1iqNnZyWYnrb9Ys2q/AXEuk09+Y
-         WMCA==
-X-Gm-Message-State: APjAAAVzZeNkiAbof/xWj+zrjPNCBEy5szduZMVoLpWXTnymY36kNcPg
-        qPExJdhwfiBjk7qfu5oYcs0FwkFg
-X-Google-Smtp-Source: APXvYqzwthzBkjX+2aJvjzfCMtR0Dq3uFFMWjPMXJeSBnPluvYPwrmkbnW2gridVfbQwiSoymqO/Sg==
-X-Received: by 2002:a2e:7009:: with SMTP id l9mr14238725ljc.96.1575941675118;
-        Mon, 09 Dec 2019 17:34:35 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r26sm516424lfm.82.2019.12.09.17.34.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 17:34:34 -0800 (PST)
-Subject: Re: [PATCH 5/6] input: elants: refactor elants_i2c_execute_command()
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
- <d0901ff04ddfe2f0c5d531db68dd493187a16d81.1575936961.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5f24b14b-75b0-52d5-eb0a-da17f3c45742@gmail.com>
-Date:   Tue, 10 Dec 2019 04:34:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 20:35:13 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191210013510epoutp024c55e12e0ad9cd49ad91a4baba54158a~e3qLeoC-X0805108051epoutp02W
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:35:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191210013510epoutp024c55e12e0ad9cd49ad91a4baba54158a~e3qLeoC-X0805108051epoutp02W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575941710;
+        bh=qFiCkpWdOhMk6slOqt40KxqUMhSvlXpG9cflFcoQj2I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LUHpmSPv6HLm9R/eR8aw7ZYm7SDqmlXd6lMFvxjmxKd4Y/b7+ymY8aVPMgkmpk0GH
+         Ok9S387axIMRgZE3C9Nu+ajSVJ4zTVbbaURcCsyrqTVXCvim65MxP0fKn61D6+9Ham
+         Gem+OKxBDuxs7kIKSY0Ui3zukZ4piotmfE9vbKhM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191210013510epcas1p2248b3cbbae64420c6c1b8dd87bfd1bbb~e3qLK-vr81892118921epcas1p2d;
+        Tue, 10 Dec 2019 01:35:10 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47X2gH5QH7zMqYlh; Tue, 10 Dec
+        2019 01:35:07 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8C.40.48019.546FEED5; Tue, 10 Dec 2019 10:35:01 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210013501epcas1p2532f000b722aac007d096c7adc1f92b4~e3qCntqUY2119221192epcas1p22;
+        Tue, 10 Dec 2019 01:35:01 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191210013501epsmtrp1d908bcace9dc47ff1fe897fc32efc236~e3qCm_50y0823808238epsmtrp1q;
+        Tue, 10 Dec 2019 01:35:01 +0000 (GMT)
+X-AuditID: b6c32a38-257ff7000001bb93-16-5deef6455802
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E5.DC.06569.546FEED5; Tue, 10 Dec 2019 10:35:01 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191210013501epsmtip14955e9626732f54cb7603b58c6c824e7~e3qCdp8pt1587015870epsmtip1X;
+        Tue, 10 Dec 2019 01:35:01 +0000 (GMT)
+Subject: Re: [PATCH 1/4] PM / devfreq: reuse system workqueue machanism
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <2eab8a20-1701-94dc-410a-bb072a5f5b4e@samsung.com>
+Date:   Tue, 10 Dec 2019 10:41:27 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <d0901ff04ddfe2f0c5d531db68dd493187a16d81.1575936961.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191209144425.13321-2-k.konieczny@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTURju7G53V3N5mqlvBmVXjDKWXufqJi2KrAZFWZE/ArGLHtTcV7tT
+        rP6U1MzIPijFRGtQUkplUyu1cmRqCeX6RMmKKClNUzLtgwradhf573mf93nO+z7nHIZSO+ko
+        JtdsJzazYGTpYPmNe4viNWu/jaYneFzxvKuiXsE7xysUvMdzTck/KhpR8s9aq2j+a2kH4q90
+        vFby/Qcu0asYQ0NdCW041lSHDF8b5qZSO/JW5BAhi9iiiTnTkpVrztazG7ZlrMnQLU3gNNxy
+        fhkbbRZMRM+mbEzVrMs1ejdgowsEY76XShVEkY1fucJmybeT6ByLaNezxJpltC63LhEFk5hv
+        zl6SaTElcwkJiTqvcGdejruqRWYtmlF4+k3EfnR3+hEUxABOgq6xV4ojKJhR42YEVYM9gWIc
+        QU3bmFIqviGYONam+Gd52neLlhp3EJw+9FsmFWMInlR3eTsME4bXw53GNJ9hFtbASHMN5dNQ
+        +KwMRsof+0+icRy4B/toHw7F8+HFj/fIh1V4JZSWOvy8HMdC5/Wfch8Ox2nQfeNgQDMTus8M
+        +PkgrIfjveN+PYUj4eXAOZmE58HNz1X+wYCHaWh5+kcmRUiBMyV1tITD4NP9JqWEo2DouCOA
+        90FtdwctmQ8jaHI/DuTXgrvmlMyXksKLoL41XqLnQ8uvaiQNngGjk0cVPglgFRx2qCVJDDx7
+        +zqwwmw4X1xCn0Bs5ZQ4lVMiVE6JUPl/mBPJ61AEsYqmbCJy1qSpr92A/L8zjm9Gt3s2tiPM
+        IDZE5Vw1mq5WCAXiHlM7AoZiZ6nuO7yUKkvYs5fYLBm2fCMR25HOe9snqajwTIv3r5vtGZwu
+        UavV8kncUh3HsZEq5seTdDXOFuwkjxArsf3zyZigqP3IMfFlMiTkw+U5jelxi12hawrLNhW4
+        dENprUNzn4emFNfvGvLMHO9KFotIpM55ES184VGX3Sb6mqs7LhiSD33cYD1xNHh7P2eoLV9t
+        7HT39DeGXX7YFjapra13TWt4NGfXq+ESzbsHpt2tJ8tymc29MWK5eUvxRGxhp45esLXiO2Hl
+        Yo7AxVE2UfgLjFYelbMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJTtf127tYgyM7uCw2zljParHg0wxW
+        i/PnN7BbnG16w25xedccNovPvUcYLdYeuctucbtxBZsDh8emVZ1sHn1bVjF6fN4kF8AcxWWT
+        kpqTWZZapG+XwJWxf85OpoImvoop98QaGA9ydzFyckgImEhcurGbrYuRi0NIYDejxP5jc9gg
+        EpIS0y4eZe5i5ACyhSUOHy4GCQsJvGWUmHGgBiQsLOAusXdzGEhYREBX4s2OpcwgY5gFFjBJ
+        zL85kQVi5mFGiR3Ln7KCVLEJaEnsf3EDbD6/gKLE1R+PGUFsXgE7id7eNrA4i4CqxNGtP1lA
+        bFGBMImdSx4zQdQISpyc+QQszilgK9F//RNYPbOAusSfeZeYIWxxiVtP5jNB2PIS29/OYZ7A
+        KDwLSfssJC2zkLTMQtKygJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcARpae1g
+        PHEi/hCjAAejEg+vh927WCHWxLLiytxDjBIczEoivMfbgEK8KYmVValF+fFFpTmpxYcYpTlY
+        lMR55fOPRQoJpCeWpGanphakFsFkmTg4pRoYI3p4Y0zK/j05wmgdNT1cWDXIJM9tsuTMI58V
+        woJbLlilbl2+UFGxJti0rbQ4Pfl6RtEdadHNd5N9bMOi+m8dnGb0xO1W2b7Qmf/erj3yMiA8
+        frr7jKkrsr6Efy+ydas+aXNy0YOQ3f9WeO5efiH5zqYvWxQk7b63TRHa8zhMTiyaI//gd6lw
+        JZbijERDLeai4kQARxaNG5wCAAA=
+X-CMS-MailID: 20191210013501epcas1p2532f000b722aac007d096c7adc1f92b4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
+References: <20191209144425.13321-1-k.konieczny@samsung.com>
+        <CGME20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2@eucas1p1.samsung.com>
+        <20191209144425.13321-2-k.konieczny@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.12.2019 03:19, Michał Mirosław пишет:
-> Apply some DRY-ing to elants_i2c_execute_command() callers.
+On 12/9/19 11:44 PM, Kamil Konieczny wrote:
+> There is no need for creating another workqueue, it is enough
+> to reuse system_freezable_power_efficient one.
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
 > ---
->  drivers/input/touchscreen/elants_i2c.c | 182 +++++++++++++------------
->  1 file changed, 93 insertions(+), 89 deletions(-)
+>  drivers/devfreq/devfreq.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 2e6c9aa60496..27aca3971da5 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -201,7 +201,8 @@ static int elants_i2c_read(struct i2c_client *client, void *data, size_t size)
->  
->  static int elants_i2c_execute_command(struct i2c_client *client,
->  				      const u8 *cmd, size_t cmd_size,
-> -				      u8 *resp, size_t resp_size)
-> +				      u8 *resp, size_t resp_size,
-> +				      int retries, const char *cmd_name)
->  {
->  	struct i2c_msg msgs[2];
->  	int ret;
-> @@ -217,30 +218,55 @@ static int elants_i2c_execute_command(struct i2c_client *client,
->  		break;
->  
->  	default:
-> -		dev_err(&client->dev, "%s: invalid command %*ph\n",
-> -			__func__, (int)cmd_size, cmd);
-> +		dev_err(&client->dev, "(%s): invalid command: %*ph\n",
-> +			cmd_name, (int)cmd_size, cmd);
->  		return -EINVAL;
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 46a7ff7c2994..955949c6fc1f 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -1532,11 +1532,11 @@ static int __init devfreq_init(void)
+>  		return PTR_ERR(devfreq_class);
 >  	}
 >  
-> -	msgs[0].addr = client->addr;
-> -	msgs[0].flags = client->flags & I2C_M_TEN;
-> -	msgs[0].len = cmd_size;
-> -	msgs[0].buf = (u8 *)cmd;
-> +	for (;;) {
-> +		msgs[0].addr = client->addr;
-> +		msgs[0].flags = client->flags & I2C_M_TEN;
-> +		msgs[0].len = cmd_size;
-> +		msgs[0].buf = (u8 *)cmd;
->  
-> -	msgs[1].addr = client->addr;
-> -	msgs[1].flags = client->flags & I2C_M_TEN;
-> -	msgs[1].flags |= I2C_M_RD;
-> -	msgs[1].len = resp_size;
-> -	msgs[1].buf = resp;
-> +		msgs[1].addr = client->addr;
-> +		msgs[1].flags = client->flags & I2C_M_TEN;
-> +		msgs[1].flags |= I2C_M_RD;
-> +		msgs[1].len = resp_size;
-> +		msgs[1].buf = resp;
->  
-> -	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> -	if (ret < 0)
-> -		return ret;
-> +		ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> +		if (ret < 0) {
-> +			if (--retries > 0) {
-> +				dev_dbg(&client->dev,
-> +					"(%s) I2C transfer failed: %d (retrying)\n",
-> +					cmd_name, ret);
-> +				continue;
-> +			}
->  
-> -	if (ret != ARRAY_SIZE(msgs) || resp[FW_HDR_TYPE] != expected_response)
-> -		return -EIO;
-> +			dev_err(&client->dev,
-> +				"(%s) I2C transfer failed: %d\n",
-> +				cmd_name, ret);
-> +			return ret;
-> +		}
->  
-> -	return 0;
-> +		if (ret != ARRAY_SIZE(msgs) ||
-> +		    resp[FW_HDR_TYPE] != expected_response) {
-> +			if (--retries > 0) {
-> +				dev_dbg(&client->dev,
-> +					"(%s) unexpected response: %*ph (retrying)\n",
-> +					cmd_name, ret, resp);
-> +				continue;
-> +			}
-> +
-> +			dev_err(&client->dev,
-> +				"(%s) unexpected response: %*ph\n",
-> +				cmd_name, ret, resp);
-> +			return -EIO;
-> +		}
-> +
-> +		return --retries;
-> +	}
->  }
->  
->  static int elants_i2c_calibrate(struct elants_data *ts)
-> @@ -313,27 +339,20 @@ static u16 elants_i2c_parse_version(u8 *buf)
->  static int elants_i2c_query_hw_version(struct elants_data *ts)
->  {
->  	struct i2c_client *client = ts->client;
-> -	int error, retry_cnt;
-> +	int retry_cnt = MAX_RETRIES;
->  	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_FW_ID, 0x00, 0x01 };
->  	u8 resp[HEADER_SIZE];
->  
-> -	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-> -		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> -						   resp, sizeof(resp));
-> -		if (!error) {
-> -			ts->hw_version = elants_i2c_parse_version(resp);
-> -			if (ts->hw_version != 0xffff)
-> -				return 0;
-> -		}
-> +	while (retry_cnt) {
-> +		retry_cnt = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> +						       resp, sizeof(resp),
-> +						       retry_cnt, "read fw id");
-> +		if (retry_cnt < 0)
-> +			return retry_cnt;
->  
-> -		dev_dbg(&client->dev, "read fw id error=%d, buf=%*phC\n",
-> -			error, (int)sizeof(resp), resp);
-> -	}
-> -
-> -	if (error) {
-> -		dev_err(&client->dev,
-> -			"Failed to read fw id: %d\n", error);
-> -		return error;
-> +		ts->hw_version = elants_i2c_parse_version(resp);
-> +		if (ts->hw_version != 0xffff)
-> +			return 0;
+> -	devfreq_wq = create_freezable_workqueue("devfreq_wq");
+> +	devfreq_wq = system_freezable_power_efficient_wq;
+
+It affect the behaviors of whole device drivers using devfreq subsystem.
+It is not good to change the workqueue type without any reasonable
+data like experiment result, power-consumption result and performance
+result for almost device drivers using devfreq subsystem.
+
+Are there any problem or any benefit to change workqueue type?
+
+Actually, it is not simple to change the like just one device driver
+because devfreq subsytem is very important for both performance
+and power-consumption.
+
+If you hope to change the feature related to both performance 
+and power-consumption, please suggest the reasonable data
+with fundamental reason.
+
+So, I can't agree it.
+
+
+>  	if (!devfreq_wq) {
+>  		class_destroy(devfreq_class);
+> -		pr_err("%s: couldn't create workqueue\n", __FILE__);
+> -		return -ENOMEM;
+> +		pr_err("%s: system_freezable_power_efficient_wq isn't initialized\n", __FILE__);
+> +		return -EINVAL;
 >  	}
->  
->  	dev_err(&client->dev, "Invalid fw id: %#04x\n", ts->hw_version);
-> @@ -344,26 +363,28 @@ static int elants_i2c_query_hw_version(struct elants_data *ts)
->  static int elants_i2c_query_fw_version(struct elants_data *ts)
->  {
->  	struct i2c_client *client = ts->client;
-> -	int error, retry_cnt;
-> +	int retry_cnt = MAX_RETRIES;
->  	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_FW_VER, 0x00, 0x01 };
->  	u8 resp[HEADER_SIZE];
->  
-> -	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-> -		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> -						   resp, sizeof(resp));
-> -		if (!error) {
-> -			ts->fw_version = elants_i2c_parse_version(resp);
-> -			if (ts->fw_version != 0x0000 &&
-> -			    ts->fw_version != 0xffff)
-> -				return 0;
-> -		}
-> +	while (retry_cnt) {
-> +		retry_cnt = elants_i2c_execute_command(client, cmd,
-> +						       sizeof(cmd),
-> +						       resp, sizeof(resp),
-> +						       retry_cnt,
-> +						       "read fw version");
-> +		if (retry_cnt < 0)
-> +			return retry_cnt;
->  
-> -		dev_dbg(&client->dev, "read fw version error=%d, buf=%*phC\n",
-> -			error, (int)sizeof(resp), resp);
-> +		ts->fw_version = elants_i2c_parse_version(resp);
-> +		if (ts->fw_version != 0x0000 && ts->fw_version != 0xffff)
-> +			return 0;
-> +
-> +		dev_dbg(&client->dev, "(read fw version) resp %*phC\n",
-> +			(int)sizeof(resp), resp);
->  	}
->  
-> -	dev_err(&client->dev,
-> -		"Failed to read fw version or fw version is invalid\n");
-> +	dev_err(&client->dev, "Invalid fw ver: %#04x\n", ts->fw_version);
->  
->  	return -EINVAL;
->  }
-> @@ -371,25 +392,20 @@ static int elants_i2c_query_fw_version(struct elants_data *ts)
->  static int elants_i2c_query_test_version(struct elants_data *ts)
->  {
->  	struct i2c_client *client = ts->client;
-> -	int error, retry_cnt;
-> +	int error;
->  	u16 version;
->  	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_TEST_VER, 0x00, 0x01 };
->  	u8 resp[HEADER_SIZE];
->  
-> -	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-> -		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> -						   resp, sizeof(resp));
-> -		if (!error) {
-> -			version = elants_i2c_parse_version(resp);
-> -			ts->test_version = version >> 8;
-> -			ts->solution_version = version & 0xff;
-> +	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> +					   resp, sizeof(resp), MAX_RETRIES,
-> +					   "read test version");
-> +	if (error >= 0) {
-> +		version = elants_i2c_parse_version(resp);
-> +		ts->test_version = version >> 8;
-> +		ts->solution_version = version & 0xff;
->  
-> -			return 0;
-> -		}
-> -
-> -		dev_dbg(&client->dev,
-> -			"read test version error rc=%d, buf=%*phC\n",
-> -			error, (int)sizeof(resp), resp);
-> +		return 0;
->  	}
->  
->  	dev_err(&client->dev, "Failed to read test version\n");
-> @@ -406,13 +422,10 @@ static int elants_i2c_query_bc_version(struct elants_data *ts)
->  	int error;
->  
->  	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
-> -					   resp, sizeof(resp));
-> -	if (error) {
-> -		dev_err(&client->dev,
-> -			"read BC version error=%d, buf=%*phC\n",
-> -			error, (int)sizeof(resp), resp);
-> +					   resp, sizeof(resp), 1,
-> +					   "read BC version");
-> +	if (error)
->  		return error;
-> -	}
->  
->  	version = elants_i2c_parse_version(resp);
->  	ts->bc_version = version >> 8;
-> @@ -444,12 +457,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
->  	error = elants_i2c_execute_command(client,
->  					   get_resolution_cmd,
->  					   sizeof(get_resolution_cmd),
-> -					   resp, sizeof(resp));
-> -	if (error) {
-> -		dev_err(&client->dev, "get resolution command failed: %d\n",
-> -			error);
-> +					   resp, sizeof(resp), 1,
-> +					   "get resolution");
-> +	if (error)
->  		return error;
-> -	}
->  
->  	rows = resp[2] + resp[6] + resp[10];
->  	cols = resp[3] + resp[7] + resp[11];
-> @@ -457,36 +468,29 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
->  	/* Process mm_to_pixel information */
->  	error = elants_i2c_execute_command(client,
->  					   get_osr_cmd, sizeof(get_osr_cmd),
-> -					   resp, sizeof(resp));
-> -	if (error) {
-> -		dev_err(&client->dev, "get osr command failed: %d\n",
-> -			error);
-> +					   resp, sizeof(resp), 1, "get osr");
-> +	if (error)
->  		return error;
-> -	}
->  
->  	osr = resp[3];
->  
->  	error = elants_i2c_execute_command(client,
->  					   get_physical_scan_cmd,
->  					   sizeof(get_physical_scan_cmd),
-> -					   resp, sizeof(resp));
-> -	if (error) {
-> -		dev_err(&client->dev, "get physical scan command failed: %d\n",
-> -			error);
-> +					   resp, sizeof(resp), 1,
-> +					   "get physical scan");
-> +	if (error)
->  		return error;
-> -	}
->  
->  	phy_x = get_unaligned_be16(&resp[2]);
->  
->  	error = elants_i2c_execute_command(client,
->  					   get_physical_drive_cmd,
->  					   sizeof(get_physical_drive_cmd),
-> -					   resp, sizeof(resp));
-> -	if (error) {
-> -		dev_err(&client->dev, "get physical drive command failed: %d\n",
-> -			error);
-> +					   resp, sizeof(resp), 1,
-> +					   "get physical drive");
-> +	if (error)
->  		return error;
-> -	}
->  
->  	phy_y = get_unaligned_be16(&resp[2]);
+>  	devfreq_class->dev_groups = devfreq_groups;
 >  
 > 
 
-Is this really needed? Could you please try to set IRQ_TYPE_EDGE_FALLING
-in the device-tree for the interrupt type? I don't think think that
-downstream kernel is correct and I've seen weird I2C problems when
-IRQ_TYPE_LEVEL_LOW is used.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
