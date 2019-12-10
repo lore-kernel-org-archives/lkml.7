@@ -2,105 +2,92 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBB9C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96ECC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55A320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863BE20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575977594;
+	bh=tPwioPBZTVQuH0xTYAjJF8pvcpv9IPBbgxZSGUhI0pQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zOTWromQL2E8/37/sXFW3mmQTKRnovrttf8DoFVVf8FLFlkxrNl3DLFoD+scj/heu
+	 oqgiHH3f3zMPN8wHZYMMVqPBw35ZPNCGxFIMFsJdzudo6jeyhCMvyMFkzYcJwpztQo
+	 9zlh0rq0Q/qQ/NAUquNDRxCIsYD5NZiRVa/cZkJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLJL2N (ORCPT
+        id S1727317AbfLJLdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:28:13 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:57272 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfLJL2M (ORCPT
+        Tue, 10 Dec 2019 06:33:13 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46845 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfLJLdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:28:12 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47XHqY5VslzQl9M;
-        Tue, 10 Dec 2019 12:28:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id ORbApr3hLJrD; Tue, 10 Dec 2019 12:28:05 +0100 (CET)
-Date:   Tue, 10 Dec 2019 22:27:50 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kselftest@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] selftests: fix spelling mistake "chainged" ->
- "chained"
-Message-ID: <20191210112750.5rfck3gnmobabhak@yavin.dot.cyphar.com>
-References: <20191210112455.171482-1-colin.king@canonical.com>
+        Tue, 10 Dec 2019 06:33:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z17so19406879ljk.13;
+        Tue, 10 Dec 2019 03:33:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WlGOel6ozfYcbJC1frR6+E7yE+Nd4baR7fkyrQ2PmS0=;
+        b=i1s+4i6EBuU2PD6JVHtFxqWCevgaVCBY5TF1R3eXCSU3ZdjRJsD0oebvpAc3LGU24a
+         iCxRMHzB4tFlL9lSyFzP4D0vW2WA9nhkly1a8Nytpof4PWgOqi+iDBoh3kruaRBMlZMG
+         23yqVkJHHMDsThV2I4je/8mQlrP5GrxgTpepcLNoh9kCsjjTem3OEkh+PGZ1eR6tmXAh
+         BOA8Mwx1ogjawlC7UIlDoHW/MvM6r6MlvsDdAlTemoIG+ZjWQv/EWBpCjDvqYBGvstxN
+         XhmR9BFembBNVwWoaMOCboiyyYCNbDJaO8629RsU/G2DQIbvMEhGBqk4S5CZj0xmWDhN
+         ZM0Q==
+X-Gm-Message-State: APjAAAUQN8r0uaA3DEuOwHRE0zy1LKVCYfrB/TGzuupLO9FuS/PbW6ou
+        8Ppe3qH1dn/YW/xVrHjMWspD5tnr
+X-Google-Smtp-Source: APXvYqwqtzkU4Y+fFg5i+yyr3JEyChJTSJMRakvsyHC/azNkKky5OQGCDs6kpPvEn/dcofvIfWjlYg==
+X-Received: by 2002:a05:651c:208:: with SMTP id y8mr20383413ljn.36.1575977590457;
+        Tue, 10 Dec 2019 03:33:10 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id p26sm1391436lfh.64.2019.12.10.03.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 03:33:09 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iedlP-00010K-Tm; Tue, 10 Dec 2019 12:33:11 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] can: fix USB altsetting bugs
+Date:   Tue, 10 Dec 2019 12:32:29 +0100
+Message-Id: <20191210113231.3797-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l7rai3c6jadzkxag"
-Content-Disposition: inline
-In-Reply-To: <20191210112455.171482-1-colin.king@canonical.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We had quite a few driver using the first alternate setting instead of
+the current one when doing descriptor sanity checks. This is mostly an
+issue on kernels with panic_on_warn set due to a WARN() in
+usb_submit_urn(). Since we've started backporting such fixes (e.g. as
+reported by syzbot), I've marked these for stable as well.
 
---l7rai3c6jadzkxag
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The second patch here is a related cleanup to prevent future issues.
 
-On 2019-12-10, Colin King <colin.king@canonical.com> wrote:
-> There is a spelling mistake in a literal string, fix it.
-
-Yup, makes sense.
-
-Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  tools/testing/selftests/openat2/resolve_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testi=
-ng/selftests/openat2/resolve_test.c
-> index 7a94b1da8e7b..bbafad440893 100644
-> --- a/tools/testing/selftests/openat2/resolve_test.c
-> +++ b/tools/testing/selftests/openat2/resolve_test.c
-> @@ -230,7 +230,7 @@ void test_openat2_opath_tests(void)
->  		{ .name =3D "[in_root] garbage link to /root",
->  		  .path =3D "cheeky/garbageself",	.how.resolve =3D RESOLVE_IN_ROOT,
->  		  .out.path =3D "root",		.pass =3D true },
-> -		{ .name =3D "[in_root] chainged garbage links to /root",
-> +		{ .name =3D "[in_root] chained garbage links to /root",
->  		  .path =3D "abscheeky/garbageself", .how.resolve =3D RESOLVE_IN_ROOT,
->  		  .out.path =3D "root",		.pass =3D true },
->  		{ .name =3D "[in_root] relative path to 'root'",
-> --=20
-> 2.24.0
->=20
+Johan
 
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+Johan Hovold (2):
+  can: kvaser_usb: fix interface sanity check
+  can: gs_usb: use descriptors of current altsetting
 
---l7rai3c6jadzkxag
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/net/can/usb/gs_usb.c                      | 4 ++--
+ drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c | 2 +-
+ drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.24.0
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXe+BLwAKCRCdlLljIbnQ
-EubTAP9OptH6VWy5DMeb7HaGfXTnyuPkThnwOMh7lvkzgNvH4AEAtBUbCf5wSGnb
-yzCFDvF52CMUSP7Tzg5KEduILkkf+A4=
-=9MTh
------END PGP SIGNATURE-----
-
---l7rai3c6jadzkxag--
