@@ -2,169 +2,87 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90963C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7658C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B53206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EF8206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="K6/ejvNq";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dMHQCBp/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adPF2rXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLJXfF (ORCPT
+        id S1727415AbfLJXfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:35:05 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14270 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726683AbfLJXfE (ORCPT
+        Tue, 10 Dec 2019 18:35:20 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39567 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfLJXfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:35:04 -0500
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBANYaFC025418;
-        Tue, 10 Dec 2019 15:34:39 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=EhCDKHC4gUCM3jUceATSEfV87aYQrW7uNQzeE7yd1nU=;
- b=K6/ejvNqr+uwCM7HPk4EGM2Y2CSiyrjq+Q435LLE/Jv6tDIIOUDIqEWG4k5WMCg6sJG/
- VSKJir9uF6CdVr0YlW60Cp6JtNTSOSjCiHKJ2uWFiSHZbe++K6iy2GJWMIhn44t5ab/g
- lCmWxznW520AAIaq1af5vEScd3UlmD5ApNQ= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wtddktx9g-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 10 Dec 2019 15:34:39 -0800
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 10 Dec 2019 15:34:26 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 10 Dec 2019 15:34:26 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VW67uXw+3CL2Gb7hJ6SLwcfz3aLJsGczie93NTZ0roEGcw3J2E4dnuBxIaVe5JPNvqgBHkldk6/zG79l/qAG0/yIvLglhksILYXE0esJL+imZf0900PhGgPPgeqfghJPqdChtiY6Q/VX49x7nxXM9yuwVsk1GFLu97g1recgybg2NHwK68iWcYe9XrbIGlA9d0/Z+S1je+lA+QrCz9Ukd+hGwK+6ORzi/TJQt2VHPCYIfRSZ/elnCMYDc/6UZH8g65mFEcm1HWppIMD4eu3xvuJPLOq9R/zmxe23efxeFIBA2Jyyist0gIaVHzMOeRaGl3BzujQFFzv8TvFAL0e1Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EhCDKHC4gUCM3jUceATSEfV87aYQrW7uNQzeE7yd1nU=;
- b=VLAzolLcy0en038iK/TYksAjLFNpGdzifLGDmsjVnxez5kcDR7RywjKS6I2yz80KssMAfp9SRAFIfYvzDO289UIrqnqSbTB4w6l0W9zIRgl9mYua5zP+ELTV0OhYex4jsLOIgVfUo4ytF9oOK3A4pAVJuMOF97mTNf88xMIdlLE5EENtdsAUdYRuT/s3r07Xx0hd/8/WGm87gBDJ1EZkLrB9xij8cxwth4lwfr5ksrd7NZag9jhZR9TMMCf7Z37b9f4Ewdai44yPyQwmbi2p0T76FEpbq2qI+l6on7QojN1gRAOdr0Kaf7GEX1JN38PDCzpxKnyi36S1JUSaTit4+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EhCDKHC4gUCM3jUceATSEfV87aYQrW7uNQzeE7yd1nU=;
- b=dMHQCBp/5MaILHU9QfsR/D3EKiwJjI1Iftav4tSqBbixbBB8Pt0aAad7tHujrJQUBqINHXuH7ZlSlnmru5kdR1kyqhKoIGUQYr5udR/Zeh39ovM35aMKJ98ZQ94E1FJMoXVU2dxsCwU7q2pilRKfVq9MaKiszfveZtWYd/tIKBM=
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com (20.179.21.76) by
- MN2PR15MB2671.namprd15.prod.outlook.com (20.179.146.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Tue, 10 Dec 2019 23:34:25 +0000
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f]) by MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f%4]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 23:34:25 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bpf: Fix build in minimal configurations, again
-Thread-Topic: [PATCH] bpf: Fix build in minimal configurations, again
-Thread-Index: AQHVr5luvUr1OsnMX0ud4dyRR00tDqe0BX+A
-Date:   Tue, 10 Dec 2019 23:34:24 +0000
-Message-ID: <20191210233421.vnybkzc6noskmsjt@kafai-mbp>
-References: <20191210203553.2941035-1-arnd@arndb.de>
-In-Reply-To: <20191210203553.2941035-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0165.namprd04.prod.outlook.com
- (2603:10b6:104:4::19) To MN2PR15MB3213.namprd15.prod.outlook.com
- (2603:10b6:208:3d::12)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:4349]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff918764-f22a-41b4-5192-08d77dc97db4
-x-ms-traffictypediagnostic: MN2PR15MB2671:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR15MB2671B33B27C6936873981E63D55B0@MN2PR15MB2671.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(199004)(189003)(8936002)(66946007)(5660300002)(2906002)(6512007)(4326008)(9686003)(86362001)(64756008)(66446008)(8676002)(71200400001)(186003)(81156014)(81166006)(66556008)(1076003)(498600001)(6916009)(33716001)(6486002)(54906003)(6506007)(52116002)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR15MB2671;H:MN2PR15MB3213.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nsyTa9/nsnm9a/tt0ofDQomnmdyzNxHFaHuUDoOx58/i3V/WgQw3As9cI8va2goGt2+wATTAiId8JkPtFAiGnDC+WdK+CWzqTEtcF9vu9sdsDtchBr0k2t2RlvZt48KQQAn941O2chpgQZKJL2fhoa25DENP8mB/RcOze2mrCLMtSZu3dJgQbL5nGzy+MjIbuzaaLA6NgxhXBivamnZ9SeQp2G1PxZDAqWojqeXlud4uLDLsRGhxnM//qtY2emOQTkxyDFAwsi+sNzh+5mHEGiZnQesoORg121ZoDoh+LuGOnUgCBtLTHN05+EzFZsIGi200IMq8IiCA3qmvvS00vUcrYAsIu6vhh7iM2zGUDOBaV4ku8d983+jY4yrylc9GFGgGUDYCeyVYvwVFPHsFdz018O3TQu1IpzwH3N6ByWnM+fQcycGo196Kc5nT4zW1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B0045B965EC74644BA81F88070FB9A2B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff918764-f22a-41b4-5192-08d77dc97db4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 23:34:24.9620
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pZko3wOSBAcUta7IV2OH/HgOYboc9YmSfrFWOoGvmuaRnI5HsH6OYJRLGX0SGlbG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2671
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_07:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1011 malwarescore=0 phishscore=0
- spamscore=0 priorityscore=1501 adultscore=0 impostorscore=0
- mlxlogscore=865 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912100193
-X-FB-Internal: deliver
+        Tue, 10 Dec 2019 18:35:20 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d5so3521423wmb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:35:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aPVFdQIWNj16ZK5RdjBKbqDPawIqCxaDmrjeIuzNinU=;
+        b=adPF2rXzMF8gO757e5fLYqNf/NWfsMRveDYLbZkuTCkMirY9OWNWSontRZyC2R75eI
+         wNd2hHSyTgz6mMFoW1mcQcjch/WjkWGndnjPV4RHaOlukq8MDxL0eSelvQT92CXnve4R
+         oZ/XdQOoceuTnnMnGlswiJiP7Mj85DOuBAnr/1LE3xvVosSTeST0eRfA1MSxxnhKilEJ
+         557jja9A+qKYnGrcFE7FBKawYUjsjTEnd7O1KfRTyTMpPgAmCnv/oRLerMKQi9pEKcyd
+         1wd+y4izFFTi1tzuQ5bQmXi7XFBUxDb1wcnd9yyoAnY2C6x3hYHmefS8Vb6DyDsMS2hj
+         uLTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aPVFdQIWNj16ZK5RdjBKbqDPawIqCxaDmrjeIuzNinU=;
+        b=S0dimu+VhobWC6SmBPDJj4laYTjdS+YjI0W2oUVWti7kiIgbMPo6mguRNvGfqJRE/X
+         v4tjqvMNHTDp7GfxyvoC3PQ3VxqFF2hwtM/rAK65aiDbLgB+XTKP7VtTFhWV3Y3/GqkS
+         FV4U65QJRmgWEOEzJdGykYfOAZGbwBgCqeQzgY8ZOylbwllXycsfm95hV6i5+X92cgK2
+         j9F5MOkThbayxgVU9WvEMLTv7DC4WMq8d6qwD5CvYMHAlfN0zaRklUWXeaxTVk79MFJR
+         asHFd+b2ZqV/7C4h/eSp0nYhZZSqStQz4TkYyc4Tulm4CO0ULzncxa7LhAJWmR6rHnXF
+         wNHA==
+X-Gm-Message-State: APjAAAViwPEMr6qRzA3N7EyNB0xNnUMG6IuusteuvAgns9ulN7j1o5nX
+        gV9XEIqDw3x6x6WKWHHWRbw=
+X-Google-Smtp-Source: APXvYqy8Ksgy0PPntHDhclphM607VPHVR5PA0lJyIgfy7XCtzEZHiOuGylmR1rQ3R47lf1vDApknGA==
+X-Received: by 2002:a1c:a9c2:: with SMTP id s185mr1046723wme.119.1576020917919;
+        Tue, 10 Dec 2019 15:35:17 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id n16sm59478wro.88.2019.12.10.15.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 15:35:17 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/4] soc: bcm: brcmstb: biuctrl updates
+Date:   Tue, 10 Dec 2019 15:30:39 -0800
+Message-Id: <20191210233043.15193-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 09:35:46PM +0100, Arnd Bergmann wrote:
-> Building with -Werror showed another failure:
->=20
-> kernel/bpf/btf.c: In function 'btf_get_prog_ctx_type.isra.31':
-> kernel/bpf/btf.c:3508:63: error: array subscript 0 is above array bounds =
-of 'u8[0]' {aka 'unsigned char[0]'} [-Werror=3Darray-bounds]
->   ctx_type =3D btf_type_member(conv_struct) + bpf_ctx_convert_map[prog_ty=
-pe] * 2;
->=20
-> I don't actually understand why the array is empty, but a similar
-> fix has addressed a related problem, so I suppose we can do the
-> same thing here.
->=20
-> Fixes: ce27709b8162 ("bpf: Fix build in minimal configurations")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  kernel/bpf/btf.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 7d40da240891..ed2075884724 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -3470,6 +3470,7 @@ static u8 bpf_ctx_convert_map[] =3D {
->  	[_id] =3D __ctx_convert##_id,
->  #include <linux/bpf_types.h>
->  #undef BPF_PROG_TYPE
-> +	0, /* avoid empty array */
-If bpf_types.h is empty, the prog should have already failed
-earlier in find_prog_type() in syscall.c, so 0 here should
-be fine.
+Hi all,
 
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+This patch series updates the Broadcom STB BIUCTRL register code to
+support the latest and greatest chips (7255, 7216, 7211) and also fixes
+the 7260A0 and B0 chips to use the correct tuning parameters.
+
+Florian Fainelli (4):
+  soc: bcm: brcmstb: biuctrl: Tune 7260 BIU interface
+  soc: bcm: brcmstb: biuctrl: Tune interface for 7255 and 7216
+  soc: bcm: brcmstb: biuctrl: Update layout for A72 on 7211
+  soc: bcm: brcmstb: biuctrl: Update programming for 7211
+
+ drivers/soc/bcm/brcmstb/biuctrl.c | 30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
+
