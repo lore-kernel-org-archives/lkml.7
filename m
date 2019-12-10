@@ -2,117 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DBEC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED762073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822B62073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575978507;
+	bh=g6sIOZ8Wv8FguCrQfPTFtqza/3QfY70NtsgL5VZM+8g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QVTasP9c6HXwIoGQCloS/yB/ujsjSawWAPt68tAln3QIckXlM6WllVw76/KqKFmix
+	 zPPt2aGT+FhN/dYy1KZVH6twUhp5UKuVxSqGegXxN2x2IExmHUj/Wh/f31YuShmGnT
+	 2pV7n8wSQHSK8HQx16EzVutjK/tHxTtoxrjlcpoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfLJLsB (ORCPT
+        id S1727695AbfLJLs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:48:01 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:55384 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727018AbfLJLr7 (ORCPT
+        Tue, 10 Dec 2019 06:48:26 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38385 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbfLJLsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:47:59 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TkXAQaw_1575978471;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkXAQaw_1575978471)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 10 Dec 2019 19:47:51 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>, yun.wang@linux.alibaba.com
-Subject: [PATCH v5 1/8] mm/vmscan: remove unnecessary lruvec adding
-Date:   Tue, 10 Dec 2019 19:46:17 +0800
-Message-Id: <1575978384-222381-2-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 10 Dec 2019 06:48:02 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k8so19479933ljh.5;
+        Tue, 10 Dec 2019 03:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SomisIKYrhnGM9uPCjPrNcYhFDkrQCYHEW6V1huhmgY=;
+        b=qn5jd9tvsiOoC2AVcE9GGC8YV8C749WT8BQmBs5YCcvAWZU5idSrHjXmjoo5x08UkC
+         zGMt9CYuHflcd2ZYTwbzoMI8ZeKU78OQO6wsG5MHGbuY6DygKs0mO/W/Im955lsPgJJl
+         Xo0mkm7/X9Ye/6FxGbdNcrkWwEBbCl4XUPGAS7iDfPljhcPUTsQPmaQqHiwOdO477+6H
+         DXEHNiSK/n97xIT9jBhxNL/xoXJkHXF+PVdOZXNb07zV4C7AtdwT06lIPQzSItUtkrQ8
+         cUVQmSPUlhBzFTdtqWYUkrDn+Q0avIYfppvSfJD82+HxfWddUeuMRSgutlrq9z8oSHq9
+         JCSA==
+X-Gm-Message-State: APjAAAVAdjaZBb5k4h7K6MmlfLfKicf0kOs6gH5KRzY2MWZDOTglj5OL
+        r23g5Xi8Iv11qw8DB41moi0=
+X-Google-Smtp-Source: APXvYqzhnW9ewIEAdaW6Atd0gX1aWXfA2az8JTi5RDAus4VEAcywwZw8M/TtqqPMRQXyUn67c8Vs2g==
+X-Received: by 2002:a05:651c:112d:: with SMTP id e13mr17386635ljo.99.1575978479806;
+        Tue, 10 Dec 2019 03:47:59 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id a9sm1441410lfk.23.2019.12.10.03.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 03:47:58 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iedzk-0001LV-HT; Tue, 10 Dec 2019 12:48:00 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        devel@driverdev.osuosl.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH 2/2] staging: rtl8712: fix interface sanity check
+Date:   Tue, 10 Dec 2019 12:47:51 +0100
+Message-Id: <20191210114751.5119-3-johan@kernel.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191210114751.5119-1-johan@kernel.org>
+References: <20191210114751.5119-1-johan@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have to add a freeable page into lru and then remove from it.
-This change saves a couple of actions and makes the moving more clear.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-The SetPageLRU needs to be kept here for list intergrity. Otherwise:
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-    #0 mave_pages_to_lru                #1 release_pages
-                                        if (put_page_testzero())
-    if (put_page_testzero())
-	                                    !PageLRU //skip lru_lock
-                                                list_add(&page->lru,);
-    else
-        list_add(&page->lru,) //corrupt
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: yun.wang@linux.alibaba.com
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Cc: stable <stable@vger.kernel.org>     # 2.6.37
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- mm/vmscan.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/staging/rtl8712/usb_intf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d97985262dda..69fb9bd9ef49 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1838,26 +1838,18 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 	while (!list_empty(list)) {
- 		page = lru_to_page(list);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
-+		list_del(&page->lru);
- 		if (unlikely(!page_evictable(page))) {
--			list_del(&page->lru);
- 			spin_unlock_irq(&pgdat->lru_lock);
- 			putback_lru_page(page);
- 			spin_lock_irq(&pgdat->lru_lock);
- 			continue;
- 		}
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--
- 		SetPageLRU(page);
--		lru = page_lru(page);
--
--		nr_pages = hpage_nr_pages(page);
--		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
--		list_move(&page->lru, &lruvec->lists[lru]);
+diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
+index ba1288297ee4..a87562f632a7 100644
+--- a/drivers/staging/rtl8712/usb_intf.c
++++ b/drivers/staging/rtl8712/usb_intf.c
+@@ -247,7 +247,7 @@ static uint r8712_usb_dvobj_init(struct _adapter *padapter)
  
- 		if (put_page_testzero(page)) {
- 			__ClearPageLRU(page);
- 			__ClearPageActive(page);
--			del_page_from_lru_list(page, lruvec, lru);
- 
- 			if (unlikely(PageCompound(page))) {
- 				spin_unlock_irq(&pgdat->lru_lock);
-@@ -1866,6 +1858,12 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 			} else
- 				list_add(&page->lru, &pages_to_free);
- 		} else {
-+			lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+			lru = page_lru(page);
-+			nr_pages = hpage_nr_pages(page);
-+
-+			update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
-+			list_add(&page->lru, &lruvec->lists[lru]);
- 			nr_moved += nr_pages;
- 		}
- 	}
+ 	pdvobjpriv->padapter = padapter;
+ 	padapter->eeprom_address_size = 6;
+-	phost_iface = &pintf->altsetting[0];
++	phost_iface = pintf->cur_altsetting;
+ 	piface_desc = &phost_iface->desc;
+ 	pdvobjpriv->nr_endpoint = piface_desc->bNumEndpoints;
+ 	if (pusbd->speed == USB_SPEED_HIGH) {
 -- 
-1.8.3.1
+2.24.0
 
