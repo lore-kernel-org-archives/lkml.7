@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17440C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5DAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBADC2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B58F20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017498;
-	bh=FNQCYLJw6VWRKFxo3u/5WYdy+Y2aaLeoGEimN0FGG8A=;
+	s=default; t=1576017506;
+	bh=6OwSiFHVFBJ2hQEfQteFIY5JAWa7jJXo4H35uupQ+BQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r6HP35cKt6BbukMk4fvbOSOtqjQ1pTFk35VtE+LkJr8cpsM/YdAQJ8V91S+2hC96d
-	 sZH/TBGIfyjYK4NqPkSa7N8fDYpneZdF4Fkt8ra60YOGIWqtuLxPGQus5z/1n+wvXL
-	 JZRbiROU9aQ4h7U7yw/a7fFab4nwROcYQjLTz1QA=
+	b=HfzPfy2cYAU7IJOCFyhMjrOie6AqevOLYgd5C8LcHUp8zDB56WcPZresfQ/OPV5wd
+	 nTVAXEBxeTufhitv1O4vxMqXJyUaNoKAj53i+UhjAB3SbAt0xWBIBlS/gpGl3f3vIn
+	 1KoUZLAEVX2rnD9aBZbHgD7eU0RyfgDKKgFK+OBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfLJWiR (ORCPT
+        id S1729950AbfLJWiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:38:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54632 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:38:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729926AbfLJWdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:41 -0500
+        id S1729892AbfLJWdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB18620836;
-        Tue, 10 Dec 2019 22:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E808207FF;
+        Tue, 10 Dec 2019 22:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017220;
-        bh=FNQCYLJw6VWRKFxo3u/5WYdy+Y2aaLeoGEimN0FGG8A=;
+        s=default; t=1576017218;
+        bh=6OwSiFHVFBJ2hQEfQteFIY5JAWa7jJXo4H35uupQ+BQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBZhb/8ZpjjYqSuHwsIZb/5vJG11B7xQ6wDPcRXdEmkVsIszc7dG6oj/4ywTx46rc
-         YttkDxY4vByqQUfOwuebC5GqNm25I+mdZumqKSsNyWVgFHocDTNbKejWvEWgdmuhgm
-         heriw+J02bmryfDNVZsOQLMJBYB+519cinYohbpY=
+        b=peVMYjSRGFBI5hM/2GLuaa3BbmgZhltD2754hZqytl+SV1E3GcT8qfaXW0zRYRV87
+         IfveN66gwHDf7w3jMJ7mqf+yvIRF8zaaIGXsJQBWEjhQVeZ7EHXo8ocIJ7DB1LZZJZ
+         aLZ7E2TnQqDyDnmHzfXgM93VKGFU7zmZANncP7mY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/71] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
-Date:   Tue, 10 Dec 2019 17:32:25 -0500
-Message-Id: <20191210223316.14988-20-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 18/71] iio: proximity: sx9500: fix iio_triggered_buffer_{predisable,postenable} positions
+Date:   Tue, 10 Dec 2019 17:32:23 -0500
+Message-Id: <20191210223316.14988-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,79 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
+[ Upstream commit 3cfd6464fe23deb45bb688df66184b3f32fefc16 ]
 
-v4l2-compliance warns with this message:
+The iio_triggered_buffer_predisable() should be called last, to detach the
+poll func after the devices has been suspended.
 
-   warn: v4l2-test-formats.cpp(717): \
- 	TRY_FMT cannot handle an invalid pixelformat.
-   warn: v4l2-test-formats.cpp(718): \
- 	This may or may not be a problem. For more information see:
-   warn: v4l2-test-formats.cpp(719): \
- 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
-	...
-   test VIDIOC_TRY_FMT: FAIL
+This change re-organizes things a bit so that the postenable & predisable
+are symmetrical. It also converts the preenable() to a postenable().
 
-We need to make sure that the returns a valid pixel format in all
-instance. Based on the v4l2 framework convention drivers must return a
-valid pixel format when the requested pixel format is either invalid or
-not supported.
+Not stable material as there is no known problem with the current
+code, it's just not consistent with the form we would like all the
+IIO drivers to adopt so as to allow subsystem wide changes.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/iio/proximity/sx9500.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index de24effd984fb..ca6629ccf82da 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -330,20 +330,25 @@ enum {
- };
- 
- /* find our format description corresponding to the passed v4l2_format */
--static struct vpe_fmt *find_format(struct v4l2_format *f)
-+static struct vpe_fmt *__find_format(u32 fourcc)
- {
- 	struct vpe_fmt *fmt;
- 	unsigned int k;
- 
- 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
- 		fmt = &vpe_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
-+		if (fmt->fourcc == fourcc)
- 			return fmt;
- 	}
- 
- 	return NULL;
+diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
+index 66cd09a18786a..f7cfb4f0dbc86 100644
+--- a/drivers/iio/proximity/sx9500.c
++++ b/drivers/iio/proximity/sx9500.c
+@@ -679,11 +679,15 @@ static irqreturn_t sx9500_trigger_handler(int irq, void *private)
+ 	return IRQ_HANDLED;
  }
  
-+static struct vpe_fmt *find_format(struct v4l2_format *f)
-+{
-+	return __find_format(f->fmt.pix.pixelformat);
-+}
+-static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
++static int sx9500_buffer_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct sx9500_data *data = iio_priv(indio_dev);
+ 	int ret = 0, i;
+ 
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
 +
- /*
-  * there is one vpe_dev structure in the driver, it is shared by
-  * all instances.
-@@ -1434,9 +1439,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 	int i, depth, depth_bytes;
+ 	mutex_lock(&data->mutex);
  
- 	if (!fmt || !(fmt->types & type)) {
--		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
-+		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
- 			pix->pixelformat);
--		return -EINVAL;
-+		fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	}
+ 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+@@ -700,6 +704,9 @@ static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
  
- 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE)
+ 	mutex_unlock(&data->mutex);
+ 
++	if (ret)
++		iio_triggered_buffer_predisable(indio_dev);
++
+ 	return ret;
+ }
+ 
+@@ -708,8 +715,6 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct sx9500_data *data = iio_priv(indio_dev);
+ 	int ret = 0, i;
+ 
+-	iio_triggered_buffer_predisable(indio_dev);
+-
+ 	mutex_lock(&data->mutex);
+ 
+ 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+@@ -726,12 +731,13 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+ 
+ 	mutex_unlock(&data->mutex);
+ 
++	iio_triggered_buffer_predisable(indio_dev);
++
+ 	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops sx9500_buffer_setup_ops = {
+-	.preenable = sx9500_buffer_preenable,
+-	.postenable = iio_triggered_buffer_postenable,
++	.postenable = sx9500_buffer_postenable,
+ 	.predisable = sx9500_buffer_predisable,
+ };
+ 
 -- 
 2.20.1
 
