@@ -2,222 +2,114 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C68DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49947C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3D32053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA162053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="FefSaWy9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fcSvCZuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbfLJKQn (ORCPT
+        id S1727455AbfLJKRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:16:43 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:46030 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfLJKQn (ORCPT
+        Tue, 10 Dec 2019 05:17:20 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54204 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbfLJKRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575973002;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Lvaoe6PF5ne+O8eFrYv6xylYoM5pzWb0Os8/rpg2yvA=;
-  b=FefSaWy9S43QW/Q6YVFj1CY2n8WuAXrT7SwkCGhBFeId/di900fuyeHt
-   zK7QYAcyWFNNN8YswhSOx3SToS9YOnLXODM7PZTWeEoBwZSTgDGR47kpc
-   lQbtdh7mBPuZfZmysczA2aONY1Bhs89BWomvkXE40nE+dJj5TWWlDQoph
-   Y=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: 9IDqAWxfl6GB4MpZN7qCOk4M8hOVCyJJZkZFstv0Y6xsVz0PCZ38GaHuQOX5FR85MixU1ffCGh
- /5SCEXREeeZ1a+dcW9UMQlQ2yA9Xzlpn9OCktFGlHD8z3RhdrKQDW+92zEybK098kEsSgz6pjx
- qxHnI3A2O+cQ80dmJO9zL2Vu5ILc06RzKVhahdm0WUSb4OFAL0l+AN97cR9atUpsQNWwF2+N7p
- fSbSkb8noLO9/CSxP0FQYUtd54zwI+cuWxdgrbok8S3tAe5Wf/EsGhYevCIugfnc13VhL3sY1N
- feM=
-X-SBRS: 2.7
-X-MesageID: 9802387
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,299,1571716800"; 
-   d="scan'208";a="9802387"
-Date:   Tue, 10 Dec 2019 11:16:35 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     <sjpark@amazon.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pdurrant@amazon.com>, <xen-devel@lists.xenproject.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH v5 1/2] xenbus/backend: Add memory pressure handler
- callback
-Message-ID: <20191210101635.GD980@Air-de-Roger>
-References: <20191210080628.5264-1-sjpark@amazon.de>
- <20191210080628.5264-2-sjpark@amazon.de>
+        Tue, 10 Dec 2019 05:17:19 -0500
+Received: by mail-wm1-f68.google.com with SMTP id n9so2481252wmd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=xmLlcTghzPFIQ8mfUoSKx274MOGK7c0q1BOLA3zin5c=;
+        b=fcSvCZuDu/jCInvDVS5idg2zFC+JxUezgWsEzS5YwYFM1JFAhzC92Nm24kZZOmk094
+         RfkjjBX4Tl7pVGKiTXkb6ZXjC8C5cdJ/xvvMdZu5xSlYUlCaPYcv4skpDFMDdUy6wKkE
+         j81+cogTRKJl+jY4iIEWkAoeVhuzbSa1Sg3rYZ2J/NAC82qC8k4qMSaQ9SRIMQ1Xs9VM
+         XIeopc2OHN73WVTc7bcO1iL6c8KxgROgkxyPTdf8WVQ+OZrbg/S39bH4Efd6uV/iI781
+         OYm3bzPYAf5N4zJXWgkloQEMKq6WKNRc1Jp54ueSiHCXeH4J9ka0xLNn64pC13mRi3qz
+         2oMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=xmLlcTghzPFIQ8mfUoSKx274MOGK7c0q1BOLA3zin5c=;
+        b=i/p1qX5No6ZqVN08xBuPD/AFR/knJxh0IQBP961n+8dmzsqPditqnNk2og5kj0fwnN
+         99Xr29Qaals4x+vUi70y4m1nvfpgruzTKZtSZ+Orh/thGzcToyjrIzvm+2HZRDYhPbam
+         Roq/MJ1THB5Jasxy8VqaFRRO/d7hEnLOcRS+cwFw6aDZHnYesCkJobz5JnipeYXM5oK5
+         RlsMcY+GwtN1Xd9+N7NfFazvG/g8Iiefvxsh7EHAtCNIJ5E69thz2h9JqACCgmRlpsR7
+         3wxCFGc8HyZZrzE+93AhG4Rx7VC+OQQmnYh4tfpYaetMSqBr+5rdtAVH2nFNMWVcbxfw
+         VIdQ==
+X-Gm-Message-State: APjAAAVsNhFVvM7X4WzUwUDCz1uRTjc6/hACZH0P2TTE4JH3c6MxwcFQ
+        iCFrEG1I4S3BFJdgTovtWeehew==
+X-Google-Smtp-Source: APXvYqwVnyN4tOCPyX/fALkBBhtIPe2HLM6zr6GYhucBkFtEKMV/e/35eKhQlSa5MVPgf6uQKl+RIQ==
+X-Received: by 2002:a05:600c:507:: with SMTP id i7mr4398123wmc.135.1575973037693;
+        Tue, 10 Dec 2019 02:17:17 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g2sm2697067wrw.76.2019.12.10.02.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 02:17:17 -0800 (PST)
+References: <20191202111253.94872-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+In-reply-to: <20191202111253.94872-1-jian.hu@amlogic.com>
+Date:   Tue, 10 Dec 2019 11:17:16 +0100
+Message-ID: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191210080628.5264-2-sjpark@amazon.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:06:27AM +0000, SeongJae Park wrote:
-> Granting pages consumes backend system memory.  In systems configured
-> with insufficient spare memory for those pages, it can cause a memory
-> pressure situation.  However, finding the optimal amount of the spare
-> memory is challenging for large systems having dynamic resource
-> utilization patterns.  Also, such a static configuration might lack a
 
-s/lack a/lack/
+On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
 
-> flexibility.
-> 
-> To mitigate such problems, this commit adds a memory reclaim callback to
-> 'xenbus_driver'.  Using this facility, 'xenbus' would be able to monitor
-> a memory pressure and request specific devices of specific backend
-
-s/monitor a/monitor/
-
-> drivers which causing the given pressure to voluntarily release its
-
-...which are causing...
-
-> memory.
-> 
-> That said, this commit simply requests every callback registered driver
-> to release its memory for every domain, rather than issueing the
-
-s/issueing/issuing/
-
-> requests to the drivers and the domain in charge.  Such things will be
-
-I'm afraid I don't understand the "domain in charge" part of this
-sentence.
-
-> done in a futur.  Also, this commit focuses on memory only.  However, it
-
-... done in a future change. Also I think the period after only should
-be removed in order to tie both sentences together.
-
-> would be ablt to be extended for general resources.
-
-s/ablt/able/
-
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG.The I2C nodes
+> depend on pinmux and clock controller.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 > ---
->  drivers/xen/xenbus/xenbus_probe_backend.c | 31 +++++++++++++++++++++++
->  include/xen/xenbus.h                      |  1 +
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-> index b0bed4faf44c..5a5ba29e39df 100644
-> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
-> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-> @@ -248,6 +248,34 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
->  	return NOTIFY_DONE;
->  }
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..d0a73d953f5e 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -16,6 +16,13 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
 >  
-> +static int xenbus_backend_reclaim(struct device *dev, void *data)
-> +{
-> +	struct xenbus_driver *drv;
-
-Newline and const.
-
-> +	if (!dev->driver)
-> +		return -ENOENT;
-> +	drv = to_xenbus_driver(dev->driver);
-> +	if (drv && drv->reclaim)
-> +		drv->reclaim(to_xenbus_device(dev));
-
-You seem to completely ignore the return of the reclaim hook...
-
-> +	return 0;
-> +}
+> +	aliases {
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +	};
 > +
-> +/*
-> + * Returns 0 always because we are using shrinker to only detect memory
-> + * pressure.
-> + */
-> +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
-> +				struct shrink_control *sc)
-> +{
-> +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
-> +			xenbus_backend_reclaim);
-> +	return 0;
-> +}
-> +
-> +static struct shrinker xenbus_backend_shrinker = {
-> +	.count_objects = xenbus_backend_shrink_count,
-> +	.seeks = DEFAULT_SEEKS,
-> +};
-> +
->  static int __init xenbus_probe_backend_init(void)
->  {
->  	static struct notifier_block xenstore_notifier = {
-> @@ -264,6 +292,9 @@ static int __init xenbus_probe_backend_init(void)
->  
->  	register_xenstore_notifier(&xenstore_notifier);
->  
-> +	if (register_shrinker(&xenbus_backend_shrinker))
-> +		pr_warn("shrinker registration failed\n");
-> +
->  	return 0;
->  }
->  subsys_initcall(xenbus_probe_backend_init);
-> diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> index 869c816d5f8c..cdb075e4182f 100644
-> --- a/include/xen/xenbus.h
-> +++ b/include/xen/xenbus.h
-> @@ -104,6 +104,7 @@ struct xenbus_driver {
->  	struct device_driver driver;
->  	int (*read_otherend_details)(struct xenbus_device *dev);
->  	int (*is_ready)(struct xenbus_device *dev);
-> +	unsigned (*reclaim)(struct xenbus_device *dev);
 
-... hence I wonder why it's returning an unsigned when it's just
-ignored.
+I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
 
-IMO it should return an int to signal errors, and the return should be
-ignored.
-
-Also, I think it would preferable for this function to take an extra
-parameter to describe the resource the driver should attempt to free
-(ie: memory or interrupts for example). I'm however not able to find
-any existing Linux type to describe such resources.
-
-Thanks, Roger.
+Such aliases are usually assigned as needed by each board design:
+meson-a1-ad401.dts in your case.
