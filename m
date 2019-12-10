@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFFBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C5CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AA52077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCAF21556
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015530;
-	bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
+	s=default; t=1576015534;
+	bh=CgxRm216WmCX4Q2oMM5pdlUpclSLBREMLbPFvNdU3nE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YxJSP+cpwboS8JT6amfZlY+1sNcAB+lXwipb8vW9yoFdyFqstrcFMXSJl76z5ZmWQ
-	 6Y6dK0YAJtn4uIYpX5F00VOOLhpeVTHYzgyKrk6Vc0NAm4aVY3kjfnFXHY9ew5Zq6u
-	 Oi5SgrdMY/oJutQ5HCSsIwTMvZ/6QrO5UnYChNIw=
+	b=DrI3fbN5X65IEqQwLxhG0+vD8M0e7rbktlkul719yHqNDatnMCOEEffk+e4o23CG+
+	 bIleP317QeVzyyBolOcM/+gs9Ve75AKQrPz9WWO5IJHzZDe4QOXXISGTy8wI9Dsm51
+	 To0aTkQ/76sAE4MA4gnI1p+h4iVOv9/E3kCbHuZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbfLJWF3 (ORCPT
+        id S1729854AbfLJWFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbfLJWFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:13 -0500
+        id S1727906AbfLJWFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2692E20637;
-        Tue, 10 Dec 2019 22:05:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE132053B;
+        Tue, 10 Dec 2019 22:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015512;
-        bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
+        s=default; t=1576015517;
+        bh=CgxRm216WmCX4Q2oMM5pdlUpclSLBREMLbPFvNdU3nE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCY1FX5gHK5o9vQQQQ/U+kReQhH9WOP6YWdWuQtWXDH8WlGQWnaS3ZPibSuXI8mJ+
-         emUgJeQIGb2WUHpOjrkRspqVf4iKPKQRPIpL0RmynT/y4byDFNNG+V9ol/2XPVyRdG
-         EqoBsEzDvn21zeSSfs0CaqcJVJ7PUW6L0dJcvAsA=
+        b=rxCSIY2NmxwxF/omFXewYyOIdrxefX+fVX8wicaDLvKzvY04juEBwH68RPqYV/oTQ
+         1rzUzFoiSiraxWiHNJAgy3lVzYEnMK5FgoqoYwhYi0f9byFUwFuzpetPP23UeRVQqz
+         lGS234HsnHK2dG0scyGxJT98rB1wynsnTcgcCZgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 110/130] RDMA/qib: Validate ->show()/store() callbacks before calling them
-Date:   Tue, 10 Dec 2019 17:02:41 -0500
-Message-Id: <20191210220301.13262-110-sashal@kernel.org>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 114/130] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
+Date:   Tue, 10 Dec 2019 17:02:45 -0500
+Message-Id: <20191210220301.13262-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,49 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
+[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
 
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
+Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
+adding MMC_CAP_ERASE to the TMIO mmc core:
 
-Protect against that by always validating the show/store callbacks.
+On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
+ -- snip --
+ This test and due to the discussions with Wolfram and you in this
+ thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+ tmio variants, rather than just for this particular one.
 
-Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+ In other words, set the cap in tmio_mmc_host_probe() should be fine,
+ as it seems none of the tmio variants supports HW busy detection at
+ this point.
+ -- snip --
+
+Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
+
+root@rcar-gen3:~# lsblk
+NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
+mmcblk0boot0 179:8    0    4M  1 disk
+mmcblk0boot1 179:16   0    4M  1 disk
+mmcblk1      179:24   0   30G  0 disk  <--- SD card
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
+real    0m8.659s
+user    0m0.001s
+sys     0m1.920s
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
+real    0m1.176s
+user    0m0.001s
+sys     0m0.124s
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/mmc/host/tmio_mmc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index ca2638d8f35ef..d831f3e61ae8f 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 2fd862dc97701..a09aad9155a56 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -1220,7 +1220,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host,
+ 		_host->start_signal_voltage_switch;
+ 	mmc->ops = &tmio_mmc_ops;
  
-+	if (!pattr->show)
-+		return -EIO;
-+
- 	return pattr->show(ppd, buf);
- }
- 
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
- 
+-	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
++	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+ 	mmc->caps2 |= pdata->capabilities2;
+ 	mmc->max_segs = pdata->max_segs ? : 32;
+ 	mmc->max_blk_size = 512;
 -- 
 2.20.1
 
