@@ -2,104 +2,130 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF05FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91867C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835732077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:19:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPuLJsA7"
+	by mail.kernel.org (Postfix) with ESMTP id 697C920828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576005557;
+	bh=v/zlr/k417wcCWHHCL31Rqwau5okPBjp1POLwjKxDYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ex3kAJQudtjalJa2WXyzT3r6y/IDyaLMkanngeF+ngvu9IVFyN0kDnR2N360JJygH
+	 s2McMwoKOFuKS8xbc/NqhDtvTx9H5Q3w3HDDdBWjjUlC6ucMBDaE2TJrzY5Grl9hDU
+	 7WJoklWfEm4tgrSfKCKB6rY1ulGN22N+94Oet1C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfLJTTN (ORCPT
+        id S1726642AbfLJTTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:19:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60472 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726018AbfLJTTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:19:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576005551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QnsyvYeZzE6S32SgMSwQ6zWyKto3RJloVhRU6/uuYto=;
-        b=IPuLJsA7WtWVoeMxcGC54+BBgnIqZb+tuzxGvkmY7gpbfwhrdvrKAE4RESCAly1+daF+ss
-        jgNsiy1vZNAaexZowg7qcWmobfAwJXWkCzodyq1kI6WLpT5CTnxhMvR0JYDRKNtJhbuZEy
-        00P1iDBJ8Woecs/D8ymNGUC8tmQVl50=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-AL_l5ibVMIy76PZUvlkSqQ-1; Tue, 10 Dec 2019 14:19:09 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Dec 2019 14:19:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfLJTTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 14:19:15 -0500
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91D3F107ACC5;
-        Tue, 10 Dec 2019 19:19:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (ovpn-205-240.brq.redhat.com [10.40.205.240])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EB8AD5C1B0;
-        Tue, 10 Dec 2019 19:19:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 10 Dec 2019 20:19:08 +0100 (CET)
-Date:   Tue, 10 Dec 2019 20:19:03 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH] sched/wait: fix ___wait_var_event(exclusive)
-Message-ID: <20191210191902.GB14449@redhat.com>
-References: <CAHk-=whiKy63tpFVUUS1sH07ce692rKcoo0ztnHw5UaPaMg8Ng@mail.gmail.com>
- <20191209091813.GA41320@gmail.com>
- <20191209102759.GA123769@gmail.com>
- <20191209130005.GB5388@redhat.com>
- <20191210072119.GA114501@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D42E02077B;
+        Tue, 10 Dec 2019 19:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576005555;
+        bh=v/zlr/k417wcCWHHCL31Rqwau5okPBjp1POLwjKxDYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FzLzsGotMfuCA9yyO2/HDt1XmRzGg33023JGprHtkq/N9sJZBqyk9HAiW9R+lNtbo
+         1PiVZLTd3dVYranyQaIjPmw22oV4+WshIGF1KQEkAGGNhxiA3fMh/CcB3TF3aBpFQF
+         8HlA6I9QpUq/ALD7kyWxTil4u7/f5YRZKDjgzUro=
+Date:   Tue, 10 Dec 2019 11:19:13 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] fs: introduce is_dot_or_dotdot helper for cleanup
+Message-ID: <20191210191912.GA99557@gmail.com>
+References: <1575979801-32569-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20191210072119.GA114501@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: AL_l5ibVMIy76PZUvlkSqQ-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <1575979801-32569-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_wait_var_entry() forgets to initialize wq_entry->flags.
+On Tue, Dec 10, 2019 at 08:10:01PM +0800, Tiezhu Yang wrote:
+> diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+> index 3da3707..ef7eba8 100644
+> --- a/fs/crypto/fname.c
+> +++ b/fs/crypto/fname.c
+> @@ -11,21 +11,11 @@
+>   * This has not yet undergone a rigorous security audit.
+>   */
+>  
+> +#include <linux/namei.h>
+>  #include <linux/scatterlist.h>
+>  #include <crypto/skcipher.h>
+>  #include "fscrypt_private.h"
+>  
+> -static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+> -{
+> -	if (str->len == 1 && str->name[0] == '.')
+> -		return true;
+> -
+> -	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+> -		return true;
+> -
+> -	return false;
+> -}
+> -
+>  /**
+>   * fname_encrypt() - encrypt a filename
+>   *
+> @@ -255,7 +245,7 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
+>  	const struct qstr qname = FSTR_TO_QSTR(iname);
+>  	struct fscrypt_digested_name digested_name;
+>  
+> -	if (fscrypt_is_dot_dotdot(&qname)) {
+> +	if (is_dot_or_dotdot(qname.name, qname.len)) {
 
-Currently not a problem, we don't have wait_var_event_exclusive().
+There's no need for the 'qname' variable anymore.  Can you please remove it and
+do:
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/sched/wait_bit.c | 1 +
- 1 file changed, 1 insertion(+)
+	if (is_dot_or_dotdot(iname->name, iname->len)) {
 
-diff --git a/kernel/sched/wait_bit.c b/kernel/sched/wait_bit.c
-index 45eba18..02ce292 100644
---- a/kernel/sched/wait_bit.c
-+++ b/kernel/sched/wait_bit.c
-@@ -179,6 +179,7 @@ void init_wait_var_entry(struct wait_bit_queue_entry *w=
-bq_entry, void *var, int
- =09=09=09.bit_nr =3D -1,
- =09=09},
- =09=09.wq_entry =3D {
-+=09=09=09.flags=09 =3D flags,
- =09=09=09.private =3D current,
- =09=09=09.func=09 =3D var_wake_function,
- =09=09=09.entry=09 =3D LIST_HEAD_INIT(wbq_entry->wq_entry.entry),
---=20
-2.5.0
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 7fe7b87..aba114a 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
+>  	return error == -ESTALE && !(flags & LOOKUP_REVAL);
+>  }
+>  
+> +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> +{
+> +	if (unlikely(name[0] == '.')) {
+> +		if (len < 2 || (len == 2 && name[1] == '.'))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
 
+This doesn't handle the len=0 case.  Did you check that none of the users pass
+in zero-length names?  It looks like fscrypt_fname_disk_to_usr() can, if the
+directory entry on-disk has a zero-length name.  Currently it will return
+-EUCLEAN in that case, but with this patch it may think it's the name ".".
 
+So I think there needs to either be a len >= 1 check added, *or* you need to
+make an argument for why it's okay to not care about the empty name case.
+
+- Eric
