@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42221C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071DCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BA62073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9CC2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="u/T7YqBH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wzNkBxfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfLJRL0 (ORCPT
+        id S1727845AbfLJRLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:11:26 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:44592 "EHLO
+        Tue, 10 Dec 2019 12:11:32 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:44604 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbfLJRLZ (ORCPT
+        with ESMTP id S1726780AbfLJRLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:11:25 -0500
+        Tue, 10 Dec 2019 12:11:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575997876; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1575997877; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GCB2kEfKlMoJDOKt8Tg1TaktvZregxG9Kvxvr/Rr6Ks=;
-        b=u/T7YqBHCd/741IVEz1Bf0jbIzQoapW08VpmqohOpNwt3DuMbv+6BJGVL/9WEcI91gjZwG
-        lm9BVFXr/a26nI1rF2j+eJYEFa4s1GowWhO+xy0mfmMgY4qq3Ums7SBIZxGOXC3hj+bpfs
-        AGRkc1kvoGdcxzWgb6R7+7AkQGv4sAU=
+        bh=EMGcZ/SUwcopwbokeiH9BmWGrI35YwfGN6RItRHcNq0=;
+        b=wzNkBxfbrlpAzZC68tsbGLtfbu39m7m3uNXJVBdVKv4LUgN8kADaaVtzsJBhPK9QdzB+sR
+        mlEndyrMFrCMOwXW0w+JQo4PQGhVLf/7cZfPpD/7TO2bIqYIwlPcBs6vLXstTZi3LBHmfR
+        /lQqw5TfFbxoQVrnac1g+RZ8vqWzf4k=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Bin Liu <b-liu@ti.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     od@zcrc.me, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v3 2/7] usb: musb: dma: Add support for shared IRQ
-Date:   Tue, 10 Dec 2019 18:11:05 +0100
-Message-Id: <20191210171110.62141-2-paul@crapouillou.net>
+Subject: [PATCH v3 3/7] usb: musb: jz4740: Add support for DMA
+Date:   Tue, 10 Dec 2019 18:11:06 +0100
+Message-Id: <20191210171110.62141-3-paul@crapouillou.net>
 In-Reply-To: <20191210171110.62141-1-paul@crapouillou.net>
 References: <20191210171110.62141-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -50,13 +50,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The implementation of the Inventra IP in some of the Ingenic JZ47xx SoCs
-does not use a separate IRQ line for DMA transfers.
-
-Allow these SoCs to be supported by adding a flag 'dma_share_usb_irq'
-in the struct musb. If set, no extra IRQ line is required, and the musb
-glue will need to call the API function musbhs_dma_controller_irq()
-within its interrupt handler.
+Add support for using the DMA channels built into the Inventra IP.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
@@ -66,103 +60,88 @@ Notes:
     v2: Rebase on 5.4-rc4
     v3: Rebase on 5.5-rc1
 
- drivers/usb/musb/musb_core.h |  2 ++
- drivers/usb/musb/musb_dma.h  |  1 +
- drivers/usb/musb/musbhsdma.c | 27 ++++++++++++++++++++++-----
- 3 files changed, 25 insertions(+), 5 deletions(-)
+ drivers/usb/musb/Kconfig  |  2 +-
+ drivers/usb/musb/jz4740.c | 21 +++++++++++++++------
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 04203b7126d5..b7c31c717800 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -392,6 +392,8 @@ struct musb {
+diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+index 52f8e2b57ad5..210e4844c92a 100644
+--- a/drivers/usb/musb/Kconfig
++++ b/drivers/usb/musb/Kconfig
+@@ -142,7 +142,7 @@ config USB_UX500_DMA
  
- 	unsigned		flush_irq_work:1;
+ config USB_INVENTRA_DMA
+ 	bool 'Inventra'
+-	depends on USB_MUSB_OMAP2PLUS
++	depends on USB_MUSB_OMAP2PLUS || USB_MUSB_JZ4740
+ 	help
+ 	  Enable DMA transfers using Mentor's engine.
  
-+	unsigned		dma_share_usb_irq:1;
+diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
+index 5261f8dfedec..bbecfdee6ea1 100644
+--- a/drivers/usb/musb/jz4740.c
++++ b/drivers/usb/musb/jz4740.c
+@@ -25,11 +25,14 @@ struct jz4740_glue {
+ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
+ {
+ 	unsigned long   flags;
+-	irqreturn_t     retval = IRQ_NONE;
++	irqreturn_t     retval = IRQ_NONE, retval_dma = IRQ_NONE;
+ 	struct musb     *musb = __hci;
+ 
+ 	spin_lock_irqsave(&musb->lock, flags);
+ 
++	if (IS_ENABLED(CONFIG_USB_INVENTRA_DMA) && musb->dma_controller)
++		retval_dma = musbhs_dma_controller_irq(musb->dma_controller);
 +
- 	u8			address;
- 	u8			test_mode_nr;
- 	u16			ackpend;		/* ep0 */
-diff --git a/drivers/usb/musb/musb_dma.h b/drivers/usb/musb/musb_dma.h
-index 8f60271c0a9d..b3f65016a972 100644
---- a/drivers/usb/musb/musb_dma.h
-+++ b/drivers/usb/musb/musb_dma.h
-@@ -191,6 +191,7 @@ extern void (*musb_dma_controller_destroy)(struct dma_controller *);
- extern struct dma_controller *
- musbhs_dma_controller_create(struct musb *musb, void __iomem *base);
- extern void musbhs_dma_controller_destroy(struct dma_controller *c);
-+extern irqreturn_t musbhs_dma_controller_irq(struct dma_controller *c);
+ 	musb->int_usb = musb_readb(musb->mregs, MUSB_INTRUSB);
+ 	musb->int_tx = musb_readw(musb->mregs, MUSB_INTRTX);
+ 	musb->int_rx = musb_readw(musb->mregs, MUSB_INTRRX);
+@@ -47,7 +50,10 @@ static irqreturn_t jz4740_musb_interrupt(int irq, void *__hci)
  
- extern struct dma_controller *
- tusb_dma_controller_create(struct musb *musb, void __iomem *base);
-diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
-index 2d3751d885b4..898856e9974e 100644
---- a/drivers/usb/musb/musbhsdma.c
-+++ b/drivers/usb/musb/musbhsdma.c
-@@ -268,7 +268,7 @@ static int dma_channel_abort(struct dma_channel *channel)
+ 	spin_unlock_irqrestore(&musb->lock, flags);
+ 
+-	return retval;
++	if (retval == IRQ_HANDLED || retval_dma == IRQ_HANDLED)
++		return IRQ_HANDLED;
++
++	return IRQ_NONE;
+ }
+ 
+ static struct musb_fifo_cfg jz4740_musb_fifo_cfg[] = {
+@@ -91,18 +97,19 @@ static int jz4740_musb_init(struct musb *musb)
+ 	musb->dyn_fifo = true;
+ 
+ 	musb->isr = jz4740_musb_interrupt;
++	musb->dma_share_usb_irq = true;
+ 
  	return 0;
  }
  
--static irqreturn_t dma_controller_irq(int irq, void *private_data)
-+static irqreturn_t dma_controller_irq_cb(int irq, void *private_data)
- {
- 	struct musb_dma_controller *controller = private_data;
- 	struct musb *musb = controller->private_data;
-@@ -292,6 +292,9 @@ static irqreturn_t dma_controller_irq(int irq, void *private_data)
- 	int_hsdma = musb_readb(mbase, MUSB_HSDMA_INTR);
+-/*
+- * DMA has not been confirmed to work with CONFIG_USB_INVENTRA_DMA,
+- * so let's not set up the dma function pointers yet.
+- */
+ static const struct musb_platform_ops jz4740_musb_ops = {
+ 	.quirks		= MUSB_DMA_INVENTRA | MUSB_INDEXED_EP,
+ 	.fifo_mode	= 2,
+ 	.init		= jz4740_musb_init,
++#ifdef CONFIG_USB_INVENTRA_DMA
++	.dma_init	= musbhs_dma_controller_create,
++	.dma_exit	= musbhs_dma_controller_destroy,
++#endif
+ };
  
- 	if (!int_hsdma) {
-+		if (musb->dma_share_usb_irq)
-+			goto done;
-+
- 		musb_dbg(musb, "spurious DMA irq");
- 
- 		for (bchannel = 0; bchannel < MUSB_HSDMA_CHANNELS; bchannel++) {
-@@ -384,6 +387,15 @@ static irqreturn_t dma_controller_irq(int irq, void *private_data)
- 	return retval;
- }
- 
-+irqreturn_t musbhs_dma_controller_irq(struct dma_controller *c)
-+{
-+	struct musb_dma_controller *controller = container_of(c,
-+			struct musb_dma_controller, controller);
-+
-+	return dma_controller_irq_cb(controller->irq, controller);
-+}
-+EXPORT_SYMBOL_GPL(musbhs_dma_controller_irq);
-+
- void musbhs_dma_controller_destroy(struct dma_controller *c)
- {
- 	struct musb_dma_controller *controller = container_of(c,
-@@ -404,9 +416,14 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
- 	struct musb_dma_controller *controller;
- 	struct device *dev = musb->controller;
- 	struct platform_device *pdev = to_platform_device(dev);
--	int irq = platform_get_irq_byname(pdev, "dma");
-+	int irq;
-+
-+	if (musb->dma_share_usb_irq)
-+		irq = 0;
-+	else
-+		irq = platform_get_irq_byname(pdev, "dma");
- 
--	if (irq <= 0) {
-+	if (irq < 0) {
- 		dev_err(dev, "No DMA interrupt line!\n");
- 		return NULL;
+ static int jz4740_probe(struct platform_device *pdev)
+@@ -137,6 +144,8 @@ static int jz4740_probe(struct platform_device *pdev)
  	}
-@@ -424,8 +441,8 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
- 	controller->controller.channel_program = dma_channel_program;
- 	controller->controller.channel_abort = dma_channel_abort;
  
--	if (request_irq(irq, dma_controller_irq, 0,
--			dev_name(musb->controller), controller)) {
-+	if (irq > 0 && request_irq(irq, dma_controller_irq_cb, 0,
-+				   dev_name(musb->controller), controller)) {
- 		dev_err(dev, "request_irq %d failed!\n", irq);
- 		musb_dma_controller_destroy(&controller->controller);
+ 	musb->dev.parent		= &pdev->dev;
++	musb->dev.dma_mask		= &musb->dev.coherent_dma_mask;
++	musb->dev.coherent_dma_mask	= DMA_BIT_MASK(32);
  
+ 	glue->dev			= &pdev->dev;
+ 	glue->musb			= musb;
 -- 
 2.24.0
 
