@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BD0C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB671C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A33C2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E2D214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012391;
-	bh=NH8QaUyEOomgIHHhrqcb10mfEPskQkrz6nBh+44/Mwg=;
+	s=default; t=1576012393;
+	bh=xzaz9CcmR2A0BgOWJp3yodJRbsKeIwbAeeptlfyvMfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ultau4a81HAY//Nx8ol3E6MNmc33pU/3lFlB7lcG39O2M7rJUR+9zs9/csjZwBHOK
-	 C2t8on24hlVvYkrJ+yTnIxBbMTiJcL6aRT1jd6rWlqKDll96/SHAtdyGpiP3/DqTTZ
-	 6B3s3Z7vjEhc2HlY2fmdPuuGbi8nOxyiN+CTt+g8=
+	b=e1sF7W7dxZm0wW8CdNgZh5tmwerJgrV1vt2lh3fLDWOnFDwicfXjAeuA+UgHmOITr
+	 9va0Tfjdom6SJnSvzrwjQJgp+iD8ny9Ic0RG0CWe55DvNqnj2mcno1M9ZIw8CnfwuS
+	 45hU+tMElVnSwH1QAUQWWZHMrgoM5IUEsXPEyz2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbfLJVNK (ORCPT
+        id S1728883AbfLJVNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38910 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729203AbfLJVNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:07 -0500
+        id S1729220AbfLJVNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B25206EC;
-        Tue, 10 Dec 2019 21:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B6320838;
+        Tue, 10 Dec 2019 21:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012387;
-        bh=NH8QaUyEOomgIHHhrqcb10mfEPskQkrz6nBh+44/Mwg=;
+        s=default; t=1576012389;
+        bh=xzaz9CcmR2A0BgOWJp3yodJRbsKeIwbAeeptlfyvMfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VNRWYjPlCjvGa1bTvIKd6LLQ7d/mznuZ1VR0VbLlvAUWTM40IAAHNCMLy0atyPqKI
-         mT1p+mtplOq2Di/jK/DT+d9Cdln9rmlmL/46LU7JjMUeCb+26WBefEOUh4hXJK9hrG
-         bs12j+heY//zMJFYn8bQ7KjqUfpw1UcDonUlshmg=
+        b=jsiWtDExKgeYWW90VIpUfiwU7upiBHQStrCTVOIZ1AeIHhWtuy7TlzYeZFpdwoZJg
+         wlO6wwyMSw3Rvo4THJ+1MTT3UNwPlA9TPW3DwYl1NopSKyXa0V5xiYdCclo7kIdaab
+         7Xhq7bFHup1mKTthzGvI3epSqcd4FJn9PQm6N9Qs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 309/350] net: phy: avoid matching all-ones clause 45 PHY IDs
-Date:   Tue, 10 Dec 2019 16:06:54 -0500
-Message-Id: <20191210210735.9077-270-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 311/350] ASoC: Intel: bytcr_rt5640: Update quirk for Acer Switch 10 SW5-012 2-in-1
+Date:   Tue, 10 Dec 2019 16:06:56 -0500
+Message-Id: <20191210210735.9077-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,81 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit b95e86d846b63b02ecdc94802ddbeaf9005fb6d9 ]
+[ Upstream commit 0bb887709eb16bdc4b5baddd8337abf3de72917f ]
 
-We currently match clause 45 PHYs using any ID read from a MMD marked
-as present in the "Devices in package" registers 5 and 6.  However,
-this is incorrect.  45.2 says:
+When the Acer Switch 10 SW5-012 quirk was added we did not have
+jack-detection support yet; and the builtin microphone selection of
+the original quirk is wrong too.
 
-  "The definition of the term package is vendor specific and could be
-   a chip, module, or other similar entity."
+Fix the microphone-input quirk and add jack-detection info so that the
+internal-microphone and headphone/set jack on the Switch 10 work properly.
 
-so a package could be more or less than the whole PHY - a PHY could be
-made up of several modules instantiated onto a single chip such as the
-Marvell 88x3310, or some of the MMDs could be disabled according to
-chip configuration, such as the Broadcom 84881.
-
-In the case of Broadcom 84881, the "Devices in package" registers
-contain 0xc000009b, meaning that there is a PHYXS present in the
-package, but all registers in MMD 4 return 0xffff.  This leads to our
-matching code incorrectly binding this PHY to one of our generic PHY
-drivers.
-
-This patch changes the way we determine whether to attempt to match a
-MMD identifier, or use it to request a module - if the identifier is
-all-ones, then we skip over it. When reading the identifiers, we
-initialise phydev->c45_ids.device_ids to all-ones, only reading the
-device ID if the "Devices in package" registers indicates we should.
-
-This avoids the generic drivers incorrectly matching on a PHY ID of
-0xffffffff.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191119145138.59162-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index adb66a2fae18b..14c6b7597b06e 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -488,7 +488,7 @@ static int phy_bus_match(struct device *dev, struct device_driver *drv)
- 
- 	if (phydev->is_c45) {
- 		for (i = 1; i < num_ids; i++) {
--			if (!(phydev->c45_ids.devices_in_package & (1 << i)))
-+			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
- 				continue;
- 
- 			if ((phydrv->phy_id & phydrv->phy_id_mask) ==
-@@ -632,7 +632,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 		int i;
- 
- 		for (i = 1; i < num_ids; i++) {
--			if (!(c45_ids->devices_in_package & (1 << i)))
-+			if (c45_ids->device_ids[i] == 0xffffffff)
- 				continue;
- 
- 			ret = phy_request_driver_module(dev,
-@@ -812,10 +812,13 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
-  */
- struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
- {
--	struct phy_c45_device_ids c45_ids = {0};
-+	struct phy_c45_device_ids c45_ids;
- 	u32 phy_id = 0;
- 	int r;
- 
-+	c45_ids.devices_in_package = 0;
-+	memset(c45_ids.device_ids, 0xff, sizeof(c45_ids.device_ids));
-+
- 	r = get_phy_id(bus, addr, &phy_id, is_c45, &c45_ids);
- 	if (r)
- 		return ERR_PTR(r);
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 9c1aa4ec9cba4..dd2b5ad086591 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -405,10 +405,12 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire SW5-012"),
+ 		},
+-		.driver_data = (void *)(BYT_RT5640_IN1_MAP |
+-						 BYT_RT5640_MCLK_EN |
+-						 BYT_RT5640_SSP0_AIF1),
+-
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD2_IN4N |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
+ 	},
+ 	{
+ 		.matches = {
 -- 
 2.20.1
 
