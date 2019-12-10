@@ -2,240 +2,86 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CC9C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF12C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6502B2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1262073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixJ82yxR"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gcPpE+/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLJBXP (ORCPT
+        id S1727641AbfLJBYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:23:15 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36687 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfLJBXP (ORCPT
+        Mon, 9 Dec 2019 20:24:43 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59029 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727221AbfLJBYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:23:15 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so17924303ljg.3;
-        Mon, 09 Dec 2019 17:23:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kqwT2YZ76KH7yigSs7gBgrzgqef0EwdSdQFxmO8Z/Yc=;
-        b=ixJ82yxRw60wEXQu+KAy+B0WW3sqUv5DlZkwQfdS/M7HscVX/CX4D/sKIOacZ0lCcx
-         BTGvEA6GyeEtWfd9Seu66WOzNpfa2judcEPmZpXu4/V6/M+bJZ+DCyH+IAMMaPFu1Eck
-         c6RA4msz2oIgbh3qFpeeU/67rxIAdAetIaKOF17tA4pAaNoDD4i6bLGfWTO9kZIEuMVe
-         IaeI0FwSVF7yQf9umpZkTzoDP+OYejcjwAcaDLYPS4gxiJR7ymLiYmGHQizqK1fFh1kJ
-         4H8YZrzImJRo655NQK185UFVH6sv/L08jJ/Y1602HEoWZhLehHWYFC4JNUmvw19W+Ss1
-         xkzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kqwT2YZ76KH7yigSs7gBgrzgqef0EwdSdQFxmO8Z/Yc=;
-        b=dGnDiItBEDD8sKufWDV9iY6MZ3URdD/67fh6cHe3oCwKGaioqvxNgs8lOi6GlCn0+X
-         eK3dCnKObLkxOA7djbR+PAswEmqXxCb9GTAkPfP7VM0ZjRj4eoXIuRCgmttzQVKmVu82
-         WK/O4StUhTbN/JOvya3aIDXBmknX9QNSkUXX1bgv5VTYgwEdDsSn8EiyulTr0vcTR9h+
-         RFVNGdl9TDC8rYX10djWdTAtSnmQMYiUIt/6jvkfY3JjhqZMwR1b2MVclzNvPdEvxgD0
-         RxRW1lLrql7ZBxrafF98STqW8ELrph3rmJfvzVrXt+bMLUTRb7+F09w07cJy0lU/LTcd
-         ByhA==
-X-Gm-Message-State: APjAAAXsyksGGHTP1QxdY5DxjHExzdKmfnb+FERgQvHhG5s2Md4Ffh6J
-        hbxWAB9GLYGxSFB1ymFfptyUxauL
-X-Google-Smtp-Source: APXvYqz0QT99Pmnbt4Mb7joxr+vE2sWjdTlvsR7RXOgu/nO1XOEGpB5gxfMAFmU5P4fMRy7vgxR+bA==
-X-Received: by 2002:a2e:9842:: with SMTP id e2mr19159377ljj.101.1575940991780;
-        Mon, 09 Dec 2019 17:23:11 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u19sm736783ljk.75.2019.12.09.17.23.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 17:23:11 -0800 (PST)
-Subject: Re: [PATCH 6/6] input: elants: read touchscreen size for EKTF3624
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
- <06f20ed8e50fe634c59cf3c585d37f1175133533.1575936961.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <fd020252-0646-5d01-95d6-aff79b8709f6@gmail.com>
-Date:   Tue, 10 Dec 2019 04:23:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 20:24:43 -0500
+X-UUID: fbdde645f9ff44fdae3a6e96192052c8-20191210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uS+vnIodKcC3nYeOH364CYiGDOfQNtI3mPSCouI1v0o=;
+        b=gcPpE+/50n18No5AZmiEkd3C3cSllzyT7fYi6K8YFsPoZyqwFQ8VQr1H2plHvwffV2EGBag/Cckd/SwXSWTBqGaote7w/Hq4JfhE4QZKBaowDBMJh227YsKXJyFTZK0F1urZXGKKCvxMLNQOL8qPlpg9/UyM1RanJjrOPlNzus4=;
+X-UUID: fbdde645f9ff44fdae3a6e96192052c8-20191210
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1852598995; Tue, 10 Dec 2019 09:24:36 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Dec 2019 09:23:39 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Dec 2019 09:24:16 +0800
+Message-ID: <1575941074.9782.0.camel@mtksdaap41>
+Subject: Re: [PATCH v2 24/28] drm/mediatek: hdmi: Use drm_bridge_init()
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 10 Dec 2019 09:24:34 +0800
+In-Reply-To: <20191204114732.28514-25-mihail.atanassov@arm.com>
+References: <20191204114732.28514-1-mihail.atanassov@arm.com>
+         <20191204114732.28514-25-mihail.atanassov@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <06f20ed8e50fe634c59cf3c585d37f1175133533.1575936961.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: C2053D4113A1F6C2D03FB17F90EEE848F312EC60C58E129E95C51A71E518A3AF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.12.2019 03:19, Michał Mirosław пишет:
-> EKTF3624 as present in Asus TF300T tablet has touchscreen size encoded
-> in different registers.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 77 ++++++++++++++++++++++++--
->  1 file changed, 72 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index 27aca3971da5..e60a5eb9fb37 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -34,7 +34,7 @@
->  #include <linux/input/touchscreen.h>
->  #include <linux/input/mt.h>
->  #include <linux/acpi.h>
-> -#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/regulator/consumer.h>
->  #include <asm/unaligned.h>
-> @@ -42,6 +42,10 @@
->  /* Device, Driver information */
->  #define DEVICE_NAME	"elants_i2c"
->  
-> +/* Device IDs */
-> +#define EKTH3500	0
-> +#define EKTF3624	1
-> +
->  /* Convert from rows or columns into resolution */
->  #define ELAN_TS_RESOLUTION(n, m)   (((n) - 1) * (m))
->  
-> @@ -160,6 +164,7 @@ struct elants_data {
->  
->  	bool wake_irq_enabled;
->  	bool keep_power_in_suspend;
-> +	u8 chip_id;
->  
->  	/* Must be last to be used for DMA operations */
->  	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
-> @@ -434,7 +439,53 @@ static int elants_i2c_query_bc_version(struct elants_data *ts)
->  	return 0;
->  }
->  
-> -static int elants_i2c_query_ts_info(struct elants_data *ts)
-> +static int elants_i2c_query_ts_info_ektf(struct elants_data *ts)
-> +{
-> +	struct i2c_client *client = ts->client;
-> +	int error;
-> +	u8 resp[4];
-> +	u16 phy_x, phy_y;
-> +	const u8 get_xres_cmd[] = {
-> +		CMD_HEADER_READ, E_INFO_X_RES, 0x00, 0x00
-> +	};
-> +	const u8 get_yres_cmd[] = {
-> +		CMD_HEADER_READ, E_INFO_Y_RES, 0x00, 0x00
-> +	};
-> +
-> +	/* Get X/Y size in mm */
-> +	error = elants_i2c_execute_command(client, get_xres_cmd,
-> +					   sizeof(get_xres_cmd),
-> +					   resp, sizeof(resp), 1,
-> +					   "get X size");
-> +	if (error)
-> +		return error;
-> +
-> +	phy_x = resp[2] | ((resp[3] & 0xF0) << 4);
-> +
-> +	error = elants_i2c_execute_command(client, get_yres_cmd,
-> +					   sizeof(get_yres_cmd),
-> +					   resp, sizeof(resp), 1,
-> +					   "get Y size");
-> +	if (error)
-> +		return error;
-> +
-> +	phy_y = resp[2] | ((resp[3] & 0xF0) << 4);
-> +
-> +	/* calculate resolution from size */
-> +	if (!ts->prop.max_x)
-> +		ts->prop.max_x = 2240;
-> +	ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
-> +
-> +	if (!ts->prop.max_y)
-> +		ts->prop.max_y = 1408;
-> +	ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
-> +
-> +	dev_dbg(&client->dev, "phy_x=%d, phy_y=%d\n", phy_x, phy_y);
-> +
-> +	return 0;
-> +}
-> +
-> +static int elants_i2c_query_ts_info_ekth(struct elants_data *ts)
->  {
->  	struct i2c_client *client = ts->client;
->  	int error;
-> @@ -587,8 +638,20 @@ static int elants_i2c_initialize(struct elants_data *ts)
->  		error = elants_i2c_query_test_version(ts);
->  	if (!error)
->  		error = elants_i2c_query_bc_version(ts);
-> -	if (!error)
-> -		error = elants_i2c_query_ts_info(ts);
-> +
-> +	switch (ts->chip_id) {
-> +	case EKTH3500:
-> +		if (!error)
-> +			error = elants_i2c_query_ts_info_ekth(ts);
-> +		break;
-> +	case EKTF3624:
-> +		if (!error)
-> +			error = elants_i2c_query_ts_info_ektf(ts);
-> +		break;
-> +	default:
-> +		unreachable();
-> +		break;
-> +	}
->  
->  	if (error)
->  		ts->iap_mode = ELAN_IAP_RECOVERY;
-> @@ -1185,6 +1248,9 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	ts->client = client;
->  	i2c_set_clientdata(client, ts);
->  
-> +	if (client->dev.of_node)
-> +		ts->chip_id = (uintptr_t)of_device_get_match_data(&client->dev);
-> +
->  	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
->  	if (IS_ERR(ts->vcc33)) {
->  		error = PTR_ERR(ts->vcc33);
-> @@ -1422,7 +1488,8 @@ MODULE_DEVICE_TABLE(acpi, elants_acpi_id);
->  
->  #ifdef CONFIG_OF
->  static const struct of_device_id elants_of_match[] = {
-> -	{ .compatible = "elan,ekth3500" },
-> +	{ .compatible = "elan,ekth3500", .data = (void *)EKTH3500 },
-> +	{ .compatible = "elan,ektf3624", .data = (void *)EKTF3624 },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, elants_of_match);
+SGksIE1paGFpbDoNCg0KT24gV2VkLCAyMDE5LTEyLTA0IGF0IDExOjQ4ICswMDAwLCBNaWhhaWwg
+QXRhbmFzc292IHdyb3RlOg0KPiBObyBmdW5jdGlvbmFsIGNoYW5nZS4NCj4gDQoNCkFja2VkLWJ5
+OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IE1paGFpbCBB
+dGFuYXNzb3YgPG1paGFpbC5hdGFuYXNzb3ZAYXJtLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyB8IDQgKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfaGRtaS5jDQo+IGluZGV4IGY2ODQ5NDdjNTI0My4uOTc2MWE4MDY3NGQ5IDEwMDY0NA0KPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYw0KPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYw0KPiBAQCAtMTcwOCw4ICsxNzA4LDggQEAgc3Rh
+dGljIGludCBtdGtfZHJtX2hkbWlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+Cj4gIA0KPiAgCW10a19oZG1pX3JlZ2lzdGVyX2F1ZGlvX2RyaXZlcihkZXYpOw0KPiAgDQo+IC0J
+aGRtaS0+YnJpZGdlLmZ1bmNzID0gJm10a19oZG1pX2JyaWRnZV9mdW5jczsNCj4gLQloZG1pLT5i
+cmlkZ2Uub2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiArCWRybV9icmlkZ2VfaW5pdCgm
+aGRtaS0+YnJpZGdlLCAmcGRldi0+ZGV2LCAmbXRrX2hkbWlfYnJpZGdlX2Z1bmNzLA0KPiArCQkJ
+TlVMTCwgTlVMTCk7DQo+ICAJZHJtX2JyaWRnZV9hZGQoJmhkbWktPmJyaWRnZSk7DQo+ICANCj4g
+IAlyZXQgPSBtdGtfaGRtaV9jbGtfZW5hYmxlX2F1ZGlvKGhkbWkpOw0KDQo=
 
-It also should be possible to remove elants_of_match entirely and do the
-following in the I2C ID table:
-
-static const struct i2c_device_id elants_i2c_id[] = {
-	{ "ekth3500", EKTH3500 },
-	{ "ektf3624", EKTF3624 },
-	{ }
-};
-MODULE_DEVICE_TABLE(i2c, elants_i2c_id);
-
-Then OF core will take care of device ID matching by removing the
-"elan," part from the compatible value of the device-tree and comparing
-it with the values in elants_i2c_id[].
-
-And then in elants_i2c_probe() you could :
-
-	chip->chip_id = (uintptr_t)id->driver_data;
-
-See "drivers/mfd/max77620.c" for the example.
