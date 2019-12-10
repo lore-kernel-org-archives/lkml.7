@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2941FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C41214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0F8205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012461;
-	bh=IuYOpPvSdHmvCmlPfdxsAUVModI75wSqdZHZvJ1mZGQ=;
+	s=default; t=1576012468;
+	bh=/ksDbFlGRX6NYNxfX+vFNg4/P4WU9zfrrWSCuSQmOYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPQUWppyPn9UiXw810RYAVfyrEJumecpM3TI7czk6YJaRSUWFMAjTsY1ReXiy8l7t
-	 D0yksr8cXvMXtCQkO6Ev4d4gfI706r5lbf+5pa+iyjXOA3wot/fNuSOV7SWXbG/vPx
-	 r7sjHw9FBXlgTmok6y5MHvCB4InXjXKulRSg7C0o=
+	b=G9Q4O7hikImZWdf0/SrRr5a6iTa3q5kobghJJndPsh0pNuxxH6PeecIeakibqGlCY
+	 vyvyFHXH2B+VRW0YxRgTo7NsZbhZNDH6Bu5SbrZHwozFecA4Y839PpWlig5ftLjLoN
+	 dTlxQaICotzz5Y9m0b03bcnPhFl3vEKAyZr2FM3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfLJVOT (ORCPT
+        id S1729232AbfLJVO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:14:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:14:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbfLJVN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:58 -0500
+        id S1729477AbfLJVNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98428208C3;
-        Tue, 10 Dec 2019 21:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC4920838;
+        Tue, 10 Dec 2019 21:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012437;
-        bh=IuYOpPvSdHmvCmlPfdxsAUVModI75wSqdZHZvJ1mZGQ=;
+        s=default; t=1576012435;
+        bh=/ksDbFlGRX6NYNxfX+vFNg4/P4WU9zfrrWSCuSQmOYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWJOgr2oWaOQE+/kCxf9tm87GMUUGBi8Eb/YgLul1IYduDLUs7FWyhZLDUD9guVoG
-         GawsH8HPNYUbyOaK99uAwy3twleBXXjTL6LAyzc0YKt5SXPCTymA+NCvqN7lxEwpAF
-         dgjczuEApEw490qFFAXt7vIUV/NCO3Y0co4AIfLU=
+        b=gt0UIjSvfwlxG0jy64tMAUFt0MhwbRtwyeZ01yz8ExwOwPRpSZJmQjcC3RWiYDIOW
+         9OzKNxg5lo9mW2CxQyaIwlboVE8NMagUv37YRs5HToy7cr6c0ztZM8PCv5LTZnHV5p
+         Ckz7eTnSNfcEkeDBB1BvHRlneD/eTwrsLcC4/3i0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@dlink.ru>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 349/350] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
-Date:   Tue, 10 Dec 2019 16:07:34 -0500
-Message-Id: <20191210210735.9077-310-sashal@kernel.org>
+Cc:     Luke Starrett <luke.starrett@broadcom.com>,
+        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Devesh Sharma <devesh.sharma@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 347/350] RDMA/bnxt_re: Fix chip number validation Broadcom's Gen P5 series
+Date:   Tue, 10 Dec 2019 16:07:32 -0500
+Message-Id: <20191210210735.9077-308-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -63,79 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Luke Starrett <luke.starrett@broadcom.com>
 
-[ Upstream commit b167191e2a851cb2e4c6ef8b91c83ff73ef41872 ]
+[ Upstream commit e284b159c6881c8bec9713daba2653268f4c4948 ]
 
-Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
-napi_gro_receive()") has applied batched GRO_NORMAL packets processing
-to all napi_gro_receive() users, including mac80211-based drivers.
+In the first version of Gen P5 ASIC, chip-id was always set to 0x1750 for
+all adaptor port configurations. This has been fixed in the new chip rev.
 
-However, this change has led to a regression in iwlwifi driver [1][2] as
-it is required for NAPI users to call napi_complete_done() or
-napi_complete() and the end of every polling iteration, whilst iwlwifi
-doesn't use NAPI scheduling at all and just calls napi_gro_flush().
-In that particular case, packets which have not been already flushed
-from napi->rx_list stall in it until at least next Rx cycle.
+Due to this missing fix users are not able to use adaptors based on latest
+chip rev of Broadcom's Gen P5 adaptors.
 
-Fix this by adding a manual flushing of the list to iwlwifi driver right
-before napi_gro_flush() call to mimic napi_complete() logics.
-
-I prefer to open-code gro_normal_list() rather than exporting it for 2
-reasons:
-* to prevent from using it and napi_gro_flush() in any new drivers,
-  as it is the *really* bad way to use NAPI that should be avoided;
-* to keep gro_normal_list() static and don't lose any CC optimizations.
-
-I also don't add the "Fixes:" tag as the mentioned commit was only a
-trigger that only exposed an improper usage of NAPI in this particular
-driver.
-
-[1] https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
-
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Acked-by: Luca Coelho <luciano.coelho@intel.com>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Tested-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Reviewed-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ae8637e13185 ("RDMA/bnxt_re: Add chip context to identify 57500 series")
+Link: https://lore.kernel.org/r/1574317343-23300-2-git-send-email-devesh.sharma@broadcom.com
+Signed-off-by: Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Luke Starrett <luke.starrett@broadcom.com>
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/bnxt_re/qplib_res.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index 19dd075f2f636..041dd75ac72bc 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1429,6 +1429,7 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+diff --git a/drivers/infiniband/hw/bnxt_re/qplib_res.h b/drivers/infiniband/hw/bnxt_re/qplib_res.h
+index fbda11a7ab1aa..aaa76d7921857 100644
+--- a/drivers/infiniband/hw/bnxt_re/qplib_res.h
++++ b/drivers/infiniband/hw/bnxt_re/qplib_res.h
+@@ -186,7 +186,9 @@ struct bnxt_qplib_chip_ctx {
+ 	u8	chip_metal;
+ };
+ 
+-#define CHIP_NUM_57500          0x1750
++#define CHIP_NUM_57508		0x1750
++#define CHIP_NUM_57504		0x1751
++#define CHIP_NUM_57502		0x1752
+ 
+ struct bnxt_qplib_res {
+ 	struct pci_dev			*pdev;
+@@ -203,7 +205,9 @@ struct bnxt_qplib_res {
+ 
+ static inline bool bnxt_qplib_is_chip_gen_p5(struct bnxt_qplib_chip_ctx *cctx)
  {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
-+	struct napi_struct *napi;
- 	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
-@@ -1534,8 +1535,16 @@ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- 	if (unlikely(emergency && count))
- 		iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
- 
--	if (rxq->napi.poll)
--		napi_gro_flush(&rxq->napi, false);
-+	napi = &rxq->napi;
-+	if (napi->poll) {
-+		if (napi->rx_count) {
-+			netif_receive_skb_list(&napi->rx_list);
-+			INIT_LIST_HEAD(&napi->rx_list);
-+			napi->rx_count = 0;
-+		}
-+
-+		napi_gro_flush(napi, false);
-+	}
- 
- 	iwl_pcie_rxq_restock(trans, rxq);
+-	return (cctx->chip_num == CHIP_NUM_57500);
++	return (cctx->chip_num == CHIP_NUM_57508 ||
++		cctx->chip_num == CHIP_NUM_57504 ||
++		cctx->chip_num == CHIP_NUM_57502);
  }
+ 
+ static inline u8 bnxt_qplib_get_hwq_type(struct bnxt_qplib_res *res)
 -- 
 2.20.1
 
