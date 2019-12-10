@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C9EC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1682BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10972205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6155206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013192;
-	bh=Uox/MUlOxAcA9VC8+NstKQ1ozhs/1ymmQvDGzA/Jz60=;
+	s=default; t=1576013198;
+	bh=TwguYHy5B2a16ohKMwc5Zw/HtcD9V/CMiposwe5BYww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NkeyPGs50bnHf06D3M1kXrt2KyAX3LBT3mvNVrblUY5yrTSLjDCuvdVgkZM9wgiXa
-	 mLmounqRIHavvN6QZaTZwfr+uW1dza2J6H0XAw51F1FuHFWSuPhnkJ330xGdfip1rd
-	 rvyb9FsCBPbFLy9G1AaIVyf9VGWx5WZH0L1fb/xc=
+	b=trircJaD4ZEe7XNCvjY762C6TTQDekY8UYwT0ijhGhbxUHxB5m55V7JCZCna+VVCk
+	 CeA6fPQVeJHGsgwayXRA5TOvWV27nJSc7LW2V4MhMckU8w8FfeC+tX2FfmlBCOCkNZ
+	 W8Qj6wBS1QMhW6snaIeGGsn0MaMSQyq06u+46Zrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfLJVZi (ORCPT
+        id S1727874AbfLJV0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:25:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56174 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:26:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfLJVZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:25:23 -0500
+        id S1729547AbfLJVZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 312DD24655;
-        Tue, 10 Dec 2019 21:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 757E9207FF;
+        Tue, 10 Dec 2019 21:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013122;
-        bh=Uox/MUlOxAcA9VC8+NstKQ1ozhs/1ymmQvDGzA/Jz60=;
+        s=default; t=1576013137;
+        bh=TwguYHy5B2a16ohKMwc5Zw/HtcD9V/CMiposwe5BYww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIgKs5/tAyf6RUbPbIzszs9oul2wL/xPIf26jFtwUM3A/0yDiRk8AKV730kR2lp7r
-         bD39vAtRbwUeLmB01B+CsBfAGlo4HwwLwJUz8PzO3m2vZwIVqr2lfntqCNPL/6vWei
-         5a6GBqOlL3g4itC9dXQyu39Jv39a4RTuLoo6yt7s=
+        b=iN88OXThYgWjRaUO9bAro76ikREJcW0RyFM5mY9f/oSuMd0AgAchstMOQfLMRU4Qe
+         /7fhAHGQc5z/tlXQCte5L8pLXieZzAShlQdsl4HcxOfffAWfwHB+JiHWrC/azjyQ6M
+         VVnyzXNnymlW50z4o4NWr0g+o99gWFOMMNJ8/p/4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 009/292] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Tue, 10 Dec 2019 16:20:28 -0500
-Message-Id: <20191210212511.11392-9-sashal@kernel.org>
+Cc:     Allen Pais <allen.pais@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 021/292] libertas: fix a potential NULL pointer dereference
+Date:   Tue, 10 Dec 2019 16:20:40 -0500
+Message-Id: <20191210212511.11392-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
 References: <20191210212511.11392-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,49 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Allen Pais <allen.pais@oracle.com>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
-
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index 28347df78cff6..adb5ab9e34390 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -59,9 +59,9 @@ struct bh1750_chip_info {
+diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
+index 242d8845da3fa..30f1025ecb9bc 100644
+--- a/drivers/net/wireless/marvell/libertas/if_sdio.c
++++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
+@@ -1179,6 +1179,10 @@ static int if_sdio_probe(struct sdio_func *func,
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
+ 	spin_lock_init(&card->lock);
+ 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
++	if (unlikely(!card->workqueue)) {
++		ret = -ENOMEM;
++		goto err_queue;
++	}
+ 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
+ 	init_waitqueue_head(&card->pwron_waitq);
  
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
+@@ -1230,6 +1234,7 @@ static int if_sdio_probe(struct sdio_func *func,
+ 	lbs_remove_card(priv);
+ free:
+ 	destroy_workqueue(card->workqueue);
++err_queue:
+ 	while (card->packets) {
+ 		packet = card->packets;
+ 		card->packets = card->packets->next;
 -- 
 2.20.1
 
