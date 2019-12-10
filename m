@@ -7,62 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0F5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD596C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AAA2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91231206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013483;
-	bh=YpQWkDLIOfvR4l/fOKKCXAcyaAJPXvo1vWfzuAc4hNE=;
+	s=default; t=1576013486;
+	bh=7zS+SDS48IEOsmWMqVS9szWqKcLCdfqqnTboh0ROiA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjWwT4Dn5AoG4mqQH1Ji6yE/4gsNIsCHB1ArrIWP/OjuMwCfdAUn1ADhLkPIPZSRq
-	 R2+8LUj44W8ul/oTq/e3diC8vP4RzvNw6HoLv3ow4ScVfmPlcluSz9PzzbTR3ToyRi
-	 OwCNmbKZQj4P4XNdO4eUxGRLNc6TvEnWXbpBVk2o=
+	b=1rYI1dXqYgooGkrNZTZt9QC4/du1eJcIvJ1Ia+8hvstIubwBvAztR28gs07//pvyF
+	 BRV+uAcv4nKtfYzW/dxgTLPx6tJmZl6bFAGufLOhhhf4r2RJ2FU1fdD2a8pAYxZFbL
+	 6AlXn0+jJbyKkk5C2CHJlZTj375B71/MEQpW3SIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfLJVbV (ORCPT
+        id S1728195AbfLJVJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:31:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbfLJVJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:34 -0500
+        id S1726913AbfLJVJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAE92077B;
-        Tue, 10 Dec 2019 21:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98335246A4;
+        Tue, 10 Dec 2019 21:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012173;
-        bh=YpQWkDLIOfvR4l/fOKKCXAcyaAJPXvo1vWfzuAc4hNE=;
+        s=default; t=1576012168;
+        bh=7zS+SDS48IEOsmWMqVS9szWqKcLCdfqqnTboh0ROiA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J643/gmkipb+mzGpEH4s9eDGd6YXKsDi9Nlypg2kz/EqivLqCuB9UpqOzkyy/TBqU
-         KzzrxJr+unAObog/BohtiJX/QN0ZKqsDfDNsWCHynIKYUGPjHTJEOF84EUn3D517+l
-         6ZQQwDyFPDIkGLkT4eAnCSvV3boa2KD/s3hB56TA=
+        b=h6NxWoHpf4jvOfFxe1TcDdN66B9NfEhuAvGYzUvSytyKFEvWNW4G395qKHB5wvlHy
+         voAnrDcVu7njwomCeYAW3X3oaqVY+Gwtvg/sW6x1Q9JqWGNe6ecpWZ13yoFcF69wBu
+         ES9JBeHCzoyzWZZxdvcydSeqNnOFQw00LhNZaiG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 131/350] perf tests: Disable bp_signal testing for arm64
-Date:   Tue, 10 Dec 2019 16:03:56 -0500
-Message-Id: <20191210210735.9077-92-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 128/350] spi: pxa2xx: Set controller->max_transfer_size in dma mode
+Date:   Tue, 10 Dec 2019 16:03:53 -0500
+Message-Id: <20191210210735.9077-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -71,111 +67,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 6a5f3d94cb69a185b921cb92c39888dc31009acb ]
+[ Upstream commit b2662a164f9dc48da8822e56600686d639056282 ]
 
-As there are several discussions for enabling perf breakpoint signal
-testing on arm64 platform: arm64 needs to rely on single-step to execute
-the breakpointed instruction and then reinstall the breakpoint exception
-handler.  But if we hook the breakpoint with a signal, the signal
-handler will do the stepping rather than the breakpointed instruction,
-this causes infinite loops as below:
+In DMA mode we have a maximum transfer size, past that the driver
+falls back to PIO (see the check at the top of pxa2xx_spi_transfer_one).
+Falling back to PIO for big transfers defeats the point of a dma engine,
+hence set the max transfer size to inform spi clients that they need
+to do something smarter.
 
-         Kernel space              |            Userspace
-  ---------------------------------|--------------------------------
-                                   |  __test_function() -> hit
-				   |                       breakpoint
-  breakpoint_handler()             |
-    `-> user_enable_single_step()  |
-  do_signal()                      |
-                                   |  sig_handler() -> Step one
-				   |                instruction and
-				   |                trap to kernel
-  single_step_handler()            |
-    `-> reinstall_suspended_bps()  |
-                                   |  __test_function() -> hit
-				   |     breakpoint again and
-				   |     repeat up flow infinitely
+This was uncovered by the drm_mipi_dbi spi panel code, which does
+large spi transfers, but stopped splitting them after:
 
-As Will Deacon mentioned [1]: "that we require the overflow handler to
-do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-hw_breakpoint code is a complete disaster so my preference would be to
-rip out the perf part and just implement something directly in ptrace,
-but it's a pretty horrible job".  Though Will commented this on arm
-architecture, but the comment also can apply on arm64 architecture.
+commit e143364b4c1774f68e923a5a0bb0fca28ac25888
+Author: Noralf Trønnes <noralf@tronnes.org>
+Date:   Fri Jul 19 17:59:10 2019 +0200
 
-For complete information, I searched online and found a few years back,
-Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-pstate' [2]; the patch tried to resolve this issue by avoiding single
-stepping in signal handler and defer to enable the signal stepping when
-return to __test_function().  The fixing was not merged due to the
-concern for missing to handle different usage cases.
+    drm/tinydrm: Remove tinydrm_spi_max_transfer_size()
 
-Based on the info, the most feasible way is to skip Perf breakpoint
-signal testing for arm64 and this could avoid the duplicate
-investigation efforts when people see the failure.  This patch skips
-this case on arm64 platform, which is same with arm architecture.
+After this commit the code relied on the spi core to split transfers
+into max dma-able blocks, which also papered over the PIO fallback issue.
 
-[1] https://lkml.org/lkml/2018/11/15/205
-[2] https://lkml.org/lkml/2015/12/23/477
+Fix this by setting the overall max transfer size to the DMA limit,
+but only when the controller runs in DMA mode.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: e143364b4c17 ("drm/tinydrm: Remove tinydrm_spi_max_transfer_size()")
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Noralf Trønnes <noralf@tronnes.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reported-and-tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Daniel Mack <daniel@zonque.org>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://lore.kernel.org/r/20191017064426.30814-1-daniel.vetter@ffwll.ch
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/bp_signal.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index c1c2c13de254c..166f411568a50 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -49,14 +49,6 @@ asm (
- 	"__test_function:\n"
- 	"incq (%rdi)\n"
- 	"ret\n");
--#elif defined (__aarch64__)
--extern void __test_function(volatile long *ptr);
--asm (
--	".globl __test_function\n"
--	"__test_function:\n"
--	"str x30, [x0]\n"
--	"ret\n");
--
- #else
- static void __test_function(volatile long *ptr)
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index bb6a14d1ab0f9..068c210376799 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1602,6 +1602,11 @@ static int pxa2xx_spi_fw_translate_cs(struct spi_controller *controller,
+ 	return cs;
+ }
+ 
++static size_t pxa2xx_spi_max_dma_transfer_size(struct spi_device *spi)
++{
++	return MAX_DMA_LEN;
++}
++
+ static int pxa2xx_spi_probe(struct platform_device *pdev)
  {
-@@ -302,10 +294,15 @@ bool test__bp_signal_is_supported(void)
- 	 * stepping into the SIGIO handler and getting stuck on the
- 	 * breakpointed instruction.
- 	 *
-+	 * Since arm64 has the same issue with arm for the single-step
-+	 * handling, this case also gets suck on the breakpointed
-+	 * instruction.
-+	 *
- 	 * Just disable the test for these architectures until these
- 	 * issues are resolved.
- 	 */
--#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
-+#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
-+    defined(__aarch64__)
- 	return false;
- #else
- 	return true;
+ 	struct device *dev = &pdev->dev;
+@@ -1707,6 +1712,8 @@ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ 		} else {
+ 			controller->can_dma = pxa2xx_spi_can_dma;
+ 			controller->max_dma_len = MAX_DMA_LEN;
++			controller->max_transfer_size =
++				pxa2xx_spi_max_dma_transfer_size;
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
