@@ -2,73 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270C2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2650C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C2120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B7C20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLJTrE (ORCPT
+        id S1726717AbfLJTsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:47:04 -0500
-Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:46794 "EHLO
-        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfLJTrD (ORCPT
+        Tue, 10 Dec 2019 14:48:01 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:51528 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726045AbfLJTsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:47:03 -0500
-Received: from darkstar.musicnaut.iki.fi (85-76-143-83-nat.elisa-mobile.fi [85.76.143.83])
-        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id DDD7EB00AE;
-        Tue, 10 Dec 2019 21:46:59 +0200 (EET)
-Date:   Tue, 10 Dec 2019 21:46:59 +0200
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sandro Volery <sandro@volery.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Florian Westphal <fw@strlen.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Branden Bonaby <brandonbonaby94@gmail.com>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Paul Burton <paulburton@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Giovanni Gherdovich <bobdc9664@seznam.cz>,
-        Valery Ivanov <ivalery111@gmail.com>
-Subject: Re: [PATCH 1/2] staging: octeon: delete driver
-Message-ID: <20191210194659.GC18225@darkstar.musicnaut.iki.fi>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
- <EFBFCF4B-745B-4B1B-A176-08CE8CADBFEA@volery.com>
- <20191210120120.GA3779155@kroah.com>
+        Tue, 10 Dec 2019 14:48:01 -0500
+Received: (qmail 6212 invoked by uid 2102); 10 Dec 2019 14:47:59 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 10 Dec 2019 14:47:59 -0500
+Date:   Tue, 10 Dec 2019 14:47:59 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
+        <jrdr.linux@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <mchehab@kernel.org>, <rfontana@redhat.com>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>
+Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+In-Reply-To: <0000000000006ab7cc05994cbae2@google.com>
+Message-ID: <Pine.LNX.4.44L0.1912101440100.1647-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210120120.GA3779155@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:01:20PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Dec 10, 2019 at 12:40:54PM +0100, Sandro Volery wrote:
-> > Doesn't octeon have drivers out of staging already?
-> > What is this module for?
+On Mon, 9 Dec 2019, syzbot wrote:
+
+> Hello,
 > 
-> I have no idea :(
+> syzbot found the following crash on:
+> 
+> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: use-after-free in __mutex_lock_common  
+> kernel/locking/mutex.c:1043 [inline]
+> BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360  
+> kernel/locking/mutex.c:1106
+> Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
+> 
+> CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xef/0x16e lib/dump_stack.c:118
+>   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+>   kasan_report+0xe/0x20 mm/kasan/common.c:638
+>   __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
+>   __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
+>   usbvision_v4l2_open+0x77/0x340  
+> drivers/media/usb/usbvision/usbvision-video.c:314
+>   v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
+>   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+>   do_dentry_open+0x494/0x1120 fs/open.c:797
+>   do_last fs/namei.c:3412 [inline]
+>   path_openat+0x142b/0x4030 fs/namei.c:3529
+>   do_filp_open+0x1a1/0x280 fs/namei.c:3559
+>   do_sys_open+0x3c0/0x580 fs/open.c:1097
+>   do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-It's stated in the TODO file you are deleting (visible in your
-patch): "This driver is functional and supports Ethernet on
-OCTEON+/OCTEON2/OCTEON3 chips at least up to CN7030."
+This looks like a race in v4l2_open(): The function drops the
+videodev_lock mutex before calling the video driver's open routine, and
+the device can be unregistered during the short time between.
 
-This includes e.g. some D-Link routers and Uniquiti EdgeRouters. You
-can check from /proc/cpuinfo if you are running on this MIPS SoC.
+This patch tries to make the race much more likely to happen, for 
+testing and verification.
 
-A.
+Andrey, will syzbot run the same test with this patch, even though it 
+says it doesn't have a reproducer?
+
+Alan Stern
+
+#syz test: https://github.com/google/kasan.git 1f22d15c
+
+Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+===================================================================
+--- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
++++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+@@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
+ 		wake_up_interruptible(&usbvision->wait_frame);
+ 		wake_up_interruptible(&usbvision->wait_stream);
+ 	} else {
++		msleep(100);
+ 		usbvision_release(usbvision);
+ 	}
+ 
+Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+===================================================================
+--- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
++++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+@@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
+ 	video_get(vdev);
+ 	mutex_unlock(&videodev_lock);
+ 	if (vdev->fops->open) {
+-		if (video_is_registered(vdev))
++		if (video_is_registered(vdev)) {
++			msleep(200);
+ 			ret = vdev->fops->open(filp);
+-		else
++		} else
+ 			ret = -ENODEV;
+ 	}
+ 
+
