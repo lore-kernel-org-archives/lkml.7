@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20215C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91158C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32712053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EB720637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015544;
-	bh=cOxQAlQhrI1Z5KvQ3Obr1WPfdYwz9OIUp2DHImVYAJ4=;
+	s=default; t=1576015548;
+	bh=6GAzeJnc3BpVSu5YGYql2j/HbyBd4pfeYwlXFb1L5SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knmSMcmQgHXQEtlQvfpELdBEv3RVp20pM4ijSdJKGWa61QNJX7J8JujeKr2ZG6jtu
-	 syTlLX4Ax1ApU7zYRvZj94keUBY6EHol0ELk+ZjZ8bwpJuf9NC+E6005d27mUbftRC
-	 8Ob2njdZlG0pnhrfkN6IvDPJE0/f+LCJYS5kVEQ0=
+	b=jAaIpCrx0k8NH7197mLwUn5U4ELJ3bdEpCfmcpWYQUPlwM7I4KNjWvDaE3mvaV8N5
+	 UAVCztowQLyebJvRgZhyXpdXBuhHrUztygUOizBFkKvCXiPrfTnfEdEiiFgFaJwChB
+	 RrnLjMJp1OVhz8hA+fTQMug6htVhzWRynHWb1Gjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbfLJWFm (ORCPT
+        id S1730198AbfLJWFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729930AbfLJWFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:35 -0500
+        id S1727779AbfLJWFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D93AE2053B;
-        Tue, 10 Dec 2019 22:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF5820838;
+        Tue, 10 Dec 2019 22:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015534;
-        bh=cOxQAlQhrI1Z5KvQ3Obr1WPfdYwz9OIUp2DHImVYAJ4=;
+        s=default; t=1576015537;
+        bh=6GAzeJnc3BpVSu5YGYql2j/HbyBd4pfeYwlXFb1L5SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kgLyXl/+cRPTM0m3SpxGktw4ea4PVCQLVsu91BY1wKgUVlZwC8oIaOqlCXEeJLycN
-         BtH8FbOXNsrn8j1iq6vVycb1lwC3pwxdIhVBHJVEsntp8uQwG5/UL9irwxpYfYGxDB
-         3vzkPrHos+HrJkghe+eG3tBOP/zlsWbGdOVKIt78=
+        b=VrXb5PmmjBrS7RFu1fD7zSsu2RduG2iu7Sw/V99yJb/s1GroWGjsNC6SBp6hhhH8T
+         DM0bHoEnMgHkzV+yGMJSHwg7aTD4XcHpO2OW3jiHu2QQFjCHYIK5aeN5y2oNmrZGOz
+         GOafNYcd/tCofsB9vN6HGeeC5ZLVSlw/kHH+z9PU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 128/130] mips: fix build when "48 bits virtual memory" is enabled
-Date:   Tue, 10 Dec 2019 17:02:59 -0500
-Message-Id: <20191210220301.13262-128-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 130/130] net: phy: initialise phydev speed and duplex sanely
+Date:   Tue, 10 Dec 2019 17:03:01 -0500
+Message-Id: <20191210220301.13262-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,79 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 3ed6751bb8fa89c3014399bb0414348499ee202a ]
+[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
 
-With CONFIG_MIPS_VA_BITS_48=y the build fails miserably:
+When a phydev is created, the speed and duplex are set to zero and
+-1 respectively, rather than using the predefined SPEED_UNKNOWN and
+DUPLEX_UNKNOWN constants.
 
-  CC      arch/mips/kernel/asm-offsets.s
-In file included from arch/mips/include/asm/pgtable.h:644,
-                 from include/linux/mm.h:99,
-                 from arch/mips/kernel/asm-offsets.c:15:
-include/asm-generic/pgtable.h:16:2: error: #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
- #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
-  ^~~~~
-include/asm-generic/pgtable.h:390:28: error: unknown type name 'p4d_t'; did you mean 'pmd_t'?
- static inline int p4d_same(p4d_t p4d_a, p4d_t p4d_b)
-                            ^~~~~
-                            pmd_t
+There is a window at initialisation time where we may report link
+down using the 0/-1 values.  Tidy this up and use the predefined
+constants, so debug doesn't complain with:
 
-[ ... more such errors ... ]
+"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
 
-scripts/Makefile.build:99: recipe for target 'arch/mips/kernel/asm-offsets.s' failed
-make[2]: *** [arch/mips/kernel/asm-offsets.s] Error 1
+when the speed and duplex settings are printed.
 
-This happens because when CONFIG_MIPS_VA_BITS_48 enables 4th level of the
-page tables, but neither pgtable-nop4d.h nor 5level-fixup.h are included to
-cope with the 5th level.
-
-Replace #ifdef conditions around includes of the pgtable-nop{m,u}d.h with
-explicit CONFIG_PGTABLE_LEVELS and add include of 5level-fixup.h for the
-case when CONFIG_PGTABLE_LEVELS==4
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: Mike Rapoport <rppt@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/pgtable-64.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/phy/phy_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
-index a2252c2a9dede..d0b9912fb63fb 100644
---- a/arch/mips/include/asm/pgtable-64.h
-+++ b/arch/mips/include/asm/pgtable-64.h
-@@ -18,10 +18,12 @@
- #include <asm/fixmap.h>
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index ed7e3c70b511a..a98c227a4c2eb 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -367,8 +367,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
+ 	mdiodev->device_free = phy_mdio_device_free;
+ 	mdiodev->device_remove = phy_mdio_device_remove;
  
- #define __ARCH_USE_5LEVEL_HACK
--#if defined(CONFIG_PAGE_SIZE_64KB) && !defined(CONFIG_MIPS_VA_BITS_48)
-+#if CONFIG_PGTABLE_LEVELS == 2
- #include <asm-generic/pgtable-nopmd.h>
--#elif !(defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_MIPS_VA_BITS_48))
-+#elif CONFIG_PGTABLE_LEVELS == 3
- #include <asm-generic/pgtable-nopud.h>
-+#else
-+#include <asm-generic/5level-fixup.h>
- #endif
- 
- /*
-@@ -222,6 +224,9 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
- 	return pgd_val(pgd);
- }
- 
-+#define pgd_phys(pgd)		virt_to_phys((void *)pgd_val(pgd))
-+#define pgd_page(pgd)		(pfn_to_page(pgd_phys(pgd) >> PAGE_SHIFT))
-+
- static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
- {
- 	return (pud_t *)pgd_page_vaddr(*pgd) + pud_index(address);
+-	dev->speed = 0;
+-	dev->duplex = -1;
++	dev->speed = SPEED_UNKNOWN;
++	dev->duplex = DUPLEX_UNKNOWN;
+ 	dev->pause = 0;
+ 	dev->asym_pause = 0;
+ 	dev->link = 1;
 -- 
 2.20.1
 
