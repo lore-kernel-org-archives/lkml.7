@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FF1C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D9DC2D0BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5F7207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B13E120726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575951617;
-	bh=p4eGj5P9l2NMr7r09ESpBfcy9YoLYZlJMhd12r4qz6w=;
+	s=default; t=1575951618;
+	bh=ng+ze/OYqZqO9jZh11sxURI+8AmnO36XW3oAqQ85jmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nimxqxzLm+f2GhOVijDADryT3y5P6sx0XH12kIqzzOklv/tXhKb8Tu3r7SH7dTj4U
-	 hkeAaBLOuykt6/6MrQ6nWcbvU3EYSWYnE1RhuxGbtAcQeUImapoCzhPu3bSX39vZYZ
-	 5T5stBKZkV4a0HpI5rv3xsQpUpqwHkPyYHafvFSg=
+	b=yaAFDkoQPCCZnmHY3lDI58nHfy09Kv4jFnfYgPbEjpY/31PksBWp7cC8CGgtyt5vw
+	 /dxElMcRZyQ5MKchTan7/iRTjukohetwL454ABgsy75SQk/IC/fuphVxLuUbK9OuoQ
+	 MWgaLlSucspd16dsVZgVlW79+7+IShq11msW2O7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfLJEUL (ORCPT
+        id S1727118AbfLJEUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:20:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47122 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:20:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfLJEUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727039AbfLJEUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 23:20:08 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA92208C3;
-        Tue, 10 Dec 2019 04:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68135214AF;
+        Tue, 10 Dec 2019 04:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575951607;
-        bh=p4eGj5P9l2NMr7r09ESpBfcy9YoLYZlJMhd12r4qz6w=;
+        s=default; t=1575951606;
+        bh=ng+ze/OYqZqO9jZh11sxURI+8AmnO36XW3oAqQ85jmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ulibXCtVgKtPAeEZNF6//b4txu572KrJ/IhBvkj9+Vk+pqlYd742dhEgUhhUq1/G1
-         Qg7B7g1mLcmhLIajdXI0tlvw7e+SC7caz5mrxqH+8FG7NvXrA51qW6JgFMcZgMsFL8
-         xDn5+AE2MLcz4UxWEiSWWIndph4Ut103g/BaLLOQ=
+        b=CmZVrDFnerOfQbtJrM9tZ4WJFYuWvx90L/jjQfYmtahxz9mEazpa78ggISNTxRRrt
+         hKpxxe5vLjnDQcHKASYrPt22LMO5V3LYqgCMOaPFpa3wrug8kEyQCymEKMU7rT2fL8
+         8J6BPHlaF+2QVKsf/0QHGmSYfyYVuFh1MxFQpYmc=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 5/9] rcu: Add and update docbook header comments in list.h
-Date:   Mon,  9 Dec 2019 20:19:58 -0800
-Message-Id: <20191210042002.3490-5-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 4/9] rcu: Use WRITE_ONCE() for assignments to ->pprev for hlist_nulls
+Date:   Mon,  9 Dec 2019 20:19:57 -0800
+Message-Id: <20191210042002.3490-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210041938.GA3367@paulmck-ThinkPad-P72>
 References: <20191210041938.GA3367@paulmck-ThinkPad-P72>
@@ -61,236 +61,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-[ paulmck: Fix typo found by kbuild test robot. ]
+Eric Dumazet supplied a KCSAN report of a bug that forces use
+of hlist_unhashed_lockless() from sk_unhashed():
+
+------------------------------------------------------------------------
+
+BUG: KCSAN: data-race in inet_unhash / inet_unhash
+
+write to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 1:
+ __hlist_nulls_del include/linux/list_nulls.h:88 [inline]
+ hlist_nulls_del_init_rcu include/linux/rculist_nulls.h:36 [inline]
+ __sk_nulls_del_node_init_rcu include/net/sock.h:676 [inline]
+ inet_unhash+0x38f/0x4a0 net/ipv4/inet_hashtables.c:612
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ start_secondary+0x208/0x260 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+read to 0xffff8880a69a0170 of 8 bytes by interrupt on cpu 0:
+ sk_unhashed include/net/sock.h:607 [inline]
+ inet_unhash+0x3d/0x4a0 net/ipv4/inet_hashtables.c:592
+ tcp_set_state+0xfa/0x3e0 net/ipv4/tcp.c:2249
+ tcp_done+0x93/0x1e0 net/ipv4/tcp.c:3854
+ tcp_write_err+0x7e/0xc0 net/ipv4/tcp_timer.c:56
+ tcp_retransmit_timer+0x9b8/0x16d0 net/ipv4/tcp_timer.c:479
+ tcp_write_timer_handler+0x42d/0x510 net/ipv4/tcp_timer.c:599
+ tcp_write_timer+0xd1/0xf0 net/ipv4/tcp_timer.c:619
+ call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+ rest_init+0xec/0xf6 init/main.c:452
+ arch_call_rest_init+0x17/0x37
+ start_kernel+0x838/0x85e init/main.c:786
+ x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+ x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+
+------------------------------------------------------------------------
+
+This commit therefore replaces C-language assignments with WRITE_ONCE()
+in include/linux/list_nulls.h and include/linux/rculist_nulls.h.
+
+Reported-by: Eric Dumazet <edumazet@google.com> # For KCSAN
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/list.h | 112 +++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 95 insertions(+), 17 deletions(-)
+ include/linux/list_nulls.h    | 8 ++++----
+ include/linux/rculist_nulls.h | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 61f5aaf..4f3b7f7 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -23,6 +23,13 @@
- #define LIST_HEAD(name) \
- 	struct list_head name = LIST_HEAD_INIT(name)
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 3ef9674..1ecd356 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -72,10 +72,10 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
  
-+/**
-+ * INIT_LIST_HEAD - Initialize a list_head structure
-+ * @list: list_head structure to be initialized.
-+ *
-+ * Initializes the list_head to point to itself.  If it is a list header,
-+ * the result is an empty list.
-+ */
- static inline void INIT_LIST_HEAD(struct list_head *list)
- {
- 	WRITE_ONCE(list->next, list);
-@@ -120,12 +127,6 @@ static inline void __list_del_clearprev(struct list_head *entry)
- 	entry->prev = NULL;
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	h->first = n;
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
  }
  
--/**
-- * list_del - deletes entry from list.
-- * @entry: the element to delete from the list.
-- * Note: list_empty() on entry does not return true after this, the entry is
-- * in an undefined state.
-- */
- static inline void __list_del_entry(struct list_head *entry)
- {
- 	if (!__list_del_entry_valid(entry))
-@@ -134,6 +135,12 @@ static inline void __list_del_entry(struct list_head *entry)
- 	__list_del(entry->prev, entry->next);
+ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+@@ -85,13 +85,13 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+ 
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+-		next->pprev = pprev;
++		WRITE_ONCE(next->pprev, pprev);
  }
  
-+/**
-+ * list_del - deletes entry from list.
-+ * @entry: the element to delete from the list.
-+ * Note: list_empty() on entry does not return true after this, the entry is
-+ * in an undefined state.
-+ */
- static inline void list_del(struct list_head *entry)
+ static inline void hlist_nulls_del(struct hlist_nulls_node *n)
  {
- 	__list_del_entry(entry);
-@@ -157,8 +164,15 @@ static inline void list_replace(struct list_head *old,
- 	new->prev->next = new;
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
  }
  
-+/**
-+ * list_replace_init - replace old entry by new one and initialize the old one
-+ * @old : the element to be replaced
-+ * @new : the new element to insert
-+ *
-+ * If @old was empty, it will be overwritten.
-+ */
- static inline void list_replace_init(struct list_head *old,
--					struct list_head *new)
-+				     struct list_head *new)
+ /**
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index bc8206a..517a06f 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -34,7 +34,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
  {
- 	list_replace(old, new);
- 	INIT_LIST_HEAD(old);
-@@ -744,21 +758,36 @@ static inline void INIT_HLIST_NODE(struct hlist_node *h)
- 	h->pprev = NULL;
- }
- 
-+/**
-+ * hlist_unhashed - Has node been removed from list and reinitialized?
-+ * @h: Node to be checked
-+ *
-+ * Not that not all removal functions will leave a node in unhashed
-+ * state.  For example, hlist_nulls_del_init_rcu() does leave the
-+ * node in unhashed state, but hlist_nulls_del() does not.
-+ */
- static inline int hlist_unhashed(const struct hlist_node *h)
- {
- 	return !h->pprev;
- }
- 
--/* This variant of hlist_unhashed() must be used in lockless contexts
-- * to avoid potential load-tearing.
-- * The READ_ONCE() is paired with the various WRITE_ONCE() in hlist
-- * helpers that are defined below.
-+/**
-+ * hlist_unhashed_lockless - Version of hlist_unhashed for lockless use
-+ * @h: Node to be checked
-+ *
-+ * This variant of hlist_unhashed() must be used in lockless contexts
-+ * to avoid potential load-tearing.  The READ_ONCE() is paired with the
-+ * various WRITE_ONCE() in hlist helpers that are defined below.
-  */
- static inline int hlist_unhashed_lockless(const struct hlist_node *h)
- {
- 	return !READ_ONCE(h->pprev);
- }
- 
-+/**
-+ * hlist_empty - Is the specified hlist_head structure an empty hlist?
-+ * @h: Structure to check.
-+ */
- static inline int hlist_empty(const struct hlist_head *h)
- {
- 	return !READ_ONCE(h->first);
-@@ -774,6 +803,13 @@ static inline void __hlist_del(struct hlist_node *n)
- 		WRITE_ONCE(next->pprev, pprev);
- }
- 
-+/**
-+ * hlist_del - Delete the specified hlist_node from its list
-+ * @n: Node to delete.
-+ *
-+ * Note that this function leaves the node in hashed state.  Use
-+ * hlist_del_init() or similar instead to unhash @n.
-+ */
- static inline void hlist_del(struct hlist_node *n)
- {
- 	__hlist_del(n);
-@@ -781,6 +817,12 @@ static inline void hlist_del(struct hlist_node *n)
- 	n->pprev = LIST_POISON2;
- }
- 
-+/**
-+ * hlist_del_init - Delete the specified hlist_node from its list and initialize
-+ * @n: Node to delete.
-+ *
-+ * Note that this function leaves the node in unhashed state.
-+ */
- static inline void hlist_del_init(struct hlist_node *n)
- {
- 	if (!hlist_unhashed(n)) {
-@@ -789,6 +831,14 @@ static inline void hlist_del_init(struct hlist_node *n)
+ 	if (!hlist_nulls_unhashed(n)) {
+ 		__hlist_nulls_del(n);
+-		n->pprev = NULL;
++		WRITE_ONCE(n->pprev, NULL);
  	}
  }
  
-+/**
-+ * hlist_add_head - add a new entry at the beginning of the hlist
-+ * @n: new entry to be added
-+ * @h: hlist head to add it after
-+ *
-+ * Insert a new entry after the specified head.
-+ * This is good for implementing stacks.
-+ */
- static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
+@@ -66,7 +66,7 @@ static inline void hlist_nulls_del_init_rcu(struct hlist_nulls_node *n)
+ static inline void hlist_nulls_del_rcu(struct hlist_nulls_node *n)
  {
- 	struct hlist_node *first = h->first;
-@@ -799,9 +849,13 @@ static inline void hlist_add_head(struct hlist_node *n, struct hlist_head *h)
- 	WRITE_ONCE(n->pprev, &h->first);
+ 	__hlist_nulls_del(n);
+-	n->pprev = LIST_POISON2;
++	WRITE_ONCE(n->pprev, LIST_POISON2);
  }
  
--/* next must be != NULL */
-+/**
-+ * hlist_add_before - add a new entry before the one specified
-+ * @n: new entry to be added
-+ * @next: hlist node to add it before, which must be non-NULL
-+ */
- static inline void hlist_add_before(struct hlist_node *n,
--					struct hlist_node *next)
-+				    struct hlist_node *next)
- {
- 	WRITE_ONCE(n->pprev, next->pprev);
- 	WRITE_ONCE(n->next, next);
-@@ -809,6 +863,11 @@ static inline void hlist_add_before(struct hlist_node *n,
- 	WRITE_ONCE(*(n->pprev), n);
+ /**
+@@ -94,10 +94,10 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+ 	struct hlist_nulls_node *first = h->first;
+ 
+ 	n->next = first;
+-	n->pprev = &h->first;
++	WRITE_ONCE(n->pprev, &h->first);
+ 	rcu_assign_pointer(hlist_nulls_first_rcu(h), n);
+ 	if (!is_a_nulls(first))
+-		first->pprev = &n->next;
++		WRITE_ONCE(first->pprev, &n->next);
  }
  
-+/**
-+ * hlist_add_behing - add a new entry after the one specified
-+ * @n: new entry to be added
-+ * @prev: hlist node to add it after, which must be non-NULL
-+ */
- static inline void hlist_add_behind(struct hlist_node *n,
- 				    struct hlist_node *prev)
- {
-@@ -820,20 +879,35 @@ static inline void hlist_add_behind(struct hlist_node *n,
- 		WRITE_ONCE(n->next->pprev, &n->next);
- }
- 
--/* after that we'll appear to be on some hlist and hlist_del will work */
-+/**
-+ * hlist_add_fake - create a fake hlist consisting of a single headless node
-+ * @n: Node to make a fake list out of
-+ *
-+ * This makes @n appear to be its own predecessor on a headless hlist.
-+ * The point of this is to allow things like hlist_del() to work correctly
-+ * in cases where there is no list.
-+ */
- static inline void hlist_add_fake(struct hlist_node *n)
- {
- 	n->pprev = &n->next;
- }
- 
-+/**
-+ * hlist_fake: Is this node a fake hlist?
-+ * @h: Node to check for being a self-referential fake hlist.
-+ */
- static inline bool hlist_fake(struct hlist_node *h)
- {
- 	return h->pprev == &h->next;
- }
- 
--/*
-+/**
-+ * hlist_is_singular_node - is node the only element of the specified hlist?
-+ * @n: Node to check for singularity.
-+ * @h: Header for potentially singular list.
-+ *
-  * Check whether the node is the only node of the head without
-- * accessing head:
-+ * accessing head, thus avoiding unnecessary cache misses.
-  */
- static inline bool
- hlist_is_singular_node(struct hlist_node *n, struct hlist_head *h)
-@@ -841,7 +915,11 @@ hlist_is_singular_node(struct hlist_node *n, struct hlist_head *h)
- 	return !n->next && n->pprev == &h->first;
- }
- 
--/*
-+/**
-+ * hlist_move_list - Move an hlist
-+ * @old: hlist_head for old list.
-+ * @new: hlist_head for new list.
-+ *
-  * Move a list from one list head to another. Fixup the pprev
-  * reference of the first entry if it exists.
-  */
+ /**
 -- 
 2.9.5
 
