@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57ECFC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF30C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BA322464
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6448F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013647;
-	bh=FMfB8rSy6S8uzbnoPcrPonnwOtJjf09yAMbyfqMk1jk=;
+	s=default; t=1576013649;
+	bh=2Hmia6uVBT0pGAtAMw0KLOxb1KHmx2lNNMAxCv4+9AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wm45arVo+Jx3N0AdBwrfF4c0hQTbT2gmkXjfyhg3t8G6mOIibcY9MglglGoaJnkL1
-	 z+7GuXR5JWHdZoBNahfsEhp2WoMF8fv6VDj0MtLoQ2Uq22u6RbzP7cguZmplwIt4e4
-	 b2ueBmWjl+0dW+pAX3awQcFBwSdKkYjMcF7pIF4c=
+	b=IhjrfTWVJBLepSKhjStE9GvqHb8W7TuTaOJJgWRJoKN41Xc/qkyaBuNq0hjnhwUEC
+	 tFOmLJ/pG9N++GoIucIGe6LWrLNOA1MClAFfFIrkPgf3frNGIqxm4VElEs2yZ2kGmq
+	 WldJv6WnTvdoVa6seA0FNhxr6i9fsOXzCQfMwCaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbfLJVeG (ORCPT
+        id S1728257AbfLJVeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfLJVd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:58 -0500
+        id S1729904AbfLJVeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66822207FF;
-        Tue, 10 Dec 2019 21:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A1B222C4;
+        Tue, 10 Dec 2019 21:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013637;
-        bh=FMfB8rSy6S8uzbnoPcrPonnwOtJjf09yAMbyfqMk1jk=;
+        s=default; t=1576013640;
+        bh=2Hmia6uVBT0pGAtAMw0KLOxb1KHmx2lNNMAxCv4+9AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOPiS4G5DH3sTIspE+/8xHyMix4w5XNH4gB6eENbcxjIwEmWhJaudHj5ROh7Lqd3V
-         UoiYvtlAjfwOoepx+tpzcTIuFgVP+NgiulzZg0ZhfhKPelQUyQmDmhypP1pWjdANYD
-         ZYbl3O+3Letv3KQleHmAox5Wlnj4r79Kp1xD612w=
+        b=tpLtngDt2oKsTXOBsbMQVcTRDRuMXXhWEKyBx6Gxk3UZppjQ4snuFIPXuULT2ygzq
+         t4h5e7SrWbaZzpUoA8DaAFez0UwPeyPhNUlgkGkXV+GQhLNyvlV923v41Bh7Q1e9eW
+         0PLO0kKz39rJYqi1jVXxvEmdS2PSuqqFaVU+GTn4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Nunley <nicholas.d.nunley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 077/177] i40e: initialize ITRN registers with correct values
-Date:   Tue, 10 Dec 2019 16:30:41 -0500
-Message-Id: <20191210213221.11921-77-sashal@kernel.org>
+Cc:     Lingling Xu <ling_ling.xu@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 080/177] spi: sprd: adi: Add missing lock protection when rebooting
+Date:   Tue, 10 Dec 2019 16:30:44 -0500
+Message-Id: <20191210213221.11921-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,80 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Nunley <nicholas.d.nunley@intel.com>
+From: Lingling Xu <ling_ling.xu@unisoc.com>
 
-[ Upstream commit 998e5166e604fd37afe94352f7b8c2d816b11049 ]
+[ Upstream commit 91ea1d70607e374b014b4b9bea771ce661f9f64b ]
 
-Since commit 92418fb14750 ("i40e/i40evf: Use usec value instead of reg
-value for ITR defines") the driver tracks the interrupt throttling
-intervals in single usec units, although the actual ITRN/ITR0 registers are
-programmed in 2 usec units. Most register programming flows in the driver
-correctly handle the conversion, although it is currently not applied when
-the registers are initialized to their default values. Most of the time
-this doesn't present a problem since the default values are usually
-immediately overwritten through the standard adaptive throttling mechanism,
-or updated manually by the user, but if adaptive throttling is disabled and
-the interval values are left alone then the incorrect value will persist.
+When rebooting the system, we should lock the watchdog after
+configuration to make sure the watchdog can reboot the system
+successfully.
 
-Since the intended default interval of 50 usecs (vs. 100 usecs as
-programmed) performs better for most traffic workloads, this can lead to
-performance regressions.
-
-This patch adds the correct conversion when writing the initial values to
-the ITRN registers.
-
-Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/7b04711127434555e3a1a86bc6be99860cd86668.1572257085.git.baolin.wang@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/spi/spi-sprd-adi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 1a66373184d62..23b31b2ff5ccd 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -3441,14 +3441,14 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
- 		q_vector->rx.target_itr =
- 			ITR_TO_REG(vsi->rx_rings[i]->itr_setting);
- 		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, vector - 1),
--		     q_vector->rx.target_itr);
-+		     q_vector->rx.target_itr >> 1);
- 		q_vector->rx.current_itr = q_vector->rx.target_itr;
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index df5960bddfe61..f1fc2bde6ef30 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -367,6 +367,9 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
+ 	val |= BIT_WDG_RUN | BIT_WDG_RST;
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
  
- 		q_vector->tx.next_update = jiffies + 1;
- 		q_vector->tx.target_itr =
- 			ITR_TO_REG(vsi->tx_rings[i]->itr_setting);
- 		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, vector - 1),
--		     q_vector->tx.target_itr);
-+		     q_vector->tx.target_itr >> 1);
- 		q_vector->tx.current_itr = q_vector->tx.target_itr;
++	/* Lock the watchdog */
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, ~WDG_UNLOCK_KEY);
++
+ 	mdelay(1000);
  
- 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
-@@ -3553,11 +3553,11 @@ static void i40e_configure_msi_and_legacy(struct i40e_vsi *vsi)
- 	/* set the ITR configuration */
- 	q_vector->rx.next_update = jiffies + 1;
- 	q_vector->rx.target_itr = ITR_TO_REG(vsi->rx_rings[0]->itr_setting);
--	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr >> 1);
- 	q_vector->rx.current_itr = q_vector->rx.target_itr;
- 	q_vector->tx.next_update = jiffies + 1;
- 	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
--	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr >> 1);
- 	q_vector->tx.current_itr = q_vector->tx.target_itr;
- 
- 	i40e_enable_misc_int_causes(pf);
-@@ -10735,7 +10735,7 @@ static int i40e_setup_misc_vector(struct i40e_pf *pf)
- 
- 	/* associate no queues to the misc vector */
- 	wr32(hw, I40E_PFINT_LNKLST0, I40E_QUEUE_END_OF_LIST);
--	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K >> 1);
- 
- 	i40e_flush(hw);
- 
+ 	dev_emerg(sadi->dev, "Unable to restart system\n");
 -- 
 2.20.1
 
