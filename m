@@ -2,58 +2,60 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C8C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A8C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3348E2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7A62073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j54TP/nA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lz1QaZAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbfLJUJQ (ORCPT
+        id S1726826AbfLJUJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:09:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44541 "EHLO
+        Tue, 10 Dec 2019 15:09:20 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39415 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfLJUJP (ORCPT
+        with ESMTP id S1726045AbfLJUJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:09:15 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so21538171wrm.11;
-        Tue, 10 Dec 2019 12:09:13 -0800 (PST)
+        Tue, 10 Dec 2019 15:09:18 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y11so21519934wrt.6;
+        Tue, 10 Dec 2019 12:09:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
-        b=j54TP/nAwGznoZrN5sbykaR8He5pb7OtuziWr36u24bFjtgGC4fQqmYI7bt0kQ38Qz
-         AIIBe0vVsCM7FpOz0f27YlcWHKCgzIuAx7vTuT4eMaNThvOD+jLiiZDSAkx0gylHcr8R
-         lQ1uKTx1wQOijjR0jD4PsHKZ8GtZ1JqwSElf5tOW344+hb00eWcRKg25W0y9nlwXFTwO
-         4eCh01Ccn+W/AYaYvwNxY7ecHXsrmeWhzU7dg3GtqxJd/YFZpbVffV9zh31G4a8xmoqq
-         acMn+8dd9s/BK4xl7KbvCHa6yaKsJRYFirKOgOPqreB84RBGY39kNaYP+wIVoIe0uNp5
-         6fIg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KlsBUJwYdM7SXbMApHLqeQhJsLc3mR/p7rFqoydEok4=;
+        b=lz1QaZAGHeTc/ijJo6V27zZwf62uJZVRebgHc/mBkHPBIOt6Se2iLUnNu71tp8wCeL
+         XYMDu9Tt2bY/kqWgjd1l/cBA6hs13nIbdj7ZlloukO01edwwryA/EBGWbR1YEKTjiHz/
+         MDY3Csk6RHzvWijMbAFRQ5K8SaRGu5UIh2PjAsr75RCP4QoWyMFVsgiVAU6UFgv9rRam
+         QDAERwmASBIb0E6EH4ac79OE8VViZ/t3T4Ywo6Am/h20teNRoGs0JKycHzyctBioc5Hz
+         L05ghMha8dYLTB06bE8HFCcDBXuvO+23K6H4uxaYJ/rdTHjxMCiVkBEH92o7/rwLtXQv
+         zL3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6AQpS5vqGgn6cf28d0t5hILD50hP2Bm2ar9YDrMWAUM=;
-        b=L2t8D7IEqJB7L3kNpoLLXl73+iiCe/zr4iULV1An5FXx0FNeOZEZAqiiOztLWn2J8e
-         qmkMbeX+RNJr4Jryj51cIgBoeGixYXC/u5FEoLbPv4EAKH3zxKjQkjT/vJ5gQ7KsGA1z
-         8PEw2uWwyikoZ2PZrKmBGxFvmbNbK/N9wi04UGe4nq71XHn5fylyMv3QMC2zKYv3lMnL
-         U5FMbvZWPeRcH8QJBZH3uXC5G1EGrHupZf1N0SRG9Ek8ahvP9fDpES1YzlAvZbDHdFF/
-         4a8PMLr1xU7aXbj6XX6+fp/jCiBs/TMp7sm/Z6hLzR1jzRbzA5TM6yxc90/o4muUFnYi
-         iQKw==
-X-Gm-Message-State: APjAAAVpytTHvBPz+njRzSlg5SlulQaWP/rCzTpIqPBt8Gdfo8aBFJlj
-        3rl/x96KIsAPYpXU3h5oBHE=
-X-Google-Smtp-Source: APXvYqxMVlaHW5ay98kOIFO+brzIC+QLtbbjUCNbwV2fRMJftfklsg7j/ydpu5uw9XjJbdY3Vj3f5Q==
-X-Received: by 2002:adf:dfc1:: with SMTP id q1mr5177155wrn.155.1576008552975;
-        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KlsBUJwYdM7SXbMApHLqeQhJsLc3mR/p7rFqoydEok4=;
+        b=kcinUQGpMR+COOG+PvXBcky8hDd0dLeK/kzFqZfbeLfthpw4rfXlLLw8q1YE/LCwqK
+         mJQvHrVe2/bSRoSXajS25eNlSbtO9zjlgRF9KZDwKRPdq04/wVdW4c+NzMxr5DTYZFlU
+         Xn55FLE3KJy+p1UqQyohmsYfqv0gu+r0WQnjBaiRzPEMB6OYb39zr1cvxqgtdqgcGZIu
+         33ghmN9Vr8BV5jp2Avak43KIVVuCUBYDjOPDGbAzQMs/3XAKnDfXSycXuFNVBhpuOSHT
+         sh1RFCC/09KKsqlMa+mjyZv3vsOsvolztb3vPONF+dTf7LL+kfMqvD8eQZZOWmrUIKV1
+         f4IA==
+X-Gm-Message-State: APjAAAXM9uNtTJYeTq//75S+WujDht+CIiBYZsftLXRHwxLt9qgMtabR
+        hp/X0AV+Bf7LF7HyoeSTVD4=
+X-Google-Smtp-Source: APXvYqyUdoIyAKqiB4UnMN/qX5fpLQybyRYkQu9nxmXblrx9PKUF9Di0xHQPn2uBX4dEfPUbuI7/QQ==
+X-Received: by 2002:adf:f2d0:: with SMTP id d16mr5107948wrp.110.1576008556437;
+        Tue, 10 Dec 2019 12:09:16 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id w19sm4113643wmc.22.2019.12.10.12.09.09
+        by smtp.gmail.com with ESMTPSA id w19sm4113643wmc.22.2019.12.10.12.09.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 12:09:12 -0800 (PST)
+        Tue, 10 Dec 2019 12:09:15 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     kishon@ti.com
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -68,31 +70,37 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
         bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 0/2] phy: brcm-sata: Support for 7216
-Date:   Tue, 10 Dec 2019 12:08:50 -0800
-Message-Id: <20191210200852.24945-1-f.fainelli@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: phy: Document BCM7216 SATA PHY compatible string
+Date:   Tue, 10 Dec 2019 12:08:51 -0800
+Message-Id: <20191210200852.24945-2-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191210200852.24945-1-f.fainelli@gmail.com>
+References: <20191210200852.24945-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+Define "brcm,bcm7216-sata-phy" as a new compatible string for the
+Broadcom SATA3 PHY.
 
-This patch series adds support for our latest 7216 class of devices
-which are taped out in a 16nm process and use a different SATA PHY AFE
-that requires a custom initialization sequence.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/devicetree/bindings/phy/brcm-sata-phy.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
-
-Florian Fainelli (2):
-  dt-bindings: phy: Document BCM7216 SATA PHY compatible string
-  phy: brcm-sata: Implement 7216 initialization sequence
-
- .../devicetree/bindings/phy/brcm-sata-phy.txt |   1 +
- drivers/phy/broadcom/phy-brcm-sata.c          | 120 ++++++++++++++++++
- 2 files changed, 121 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+index b640845fec67..c03ad2198410 100644
+--- a/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
++++ b/Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+@@ -2,6 +2,7 @@
+ 
+ Required properties:
+ - compatible: should be one or more of
++     "brcm,bcm7216-sata-phy"
+      "brcm,bcm7425-sata-phy"
+      "brcm,bcm7445-sata-phy"
+      "brcm,iproc-ns2-sata-phy"
 -- 
 2.17.1
 
