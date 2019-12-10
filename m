@@ -2,320 +2,328 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10805C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22F5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD0420409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575943620;
-	bh=zWBRIsBdvmzUUBmqHccuMfSrDNT2v/SnLl8qFP/itmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mf99g21LnyqhsiuU6zz5x2X8AQIwjUn7HjksblliA/WcNUxtLmVbn0UUIcWngT1l9
-	 KEeLNBpDucFGpsuOBczZB+eoMF5VuToJDgfc8U3zpN1KBG2158ohteO0a+O1oT+5/m
-	 YOrJJ11+M881iq7QEtfMEdi+HNY8E993AI5dyjQc=
+	by mail.kernel.org (Postfix) with ESMTP id 733C12077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 02:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfLJCG7 (ORCPT
+        id S1726769AbfLJCHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 21:06:59 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44581 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbfLJCG7 (ORCPT
+        Mon, 9 Dec 2019 21:07:36 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:24154 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726538AbfLJCHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 21:06:59 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x7so8057538pgl.11;
-        Mon, 09 Dec 2019 18:06:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fQK7/Z8N27AQrrn4XeHTPvmQzm6ydwEyH3COqKm7It8=;
-        b=VfjGNiOJtThwOuVOkmYk6Pt3PT5JZRC1HS8z4bsp1zcuQTScYbSO2Jd0iH0cgsnisK
-         tcDGcNuRoCXmOQOI64DfeRNfEegPF2GreGxq3ImlqxTjIgl1aiP87i23Gt1dDNzpmYwK
-         HWgXQLJsvlK7LzroK5HYrQvAT8uFvrRW23XHjfpS68kwxwy1oi+xoU+seGja75kL4aHw
-         IaWPu4SBCjm9YpVXx+H3mL6YgZ/Ivw/3CVRJOkh6wczScvK5xmibZPxKfKY1adfkQlUF
-         mw/InEZyr6CBuquK/6aYg7xpKBVd/Khmx/2Hw/xhy31kuA9PavY4CK4nRw6IaZExnTP+
-         NEPQ==
-X-Gm-Message-State: APjAAAUj8c+EK1SVK2H8LJ57fVd7udNmmcz4ibFOcsAmATxqtGVrst0Z
-        BWr3yikihYDR8J0cP1HR9fEmTB+A
-X-Google-Smtp-Source: APXvYqw7Ncr31OP9o+hKfIIXe4mJIFEexjMTcqKt8Q3sfrkNl2Va9ShQhwjiDFycTvHHG3NC7oP6MA==
-X-Received: by 2002:a63:2a06:: with SMTP id q6mr3485292pgq.92.1575943617489;
-        Mon, 09 Dec 2019 18:06:57 -0800 (PST)
-Received: from localhost ([2601:647:5b00:424:25eb:1c49:3138:9518])
-        by smtp.gmail.com with ESMTPSA id k4sm786697pfk.11.2019.12.09.18.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2019 18:06:56 -0800 (PST)
-Date:   Mon, 9 Dec 2019 18:06:54 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Wu Hao <hao.wu@intel.com>
-Subject: Re: [PATCH] fpga: dfl: support multiple opens on feature device node.
-Message-ID: <20191210020654.GA7171@archbook>
-References: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
+        Mon, 9 Dec 2019 21:07:36 -0500
+Received: from [10.28.39.106] (10.28.39.106) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 10 Dec
+ 2019 10:08:05 +0800
+Subject: Re: [PATCH 2/4] irqchip/meson-gpio: rework meson irqchip driver to
+ support meson-A1 SoCs
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>
+References: <20191206121714.14579-1-qianggui.song@amlogic.com>
+ <20191206121714.14579-3-qianggui.song@amlogic.com>
+ <542e3e819e584d6e433d2c4276c3b379@www.loen.fr>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <2551e382-d373-dad8-7294-80f2a15c0ad4@amlogic.com>
+Date:   Tue, 10 Dec 2019 10:08:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574054441-1568-1-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <542e3e819e584d6e433d2c4276c3b379@www.loen.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.106]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xu,
+Hi, Marc
+     Thank you for your review
 
-Sorry for the delay.
-
-On Mon, Nov 18, 2019 at 01:20:41PM +0800, Xu Yilun wrote:
-> Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
-> (FPGA Management Engine), could implement more than one function within
-> its region, but current driver only allows one user application to access
-> it by exclusive open on device node. So this is not convenient and
-> flexible for userspace applications, as they have to combine lots of
-> different functions into one single application.
-I'm not entirely sure how I feel about that, wouldn't the right solution
-be to create more devices? If this ends up being 100% passthrough
-basically, VFIO would be a better choice?
+On 2019/12/6 21:13, Marc Zyngier wrote:
+> On 2019-12-06 12:17, Qianggui Song wrote:
+>> Since Meson-A1 Socs register layout of gpio interrupt controller have
+>> difference with previous chips, registers to decide irq line and 
+>> offset
+>> of trigger method are all changed, the current driver should be 
+>> modified.
+>>
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> ---
+>>  drivers/irqchip/irq-meson-gpio.c | 79 
+>> ++++++++++++++++++++++++--------
+>>  1 file changed, 60 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-meson-gpio.c
+>> b/drivers/irqchip/irq-meson-gpio.c
+>> index 829084b568fa..1824ffc30de2 100644
+>> --- a/drivers/irqchip/irq-meson-gpio.c
+>> +++ b/drivers/irqchip/irq-meson-gpio.c
+>> @@ -30,44 +30,74 @@
+>>   * stuck at 0. Bits 8 to 15 are responsive and have the expected
+>>   * effect.
+>>   */
+>> -#define REG_EDGE_POL_EDGE(x)	BIT(x)
+>> -#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
+>> -#define REG_BOTH_EDGE(x)	BIT(8 + (x))
+>> -#define REG_EDGE_POL_MASK(x)    (	\
+>> -		REG_EDGE_POL_EDGE(x) |	\
+>> -		REG_EDGE_POL_LOW(x)  |	\
+>> -		REG_BOTH_EDGE(x))
+>> +#define REG_EDGE_POL_EDGE(params, 
+>> x)	BIT((params)->edge_single_offset + (x))
+>> +#define REG_EDGE_POL_LOW(params, x)	BIT((params)->pol_low_offset + 
+>> (x))
+>> +#define REG_BOTH_EDGE(params, x)	BIT((params)->edge_both_offset + 
+>> (x))
+>> +#define REG_EDGE_POL_MASK(params, x)    (	\
+>> +		REG_EDGE_POL_EDGE(params, x) |	\
+>> +		REG_EDGE_POL_LOW(params, x)  |	\
+>> +		REG_BOTH_EDGE(params, x))
+>>  #define REG_PIN_SEL_SHIFT(x)	(((x) % 4) * 8)
+>>  #define REG_FILTER_SEL_SHIFT(x)	((x) * 4)
+>>
+>> +#define INIT_MESON8_COMMON_DATA					\
+>> +	.edge_single_offset = 0,				\
+>> +	.pol_low_offset = 16,					\
+>> +	.pin_sel_mask = 0xff,					\
+>> +	.ops = {						\
+>> +		.gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,	\
+>> +	},
 > 
-> This patch removes the limitation here to allow multiple opens to each
-> feature device node for AFU and FME from userspace applications. If user
-> still needs exclusive access to these device node, O_EXCL flag must be
-> issued together with open.
-Wouldn't you wanna default to have exclusive access, and then allow
-multiple opens by means of a management interface, maybe?
+> Please place the #defines that operate on the various data structures
+> *after* the definition of the structures. It would greatly help
+> reading the changes.
 > 
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> ---
->  drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
->  drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
->  drivers/fpga/dfl.c          | 15 +++++++++++++--
->  drivers/fpga/dfl.h          | 35 +++++++++++++++++++++++++++--------
->  4 files changed, 67 insertions(+), 28 deletions(-)
+OK, will place it below the definition of struct meson_gpio_irq_params
+in the next patch.
+>> +
+>> +struct meson_gpio_irq_controller;
+>> +static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller 
+>> *ctl,
+>> +				    unsigned int channel, unsigned long hwirq);
+>> +struct irq_ctl_ops {
+>> +	void (*gpio_irq_sel_pin)(struct meson_gpio_irq_controller *ctl,
+>> +					 unsigned int channel,
+>> +					 unsigned long hwirq);
+>> +	void (*gpio_irq_init)(struct meson_gpio_irq_controller *ctl);
+>> +};
+>> +
+>>  struct meson_gpio_irq_params {
+>>  	unsigned int nr_hwirq;
+>>  	bool support_edge_both;
+>> +	unsigned int edge_both_offset;
+>> +	unsigned int edge_single_offset;
+>> +	unsigned int pol_low_offset;
+>> +	unsigned int pin_sel_mask;
+>> +	struct irq_ctl_ops ops;
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params meson8_params = {
+>>  	.nr_hwirq = 134,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params meson8b_params = {
+>>  	.nr_hwirq = 119,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params gxbb_params = {
+>>  	.nr_hwirq = 133,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params gxl_params = {
+>>  	.nr_hwirq = 110,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params axg_params = {
+>>  	.nr_hwirq = 100,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
+>>
+>>  static const struct meson_gpio_irq_params sm1_params = {
+>>  	.nr_hwirq = 100,
+>>  	.support_edge_both = true,
+>> +	.edge_both_offset = 8,
+>> +	INIT_MESON8_COMMON_DATA
+>>  };
 > 
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index e4a34dc..c6e0e07 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
->  	if (WARN_ON(!pdata))
->  		return -ENODEV;
->  
-> -	ret = dfl_feature_dev_use_begin(pdata);
-> -	if (ret)
-> -		return ret;
-> -
-> -	dev_dbg(&fdev->dev, "Device File Open\n");
-> -	filp->private_data = fdev;
-> +	mutex_lock(&pdata->lock);
-> +	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-> +	if (!ret) {
-> +		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-> +			dfl_feature_dev_use_count(pdata));
-Could those be trace events instead?
-> +		filp->private_data = fdev;
-> +	}
-> +	mutex_unlock(&pdata->lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int afu_release(struct inode *inode, struct file *filp)
-> @@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
->  	pdata = dev_get_platdata(&pdev->dev);
->  
->  	mutex_lock(&pdata->lock);
-> -	__port_reset(pdev);
-> -	afu_dma_region_destroy(pdata);
-> -	mutex_unlock(&pdata->lock);
-> -
->  	dfl_feature_dev_use_end(pdata);
->  
-> +	if (!dfl_feature_dev_use_count(pdata)) {
-> +		__port_reset(pdev);
-> +		afu_dma_region_destroy(pdata);
-> +	}
-> +	mutex_unlock(&pdata->lock);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 7c930e6..fda8623 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
->  	if (WARN_ON(!pdata))
->  		return -ENODEV;
->  
-> -	ret = dfl_feature_dev_use_begin(pdata);
-> -	if (ret)
-> -		return ret;
-> -
-> -	dev_dbg(&fdev->dev, "Device File Open\n");
-> -	filp->private_data = pdata;
-> +	mutex_lock(&pdata->lock);
-> +	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-> +	if (!ret) {
-> +		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-> +			dfl_feature_dev_use_count(pdata));
-> +		filp->private_data = pdata;
-> +	}
-> +	mutex_unlock(&pdata->lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int fme_release(struct inode *inode, struct file *filp)
-> @@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
->  	struct platform_device *pdev = pdata->dev;
->  
->  	dev_dbg(&pdev->dev, "Device File Release\n");
-> +
-> +	mutex_lock(&pdata->lock);
->  	dfl_feature_dev_use_end(pdata);
-> +	mutex_unlock(&pdata->lock);
->  
->  	return 0;
->  }
-> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> index 96a2b82..9909948 100644
-> --- a/drivers/fpga/dfl.c
-> +++ b/drivers/fpga/dfl.c
-> @@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
->   */
->  int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
->  {
-> +	struct dfl_feature_platform_data *pdata;
->  	struct platform_device *port_pdev;
->  	int ret = -ENODEV;
->  
-> @@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
->  		goto put_dev_exit;
->  	}
->  
-> -	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
-> +	pdata = dev_get_platdata(&port_pdev->dev);
-> +
-> +	mutex_lock(&pdata->lock);
-> +	ret = dfl_feature_dev_use_begin(pdata, true);
-> +	mutex_unlock(&pdata->lock);
->  	if (ret)
->  		goto put_dev_exit;
->  
-> @@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
->   */
->  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
->  {
-> +	struct dfl_feature_platform_data *pdata;
->  	struct platform_device *port_pdev;
->  	int ret = -ENODEV;
->  
-> @@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
->  	if (ret)
->  		goto put_dev_exit;
->  
-> -	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
-> +	pdata = dev_get_platdata(&port_pdev->dev);
-> +
-> +	mutex_lock(&pdata->lock);
-> +	dfl_feature_dev_use_end(pdata);
-> +	mutex_unlock(&pdata->lock);
-> +
->  	cdev->released_port_num--;
->  put_dev_exit:
->  	put_device(&port_pdev->dev);
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index 9f0e656..4a9a33c 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -205,8 +205,6 @@ struct dfl_feature {
->  	const struct dfl_feature_ops *ops;
->  };
->  
-> -#define DEV_STATUS_IN_USE	0
-> -
->  #define FEATURE_DEV_ID_UNUSED	(-1)
->  
->  /**
-> @@ -219,8 +217,9 @@ struct dfl_feature {
->   * @dfl_cdev: ptr to container device.
->   * @id: id used for this feature device.
->   * @disable_count: count for port disable.
-> + * @excl_open: set on feature device exclusive open.
-> + * @open_count: count for feature device open.
->   * @num: number for sub features.
-> - * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
->   * @private: ptr to feature dev private data.
->   * @features: sub features of this feature dev.
->   */
-> @@ -232,26 +231,46 @@ struct dfl_feature_platform_data {
->  	struct dfl_fpga_cdev *dfl_cdev;
->  	int id;
->  	unsigned int disable_count;
-> -	unsigned long dev_status;
-> +	bool excl_open;
-> +	int open_count;
->  	void *private;
->  	int num;
->  	struct dfl_feature features[0];
->  };
->  
->  static inline
-
-> -int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
-> +int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
-> +			      bool excl)
->  {
-> -	/* Test and set IN_USE flags to ensure file is exclusively used */
-> -	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
-> +	if (pdata->excl_open)
->  		return -EBUSY;
->  
-> +	if (excl) {
-> +		if (pdata->open_count)
-> +			return -EBUSY;
-> +
-> +		pdata->excl_open = true;
-> +	}
-> +	pdata->open_count++;
-> +
->  	return 0;
->  }
->  
->  static inline
->  void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
->  {
-> -	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
-> +	pdata->excl_open = false;
-> +
-> +	if (WARN_ON(pdata->open_count <= 0))
-> +		return;
-> +
-> +	pdata->open_count--;
-> +}
-> +
-> +static inline
-Feel free to drop the inline here. Your compiler will figure that out by
-iteself.
-> +int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
-> +{
-> +	return pdata->open_count;
->  }
->  
->  static inline
-> -- 
-> 2.7.4
+> OK, this isn't great. The least you could do is to make
+> your initializer parametric, so that it takes the nr_hwirq as
+> a parameter.
+> 
+> Then, any additional member that overrides common behaviour
+> should come after the main initializer.
+> 
+> Also, do you need 'support_edge_both'? Isn't a non-zero
+> 'edge_both_offset' enough to detect the feature?
 > 
 
-Again, sorry for the delay,
+Sorry, but I am not very clear that "make your initializer parametric,
+so that it takes the nr_hwirq as a parameter". Is that
+initializer(initial function in .ops ? ) as a parameter of struct
+meson_gpio_irq_params ? If nr_hwirq as a parameter of init function of
+.ops then will make lot of init function for each platform.
 
-Moritz
+How about move .ops from  macro like below:
+#define INIT_MESON8_COMMON_DATA					\
+	.edge_single_offset = 0,				\
+	.pol_low_offset = 16,					\
+	.pin_sel_mask = 0xff,
+
+static const struct meson_gpio_irq_params sm1_params = {
+ 	.nr_hwirq = 100,//main initializer
+	.ops = {
+              .gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,
+               /*in below to assign support_edge_both
+                * edge_both_offset
+                * call after main initializer to additional
+                * member
+                */
+              .gpio_irq_init = meson_sm1_irq_init,
+	},
+  	INIT_MESON8_COMMON_DATA// m8 to sm1 are the same.
+};
+
+About support_edge_both
+support_edge_both & edge_both_offset are used for sm1 or later chip, but
+the value are different with A1 which this patch set support.For SM1 is
+8, but A1 is 16, so I am not one hundred percent sure that later chip
+design will change to edge_both_offet to zero to set both edge trigger.
+Let' s see edge_single_offset, it is set to 0 in A1 from 16 which is
+previous chip use.I think support_edge_bot should be kept.
+
+>>
+>>  static const struct of_device_id meson_irq_gpio_matches[] = {
+>> @@ -100,9 +130,18 @@ static void meson_gpio_irq_update_bits(struct
+>> meson_gpio_irq_controller *ctl,
+>>  	writel_relaxed(tmp, ctl->base + reg);
+>>  }
+>>
+>> -static unsigned int meson_gpio_irq_channel_to_reg(unsigned int 
+>> channel)
+>> +static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller 
+>> *ctl,
+>> +				    unsigned int channel, unsigned long hwirq)
+>>  {
+>> -	return (channel < 4) ? REG_PIN_03_SEL : REG_PIN_47_SEL;
+>> +	unsigned int reg_offset;
+>> +	unsigned int bit_offset;
+>> +
+>> +	reg_offset = (channel < 4) ? REG_PIN_03_SEL : REG_PIN_47_SEL;
+>> +	bit_offset = REG_PIN_SEL_SHIFT(channel);
+>> +
+>> +	meson_gpio_irq_update_bits(ctl, reg_offset,
+>> +				   ctl->params->pin_sel_mask << bit_offset,
+>> +				   hwirq << bit_offset);
+>>  }
+>>
+>>  static int
+>> @@ -110,7 +149,7 @@ meson_gpio_irq_request_channel(struct
+>> meson_gpio_irq_controller *ctl,
+>>  			       unsigned long  hwirq,
+>>  			       u32 **channel_hwirq)
+>>  {
+>> -	unsigned int reg, idx;
+>> +	unsigned int idx;
+>>
+>>  	spin_lock(&ctl->lock);
+>>
+>> @@ -129,10 +168,7 @@ meson_gpio_irq_request_channel(struct
+>> meson_gpio_irq_controller *ctl,
+>>  	 * Setup the mux of the channel to route the signal of the pad
+>>  	 * to the appropriate input of the GIC
+>>  	 */
+>> -	reg = meson_gpio_irq_channel_to_reg(idx);
+>> -	meson_gpio_irq_update_bits(ctl, reg,
+>> -				   0xff << REG_PIN_SEL_SHIFT(idx),
+>> -				   hwirq << REG_PIN_SEL_SHIFT(idx));
+>> +	ctl->params->ops.gpio_irq_sel_pin(ctl, idx, hwirq);
+>>
+>>  	/*
+>>  	 * Get the hwirq number assigned to this channel through
+>> @@ -173,7 +209,9 @@ static int meson_gpio_irq_type_setup(struct
+>> meson_gpio_irq_controller *ctl,
+>>  {
+>>  	u32 val = 0;
+>>  	unsigned int idx;
+>> +	const struct meson_gpio_irq_params *params;
+>>
+>> +	params = ctl->params;
+>>  	idx = meson_gpio_irq_get_channel_idx(ctl, channel_hwirq);
+>>
+>>  	/*
+>> @@ -190,22 +228,22 @@ static int meson_gpio_irq_type_setup(struct
+>> meson_gpio_irq_controller *ctl,
+>>  	 * precedence over the other edge/polarity settings
+>>  	 */
+>>  	if (type == IRQ_TYPE_EDGE_BOTH) {
+>> -		if (!ctl->params->support_edge_both)
+>> +		if (!params->support_edge_both)
+>>  			return -EINVAL;
+>>
+>> -		val |= REG_BOTH_EDGE(idx);
+>> +		val |= REG_BOTH_EDGE(params, idx);
+>>  	} else {
+>>  		if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
+>> -			val |= REG_EDGE_POL_EDGE(idx);
+>> +			val |= REG_EDGE_POL_EDGE(params, idx);
+>>
+>>  		if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
+>> -			val |= REG_EDGE_POL_LOW(idx);
+>> +			val |= REG_EDGE_POL_LOW(params, idx);
+>>  	}
+>>
+>>  	spin_lock(&ctl->lock);
+>>
+>>  	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
+>> -				   REG_EDGE_POL_MASK(idx), val);
+>> +				   REG_EDGE_POL_MASK(params, idx), val);
+>>
+>>  	spin_unlock(&ctl->lock);
+>>
+>> @@ -371,6 +409,9 @@ static int __init meson_gpio_irq_parse_dt(struct
+>> device_node *node,
+>>  		return ret;
+>>  	}
+>>
+>> +	if (ctl->params->ops.gpio_irq_init)
+>> +		ctl->params->ops.gpio_irq_init(ctl);
+> 
+> It would make sense to provide a dummy init() method, since
+> you have all the infrastructure already.
+> 
+Okay
+>> +
+>>  	return 0;
+>>  }
+> 
+> Thanks,
+> 
+>          M.
+> 
