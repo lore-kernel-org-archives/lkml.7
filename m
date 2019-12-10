@@ -2,78 +2,160 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2A4C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D67C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9463621556
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rxmF2lup"
+	by mail.kernel.org (Postfix) with ESMTP id CA2AF2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfLJQkv (ORCPT
+        id S1727610AbfLJQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:40:51 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39944 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbfLJQkt (ORCPT
+        Tue, 10 Dec 2019 11:41:46 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44403 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbfLJQlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:40:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1575996023; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CQEiwhZzXwQxjopyLACzbeQi0R34KC0lTmvzkFl3Opo=;
-        b=rxmF2lupczuKnGE8lGPSwKOdfTs5PkrTcGVcLSTcGxk+9313NPIgoNOqKdHFDWrxty7Adu
-        33VWKGFAUQ7ViJ1EPFqF84LBIa+wm9AtBsDJ1jwh5EUgr4Vmjw08c4d+8yJeP/91ovdulg
-        UjpdAq+Ne80HMTp3iXJrdSAFG6qQNNY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 5/5] MAINTAINERS: Add myself as reviewer for Ingenic rproc driver
-Date:   Tue, 10 Dec 2019 17:40:14 +0100
-Message-Id: <20191210164014.50739-5-paul@crapouillou.net>
-In-Reply-To: <20191210164014.50739-1-paul@crapouillou.net>
-References: <20191210164014.50739-1-paul@crapouillou.net>
+        Tue, 10 Dec 2019 11:41:46 -0500
+X-Originating-IP: 90.182.112.136
+Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id B3FC01BF21B;
+        Tue, 10 Dec 2019 16:41:42 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 17:41:39 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com,
+        Ran Bi <ran.bi@mediatek.com>
+Subject: Re: [PATCH v6 5/6] rtc: mt6397: fix alarm register overwrite
+Message-ID: <20191210164139.GT1463890@piout.net>
+References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1575639183-17606-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575639183-17606-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as the reviewer for the Ingenic VPU remoteproc driver.
+Hi,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+On 06/12/2019 21:33:02+0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> Alarm registers high byte was reserved for other functions.
+> This add mask in alarm registers operation functions.
+> This also fix error condition in interrupt handler.
+> 
+> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+> 
 
-Notes:
-    v4: New patch
+Can you rebase that one on top of v5.5-rc1 soon? I'll include it in -fixes.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index 704229e..b216bdc 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -47,6 +47,14 @@
+>  
+>  #define RTC_AL_SEC		0x0018
+>  
+> +#define RTC_AL_SEC_MASK		0x003f
+> +#define RTC_AL_MIN_MASK		0x003f
+> +#define RTC_AL_HOU_MASK		0x001f
+> +#define RTC_AL_DOM_MASK		0x001f
+> +#define RTC_AL_DOW_MASK		0x0007
+> +#define RTC_AL_MTH_MASK		0x000f
+> +#define RTC_AL_YEA_MASK		0x007f
+> +
+>  #define RTC_PDN2		0x002e
+>  #define RTC_PDN2_PWRON_ALARM	BIT(4)
+>  
+> @@ -103,7 +111,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+>  		irqen = irqsta & ~RTC_IRQ_EN_AL;
+>  		mutex_lock(&rtc->lock);
+>  		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+> -				 irqen) < 0)
+> +				 irqen) == 0)
+>  			mtk_rtc_write_trigger(rtc);
+>  		mutex_unlock(&rtc->lock);
+>  
+> @@ -225,12 +233,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+>  	mutex_unlock(&rtc->lock);
+>  
+> -	tm->tm_sec = data[RTC_OFFSET_SEC];
+> -	tm->tm_min = data[RTC_OFFSET_MIN];
+> -	tm->tm_hour = data[RTC_OFFSET_HOUR];
+> -	tm->tm_mday = data[RTC_OFFSET_DOM];
+> -	tm->tm_mon = data[RTC_OFFSET_MTH];
+> -	tm->tm_year = data[RTC_OFFSET_YEAR];
+> +	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
+> +	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
+> +	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
+> +	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
+> +	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
+> +	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+>  
+>  	tm->tm_year += RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon--;
+> @@ -251,14 +259,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>  	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+>  	tm->tm_mon++;
+>  
+> -	data[RTC_OFFSET_SEC] = tm->tm_sec;
+> -	data[RTC_OFFSET_MIN] = tm->tm_min;
+> -	data[RTC_OFFSET_HOUR] = tm->tm_hour;
+> -	data[RTC_OFFSET_DOM] = tm->tm_mday;
+> -	data[RTC_OFFSET_MTH] = tm->tm_mon;
+> -	data[RTC_OFFSET_YEAR] = tm->tm_year;
+> -
+>  	mutex_lock(&rtc->lock);
+> +	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
+> +			       data, RTC_OFFSET_COUNT);
+> +	if (ret < 0)
+> +		goto exit;
+> +
+> +	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
+> +				(tm->tm_sec & RTC_AL_SEC_MASK));
+> +	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
+> +				(tm->tm_min & RTC_AL_MIN_MASK));
+> +	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
+> +				(tm->tm_hour & RTC_AL_HOU_MASK));
+> +	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
+> +				(tm->tm_mday & RTC_AL_DOM_MASK));
+> +	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
+> +				(tm->tm_mon & RTC_AL_MTH_MASK));
+> +	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
+> +				(tm->tm_year & RTC_AL_YEA_MASK));
+> +
+>  	if (alm->enabled) {
+>  		ret = regmap_bulk_write(rtc->regmap,
+>  					rtc->addr_base + RTC_AL_SEC,
+> -- 
+> 2.6.4
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd5847e802de..d82814ef2bee 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8197,6 +8197,7 @@ F:	drivers/mtd/nand/raw/ingenic/
- F:	drivers/pinctrl/pinctrl-ingenic.c
- F:	drivers/power/supply/ingenic-battery.c
- F:	drivers/pwm/pwm-jz4740.c
-+F:	drivers/remoteproc/ingenic_rproc.c
- F:	drivers/rtc/rtc-jz4740.c
- F:	drivers/tty/serial/8250/8250_ingenic.c
- F:	drivers/usb/musb/jz4740.c
 -- 
-2.24.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
