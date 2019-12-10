@@ -2,125 +2,178 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32373C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80592053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073242053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017681;
-	bh=OWeDD1ggaI7KtD7dXyfUWEhw8ibkokJLLFnshu+t8Bs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Hf7zBBl1IL4ci+ohCe9rS1Pjry59fInbrNdJTD6SpPrSYzdrovsytoMKrC2aWh13j
-	 vapGE9xrZrWmKInBT8L+5vYq8BjuzLLD9OSK1wlTp1QMxHUylXjTxw/SB+etnXvoXA
-	 MMIIfDeN0gKysxMn5ezKlF9XUt42dEalIPHVRocA=
+	s=default; t=1576017684;
+	bh=bEAwH4Z8PyFokaoHE/aWosb1gnRhFSKY9viSlKHPEcs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RznKPQEdzNxHzDb3GPSY4zeKxExE36QHQQD5l2dBlVNN+42MH1JWZR8k4zcj8C/PC
+	 C361ym4OWCzuw69jHFxKs0yJ6xP/+/yyGB3zLBT+ngjjzlve9EjQfu1Dys6tfV0ZzU
+	 XiiN93F8BkKR4uMIXD3MrvUzoXy4vdny2IuJKJnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfLJWlU (ORCPT
+        id S1729783AbfLJWlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:41:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbfLJWbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:50 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728912AbfLJWbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:51 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EDE5206EC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 78CED21D7D;
         Tue, 10 Dec 2019 22:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576017110;
-        bh=OWeDD1ggaI7KtD7dXyfUWEhw8ibkokJLLFnshu+t8Bs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jx/aoNNd4yeJQOJni2d8Jm2bVglXRvoz4EFeLcuMkv+4rwBBQgDPc8e0091THiWqv
-         ByDPON5LbCRk5pfsGKnre0V6A3u0AVAS3HCh4SvEgK46AtHn1Lj4VDYvmleLkrwvjW
-         e7Rs9VJEMWlZSW72/q1C36bfYYi7lcjJcJDvAF2c=
-Date:   Tue, 10 Dec 2019 16:31:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v6 1/3] PCI: Fix off by one in dma_alias_mask allocation
- size
-Message-ID: <20191210223148.GA166696@google.com>
+        bh=bEAwH4Z8PyFokaoHE/aWosb1gnRhFSKY9viSlKHPEcs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XCkjk9SR8SdONESU6xtcT2nUxeTNly8vHuUXBL2dQSZh9YGVBqN4i7oVOMeDtoxvO
+         8F9+UMhzhHSRq8LvYJq/8CT4AkQ0wKvcZF1FCHAfOa3iTJaj7EiwMr7QPKv4g5aoND
+         vpSA58UX71OQn7aFdjp6W96Aw6Iic3OWO258i+qY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 63/91] perf probe: Filter out instances except for inlined subroutine and subprogram
+Date:   Tue, 10 Dec 2019 17:30:07 -0500
+Message-Id: <20191210223035.14270-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <910070E3-7964-4549-B77F-EC7FC6144503@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Joerg]
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-On Tue, Dec 03, 2019 at 03:43:22PM +0000, James Sewart wrote:
-> The number of possible devfns is 256, add def and correct uses.
-> 
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: James Sewart <jamessewart@arista.com>
+[ Upstream commit da6cb952a89efe24bb76c4971370d485737a2d85 ]
 
-I applied these three patches to pci/virtualization for v5.6, thanks!
+Filter out instances except for inlined_subroutine and subprogram DIE in
+die_walk_instances() and die_is_func_instance().
 
-I moved the MAX_NR_DEVFNS from include/linux/pci.h to
-drivers/pci/pci.h since nobody outside drivers/pci needs it.
+This fixes an issue that perf probe sets some probes on calling address
+instead of a target function itself.
 
-> ---
->  drivers/pci/pci.c    | 2 +-
->  drivers/pci/search.c | 2 +-
->  include/linux/pci.h  | 2 ++
->  3 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a97e2571a527..d3c83248f3ce 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5876,7 +5876,7 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->  {
->  	if (!dev->dma_alias_mask)
-> -		dev->dma_alias_mask = bitmap_zalloc(U8_MAX, GFP_KERNEL);
-> +		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
->  	if (!dev->dma_alias_mask) {
->  		pci_warn(dev, "Unable to allocate DMA alias mask\n");
->  		return;
-> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> index bade14002fd8..9e4dfae47252 100644
-> --- a/drivers/pci/search.c
-> +++ b/drivers/pci/search.c
-> @@ -43,7 +43,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
->  	if (unlikely(pdev->dma_alias_mask)) {
->  		u8 devfn;
->  
-> -		for_each_set_bit(devfn, pdev->dma_alias_mask, U8_MAX) {
-> +		for_each_set_bit(devfn, pdev->dma_alias_mask, MAX_NR_DEVFNS) {
->  			ret = fn(pdev, PCI_DEVID(pdev->bus->number, devfn),
->  				 data);
->  			if (ret)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1a6cf19eac2d..6481da29d667 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -57,6 +57,8 @@
->  #define PCI_DEVID(bus, devfn)	((((u16)(bus)) << 8) | (devfn))
->  /* return bus from PCI devid = ((u16)bus_number) << 8) | devfn */
->  #define PCI_BUS_NUM(x) (((x) >> 8) & 0xff)
-> +/* Number of possible devfns. devfns can be from 0.0 to 1f.7 inclusive */
-> +#define MAX_NR_DEVFNS 256
->  
->  /* pci_slot represents a physical slot */
->  struct pci_slot {
-> -- 
-> 2.24.0
-> 
-> 
+When perf probe walks on instances of an abstruct origin (a kind of
+function prototype of inlined function), die_walk_instances() can also
+pass a GNU_call_site (a GNU extension for call site) to callback. Since
+it is not an inlined instance of target function, we have to filter out
+when searching a probe point.
+
+Without this patch, perf probe sets probes on call site address too.This
+can happen on some function which is marked "inlined", but has actual
+symbol. (I'm not sure why GCC mark it "inlined"):
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2500017
+  p:probe/vfs_read_1 _text+2499468
+  p:probe/vfs_read_2 _text+2499563
+  p:probe/vfs_read_3 _text+2498876
+  p:probe/vfs_read_4 _text+2498512
+  p:probe/vfs_read_5 _text+2498627
+
+With this patch:
+
+Slightly different results, similar tho:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2498512
+
+Committer testing:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+Before:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3131557
+  p:probe/vfs_read_1 _text+3130975
+  p:probe/vfs_read_2 _text+3131047
+  p:probe/vfs_read_3 _text+3130380
+  p:probe/vfs_read_4 _text+3130000
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+
+After:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3130000
+  #
+
+Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 7eec3ae7b3c5c..9b482477ddfea 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -322,18 +322,22 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+  * @dw_die: a DIE
+  *
+  * Ensure that this DIE is an instance (which has an entry address).
+- * This returns true if @dw_die is a function instance. If not, you need to
+- * call die_walk_instances() to find actual instances.
++ * This returns true if @dw_die is a function instance. If not, the @dw_die
++ * must be a prototype. You can use die_walk_instances() to find actual
++ * instances.
+  **/
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
+ 	Dwarf_Attribute attr_mem;
++	int tag = dwarf_tag(dw_die);
+ 
+-	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) &&
+-	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
+-		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
++	if (tag != DW_TAG_subprogram &&
++	    tag != DW_TAG_inlined_subroutine)
++		return false;
++
++	return dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
+ }
+ 
+ /**
+@@ -612,6 +616,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+ 	Dwarf_Die *origin;
+ 	int tmp;
+ 
++	if (!die_is_func_instance(inst))
++		return DIE_FIND_CB_CONTINUE;
++
+ 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
+ 	if (attr == NULL)
+ 		return DIE_FIND_CB_CONTINUE;
+-- 
+2.20.1
+
