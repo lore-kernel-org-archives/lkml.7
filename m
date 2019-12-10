@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70245C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E5DC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EFC246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B29246A8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012143;
-	bh=otZ2XpBNGM9vqKhgPacAje6pQSlojqxZHAUN4DW+jHQ=;
+	s=default; t=1576012148;
+	bh=PX5vOMAe3WelCDyOsnCu/L2YTS9HO4Ui6SNmnp+WoH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06OpBtEbVOVxUWgPlI+VV020A66037lsQlPq+0m/HAbhxpQlspvMevuQZcRIdmTNW
-	 sv/QLkGeGi50o/HeykdSQ0ph6nmaQijblnkTvlmRb3bpeD6uFu/Q77oAX3Bloxd+t5
-	 XiroAFVbO3T7X5xxz/Gur+mxNkho32tsjTwD+IX8=
+	b=VPolIDjeBfD7LYMyFUv68O20TccgGWganNSiKP+jTSinQnCOBwsuftDmEvCYyCeDz
+	 ZpLPlBOF2VpnsertKtbfbsKwV+9hv5sDh29oplCR3S+Df3T7v8+nQ9b0WVL3ir0J5+
+	 XSzYdCvsg3JZrQi+fyGsI6TM7tU8n/jhjJbd2YCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfLJVJC (ORCPT
+        id S1727484AbfLJVJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfLJVIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:55 -0500
+        id S1728008AbfLJVJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 411A7246A1;
-        Tue, 10 Dec 2019 21:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10086246A7;
+        Tue, 10 Dec 2019 21:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012135;
-        bh=otZ2XpBNGM9vqKhgPacAje6pQSlojqxZHAUN4DW+jHQ=;
+        s=default; t=1576012139;
+        bh=PX5vOMAe3WelCDyOsnCu/L2YTS9HO4Ui6SNmnp+WoH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLB9382rjLw457Ctuz8+2DPtIZpNT1hDMPQH5av7/G+qeM7X6rAezo+muJVFNHJqQ
-         rZforpA+4CW3uHwbRhf+cpg42ztYCUtLcEFbyfFQFfDqamKlrocbBd6FiDriU7Mdq6
-         3GU2J1I8lRFzsA+jk8gE6wOBgTLk4ssx953AuKP0=
+        b=I/QIvS2BK0N9r/embhaJ/eJbZxF1mLkDhIQ3fSsyhWtIckoV892rIQYKDaAKXBgCe
+         z+ZdNMJ23e9lIGTBKDKtCfsf0MxidnWDjywOYr/EzNyRBX5jBGyMawlkaTcICB/3S8
+         GNaRZyMGzeYrmt+9p0L8UCoiAyKK1wJQO5P6riN0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Parkin <julian.parkin@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 102/350] drm/amd/display: Program DWB watermarks from correct state
-Date:   Tue, 10 Dec 2019 16:03:27 -0500
-Message-Id: <20191210210735.9077-63-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 105/350] iio: chemical: atlas-ph-sensor: fix iio_triggered_buffer_predisable() position
+Date:   Tue, 10 Dec 2019 16:03:30 -0500
+Message-Id: <20191210210735.9077-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,91 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Parkin <julian.parkin@amd.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit edb922b022c0c94805c4ffad202b3edff83d76f0 ]
+[ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
 
-[Why]
-When diags adds a DWB via a stream update, we calculate MMHUBBUB
-paramaters, but dc->current_state has not yet been updated
-when the DWB programming happens. This leads to overflow on
-high bandwidth tests since the incorrect MMHUBBUB arbitration
-parameters are programmed.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-[How]
-Pass the updated context down to the (enable|update)_writeback functions
-so that they can use the correct watermarks when programming MMHUBBUB.
+The iio_triggered_buffer_predisable() should be called last, to detach the
+poll func after the devices has been suspended.
 
-Signed-off-by: Julian Parkin <julian.parkin@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The position of iio_triggered_buffer_postenable() is correct.
+
+Note this is not stable material. It's a fix in the logical
+model rather fixing an actual bug.  These are being tidied up
+throughout the subsystem to allow more substantial rework that
+was blocked by variations in how things were done.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c    | 4 ++--
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 5 +++--
- drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h  | 6 ++++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index bf1d7bb90e0f9..bb09243758fe3 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -423,10 +423,10 @@ bool dc_stream_add_writeback(struct dc *dc,
+diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
+index 3a20cb5d9bffc..6c175eb1c7a7f 100644
+--- a/drivers/iio/chemical/atlas-ph-sensor.c
++++ b/drivers/iio/chemical/atlas-ph-sensor.c
+@@ -323,16 +323,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct atlas_data *data = iio_priv(indio_dev);
+ 	int ret;
  
- 		if (dwb->funcs->is_enabled(dwb)) {
- 			/* writeback pipe already enabled, only need to update */
--			dc->hwss.update_writeback(dc, stream_status, wb_info);
-+			dc->hwss.update_writeback(dc, stream_status, wb_info, dc->current_state);
- 		} else {
- 			/* Enable writeback pipe from scratch*/
--			dc->hwss.enable_writeback(dc, stream_status, wb_info);
-+			dc->hwss.enable_writeback(dc, stream_status, wb_info, dc->current_state);
- 		}
- 	}
+-	ret = iio_triggered_buffer_predisable(indio_dev);
++	ret = atlas_set_interrupt(data, false);
+ 	if (ret)
+ 		return ret;
  
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index 1212da12c4144..9108240d3c1b2 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -1337,7 +1337,8 @@ bool dcn20_update_bandwidth(
- static void dcn20_enable_writeback(
- 		struct dc *dc,
- 		const struct dc_stream_status *stream_status,
--		struct dc_writeback_info *wb_info)
-+		struct dc_writeback_info *wb_info,
-+		struct dc_state *context)
- {
- 	struct dwbc *dwb;
- 	struct mcif_wb *mcif_wb;
-@@ -1354,7 +1355,7 @@ static void dcn20_enable_writeback(
- 	optc->funcs->set_dwb_source(optc, wb_info->dwb_pipe_inst);
- 	/* set MCIF_WB buffer and arbitration configuration */
- 	mcif_wb->funcs->config_mcif_buf(mcif_wb, &wb_info->mcif_buf_params, wb_info->dwb_params.dest_height);
--	mcif_wb->funcs->config_mcif_arb(mcif_wb, &dc->current_state->bw_ctx.bw.dcn.bw_writeback.mcif_wb_arb[wb_info->dwb_pipe_inst]);
-+	mcif_wb->funcs->config_mcif_arb(mcif_wb, &context->bw_ctx.bw.dcn.bw_writeback.mcif_wb_arb[wb_info->dwb_pipe_inst]);
- 	/* Enable MCIF_WB */
- 	mcif_wb->funcs->enable_mcif(mcif_wb);
- 	/* Enable DWB */
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-index 3a938cd414ea4..f6cc2d6f576d2 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-@@ -321,10 +321,12 @@ struct hw_sequencer_funcs {
- 			struct dc_state *context);
- 	void (*update_writeback)(struct dc *dc,
- 			const struct dc_stream_status *stream_status,
--			struct dc_writeback_info *wb_info);
-+			struct dc_writeback_info *wb_info,
-+			struct dc_state *context);
- 	void (*enable_writeback)(struct dc *dc,
- 			const struct dc_stream_status *stream_status,
--			struct dc_writeback_info *wb_info);
-+			struct dc_writeback_info *wb_info,
-+			struct dc_state *context);
- 	void (*disable_writeback)(struct dc *dc,
- 			unsigned int dwb_pipe_inst);
- #endif
+-	ret = atlas_set_interrupt(data, false);
++	pm_runtime_mark_last_busy(&data->client->dev);
++	ret = pm_runtime_put_autosuspend(&data->client->dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	pm_runtime_mark_last_busy(&data->client->dev);
+-	return pm_runtime_put_autosuspend(&data->client->dev);
++	return iio_triggered_buffer_predisable(indio_dev);
+ }
+ 
+ static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
 -- 
 2.20.1
 
