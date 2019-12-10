@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E9DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBCAC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29712077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1052420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfLJOyI (ORCPT
+        id S1727658AbfLJOyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:54:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:47112 "EHLO foss.arm.com"
+        Tue, 10 Dec 2019 09:54:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:47126 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727610AbfLJOyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:54:06 -0500
+        id S1727634AbfLJOyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:54:08 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B46328;
-        Tue, 10 Dec 2019 06:54:05 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E4F811B3;
+        Tue, 10 Dec 2019 06:54:07 -0800 (PST)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0DE173F67D;
-        Tue, 10 Dec 2019 06:54:04 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF7023F67D;
+        Tue, 10 Dec 2019 06:54:06 -0800 (PST)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 01/15] firmware: arm_scmi: Add support for multiple device per protocol
-Date:   Tue, 10 Dec 2019 14:53:31 +0000
-Message-Id: <20191210145345.11616-2-sudeep.holla@arm.com>
+Subject: [PATCH 03/15] firmware: arm_scmi: Skip protocol initialisation for additional devices
+Date:   Tue, 10 Dec 2019 14:53:33 +0000
+Message-Id: <20191210145345.11616-4-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191210145345.11616-1-sudeep.holla@arm.com>
 References: <20191210145345.11616-1-sudeep.holla@arm.com>
@@ -40,138 +40,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently only one scmi device is created for each protocol enumerated.
-However, there is requirement to make use of some procotols by multiple
-kernel subsystems/frameworks. One such example is SCMI PERFORMANCE
-protocol which can be used by both cpufreq and devfreq drivers.
-Similarly, SENSOR protocol may be used by hwmon and iio subsystems,
-and POWER protocol may be used by genpd and regulator drivers.
-
-In order to achieve that, let us extend the scmi bus to match based
-not only protocol id but also the scmi device name if one is available.
+The scmi bus now supports adding multiple devices per protocol,
+and since scmi_protocol_init is called for each scmi device created,
+we must avoid allocating protocol private data and initialising the
+protocol itself if it is already initialised.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/bus.c    | 20 +++++++++++++++++---
- drivers/firmware/arm_scmi/driver.c |  6 +++---
- include/linux/scmi_protocol.h      |  5 ++++-
- 3 files changed, 24 insertions(+), 7 deletions(-)
+ drivers/firmware/arm_scmi/clock.c   | 3 +++
+ drivers/firmware/arm_scmi/perf.c    | 3 +++
+ drivers/firmware/arm_scmi/power.c   | 3 +++
+ drivers/firmware/arm_scmi/reset.c   | 3 +++
+ drivers/firmware/arm_scmi/sensors.c | 3 +++
+ 5 files changed, 15 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
-index 7a30952b463d..3714e6307b05 100644
---- a/drivers/firmware/arm_scmi/bus.c
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -28,8 +28,12 @@ scmi_dev_match_id(struct scmi_device *scmi_dev, struct scmi_driver *scmi_drv)
- 		return NULL;
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
+index 32526a793f3a..922b22aaaf84 100644
+--- a/drivers/firmware/arm_scmi/clock.c
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -316,6 +316,9 @@ static int scmi_clock_protocol_init(struct scmi_handle *handle)
+ 	int clkid, ret;
+ 	struct clock_info *cinfo;
 
- 	for (; id->protocol_id; id++)
--		if (id->protocol_id == scmi_dev->protocol_id)
--			return id;
-+		if (id->protocol_id == scmi_dev->protocol_id) {
-+			if (!id->name)
-+				return id;
-+			else if (!strcmp(id->name, scmi_dev->name))
-+				return id;
-+		}
-
- 	return NULL;
- }
-@@ -125,7 +129,8 @@ static void scmi_device_release(struct device *dev)
- }
-
- struct scmi_device *
--scmi_device_create(struct device_node *np, struct device *parent, int protocol)
-+scmi_device_create(struct device_node *np, struct device *parent, int protocol,
-+		   const char *name)
- {
- 	int id, retval;
- 	struct scmi_device *scmi_dev;
-@@ -134,8 +139,15 @@ scmi_device_create(struct device_node *np, struct device *parent, int protocol)
- 	if (!scmi_dev)
- 		return NULL;
-
-+	scmi_dev->name = kstrdup_const(name ?: "unknown", GFP_KERNEL);
-+	if (!scmi_dev->name) {
-+		kfree(scmi_dev);
-+		return NULL;
-+	}
++	if (handle->clk_ops && handle->clk_priv)
++		return 0; /* initialised already for the first device */
 +
- 	id = ida_simple_get(&scmi_bus_id, 1, 0, GFP_KERNEL);
- 	if (id < 0) {
-+		kfree_const(scmi_dev->name);
- 		kfree(scmi_dev);
- 		return NULL;
- 	}
-@@ -154,6 +166,7 @@ scmi_device_create(struct device_node *np, struct device *parent, int protocol)
+ 	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
 
- 	return scmi_dev;
- put_dev:
-+	kfree_const(scmi_dev->name);
- 	put_device(&scmi_dev->dev);
- 	ida_simple_remove(&scmi_bus_id, id);
- 	return NULL;
-@@ -161,6 +174,7 @@ scmi_device_create(struct device_node *np, struct device *parent, int protocol)
+ 	dev_dbg(handle->dev, "Clock Version %d.%d\n",
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index 601af4edad5e..55c2a4c21ccb 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -710,6 +710,9 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ 	u32 version;
+ 	struct scmi_perf_info *pinfo;
 
- void scmi_device_destroy(struct scmi_device *scmi_dev)
- {
-+	kfree_const(scmi_dev->name);
- 	scmi_handle_put(scmi_dev->handle);
- 	ida_simple_remove(&scmi_bus_id, scmi_dev->id);
- 	device_unregister(&scmi_dev->dev);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 3eb0382491ce..dee7ce3bd815 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -803,11 +803,11 @@ scmi_mbox_txrx_setup(struct scmi_info *info, struct device *dev, int prot_id)
++	if (handle->perf_ops && handle->perf_priv)
++		return 0; /* initialised already for the first device */
++
+ 	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
 
- static inline void
- scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
--			    int prot_id)
-+			    int prot_id, const char *name)
- {
- 	struct scmi_device *sdev;
+ 	dev_dbg(handle->dev, "Performance Version %d.%d\n",
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+index 5abef7079c0a..9a7593238b8f 100644
+--- a/drivers/firmware/arm_scmi/power.c
++++ b/drivers/firmware/arm_scmi/power.c
+@@ -185,6 +185,9 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
+ 	u32 version;
+ 	struct scmi_power_info *pinfo;
 
--	sdev = scmi_device_create(np, info->dev, prot_id);
-+	sdev = scmi_device_create(np, info->dev, prot_id, name);
- 	if (!sdev) {
- 		dev_err(info->dev, "failed to create %d protocol device\n",
- 			prot_id);
-@@ -892,7 +892,7 @@ static int scmi_probe(struct platform_device *pdev)
- 			continue;
- 		}
++	if (handle->power_ops && handle->power_priv)
++		return 0; /* initialised already for the first device */
++
+ 	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
 
--		scmi_create_protocol_device(child, info, prot_id);
-+		scmi_create_protocol_device(child, info, prot_id, NULL);
- 	}
+ 	dev_dbg(handle->dev, "Power Version %d.%d\n",
+diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+index ab42c21c5517..809dc8faee1e 100644
+--- a/drivers/firmware/arm_scmi/reset.c
++++ b/drivers/firmware/arm_scmi/reset.c
+@@ -195,6 +195,9 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ 	u32 version;
+ 	struct scmi_reset_info *pinfo;
 
- 	return 0;
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 881fea47c83d..5c873a59b387 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -257,6 +257,7 @@ enum scmi_std_protocol {
- struct scmi_device {
- 	u32 id;
- 	u8 protocol_id;
-+	const char *name;
- 	struct device dev;
- 	struct scmi_handle *handle;
- };
-@@ -264,11 +265,13 @@ struct scmi_device {
- #define to_scmi_dev(d) container_of(d, struct scmi_device, dev)
++	if (handle->reset_ops && handle->reset_priv)
++		return 0; /* initialised already for the first device */
++
+ 	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
 
- struct scmi_device *
--scmi_device_create(struct device_node *np, struct device *parent, int protocol);
-+scmi_device_create(struct device_node *np, struct device *parent, int protocol,
-+		   const char *name);
- void scmi_device_destroy(struct scmi_device *scmi_dev);
+ 	dev_dbg(handle->dev, "Reset Version %d.%d\n",
+diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
+index a400ea805fc2..b7f92c37c8a4 100644
+--- a/drivers/firmware/arm_scmi/sensors.c
++++ b/drivers/firmware/arm_scmi/sensors.c
+@@ -276,6 +276,9 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+ 	u32 version;
+ 	struct sensors_info *sinfo;
 
- struct scmi_device_id {
- 	u8 protocol_id;
-+	const char *name;
- };
++	if (handle->sensor_ops && handle->sensor_priv)
++		return 0; /* initialised already for the first device */
++
+ 	scmi_version_get(handle, SCMI_PROTOCOL_SENSOR, &version);
 
- struct scmi_driver {
+ 	dev_dbg(handle->dev, "Sensor Version %d.%d\n",
 --
 2.17.1
 
