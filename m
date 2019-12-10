@@ -2,166 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC54C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5CEC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719F2206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DB9206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghqqpu4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLJJO4 (ORCPT
+        id S1727441AbfLJJPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:14:56 -0500
-Received: from mga12.intel.com ([192.55.52.136]:29109 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfLJJO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:14:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 01:14:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
-   d="scan'208";a="244777863"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Dec 2019 01:14:52 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v2 0/3] perf x86: Exposing IO stack to IO PMON mapping through sysfs
-Date:   Tue, 10 Dec 2019 12:14:48 +0300
-Message-Id: <20191210091451.6054-1-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 10 Dec 2019 04:15:06 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37491 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfLJJPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:15:03 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s18so8747834pfm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:15:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TDhjwwUSHDyACk0EiHiTW5gF5LNK8IJFMEdCdOncrPE=;
+        b=ghqqpu4Y3uy6hum+ewIVbOYchj5qEMKjfUftHMyfeRmiSE9NmCDJ9vZXizcVLViGxF
+         Uc8K92FzayQgL8W6g/GF5S3scqlogON5s9nQVQ9fJw5fqPwqnmDkJszXcT01LQWAeOSR
+         z41gcw7az9DzaMG+mPFKEBA3Xf+E8ZyUk/EB/kw9B9KdACbunaXvQ2lNNkC6fnG0Z6Yv
+         xUj/45p9resd1DifbIk76ZqlqRb7VIWA0Rgv0/q+pmGLxtwBPtB+plQ6EMPpYGpu0SJK
+         aerFxhbP2AAvZn83JYDGqKsyUGALkIkgL54ICylCzQlj1FHWYUAnukNAedykQv7WYMsx
+         uZmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TDhjwwUSHDyACk0EiHiTW5gF5LNK8IJFMEdCdOncrPE=;
+        b=VlkVDTFmaoIKIIwEuVAGLVqrXPezipOFZL0dC20bvng7xCJ0lrHW6gnwPDzlE94bV8
+         qNYQIQy4hmFJxmpKgJclSl/8bELtTNo8njc+AesRGqaOeoN7QovnQLCRk99pVDUnW6Nq
+         +S12iMkXCPqoPCcb9E2eqVY/y22l4ZEARi0+jBuAkV1XSwECxN/UlVPy24NHqiZST+JT
+         7zMKkiERZQjdUE1gboJLojnSs3E7ZrqSE+bwPHCNRifsfc7nJL+wlc8i1trm01I6ntu1
+         YZ283XpEN8m8fYrLmd/JfsJmnBUcKiWhp+2Tyjcb7h7OBZ/yH+XvrKdLCq9k+I+aG0cY
+         dRZg==
+X-Gm-Message-State: APjAAAVdPnkjPuaJ5TEsGDl7tTyX7Gea6MgNNgq6ynYLx+xV7uWh2O+s
+        S8Y0GORg7Zx05JJe7qAez15RsFxJ
+X-Google-Smtp-Source: APXvYqyXCRbKsNc5R0fJgcZtH0Jj0+LMgA/z2G4Rzo1eZ2DpoBJB/lpl1vKKqc6LG9ozYEpt2/nn2w==
+X-Received: by 2002:a65:66c4:: with SMTP id c4mr23827702pgw.429.1575969302412;
+        Tue, 10 Dec 2019 01:15:02 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id 143sm2478287pfz.67.2019.12.10.01.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 01:15:01 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cheah Kok Cheong <thrust73@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] staging: comedi: comedi_test: return error when comedi_test_init fails
+Date:   Tue, 10 Dec 2019 17:14:51 +0800
+Message-Id: <20191210091451.23505-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+comedi_test_init() forgets to return error when it fails.
+Modify the return value to fix it.
 
-The previous version can be found at:
-v1: https://lkml.org/lkml/2019/11/26/447
+Fixes: 9ff7400bd38c ("Staging: comedi: drivers: comedi_test: Add auto-configuration capability")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/staging/comedi/drivers/comedi_test.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes in this revision are:
-v1 -> v2:
-- Fixed process related issues;
-- This patch set includes kernel support for IIO stack to PMON mapping;
-- Stephane raised concerns regarding output format which may require
-code changes in the user space part of the feature only. We will continue 
-output format discussion in the context of user space update.
-
-Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-significant changes in the integrated I/O (IIO) architecture. The new
-solution introduces IIO stacks which are responsible for managing traffic
-between the PCIe domain and the Mesh domain. Each IIO stack has its own
-PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-or various built-in accelerators. IIO PMON blocks allow concurrent
-monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
-
-Software is supposed to program required perf counters within each IIO
-stack and gather performance data. The tricky thing here is that IIO PMON
-reports data per IIO stack but users have no idea what IIO stacks are -
-they only know devices which are connected to the platform.
-
-Understanding IIO stack concept to find which IIO stack that particular
-IO device is connected to, or to identify an IIO PMON block to program
-for monitoring specific IIO stack assumes a lot of implicit knowledge
-about given Intel server platform architecture.
-
-This patch set introduces:
-1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
-   through sysfs-backend;
-2. A new --iiostat mode in perf stat to provide I/O performance metrics
-   per I/O device.
-
-Usage examples:
-
-1. List all devices below IIO stacks
-  ./perf stat --iiostat=show
-
-Sample output w/o libpci:
-
-    S0-RootPort0-uncore_iio_0<00:00.0>
-    S1-RootPort0-uncore_iio_0<81:00.0>
-    S0-RootPort1-uncore_iio_1<18:00.0>
-    S1-RootPort1-uncore_iio_1<86:00.0>
-    S1-RootPort1-uncore_iio_1<88:00.0>
-    S0-RootPort2-uncore_iio_2<3d:00.0>
-    S1-RootPort2-uncore_iio_2<af:00.0>
-    S1-RootPort3-uncore_iio_3<da:00.0>
-
-Sample output with libpci:
-
-    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
-    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
-    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
-    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
-    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
-    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
-
-2. Collect metrics for all I/O devices below IIO stack
-
-  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    357708+0 records in
-    357707+0 records out
-    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    00:00.0                    0                    0                    0                    0
-    81:00.0                    0                    0                    0                    0
-    18:00.0                    0                    0                    0                    0
-    86:00.0                    0                    0                    0                    0
-    88:00.0                    0                    0                    0                    0
-    3b:00.0                    3                    0                    0                    0
-    3c:03.0                    3                    0                    0                    0
-    3d:00.0                    3                    0                    0                    0
-    af:00.0                    0                    0                    0                    0
-    da:00.0               358559                   44                    0                   22
-
-    215.383783574 seconds time elapsed
-
-
-3. Collect metrics for comma separted list of I/O devices 
-
-  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
-    381555+0 records in
-    381554+0 records out
-    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
-
-  Performance counter stats for 'system wide':
-
-     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
-    da:00.0               382462                   47                    0                   23
-
-    374.045775505 seconds time elapsed
-
-Roman Sudarikov (3):
-  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
-  perf x86: Add compaction function for uncore attributes
-  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
-    platform
-
- arch/x86/events/intel/uncore.c       |  50 ++++++++-
- arch/x86/events/intel/uncore.h       |  10 +-
- arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+), 2 deletions(-)
-
-
-base-commit: 219d54332a09e8d8741c1e1982f5eae56099de85
+diff --git a/drivers/staging/comedi/drivers/comedi_test.c b/drivers/staging/comedi/drivers/comedi_test.c
+index ef4c7c8a2b71..133ed99a89f1 100644
+--- a/drivers/staging/comedi/drivers/comedi_test.c
++++ b/drivers/staging/comedi/drivers/comedi_test.c
+@@ -799,12 +799,14 @@ static int __init comedi_test_init(void)
+ 	if (!config_mode) {
+ 		ctcls = class_create(THIS_MODULE, CLASS_NAME);
+ 		if (IS_ERR(ctcls)) {
++			ret = PTR_ERR(ctcls);
+ 			pr_warn("comedi_test: unable to create class\n");
+ 			goto clean3;
+ 		}
+ 
+ 		ctdev = device_create(ctcls, NULL, MKDEV(0, 0), NULL, DEV_NAME);
+ 		if (IS_ERR(ctdev)) {
++			ret = PTR_ERR(ctdev);
+ 			pr_warn("comedi_test: unable to create device\n");
+ 			goto clean2;
+ 		}
+@@ -826,7 +828,7 @@ static int __init comedi_test_init(void)
+ clean3:
+ 	ctcls = NULL;
+ 
+-	return 0;
++	return ret;
+ }
+ module_init(comedi_test_init);
+ 
 -- 
-2.19.1
+2.24.0
 
