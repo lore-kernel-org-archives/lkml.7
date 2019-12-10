@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B4CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364DFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38432077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C56246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012327;
-	bh=itWihxWxovXnJNR9Dz5lHXRgZXTfMWzOkcG76mDc7sE=;
+	s=default; t=1576012333;
+	bh=UMpGuVvlVQ1bxIgcuXYUIwPC5nEb2CXC5Q+/LiSkbro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2sxBhq21p/uh+5GOQrVq5d96WCfJGGaLF9SJGHZz+lkWYUpB/EIGMdbKVtloShs2
-	 uMZBtDEfIF9HWIuGbZl85XVoLOQgHGbwAbAYBV6PEu9Ow/EMkp6ujEqchZtJRQt/T5
-	 FCPPUrFE1Zq3ojsAYZa41Slv1ZBon+iJ7xKAfOck=
+	b=V4RicHJo1/tA0hW0mzinml/yOQBTMkaB662+LfSkPl51zP2aS+cJjgnHH+pQ74O4o
+	 2hZ/4A5WJ8t0QNL96f17dOVCd9/lWB3rN1zCxn4/RNycIR1YSIdBKCVCGVZesNzvNb
+	 fbyrO1YiygZpJdJDhmOZcSfQq8O5oDqBVpCW8Mvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfLJVMH (ORCPT
+        id S1728915AbfLJVMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfLJVLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:55 -0500
+        id S1728618AbfLJVMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1344B246BE;
-        Tue, 10 Dec 2019 21:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E848E246B5;
+        Tue, 10 Dec 2019 21:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012314;
-        bh=itWihxWxovXnJNR9Dz5lHXRgZXTfMWzOkcG76mDc7sE=;
+        s=default; t=1576012319;
+        bh=UMpGuVvlVQ1bxIgcuXYUIwPC5nEb2CXC5Q+/LiSkbro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4jT5g1qRANmitOcSYsmGKF27/NlC+UmMoW+G6KxdsD/nH7h0wQK6GiJyCCYcY+wU
-         vq1JKysx4EBDKoyjFnriHRmBNWZOZFzZewdstAKrlhtXELvRmsT/g/J1/fa8QF9VnQ
-         lJa20wDIJMG/31pTHyL+UAQeVRm6Poi//12+DJpU=
+        b=CxX7crp+LKl5/IqWMeJoJ7Colkkjh5uR1s2p58ms3fZd0jY0121DYCts40CoxSLgh
+         w3O33Yhyu2swX7j8uuW475Dmk7lZg4fsKbr/nBCx5FO/nRgJqHnFVLI+lqCdBnA0LO
+         KmIVSkywFuCKwVa1GdADG3Ahv3m4YNV2qyk13HVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 249/350] fsi: core: Fix small accesses and unaligned offsets via sysfs
-Date:   Tue, 10 Dec 2019 16:05:54 -0500
-Message-Id: <20191210210735.9077-210-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 253/350] soundwire: intel: fix PDI/stream mapping for Bulk
+Date:   Tue, 10 Dec 2019 16:05:58 -0500
+Message-Id: <20191210210735.9077-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,108 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 9f4c2b516b4f031e3cd0e45957f4150b3c1a083d ]
+[ Upstream commit c134f914e9f55b7817e2bae625ec0e5f1379f7cd ]
 
-Subtracting the offset delta from four-byte alignment lead to wrapping
-of the requested length where `count` is less than `off`. Generalise the
-length handling to enable and optimise aligned access sizes for all
-offset and size combinations. The new formula produces the following
-results for given offset and count values:
+The previous formula is incorrect for PDI0/1, the mapping is not
+linear but has a discontinuity between PDI1 and PDI2.
 
-    offset  count | length
-    --------------+-------
-    0       1     | 1
-    0       2     | 2
-    0       3     | 2
-    0       4     | 4
-    0       5     | 4
-    1       1     | 1
-    1       2     | 1
-    1       3     | 1
-    1       4     | 1
-    1       5     | 1
-    2       1     | 1
-    2       2     | 2
-    2       3     | 2
-    2       4     | 2
-    2       5     | 2
-    3       1     | 1
-    3       2     | 1
-    3       3     | 1
-    3       4     | 1
-    3       5     | 1
+This change has no effect on PCM PDIs (same mapping).
 
-We might need something like this for the cfam chardevs as well, for
-example we don't currently implement any alignment restrictions /
-handling in the hardware master driver.
-
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20191108051945.7109-6-joel@jms.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191022232948.17156-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-core.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ drivers/soundwire/intel.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 1f76740f33b6f..9282239b4d959 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -544,6 +544,31 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
- }
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 13c54eac0cc3e..d1839707128a8 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -479,7 +479,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	int pdi_conf = 0;
  
-+static unsigned long aligned_access_size(size_t offset, size_t count)
-+{
-+	unsigned long offset_unit, count_unit;
-+
-+	/* Criteria:
-+	 *
-+	 * 1. Access size must be less than or equal to the maximum access
-+	 *    width or the highest power-of-two factor of offset
-+	 * 2. Access size must be less than or equal to the amount specified by
-+	 *    count
-+	 *
-+	 * The access width is optimal if we can calculate 1 to be strictly
-+	 * equal while still satisfying 2.
-+	 */
-+
-+	/* Find 1 by the bottom bit of offset (with a 4 byte access cap) */
-+	offset_unit = BIT(__builtin_ctzl(offset | 4));
-+
-+	/* Find 2 by the top bit of count */
-+	count_unit = BIT(8 * sizeof(unsigned long) - 1 - __builtin_clzl(count));
-+
-+	/* Constrain the maximum access width to the minimum of both criteria */
-+	return BIT(__builtin_ctzl(offset_unit | count_unit));
-+}
-+
- static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		struct kobject *kobj, struct bin_attribute *attr, char *buf,
- 		loff_t off, size_t count)
-@@ -559,8 +584,7 @@ static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		return -EINVAL;
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
- 	for (total_len = 0; total_len < count; total_len += read_len) {
--		read_len = min_t(size_t, count, 4);
--		read_len -= off & 0x3;
-+		read_len = aligned_access_size(off, count - total_len);
+ 	/*
+ 	 * Program stream parameters to stream SHIM register
+@@ -508,7 +511,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	unsigned int conf;
  
- 		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
- 		if (rc)
-@@ -587,8 +611,7 @@ static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
- 		return -EINVAL;
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
- 	for (total_len = 0; total_len < count; total_len += write_len) {
--		write_len = min_t(size_t, count, 4);
--		write_len -= off & 0x3;
-+		write_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
- 		if (rc)
+ 	/* Program Stream config ALH register */
+ 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
 -- 
 2.20.1
 
