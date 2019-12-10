@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B902DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C241C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E284205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FE7205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012700;
-	bh=RflEyOd9W9raPwdc4maUJv1kkKNGsiq51a+yvRzHZik=;
+	s=default; t=1576012704;
+	bh=K7c745eb+nMmvB7McKYT6nRA4wxEeUxldotXXntqTEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2i9kGZ7mmJ9GzqYCuEMDIe7CDfLs/+171bmbiyIDIdYx9kZ9NFvxs8H2LVReoenNt
-	 0kzvyOLNDiZU842nabyuFO/l4qvIIyl3AXEJPUFILEMSiA9ud5PS8wus1K5V7RkW3N
-	 KHJxNbE7YspVjNqqVB/BNMDKH5Nk56/WT/wM4tvU=
+	b=grS//1TU/vo5GW7R9X0Po88LqJETkED/j7gc8FtpmR7T1B4b8FJHwiefWbzpqRzQL
+	 aTYAtZu9QLIv1cWXBuPX2nGxzUu9j9Z+VTPLag7RBtANKlnhjPfa/8R2KDi2ubMnWk
+	 1GRZWRcZseURusgsNZQCEqS0sM3pJnEfIa4wy7U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfLJVMn (ORCPT
+        id S1729019AbfLJVSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36606 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:18:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfLJVMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:30 -0500
+        id S1729069AbfLJVMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1734206EC;
-        Tue, 10 Dec 2019 21:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 934F321D7D;
+        Tue, 10 Dec 2019 21:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012349;
-        bh=RflEyOd9W9raPwdc4maUJv1kkKNGsiq51a+yvRzHZik=;
+        s=default; t=1576012363;
+        bh=K7c745eb+nMmvB7McKYT6nRA4wxEeUxldotXXntqTEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOZNWO2nkeCJKxK7h+WS0FAT7ifmMv40hDGHIiUrNpemuG/qSgXnhYN28PxGSW9qa
-         totIa+ZJFc+LWmhqUQRVAQCrusMGEvHJoy6l5P+Gida364LaiWeRgtYj0AWsh1HXAm
-         PrCjgIvEmyx7/GDT0VONvzJaqLwS7Vt/9NHzp6Yk=
+        b=b2766pvciGx490ut4+Ix2yxiMAqoLDTqUgrK7m2p22ogSzDM9amyrgo8260wJBbZw
+         TPZqedS4XxZBab49jyAw4QzoF94raPEH5JaRSCGxn+ZmxZg74+g+Yc8YIAhDEzUoGN
+         LXrLwT11pLkaP2yD930DWoXWwXLFdflnvr27J4vY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Dan Carpenter <dan.carpenter@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 279/350] bcache: fix static checker warning in bcache_device_free()
-Date:   Tue, 10 Dec 2019 16:06:24 -0500
-Message-Id: <20191210210735.9077-240-sashal@kernel.org>
+Cc:     Andrea Righi <andrea.righi@canonical.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 290/350] bcache: fix deadlock in bcache_allocator
+Date:   Tue, 10 Dec 2019 16:06:35 -0500
+Message-Id: <20191210210735.9077-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,97 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-[ Upstream commit 2d8869518a525c9bce5f5268419df9dfbe3dfdeb ]
+[ Upstream commit 84c529aea182939e68f618ed9813740c9165c7eb ]
 
-Commit cafe56359144 ("bcache: A block layer cache") leads to the
-following static checker warning:
+bcache_allocator can call the following:
 
-    ./drivers/md/bcache/super.c:770 bcache_device_free()
-    warn: variable dereferenced before check 'd->disk' (see line 766)
+ bch_allocator_thread()
+  -> bch_prio_write()
+     -> bch_bucket_alloc()
+        -> wait on &ca->set->bucket_wait
 
-drivers/md/bcache/super.c
-   762  static void bcache_device_free(struct bcache_device *d)
-   763  {
-   764          lockdep_assert_held(&bch_register_lock);
-   765
-   766          pr_info("%s stopped", d->disk->disk_name);
-                                      ^^^^^^^^^
-Unchecked dereference.
+But the wake up event on bucket_wait is supposed to come from
+bch_allocator_thread() itself => deadlock:
 
-   767
-   768          if (d->c)
-   769                  bcache_device_detach(d);
-   770          if (d->disk && d->disk->flags & GENHD_FL_UP)
-                    ^^^^^^^
-Check too late.
+[ 1158.490744] INFO: task bcache_allocato:15861 blocked for more than 10 seconds.
+[ 1158.495929]       Not tainted 5.3.0-050300rc3-generic #201908042232
+[ 1158.500653] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1158.504413] bcache_allocato D    0 15861      2 0x80004000
+[ 1158.504419] Call Trace:
+[ 1158.504429]  __schedule+0x2a8/0x670
+[ 1158.504432]  schedule+0x2d/0x90
+[ 1158.504448]  bch_bucket_alloc+0xe5/0x370 [bcache]
+[ 1158.504453]  ? wait_woken+0x80/0x80
+[ 1158.504466]  bch_prio_write+0x1dc/0x390 [bcache]
+[ 1158.504476]  bch_allocator_thread+0x233/0x490 [bcache]
+[ 1158.504491]  kthread+0x121/0x140
+[ 1158.504503]  ? invalidate_buckets+0x890/0x890 [bcache]
+[ 1158.504506]  ? kthread_park+0xb0/0xb0
+[ 1158.504510]  ret_from_fork+0x35/0x40
 
-   771                  del_gendisk(d->disk);
-   772          if (d->disk && d->disk->queue)
-   773                  blk_cleanup_queue(d->disk->queue);
-   774          if (d->disk) {
-   775                  ida_simple_remove(&bcache_device_idx,
-   776                                    first_minor_to_idx(d->disk->first_minor));
-   777                  put_disk(d->disk);
-   778          }
-   779
+Fix by making the call to bch_prio_write() non-blocking, so that
+bch_allocator_thread() never waits on itself.
 
-It is not 100% sure that the gendisk struct of bcache device will always
-be there, the warning makes sense when there is problem in block core.
+Moreover, make sure to wake up the garbage collector thread when
+bch_prio_write() is failing to allocate buckets.
 
-This patch tries to remove the static checking warning by checking
-d->disk to avoid NULL pointer deferences.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+BugLink: https://bugs.launchpad.net/bugs/1784665
+BugLink: https://bugs.launchpad.net/bugs/1796292
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/md/bcache/alloc.c  |  5 ++++-
+ drivers/md/bcache/bcache.h |  2 +-
+ drivers/md/bcache/super.c  | 27 +++++++++++++++++++++------
+ 3 files changed, 26 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 6f776823b9ba5..a1df0d95151c6 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -377,7 +377,10 @@ static int bch_allocator_thread(void *arg)
+ 			if (!fifo_full(&ca->free_inc))
+ 				goto retry_invalidate;
+ 
+-			bch_prio_write(ca);
++			if (bch_prio_write(ca, false) < 0) {
++				ca->invalidate_needs_gc = 1;
++				wake_up_gc(ca->set);
++			}
+ 		}
+ 	}
+ out:
+diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+index 013e35a9e317a..deb924e1d790a 100644
+--- a/drivers/md/bcache/bcache.h
++++ b/drivers/md/bcache/bcache.h
+@@ -977,7 +977,7 @@ bool bch_cached_dev_error(struct cached_dev *dc);
+ __printf(2, 3)
+ bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
+ 
+-void bch_prio_write(struct cache *ca);
++int bch_prio_write(struct cache *ca, bool wait);
+ void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
+ 
+ extern struct workqueue_struct *bcache_wq;
 diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 20ed838e9413b..d2654880b7b9e 100644
+index d2654880b7b9e..64999c7a8033f 100644
 --- a/drivers/md/bcache/super.c
 +++ b/drivers/md/bcache/super.c
-@@ -761,20 +761,28 @@ static inline int idx_to_first_minor(int idx)
+@@ -529,12 +529,29 @@ static void prio_io(struct cache *ca, uint64_t bucket, int op,
+ 	closure_sync(cl);
+ }
  
- static void bcache_device_free(struct bcache_device *d)
+-void bch_prio_write(struct cache *ca)
++int bch_prio_write(struct cache *ca, bool wait)
  {
-+	struct gendisk *disk = d->disk;
-+
- 	lockdep_assert_held(&bch_register_lock);
+ 	int i;
+ 	struct bucket *b;
+ 	struct closure cl;
  
--	pr_info("%s stopped", d->disk->disk_name);
-+	if (disk)
-+		pr_info("%s stopped", disk->disk_name);
-+	else
-+		pr_err("bcache device (NULL gendisk) stopped");
++	pr_debug("free_prio=%zu, free_none=%zu, free_inc=%zu",
++		 fifo_used(&ca->free[RESERVE_PRIO]),
++		 fifo_used(&ca->free[RESERVE_NONE]),
++		 fifo_used(&ca->free_inc));
++
++	/*
++	 * Pre-check if there are enough free buckets. In the non-blocking
++	 * scenario it's better to fail early rather than starting to allocate
++	 * buckets and do a cleanup later in case of failure.
++	 */
++	if (!wait) {
++		size_t avail = fifo_used(&ca->free[RESERVE_PRIO]) +
++			       fifo_used(&ca->free[RESERVE_NONE]);
++		if (prio_buckets(ca) > avail)
++			return -ENOMEM;
++	}
++
+ 	closure_init_stack(&cl);
  
- 	if (d->c)
- 		bcache_device_detach(d);
--	if (d->disk && d->disk->flags & GENHD_FL_UP)
--		del_gendisk(d->disk);
--	if (d->disk && d->disk->queue)
--		blk_cleanup_queue(d->disk->queue);
--	if (d->disk) {
-+
-+	if (disk) {
-+		if (disk->flags & GENHD_FL_UP)
-+			del_gendisk(disk);
-+
-+		if (disk->queue)
-+			blk_cleanup_queue(disk->queue);
-+
- 		ida_simple_remove(&bcache_device_idx,
--				  first_minor_to_idx(d->disk->first_minor));
--		put_disk(d->disk);
-+				  first_minor_to_idx(disk->first_minor));
-+		put_disk(disk);
+ 	lockdep_assert_held(&ca->set->bucket_lock);
+@@ -544,9 +561,6 @@ void bch_prio_write(struct cache *ca)
+ 	atomic_long_add(ca->sb.bucket_size * prio_buckets(ca),
+ 			&ca->meta_sectors_written);
+ 
+-	//pr_debug("free %zu, free_inc %zu, unused %zu", fifo_used(&ca->free),
+-	//	 fifo_used(&ca->free_inc), fifo_used(&ca->unused));
+-
+ 	for (i = prio_buckets(ca) - 1; i >= 0; --i) {
+ 		long bucket;
+ 		struct prio_set *p = ca->disk_buckets;
+@@ -564,7 +578,7 @@ void bch_prio_write(struct cache *ca)
+ 		p->magic	= pset_magic(&ca->sb);
+ 		p->csum		= bch_crc64(&p->magic, bucket_bytes(ca) - 8);
+ 
+-		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, true);
++		bucket = bch_bucket_alloc(ca, RESERVE_PRIO, wait);
+ 		BUG_ON(bucket == -1);
+ 
+ 		mutex_unlock(&ca->set->bucket_lock);
+@@ -593,6 +607,7 @@ void bch_prio_write(struct cache *ca)
+ 
+ 		ca->prio_last_buckets[i] = ca->prio_buckets[i];
  	}
++	return 0;
+ }
  
- 	bioset_exit(&d->bio_split);
+ static void prio_read(struct cache *ca, uint64_t bucket)
+@@ -1962,7 +1977,7 @@ static int run_cache_set(struct cache_set *c)
+ 
+ 		mutex_lock(&c->bucket_lock);
+ 		for_each_cache(ca, c, i)
+-			bch_prio_write(ca);
++			bch_prio_write(ca, true);
+ 		mutex_unlock(&c->bucket_lock);
+ 
+ 		err = "cannot allocate new UUID bucket";
 -- 
 2.20.1
 
