@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2442EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C474FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F3A20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9011520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017710;
-	bh=SbJ4s+tlx67WyIDq4yQKNvF98wHty0yh/j2e3DmMO9s=;
+	s=default; t=1576017712;
+	bh=9JZTUZ8XZbtS5hmjle0IXCzfwZyXHuzrQkrAN6BuoOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=buMz3/fCc5azkAIDj59Nocx+51pG7eAnb6cz2ItUDf5kA3eUctRVIiAb0kW6T9FMV
-	 HaZSEov/aZHnErrxC5S3OnR2laCsX91UyfNSohDzxJDfi1ykJU47lVT6OtopHN5+s9
-	 0KIbWDoCNFcwN84ZNEnokN6K12e/PyXzS8QxDUpI=
+	b=HmDDMxrkBj6oyLRblaC319a7lYSKkVLfJFF7AtW1xCHXc9HHUsrxRA+6Is5P4Jqrq
+	 8NsoWIjjtKEBj3unuDAtw1VudmLBQDxNvcbd+oqdWpQWY8k4ltLzo2nJQbIc6tgNZb
+	 PJg/B9T/0uUvoNzVBlyPrn1iB+5T80zEsiBZD8Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfLJWls (ORCPT
+        id S1728721AbfLJWbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:41:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbfLJWbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:39 -0500
+        id S1728496AbfLJWb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB84A2077B;
-        Tue, 10 Dec 2019 22:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE72F20836;
+        Tue, 10 Dec 2019 22:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017098;
-        bh=SbJ4s+tlx67WyIDq4yQKNvF98wHty0yh/j2e3DmMO9s=;
+        s=default; t=1576017087;
+        bh=9JZTUZ8XZbtS5hmjle0IXCzfwZyXHuzrQkrAN6BuoOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b585LO98pMmuI+1Kd3mIn4SxqNNfOW9gFxmKNvDXHLTC2Yi1PQHFGWgxkpAxsUNhq
-         X5sZXrhUQFAwclXj9WNuf4QsvuV2NPZuzC5o4XZlF5wp6I1SwE7FXXA0uhn8DTo09W
-         RVE+hBy0/Hph8ye77MLRdB5BIrUnkZazDfVeVzVQ=
+        b=I7FFyzuAZd5+f7Cu6dT8VinVBzV32tqHoPl+bQphLQ6c/FQPUYrQIomcDaMxxJNrG
+         2XVoR7waO+P1vqRKMyO7vgR1TiUGRIKeuR4vAFLDe6vAXuzq+YYMYsJ7T9S0B9cxpU
+         n9+l4Kk792sduLDOCS7eTHCEz8G8Q7zOHaERfbbs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 53/91] perf probe: Fix to list probe event with correct line number
-Date:   Tue, 10 Dec 2019 17:29:57 -0500
-Message-Id: <20191210223035.14270-53-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 43/91] ALSA: hda - Fix pending unsol events at shutdown
+Date:   Tue, 10 Dec 2019 17:29:47 -0500
+Message-Id: <20191210223035.14270-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -61,76 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
+[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
 
-Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-entry address of the function on which a probe is, it will fail when the
-function DIE has only ranges attribute.
+This is an alternative fix attemp for the issue reported in the commit
+caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
+reverted later due to regressions.  Instead of tweaking the hardware
+disablement order and the enforced irq flushing, do calling
+cancel_work_sync() of the unsol work early enough, and explicitly
+ignore the unsol events during the shutdown by checking the
+bus->shutdown flag.
 
-To fix this issue, use die_entrypc() instead of dwarf_entrypc().
-
-Without this fix, perf probe -l shows incorrect offset:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
-
-With this:
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_bind.c  | 4 ++++
+ sound/pci/hda/hda_intel.c | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 0d9d6e0803b88..248d3ff7e3454 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1567,7 +1567,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		/* Get function entry information */
- 		func = basefunc = dwarf_diename(&spdie);
- 		if (!func ||
--		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-+		    die_entrypc(&spdie, &baseaddr) != 0 ||
- 		    dwarf_decl_line(&spdie, &baseline) != 0) {
- 			lineno = 0;
- 			goto post;
-@@ -1584,7 +1584,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
- 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
- 						&indie)) {
- 			/* There is an inline function */
--			if (dwarf_entrypc(&indie, &_addr) == 0 &&
-+			if (die_entrypc(&indie, &_addr) == 0 &&
- 			    _addr == addr) {
- 				/*
- 				 * addr is at an inline function entry.
+diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
+index 7ea201c05e5da..d0d6dfbfcfdf8 100644
+--- a/sound/pci/hda/hda_bind.c
++++ b/sound/pci/hda/hda_bind.c
+@@ -42,6 +42,10 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
+ {
+ 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
+ 
++	/* ignore unsol events during shutdown */
++	if (codec->bus->shutdown)
++		return;
++
+ 	if (codec->patch_ops.unsol_event)
+ 		codec->patch_ops.unsol_event(codec, ev);
+ }
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index f2f1d9fd848c8..3234e9ca02cec 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1275,8 +1275,11 @@ static int azx_free(struct azx *chip)
+ static int azx_dev_disconnect(struct snd_device *device)
+ {
+ 	struct azx *chip = device->device_data;
++	struct hdac_bus *bus = azx_bus(chip);
+ 
+ 	chip->bus.shutdown = 1;
++	cancel_work_sync(&bus->unsol_work);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
