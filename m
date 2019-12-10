@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8ADC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99069C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3601205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7A2205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014153;
-	bh=6Ve9dJgXvkid6EqjAKU+C/eDNUi6JUFV6zDuf7RN9Gg=;
+	s=default; t=1576014167;
+	bh=eQbFqYCDG+MMyMtiZdXRiT12afIA+0Y7URRm3YxhcdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYiFg5eScIer5v0/OOlnBEGF3D72icXKmtTq8BQQ9Jr7TF40duLONjSKVL4hnCwO9
-	 uhqc8ek/haDo50wVsB0cd7QUu0gJKaQbMihZdwb/qaR/83eHrwHlLWviO26p0fXVF0
-	 jn05PEGDJt500L0YaeFlAuKyviT62G0fRHGUwX+M=
+	b=dsfMddI/SP5F8Zc9SDwMLhZqQcgpPTiiABJB+kuyvob6uQeaCgla40ZgqOXgz2355
+	 9QlRANTTB26ox0Ibgq7v/H9zLOhH5SdXSX9wAg+vCJZORhxlzY+jnl/uOdbJz16lur
+	 81aM1rNwWfsm8JeNghNpUmDKHwNQB8ftpQPWAWrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfLJVmb (ORCPT
+        id S1728279AbfLJVmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:42:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38634 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:42:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbfLJVd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:58 -0500
+        id S1728172AbfLJVdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9211022464;
-        Tue, 10 Dec 2019 21:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7202073B;
+        Tue, 10 Dec 2019 21:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013638;
-        bh=6Ve9dJgXvkid6EqjAKU+C/eDNUi6JUFV6zDuf7RN9Gg=;
+        s=default; t=1576013631;
+        bh=eQbFqYCDG+MMyMtiZdXRiT12afIA+0Y7URRm3YxhcdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+nb64CEzVub9om0l5rb8ToTVDPsfNk1peYdEnCEaccSH0jaqzU64zCtexmq1Cwyz
-         ZjOztkCJUsd6WB3Re/GTRprPrN20qQOrYF01uX0PzsRZIjF3crYnAfHOiBY446CUw0
-         kAEGAPI71qky8TXm+Uw5mjDT3yqeT2zIzOrYk+q8=
+        b=dazgZCvCb/25mIERW1/CXUkxCRD0SPLbVRvVGkIJiePtu9S581MzePUgOUVhpfX68
+         dnFYpwaDHigxdzjgQ3n2U7zya34pMjwsFHSx46oXzFG8u5ZnomXKoz3w2pI/FjoAfs
+         sga0cavIkzOjIGNtrbA12IFQwFFyVbtzlEMppQOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 078/177] net: phy: dp83867: enable robust auto-mdix
-Date:   Tue, 10 Dec 2019 16:30:42 -0500
-Message-Id: <20191210213221.11921-78-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 073/177] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Tue, 10 Dec 2019 16:30:37 -0500
+Message-Id: <20191210213221.11921-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,67 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-The link detection timeouts can be observed (or link might not be detected
-at all) when dp83867 PHY is configured in manual mode (speed/duplex).
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
-in case dp83867 is configured in manual mode and reduce link detection
-time.
-As per DM: "If link partners are configured to operational modes that are
-not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
-100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
-MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
 
-Hence, enable this option by default as there are no known reasons
-not to do so.
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index eeadfde159401..879096d3ff412 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -86,6 +86,10 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index ab22eded61d25..fa3b85b222e31 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1724,9 +1724,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
-+/* CFG3 bits */
-+#define DP83867_CFG3_INT_OE			BIT(7)
-+#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-+
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-@@ -331,12 +335,13 @@ static int dp83867_config_init(struct phy_device *phydev)
- 			return ret;
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
  	}
- 
-+	val = phy_read(phydev, DP83867_CFG3);
- 	/* Enable Interrupt output INT_OE in CFG3 register */
--	if (phy_interrupt_is_valid(phydev)) {
--		val = phy_read(phydev, DP83867_CFG3);
--		val |= BIT(7);
--		phy_write(phydev, DP83867_CFG3, val);
--	}
-+	if (phy_interrupt_is_valid(phydev))
-+		val |= DP83867_CFG3_INT_OE;
-+
-+	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
-+	phy_write(phydev, DP83867_CFG3, val);
- 
- 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
- 		dp83867_config_port_mirroring(phydev);
+ 	return false;
+@@ -1763,7 +1764,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
+ }
+ #else
 -- 
 2.20.1
 
