@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AE5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C65C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FF620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5172520637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014594;
-	bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+	s=default; t=1576014597;
+	bh=7XAFeYdjzdaDWxzc/x4+K8Fg4Yzq7/2lj8NDwkqvElI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JVRXhaXWz0T6jOZ3FfOEOZPhZxcV4rZL0l6gUhfbACQi69UdW9yPRsECvc22F6Kkn
-	 tycLMQ2QGsJeXho1ZWHjQPzjNzQSIxqMa2qov560ci9jwL18dAg+kT3O4DKEb/KfJy
-	 MkrXQJVXO7V/d3JEWo2DSpXs+Tq+HAsY6JaWhZvg=
+	b=p7iT23N91ztP5z/0wqUYaJ4gkk6PiOKONik+KYiKDQC508OXEb3XZziHdO+mRbCGE
+	 NO7dZzQ2bJOiYceLTaV2gVlvmSi/OW37ZlAFiN/HsT2xOKCYI+BDoRSOThfMwMg6y1
+	 L5LPQPuAupxprJa4m0ykOxoHcU/JIRayZ6K8xOqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfLJVIa (ORCPT
+        id S1728674AbfLJVt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:08:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:49:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbfLJVIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:16 -0500
+        id S1727864AbfLJVIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 075582077B;
-        Tue, 10 Dec 2019 21:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7281624684;
+        Tue, 10 Dec 2019 21:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012094;
-        bh=p5Ji009ZQl7sPBz9tomk2b5BFRUxQIfpJoi6Rg5HaJI=;
+        s=default; t=1576012110;
+        bh=7XAFeYdjzdaDWxzc/x4+K8Fg4Yzq7/2lj8NDwkqvElI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DBdIZND5yNptuvmiJboPS3I3GRipNyuAxwvXrJX6Q1Rq+k7Hckr5KrxiOWzF6nZW7
-         iP2qcMT0uXWR+SWkOTbhTcvt5pbXZuz8Ei+5RM17kKQjwd9wXXkGcA6jpNJLgO/NBy
-         U7qGWHIarpuYJtUShScLDkmrfN2rI8TVWmvHFnIA=
+        b=w8ih1pJ+6XNd3kyHiThAUiAKrg5pNnhqFGdcWKAmtHC0QdVC66Xvu4n7/r6swppsu
+         yMZ1g83shuLhmTXOV/Pqe5uTyzHKZCKnMpBnZmstZFMI6nLGw0/CPjjLOsIpi9+rpG
+         MTAo4FrwWDCg6cnOq1xW+7qWsL3cJuOFzP0OPE3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 071/350] block: Fix writeback throttling W=1 compiler warnings
-Date:   Tue, 10 Dec 2019 16:02:56 -0500
-Message-Id: <20191210210735.9077-32-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 083/350] team: call RCU read lock when walking the port_list
+Date:   Tue, 10 Dec 2019 16:03:08 -0500
+Message-Id: <20191210210735.9077-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,126 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 1d200e9d6f635ae894993a7d0f1b9e0b6e522e3b ]
+[ Upstream commit c17e26ddc79596230834345be80fcad6c619e9ec ]
 
-Fix the following compiler warnings:
+Before reading the team port list, we need to acquire the RCU read lock.
+Also change list_for_each_entry() to list_for_each_entry_rcu().
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:21,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:38,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/mm.h:10,
-                 from ./include/linux/bvec.h:13,
-                 from ./include/linux/blk_types.h:10,
-                 from block/blk-wbt.c:23:
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+v2:
+repost the patch to net-next and remove fixes flag as this is a cosmetic
+change.
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/wbt.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/net/team/team.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index b048694070e2c..37342a13c9cb9 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,8 @@ TRACE_EVENT(wbt_stat,
- 	),
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index 8156b33ee3e79..ca70a1d840eb3 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2074,7 +2074,8 @@ static int team_ethtool_get_link_ksettings(struct net_device *dev,
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
- 		__entry->rmax		= stat[0].max;
-@@ -67,7 +68,8 @@ TRACE_EVENT(wbt_lat,
- 	),
+-	list_for_each_entry(port, &team->port_list, list) {
++	rcu_read_lock();
++	list_for_each_entry_rcu(port, &team->port_list, list) {
+ 		if (team_port_txable(port)) {
+ 			if (port->state.speed != SPEED_UNKNOWN)
+ 				speed += port->state.speed;
+@@ -2083,6 +2084,8 @@ static int team_ethtool_get_link_ksettings(struct net_device *dev,
+ 				cmd->base.duplex = port->state.duplex;
+ 		}
+ 	}
++	rcu_read_unlock();
++
+ 	cmd->base.speed = speed ? : SPEED_UNKNOWN;
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
- 
-@@ -103,7 +105,8 @@ TRACE_EVENT(wbt_step,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
- 		__entry->window	= div_u64(window, 1000);
-@@ -138,7 +141,8 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
- 		__entry->inflight	= inflight;
+ 	return 0;
 -- 
 2.20.1
 
