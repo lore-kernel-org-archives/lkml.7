@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020DBC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B20CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F01207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B57D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017252;
-	bh=56vqzIiw9gnw4/jZSv4Jg8hafDat+7TSpFTgWOQNGh0=;
+	s=default; t=1576017255;
+	bh=dSAmDi5K/TDVYc2keDhij+3vb2QweI89i+JjWfeGopI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bavt4Oh10iJLWKpoorFzczCPfKLmoaaf32bh9nfTIPV+kAPrrTtIjGjeO/ClRZO88
-	 yn0eIzPQNg4vMXyO6p/2sst8t72R5OXNZIpprOf8e2RpNMxyflGS36R388yPCO28A2
-	 tgqmfeC1VscXVhPOdBnelXhoCCtBiv5nVHsefgSU=
+	b=uXpO16xABt2uzpAZVD37NCMhCAyVJNFEmRwyAVK2wsHuGYxXq8F2BrSAbqznRy8fF
+	 hFm50jcd9qVXO3KVTCzgbdlOT52v2zisvwTZ7jPq43ek3h1VJq2IonrWLKqDbFB2OG
+	 eatjeCHbg8m04JoiwkhS4Mblj3glCPemxiJURIy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbfLJWeL (ORCPT
+        id S1730188AbfLJWeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:34:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbfLJWdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:53 -0500
+        id S1730042AbfLJWdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D288221556;
-        Tue, 10 Dec 2019 22:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD50424653;
+        Tue, 10 Dec 2019 22:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017232;
-        bh=56vqzIiw9gnw4/jZSv4Jg8hafDat+7TSpFTgWOQNGh0=;
+        s=default; t=1576017233;
+        bh=dSAmDi5K/TDVYc2keDhij+3vb2QweI89i+JjWfeGopI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IoKz/GvMIVCcVRcnUFJMFttJ50TTT5qqsSFP3maw0cGk9fnxLD6ssb8aGKvjim39l
-         +D0I4+SGjhVK0NCv/xsW6AF1StrIlv1033MPd7gZudKLlKLTASmq7lKNJMStoILztV
-         5xOJ9YS6CnmVvq/1mUaUOnKStcdvWSh4VnkZHq6M=
+        b=cPpUtubC2qhv8fpQF6Z+D8KWRlqN6lUckRybfRpN5vMke2Eg8lh6b/A33YEO95DFY
+         1XvUDLyTddzwvZK1Sdr4lugfDp7+0BY6D6MLdheoRepEv2MRN53WYzqPG84BKRh9KP
+         25tCDekIIrWXiy85n4ov103y/Och9MBW5VC2UJec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 30/71] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Tue, 10 Dec 2019 17:32:35 -0500
-Message-Id: <20191210223316.14988-30-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 31/71] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Tue, 10 Dec 2019 17:32:36 -0500
+Message-Id: <20191210223316.14988-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,42 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
+
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
+
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index 1048f0c7c6ce7..31e0899035f98 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 4d5e8ff3b5e5c..5e8fc9809da3f 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1710,9 +1710,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
- 
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1749,7 +1750,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
+ }
+ #else
 -- 
 2.20.1
 
