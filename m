@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0372BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EB5C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE281207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E25207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bNJ4J1Ko"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d4wzvLXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfLJTeY (ORCPT
+        id S1727053AbfLJTeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:34:24 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:44146 "EHLO
+        Tue, 10 Dec 2019 14:34:25 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:44104 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbfLJTeJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726364AbfLJTeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:34:09 -0500
+        Tue, 10 Dec 2019 14:34:08 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 35F01C0BA9;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3EB47C0BAA;
         Tue, 10 Dec 2019 19:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576006448; bh=273lLdI7WjAvMCo++9OKcx//zzUtteRXA+1x/gS5aZ4=;
+        t=1576006448; bh=gYImNi57/kYNKWzQRGU49nrM6skiO38qklKbbS/7JkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=bNJ4J1KoZvhezaQK3Q7Usu2KK2PtG1Nmm+b8jLbri9Y/w26EwIB1MctcPiDkmnIjG
-         s6EwzNj+FUBY3S09p1+qXxlTmchujCoj3ezLi0M2Bsrzn4AjPGs/GgRy2Lm7vSWu2o
-         RlmyHjOCbMOcmsrOV/6WmG3J5Jhr69tsyd7md9yX+AWNuHjyvwqDtyoyKK0743VtHf
-         HrD/9kOf+fNyLEiDOz2rwNZdq8NkSM5/QRrZFlU2u6aAflDIM6kDwhN2TnrLSnh0lF
-         NwUeYj1/09hYPNLMZRPPeXCv9GD+Tp9qj+6vSb8U7cwnm+kU/c/PZf5E4avtjxX/6t
-         iuAFPsOslYsHw==
+        b=d4wzvLXx40+aC4kaa+Q/LMWS+TrYrODaFGwvn/K/KSROh7Tz8ZgSVJCsHiwKXAoyW
+         OMJyUFInBUJumVO4diAKaJaKEu6cLmyrrClAH26mPdCW/V4SBiNFY5hhpDq+2Ih5R/
+         nE3YIvfkyMbAGG91Xq6l35YVtLPOfeDEkmUjBVUSrJr6aRqhDtmNb3dBBDGFC5rDcW
+         2IDBWu2b+PcmAHJRgvfn1D3Qx6QnxzywBMahyQtPZTc9QjJvQ9TaErkfB5pWrnGp9i
+         JtkjmlnSBTlWFDCfP2JqKKyti6l4CURriJlcdLBupdcsicVSjICmqY3UK1oBjpyTDR
+         ho/GObB/PL26Q==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id F2A6FA009A;
+        by mailhost.synopsys.com (Postfix) with ESMTP id CE9BAA008F;
         Tue, 10 Dec 2019 19:34:05 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 5/8] net: stmmac: xgmac: Clear previous RX buffer size
-Date:   Tue, 10 Dec 2019 20:33:57 +0100
-Message-Id: <d28e07a451ffdc354c6c5b746432f4f252228284.1576005975.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 2/8] net: stmmac: Determine earlier the size of RX buffer
+Date:   Tue, 10 Dec 2019 20:33:54 +0100
+Message-Id: <fdb5e691ad9c3117bf2b2db9076b1045d7354ec4.1576005975.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
 References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
@@ -65,7 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching between buffer sizes we need to clear the previous value.
+Split Header feature needs to know the size of RX buffer but current
+code is determining it too late. Fix this by moving the RX buffer
+computation to earlier stage
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -80,37 +82,68 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 2 ++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 24 +++++++++++------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 3b6e559aa0b9..ef8a07c68ca7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -343,6 +343,8 @@
- #define XGMAC_DMA_CH_RX_CONTROL(x)	(0x00003108 + (0x80 * (x)))
- #define XGMAC_RxPBL			GENMASK(21, 16)
- #define XGMAC_RxPBL_SHIFT		16
-+#define XGMAC_RBSZ			GENMASK(14, 1)
-+#define XGMAC_RBSZ_SHIFT		1
- #define XGMAC_RXST			BIT(0)
- #define XGMAC_DMA_CH_TxDESC_HADDR(x)	(0x00003110 + (0x80 * (x)))
- #define XGMAC_DMA_CH_TxDESC_LADDR(x)	(0x00003114 + (0x80 * (x)))
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 22a7f0cc1b90..f3f08ccc379b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -482,7 +482,8 @@ static void dwxgmac2_set_bfsize(void __iomem *ioaddr, int bfsize, u32 chan)
- 	u32 value;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index bbc65bd332a8..dfecced43f29 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1293,19 +1293,9 @@ static int init_dma_rx_desc_rings(struct net_device *dev, gfp_t flags)
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 	u32 rx_count = priv->plat->rx_queues_to_use;
+ 	int ret = -ENOMEM;
+-	int bfsize = 0;
+ 	int queue;
+ 	int i;
  
- 	value = readl(ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
--	value |= bfsize << 1;
-+	value &= ~XGMAC_RBSZ;
-+	value |= bfsize << XGMAC_RBSZ_SHIFT;
- 	writel(value, ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
- }
+-	bfsize = stmmac_set_16kib_bfsize(priv, dev->mtu);
+-	if (bfsize < 0)
+-		bfsize = 0;
+-
+-	if (bfsize < BUF_SIZE_16KiB)
+-		bfsize = stmmac_set_bfsize(dev->mtu, priv->dma_buf_sz);
+-
+-	priv->dma_buf_sz = bfsize;
+-
+ 	/* RX INITIALIZATION */
+ 	netif_dbg(priv, probe, priv->dev,
+ 		  "SKB addresses:\nskb\t\tskb data\tdma data\n");
+@@ -1347,8 +1337,6 @@ static int init_dma_rx_desc_rings(struct net_device *dev, gfp_t flags)
+ 		}
+ 	}
  
+-	buf_sz = bfsize;
+-
+ 	return 0;
+ 
+ err_init_rx_buffers:
+@@ -2658,6 +2646,7 @@ static void stmmac_hw_teardown(struct net_device *dev)
+ static int stmmac_open(struct net_device *dev)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
++	int bfsize = 0;
+ 	u32 chan;
+ 	int ret;
+ 
+@@ -2677,7 +2666,16 @@ static int stmmac_open(struct net_device *dev)
+ 	memset(&priv->xstats, 0, sizeof(struct stmmac_extra_stats));
+ 	priv->xstats.threshold = tc;
+ 
+-	priv->dma_buf_sz = STMMAC_ALIGN(buf_sz);
++	bfsize = stmmac_set_16kib_bfsize(priv, dev->mtu);
++	if (bfsize < 0)
++		bfsize = 0;
++
++	if (bfsize < BUF_SIZE_16KiB)
++		bfsize = stmmac_set_bfsize(dev->mtu, priv->dma_buf_sz);
++
++	priv->dma_buf_sz = STMMAC_ALIGN(bfsize);
++	buf_sz = bfsize;
++
+ 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
+ 
+ 	ret = alloc_dma_desc_resources(priv);
 -- 
 2.7.4
 
