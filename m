@@ -2,138 +2,84 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08500C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB2AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCB82053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ADA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y2b7bUXn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="15lEJW8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfLJVx1 (ORCPT
+        id S1727648AbfLJVyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:53:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54308 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726417AbfLJVx1 (ORCPT
+        Tue, 10 Dec 2019 16:54:04 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48440 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727131AbfLJVyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:53:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576014805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yrizCyo7m7hDOCYKIMvuYeQwoBYzTpaglQGy0pm+RW0=;
-        b=Y2b7bUXniGrVq3V9sotcyzpfli6n94aUeWEDcm98x6lTb6AfkuI9aJt/PbZ2zUMiIuxgyY
-        WskKZ/+DDF9mqROwYRUxZ4GN0Yw1Zip4Ko/SeMNLKvFezRP6JNsg7eqWp86QOWvlYjAFrq
-        sjXRinFC4a0yQDvypIdG5RUnuja/Qk4=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-Ji6W44QNMPKu0Pf1ytM6zQ-1; Tue, 10 Dec 2019 16:53:24 -0500
-Received: by mail-qt1-f198.google.com with SMTP id c8so2962019qte.22
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:53:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=haO+hO7zhLiDWtz4v+nZfgg/Acru74GowOg9k9oKdgQ=;
-        b=r3Z54rcTcq2E67sUla7GApV7hZXqgDzSPedWhu758OQsGeHvQgBZ8p3zkeCiv3OSVx
-         /q+s31XV/PlOEetgbTtwTVqRiQ5uyaWWQvCpAAiwsDbXFJOOcSkLOfvOzovtfpZB+Rv8
-         YWtr7lkFmcVfEd07ufthRBrq6TYlnBinflmIc4Db1tmXoXAEghx8EgbE3I+1ZQAkEUdk
-         C2FvWxk+hen1CXLO1Fe7SWdCERFTIw38Fm086utG0RtoIErV5tOXG46ts28pbDabDsK5
-         8HIYmpqw6gGWnBTFB1q6kiNJHndBGcuJP5T6GdJnPCqDagQwqvWIQR22M9JicU/hVpdQ
-         A1Ww==
-X-Gm-Message-State: APjAAAVW+f8yxY73JofSuH0SUl5D32d0Lr+fyzBc7v0zBZ8mVSDUZfxK
-        DaOouuo1sGG/ry6FbwfL3DIXX4lP2UuNTiyvZD5R3CZY3LQS9aprwNVqLtNZLNbh4Zv9hk4tdYb
-        GI7V9Wth5Qfez6uXEkBNkQmNQ
-X-Received: by 2002:a37:7bc7:: with SMTP id w190mr34597382qkc.132.1576014803586;
-        Tue, 10 Dec 2019 13:53:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz/l3O2+jkai7Ds7qKKCHV1j/1Q6fIugOHydRaUvmyObOfC1CSUBb8wBoJYsKYM6H1xo9Jc6w==
-X-Received: by 2002:a37:7bc7:: with SMTP id w190mr34597363qkc.132.1576014803352;
-        Tue, 10 Dec 2019 13:53:23 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id x126sm1349347qkc.87.2019.12.10.13.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:53:22 -0800 (PST)
-Date:   Tue, 10 Dec 2019 16:53:17 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-Message-ID: <20191210164908-mutt-send-email-mst@kernel.org>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
- <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
- <20191210081958-mutt-send-email-mst@kernel.org>
- <8843d1c8-1c87-e789-9930-77e052bf72f9@redhat.com>
- <20191210160211.GE3352@xz-x1>
+        Tue, 10 Dec 2019 16:54:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TfyQzdYdc2vORsdO4R5k7wzcXlTkqH6TBOkerjXFBzI=; b=15lEJW8TVI78zM5kQtMiXrA76
+        2Vl14PyunTX7+JvCwguNW35sQJ7CAbTfjSdtIlWyPoYcBLAFIXRBeJd9/qNFlIfXqgJN0OCj9akkk
+        +iHvINnQ0lzlUeLcj+cwJbce4CW1OaqYs+sadx3AeoGLfJ3968wEAHQRmuavunIHgoei/OruR4fGx
+        3DzfmtNrw8FNpkz8Qwybo/Ptk7lKc2d2xzK4vkmNuE9VubxUwvvYqgldugVelvdpOUIS70kUdyg8r
+        bO7/c1zM4QoEtvFtj3QYW9vJVpZ12rtk21iKVin6M503sssmfUIzizgjXoCQYbSkW87TK1QXiT5Fu
+        leapZ9ApQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ienSB-00064n-3d; Tue, 10 Dec 2019 21:53:59 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 40068980CCD; Tue, 10 Dec 2019 22:53:56 +0100 (CET)
+Date:   Tue, 10 Dec 2019 22:53:56 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        David Howells <dhowells@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: Problem with WARN_ON in mutex_trylock() and rxrpc
+Message-ID: <20191210215356.GC11457@worktop.programming.kicks-ass.net>
+References: <26229.1575547344@warthog.procyon.org.uk>
+ <20191205132212.GK2827@hirez.programming.kicks-ass.net>
+ <87wob4hvyq.fsf@nanos.tec.linutronix.de>
+ <20191210192538.GB11457@worktop.programming.kicks-ass.net>
+ <20191210203225.2kvykwn35gnethjn@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191210160211.GE3352@xz-x1>
-X-MC-Unique: Ji6W44QNMPKu0Pf1ytM6zQ-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <20191210203225.2kvykwn35gnethjn@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:02:11AM -0500, Peter Xu wrote:
-> On Tue, Dec 10, 2019 at 02:31:54PM +0100, Paolo Bonzini wrote:
-> > On 10/12/19 14:25, Michael S. Tsirkin wrote:
-> > >> There is no new infrastructure to track the dirty pages---it's just =
-a
-> > >> different way to pass them to userspace.
-> > > Did you guys consider using one of the virtio ring formats?
-> > > Maybe reusing vhost code?
-> >=20
-> > There are no used/available entries here, it's unidirectional
-> > (kernel->user).
->=20
-> Agreed.  Vring could be an overkill IMHO (the whole dirty_ring.c is
-> 100+ LOC only).
+On Tue, Dec 10, 2019 at 09:32:25PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2019-12-10 20:25:38 [+0100], Peter Zijlstra wrote:
+> > AFAICT the only assumption it relies on are:
+> > 
+> >  - that the softirq will cleanly preempt a task. That is, the task
+> >    context must not change under the softirq execution.
+> > 
+> >  - that the softirq runs non-preemptible.
+> > 
+> > Now, both these properties are rather fundamental to how our softirqs
+> > work. And can, therefore, be relied upon, irrespective of the mutex
+> > implementation.
+> 
+> softirq is preemptible on -RT (I think you know that already but just in
+> case).
 
-
-I guess you don't do polling/ event suppression and other tricks that
-virtio came up with for speed then? Why won't they be helpful for kvm?
-To put it another way, LOC is irrelevant, virtio is already in the
-kernel.
-
-Anyway, this is something to be discussed in the cover letter.
-
-> >=20
-> > > If you did and it's not a good fit, this is something good to mention
-> > > in the commit log.
-> > >=20
-> > > I also wonder about performance numbers - any data here?
-> >=20
-> > Yes some numbers would be useful.  Note however that the improvement is
-> > asymptotical, O(#dirtied pages) vs O(#total pages) so it may differ
-> > depending on the workload.
->=20
-> Yes.  I plan to give some numbers when start to work on the QEMU
-> series (after this lands).  However as Paolo said, those numbers would
-> probably only be with some special case where I know the dirty ring
-> could win.  Frankly speaking I don't even know whether we should
-> change the default logging mode when the QEMU work is done - I feel
-> like the old logging interface is still good in many major cases
-> (small vms, or high dirty rates).  It could be that we just offer
-> another option when the user could consider to solve specific problems.
->=20
-> Thanks,
->=20
-> --=20
-> Peter Xu
-
+Indeed, but there it also runs in task context and then it all works
+naturally. The !preempt thing is required for when it runs on top of a
+task; then it functions as a priority ceiling like construct.
