@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74CCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F5E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB7122B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017082;
-	bh=Xd752C+IVCZ0sm9nxYhtVz0fUF142BHtq4iOXmpz0+A=;
+	s=default; t=1576017090;
+	bh=jM5M41eLThGmjjSeUOOPEKb7rEhNaBrdBPMfbYzqH3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmwpcuy8y5OoiPG9y5SpHCVyeYVwEkPotsYDEBkHJpmBCuWIPdse1Aa4Xnt+MWoxd
-	 B9ilCBsU9LCiC4jz2BpvPP7QUbcDdNRYCNgplociP6TQkmt4StAu5FggFNFSfX4gcn
-	 HweUJKCcc2SILh7H2MaYJicE/dJ0xyRcfcbMcvWY=
+	b=PXrKMHw1CRzJcqLVts9qcNH4kbgmyjc62NCJmgV0d5kEVvLou2F1SsR88GhVSrEpB
+	 IXsNk3uGE3TOoAXkdhKVD/Dp5SO+H0np8ODkscrqe/UBovaF3wSm02ZDlc25OIgY/N
+	 0cTzHV077OfRWDocs+YucivoH3CKJ7/N4pMlEsqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfLJWbV (ORCPT
+        id S1728525AbfLJWb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbfLJWbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:16 -0500
+        id S1728308AbfLJWbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030C120838;
-        Tue, 10 Dec 2019 22:31:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40E5A24653;
+        Tue, 10 Dec 2019 22:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017075;
-        bh=Xd752C+IVCZ0sm9nxYhtVz0fUF142BHtq4iOXmpz0+A=;
+        s=default; t=1576017080;
+        bh=jM5M41eLThGmjjSeUOOPEKb7rEhNaBrdBPMfbYzqH3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eelbaeht+2Ta/0tjebPcXCEkTwK1V/n9sRvZGKq34ljM/q38lsOBetM/CMVncNHRk
-         RWYogj+2mEY7hnsbB+VK0uQrGcU5eDVjrEDo/hH2v61e8Mz+XqUsvYR6O0Q/SeX17L
-         DjM9Q0q+VAf3kNrPtWBK90CNc0HQpz3vgdqv8NNM=
+        b=jgiZ8/mSygeYG5huXtwqNkldAc9nGi8byz4vG3xXwpGalNG9xHJkTR9ohO2maI5S1
+         ejuo9Dwd4NVxHxpV5ZXM8GLdBoadcHusUZ0kTY9QMLwOGqMsBrT2AzZJnno7l7vsbY
+         DOpWYLw2jJ0NR3GHcUr1JD7byCFWQAAoqS+Dnrq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/91] usb: usbfs: Suppress problematic bind and unbind uevents.
-Date:   Tue, 10 Dec 2019 17:29:37 -0500
-Message-Id: <20191210223035.14270-33-sashal@kernel.org>
+Cc:     Benjamin Berg <bberg@redhat.com>, Borislav Petkov <bp@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 37/91] x86/mce: Lower throttling MCE messages' priority to warning
+Date:   Tue, 10 Dec 2019 17:29:41 -0500
+Message-Id: <20191210223035.14270-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,80 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+From: Benjamin Berg <bberg@redhat.com>
 
-[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
+[ Upstream commit 9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7 ]
 
-commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
-to a driver") added bind and unbind uevents when a driver is bound or
-unbound to a physical device.
+On modern CPUs it is quite normal that the temperature limits are
+reached and the CPU is throttled. In fact, often the thermal design is
+not sufficient to cool the CPU at full load and limits can quickly be
+reached when a burst in load happens. This will even happen with
+technologies like RAPL limitting the long term power consumption of
+the package.
 
-For USB devices which are handled via the generic usbfs layer (via
-libusb for example), this is problematic:
-Each time a user space program calls
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-and then later
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-The kernel will now produce a bind or unbind event, which does not
-really contain any useful information.
+Also, these limits are "softer", as Srinivas explains:
 
-This allows a user space program to run a DoS attack against programs
-which listen to uevents (in particular systemd/eudev/upowerd):
-A malicious user space program just has to call in a tight loop
+"CPU temperature doesn't have to hit max(TjMax) to get these warnings.
+OEMs ha[ve] an ability to program a threshold where a thermal interrupt
+can be generated. In some systems the offset is 20C+ (Read only value).
 
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+In recent systems, there is another offset on top of it which can be
+programmed by OS, once some agent can adjust power limits dynamically.
+By default this is set to low by the firmware, which I guess the
+prime motivation of Benjamin to submit the patch."
 
-With this loop the malicious user space program floods the kernel and
-all programs listening to uevents with tons of bind and unbind
-events.
+So these messages do not usually indicate a hardware issue (e.g.
+insufficient cooling). Log them as warnings to avoid confusion about
+their severity.
 
-This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
-USBDEVFS_RELEASEINTERFACE.
+ [ bp: Massage commit mesage. ]
 
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
-Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Benjamin Berg <bberg@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Christian Kellner <ckellner@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191009155424.249277-1-bberg@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/devio.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mcheck/therm_throt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 06a8f645106bf..059e71d71b666 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -754,8 +754,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	intf = usb_ifnum_to_if(dev, ifnum);
- 	if (!intf)
- 		err = -ENOENT;
--	else
-+	else {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while claiming interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
-+	}
- 	if (err == 0)
- 		set_bit(ifnum, &ps->ifclaimed);
- 	return err;
-@@ -775,7 +782,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	if (!intf)
- 		err = -ENOENT;
- 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while releasing interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		usb_driver_release_interface(&usbfs_driver, intf);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
- 		err = 0;
- 	}
- 	return err;
+diff --git a/arch/x86/kernel/cpu/mcheck/therm_throt.c b/arch/x86/kernel/cpu/mcheck/therm_throt.c
+index c460c91d0c8fd..be2439592b0ec 100644
+--- a/arch/x86/kernel/cpu/mcheck/therm_throt.c
++++ b/arch/x86/kernel/cpu/mcheck/therm_throt.c
+@@ -190,7 +190,7 @@ static int therm_throt_process(bool new_event, int event, int level)
+ 	/* if we just entered the thermal event */
+ 	if (new_event) {
+ 		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
++			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+ 				this_cpu,
+ 				level == CORE_LEVEL ? "Core" : "Package",
+ 				state->count);
 -- 
 2.20.1
 
