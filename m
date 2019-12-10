@@ -2,206 +2,529 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921C0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF502077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g6KFfqG/"
+	by mail.kernel.org (Postfix) with ESMTP id 31D792073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfLJJ2c (ORCPT
+        id S1727159AbfLJJaD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:28:32 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:41829 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJ2b (ORCPT
+        Tue, 10 Dec 2019 04:30:03 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:62361 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbfLJJaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:28:31 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191210092830euoutp022fd43585b84cc38ec6614ea00cea24ab~e_Hcov3LP0213202132euoutp02Y
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:28:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191210092830euoutp022fd43585b84cc38ec6614ea00cea24ab~e_Hcov3LP0213202132euoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575970110;
-        bh=dPlPWkaADTo1etmALgGe0F2k3QnnsfFpqhDu+iZww9c=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=g6KFfqG/fzmS5LQxe/nyv+5JHN5VrgcfoPh0SeLmmQotHKEKFOzUXxb/mdFAWNfjs
-         o9IB80XWKV2NOn1Tut6Y4TyMUPGEuOIutCOXiIIEExBl0/eTj9x7l7nceXSaWGm6YR
-         QTwRjgYX82zPCvsETcBpJqeb+JJLk7QrnpVsiXz0=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191210092829eucas1p21ca8e3e5c0805c982a8b003d512b6c5a~e_HcO09Do3210732107eucas1p25;
-        Tue, 10 Dec 2019 09:28:29 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id AA.3D.60679.D356FED5; Tue, 10
-        Dec 2019 09:28:29 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191210092829eucas1p12f2dae6c291fb3173af9688d1cdd9d43~e_Hb8_Fb51932419324eucas1p1y;
-        Tue, 10 Dec 2019 09:28:29 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191210092829eusmtrp143a1262e10719f6068811c7123662e58~e_Hb8OJEY1354713547eusmtrp1Z;
-        Tue, 10 Dec 2019 09:28:29 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-9d-5def653d21e4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 64.1C.07950.D356FED5; Tue, 10
-        Dec 2019 09:28:29 +0000 (GMT)
-Received: from [106.120.51.18] (unknown [106.120.51.18]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191210092829eusmtip2386e210bd436dbc8262d4ec07a9c88ac~e_HberUUq0838608386eusmtip2N;
-        Tue, 10 Dec 2019 09:28:29 +0000 (GMT)
-Subject: Re: [PATCH 1/4] PM / devfreq: reuse system workqueue machanism
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-From:   Kamil Konieczny <k.konieczny@samsung.com>
-Message-ID: <1e6f7bcd-78ef-17e2-c470-a546d58c70fa@samsung.com>
-Date:   Tue, 10 Dec 2019 10:28:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Tue, 10 Dec 2019 04:30:02 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="33219874"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 10 Dec 2019 17:30:00 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71511:0:AUTH_RELAY)
+        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:30:02 +0800 (CST)
+Received: from 192.168.55.71
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101173:0:AUTH_LOGIN)
+        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:30:00 +0800 (CST)
+From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        =?big5?B?J1NUUkQyLb2ytGa8YCc=?= <jennifer.tsai@emc.com.tw>,
+        <james.chen@emc.com.tw>,
+        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
+        "'jeff'" <jeff.chuang@emc.com.tw>
+References: <1574142739-24556-1-git-send-email-johnny.chuang@emc.com.tw> <003d01d59e9e$8b0a3120$a11e9360$@emc.com.tw> <20191203194806.GL50317@dtor-ws> 
+In-Reply-To: 
+Subject: RE: [PATCH] Input: elants_i2c - Add Remark ID check flow in firmware update function
+Date:   Tue, 10 Dec 2019 17:29:57 +0800
+Message-ID: <00aa01d5af3c$632d0110$29870330$@emc.com.tw>
 MIME-Version: 1.0
-In-Reply-To: <9926005a-c030-a823-fd65-6b8578e39218@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTcRTG+e/ebdfl9O80dtKRtVAqUNMKLmlmYSTRh4KIjMRWXlRyKpsv
-        WRQW4ctQ0yXmxPIlcDrn2yYaQyGnKGpmkmgkvaAzSzQLl2Kmy9tV8tvD73kO5zxwKEJSxfek
-        4hNTGFWiIkEuEJFtvSuv/Y4zC1GH+pcC6ZbSJj49bp/h08PDzUJ66MGckH5rKRfQi/k9iG7o
-        +SCkJ+7XCsKoCJMhVxBR0GpAEYum3eeJK6KQGCYhPo1RBYReE8UVtjSgZK3sli5XmIkeSTXI
-        iQJ8BMYKh0kNElESXIug2lYpZA0JtiNwjIo4YxGBfqye2JoY+GTkcYYeQY1uBHET8wjezYdr
-        EEW54zPQab7EYg+8H3Rro4jNE/gZD+ZK3vBZQ4ADoGuon2TzYhwKv5eDWExiHzAbrIjFO/Fl
-        GPylYLEYu0G/zkay2gmfgLq6r/+2ElgK720VPE57Q/t8OcGuAmwSgrZ1YfPmcOisGRVy2h1m
-        +1o3tQwGH+eRnE6H6aoCITf8EMHn7J+bRjB0943w2YMIfACaLAEcPglPHV8IFgN22Wjuxt3g
-        Atq2J5tYDDlZEi7tAzMDeTxOe4HG0cgvRPKybc3KtrUp29am7P/eSkQakJRJVStjGXVQIpPu
-        r1Yo1amJsf43kpQmtPE4g+t99hfI8ue6FWEKyZ3FlWHfoyR8RZo6Q2lFQBFyD3Ff1gYSxygy
-        bjOqpGhVagKjtiIvipRLxYerv0VJcKwihbnJMMmMasvlUU6emci8NK+X6T46vFaPNU8y8Uaj
-        o9nVMF1cctT/ztyi/a7tarB3x/hzvc8ez6jlHdFT+4p8dzXWE/khY8pube2UxT5bcNFsndwr
-        nVg9V9i7Umwt8O5obb5nOqUd7ZK1O/td0P3IrhrLiV7z7y/1jlw//dJ3ps1c5GaMzHWtoF+d
-        demVk+o4ReBBQqVW/AV6vpy5NAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xe7q2qe9jDXrXSVtsnLGe1eL6l+es
-        FufPb2C3ONv0ht3i8q45bBafe48wWqw9cpfd4nbjCjYHDo9NqzrZPPq2rGL0+LxJLoA5Ss+m
-        KL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS9jwsa1jAWT
-        ZCpmdrI3MPaLdzFyckgImEicur+GqYuRi0NIYCmjREPjeVaIhLRE4+nVTBC2sMSfa11sILaQ
-        wGtGib8T/LsYOTiEBdwl9m4OAwmLCGhIzPx7hRFkDrPAAiaJ+TcnskAMfcQk0btjJdhQNgF9
-        iYNnT7KANPMK2En8+m4EEmYRUJXYvOoQI4gtKhAh8Xz7DTCbV0BQ4uTMJywgNqeAvcTKlS/A
-        4swC6hJ/5l1ihrDFJW49mc8EYctLbH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5
-        xUZ6xYm5xaV56XrJ+bmbGIFxtu3Yzy07GLveBR9iFOBgVOLhXeDwLlaINbGsuDL3EKMEB7OS
-        CO/xNqAQb0piZVVqUX58UWlOavEhRlOg5yYyS4km5wNTQF5JvKGpobmFpaG5sbmxmYWSOG+H
-        wMEYIYH0xJLU7NTUgtQimD4mDk6pBsaN17+Jn92z8pf3pfnGn1TZ7xf+Xlb+Via19un3iQf/
-        ZfVw/Kn92yU6yUs3XGC2TuEHa8E9c5udlsqGOt1Yc/SJvHzu6sWXJmhe2/Ja18VnF7dNUMq1
-        e9OSDsp/F7J+PEPFK1Fl81Ux765I2Va5n10smps82Qz+y7BJFpQdqHl0gLNvnZDOMgElluKM
-        REMt5qLiRABbcJqCyQIAAA==
-X-CMS-MailID: 20191210092829eucas1p12f2dae6c291fb3173af9688d1cdd9d43
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2
-References: <20191209144425.13321-1-k.konieczny@samsung.com>
-        <CGME20191209144441eucas1p16945780c1a1ff3302a233414ae6aace2@eucas1p1.samsung.com>
-        <20191209144425.13321-2-k.konieczny@samsung.com>
-        <2eab8a20-1701-94dc-410a-bb072a5f5b4e@samsung.com>
-        <6ead2998-ebe1-704b-7d89-3b0cf8beca70@samsung.com>
-        <9926005a-c030-a823-fd65-6b8578e39218@samsung.com>
+Content-Type: text/plain;
+        charset="big5"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQJWcJ1GfW6vkoLmumyMvYKuQq0ScAIT1IjnAR9//EimjmCYoIAJm8rw
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1hMGEwODIzNi0xYjJmLTExZWEtOGFiMy03YzVjZjg3NDk0NzhcYW1lLXRlc3RcYTBhMDgyMzgtMWIyZi0xMWVhLThhYjMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIxNDcyNyIgdD0iMTMyMjA0NDM3OTcxMDY4MDE0IiBoPSJnQnV1eUk3YjNHaURqc3hhMmdzTzMxMjVnYkk9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+Hi Dmitry,
 
-On 10.12.2019 08:53, Chanwoo Choi wrote:
-> On 12/10/19 4:28 PM, Kamil Konieczny wrote:
->> On 10.12.2019 02:41, Chanwoo Choi wrote:
->>> On 12/9/19 11:44 PM, Kamil Konieczny wrote:
->>>> There is no need for creating another workqueue, it is enough
->>>> to reuse system_freezable_power_efficient one.
->>>>
->>>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
->>>> ---
->>>>  drivers/devfreq/devfreq.c | 6 +++---
->>>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->>>> index 46a7ff7c2994..955949c6fc1f 100644
->>>> --- a/drivers/devfreq/devfreq.c
->>>> +++ b/drivers/devfreq/devfreq.c
->>>> @@ -1532,11 +1532,11 @@ static int __init devfreq_init(void)
->>>>  		return PTR_ERR(devfreq_class);
->>>>  	}
->>>>  
->>>> -	devfreq_wq = create_freezable_workqueue("devfreq_wq");
->>>> +	devfreq_wq = system_freezable_power_efficient_wq;
->>>
->>> It affect the behaviors of whole device drivers using devfreq subsystem.
->>> It is not good to change the workqueue type without any reasonable
->>> data like experiment result, power-consumption result and performance
->>> result for almost device drivers using devfreq subsystem.
->>>
->>> Are there any problem or any benefit to change workqueue type?
->>
->> The workqueue is freezable with additional capability of 'power_efficient',
->> it is already developed by linux community so why not reuse it ?
+Please drop this patch.
+I modified driver by your recommendation and commit a new patch.
+
+Many thanks,
+Johnny
+-----Original Message-----
+From: Johnny.Chuang [mailto:johnny.chuang@emc.com.tw] 
+Sent: Wednesday, December 04, 2019 3:10 PM
+To: 'Dmitry Torokhov'
+Cc: 'linux-kernel@vger.kernel.org'; 'linux-input@vger.kernel.org'; 'STRD2-½²
+´f¼`'; 'james.chen@emc.com.tw'; '±ç³Õµ¾'; 'jeff'
+Subject: RE: [PATCH] Input: elants_i2c - Add Remark ID check flow in
+firmware update function
+
+Hi Dmitry,
+
+I had modified driver and responded you inline.
+
+Many thanks,
+Johnny
+
+diff --git a/drivers/input/touchscreen/elants_i2c.c
+b/drivers/input/touchscreen/elants_i2c.c
+index 9a17af6..4911799 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -130,7 +130,6 @@ struct elants_data {
+        u8 bc_version;
+        u8 iap_version;
+        u16 hw_version;
+-       u16 remark_id;
+        unsigned int x_res;     /* resolution in units/mm */
+        unsigned int y_res;
+        unsigned int x_max;
+@@ -620,47 +619,33 @@ static int elants_i2c_fw_write_page(struct i2c_client
+*client,
+        return error;
+ }
+
+-static int elants_i2c_query_remark_id(struct elants_data *ts) -{
+-       struct i2c_client *client = ts->client;
+-       int error;
+-       const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
+};
+-       u8 resp[6] = { 0 };
+-
+-       error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+-                                       resp, sizeof(resp));
+-       if (error) {
+-               dev_err(&client->dev, "get Remark ID failed: %d.\n", error);
+-               return error;
+-       }
+-
+-       ts->remark_id = get_unaligned_be16(&resp[3]);
+-       dev_info(&client->dev, "remark_id=0x%04x.\n", ts->remark_id);
+-
+-       return 0;
+-}
+-
+ static int elants_i2c_validate_remark_id(struct elants_data *ts,
+                                         const struct firmware *fw)  {
+        struct i2c_client *client = ts->client;
+        int error;
++       const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
+};
++       u8 resp[6] = { 0 };
++       u16 ts_remark_id = 0;
+        u16 fw_remark_id = 0;
+
+        /* Compare TS Remark ID and FW Remark ID */
+-       error = elants_i2c_query_remark_id(ts);
++       error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
++                                       resp, sizeof(resp));
+        if (error) {
+                dev_err(&client->dev, "failed to query Remark ID: %d\n",
+error);
+                return error;
+        }
+
++       ts_remark_id = get_unaligned_be16(&resp[3]);
++
+        fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
+-       dev_info(&client->dev, "fw_remark_id=0x%04x.\n", fw_remark_id);
+-       if (fw_remark_id != ts->remark_id) {
++
++       if (fw_remark_id != ts_remark_id) {
+                dev_err(&client->dev,
+-                       "Remark ID Mismatched: ts_remark_id=0x%04x,
+fw_remark_id=0x%x.\n",
+-                       ts->remark_id, fw_remark_id);
+-               return -ENODATA;
++                       "Remark ID Mismatched: ts_remark_id=0x%04x,
+fw_remark_id=0x%04x.\n",
++                       ts_remark_id, fw_remark_id);
++               return -EINVAL;
+        }
+
+        return 0;
+@@ -671,7 +656,6 @@ static int elants_i2c_do_update_firmware(struct
+i2c_client *client,
+                                         bool force)  {
+        struct elants_data *ts = i2c_get_clientdata(client);
+-       static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
+        const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
+        const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
+        const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc }; @@ -686,29 +670,18
+@@ static int elants_i2c_do_update_firmware(struct i2c_client *client,
+        if (force) {
+                dev_dbg(&client->dev, "Recovery mode procedure\n");
+
+-               if (check_remark_id == true) {
+-                       /* Validate Remark ID */
++               if (check_remark_id) {
+                        error = elants_i2c_validate_remark_id(ts, fw);
+-                       if (error) {
+-                               dev_err(&client->dev,
+-                                       "failed to validate Remark ID:
+%d\n",
+-                                       error);
++                       if (error)
+                                return error;
+-                       }
+                }
+
+-               error = elants_i2c_send(client, w_flashkey,
+sizeof(w_flashkey));
+-               if (error)
+-                       dev_err(&client->dev, "failed to write flash key:
+%d\n",
+-                               error);
+-
+                error = elants_i2c_send(client, enter_iap2,
+sizeof(enter_iap2));
+                if (error) {
+                        dev_err(&client->dev, "failed to enter IAP mode:
+%d\n",
+                                error);
+                        return error;
+                }
+-               msleep(20);
+        } else {
+                /* Start IAP Procedure */
+                dev_dbg(&client->dev, "Normal IAP procedure\n"); @@ -722,14
++695,10 @@ static int elants_i2c_do_update_firmware(struct i2c_client
+*client,
+                elants_i2c_sw_reset(client);
+                msleep(20);
+
+-               if (check_remark_id == true) {
+-                       /* Validate Remark ID */
++               if (check_remark_id) {
+                        error = elants_i2c_validate_remark_id(ts, fw);
+-                       if (error) {
+-                               dev_err(&client->dev, "failed to validate
+Remark ID: %d\n",
+-                                       error);
++                       if (error)
+                                return error;
+-                       }
+                }
+
+                error = elants_i2c_send(client, enter_iap,
+sizeof(enter_iap));
+
+-----Original Message-----
+From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com]
+Sent: Wednesday, December 04, 2019 3:48 AM
+To: Johnny.Chuang
+Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; STRD2-½²´f¼`;
+james.chen@emc.com.tw; '±ç³Õµ¾'; 'jeff'
+Subject: Re: [PATCH] Input: elants_i2c - Add Remark ID check flow in
+firmware update function
+
+Hi Johnny,
+
+On Tue, Nov 19, 2019 at 01:59:45PM +0800, Johnny.Chuang wrote:
+> This patch add Remark ID check flow to firmware update function of 
+> elan touchscreen driver.
 > 
-> As you agreed below, why don't you suggest the any reasonable test result
-> with this patch? As I commented, it affects the all device drivers. 
-> It is necessary to suggest the test result on multiple scenarios
-> in order to prevent the any power-consumption and performance regression.
-> It is not easy to change them without any data.
+> It avoids firmware update with mismatched Remark ID.
 > 
-> Frankly, if you test almost scenarios and suggest the reasonable result
-> that anyone can understand, like there are never difference
-> between "create_freezable_workqueue("devfreq_wq");" and system_freezable_power_efficient_wq.
-> But you don't suggest any data.
+> This function is supported by our latest version of boot code, but it 
+> cooperates well with earlier versions.
+> 
+> Our driver will decide if enable Remark ID check with boot code version.
+> 
+> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 108
+> ++++++++++++++++++++++++++++++---
+>  1 file changed, 100 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c
+> b/drivers/input/touchscreen/elants_i2c.c
+> index d4ad24e..9a17af6 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -59,8 +59,10 @@
+>  #define CMD_HEADER_WRITE	0x54
+>  #define CMD_HEADER_READ		0x53
+>  #define CMD_HEADER_6B_READ	0x5B
+> +#define CMD_HEADER_ROM_READ	0x96
+>  #define CMD_HEADER_RESP		0x52
+>  #define CMD_HEADER_6B_RESP	0x9B
+> +#define CMD_HEADER_ROM_RESP	0x95
+>  #define CMD_HEADER_HELLO	0x55
+>  #define CMD_HEADER_REK		0x66
+>  
+> @@ -128,6 +130,7 @@ struct elants_data {
+>  	u8 bc_version;
+>  	u8 iap_version;
+>  	u16 hw_version;
+> +	u16 remark_id;
 
-I agree about tests data needed for deciding about change. As I already wrote in other
-letter, I do not have such tests procedures, so if you have them and you may share
-them with me or Marek, I can run them and gather tests results.
+We only use this during firmware version check phase, no need to store it in
+the device data structure.
+[J]: I remove remark_id and move work of elants_i2c_query_remark_id() into
+elants_i2c_validate_remark_id().
 
-> - The original devfreq_wq include the only work related to devfreq.
-> - system_freezable_power_efficient_wq include the all works registered
-> from both other subsystem and device drivers in linux kernel.
+>  	unsigned int x_res;	/* resolution in units/mm */
+>  	unsigned int y_res;
+>  	unsigned int x_max;
+> @@ -200,6 +203,10 @@ static int elants_i2c_execute_command(struct 
+> i2c_client *client,
+>  		expected_response = CMD_HEADER_6B_RESP;
+>  		break;
+>  
+> +	case CMD_HEADER_ROM_READ:
+> +		expected_response = CMD_HEADER_ROM_RESP;
+> +		break;
+> +
+>  	default:
+>  		dev_err(&client->dev, "%s: invalid command %*ph\n",
+>  			__func__, (int)cmd_size, cmd);
+> @@ -556,6 +563,8 @@ static int elants_i2c_initialize(struct 
+> elants_data *ts)
+>  
+>  	/* hw version is available even if device in recovery state */
+>  	error2 = elants_i2c_query_hw_version(ts);
+> +	if (!error2)
+> +		error2 = elants_i2c_query_bc_version(ts);
 
-I do not know that good system wq, devfreq_wq have only one work item so
-imho it is not beneficial to use separate wq. Seperate wq can be good
-during debugging problems with wq.
+Can you please explain why this change is done? This does not seem to relate
+to the "remark id" functionality. Should it be a separate change?
+[J]: We use ts->iap_version as check_remark_id to run validate remark id
+flow or not. Hence we need to get iap_version by elants_i2c_query_bc_version
+not only on normal mode but also on recovery mode.
 
->>> Actually, it is not simple to change the like just one device driver
->>> because devfreq subsytem is very important for both performance
->>> and power-consumption.
->>
->> I agree. The name of this wq promises what you want, both freezable
->> and power efficiency.
->>
->>> If you hope to change the feature related to both performance 
->>> and power-consumption, please suggest the reasonable data
->>> with fundamental reason.
->>>
->>> So, I can't agree it.
->>>
->>>
->>>>  	if (!devfreq_wq) {
->>>>  		class_destroy(devfreq_class);
->>>> -		pr_err("%s: couldn't create workqueue\n", __FILE__);
->>>> -		return -ENOMEM;
->>>> +		pr_err("%s: system_freezable_power_efficient_wq isn't initialized\n", __FILE__);
->>>> +		return -EINVAL;
->>>>  	}
->>>>  	devfreq_class->dev_groups = devfreq_groups;
+>  	if (!error)
+>  		error = error2;
+>  
+> @@ -564,8 +573,6 @@ static int elants_i2c_initialize(struct elants_data
+*ts)
+>  	if (!error)
+>  		error = elants_i2c_query_test_version(ts);
+>  	if (!error)
+> -		error = elants_i2c_query_bc_version(ts);
+> -	if (!error)
+>  		error = elants_i2c_query_ts_info(ts);
+>  
+>  	if (error)
+> @@ -613,39 +620,124 @@ static int elants_i2c_fw_write_page(struct 
+> i2c_client *client,
+>  	return error;
+>  }
+>  
+> +static int elants_i2c_query_remark_id(struct elants_data *ts) {
+> +	struct i2c_client *client = ts->client;
+> +	int error;
+> +	const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
+> };
+> +	u8 resp[6] = { 0 };
+> +
+> +	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+> +					resp, sizeof(resp));
+> +	if (error) {
+> +		dev_err(&client->dev, "get Remark ID failed: %d.\n", error);
+> +		return error;
+> +	}
+> +
+> +	ts->remark_id = get_unaligned_be16(&resp[3]);
+> +	dev_info(&client->dev, "remark_id=0x%04x.\n", ts->remark_id);
 
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+I do not think we need be this noisy. Either dev_dbg, or drop it completely.
+[J]: drop done.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int elants_i2c_validate_remark_id(struct elants_data *ts,
+> +					 const struct firmware *fw)
+> +{
+> +	struct i2c_client *client = ts->client;
+> +	int error;
+> +	u16 fw_remark_id = 0;
+> +
+> +	/* Compare TS Remark ID and FW Remark ID */
+> +	error = elants_i2c_query_remark_id(ts);
+> +	if (error) {
+> +		dev_err(&client->dev, "failed to query Remark ID: %d\n",
+> error);
+> +		return error;
+> +	}
+> +
+> +	fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
+> +	dev_info(&client->dev, "fw_remark_id=0x%04x.\n", fw_remark_id);
+
+Please drop this dev_info().
+[J]: drop done.
+
+> +	if (fw_remark_id != ts->remark_id) {
+> +		dev_err(&client->dev,
+> +			"Remark ID Mismatched: ts_remark_id=0x%04x,
+> fw_remark_id=0x%x.\n",
+
+You can use "%#04x" to format with prefix.
+[J]: Thanks for your recommendation. I still keep 0x%04x as other in this
+driver. I will submit another patch for all prefix change later.
+
+> +			ts->remark_id, fw_remark_id);
+> +		return -ENODATA;
+
+I'd say -EINVAL here.
+[J]: change done.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int elants_i2c_do_update_firmware(struct i2c_client *client,
+>  					 const struct firmware *fw,
+>  					 bool force)
+>  {
+> +	struct elants_data *ts = i2c_get_clientdata(client);
+> +	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
+>  	const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
+>  	const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
+>  	const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
+> -	const u8 close_idle[] = {0x54, 0x2c, 0x01, 0x01};
+> +	const u8 close_idle[] = { 0x54, 0x2c, 0x01, 0x01 };
+>  	u8 buf[HEADER_SIZE];
+>  	u16 send_id;
+>  	int page, n_fw_pages;
+>  	int error;
+> +	bool check_remark_id = ts->iap_version >= 0x60;
+>  
+>  	/* Recovery mode detection! */
+>  	if (force) {
+>  		dev_dbg(&client->dev, "Recovery mode procedure\n");
+> +
+> +		if (check_remark_id == true) {
+
+Simply
+		if (check_remark_id) {
+[J]: change done.
+
+
+> +			/* Validate Remark ID */
+
+This comment is not needed, you named the function that you are calling
+below well and its name describes what we are trying to do perfectly.
+[J]: drop done.
+
+> +			error = elants_i2c_validate_remark_id(ts, fw);
+> +			if (error) {
+> +				dev_err(&client->dev,
+> +					"failed to validate Remark ID:
+> %d\n",
+> +					error);
+
+elants_i2c_validate_remark_id() already gives necessary diagnostic, this
+message is not needed.
+[J]: drop done.
+
+> +				return error;
+> +			}
+> +		}
+> +
+> +		error = elants_i2c_send(client, w_flashkey,
+> sizeof(w_flashkey));
+> +		if (error)
+> +			dev_err(&client->dev, "failed to write flash key:
+> %d\n",
+> +				error);
+
+Sending flashkey in this chunk seems to be another change not directly
+related to the remark id. Why do we need this? Should it be split out?
+[J]: drop done. It's for another change.
+
+> +
+>  		error = elants_i2c_send(client, enter_iap2,
+sizeof(enter_iap2));
+> +		if (error) {
+> +			dev_err(&client->dev, "failed to enter IAP mode:
+> %d\n",
+> +				error);
+> +			return error;
+> +		}
+> +		msleep(20);
+
+We already have msleep(20) in the common path below, do we really need 2nd
+one here?
+[J]: drop done. It's typo.
+
+>  	} else {
+>  		/* Start IAP Procedure */
+>  		dev_dbg(&client->dev, "Normal IAP procedure\n");
+> +
+>  		/* Close idle mode */
+>  		error = elants_i2c_send(client, close_idle,
+sizeof(close_idle));
+>  		if (error)
+>  			dev_err(&client->dev, "Failed close idle: %d\n",
+error);
+>  		msleep(60);
+> +
+>  		elants_i2c_sw_reset(client);
+>  		msleep(20);
+> -		error = elants_i2c_send(client, enter_iap,
+> sizeof(enter_iap));
+> -	}
+>  
+> -	if (error) {
+> -		dev_err(&client->dev, "failed to enter IAP mode: %d\n",
+> error);
+> -		return error;
+> +		if (check_remark_id == true) {
+
+		if (check_remark_id) {
+
+> +			/* Validate Remark ID */
+
+Drop comment.
+[J]: drop done.
+
+> +			error = elants_i2c_validate_remark_id(ts, fw);
+> +			if (error) {
+> +				dev_err(&client->dev, "failed to validate
+> Remark ID: %d\n",
+> +					error);
+
+Drop message.
+[J]: drop done.
+
+> +				return error;
+> +			}
+> +		}
+> +
+> +		error = elants_i2c_send(client, enter_iap,
+> sizeof(enter_iap));
+> +		if (error) {
+> +			dev_err(&client->dev, "failed to enter IAP mode:
+> %d\n",
+> +				error);
+> +			return error;
+> +		}
+>  	}
+>  
+>  	msleep(20);
+> --
+> 2.7.4
+> 
+
+Thanks.
+
+--
+Dmitry
 
