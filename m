@@ -2,149 +2,127 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D8EC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44981C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AE42053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162D02053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017888;
+	bh=z8PnKVK74ENGpfBY08cvdPkDCNbeMO4HpQLF8Ybtr40=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mBYHdtmYIb0XrKjN48taSf+2O6ByI2sBu6t/+4eaGwe46lB1Fy0r3xFremQC04OPK
+	 8rrxRfWLk8vYlY/Yb7nZgolFkIIIOaYMu7oW+4eAOe6JW6iH14GIzofEAOVJnFeuQk
+	 EDHpmseLoZp0x4NgBMurVLKx2qwz2zCKd3sfGrQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfLJWoe (ORCPT
+        id S1727486AbfLJWat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:44:34 -0500
-Received: from mga09.intel.com ([134.134.136.24]:9124 "EHLO mga09.intel.com"
+        Tue, 10 Dec 2019 17:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfLJWoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:44:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 14:44:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="413279340"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Dec 2019 14:44:20 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jun Nakajima <jun.nakajima@intel.com>
-Subject: [PATCH 4/4] KVM: x86: Add macro to ensure reserved cr4 bits checks stay in sync
-Date:   Tue, 10 Dec 2019 14:44:16 -0800
-Message-Id: <20191210224416.10757-5-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210224416.10757-1-sean.j.christopherson@intel.com>
-References: <20191210224416.10757-1-sean.j.christopherson@intel.com>
+        id S1727069AbfLJWao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:44 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B7F20836;
+        Tue, 10 Dec 2019 22:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017043;
+        bh=z8PnKVK74ENGpfBY08cvdPkDCNbeMO4HpQLF8Ybtr40=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XPHUYa5M5itUNCq4kTwW5LAUQVvNRaDyntRrTgxt2L4JS53a+uUv1O/9YMWG2xYdz
+         cZ6cHHHR0Si2c6W10F06vvZSPsDfUefAVtoA3Gzae47krZOtPe9T+WdG2Y5pOyQ6wW
+         f7RCR3cLy4peM4MwD4iH/3gmOkQnjNo/uwTqaPTI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.9 06/91] staging: rtl8192u: fix multiple memory leaks on error path
+Date:   Tue, 10 Dec 2019 17:29:10 -0500
+Message-Id: <20191210223035.14270-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper macro to generate the set of reserved cr4 bits for both
-host and guest to ensure that adding a check on guest capabilities is
-also added for host capabilities, and vice versa.
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+[ Upstream commit ca312438cf176a16d4b89350cade8789ba8d7133 ]
+
+In rtl8192_tx on error handling path allocated urbs and also skb should
+be released.
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20190920025137.29407-1-navid.emamdoost@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c | 65 ++++++++++++++++++----------------------------
- 1 file changed, 25 insertions(+), 40 deletions(-)
+ drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ab3a4104febf..d2ab4da75783 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -880,31 +880,34 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
- }
- EXPORT_SYMBOL_GPL(kvm_set_xcr);
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index 5fe95937d8113..6ec3790566504 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -1509,7 +1509,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		(tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
+ 	struct usb_device *udev = priv->udev;
+ 	int pend;
+-	int status;
++	int status, rt = -1;
+ 	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
+ 	unsigned int idx_pipe;
  
-+#define __cr4_reserved_bits(__cpu_has, __c)		\
-+({							\
-+	u64 __reserved_bits = CR4_RESERVED_BITS;	\
-+							\
-+	if (!__cpu_has(__c, X86_FEATURE_XSAVE))		\
-+		__reserved_bits |= X86_CR4_OSXSAVE;	\
-+	if (!__cpu_has(__c, X86_FEATURE_SMEP))		\
-+		__reserved_bits |= X86_CR4_SMEP;	\
-+	if (!__cpu_has(__c, X86_FEATURE_SMAP))		\
-+		__reserved_bits |= X86_CR4_SMAP;	\
-+	if (!__cpu_has(__c, X86_FEATURE_FSGSBASE))	\
-+		__reserved_bits |= X86_CR4_FSGSBASE;	\
-+	if (!__cpu_has(__c, X86_FEATURE_PKU))		\
-+		__reserved_bits |= X86_CR4_PKE;		\
-+	if (!__cpu_has(__c, X86_FEATURE_LA57))		\
-+		__reserved_bits |= X86_CR4_LA57;	\
-+	__reserved_bits;				\
-+})
+@@ -1653,8 +1653,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		}
+ 		if (bSend0Byte) {
+ 			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
+-			if (!tx_urb_zero)
+-				return -ENOMEM;
++			if (!tx_urb_zero) {
++				rt = -ENOMEM;
++				goto error;
++			}
+ 			usb_fill_bulk_urb(tx_urb_zero, udev,
+ 					  usb_sndbulkpipe(udev, idx_pipe),
+ 					  &zero, 0, tx_zero_isr, dev);
+@@ -1664,7 +1666,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 					 "Error TX URB for zero byte %d, error %d",
+ 					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 					 status);
+-				return -1;
++				goto error;
+ 			}
+ 		}
+ 		netif_trans_update(dev);
+@@ -1675,7 +1677,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
+ 		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 		 status);
+-	return -1;
 +
- static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
- {
--	u64 reserved_bits = CR4_RESERVED_BITS;
-+	u64 reserved_bits = __cr4_reserved_bits(cpu_has, c);
- 
--	if (!cpu_has(c, X86_FEATURE_XSAVE))
--		reserved_bits |= X86_CR4_OSXSAVE;
-+	if (cpuid_ecx(0x7) & bit(X86_FEATURE_LA57))
-+		reserved_bits &= ~X86_CR4_LA57;
- 
--	if (!cpu_has(c, X86_FEATURE_SMEP))
--		reserved_bits |= X86_CR4_SMEP;
--
--	if (!cpu_has(c, X86_FEATURE_SMAP))
--		reserved_bits |= X86_CR4_SMAP;
--
--	if (!cpu_has(c, X86_FEATURE_FSGSBASE))
--		reserved_bits |= X86_CR4_FSGSBASE;
--
--	if (!cpu_has(c, X86_FEATURE_PKU))
--		reserved_bits |= X86_CR4_PKE;
--
--	if (!cpu_has(c, X86_FEATURE_LA57) &&
--	    !(cpuid_ecx(0x7) & bit(X86_FEATURE_LA57)))
--		reserved_bits |= X86_CR4_LA57;
--
--	if (!cpu_has(c, X86_FEATURE_UMIP) && !kvm_x86_ops->umip_emulated())
--		reserved_bits |= X86_CR4_UMIP;
-+	if (kvm_x86_ops->umip_emulated())
-+		reserved_bits &= ~X86_CR4_UMIP;
- 
- 	return reserved_bits;
++error:
++	dev_kfree_skb_any(skb);
++	usb_free_urb(tx_urb);
++	usb_free_urb(tx_urb_zero);
++	return rt;
  }
-@@ -914,25 +917,7 @@ static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 	if (cr4 & cr4_reserved_bits)
- 		return -EINVAL;
  
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMEP) && (cr4 & X86_CR4_SMEP))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_SMAP) && (cr4 & X86_CR4_SMAP))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_FSGSBASE) && (cr4 & X86_CR4_FSGSBASE))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_PKU) && (cr4 & X86_CR4_PKE))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_LA57) && (cr4 & X86_CR4_LA57))
--		return -EINVAL;
--
--	if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) && (cr4 & X86_CR4_UMIP))
-+	if (cr4 & __cr4_reserved_bits(guest_cpuid_has, vcpu))
- 		return -EINVAL;
- 
- 	return 0;
+ static short rtl8192_usb_initendpoints(struct net_device *dev)
 -- 
-2.24.0
+2.20.1
 
