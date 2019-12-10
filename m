@@ -2,154 +2,130 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B4CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB443C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C180B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD96206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfLJLmL (ORCPT
+        id S1727502AbfLJLmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:42:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49924 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727128AbfLJLmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:42:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BD75FAF2B;
-        Tue, 10 Dec 2019 11:42:08 +0000 (UTC)
-Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
- FRONT/BACK_RING_ATTACH
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
+        Tue, 10 Dec 2019 06:42:42 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56514 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfLJLmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 06:42:42 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 92096291A06
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Philippe CORNU <philippe.cornu@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Cc:     "kernel@collabora.com" <kernel@collabora.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20191205140123.3817-1-pdurrant@amazon.com>
- <20191205140123.3817-4-pdurrant@amazon.com>
- <8a42e7a2-e1aa-69ff-32a4-f43cc5df10d9@suse.com>
- <23a1e955fcaa4e948f5290a7252256fb@EX13D32EUC003.ant.amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <6c5b7102-39af-9e83-8571-ff669b23115d@suse.com>
-Date:   Tue, 10 Dec 2019 12:42:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>
+Subject: Re: [Linux-stm32] [PATCH v4 0/4] Genericize DW MIPI DSI bridge and
+ add i.MX 6 driver
+In-Reply-To: <a356df00-e321-ab8c-61e9-f179cb1f8e12@st.com>
+References: <20191202193359.703709-1-adrian.ratiu@collabora.com>
+ <a356df00-e321-ab8c-61e9-f179cb1f8e12@st.com>
+Date:   Tue, 10 Dec 2019 13:43:03 +0200
+Message-ID: <87y2vk1k54.fsf@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <23a1e955fcaa4e948f5290a7252256fb@EX13D32EUC003.ant.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.12.19 17:38, Durrant, Paul wrote:
->> -----Original Message-----
->> From: Jürgen Groß <jgross@suse.com>
->> Sent: 09 December 2019 13:55
->> To: Durrant, Paul <pdurrant@amazon.com>; linux-kernel@vger.kernel.org;
->> xen-devel@lists.xenproject.org
->> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>; Stefano Stabellini
->> <sstabellini@kernel.org>
->> Subject: Re: [PATCH 3/4] xen/interface: don't discard pending work in
->> FRONT/BACK_RING_ATTACH
->>
->> On 05.12.19 15:01, Paul Durrant wrote:
->>> Currently these macros will skip over any requests/responses that are
->>> added to the shared ring whilst it is detached. This, in general, is not
->>> a desirable semantic since most frontend implementations will eventually
->>> block waiting for a response which would either never appear or never be
->>> processed.
->>>
->>> NOTE: These macros are currently unused. BACK_RING_ATTACH(), however,
->> will
->>>         be used in a subsequent patch.
->>>
->>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
->>> ---
->>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>> Cc: Juergen Gross <jgross@suse.com>
->>> Cc: Stefano Stabellini <sstabellini@kernel.org>
->>> ---
->>>    include/xen/interface/io/ring.h | 4 ++--
->>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/include/xen/interface/io/ring.h
->> b/include/xen/interface/io/ring.h
->>> index 3f40501fc60b..405adfed87e6 100644
->>> --- a/include/xen/interface/io/ring.h
->>> +++ b/include/xen/interface/io/ring.h
->>> @@ -143,14 +143,14 @@ struct __name##_back_ring {
->> 		\
->>>    #define FRONT_RING_ATTACH(_r, _s, __size) do {				\
->>>        (_r)->sring = (_s);							\
->>>        (_r)->req_prod_pvt = (_s)->req_prod;				\
->>> -    (_r)->rsp_cons = (_s)->rsp_prod;					\
->>> +    (_r)->rsp_cons = (_s)->req_prod;					\
->>>        (_r)->nr_ents = __RING_SIZE(_s, __size);				\
->>>    } while (0)
->>>
->>>    #define BACK_RING_ATTACH(_r, _s, __size) do {				\
->>>        (_r)->sring = (_s);							\
->>>        (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
->>> -    (_r)->req_cons = (_s)->req_prod;					\
->>> +    (_r)->req_cons = (_s)->rsp_prod;					\
->>>        (_r)->nr_ents = __RING_SIZE(_s, __size);				\
->>>    } while (0)
->>
->> Lets look at all possible scenarios where BACK_RING_ATTACH()
->> might happen:
->>
->> Initially (after [FRONT|BACK]_RING_INIT(), leaving _pvt away):
->> req_prod=0, rsp_cons=0, rsp_prod=0, req_cons=0
->> Using BACK_RING_ATTACH() is fine (no change)
->>
->> Request queued:
->> req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=0
->> Using BACK_RING_ATTACH() is fine (no change)
->>
->> and taken by backend:
->> req_prod=1, rsp_cons=0, rsp_prod=0, req_cons=1
->> Using BACK_RING_ATTACH() is resetting req_cons to 0, will result
->> in redoing request (for blk this is fine, other devices like SCSI
->> tapes will have issues with that). One possible solution would be
->> to ensure all taken requests are either stopped or the response
->> is queued already.
+On Fri, 06 Dec 2019, Philippe CORNU <philippe.cornu@st.com> wrote:
+> Hi Adrian, 
 > 
-> Yes, it is the assumption that a backend will drain and complete any requests it is handling, but it will not deal with new ones being posted by the frontend. This does appear to be the case for blkback.
+> And sorry for this late reply.  Your patches look good and we 
+> ("stm guys") understand that v1.01 is very  different to 
+> v1.30/31. 
 > 
->>
->> Response queued:
->> req_prod=1, rsp_cons=0, rsp_prod=1, req_cons=1
->> Using BACK_RING_ATTACH() is fine (no change)
->>
->> Response taken:
->> req_prod=1, rsp_cons=1, rsp_prod=1, req_cons=1
->> Using BACK_RING_ATTACH() is fine (no change)
->>
->> In general I believe the [FRONT|BACK]_RING_ATTACH() macros are not
->> fine to be used in the current state, as the *_pvt fields normally not
->> accessible by the other end are initialized using the (possibly
->> untrusted) values from the shared ring. There needs at least to be a
->> test for the values to be sane, and your change should not result in the
->> same value to be read twice, as it could have changed in between.
-> 
-> What test would you apply to sanitize the value of the pvt pointer?
+> We are doing our best to review & test your patches and we will 
+> go back  to you asap.  Many thanks, Philippe :-) 
 
-For the BACK_RING_ATTACH() case rsp_prod_pvt should not be between
-req_prod and req_cons, and req_cons - rsp_prod_pvt should be <= ring
-size IMO.
+Hi Philippe,
 
-> Another option would be to have a backend write its pvt value into the xenstore backend area when the ring is unmapped, so that a new instance definitely resumes where the old one left off. The value of rsp_prod could, of course, be overwritten by the guest at any time and so there's little point in attempting sanitize it.
+Thank you for taking the time to test this, I really appreciate 
+it.
 
-I don't think this would be necessary. With above validation in place
-all the guest could do would be to shoot itself in the foot.
+Adrian
 
-
-Juergen
+>
+>
+> On 12/2/19 8:33 PM, Adrian Ratiu wrote:
+>> Having a generic Synopsis DesignWare MIPI-DSI host controller bridge
+>> driver is a very good idea, however the current implementation has
+>> hardcoded quite a lot of the register layouts used by the two supported
+>> SoC vendors, STM and Rockchip, which use IP cores v1.30 and v1.31.
+>> 
+>> This makes it hard to support other SoC vendors like the FSL/NXP i.MX 6
+>> which use older v1.01 cores or future versions because, based on history,
+>> layout changes should also be expected in new DSI versions / SoCs.
+>> 
+>> This patch series converts the bridge and platform drivers to access
+>> registers via generic regmap APIs and allows each platform driver to
+>> configure its register layout via struct reg_fields, then adds support
+>> for the host controller found on i.MX 6.
+>> 
+>> I only have i.MX hardware with MIPI-DSI panel and relevant documentation
+>> available for testing so I'll really appreciate it if someone could test
+>> the series on Rockchip and STM... eyeballing register fields could only
+>> get me so far, so sorry in advance for any breakage!
+>> 
+>> Many thanks to Boris Brezillon <boris.brezillon@collabora.com> for
+>> suggesting the regmap solution and to Liu Ying <Ying.Liu@freescale.com>
+>> for doing the initial i.MX platform driver implementation.
+>> 
+>> This series applies on top of latest linux-next tree, next-20191202.
+>> 
+>> v3 -> v4:
+>>    * Added commmit message to dt-binding patch (Neil)
+>>    * Converted the dt-binding to yaml dt-schema format (Neil)
+>>    * Small DT node + driver fixes (Rob)
+>>    * Renamed platform driver to reflect it's only for i.MX v6 (Fabio)
+>>    * Added small panel example to the host controller DT binding
+>> 
+>> v2 -> v3:
+>>    * Added const declarations to dw-mipi-dsi.c structs (Emil)
+>>    * Fixed Reviewed-by tags and cc'd some more relevant ML (Emil)
+>> 
+>> v1 -> v2:
+>>    * Moved register definitions & regmap initialization into bridge
+>>    module. Platform drivers get the regmap via plat_data after calling
+>>    the bridge probe (Emil).
+>> 
+>> Adrian Ratiu (4):
+>>    drm: bridge: dw_mipi_dsi: access registers via a regmap
+>>    drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+>>    drm: imx: Add i.MX 6 MIPI DSI host driver
+>>    dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+>> 
+>>   .../display/imx/fsl,mipi-dsi-imx6.yaml        | 136 ++++
+>>   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 699 +++++++++++++-----
+>>   drivers/gpu/drm/imx/Kconfig                   |   7 +
+>>   drivers/gpu/drm/imx/Makefile                  |   1 +
+>>   drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 378 ++++++++++
+>>   .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   |  17 +-
+>>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c         |  34 +-
+>>   include/drm/bridge/dw_mipi_dsi.h              |   2 +-
+>>   8 files changed, 1067 insertions(+), 207 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+>>   create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+>> 
