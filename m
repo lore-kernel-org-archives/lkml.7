@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23742C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F33FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4BB206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308A1205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012957;
-	bh=u3tBobRqyUMAHiZopxd1EyUAizLv/WfR7fzzUyV/pyU=;
+	s=default; t=1576012961;
+	bh=I9352z0iCXVXtkWPBa/1Pa0m0mxbqm65/+V+ZPZCkZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFavGffP5/78ZpMpx5VRQ5uei84zxxS5jhGH6zOBZJztwu655sUQ88OnnhUorLVwk
-	 cnsPuDPVwaqC0hMFeYXTa4RQ3tZvWvYxlrtvEm7/U1JZ7JkZiWIwH4ZsFgt7SwXb0k
-	 bLXgeoje4/lisO+bmQzcSyVuzFYBlDKBBR5n6yJY=
+	b=DGozSlTaE0dqaZ5u4/i3V8v/MmcxEugi3+TOpeBPoXiNf5ArM6kwWRXNHmZPehN/W
+	 aeH2VMufoh1KxZYbkJetzIKM0siHH9D/qCB/u0vl2R9OsDfdt2IEgYus3g9K+JLzfD
+	 BaMH+VPD4oKcqQgP1IN+jEpwMHuj29SVrt6NXxGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLJVL3 (ORCPT
+        id S1729183AbfLJVWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:22:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfLJVLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:14 -0500
+        id S1727237AbfLJVL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01615246AA;
-        Tue, 10 Dec 2019 21:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ABAA246B5;
+        Tue, 10 Dec 2019 21:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012273;
-        bh=u3tBobRqyUMAHiZopxd1EyUAizLv/WfR7fzzUyV/pyU=;
+        s=default; t=1576012287;
+        bh=I9352z0iCXVXtkWPBa/1Pa0m0mxbqm65/+V+ZPZCkZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofPgF8vC9oe5leHb6g7Ct38MUSIaOPvWXQU1F0IEyQ+KSXn/ClivErT+W5ewVgtyA
-         fQt04sPOiEW6bltEAHE287rdvGe30sReJGO3NO471uIxqN2QFAMqRJuu9GlTgKGAMg
-         G14J3L5C5jYYprXGUFC2iGn/TzUv5s27tl6Cwrcs=
+        b=l473EK03KUfcAyZL7z1WJiQwruGd02ONuc43tV5lh0h0t3RIWaIN/ikR3h/znoDnR
+         7CtqRKxv1yQqFze4mXW0EP70ijviy3xtCA/cGO/QK2kyUcbXHrTJ7CxpGTwoXZnxgs
+         fKtaflZTpwacSTb8Ms3jcvWUpWMxVk4wUIYf6MRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+Cc:     John Garry <john.garry@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 218/350] perf probe: Fix to find range-only function instance
-Date:   Tue, 10 Dec 2019 16:05:23 -0500
-Message-Id: <20191210210735.9077-179-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 228/350] perf tools: Fix cross compile for ARM64
+Date:   Tue, 10 Dec 2019 16:05:33 -0500
+Message-Id: <20191210210735.9077-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,48 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
+[ Upstream commit 71f699078b154fcb1c9162fd0208ada9ce532ffc ]
 
-Fix die_is_func_instance() to find range-only function instance.
+Currently when cross compiling perf tool for ARM64 on my x86 machine I
+get this error:
 
-In some case, a function instance can be made without any low PC or
-entry PC, but only with address ranges by optimization.  (e.g. cold text
-partially in "text.unlikely" section) To find such function instance, we
-have to check the range attribute too.
+  arch/arm64/util/sym-handling.c:9:10: fatal error: gelf.h: No such file or directory
+   #include <gelf.h>
 
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+For the build, libelf is reported off:
+
+  Auto-detecting system features:
+  ...
+  ...                        libelf: [ OFF ]
+
+Indeed, test-libelf is not built successfully:
+
+  more ./build/feature/test-libelf.make.output
+  test-libelf.c:2:10: fatal error: libelf.h: No such file or directory
+   #include <libelf.h>
+          ^~~~~~~~~~
+  compilation terminated.
+
+I have no such problems natively compiling on ARM64, and I did not
+previously have this issue for cross compiling. Fix by relocating the
+gelf.h include.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/1573045254-39833-1-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm64/util/sym-handling.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index df6cee5c071f3..2ec24c3bed44c 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -318,10 +318,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
-+	Dwarf_Attribute attr_mem;
+diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
+index 5df7889851305..8dfa3e5229f1b 100644
+--- a/tools/perf/arch/arm64/util/sym-handling.c
++++ b/tools/perf/arch/arm64/util/sym-handling.c
+@@ -6,9 +6,10 @@
  
- 	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
-+	return !dwarf_func_inline(dw_die) &&
-+	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
- }
+ #include "symbol.h" // for the elf__needs_adjust_symbols() prototype
+ #include <stdbool.h>
+-#include <gelf.h>
+ 
+ #ifdef HAVE_LIBELF_SUPPORT
++#include <gelf.h>
 +
- /**
-  * die_get_data_member_location - Get the data-member offset
-  * @mb_die: a DIE of a member of a data structure
+ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+ {
+ 	return ehdr.e_type == ET_EXEC ||
 -- 
 2.20.1
 
