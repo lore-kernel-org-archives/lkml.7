@@ -4,54 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0A7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53555C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED7B24696
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217D524697
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012081;
-	bh=R3MtLN1Rj4wCOGDlYX0wo0g3yFmfhogzVgnOrcaB29Q=;
+	s=default; t=1576012085;
+	bh=MlG9exxlQ96joQ8jTOQ8joUO6pD4ZycdLLJfsJLHePs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FwgCNZrOjJ+si9YieyM5QmAqDi7VYZSn1TxsKFBX7gHNz9ABMxqHDv3blPFBVcduC
-	 //k1558hJKs0GDy4tXx2YJZstj+u+n89rZWZ/oSOjmnFzxHOIdixiV52y/Y6OlONJ9
-	 ZNUFVUQ5HiPZshgz6vINk+AO/Fg409IzhNYQpqPY=
+	b=NLYRPwreqOUfFP7q0MNhxtdppj76E4MqXaKDQD8wTuUmdeRLSBggpAmYWjj9Ol2x/
+	 mvNg6AgqEmbCCm9WW13VlzgzLPundvt0zKbIzodn/oQJPUyGHtYbU2ff7Py6o923cw
+	 r4mdCTjXIJDtQMJCfQ3ejcjnA6cbFY6YPDebk2dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfLJVIB (ORCPT
+        id S1727771AbfLJVIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:08:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54736 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfLJVH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:56 -0500
+        id S1727542AbfLJVHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A522468E;
-        Tue, 10 Dec 2019 21:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E53920836;
+        Tue, 10 Dec 2019 21:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012075;
-        bh=R3MtLN1Rj4wCOGDlYX0wo0g3yFmfhogzVgnOrcaB29Q=;
+        s=default; t=1576012074;
+        bh=MlG9exxlQ96joQ8jTOQ8joUO6pD4ZycdLLJfsJLHePs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdn1ehEhzZgeJSGnJm49W5hpc9b23gpjFBw+FoDcPqLXu4kfALMKe2Drrw9T5Mu6i
-         n7IGjLTINvjEsVRN+4fN83xmwbIdov16JsBI/T4z6joLE/wQ/lgRfZCuUtBfUEHzQI
-         XWXLp1A46Z18+vXK5fxeXGH1641Hh03xeUo5AUK4=
+        b=GmvlZrSfyxaGh5SuMSwE2OLUEwCu/2taQJQXTnsCQv9pHVXaTjEdV96/7ruM/k3NQ
+         Wlh8lMPB8sxKA21u9EbUd2TK1KeS2+3Pc7zV6+IW+Xp8+veot3Dmmn9Li8UkNmgICy
+         +kYRo+CI9j5Q1gmIlTv3oS4LUVrOzpZyMkEcqAXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     chen gong <curry.gong@amd.com>, Aaron Liu <aaron.liu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 055/350] drm/amd/powerplay: A workaround to GPU RESET on APU
-Date:   Tue, 10 Dec 2019 16:02:40 -0500
-Message-Id: <20191210210735.9077-16-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bill Metzenthen <billm@melbpc.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 054/350] x86/math-emu: Check __copy_from_user() result
+Date:   Tue, 10 Dec 2019 16:02:39 -0500
+Message-Id: <20191210210735.9077-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,42 +64,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chen gong <curry.gong@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 068ad870bbd8f4f2c5b2fd4977a4f3330c9988f4 ]
+[ Upstream commit e6b44ce1925a8329a937c57f0d60ba0d9bb5d226 ]
 
-Changes to function "smu_suspend" in amdgpu_smu.c is a workaround.
+The new __must_check annotation on __copy_from_user() successfully
+identified some code that has lacked the check since at least
+linux-2.1.73:
 
-We should get real information about if baco is enabled or not, while we
-always consider APU SMU feature as enabled in current code.
+  arch/x86/math-emu/reg_ld_str.c:88:2: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+          __copy_from_user(sti_ptr, s, 10);
+          ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
+  arch/x86/math-emu/reg_ld_str.c:1129:2: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+          __copy_from_user(register_base + offset, s, other);
+          ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/x86/math-emu/reg_ld_str.c:1131:3: error: ignoring return value of \
+  function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+                  __copy_from_user(register_base, s + other, offset);
+                ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I know APU do not support baco mode for GPU reset, so I use
-"adev->flags" to skip function "smu_feature_is_enabled".
+In addition, the get_user()/put_user() helpers do not enforce a return
+value check, but actually still require one. These have been missing for
+even longer.
 
-Signed-off-by: chen gong <curry.gong@amd.com>
-Reviewed-by: Aaron Liu <aaron.liu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Change the internal wrappers around get_user()/put_user() to force
+a signal and add a corresponding wrapper around __copy_from_user()
+to check all such cases.
+
+ [ bp: Break long lines. ]
+
+Fixes: 257e458057e5 ("Import 2.1.73")
+Fixes: 9dd819a15162 ("uaccess: add missing __must_check attributes")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Bill Metzenthen <billm@melbpc.org.au>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191001142344.1274185-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/math-emu/fpu_system.h | 6 ++++--
+ arch/x86/math-emu/reg_ld_str.c | 6 +++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-index 4acf139ea0140..58c091ab67b26 100644
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -1344,7 +1344,10 @@ static int smu_suspend(void *handle)
- 	int ret;
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 	struct smu_context *smu = &adev->smu;
--	bool baco_feature_is_enabled = smu_feature_is_enabled(smu, SMU_FEATURE_BACO_BIT);
-+	bool baco_feature_is_enabled = false;
-+
-+	if(!(adev->flags & AMD_IS_APU))
-+		baco_feature_is_enabled = smu_feature_is_enabled(smu, SMU_FEATURE_BACO_BIT);
+diff --git a/arch/x86/math-emu/fpu_system.h b/arch/x86/math-emu/fpu_system.h
+index f98a0c9567646..9b41391867dca 100644
+--- a/arch/x86/math-emu/fpu_system.h
++++ b/arch/x86/math-emu/fpu_system.h
+@@ -107,6 +107,8 @@ static inline bool seg_writable(struct desc_struct *d)
+ #define FPU_access_ok(y,z)	if ( !access_ok(y,z) ) \
+ 				math_abort(FPU_info,SIGSEGV)
+ #define FPU_abort		math_abort(FPU_info, SIGSEGV)
++#define FPU_copy_from_user(to, from, n)	\
++		do { if (copy_from_user(to, from, n)) FPU_abort; } while (0)
  
- 	ret = smu_system_features_control(smu, false);
- 	if (ret)
+ #undef FPU_IGNORE_CODE_SEGV
+ #ifdef FPU_IGNORE_CODE_SEGV
+@@ -122,7 +124,7 @@ static inline bool seg_writable(struct desc_struct *d)
+ #define	FPU_code_access_ok(z) FPU_access_ok((void __user *)FPU_EIP,z)
+ #endif
+ 
+-#define FPU_get_user(x,y)       get_user((x),(y))
+-#define FPU_put_user(x,y)       put_user((x),(y))
++#define FPU_get_user(x,y) do { if (get_user((x),(y))) FPU_abort; } while (0)
++#define FPU_put_user(x,y) do { if (put_user((x),(y))) FPU_abort; } while (0)
+ 
+ #endif
+diff --git a/arch/x86/math-emu/reg_ld_str.c b/arch/x86/math-emu/reg_ld_str.c
+index f3779743d15e6..fe6246ff98870 100644
+--- a/arch/x86/math-emu/reg_ld_str.c
++++ b/arch/x86/math-emu/reg_ld_str.c
+@@ -85,7 +85,7 @@ int FPU_load_extended(long double __user *s, int stnr)
+ 
+ 	RE_ENTRANT_CHECK_OFF;
+ 	FPU_access_ok(s, 10);
+-	__copy_from_user(sti_ptr, s, 10);
++	FPU_copy_from_user(sti_ptr, s, 10);
+ 	RE_ENTRANT_CHECK_ON;
+ 
+ 	return FPU_tagof(sti_ptr);
+@@ -1126,9 +1126,9 @@ void frstor(fpu_addr_modes addr_modes, u_char __user *data_address)
+ 	/* Copy all registers in stack order. */
+ 	RE_ENTRANT_CHECK_OFF;
+ 	FPU_access_ok(s, 80);
+-	__copy_from_user(register_base + offset, s, other);
++	FPU_copy_from_user(register_base + offset, s, other);
+ 	if (offset)
+-		__copy_from_user(register_base, s + other, offset);
++		FPU_copy_from_user(register_base, s + other, offset);
+ 	RE_ENTRANT_CHECK_ON;
+ 
+ 	for (i = 0; i < 8; i++) {
 -- 
 2.20.1
 
