@@ -2,169 +2,96 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20879C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D91C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86F62073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLerbINJ"
+	by mail.kernel.org (Postfix) with ESMTP id 80908206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013419;
+	bh=QPjFK2EXgY9x+qBNXW4gGPYCxWQ3fUnbQphCK0+D+ys=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w2jqxiKEEdyjdjKGrwYoSrQBN2RrYFl0Dmw9RtOQRXTjp8dU2zsnLsQFiAo2EWPe6
+	 +hfqnu5wJm5S0DRHejrRsMNNsUEKrXmmYo0u4YkeNE70aBJOof3toAia0HfDTmwYCh
+	 6/JCMmYktLYP+zj6vmIPyahYkMHByCPlWa3HpX/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfLJVaN (ORCPT
+        id S1728696AbfLJVaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:30:13 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36780 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728338AbfLJVaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:30:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576013404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DHu5hRwqB3tC0gd9elzTe92YoxL1ejzVp+mWTVGomm8=;
-        b=WLerbINJlc2q6fRSJ6P05AUEghs7dsJTv7lLgYoyO0RCJm6d1WacGOujMkBCef7GIL+e9s
-        VOpzo8cCFcWQjFiqKVMgMsgncfbVtf2f8kBz5t7Old+2GqKbybfIpeOfo9FFSi85NnRuzi
-        AV/ZpFc4TjozBhNcXxlWKyywuWxVtUs=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-342-oJbheIpgM1mhuola6raGiQ-1; Tue, 10 Dec 2019 16:30:02 -0500
-Received: by mail-qv1-f69.google.com with SMTP id s18so3907094qvr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:30:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=xpN2FnDzTxFXN1g1oq3lTClVwXGfJj+1zSJtFTlzut4=;
-        b=lvlWbcfhXRFQKDF1WgLiiHCXeAaaEo9oASBBvpzRSfCi3J5n/Ne1+LhuTObrX18mk1
-         66k39ijnWK3GprDfTPUAiAzxyRgNhMX7WpgsARUIlNonGxIBKMmYwQcCGwWqPBoocaJ9
-         ZHfO/ygm0GgMD8WP8ldhAuOOXF4VJiaWHMFCwLpkJUpkbFJEEy9PN7u5FTvOjgu8FldF
-         y/5/hIZqjaGcZ5o4miVikfbxqs1xXd1AvIJdqFPCro2qpATXYoTV/RqwVa2o4cHSWft9
-         OcSFVHXAC5vRWaLjyck/jrNViK8E/KnZ9eq2hPfF+1PTfvy9JnxFQT1UZkEImqjXsm54
-         mpfQ==
-X-Gm-Message-State: APjAAAUJd9kUsRz3Guhim8iV/YQD6pL6OpJr9p/3qwEPJA6w6k5KI4Y9
-        kj9F78NU7Ay5OCe5FYdWZurOMws6BkEOjuYcpRARHuyixA/aCQCnJiR4XuNbSH2GvmBHm89+BXd
-        Q/faltrkCb3p+QnHSyDmGC4F3
-X-Received: by 2002:ae9:ea06:: with SMTP id f6mr36300558qkg.246.1576013401553;
-        Tue, 10 Dec 2019 13:30:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw6HfPU/eGOIfyo5HqRG5ep6RNVNFkQBiwi75jTuEdvFpEA7UiCcSPs3KNOxfndMomJWPkDOg==
-X-Received: by 2002:ae9:ea06:: with SMTP id f6mr36300538qkg.246.1576013401306;
-        Tue, 10 Dec 2019 13:30:01 -0800 (PST)
-Received: from dhcp-10-20-1-90.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id r41sm5405qtr.60.2019.12.10.13.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:30:00 -0800 (PST)
-Message-ID: <90e9126b9692ce6a1b0fcd85a4d0327bf818e58a.camel@redhat.com>
-Subject: Re: [PATCH AUTOSEL 5.4 143/350] drm/nouveau: Resume hotplug
- interrupts earlier
-From:   Lyude Paul <lyude@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Juston Li <juston.li@intel.com>, Imre Deak <imre.deak@intel.com>,
-        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org
-Date:   Tue, 10 Dec 2019 16:29:54 -0500
-In-Reply-To: <20191210210735.9077-104-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:30:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728314AbfLJVJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:56 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E2FB246A2;
+        Tue, 10 Dec 2019 21:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012196;
+        bh=QPjFK2EXgY9x+qBNXW4gGPYCxWQ3fUnbQphCK0+D+ys=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aE9NrNRHOmbOBO21R+xfWEkfVV7Wy6tk7hIEJcA5SVc8qkj1fId1FsDg159G6Pmqt
+         oXi12gKq+h+Mhbc5Zft3sv61R8ERKOflvaB4Rl9EXxnAJqzwUPNX86MDJcMomMIF0w
+         /bmbYpFm1kkk27PJ/QUmze2MFjPY1G2z+YIRh7qM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 150/350] media: st-mipid02: add a check for devm_gpiod_get_optional
+Date:   Tue, 10 Dec 2019 16:04:15 -0500
+Message-Id: <20191210210735.9077-111-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
-         <20191210210735.9077-104-sashal@kernel.org>
-Organization: Red Hat
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31)
 MIME-Version: 1.0
-X-MC-Unique: oJbheIpgM1mhuola6raGiQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-huh? Not sure how this got put in the stable queue, but this probably shoul=
-d
-be dropped. this was prepatory work for some MST functionality that got add=
-ed
-recently, not a fix.
+From: Chuhong Yuan <hslester96@gmail.com>
 
-On Tue, 2019-12-10 at 16:04 -0500, Sasha Levin wrote:
-> From: Lyude Paul <lyude@redhat.com>
->=20
-> [ Upstream commit ac0de16a38a9ec7026ca96132e3883c564497068 ]
->=20
-> Currently, we enable hotplug detection only after we re-enable the
-> display. However, this is too late if we're planning on sending sideband
-> messages during the resume process - which we'll need to do in order to
-> reprobe the topology on resume.
->=20
-> So, enable hotplug events before reinitializing the display.
->=20
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Reviewed-by: Sean Paul <sean@poorly.run>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Link:=20
-> https://patchwork.freedesktop.org/patch/msgid/20191022023641.8026-11-lyud=
-e@redhat.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_display.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c
-> b/drivers/gpu/drm/nouveau/nouveau_display.c
-> index 6f038511a03a9..53f9bceaf17a5 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_display.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-> @@ -407,6 +407,17 @@ nouveau_display_init(struct drm_device *dev, bool
-> resume, bool runtime)
->  =09struct drm_connector_list_iter conn_iter;
->  =09int ret;
-> =20
-> +=09/*
-> +=09 * Enable hotplug interrupts (done as early as possible, since we nee=
-d
-> +=09 * them for MST)
-> +=09 */
-> +=09drm_connector_list_iter_begin(dev, &conn_iter);
-> +=09nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
-> +=09=09struct nouveau_connector *conn =3D nouveau_connector(connector);
-> +=09=09nvif_notify_get(&conn->hpd);
-> +=09}
-> +=09drm_connector_list_iter_end(&conn_iter);
-> +
->  =09ret =3D disp->init(dev, resume, runtime);
->  =09if (ret)
->  =09=09return ret;
-> @@ -416,14 +427,6 @@ nouveau_display_init(struct drm_device *dev, bool
-> resume, bool runtime)
->  =09 */
->  =09drm_kms_helper_poll_enable(dev);
-> =20
-> -=09/* enable hotplug interrupts */
-> -=09drm_connector_list_iter_begin(dev, &conn_iter);
-> -=09nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
-> -=09=09struct nouveau_connector *conn =3D nouveau_connector(connector);
-> -=09=09nvif_notify_get(&conn->hpd);
-> -=09}
-> -=09drm_connector_list_iter_end(&conn_iter);
-> -
->  =09return ret;
->  }
-> =20
---=20
-Cheers,
-=09Lyude Paul
+[ Upstream commit 61c03b631b74a38ab53753f3ee971a55886d4843 ]
+
+mipid02_probe misses a check for devm_gpiod_get_optional and may miss
+the failure.
+Add a check to fix the problem.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/st-mipid02.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
+index 81285b8d5cfbe..003ba22334cdf 100644
+--- a/drivers/media/i2c/st-mipid02.c
++++ b/drivers/media/i2c/st-mipid02.c
+@@ -971,6 +971,11 @@ static int mipid02_probe(struct i2c_client *client)
+ 	bridge->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+ 						     GPIOD_OUT_HIGH);
+ 
++	if (IS_ERR(bridge->reset_gpio)) {
++		dev_err(dev, "failed to get reset GPIO\n");
++		return PTR_ERR(bridge->reset_gpio);
++	}
++
+ 	ret = mipid02_get_regulators(bridge);
+ 	if (ret) {
+ 		dev_err(dev, "failed to get regulators %d", ret);
+-- 
+2.20.1
 
