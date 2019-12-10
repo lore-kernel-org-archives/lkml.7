@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7CC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4246BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635F32053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CEF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015956;
-	bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
+	s=default; t=1576015961;
+	bh=h9fYDAsY52yL/u7PRjPms3T2uAqlhcezyCB1LyQ2Izc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jslWpix6MYsblK/8EneLUI5/+Bqk289lKUY4324Bi2WCoOWjQvHjBor+3Ra4Z3Eq7
-	 +5RQ8Kr7WOIs1RasY5q4zSrffeUekv55iOVcm830oTTz9tCw37v1bYcMo6ZBU1JGTG
-	 ycN6TqMM5DuHzYOX554DelQo2nV8ZGfbBF1PEm3w=
+	b=nnaSSRobTLuVn76blMa3XuIsFwRZHHHuN49krLimHjG4zlZ5CDcIAzdrLVnCbG9mJ
+	 kETUqFw/b1O8STum93UV85VFVHYfjGu1wWZZm4lsQP2Y7WJ26yz90HzTopSfAUlki1
+	 OokLrD9Yb42jsIDgY41Msd067Ho309TPV0F+3/rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfLJWMf (ORCPT
+        id S1729826AbfLJWMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33854 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:12:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbfLJWDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:36 -0500
+        id S1727909AbfLJWDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B730924656;
-        Tue, 10 Dec 2019 22:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8344724655;
+        Tue, 10 Dec 2019 22:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015416;
-        bh=c8U50mhiHIc1GC3zrGkTpaUtUN/sJunK5pJd39gueNI=;
+        s=default; t=1576015415;
+        bh=h9fYDAsY52yL/u7PRjPms3T2uAqlhcezyCB1LyQ2Izc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odwSSbibh44UqmSM7LDhB+xuejV4XGCfBaH2qpRsxYZisrGEwwGFeh7DjapwdE5g0
-         p279bl2bQGXyf53YCdxM2zSZJd0Rv5Hn//2E6FpI6ZDp+vWBQtKHO/CU4kGPx62+Yi
-         FzvqemG0qEJ7Lg14enDwJ98049CZXQJrkf7nJVCE=
+        b=13z8OCBTDM/QxF8n5y/0AQEQPCvnN37fEynZmnXTmAFvd/kuzXm+cqyIA84utBVHt
+         y34nRFXZd2MVARp5hiixb8ht+Ad/um6Z0yEikose1iqJRL8puHh5Q72xXaY983MGhB
+         8g8HvWaBrX3YkDRlFPe3ZGPdpqXdG8LWO7Xvt6SM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 029/130] samples: pktgen: fix proc_cmd command result check logic
-Date:   Tue, 10 Dec 2019 17:01:20 -0500
-Message-Id: <20191210220301.13262-29-sashal@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 028/130] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
+Date:   Tue, 10 Dec 2019 17:01:19 -0500
+Message-Id: <20191210220301.13262-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,80 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+The DDC/CI protocol involves sending a multi-byte request to the
+display via I2C, which is typically followed by a multi-byte
+response. The internal I2C controller only allows single byte
+reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
+supported when the internal I2C controller is used. The I2C
+transfers complete without errors, however the data in the response
+is garbage. Abort transfers to/from slave address 0x37 (DDC) with
+-EOPNOTSUPP, to make it evident that the communication is failing.
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
-
-For clarity of an execution flow, 'errexit' flag has been set.
-
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index 205e4cde46012..065a7e296ee31 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 4db31b89507c5..0febaafb8d895 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -39,6 +39,7 @@
  
-+set -o errexit
+ #include <media/cec-notifier.h>
+ 
++#define DDC_CI_ADDR		0x37
+ #define DDC_SEGMENT_ADDR	0x30
+ 
+ #define HDMI_EDID_LEN		512
+@@ -320,6 +321,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
+ 	u8 addr = msgs[0].addr;
+ 	int i, ret = 0;
+ 
++	if (addr == DDC_CI_ADDR)
++		/*
++		 * The internal I2C controller does not support the multi-byte
++		 * read and write operations needed for DDC/CI.
++		 * TOFIX: Blacklist the DDC/CI address until we filter out
++		 * unsupported I2C operations.
++		 */
++		return -EOPNOTSUPP;
 +
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
+ 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
  
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
- 
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
-+
- ## -- General shell tricks --
- 
- function root_check_run_with_sudo() {
+ 	for (i = 0; i < num; i++) {
 -- 
 2.20.1
 
