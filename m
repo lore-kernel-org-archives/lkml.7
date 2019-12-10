@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D2DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED91C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E892246B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5158246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012232;
-	bh=+mYYtCrQuz5xL26HF/OI5A2kAJzDXj0Jmz2H3hixYGE=;
+	s=default; t=1576012235;
+	bh=cXHoFaCPOcdNxCGH5Nh0rBLLYZyaMEeDTY7yKhcYT/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VpF1Z6yz22X8nAB7mvSSisr5y5/s3lK+GhjGmaU5IzTPwN5C4TI2Es3Brrq/NaJu1
-	 4+rA7Yi0rCGIeZfrgu6AiMf7iuwZ4mI973N4GiSWIzC6v8qltW0ZNCv+TQo9L1unf2
-	 gCf3HFcuNfPLLrG0crBRL7TxoJd9cuLabYNZDHkg=
+	b=Omv4IMWc70dZa8dfpSCsYbw8TJ9nF/r33xNxLdc9mXG5bqw4J52kStX8uNS9+Lh4j
+	 WLPgJYVsfuc6SSqQ9rHYRF8KaRynYLX4OkLKUxU4dFKzQfJT6oiRTnTz0oEOaNp3qW
+	 NMRkeDbIKfFhpTypDxVDfxTh5571V/pGn5HyYXvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfLJVKa (ORCPT
+        id S1728536AbfLJVKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60374 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfLJVK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:28 -0500
+        id S1728513AbfLJVKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEE47246AF;
-        Tue, 10 Dec 2019 21:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBFF02077B;
+        Tue, 10 Dec 2019 21:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012227;
-        bh=+mYYtCrQuz5xL26HF/OI5A2kAJzDXj0Jmz2H3hixYGE=;
+        s=default; t=1576012229;
+        bh=cXHoFaCPOcdNxCGH5Nh0rBLLYZyaMEeDTY7yKhcYT/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zyj1w8NPakhctp/OiVS3ixNt6e8soscNjSt1mdkfZzxJkP3V1sJEq8cGtPvp4FNgd
-         XGPb40Mv0kVcwyr3I4kqhwGDr0eBAC3scvUo6N4ZGJwszC02JWhP/xLKY4TQ3LFBkl
-         Ts/KsHg9axAA5+Jcdtr3uSYbV2VKAgtxUM5H2n18=
+        b=wwYUKEwKYIk8arMW1TyelSgMlRX8JeLwMhD6cUFnkNRb7w9Fpv6BVxhw5Xe47Bcnw
+         amkAETaNDxE52qqDJ3tN66UNaXDjLA4VH0MjnL445ChlRBPzq9gbi77Hjr/QdnOHPa
+         JwdimdJx9G2VQgbWHJcRPfyTnNaKWfM3fPBmxp6E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 177/350] regulator: fixed: add off-on-delay
-Date:   Tue, 10 Dec 2019 16:04:42 -0500
-Message-Id: <20191210210735.9077-138-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 179/350] ALSA: hda/hdmi - implement mst_no_extra_pcms flag
+Date:   Tue, 10 Dec 2019 16:04:44 -0500
+Message-Id: <20191210210735.9077-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -58,57 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit f7907e57aea2adcd0b57ebcca410e125412ab680 ]
+[ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
 
-Depends on board design, the gpio controlling regulator may
-connects with a big capacitance. When need off, it takes some time
-to let the regulator to be truly off. If not add enough delay, the
-regulator might have always been on, so introduce off-on-delay to
-handle such case.
+To support the DP-MST multiple streams via single connector feature,
+the HDMI driver was extended with the concept of backup PCMs. See
+commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1572311875-22880-3-git-send-email-peng.fan@nxp.com
+This implementation works fine with snd_hda_intel.c as PCM topology
+is fully managed within the single driver.
+
+When the HDA codec driver is used from ASoC components, the concept
+of backup PCMs no longer fits. For ASoC topologies, the physical
+HDMI converters are presented as backend DAIs and these should match
+with hardware capabilities. The ASoC topology may define arbitrary
+PCMs (i.e. frontend DAIs) and have processing elements before eventual
+routing to the HDMI BE DAIs. With backup PCMs, the link between
+FE and BE DAIs would become dynamic and change when monitors are
+(un)plugged. This would lead to modifying the topology every time
+hotplug events happen, which is not currently possible in ASoC and
+there does not seem to be any obvious benefits from this design.
+
+To overcome above problems and enable the HDMI driver to be used
+from ASoC, this patch adds a new mode (mst_no_extra_pcms flags) to
+patch_hdmi.c. In this mode, the codec driver does not assume
+the backup PCMs to be created.
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191029134017.18901-2-kai.vehmanen@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/fixed.c       | 2 ++
- include/linux/regulator/fixed.h | 1 +
- 2 files changed, 3 insertions(+)
+ include/sound/hda_codec.h  |  1 +
+ sound/pci/hda/patch_hdmi.c | 19 ++++++++++++++-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index f81533070058e..bc0bbd99e98d0 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -123,6 +123,7 @@ of_get_fixed_voltage_config(struct device *dev,
- 		config->enabled_at_boot = true;
+diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
+index 9a0393cf024c2..ac18f428eda6c 100644
+--- a/include/sound/hda_codec.h
++++ b/include/sound/hda_codec.h
+@@ -254,6 +254,7 @@ struct hda_codec {
+ 	unsigned int force_pin_prefix:1; /* Add location prefix */
+ 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
+ 	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
++	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
  
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
-+	of_property_read_u32(np, "off-on-delay-us", &config->off_on_delay);
+ #ifdef CONFIG_PM
+ 	unsigned long power_on_acct;
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index d14f6684737d0..b8579cd218098 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2075,15 +2075,24 @@ static bool is_hdmi_pcm_attached(struct hdac_device *hdac, int pcm_idx)
+ static int generic_hdmi_build_pcms(struct hda_codec *codec)
+ {
+ 	struct hdmi_spec *spec = codec->spec;
+-	int idx;
++	int idx, pcm_num;
  
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply = "vin";
-@@ -189,6 +190,7 @@ static int reg_fixed_voltage_probe(struct platform_device *pdev)
- 	}
+ 	/*
+ 	 * for non-mst mode, pcm number is the same as before
+-	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
+-	 *  dev_num is the device entry number in a pin
+-	 *
++	 * for DP MST mode without extra PCM, pcm number is same
++	 * for DP MST mode with extra PCMs, pcm number is
++	 *  (nid number + dev_num - 1)
++	 * dev_num is the device entry number in a pin
+ 	 */
+-	for (idx = 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
++
++	if (codec->mst_no_extra_pcms)
++		pcm_num = spec->num_nids;
++	else
++		pcm_num = spec->num_nids + spec->dev_num - 1;
++
++	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
++
++	for (idx = 0; idx < pcm_num; idx++) {
+ 		struct hda_pcm *info;
+ 		struct hda_pcm_stream *pstr;
  
- 	drvdata->desc.enable_time = config->startup_delay;
-+	drvdata->desc.off_on_delay = config->off_on_delay;
- 
- 	if (config->input_supply) {
- 		drvdata->desc.supply_name = devm_kstrdup(&pdev->dev,
-diff --git a/include/linux/regulator/fixed.h b/include/linux/regulator/fixed.h
-index d44ce5f18a568..55319943fcc58 100644
---- a/include/linux/regulator/fixed.h
-+++ b/include/linux/regulator/fixed.h
-@@ -36,6 +36,7 @@ struct fixed_voltage_config {
- 	const char *input_supply;
- 	int microvolts;
- 	unsigned startup_delay;
-+	unsigned int off_on_delay;
- 	unsigned enabled_at_boot:1;
- 	struct regulator_init_data *init_data;
- };
 -- 
 2.20.1
 
