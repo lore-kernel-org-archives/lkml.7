@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDC1C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D6CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D58246C1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6132C246C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012299;
-	bh=WfeIUPb1jcebWN1U5IJAs6nakk29bn4JVC4Z2UolPdg=;
+	s=default; t=1576012305;
+	bh=E0qgeFxZxqKUFnBfvaw7RnzgxM0tS1Pc/6AZP0kcofA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eclDO5F6X1tSMZJinn8vo+eBNp5EwoMek46FF9fAqidvibW1w6mk0nJ5q305TDugD
-	 I5Gli7RHWd2HmxvirpfDu62xKCB1OisX2SxAoAGkuiFv9VYuAg4hufKIhFTJD8raFv
-	 dlZfVI8ne7lZ3iPGiVn0nsycozQrfkThiIS0fCj0=
+	b=A+D9uvCJygP0t8VI4s4vXL8A9XmDDuBXPWQ8HklsBY0HpTTg7CP8TL6bh2X62RZaK
+	 aj8ctv1v5O7HvQr9mp6RRxQkw17SSxWGIlWHbVAeTbfR0+t6rUlNrLSpgbskaE96sX
+	 wpBWRYADz5/t5O7GYmzFRFyxWxuBqtXOPDVdwTLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfLJVLi (ORCPT
+        id S1728829AbfLJVLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbfLJVL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:26 -0500
+        id S1726362AbfLJVLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7366246B9;
-        Tue, 10 Dec 2019 21:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8EB0246C1;
+        Tue, 10 Dec 2019 21:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012285;
-        bh=WfeIUPb1jcebWN1U5IJAs6nakk29bn4JVC4Z2UolPdg=;
+        s=default; t=1576012301;
+        bh=E0qgeFxZxqKUFnBfvaw7RnzgxM0tS1Pc/6AZP0kcofA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peHIY0j4kCF+uXemIIqPz+q4obUOljTm6Px7EERupjwSljwpOIn1xm1DDA+5BnLE+
-         hJ4zQnZjah/0LaKZvF5w1J90rGOBpBx2ijC8gdmgs0WBrmmyaJZestUs2mldEUSnDT
-         V7jsHSoL9fjJb1Kt2clge+2nBssGHG+rJTr1uMj8=
+        b=FhxmxZxj74O8WZKccgyrJh0lXlNqgEn1eaRu+FbMrw07VgrEVw2S3bWNtqWMN5VpL
+         BlRptmnyTD6vtCYIwVe+d2mQvURLccHlPH6a71UeTlVJJ/k+6O8yK2DXFqMukApoFg
+         I/xMUZTPbM0KMZ2ANho66Gz/Ego1GCcjEkNPnDSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 227/350] perf probe: Fix to probe a function which has no entry pc
-Date:   Tue, 10 Dec 2019 16:05:32 -0500
-Message-Id: <20191210210735.9077-188-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 238/350] perf probe: Return a better scope DIE if there is no best scope
+Date:   Tue, 10 Dec 2019 16:05:43 -0500
+Message-Id: <20191210210735.9077-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -64,92 +65,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
+[ Upstream commit c701636aeec4c173208697d68da6e4271125564b ]
 
-Fix 'perf probe' to probe a function which has no entry pc or low pc but
-only has ranges attribute.
+Make find_best_scope() returns innermost DIE at given address if there
+is no best matched scope DIE. Since Gcc sometimes generates intuitively
+strange line info which is out of inlined function address range, we
+need this fixup.
 
-probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
-but that doesn't work for the function DIE which has only ranges
-attribute. Use die_entrypc() instead.
+Without this, sometimes perf probe failed to probe on a line inside an
+inlined function:
 
-Without this fix:
-
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
+  # perf probe -D ksys_open:3
+  Failed to find scope of probe point.
     Error: Failed to add events.
 
-With this:
+With this fix, 'perf probe' can probe it:
 
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
+  # perf probe -D ksys_open:3
+  p:probe/ksys_open _text+25707308
+  p:probe/ksys_open_1 _text+25710596
+  p:probe/ksys_open_2 _text+25711114
+  p:probe/ksys_open_3 _text+25711343
+  p:probe/ksys_open_4 _text+25714058
+  p:probe/ksys_open_5 _text+2819653
+  p:probe/ksys_open_6 _text+2819701
 
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]#
-
-Using it with 'perf trace':
-
-  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
-
-Doesn't seem to be used in x86_64:
-
-  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
-  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
-  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
-  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
-  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
-  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
-  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
-  $
-
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 7857ae7a10b73..4079ed617f53c 100644
+index e4ef8f4935b2a..08cccd86447c5 100644
 --- a/tools/perf/util/probe-finder.c
 +++ b/tools/perf/util/probe-finder.c
-@@ -994,7 +994,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
- 		param->retval = find_probe_point_by_line(pf);
- 	} else if (die_is_func_instance(sp_die)) {
- 		/* Instances always have the entry address */
--		dwarf_entrypc(sp_die, &pf->addr);
-+		die_entrypc(sp_die, &pf->addr);
- 		/* But in some case the entry address is 0 */
- 		if (pf->addr == 0) {
- 			pr_debug("%s has no entry PC. Skipped\n",
+@@ -756,6 +756,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
+ 	return 0;
+ }
+ 
++/* Return innermost DIE */
++static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
++{
++	struct find_scope_param *fsp = data;
++
++	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
++	fsp->found = true;
++	return 1;
++}
++
+ /* Find an appropriate scope fits to given conditions */
+ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ {
+@@ -767,8 +777,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ 		.die_mem = die_mem,
+ 		.found = false,
+ 	};
++	int ret;
+ 
+-	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
++	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
++				   &fsp);
++	if (!ret && !fsp.found)
++		cu_walk_functions_at(&pf->cu_die, pf->addr,
++				     find_inner_scope_cb, &fsp);
+ 
+ 	return fsp.found ? die_mem : NULL;
+ }
 -- 
 2.20.1
 
