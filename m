@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9390FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517BEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590E92077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26301207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017693;
-	bh=YCY9SJX1PgzVA6xBjXs9QXqR7IeaQGAd82YkXGq+9CQ=;
+	s=default; t=1576017696;
+	bh=3D4BLrw6nIRMZyEUJCGiVCsjqBnckI5Hde+T4/No4ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4M4zPrs0wgu4CL5NNNqJMjGwzWWsfEsVsWYiZLs9sB/yPWkn2awKIgVRPxDfIHjb
-	 lMMFEmDONao7iXzI9ir7/qR5ULPMvrrEPBsIUy8uFyQgmOybB95ydn4mHwT+Yft84n
-	 Yym+BPWYowgTBaq3FcSz5CU//LaUvijD4u68zuSg=
+	b=x24/kEJR5+tuIoRh10GjN4BzOpR+6h3k5MMG2imrSSfBMltKIxpjffVaS8jqaTqK6
+	 uRk5DlqLGYMZb04Umr4EvJUjrYuFD7dbHZC0c9ZX2izM2G1n86FEO+vWrLN2cM2jac
+	 BbIonxqFI0JPaVHgyJktxR3fBf8GczJ6SGnmyYvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbfLJWbr (ORCPT
+        id S1730092AbfLJWlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:41:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbfLJWbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:34 -0500
+        id S1728845AbfLJWbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9F820836;
-        Tue, 10 Dec 2019 22:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6BD1214D8;
+        Tue, 10 Dec 2019 22:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017093;
-        bh=YCY9SJX1PgzVA6xBjXs9QXqR7IeaQGAd82YkXGq+9CQ=;
+        s=default; t=1576017106;
+        bh=3D4BLrw6nIRMZyEUJCGiVCsjqBnckI5Hde+T4/No4ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jelgK2lreos8lGsO5bH/2Q1+mFk3x+VORAdfSPg/YJ7nEED1qJyaj3PzbtV9rtGdC
-         80djzLMPbw48/i2OladGEbR1Jt+b4ayyZxc+We6rU96UmMGilISAQ4XUe8wM4x67um
-         bT4MBmuUFGm10V6LYLSe1LjjK2KaXUSHB2YYNkoM=
+        b=s4bZz5Ol5Lpd0Kr7nv/2CqDGxQosZpZijKsTn2ox2uqDe2D/WmsHuu61Ox2Driagt
+         Zp7PYBVoLN+yoWphM1NJrqQuGkFobfQxqlvTl1/8yXtGtcK4T1o36lyi8Rz5Rs5UPc
+         Q3qJUjqQgNH8YUZ96xrmXFOEMaEV8Gw5ZJ/C0ukg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 48/91] bnx2x: Fix PF-VF communication over multi-cos queues.
-Date:   Tue, 10 Dec 2019 17:29:52 -0500
-Message-Id: <20191210223035.14270-48-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 60/91] perf probe: Return a better scope DIE if there is no best scope
+Date:   Tue, 10 Dec 2019 17:30:04 -0500
+Message-Id: <20191210223035.14270-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,52 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit dc5a3d79c345871439ffe72550b604fcde9770e1 ]
+[ Upstream commit c701636aeec4c173208697d68da6e4271125564b ]
 
-PF driver doesn't enable tx-switching for all cos queues/clients,
-which causes packets drop from PF to VF. Fix this by enabling
-tx-switching on all cos queues/clients.
+Make find_best_scope() returns innermost DIE at given address if there
+is no best matched scope DIE. Since Gcc sometimes generates intuitively
+strange line info which is out of inlined function address range, we
+need this fixup.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Without this, sometimes perf probe failed to probe on a line inside an
+inlined function:
+
+  # perf probe -D ksys_open:3
+  Failed to find scope of probe point.
+    Error: Failed to add events.
+
+With this fix, 'perf probe' can probe it:
+
+  # perf probe -D ksys_open:3
+  p:probe/ksys_open _text+25707308
+  p:probe/ksys_open_1 _text+25710596
+  p:probe/ksys_open_2 _text+25711114
+  p:probe/ksys_open_3 _text+25711343
+  p:probe/ksys_open_4 _text+25714058
+  p:probe/ksys_open_5 _text+2819653
+  p:probe/ksys_open_6 _text+2819701
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/broadcom/bnx2x/bnx2x_sriov.c    | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-index c6e059119b22e..e8a09d0afe1c9 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c
-@@ -2376,15 +2376,21 @@ static int bnx2x_set_pf_tx_switching(struct bnx2x *bp, bool enable)
- 	/* send the ramrod on all the queues of the PF */
- 	for_each_eth_queue(bp, i) {
- 		struct bnx2x_fastpath *fp = &bp->fp[i];
-+		int tx_idx;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 440f0a92ade65..6ca804a01cf9f 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -764,6 +764,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
+ 	return 0;
+ }
  
- 		/* Set the appropriate Queue object */
- 		q_params.q_obj = &bnx2x_sp_obj(bp, fp).q_obj;
- 
--		/* Update the Queue state */
--		rc = bnx2x_queue_state_change(bp, &q_params);
--		if (rc) {
--			BNX2X_ERR("Failed to configure Tx switching\n");
--			return rc;
-+		for (tx_idx = FIRST_TX_COS_INDEX;
-+		     tx_idx < fp->max_cos; tx_idx++) {
-+			q_params.params.update.cid_index = tx_idx;
++/* Return innermost DIE */
++static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
++{
++	struct find_scope_param *fsp = data;
 +
-+			/* Update the Queue state */
-+			rc = bnx2x_queue_state_change(bp, &q_params);
-+			if (rc) {
-+				BNX2X_ERR("Failed to configure Tx switching\n");
-+				return rc;
-+			}
- 		}
- 	}
++	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
++	fsp->found = true;
++	return 1;
++}
++
+ /* Find an appropriate scope fits to given conditions */
+ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ {
+@@ -775,8 +785,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ 		.die_mem = die_mem,
+ 		.found = false,
+ 	};
++	int ret;
  
+-	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
++	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
++				   &fsp);
++	if (!ret && !fsp.found)
++		cu_walk_functions_at(&pf->cu_die, pf->addr,
++				     find_inner_scope_cb, &fsp);
+ 
+ 	return fsp.found ? die_mem : NULL;
+ }
 -- 
 2.20.1
 
