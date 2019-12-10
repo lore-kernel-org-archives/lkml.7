@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C67C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5BAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E1F20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE69E20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014387;
-	bh=3gDGzaKlOnL6s0iVohZmjRBLjJCVh5j/TZpCYp5eJ/U=;
+	s=default; t=1576014389;
+	bh=WbZYgeyetfkE8t/vVji5okhijsFun0tbIkXbduSiIOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQBfBJkJrHXWj/KO+IZs4UZW+N+AhqoICm9bYWSHR2E1n+1RkM3ye0CDYeAgIbgQj
-	 jo8ab/izfpTrEOUXWdOuG65SnBu+P9/JGOmcv4jaVEBXbOTTj4Ye9mpMap2UZG9PEH
-	 oYduQrX6OJuP580rFmsWzs/HD/XCNO63rNG4uMd4=
+	b=TkWG1va45CpQTnZohc4f5Sv7CopALylSgfdFjm/NQ6P/278bYF4qJj8JhQGiTsJhN
+	 fZ7faWy/gU3iYf3Txm9hzIMcmueaUF78VreitLIOKWrqcuzK0X3pMpeNdfPCZW3VWK
+	 RFCF4cnib/uh9AN5U/tPKxLGOA/pLR50j7u8iSSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbfLJVq0 (ORCPT
+        id S1729793AbfLJVqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:46:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:46:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfLJVco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:32:44 -0500
+        id S1729287AbfLJVcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF99207FF;
-        Tue, 10 Dec 2019 21:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B3D214AF;
+        Tue, 10 Dec 2019 21:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013564;
-        bh=3gDGzaKlOnL6s0iVohZmjRBLjJCVh5j/TZpCYp5eJ/U=;
+        s=default; t=1576013562;
+        bh=WbZYgeyetfkE8t/vVji5okhijsFun0tbIkXbduSiIOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ld/9ovqB+7CooOSc+hRcSvY+m9MZaDnXmc35WdcaFVGPzyn44RlKWAiAKCLzjuxWb
-         bdOHhkizVBr+ifeJFhRuqQ552jgEJ0jiQSolczsK7XGuFkOBrClAQjuTAzyeHoW0qM
-         hbwnjTm/ILGQKLtULx5+Y5B6m5RpHT7K5JWftqpc=
+        b=2VN+NBSCkSPUwaUdvzG4tkhRt2uZqyQMaSWniVKCs4Hdx94vcSFs3Oi+So9vNcNQF
+         ewhCVZO0ehfxf81TuLDFHhiEkX3O+TbpvvC+Q4bd5dL/byxs0b9elkAJ8K3EFw6KDN
+         ja9qUXKajWE1jRkRe5Dyd4Y2K36n3XgK9RQm88qE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 019/177] media: ov6650: Fix stored frame format not in sync with hardware
-Date:   Tue, 10 Dec 2019 16:29:43 -0500
-Message-Id: <20191210213221.11921-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 017/177] media: ov6650: Fix crop rectangle alignment not passed back
+Date:   Tue, 10 Dec 2019 16:29:41 -0500
+Message-Id: <20191210213221.11921-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -62,67 +62,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
+[ Upstream commit 7b188d6ba27a131e7934a51a14ece331c0491f18 ]
 
-The driver stores frame format settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, those settings are updated before they are actually applied
-on hardware.  If an error occurs on device update, the stored settings
-my not reflect hardware state anymore and consecutive calls to
-.get_fmt() may return incorrect information.  That in turn may affect
-ability of a bridge device to use correct DMA transfer settings if such
-incorrect informmation on active frame format returned by .get_fmt() is
-used.
+Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
+introduced a writable copy of constified user requested crop rectangle
+in order to be able to perform hardware alignments on it.  Later
+on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
+ops") replaced s_crop() video operation using that const argument with
+set_selection() pad operation which had a corresponding argument not
+constified, however the original behavior of the driver was not
+restored.  Since that time, any hardware alignment applied on a user
+requested crop rectangle is not passed back to the user calling
+.set_selection() as it should be.
 
-Assuming a failed device update means its state hasn't changed, update
-frame format related settings stored in the device private structure
-only after they are successfully applied so the stored values always
-reflect hardware state as closely as possible.
+Fix the issue by dropping the copy and replacing all references to it
+with references to the crop rectangle embedded in the user argument.
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index e3433a4fc4738..60109442a0729 100644
+index edded869d7920..e3433a4fc4738 100644
 --- a/drivers/media/i2c/ov6650.c
 +++ b/drivers/media/i2c/ov6650.c
-@@ -613,7 +613,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+@@ -469,38 +469,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct ov6650 *priv = to_ov6650(client);
+-	struct v4l2_rect rect = sel->r;
+ 	int ret;
+ 
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
  		return -EINVAL;
- 	}
--	priv->code = code;
  
- 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
- 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
-@@ -639,7 +638,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_dbg(&client->dev, "max resolution: CIF\n");
- 		coma_mask |= COMA_QCIF;
- 	}
--	priv->half_scale = half_scale;
+-	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
+-			      &rect.height, 2, H_CIF, 1, 0);
+-	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
+-			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
+-			      &rect.top, DEF_VSTRT << 1,
+-			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
+-			      0);
++	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
++			      &sel->r.height, 2, H_CIF, 1, 0);
++	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
++			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
++			      &sel->r.top, DEF_VSTRT << 1,
++			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
++			      1, 0);
  
- 	clkrc = CLKRC_12MHz;
- 	mclk = 12000000;
-@@ -657,8 +655,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
- 	if (!ret)
- 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
--	if (!ret)
-+	if (!ret) {
-+		priv->half_scale = half_scale;
-+
- 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
-+	}
-+	if (!ret)
-+		priv->code = code;
- 
+-	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
++	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
  	if (!ret) {
- 		mf->colorspace	= priv->colorspace;
+-		priv->rect.left = rect.left;
++		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+-				(rect.left + rect.width) >> 1);
++				       (sel->r.left + sel->r.width) >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.width = rect.width;
+-		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
++		priv->rect.width = sel->r.width;
++		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.top = rect.top;
++		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+-				(rect.top + rect.height) >> 1);
++				       (sel->r.top + sel->r.height) >> 1);
+ 	}
+ 	if (!ret)
+-		priv->rect.height = rect.height;
++		priv->rect.height = sel->r.height;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
