@@ -4,58 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AD7C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B93AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C1C246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41609246C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012292;
-	bh=PBfCn9+firaC/BKdGAdGc6hnUFsDFRu0TqHzigAU/hg=;
+	s=default; t=1576012295;
+	bh=VtfTMDq6SeMBsLcMb49j1SzFCrI/N7h9baI5QJ7nNUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsvL7B2A/Lmilt5Fl899ixZTIoXni08+uhB+q7jdOzMtG8MocGPqpDiWyhfWpRdX1
-	 xj5Gn4EuHRlw+jU/MGxKNKlw2CWs5gDWnAwIykhNdMcOgeIzMqhee+ARgyISDrnYuF
-	 iPkKt7GHme2yE9gWxOYPIdN8R6gYoHetlpTgq1Gc=
+	b=jqZLlaclF8mPnE9RsoLm1fo43MKbPyQOTZmQAFNfT/yj7ajs6IjaPavAsxXpevQTH
+	 CgVPYwG9hsSWAbtby0rJyNCkJL+DZ/eodBvH/APi8keLQs7wxOV0Ik36dH7G4sUNbp
+	 qp75UtXCIz74SbAGBEnwbFemYXPwLu5nhKi7oMhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfLJVLb (ORCPT
+        id S1728780AbfLJVLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33714 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfLJVLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:16 -0500
+        id S1727619AbfLJVLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23764246B9;
-        Tue, 10 Dec 2019 21:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAAF3246AF;
+        Tue, 10 Dec 2019 21:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012275;
-        bh=PBfCn9+firaC/BKdGAdGc6hnUFsDFRu0TqHzigAU/hg=;
+        s=default; t=1576012278;
+        bh=VtfTMDq6SeMBsLcMb49j1SzFCrI/N7h9baI5QJ7nNUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLGUFMCN+YTM008WkyQI3/6G7yLhJKH2qlzlso3D3iEM3/IGsFxmLCZG1nY61WC7v
-         SY+EQ1uZmAEMWobEohgxDZp6dPqVbF+M8RKHLavUaYGWxD1nlF8wodQezWC9XloMY8
-         fRAgmgEVKyfoPlyDj1RMSDyP9sNrzJOFBefBZpNI=
+        b=vgYCPNRjdMBozrjZhknR9ibZWJeOXx0i6eyhs4La4MyYKGTI6plPXxGfuZ11bhp5i
+         eRE4AbxcsS9o9jDzBJ1FoXwqWM/kUjzneCT624Eacf8zto5htB9b5ISC8FmesD4swl
+         GxxFQbFYj+1YY30H7IGyDmgZfjUrlryAM4bo4U+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Feilong Lin <linfeilong@huawei.com>,
+        Hu Shiyuan <hushiyuan@huawei.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Luke Mujica <lukemujica@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight ml <coresight@lists.linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Zenghui Yu <yuzenghui@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 219/350] perf cs-etm: Fix definition of macro TO_CS_QUEUE_NR
-Date:   Tue, 10 Dec 2019 16:05:24 -0500
-Message-Id: <20191210210735.9077-180-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 221/350] perf jevents: Fix resource leak in process_mapfile() and main()
+Date:   Tue, 10 Dec 2019 16:05:26 -0500
+Message-Id: <20191210210735.9077-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -68,64 +71,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 9d604aad4bb022e848dec80d6fe5f73fe87061a2 ]
+[ Upstream commit 1785fbb73896dbd9d27a406f0d73047df42db710 ]
 
-Macro TO_CS_QUEUE_NR definition has a typo, which uses 'trace_id_chan'
-as its parameter, this doesn't match with its definition body which uses
-'trace_chan_id'.  So renames the parameter to 'trace_chan_id'.
+There are memory leaks and file descriptor resource leaks in
+process_mapfile() and main().
 
-It's luck to have a local variable 'trace_chan_id' in the function
-cs_etm__setup_queue(), even we wrongly define the macro TO_CS_QUEUE_NR,
-the local variable 'trace_chan_id' is used rather than the macro's
-parameter 'trace_id_chan'; so the compiler doesn't complain for this
-before.
+Fix this by adding free(), fclose() and free_arch_std_events() on the
+error paths.
 
-After renaming the parameter, it leads to a compiling error due
-cs_etm__setup_queue() has no variable 'trace_id_chan'.  This patch uses
-the variable 'trace_chan_id' for the macro so that fixes the compiling
-error.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
+Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Luke Mujica <lukemujica@google.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight ml <coresight@lists.linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20191021074808.25795-1-leo.yan@linaro.org
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cs-etm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/jevents.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 4ba0f871f086d..f5f855fff412e 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -110,7 +110,7 @@ static int cs_etm__decode_data_block(struct cs_etm_queue *etmq);
-  * encode the etm queue number as the upper 16 bit and the channel as
-  * the lower 16 bit.
-  */
--#define TO_CS_QUEUE_NR(queue_nr, trace_id_chan)	\
-+#define TO_CS_QUEUE_NR(queue_nr, trace_chan_id)	\
- 		      (queue_nr << 16 | trace_chan_id)
- #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
- #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
-@@ -819,7 +819,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	 * Note that packets decoded above are still in the traceID's packet
- 	 * queue and will be processed in cs_etm__process_queues().
- 	 */
--	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_id_chan);
-+	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index e2837260ca4df..99e3fd04a5cb3 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	char *line, *p;
+ 	int line_num;
+ 	char *tblname;
++	int ret = 0;
+ 
+ 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+ 
+@@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	if (!mapfp) {
+ 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+ 				fpath);
++		free(line);
+ 		return -1;
+ 	}
+ 
+@@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 			/* TODO Deal with lines longer than 16K */
+ 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+ 					prog, fpath, line_num);
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		line[strlen(line)-1] = '\0';
+ 
+@@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 
  out:
- 	return ret;
+ 	print_mapping_table_suffix(outfp);
+-	return 0;
++	fclose(mapfp);
++	free(line);
++	return ret;
+ }
+ 
+ /*
+@@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+ 		/* Make build fail */
++		fclose(eventsfp);
++		free_arch_std_events();
+ 		return 1;
+ 	}
+ 
 -- 
 2.20.1
 
