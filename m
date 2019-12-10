@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7D9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319FDC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7820E207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D555B20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017054;
-	bh=kEw65JPUeeeLdPYT7MjEL5X1pmo845/HjvaBh46ctSY=;
+	s=default; t=1576017058;
+	bh=AHUNbmppfEpP+t+XO42kmTgb66/uWoJiiZ5QJVUfK80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3YKQ/v+tXJZZnhzaGkXzksX30DdTQCFqrCmiw001PATH5kOvDvS9C7uaIXOWuo6r
-	 ZHogKrEpAJWPc03EomOx0FDJyf29OUkIDfhnQlhI45kbBx0ZsM/EgNe2QcJP+B8u1o
-	 owJKq0TfFW2jSC5WWCamUc9O7CZnZfX0ZvHEWxdo=
+	b=xTDoN0N1tpR8ioYC5e+MCKfNZl92gE50Q1PrAH56i4HOJyPmWAuORbNMXylfG23FK
+	 ySwlwA94Q2mx4v7ZwmzEEvHN2k/H/m9jbKBO/T/QMHFb4YPPOFSgsRe0JoUQv/s5xn
+	 C2ZVKduf2vq357EPuAel/t1xLgmO7Olj/AR48r1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfLJWax (ORCPT
+        id S1727639AbfLJWa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:30:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50612 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:30:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbfLJWau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:50 -0500
+        id S1727539AbfLJWax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925CB2077B;
-        Tue, 10 Dec 2019 22:30:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB64208C3;
+        Tue, 10 Dec 2019 22:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017049;
-        bh=kEw65JPUeeeLdPYT7MjEL5X1pmo845/HjvaBh46ctSY=;
+        s=default; t=1576017052;
+        bh=AHUNbmppfEpP+t+XO42kmTgb66/uWoJiiZ5QJVUfK80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IHvTleinE6/YSzB2MPBSle2EZhjy9SPoA/3qJPeAHTLnHBRDKL8/h81bJu5jSzqGG
-         o0dRF3XufgrxFalYCZjo9DpH0ajr1KwCt6RV4TOxU9AQRfUl2m8dMP3aHm0HBnFAJ5
-         108PYDZgiW2vMLBE3EXOCAF0osyEfIT48srlGDBc=
+        b=aNnqU687R4TayBr+/ZYHeBehpM1WlXnLuzdJHPlYIz8i2O1sS+NtonFGRRVodtMZO
+         OHg/Pjsufu6CZhtl1lhRkMXtYhQSzywhMRgcu0G7szIHpFrvEGn3uWkOUEyjggURtC
+         jXokIcJOZr6hjTpAUtfRlP68lkADtB3h43Fdk8xY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Gurtovoy <maxg@mellanox.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/91] IB/iser: bound protection_sg size by data_sg size
-Date:   Tue, 10 Dec 2019 17:29:15 -0500
-Message-Id: <20191210223035.14270-11-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/91] media: i2c: ov2659: Fix missing 720p register config
+Date:   Tue, 10 Dec 2019 17:29:18 -0500
+Message-Id: <20191210223035.14270-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,38 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+The initial registers sequence is only loaded at probe
+time. Afterward only the resolution and format specific
+register are modified. Care must be taken to make sure
+registers modified by one resolution setting are reverted
+back when another resolution is programmed.
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This was not done properly for the 720p case.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/ov2659.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index e46e2b095c184..fdf5179a81c10 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -649,6 +649,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 49196afd15a8a..ade3c48e2e0cf 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
+ 	{ REG_TIMING_YINC, 0x11 },
+ 	{ REG_TIMING_VERT_FORMAT, 0x80 },
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
++	{ 0x370a, 0x12 },
+ 	{ 0x3a03, 0xe8 },
+ 	{ 0x3a09, 0x6f },
+ 	{ 0x3a0b, 0x5d },
+ 	{ 0x3a15, 0x9a },
++	{ REG_VFIFO_READ_START_H, 0x00 },
++	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_ISP_CTRL02, 0x00 },
+ 	{ REG_NULL, 0x00 },
+ };
  
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
 -- 
 2.20.1
 
