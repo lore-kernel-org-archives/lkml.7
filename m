@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C7AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5488CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A81E24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC2024680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011954;
-	bh=8sQZi92LYMSGs3wG0gKqFzU+WlXbbH0AzH5Aku7580E=;
+	s=default; t=1576011960;
+	bh=MGJpwmzW8V6MK6vfbIXS/Ffo7ij6p1KHtpg0BMQrkBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fph0ik4rxZ7R16U/iPJjDuvwAlkASMiq3VsKl8cpFarTi1FdxlG+HkiKy8VYw1fg4
-	 1MyJ+YPUtbxq253Jc5tP9iZiIE/oCRYHW9f4fR6gvIggKJY0Qd920OQnfisRZ9CKVn
-	 Qcdu3g3/NTf67b1M3owD/eKPz69cY28RD/LIXxdg=
+	b=WSoIPFaBp9lX55nN6WZQ/izbnWaSGTEdS4iXggqddr96ZkLxIaBLm0G8BY8al23Z6
+	 g5FMlv+xzqwNht1n7Wrvlja+oHkhXQpcJvAvwngp4RoenycflP30/OtAnp/oCTJUiF
+	 ogmerxJLp5hSEFI91MgV7j1VXv2WLbDGg51FW6u8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfLJVEe (ORCPT
+        id S1727387AbfLJVF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:05:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfLJVE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:27 -0500
+        id S1727168AbfLJVEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE4EA24654;
-        Tue, 10 Dec 2019 21:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E1B724654;
+        Tue, 10 Dec 2019 21:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011866;
-        bh=8sQZi92LYMSGs3wG0gKqFzU+WlXbbH0AzH5Aku7580E=;
+        s=default; t=1576011870;
+        bh=MGJpwmzW8V6MK6vfbIXS/Ffo7ij6p1KHtpg0BMQrkBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYWzKvMmotEGSTwHac1rIRFATAANTKlw+VfCRxwecWiuGmROSbdnqBsHEPtkIlBQ4
-         /uATLyNi+Lp9qvXJiHH+Wi/eudEfEeoRkiUGa6NRFW23ZKZH+a6JiuorH0qv0c2+sl
-         QgbtwrWej8gZK9ia0R+ZNIODkHcs9XDNA9DvZ4rk=
+        b=0zqXJh64WM4Ql57n6aR44DwT/GzQTepasohY7PjfcdDHlfsnBJGjFMFhAdNmG4+CH
+         fNx7NoHhDKlLRxIxlt2mTeIm4vReBzwsXAmZOrgdoKSStc0xEdkV//7aIhvH2X0Di5
+         RqH+8rUFs0u6AAEnQ5MBkb/rSDvlv0SwKoR5bTCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 019/350] iio: tcs3414: fix iio_triggered_buffer_{pre,post}enable positions
-Date:   Tue, 10 Dec 2019 15:58:31 -0500
-Message-Id: <20191210210402.8367-19-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 022/350] drm/meson: vclk: use the correct G12A frac max value
+Date:   Tue, 10 Dec 2019 15:58:34 -0500
+Message-Id: <20191210210402.8367-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -59,84 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 0fe2f2b789190661df24bb8bf62294145729a1fe ]
+[ Upstream commit d56276a13c2b9ea287b9fc7cc78bed4c43b286f9 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+When calculating the HDMI PLL settings for a DMT mode PHY frequency,
+use the correct max fractional PLL value for G12A VPU.
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+With this fix, we can finally setup the 1024x768-60 mode.
 
-The driver was slightly reworked. The preenable hook was moved to the
-postenable, to add some symmetry to the postenable/predisable part.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190828132311.23881-1-narmstrong@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/tcs3414.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/light/tcs3414.c b/drivers/iio/light/tcs3414.c
-index 7c0291c5fe76e..b542e5619ead8 100644
---- a/drivers/iio/light/tcs3414.c
-+++ b/drivers/iio/light/tcs3414.c
-@@ -240,32 +240,42 @@ static const struct iio_info tcs3414_info = {
- 	.attrs = &tcs3414_attribute_group,
- };
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index ac491a7819527..f690793ae2d57 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
+ 		if (frac >= HDMI_FRAC_MAX_GXBB)
+ 			return false;
+ 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
+ 		/* Empiric supported min/max dividers */
+ 		if (m < 106 || m > 247)
+ 			return false;
+ 		if (frac >= HDMI_FRAC_MAX_GXL)
+ 			return false;
++	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		/* Empiric supported min/max dividers */
++		if (m < 106 || m > 247)
++			return false;
++		if (frac >= HDMI_FRAC_MAX_G12A)
++			return false;
+ 	}
  
--static int tcs3414_buffer_preenable(struct iio_dev *indio_dev)
-+static int tcs3414_buffer_postenable(struct iio_dev *indio_dev)
- {
- 	struct tcs3414_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
- 
- 	data->control |= TCS3414_CONTROL_ADC_EN;
--	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
-+	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
- 		data->control);
-+	if (ret)
-+		iio_triggered_buffer_predisable(indio_dev);
-+
-+	return ret;
- }
- 
- static int tcs3414_buffer_predisable(struct iio_dev *indio_dev)
- {
- 	struct tcs3414_data *data = iio_priv(indio_dev);
--	int ret;
--
--	ret = iio_triggered_buffer_predisable(indio_dev);
--	if (ret < 0)
--		return ret;
-+	int ret, ret2;
- 
- 	data->control &= ~TCS3414_CONTROL_ADC_EN;
--	return i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
-+	ret = i2c_smbus_write_byte_data(data->client, TCS3414_CONTROL,
- 		data->control);
-+
-+	ret2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (!ret)
-+		ret = ret2;
-+
-+	return ret;
- }
- 
- static const struct iio_buffer_setup_ops tcs3414_buffer_setup_ops = {
--	.preenable = tcs3414_buffer_preenable,
--	.postenable = &iio_triggered_buffer_postenable,
-+	.postenable = tcs3414_buffer_postenable,
- 	.predisable = tcs3414_buffer_predisable,
- };
- 
+ 	return true;
 -- 
 2.20.1
 
