@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AB9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6202DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022CC206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D38D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013366;
-	bh=0anSLDyn+Aa3gqS2U/aPIGNBw1tZDQyavx1RGtfwOIw=;
+	s=default; t=1576013375;
+	bh=jTpiUlKsyB/ccCAr0py+oekD/sHAUrfYfWldZKhQytQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IvS+BAySWpEumuobUK3Y7xXrDbvE6Gms3jORml/gtq2UUgPh4fzfMJn2jQeXTiGg
-	 36Y29p39uimYw+3pexE/U4KDiKUlG1HnQhH+A94r5oiQD6IGZXR+BQPVZKh3ujvOm1
-	 WfahzJIc9sx3qwVW3ia8sEiymMAv5dIH3aViAk5Y=
+	b=x92E9V8pq7OVlTOX1rEdYnGjEGqaA38cW4kh5UCIyPE2EqQIDpBFluSPtftaXhrYl
+	 MkJRigQlgpn399tcL5LnPuasGo6w8MI4VWI0U9fNqTdgOpKtrWazKoGAOB/ztgi52a
+	 BguOok3pzxMCbagJp/Co7YQejR9JIaOpGB3N3szk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLJV3Y (ORCPT
+        id S1728385AbfLJVKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:29:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbfLJVKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:13 -0500
+        id S1728351AbfLJVKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 524FC246A3;
-        Tue, 10 Dec 2019 21:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72327246A4;
+        Tue, 10 Dec 2019 21:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012213;
-        bh=0anSLDyn+Aa3gqS2U/aPIGNBw1tZDQyavx1RGtfwOIw=;
+        s=default; t=1576012202;
+        bh=jTpiUlKsyB/ccCAr0py+oekD/sHAUrfYfWldZKhQytQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DuYm6YgdSb3rvGO6YYcPoxSxrddL+Pf4OYraVwL0LF+PJ9U3by7+QfNztW2JCVKIW
-         ZAIIK25yqUab1occgSIfLr5oBNklAQyVyKhT5tRTqzfJNfVXI8NdJaVvOKp50e1+CE
-         +nw8HaKFGQLmhKYtnoqqvUn5mRrJjZP/v4GqHFqc=
+        b=S5S6Vkbrfe3foMZUaOFNqxo9GIRqiEZ5yUoqdjT7hADF4BXuQtRzo5xohxd7+PQR9
+         K4bALqV3/3ERnXl8+g4jbZuFjGq6YgWMGTih+Vp+8Z606ey0sRV4+ahkmBdqx7lMQy
+         +jnCDpqEovf/grBGJ8Osl3hquoA+Njx+tNjBdoC8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 164/350] net: phy: dp83867: enable robust auto-mdix
-Date:   Tue, 10 Dec 2019 16:04:29 -0500
-Message-Id: <20191210210735.9077-125-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.4 155/350] staging: wilc1000: potential corruption in wilc_parse_join_bss_param()
+Date:   Tue, 10 Dec 2019 16:04:20 -0500
+Message-Id: <20191210210735.9077-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
+[ Upstream commit d59dc92f1bccd5acde793aebdbb4f7121cf3f9af ]
 
-The link detection timeouts can be observed (or link might not be detected
-at all) when dp83867 PHY is configured in manual mode (speed/duplex).
+The "rates_len" value needs to be capped so that the memcpy() doesn't
+copy beyond the end of the array.
 
-CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
-in case dp83867 is configured in manual mode and reduce link detection
-time.
-As per DM: "If link partners are configured to operational modes that are
-not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
-100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
-MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
-
-Hence, enable this option by default as there are no known reasons
-not to do so.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c5c77ba18ea6 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Adham Abozaeid <adham.abozaeid@microchip.com>
+Link: https://lore.kernel.org/r/20191017091832.GB31278@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/staging/wilc1000/wilc_hif.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 37fceaf9fa10f..cf4455bbf888a 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -95,6 +95,10 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* CFG3 bits */
-+#define DP83867_CFG3_INT_OE			BIT(7)
-+#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-+
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-@@ -410,12 +414,13 @@ static int dp83867_config_init(struct phy_device *phydev)
- 		phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
+diff --git a/drivers/staging/wilc1000/wilc_hif.c b/drivers/staging/wilc1000/wilc_hif.c
+index d3d9ea284816a..77d0732f451be 100644
+--- a/drivers/staging/wilc1000/wilc_hif.c
++++ b/drivers/staging/wilc1000/wilc_hif.c
+@@ -473,6 +473,8 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
+ 	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies->data, ies->len);
+ 	if (rates_ie) {
+ 		rates_len = rates_ie[1];
++		if (rates_len > WILC_MAX_RATES_SUPPORTED)
++			rates_len = WILC_MAX_RATES_SUPPORTED;
+ 		param->supp_rates[0] = rates_len;
+ 		memcpy(&param->supp_rates[1], rates_ie + 2, rates_len);
  	}
- 
-+	val = phy_read(phydev, DP83867_CFG3);
- 	/* Enable Interrupt output INT_OE in CFG3 register */
--	if (phy_interrupt_is_valid(phydev)) {
--		val = phy_read(phydev, DP83867_CFG3);
--		val |= BIT(7);
--		phy_write(phydev, DP83867_CFG3, val);
--	}
-+	if (phy_interrupt_is_valid(phydev))
-+		val |= DP83867_CFG3_INT_OE;
-+
-+	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
-+	phy_write(phydev, DP83867_CFG3, val);
- 
- 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
- 		dp83867_config_port_mirroring(phydev);
 -- 
 2.20.1
 
