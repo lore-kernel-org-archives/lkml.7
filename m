@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1380C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B1CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B28207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C3820836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017156;
-	bh=MAg7twYwRu+7UcjxFxWbapy1cQ/MH8MFkJYaPnnScc8=;
+	s=default; t=1576017159;
+	bh=yypaO9vnLjbLue6SUTxHQ/Kt/22WIq6G3Q7QIh3abwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6GP1hrsoML7uxm+WkcA8PzkHLdfUgH18TL1SamLOw8h/QDcoGOvQqbOi2irLXXAN
-	 JvFB81XzGnfziiXt8AtjvOPOeIuQ4Grfn5TWXCFALh2vlRSTJz3HmgqzxXLbXsIctN
-	 tH+IxC2pjCoYDEKZ7l+cyhXd2pkWw0Nd0Vlwu7Hc=
+	b=tkyp9yWJ0dgC2TVWspjqUeO6qu0oS+uIABtdf8yR3OutsdztsYI0oBzcQ6eo4UkS5
+	 CRHUxah0ry+41bksxO/C1gD+tbRES1VBbpzNzyRjlXEEWSodXKo+UdShGP5uF+Qtz1
+	 2/4Yk1vO4la2nYh7GcugeD7b7aqaofNJ9ifsta+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfLJWcf (ORCPT
+        id S1729649AbfLJWci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbfLJWcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:24 -0500
+        id S1729449AbfLJWcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F106214D8;
-        Tue, 10 Dec 2019 22:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E79F24653;
+        Tue, 10 Dec 2019 22:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017143;
-        bh=MAg7twYwRu+7UcjxFxWbapy1cQ/MH8MFkJYaPnnScc8=;
+        s=default; t=1576017145;
+        bh=yypaO9vnLjbLue6SUTxHQ/Kt/22WIq6G3Q7QIh3abwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ba5N3nzclfYBeonl1PaCQJ+d4jYDzE6lpLatd0utOUMEMtt5lB15xvr4hJmGLfUy
-         Iw8At+nJpNLxZfS32JrQiYBsL7xnmF1rmZahw0w74OGOzV08eM5z0DM0G3VWFP6caQ
-         +FRgwpPkroR7TCGCBg7CGLyZ/VX+otLfmk0ihS14=
+        b=SiXu2uoMVo6KdJ/QojfsuYEBlwsb9YOUHRCxzqmB8o8f4+cWqWznGo+k844I+FY9G
+         xSscgj2u816bc1vklVSdKE7FPYa9TTHf4ZFU7twhqVh9AbuBWG9ZQIhiC971O6zc92
+         PwAc+XxdRqQXplO0Xa+yCRbCpTyGLPIdJX4la950=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 89/91] perf parse: Fix potential memory leak when handling tracepoint errors
-Date:   Tue, 10 Dec 2019 17:30:33 -0500
-Message-Id: <20191210223035.14270-89-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 91/91] net: phy: initialise phydev speed and duplex sanely
+Date:   Tue, 10 Dec 2019 17:30:35 -0500
+Message-Id: <20191210223035.14270-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -68,83 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 4584f084aa9d8033d5911935837dbee7b082d0e9 ]
+[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+When a phydev is created, the speed and duplex are set to zero and
+-1 respectively, rather than using the predefined SPEED_UNKNOWN and
+DUPLEX_UNKNOWN constants.
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
+There is a window at initialisation time where we may report link
+down using the 0/-1 values.  Tidy this up and use the predefined
+constants, so debug doesn't complain with:
 
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
+"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
 
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
+when the speed and duplex settings are printed.
 
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/phy/phy_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6193be6d7639d..cfb64369a18d1 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -440,6 +440,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 5c2c72b1ef8b4..3289fd910c4a6 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -324,8 +324,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
+ 	mdiodev->device_free = phy_mdio_device_free;
+ 	mdiodev->device_remove = phy_mdio_device_remove;
  
- 	if (!e)
-@@ -453,18 +454,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
- 		break;
- 	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
- }
- 
- static int add_tracepoint(struct list_head *list, int *idx,
+-	dev->speed = 0;
+-	dev->duplex = -1;
++	dev->speed = SPEED_UNKNOWN;
++	dev->duplex = DUPLEX_UNKNOWN;
+ 	dev->pause = 0;
+ 	dev->asym_pause = 0;
+ 	dev->link = 1;
 -- 
 2.20.1
 
