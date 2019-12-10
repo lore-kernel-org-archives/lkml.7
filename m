@@ -2,106 +2,105 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB7C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171ABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDF42073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="x3zO7znl"
+	by mail.kernel.org (Postfix) with ESMTP id D17A121556
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017204;
+	bh=DiRCgErLnaPFpDFzZ7O2OQisayRi7QqIXVHj7zFDuXw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DAelLdrA0WthQxIllBA260G+LU/3Y+mUnYaFhjvefYylgwsaHwa+CytsFaOnBeJv4
+	 h/s+9B3R+/2irR4IIdrGxX7VfoARvVXchIbFvZ2z3zQKMiGh/pa9T4HaxrSsn8YBD8
+	 xiWW08Oojn6vlxeVh1qOFrPCVlNupXZ3s1sceKNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfLJWdU (ORCPT
+        id S1729740AbfLJWdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:20 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:58808 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbfLJWdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=l5nCDL9ygOAUkfMI19xtYeqlPRqrJq8DhttmTEm6aW8=; b=x3zO7znlJD+0Desk5TPJUwH4zH
-        8sLQF0FvCKSQ68+jTwttTyTuVtF5Fu0u7j9GaxohPhKKNlvDBe/GN7ePxHHCYfkf3YwURFsll0r/r
-        ZzFm9YrCZJ2s5VYHMXNTDBH9YFG9iKFXyhUyKoc7ZWrL9xfhE1xnZtq72n7bdEb6FbtCNWuhjnc0y
-        Agt7gLeB0/UZFgZu8oyy0kchCihvxbfFM7ZeeaUww/TnCBl7vq1rj3s2BSXHOWlVh3+FS6q2wfHpA
-        7lXs3Dudp2TDEuzWX2TlG8N6KGEA5kRR0sRmV+OHJKsm1LRWPIe+B+miJTz8Wm9jDgMArS3LOYD0v
-        F1Oa54Mw==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:42694 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1ieo42-0004Lp-6r; Tue, 10 Dec 2019 22:33:06 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1ieo41-00023K-2O; Tue, 10 Dec 2019 22:33:05 +0000
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Willy Tarreau <w@1wt.eu>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        maxime.chevallier@bootlin.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] net: marvell: mvpp2: phylink requires the link interrupt
+        Tue, 10 Dec 2019 17:33:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728478AbfLJWdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:19 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7128C2073D;
+        Tue, 10 Dec 2019 22:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017198;
+        bh=DiRCgErLnaPFpDFzZ7O2OQisayRi7QqIXVHj7zFDuXw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fJA7NeihFF7PkPApy56zBaOsM15RZXI3EVqn5G3Ey8/tPYVPRfHpFVUkmDDKSEsBw
+         vhlV5sdmnRgSVrUZdh7y10owGcg0JLRKYde0K5pq1Se23tt4dnxSnFTr+xkNuxKvO6
+         lBjHbl1he1Yo/LTx6OogpfOortYLuAn5yGzhtOMM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sean Paul <seanpaul@chromium.org>, Lyude Paul <lyude@redhat.com>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 01/71] drm: mst: Fix query_payload ack reply struct
+Date:   Tue, 10 Dec 2019 17:32:06 -0500
+Message-Id: <20191210223316.14988-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1ieo41-00023K-2O@rmk-PC.armlinux.org.uk>
-Date:   Tue, 10 Dec 2019 22:33:05 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-phylink requires the MAC to report when its link status changes when
-operating in inband modes.  Failure to report link status changes
-means that phylink has no idea when the link events happen, which
-results in either the network interface's carrier remaining up or
-remaining permanently down.
+From: Sean Paul <seanpaul@chromium.org>
 
-For example, with a fiber module, if the interface is brought up and
-link is initially established, taking the link down at the far end
-will cut the optical power.  The SFP module's LOS asserts, we
-deactivate the link, and the network interface reports no carrier.
+[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
 
-When the far end is brought back up, the SFP module's LOS deasserts,
-but the MAC may be slower to establish link.  If this happens (which
-in my tests is a certainty) then phylink never hears that the MAC
-has established link with the far end, and the network interface is
-stuck reporting no carrier.  This means the interface is
-non-functional.
+Spec says[1] Allocated_PBN is 16 bits
 
-Avoiding the link interrupt when we have phylink is basically not
-an option, so remove the !port->phylink from the test.
+[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
 
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Todd Previte <tprevite@gmail.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
+ include/drm/drm_dp_mst_helper.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 111b3b8239e1..ef44c6979a31 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
- 		valid = true;
- 	}
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index f356f9716474a..674472ac067ad 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -303,7 +303,7 @@ struct drm_dp_resource_status_notify {
  
--	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
-+	if (priv->hw_version == MVPP22 && port->link_irq) {
- 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
- 				  dev->name, port);
- 		if (err) {
+ struct drm_dp_query_payload_ack_reply {
+ 	u8 port_number;
+-	u8 allocated_pbn;
++	u16 allocated_pbn;
+ };
+ 
+ struct drm_dp_sideband_msg_req_body {
 -- 
 2.20.1
 
