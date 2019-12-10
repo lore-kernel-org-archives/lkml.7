@@ -2,179 +2,151 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6B9C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5B6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1AF2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CED02073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WYjlBA1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfLJQju (ORCPT
+        id S1727643AbfLJQkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:39:50 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56727 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLJQju (ORCPT
+        Tue, 10 Dec 2019 11:40:22 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39804 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfLJQkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:39:50 -0500
-X-Originating-IP: 90.182.112.136
-Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 2F5696000D;
-        Tue, 10 Dec 2019 16:39:46 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 17:39:44 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: Re: [v5,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Message-ID: <20191210163944.GS1463890@piout.net>
-References: <20190919014520.15500-1-biwen.li@nxp.com>
+        Tue, 10 Dec 2019 11:40:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1575996019; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=nc5SrIdHpVnssk/U5799zzJ9fpS4ncnOzKcnZl0pRgI=;
+        b=WYjlBA1ep008dqBzJo1+7SWKeyfOnEDf2AYce0NkCM6GUUkOGKOqh5WLK8kYXbh6RCmYT/
+        KwwF6zezIBDpVAHQhqIjbUpRfl/Y+SCzxYJ32INAnLrsHx2b4ATOvoglKLJA8RlQoNODGv
+        uX9mwcKs70+693X9SmZng3VnyI5QIRk=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v4 1/5] dt-bindings: Document JZ47xx VPU auxiliary processor
+Date:   Tue, 10 Dec 2019 17:40:10 +0100
+Message-Id: <20191210164014.50739-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190919014520.15500-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
+Ingenic is a second Xburst MIPS CPU very similar to the main core.
+This document describes the devicetree bindings for this auxiliary
+processor.
 
-On 19/09/2019 09:45:19+0800, Biwen Li wrote:
-> Add some properties for pcf85263/pcf85363 as follows:
->   - nxp,rtc-interrupt-type: integer type
->   - nxp,rtc-interrupt-output-pin: string type
->   - quartz-load-femtofarads: integer type
->   - quartz-drive-strength-ohms: integer type
->   - nxp,quartz-low-jitter: bool type
->   - wakeup-source: bool type
-> 
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v5:
-> 	- Replace nxp,quartz-drive-strength with
-> 	  quartz-drive-strength-ohms
-> 	- Select ohm unit for quartz drive strength
-> 
-> Change in v4:
-> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
-> 	- Add nxp,rtc-interrupt-type property
-> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
-> 
-> Change in v3:
-> 	- None
-> 
-> Change in v2:
-> 	- Replace properties name
-> 	  quartz-load-capacitance -> quartz-load-femtofarads
-> 	  quartz-drive-strength -> nxp,quartz-drive-strength
-> 	  quartz-low-jitter -> nxp,quartz-low-jitter
-> 	- Replace drive strength name
-> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
-> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
-> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
-> 	- Set default interrupt-output-pin as "INTA"
-> 
->  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
->  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
->  2 files changed, 57 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..7f907581d5db 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,52 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->  
-> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
-> +  type. Valid values are
-> +  INT_PIE(periodic interrupt enable),
-> +  INT_OIE(offset correction interrupt enable),
-> +  INT_A1IE(alarm1 interrupt enable),
-> +  INT_A2IE(alarm2 interrupt enable),
-> +  INT_TSRIE(timestamp register interrupt enable)
-> +  INT_BSIE(battery switch interrupt enable),
-> +  INT_WDIE(WatchDog interrupt enable,and
-> +  compose these values such as: INT_A1IE | INT_A2IE,
-> +  but currently only support INT_A1IE, default value is INT_A1IE.
-> +  The property and property nxp,rtc-interrupt-output-pin
-> +  work together to generate some interrupts on some pins.
-> +
-> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
-> +  "INTA" or "INTB", default value is "INTA". The property and property
-> +  nxp,rtc-interrupt-type work together to generate some interrupts on
-> +  some pins.
-> +
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
 
-This binding is still not working. What if you need INT_A1 on INTA and
-INT_WD on INTB?
+Notes:
+    v2: Update TCSM0 address in example
+    v3: Change node name to 'video-decoder'
+    v4: Convert to YAML. I didn't add Rob's Ack on v3 because of that (sorry Rob)
 
-> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
-> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
-> +  Default value is 12500fF.
-> +
-> +- quartz-drive-strength-ohms: Drive strength for the quartz,
-> +  expressed in ohm, Valid values are 60000, 100000 and 500000.
-> +  Default value is 100000 ohm.
-> +
-> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
-> +  which reduces jitter at the cost of increased power consumption.
-> +
-> +- wakeup-source: Boolean property, Please refer to
-> +  Documentation/devicetree/bindings/power/wakeup-source.txt
-> +
->  Example:
->  
->  pcf85363: pcf85363@51 {
->  	compatible = "nxp,pcf85363";
->  	reg = <0x51>;
-> -};
->  
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +	wakeup-source;
-> +	nxp,rtc-interrupt-output-pin = "INTA";
-> +	nxp,rtc-interrupt-type = <INT_A1IE>;
-> +	quartz-load-femtofarads = <12500>;
-> +	quartz-drive-strength-ohms = <60000>;
-> +	nxp,quartz-low-jitter;
-> +};
-> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
-> new file mode 100644
-> index 000000000000..6340bf2da8f5
-> --- /dev/null
-> +++ b/include/dt-bindings/rtc/pcf85363.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
-> +#define _DT_BINDINGS_RTC_PCF85363_H
-> +
-> +/* Interrupt type */
-> +#define INT_WDIE	(1 << 0)
-> +#define INT_BSIE	(1 << 1)
-> +#define INT_TSRIE	(1 << 2)
-> +#define INT_A2IE	(1 << 3)
-> +#define INT_A1IE	(1 << 4)
-> +#define INT_OIE		(1 << 5)
-> +#define INT_PIE		(1 << 6)
+ .../bindings/remoteproc/ingenic,vpu.yaml      | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
 
-Please remove IE from the define names. i.e INT_WDIE is a bit enabling
-INT_WD, you don't get an interrupt when the watchdog is enabled but
-rather when it expires.
-
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+new file mode 100644
+index 000000000000..9f876d16a5a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/remoteproc/ingenic,vpu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Ingenic Video Processing Unit bindings
++
++description:
++  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs from
++  Ingenic is a second Xburst MIPS CPU very similar to the main core.
++  This document describes the devicetree bindings for this auxiliary
++  processor.
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  compatible:
++    const: ingenic,jz4770-vpu-rproc
++
++  reg:
++    items:
++      - description: aux registers
++      - description: tcsm0 registers
++      - description: tcsm1 registers
++      - description: sram registers
++
++  reg-names:
++    items:
++      - const: aux
++      - const: tcsm0
++      - const: tcsm1
++      - const: sram
++
++  clocks:
++    items:
++      - description: aux clock
++      - description: vpu clock
++
++  clock-names:
++    items:
++      - const: aux
++      - const: vpu
++
++  interrupts:
++    description: VPU hardware interrupt
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    vpu: video-decoder@132a0000 {
++      compatible = "ingenic,jz4770-vpu-rproc";
++
++      reg = <0x132a0000 0x20 /* AUX */
++           0x132b0000 0x4000 /* TCSM0 */
++           0x132c0000 0xc000 /* TCSM1 */
++           0x132f0000 0x7000 /* SRAM */
++      >;
++      reg-names = "aux", "tcsm0", "tcsm1", "sram";
++
++      clocks = <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
++      clock-names = "aux", "vpu";
++
++      interrupt-parent = <&cpuintc>;
++      interrupts = <3>;
++    };
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.24.0
+
