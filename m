@@ -2,180 +2,86 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E0AC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864DBC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2AB20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OJg6/Xiq"
+	by mail.kernel.org (Postfix) with ESMTP id 53676206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 06:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfLJGva (ORCPT
+        id S1727310AbfLJGwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 01:51:30 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:46768 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfLJGv3 (ORCPT
+        Tue, 10 Dec 2019 01:52:33 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48165 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbfLJGwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 01:51:29 -0500
-Received: by mail-vs1-f68.google.com with SMTP id t12so12248166vso.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 22:51:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ThCXORbwGE9xbug2jutD7MWlrN+Auf/XeZZe6HyXDCI=;
-        b=OJg6/Xiqa76NbusYSxC5X8GD57DM0I7MkUk0t1esPlgDll9GffgM7UtFmfWwrMrHxK
-         qNrl6lSYHJlSAdRr9EapLQs9zMBpxgefxGInziD7WYREkKd9QEmha5KZOrzhQPukdYzq
-         e/IetOsEfK5XeuGJ/rssXcoQDmDEvvmOvfYezBlb9CvcFsoZcGqR1I8PxKJvXWpmpuEk
-         /6MgT5UtEv56Ss3H91seuqI1JrXZgQ6kTtS66kNDo+0VLQNCnyaVhtxGzpmTlOuUNHmA
-         9Hjx1+eWTpXpixd1u33XZ+/FYkua1n1Q0Nlioz5xJ9oYdbn5xuJDq71iRxH4BfFRpur+
-         muYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ThCXORbwGE9xbug2jutD7MWlrN+Auf/XeZZe6HyXDCI=;
-        b=mCja+wjf1BSbzROWN/pzzzb/ns/MKEXY66PIlCNEBk0OfauX99M3OmWTfF618Rg8If
-         MIEL9R7V84LXt+/PqZTXSa92cOjtI5V5YMIci562pX2yTNTlhEO9sV0vy3PLuhkgHR7N
-         Y4ch87qHoWy9/+2FDyv7anZfaWz1Fx1m+4Sq+LYLbn5T8BqcP7Lh+fKjvYQWPILDg7YL
-         7ymaBRPPG1yaIi7Jio3EUcn7baXS7kFfHjBNNnY67fo7KdbpnVQQmAask5nJCQ4v6i9k
-         znRqqCImOdKmaV8aMMbSgSEGDScs2IHJ8Fs+E77gdX+fxE1HipDg6J3HcJodJSxLn/eU
-         GcGA==
-X-Gm-Message-State: APjAAAVWGn6rpBusqlD4mQCqxeV8MvXAGYEOxHicv5jmMaMdnoYsG77b
-        nClKW09DntoV908taCW5GvuOoRbadX1bLs8bv2jcxi+4YFU=
-X-Google-Smtp-Source: APXvYqwt/03vbKh2kfOs7ZHlFMp8YyR7qTrK2AXkCFkwS7Go5jnB8eSUieA6uPorGuWDG8/HS/r+AvBK94IUj0iUnFM=
-X-Received: by 2002:a67:7acd:: with SMTP id v196mr22065831vsc.95.1575960688036;
- Mon, 09 Dec 2019 22:51:28 -0800 (PST)
+        Tue, 10 Dec 2019 01:52:33 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieZNm-0002nD-1i; Tue, 10 Dec 2019 07:52:30 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieZNl-0004eE-Cp; Tue, 10 Dec 2019 07:52:29 +0100
+Date:   Tue, 10 Dec 2019 07:52:29 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH] pwm: bcm2835: Allow building for ARCH_BRCMSTB
+Message-ID: <20191210065229.hopmnq5qlwtl7gzw@pengutronix.de>
+References: <20191209232503.7252-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
-In-Reply-To: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 10 Dec 2019 12:21:17 +0530
-Message-ID: <CAHLCerOxHq4DYn9xV6JEDkbxZxmKkzC0mY70RiFkhCAbpovFrg@mail.gmail.com>
-Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, Keerthy <j-keerthy@ti.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209232503.7252-1-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:21 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> From: Ram Chandrasekar <rkumbako@codeaurora.org>
->
-> Currently, step wise governor increases the mitigation when the
-> temperature goes above a threshold and decreases the mitigation when the
-> temperature goes below the threshold. If there is a case where the
-> temperature is wavering around the threshold, the mitigation will be
-> applied and removed every iteration, which is not very efficient.
->
-> The use of hysteresis temperature could avoid this ping-pong of
-> mitigation by relaxing the mitigation to happen only when the
-> temperature goes below this lower hysteresis value.
->
-> Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> [Rebased patch from downstream]
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-Daniel, Rui: ping.
-
-Keerthy: This works for you, right?
-
+On Mon, Dec 09, 2019 at 03:25:03PM -0800, Florian Fainelli wrote:
+> BCM7211 is supported using ARCH_BRCMSTB and uses this PWM controller
+> driver, make it possible to build it.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/thermal/step_wise.c | 35 ++++++++++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-> index 6e051cbd824ff..2c8a34a7cf959 100644
-> --- a/drivers/thermal/step_wise.c
-> +++ b/drivers/thermal/step_wise.c
-> @@ -24,7 +24,7 @@
->   *       for this trip point
->   *    d. if the trend is THERMAL_TREND_DROP_FULL, use lower limit
->   *       for this trip point
-> - * If the temperature is lower than a trip point,
-> + * If the temperature is lower than a hysteresis temperature,
->   *    a. if the trend is THERMAL_TREND_RAISING, do nothing
->   *    b. if the trend is THERMAL_TREND_DROPPING, use lower cooling
->   *       state for this trip point, if the cooling state already
-> @@ -115,30 +115,31 @@ static void update_passive_instance(struct thermal_zone_device *tz,
->
->  static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->  {
-> -       int trip_temp;
-> +       int trip_temp, hyst_temp;
->         enum thermal_trip_type trip_type;
->         enum thermal_trend trend;
->         struct thermal_instance *instance;
-> -       bool throttle = false;
-> +       bool throttle;
->         int old_target;
->
->         if (trip == THERMAL_TRIPS_NONE) {
-> -               trip_temp = tz->forced_passive;
-> +               hyst_temp = trip_temp = tz->forced_passive;
->                 trip_type = THERMAL_TRIPS_NONE;
->         } else {
->                 tz->ops->get_trip_temp(tz, trip, &trip_temp);
-> +               hyst_temp = trip_temp;
-> +               if (tz->ops->get_trip_hyst) {
-> +                       tz->ops->get_trip_hyst(tz, trip, &hyst_temp);
-> +                       hyst_temp = trip_temp - hyst_temp;
-> +               }
->                 tz->ops->get_trip_type(tz, trip, &trip_type);
->         }
->
->         trend = get_tz_trend(tz, trip);
->
-> -       if (tz->temperature >= trip_temp) {
-> -               throttle = true;
-> -               trace_thermal_zone_trip(tz, trip, trip_type);
-> -       }
-> -
-> -       dev_dbg(&tz->device, "Trip%d[type=%d,temp=%d]:trend=%d,throttle=%d\n",
-> -                               trip, trip_type, trip_temp, trend, throttle);
-> +       dev_dbg(&tz->device,
-> +               "Trip%d[type=%d,temp=%d,hyst=%d]:trend=%d,throttle=%d\n",
-> +               trip, trip_type, trip_temp, hyst_temp, trend, throttle);
->
->         mutex_lock(&tz->lock);
->
-> @@ -147,6 +148,18 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->                         continue;
->
->                 old_target = instance->target;
-> +               throttle = false;
-> +               /*
-> +                * Lower the mitigation only if the temperature
-> +                * goes below the hysteresis temperature.
-> +                */
-> +               if (tz->temperature >= trip_temp ||
-> +                   (tz->temperature >= hyst_temp &&
-> +                    old_target != THERMAL_NO_TARGET)) {
-> +                       throttle = true;
-> +                       trace_thermal_zone_trip(tz, trip, trip_type);
-> +               }
-> +
->                 instance->target = get_target_state(instance, trend, throttle);
->                 dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
->                                         old_target, (int)instance->target);
-> --
-> 2.17.1
->
+>  drivers/pwm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index bd21655c37a6..0bb8a40c8d6c 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -100,7 +100,7 @@ config PWM_BCM_KONA
+>  
+>  config PWM_BCM2835
+>  	tristate "BCM2835 PWM support"
+> -	depends on ARCH_BCM2835
+> +	depends on ARCH_BCM2835 || ARCH_BRCMSTB
+
+It would be nice to allow this driver to be compiled with COMPILE_TEST,
+too. But also without this:
+
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
