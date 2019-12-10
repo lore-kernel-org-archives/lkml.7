@@ -2,107 +2,121 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60782C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9B6C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295F620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013845;
-	bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGxB7CmGnsdMp/GpU3YRK4XapCCyOQ5/Gar9xHerQViPNTJ3Pt8XJ8ChKZ20GWMEA
-	 DTFmeN82PvxNg46EDq0GR8TNSFnlehWSgXfYPai+aQnVILd/EzWXv80Yul3RtiHq2t
-	 pjgC4rTUZKIj7GuS4mKWeKY80hRfo/qNJVEFxHM4=
+	by mail.kernel.org (Postfix) with ESMTP id D94A320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:37:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJ2RcBVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfLJVfd (ORCPT
+        id S1730338AbfLJVh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:35:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbfLJVfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:35:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8460C2073B;
-        Tue, 10 Dec 2019 21:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013720;
-        bh=HmliciBZzqsRqRN7RPFZjJ+IVzmrgEi6yiabt3TzylU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PHm0m5BIDR0oqO/xhh0DsGlRLHLZTZMh5JhnjCOsKqBGzOSIxl5QUq+D8Qp0pOq/r
-         qemjxr6pe9iCA3cC99WqW0S23wA51pfU4OcKU7cCp1Za6wtH7MYVv1jkiI7ijWCxow
-         YhJjr1uX4HPvog/+bMCPbeR8OWH33y1XH0+vH6aU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 146/177] RDMA/qib: Validate ->show()/store() callbacks before calling them
-Date:   Tue, 10 Dec 2019 16:31:50 -0500
-Message-Id: <20191210213221.11921-146-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
-References: <20191210213221.11921-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:37:28 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39351 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfLJVh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:37:26 -0500
+Received: by mail-ed1-f68.google.com with SMTP id v16so17354550edy.6;
+        Tue, 10 Dec 2019 13:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DAqvBJfhNAOGF5MpGJ9HATnJQKl2CCNr6kYiDBl2DG4=;
+        b=nJ2RcBVGN5w/cHHhwNlitZ++xYkfcmWBQPzUx0q1WklcNfOFp4iBI8qLiaQgdH0xKz
+         VV0EES6LBWUqF5FsJv9B59d101Zskd2vjgXt+oASmPKcjX6ieRviRII079K5POvSNsqU
+         XqMMtkg68O4ohkJli8naxOPj8DFN6u+Lr+w9TnJrGXG+hgh7StBs7mvTCHaE98V/sLVK
+         7QqXcG3gywf/GtysF5T82g1xKztJA6yHwT4JeQyv9b2WfPt8SgUI54b2dfENvJEQa2iL
+         yIYsSlCtCOE43IfxR5tBuYIVYQVDyU3cnXkjmypLHVjxqisEyQrQAo9x/eaNvOWadIrr
+         UXMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DAqvBJfhNAOGF5MpGJ9HATnJQKl2CCNr6kYiDBl2DG4=;
+        b=G1SYksLvtR6FjhMHtYWLKcv57kSj2nuUeZleoYsTQUCwHcHn+4grxiLxVao806ogg6
+         4Bv59mGMDi37QrQQxlkxBWWvu5BP9mJEPvHAK6h9LSU9eYTDAZiXBdJTba2u2TSyAzBp
+         FDTMc5jUOdqvAHAXqrUunXVWCMuZ5LW6ozi8xKNnG28qeSJxxwH25vRSsYCgp9bXcHjD
+         5cNxbvydl9N+lqBF/kMxPooekAxS+bHqq0whmVvSJdtz/KxxQk2OoHZm9SId2umyCLjK
+         e76skuJj2OdwM5IqvVVwGo8PfW2B1FywKOFum+qcw1Gg5FnJYChkAqqTB0FVz75tj9xJ
+         alqg==
+X-Gm-Message-State: APjAAAV+yQJ9HaAAi1gBTVMGq2IQ41sCpzQC4GyabaaZpKAUqN+VqaLr
+        rAILl8h0i4xJf6tGo1Gh33aMsAJQ/KpOuwSjprU=
+X-Google-Smtp-Source: APXvYqxP8zj+d8UiYiYWLKUnX3/3yCG8sjv94TZFtkAfGBo9bO/cvbEXCYctDTnSBQi/mvtJEPNbH7RdQoDcHjWsaG0=
+X-Received: by 2002:a17:906:3052:: with SMTP id d18mr6270011ejd.86.1576013844298;
+ Tue, 10 Dec 2019 13:37:24 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191210203710.2987983-1-arnd@arndb.de>
+In-Reply-To: <20191210203710.2987983-1-arnd@arndb.de>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 10 Dec 2019 23:37:13 +0200
+Message-ID: <CA+h21hrJ45J2N4DD=pAtE8vN6hCjUYUq5vz17pY-7=TpkA51rA@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: ocelot: add NET_VENDOR_MICROSEMI dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+Hi Arnd,
 
-[ Upstream commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 ]
+On Tue, 10 Dec 2019 at 22:37, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Selecting MSCC_OCELOT_SWITCH is not possible when NET_VENDOR_MICROSEMI
+> is disabled:
+>
+> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+>   Depends on [n]: NETDEVICES [=y] && ETHERNET [=n] && NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+>   Selected by [m]:
+>   - NET_DSA_MSCC_FELIX [=m] && NETDEVICES [=y] && HAVE_NET_DSA [=y] && NET_DSA [=y] && PCI [=y]
+>
+> Add a Kconfig dependency on NET_VENDOR_MICROSEMI, which also implies
+> CONFIG_NETDEVICES.
+>
+> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
+This has been submitted before, here [0].
 
-Protect against that by always validating the show/store callbacks.
+It isn't wrong, but in principle I agree with David that it is strange
+to put a "depends" relationship between a driver in drivers/net/dsa
+and the Kconfig vendor umbrella from drivers/net/ethernet/mscc ("why
+would the user care/need to enable NET_VENDOR_MICROSEMI to see the DSA
+driver" is a valid point to me). This is mainly because I don't
+understand the point of CONFIG_NET_VENDOR_* options, they're a bit
+tribalistic to my ears.
 
-Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Nonetheless, alternatives may be:
+- Move MSCC_OCELOT_SWITCH core option outside of the
+NET_VENDOR_MICROSEMI umbrella, and make it invisible to menuconfig,
+just selectable from the 2 driver instances (MSCC_OCELOT_SWITCH_OCELOT
+and NET_DSA_MSCC_FELIX). MSCC_OCELOT_SWITCH has no reason to be
+selectable by the user anyway.
+- Remove NET_VENDOR_MICROSEMI altogether. There is a single driver
+under drivers/net/ethernet/mscc and it's already causing problems,
+it's ridiculous.
+- Leave it as it is. I genuinely ask: if the build system tells you
+that the build dependencies are not met, does it matter if it compiles
+or not?
 
-diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
-index ca2638d8f35ef..d831f3e61ae8f 100644
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->show)
-+		return -EIO;
-+
- 	return pattr->show(ppd, buf);
- }
- 
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
- 
--- 
-2.20.1
+[0]: https://www.spinics.net/lists/netdev/msg614325.html
 
+Regards,
+-Vladimir
