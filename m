@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700D2C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD96C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376E7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F168F2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017237;
-	bh=z85FmNK9Mut2+gNcaZ5tnOPAJmp1/oYSAurzwM4xhGw=;
+	s=default; t=1576017245;
+	bh=GI466eaFq8/XIs0M1Zy1iGa8Bm7REhY6rlR8sEXAIbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeHKu50WUedXFrMUzSPCf0YqSs7ldSIvBFa6ZThACBmKZwUd94yJWP9l+fyUljP2Y
-	 hHjVZOYlljT4b5FwP2foCSmsCx/yH/HL9vr8HVF+0jd3ff15FKBct+JEsgoQhvySp1
-	 8WoFI6RobG2CX5C975USu7WnZAqvN0tXQP+cEZ24=
+	b=CclNi6bIHUeacpvjlS3xGCqONZuDc/ZM5ZioD+0swZLakMDhlAGy0yQzOt0nwYzKS
+	 yrRrouxqW27EphjwT/a/U/iVAIiIn3iTfz5JVppPYf8n0uIscA/uotoVnTnk4Ff+6j
+	 +d4da8rOdJh1UYN9w1NdnBPuDxutmr4CF0PI4HYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfLJWdz (ORCPT
+        id S1730116AbfLJWeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:33:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbfLJWdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:42 -0500
+        id S1728775AbfLJWdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D3EC207FF;
-        Tue, 10 Dec 2019 22:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA902077B;
+        Tue, 10 Dec 2019 22:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017221;
-        bh=z85FmNK9Mut2+gNcaZ5tnOPAJmp1/oYSAurzwM4xhGw=;
+        s=default; t=1576017228;
+        bh=GI466eaFq8/XIs0M1Zy1iGa8Bm7REhY6rlR8sEXAIbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ngWL9hXXi1TX1yPZiixe6E1mBzf0b6FcSDrdrZQXEQCQxOMindUB+5JwiUwacy8MJ
-         Nua4nkKo0KvchECboqsUU15tEoAgmJsPbf99VAjZTO6ilhZ2eUzL0g5waOFM0bFn4A
-         mZSqPdRwA1TF4eD2HtQZJ3n36ErFQNDIU4xVkMu0=
+        b=dqSjANwS+++UTv87EcwWeIoE3Mv1fSeiwCCfw94r2Ky2CpygIZvPFya5ffpWVjJJ4
+         JWAMGWWcEr2TRZICm8YZoQpZRwg7G7Q8soQEVTu/d+8XFk0hmDmvjzV0ilsbUskfHp
+         mAIqq4cUoGRvRm1OYZoVc/aA4FTSxHxk06DFUask=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/71] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Tue, 10 Dec 2019 17:32:26 -0500
-Message-Id: <20191210223316.14988-21-sashal@kernel.org>
+Cc:     Ingo Rohloff <ingo.rohloff@lauterbach.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/71] usb: usbfs: Suppress problematic bind and unbind uevents.
+Date:   Tue, 10 Dec 2019 17:32:31 -0500
+Message-Id: <20191210223316.14988-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,48 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
 
-[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
+[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
 
-v4l2-compliance fails with this message:
+commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
+to a driver") added bind and unbind uevents when a driver is bound or
+unbound to a physical device.
 
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
+For USB devices which are handled via the generic usbfs layer (via
+libusb for example), this is problematic:
+Each time a user space program calls
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+and then later
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
+The kernel will now produce a bind or unbind event, which does not
+really contain any useful information.
 
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
+This allows a user space program to run a DoS attack against programs
+which listen to uevents (in particular systemd/eudev/upowerd):
+A malicious user space program just has to call in a tight loop
 
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
+   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
+   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+With this loop the malicious user space program floods the kernel and
+all programs listening to uevents with tons of bind and unbind
+events.
+
+This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
+USBDEVFS_RELEASEINTERFACE.
+
+Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/devio.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index ca6629ccf82da..aa2870e864f9c 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1299,6 +1299,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
- 
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
- 
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_DATA_INTERLACED) {
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index 7559d96695da6..4ef2484cf9935 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -640,8 +640,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	intf = usb_ifnum_to_if(dev, ifnum);
+ 	if (!intf)
+ 		err = -ENOENT;
+-	else
++	else {
++		unsigned int old_suppress;
++
++		/* suppress uevents while claiming interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
++	}
+ 	if (err == 0)
+ 		set_bit(ifnum, &ps->ifclaimed);
+ 	return err;
+@@ -661,7 +668,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
+ 	if (!intf)
+ 		err = -ENOENT;
+ 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
++		unsigned int old_suppress;
++
++		/* suppress uevents while releasing interface */
++		old_suppress = dev_get_uevent_suppress(&intf->dev);
++		dev_set_uevent_suppress(&intf->dev, 1);
+ 		usb_driver_release_interface(&usbfs_driver, intf);
++		dev_set_uevent_suppress(&intf->dev, old_suppress);
+ 		err = 0;
+ 	}
+ 	return err;
 -- 
 2.20.1
 
