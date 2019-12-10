@@ -2,155 +2,274 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB62C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FCAC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE47520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8363D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pZAsr1By"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="hqAQ/ULy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfLJSFp (ORCPT
+        id S1727743AbfLJSFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:05:45 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36110 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfLJSFn (ORCPT
+        Tue, 10 Dec 2019 13:05:52 -0500
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:50559 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbfLJSFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:05:43 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so4269650wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 10:05:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q175/tdQiN9afM1M6kXYFp4497R4zKds4S0DO+G9mOE=;
-        b=pZAsr1ByA+X2hMr43BvTyar3tRZSNb1CkMS6p8B2P5gxsZdXRyM1AHAU3ErL84Bdfj
-         aWjOf2nvann9HOWLw6MyHiFtcjfnxFaE+Xb7cMSMFZtJuCNzL2k1DvUuUrmDwa33idz/
-         M4qP3dHrE7QP1Q5NqauaERNCReS9B7YMT+K/TfxKlUC89U2TRc7CnghnEP2LQtisBR6c
-         T/Z4aJeDZES7MQkveHRzc8U9ieFcF+5kRmu+o+tZAyF1FOeNyricp/JMZl19w9kInMlR
-         ZreW8LrRZXzuhwGSqjh/NarPru32P+7DdGMYkw/3FbkHHPDbGy0FC2q611rL9C4NtA6j
-         8z+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=q175/tdQiN9afM1M6kXYFp4497R4zKds4S0DO+G9mOE=;
-        b=TpWnqRjSMeH6RYAcF1MW5otGj9kmp9C20OW3r7RTdGZ7v8B5fpvhU95vHjAgWP6bM3
-         2SZcdt14XwnVfHtzetJMlB3di1QSRoYTPYnUNIkW/ibKaUgp+nKse0ZQhMIO6tAyCHk5
-         6YCdhix8HDY+R/8yqcXDl3Mjdtck8B9/r09uT6P2t1L/f/fEVuHGZC6LcIi5fPmoQRD1
-         x5mJ8kWbAhzH/m6ejkfUZm/Kz+/MNrbtRCA4QtPaEh7I1dfjLq+xOP+Esajh0ne1W4t8
-         x4Far8CjPFiT8piSCwns/UzFbCnegY5iZQCtyq/27evg6HTtu5cv5QYqMQhEeAgtKqSc
-         L+/A==
-X-Gm-Message-State: APjAAAUtAb7Ev54TwCJIZXVoc+D3YS5mhVn/eSsNsNlGR4IJ8cMyZT+l
-        OXfVERG08RDbQ+wT3KBUQ4dHDDKht3o=
-X-Google-Smtp-Source: APXvYqzJR1qUt5KZZW+PkHKpw5fAAvZEO7vTbhuwznols2j3+JEY0OkfxkwahvTHtuTeUPDeOfpCiA==
-X-Received: by 2002:a1c:4d03:: with SMTP id o3mr6763868wmh.164.1576001139732;
-        Tue, 10 Dec 2019 10:05:39 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:683a:fee4:9950:e8ce? ([2a01:e34:ed2f:f020:683a:fee4:9950:e8ce])
-        by smtp.googlemail.com with ESMTPSA id k4sm4068672wmk.26.2019.12.10.10.05.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 10:05:39 -0800 (PST)
-Subject: Re: [PATCH v8 00/12] QorIQ TMU multi-sensor and HWMON support
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191210164153.10463-1-andrew.smirnov@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
- CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
- U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
- UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
- KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
- ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
- 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
- UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
- d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
- 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
- z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
- Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
- 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
- 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
- eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
- NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
- 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
- gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
- qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
- OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
- gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
- 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
- PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
- F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
- WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
- qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
- l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
- BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
- 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
- eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
- t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
- i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
- X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
- fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <4af27042-56a9-6420-d1f9-c9410721acc2@linaro.org>
-Date:   Tue, 10 Dec 2019 19:05:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 13:05:50 -0500
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 24428210C0;
+        Tue, 10 Dec 2019 13:05:48 -0500 (EST)
+        (envelope-from junio@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type; s=sasl; bh=N
+        OirRWY6grfPU8sXDBbIzZh4yyU=; b=hqAQ/ULytTxuApGJxbDtXYPTa6B+VoXg3
+        AlA2fAhgdBiT0hvth3f6IkWrCJUwM1cCY5CWlkNVWBSa+P+/NArgdKCT2nmGdUIp
+        ipKOxxHlJPhdc9iT7gtGbb2a3AoWmPhk1FjClGB4EHmPmGOGgdQl2BZx1KuG3nIB
+        De7glS2dVo=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type; q=dns; s=
+        sasl; b=hOK5+FgCN6VdvqtQlf+zDp222zH41ROCjD+WFU3I9d3IJ5SqNe1xhXXq
+        d3F2aYTrAVAZtA2V0tHqSwhNuXX7RzA/R0pmORWxIJfkAB1IiyjtV+VAREsRrs1U
+        7+CIY8UUf4Jw0icNSolAzL0JiT62b9uHj6C1dx95uIEtNkiGqiM=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 1CF35210BF;
+        Tue, 10 Dec 2019 13:05:48 -0500 (EST)
+        (envelope-from junio@pobox.com)
+Received: from pobox.com (unknown [34.76.80.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 78E67210BE;
+        Tue, 10 Dec 2019 13:05:47 -0500 (EST)
+        (envelope-from junio@pobox.com)
+From:   Junio C Hamano <gitster@pobox.com>
+To:     git@vger.kernel.org
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.24.1 and others
+Date:   Tue, 10 Dec 2019 10:05:46 -0800
+Message-ID: <xmqqr21cqcn9.fsf@gitster-ct.c.googlers.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20191210164153.10463-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Pobox-Relay-ID: B1231074-1B77-11EA-95ED-D1361DBA3BAF-77302942!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 17:41, Andrey Smirnov wrote:
-> Everyone:
-> 
-> This series contains patches adding support for HWMON integration, bug
-> fixes and general improvements (hopefully) for TMU driver I made while
-> working on it on i.MX8MQ.
-> 
-> Feedback is welcome!
+Today, the Git project is releasing the following Git versions:
 
-Applied, thanks!
+    v2.24.1, v2.23.1, v2.22.2, v2.21.1, v2.20.2, v2.19.3, v2.18.2,
+    v2.17.3, v2.16.6, v2.15.4, and v2.14.6
 
-  -- Daniel
+These releases fix various security flaws, which allowed an attacker
+to overwrite arbitrary paths, remotely execute code, and/or overwrite
+files in the .git/ directory etc.  See the release notes attached for
+the list for their descriptions and CVE identifiers.
+
+Users of the affected maintenance tracks are urged to upgrade.
+
+These flaws were discovered and reported by Joern Schneeweisz of
+GitLab and by Microsoft Security Response Center (and in particular
+Nicolas Joly), and were fixed by Johannes Schindelin, Jeff King,
+Garima Singh and Jonathan Nieder on the git-security mailing list.
+The release engineering and coordination was led by Johannes
+Schindelin.
+
+The tarballs are found at:
+
+    https://www.kernel.org/pub/software/scm/git/
+
+The following public repositories all have a copy of the 'v2.24.1'
+and other tags:
+
+  url = https://kernel.googlesource.com/pub/scm/git/git
+  url = git://repo.or.cz/alt-git.git
+  url = https://github.com/gitster/git
+
+----------------------------------------------------------------
+
+Git v2.14.6 Release Notes
+=========================
+
+This release addresses the security issues CVE-2019-1348,
+CVE-2019-1349, CVE-2019-1350, CVE-2019-1351, CVE-2019-1352,
+CVE-2019-1353, CVE-2019-1354, and CVE-2019-1387.
+
+Fixes since v2.14.5
+-------------------
+
+ * CVE-2019-1348:
+   The --export-marks option of git fast-import is exposed also via
+   the in-stream command feature export-marks=... and it allows
+   overwriting arbitrary paths.
+
+ * CVE-2019-1349:
+   When submodules are cloned recursively, under certain circumstances
+   Git could be fooled into using the same Git directory twice. We now
+   require the directory to be empty.
+
+ * CVE-2019-1350:
+   Incorrect quoting of command-line arguments allowed remote code
+   execution during a recursive clone in conjunction with SSH URLs.
+
+ * CVE-2019-1351:
+   While the only permitted drive letters for physical drives on
+   Windows are letters of the US-English alphabet, this restriction
+   does not apply to virtual drives assigned via subst <letter>:
+   <path>. Git mistook such paths for relative paths, allowing writing
+   outside of the worktree while cloning.
+
+ * CVE-2019-1352:
+   Git was unaware of NTFS Alternate Data Streams, allowing files
+   inside the .git/ directory to be overwritten during a clone.
+
+ * CVE-2019-1353:
+   When running Git in the Windows Subsystem for Linux (also known as
+   "WSL") while accessing a working directory on a regular Windows
+   drive, none of the NTFS protections were active.
+
+ * CVE-2019-1354:
+   Filenames on Linux/Unix can contain backslashes. On Windows,
+   backslashes are directory separators. Git did not use to refuse to
+   write out tracked files with such filenames.
+
+ * CVE-2019-1387:
+   Recursive clones are currently affected by a vulnerability that is
+   caused by too-lax validation of submodule names, allowing very
+   targeted attacks via remote code execution in recursive clones.
+
+Credit for finding these vulnerabilities goes to Microsoft Security
+Response Center, in particular to Nicolas Joly. The `fast-import`
+fixes were provided by Jeff King, the other fixes by Johannes
+Schindelin with help from Garima Singh.
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Git v2.15.4 Release Notes
+=========================
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+This release merges up the fixes that appear in v2.14.6 to address
+the security issues CVE-2019-1348, CVE-2019-1349, CVE-2019-1350,
+CVE-2019-1351, CVE-2019-1352, CVE-2019-1353, CVE-2019-1354, and
+CVE-2019-1387; see the release notes for that version for details.
+
+In conjunction with a vulnerability that was fixed in v2.20.2,
+`.gitmodules` is no longer allowed to contain entries of the form
+`submodule.<name>.update=!command`.
+
+
+Git v2.16.6 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6 and in
+v2.15.4 addressing the security issues CVE-2019-1348, CVE-2019-1349,
+CVE-2019-1350, CVE-2019-1351, CVE-2019-1352, CVE-2019-1353,
+CVE-2019-1354, and CVE-2019-1387; see the release notes for those
+versions for details.
+
+
+Git v2.17.3 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6 and in
+v2.15.4 addressing the security issues CVE-2019-1348, CVE-2019-1349,
+CVE-2019-1350, CVE-2019-1351, CVE-2019-1352, CVE-2019-1353,
+CVE-2019-1354, and CVE-2019-1387; see the release notes for those
+versions for details.
+
+In addition, `git fsck` was taught to identify `.gitmodules` entries
+of the form `submodule.<name>.update=!command`, which have been
+disallowed in v2.15.4.
+
+
+Git v2.18.2 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4
+and in v2.17.3, addressing the security issues CVE-2019-1348,
+CVE-2019-1349, CVE-2019-1350, CVE-2019-1351, CVE-2019-1352,
+CVE-2019-1353, CVE-2019-1354, and CVE-2019-1387; see the release notes
+for those versions for details.
+
+
+Git v2.19.3 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4
+and in v2.17.3, addressing the security issues CVE-2019-1348,
+CVE-2019-1349, CVE-2019-1350, CVE-2019-1351, CVE-2019-1352,
+CVE-2019-1353, CVE-2019-1354, and CVE-2019-1387; see the release notes
+for those versions for details.
+
+
+Git v2.20.2 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4
+and in v2.17.3, addressing the security issues CVE-2019-1348,
+CVE-2019-1349, CVE-2019-1350, CVE-2019-1351, CVE-2019-1352,
+CVE-2019-1353, CVE-2019-1354, and CVE-2019-1387; see the release notes
+for those versions for details.
+
+The change to disallow `submodule.<name>.update=!command` entries in
+`.gitmodules` which was introduced v2.15.4 (and for which v2.17.3
+added explicit fsck checks) fixes the vulnerability in v2.20.x where a
+recursive clone followed by a submodule update could execute code
+contained within the repository without the user explicitly having
+asked for that (CVE-2019-19604).
+
+Credit for finding this vulnerability goes to Joern Schneeweisz,
+credit for the fixes goes to Jonathan Nieder.
+
+
+Git v2.21.1 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4,
+v2.17.3 and in v2.20.2, addressing the security issues CVE-2019-1348,
+CVE-2019-1349, CVE-2019-1350, CVE-2019-1351, CVE-2019-1352,
+CVE-2019-1353, CVE-2019-1354, CVE-2019-1387, and CVE-2019-19604;
+see the release notes for those versions for details.
+
+Additionally, this version also includes a couple of fixes for the
+Windows-specific quoting of command-line arguments when Git executes
+a Unix shell on Windows.
+
+
+Git v2.22.2 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4,
+v2.17.3, v2.20.2 and in v2.21.1, addressing the security issues
+CVE-2019-1348, CVE-2019-1349, CVE-2019-1350, CVE-2019-1351,
+CVE-2019-1352, CVE-2019-1353, CVE-2019-1354, CVE-2019-1387, and
+CVE-2019-19604; see the release notes for those versions for details.
+
+
+Git v2.23.1 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4,
+v2.17.3, v2.20.2 and in v2.21.1, addressing the security issues
+CVE-2019-1348, CVE-2019-1349, CVE-2019-1350, CVE-2019-1351,
+CVE-2019-1352, CVE-2019-1353, CVE-2019-1354, CVE-2019-1387, and
+CVE-2019-19604; see the release notes for those versions for details.
+
+
+Git v2.24.1 Release Notes
+=========================
+
+This release merges up the fixes that appear in v2.14.6, v2.15.4,
+v2.17.3, v2.20.2 and in v2.21.1, addressing the security issues
+CVE-2019-1348, CVE-2019-1349, CVE-2019-1350, CVE-2019-1351,
+CVE-2019-1352, CVE-2019-1353, CVE-2019-1354, CVE-2019-1387, and
+CVE-2019-19604; see the release notes for those versions for details.
+
 
