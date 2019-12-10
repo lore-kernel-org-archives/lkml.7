@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B6DC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD86C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1872F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC376214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015459;
-	bh=W1rixHlRglZalpJ3fSvD2qz0lSsb15o4abLzRwMrYYo=;
+	s=default; t=1576015471;
+	bh=Hh3R6bgpfIqgBXr1M5YNdXh6HBN0Bb9I12xn+qgoj1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4l4e/P9xDUmnaE1jKq0wvVU+u3rktuwOo4fRKb8FmYwe5iz/5U5M0Z4wbirzR3JS
-	 xK93sIgfuxIxaHAd+eecLSQPwkfbmkXETASYRv/JEa1+uFxMWeZWdL6/oaI3nP4txa
-	 RfcwzsEddCaPyP7Y3L6EnTmspgpO38lt4ccZ/vHo=
+	b=LMGIQCcH5tFTLHBoWukMcW2NUu2AYMveGy9SnRP4nyMjXrtgHDWXq94eQGt8AuCDi
+	 mzJVHf1Jmfih82tH7M61Y6Yc+9EFU5rmUKIFCuimbLLvAdereSaxwKz6KgRF+tyDxy
+	 rMK+otoriod0/TfaUrBeMXFKQ9ssa2IbdZF1yZFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbfLJWER (ORCPT
+        id S1728882AbfLJWEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34870 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbfLJWEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:11 -0500
+        id S1728734AbfLJWEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C212465E;
-        Tue, 10 Dec 2019 22:04:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4351320637;
+        Tue, 10 Dec 2019 22:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015451;
-        bh=W1rixHlRglZalpJ3fSvD2qz0lSsb15o4abLzRwMrYYo=;
+        s=default; t=1576015462;
+        bh=Hh3R6bgpfIqgBXr1M5YNdXh6HBN0Bb9I12xn+qgoj1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Km/cCl626oqYcOS2RGhSNtWspd0BGhZspE7efBonyRMwKSz3PH6QjM+cnIawbyB5
-         c00Ju4YbS0T1eu6RBdTtSqmPjEF5HgopasFKvCZD0Q7Pfq8QadtVUfzevXcTQQMIQ9
-         kdRrmIIqjpHnKoW39hvtCRmNKrfSPQnYgancTYDw=
+        b=OBRC8/FxQ58Q5G6gr0zfw5XWravlGSKul8R+bo7ecgM8p5TegAEqtTIKwapEG4GpG
+         RTdrXFBgLmfzrnhhL4YvOufIBerpw80+ZwX+RQrvHePoZgVZo7Nh/I2fA33g7qHT+o
+         X8SLhuY8t7WyiPbHov1Ub/tsQBcfiTT0jmIIV5W8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 058/130] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
-Date:   Tue, 10 Dec 2019 17:01:49 -0500
-Message-Id: <20191210220301.13262-58-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 068/130] loop: fix no-unmap write-zeroes request behavior
+Date:   Tue, 10 Dec 2019 17:01:59 -0500
+Message-Id: <20191210220301.13262-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,71 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
+[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+Currently, if the loop device receives a WRITE_ZEROES request, it asks
+the underlying filesystem to punch out the range.  This behavior is
+correct if unmapping is allowed.  However, a NOUNMAP request means that
+the caller doesn't want us to free the storage backing the range, so
+punching out the range is incorrect behavior.
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
+underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
+the fallocate documentation) required to ensure that the entire range is
+backed by real storage, which suffices for our purposes.
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
-
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/block/loop.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index e8edbf13302aa..3856d51c645b5 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -84,7 +84,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ec61dd873c93d..453e3728e6573 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -414,18 +414,20 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
+ 	return ret;
+ }
  
- static int cpu_psci_cpu_kill(unsigned int cpu)
+-static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
++static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
++			int mode)
  {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
- 
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -94,16 +95,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
+ 	/*
+-	 * We use punch hole to reclaim the free space used by the
+-	 * image a.k.a. discard. However we do not support discard if
+-	 * encryption is enabled, because it may give an attacker
+-	 * useful information.
++	 * We use fallocate to manipulate the space mappings used by the image
++	 * a.k.a. discard/zerorange. However we do not support this if
++	 * encryption is enabled, because it may give an attacker useful
++	 * information.
  	 */
+ 	struct file *file = lo->lo_backing_file;
+-	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
+ 	int ret;
  
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
- 
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
--	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
- 
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
++	mode |= FALLOC_FL_KEEP_SIZE;
++
+ 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+@@ -565,9 +567,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+ 	switch (req_op(rq)) {
+ 	case REQ_OP_FLUSH:
+ 		return lo_req_flush(lo, rq);
+-	case REQ_OP_DISCARD:
+ 	case REQ_OP_WRITE_ZEROES:
+-		return lo_discard(lo, rq, pos);
++		/*
++		 * If the caller doesn't want deallocation, call zeroout to
++		 * write zeroes the range.  Otherwise, punch them out.
++		 */
++		return lo_fallocate(lo, rq, pos,
++			(rq->cmd_flags & REQ_NOUNMAP) ?
++				FALLOC_FL_ZERO_RANGE :
++				FALLOC_FL_PUNCH_HOLE);
++	case REQ_OP_DISCARD:
++		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
+ 	case REQ_OP_WRITE:
+ 		if (lo->transfer)
+ 			return lo_write_transfer(lo, rq, pos);
 -- 
 2.20.1
 
