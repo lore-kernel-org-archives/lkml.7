@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BA6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36513C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89EB2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C2520726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 04:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575951622;
-	bh=nQF9quNxVBcU3S+fZmNYk/8oN/cX4almQAM+hd3939M=;
+	s=default; t=1575951625;
+	bh=s8MWRwAjm8mlj+5cwYZV3e60JuvOkWNE1NL5PFrhIj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=crGaLGJEXwO4S0zaHFhZcoqqIFm6g1xbjmWHOrqaR5l9YwW2qVq9olr0NYbJBBi4q
-	 8/AEoviYgoVW6x8298IUrtRY6ch7zEueDY55aQX+1N6W0W+0CJj0uss5M+LAE+CgvU
-	 NdQTT9Bd4ZNg9qijFGNGaQsh5bx/D+pVptJMLmxY=
+	b=dnNdrFFZbQJHPEqXzepu2+XvJZNdg2tR0IE+hzmCrsQiqCOf+TQGu/V2R9z0wgJCe
+	 Fa7W8qDpcxGnhBT31bK8JEfljipygbuRLk4nHF1eSNiuhzS/IVdlUeYbYKnmMsYRRt
+	 KI4ozXBROm7rVMAxuapBRLvuxDLWQgO3j4p9EKtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLJEUU (ORCPT
+        id S1727223AbfLJEUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 23:20:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 23:20:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfLJEUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727103AbfLJEUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Dec 2019 23:20:10 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E1D24655;
+        by mail.kernel.org (Postfix) with ESMTPSA id 205AC24653;
         Tue, 10 Dec 2019 04:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575951610;
-        bh=nQF9quNxVBcU3S+fZmNYk/8oN/cX4almQAM+hd3939M=;
+        s=default; t=1575951609;
+        bh=s8MWRwAjm8mlj+5cwYZV3e60JuvOkWNE1NL5PFrhIj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2KoB5DATs4TWXLbAF7Be8U337q/mpUUW117KerEC+fnKHdtnj3lgE9p3IomftW5Zs
-         1vMYCpwiDDrQsvdwEi63LZrjyLIP6bwM1CiQSlAr2WXzGO6cmPI1W52bnBS95CCutE
-         QbqOufofId9PUW2/bJKxtHJ07ojefpo+n/mSpoiQ=
+        b=xOT5nHF6fij6kGsDrw8INuOjmQMvHns/r5jegSPTZgKdpVpr14ujAb714XManbNd2
+         RG8+8d9W43HMZaOMnV8aD6epkG0I9D043RVD1Wj/q1p14M9XNrOYCe0PUiUBlA+V11
+         EiQ6JAtb+vFuruvthPraFMfrK+yacL9TeZu8fNpw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -49,9 +49,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 9/9] rculist.h: Add list_tail_rcu()
-Date:   Mon,  9 Dec 2019 20:20:02 -0800
-Message-Id: <20191210042002.3490-9-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 8/9] rculist_nulls: Change docbook comment headers
+Date:   Mon,  9 Dec 2019 20:20:01 -0800
+Message-Id: <20191210042002.3490-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210041938.GA3367@paulmck-ThinkPad-P72>
 References: <20191210041938.GA3367@paulmck-ThinkPad-P72>
@@ -62,36 +62,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-This patch adds the macro list_tail_rcu() and documents it.
+This patch changes the docbook comment "head for your list"
+to "head of the list".
 
 Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-[ paulmck: Reword a bit. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rculist.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/rculist_nulls.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 4b7ae1b..9f313e4 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -40,6 +40,16 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
+index 25952c4..409a86b 100644
+--- a/include/linux/rculist_nulls.h
++++ b/include/linux/rculist_nulls.h
+@@ -112,7 +112,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+  * hlist_nulls_for_each_entry_rcu - iterate over rcu list of given type
+  * @tpos:	the type * to use as a loop cursor.
+  * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
+- * @head:	the head for your list.
++ * @head:	the head of the list.
+  * @member:	the name of the hlist_nulls_node within the struct.
+  *
+  * The barrier() is needed to make sure compiler doesn't cache first element [1],
+@@ -132,7 +132,7 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
+  *   iterate over list of given type safe against removal of list entry
+  * @tpos:	the type * to use as a loop cursor.
+  * @pos:	the &struct hlist_nulls_node to use as a loop cursor.
+- * @head:	the head for your list.
++ * @head:	the head of the list.
+  * @member:	the name of the hlist_nulls_node within the struct.
   */
- #define list_next_rcu(list)	(*((struct list_head __rcu **)(&(list)->next)))
- 
-+/**
-+ * list_tail_rcu - returns the prev pointer of the head of the list
-+ * @head: the head of the list
-+ *
-+ * Note: This should only be used with the list header, and even then
-+ * only if list_del() and similar primitives are not also used on the
-+ * list header.
-+ */
-+#define list_tail_rcu(head)	(*((struct list_head __rcu **)(&(head)->prev)))
-+
- /*
-  * Check during list traversal that we are within an RCU reader
-  */
+ #define hlist_nulls_for_each_entry_safe(tpos, pos, head, member)		\
 -- 
 2.9.5
 
