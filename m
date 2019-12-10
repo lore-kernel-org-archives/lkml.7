@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3891CC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743DFC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1F6214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4763020637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015580;
-	bh=8zyNla2jXgqDmHpILGytgenyNG3o9448eWYRUveLcKE=;
+	s=default; t=1576015586;
+	bh=pEEjz3Ac7oHki0v/6nYWxfjSb4k9VlXfoHypBWSLk2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GvGnDglYLoIVCkKfCBtRLbouBFU5LMdRP2Vf22/1/JqeY/bV3DdD73Lg4GIlOOX7L
-	 3pze0GpPKNGOkoo6DKw5LHCuK1HNPzYWIJxnLJFyg1eY6ll+3670L9KN7qwwWONTgv
-	 21kJB/43eL5xv4FZPNq7O47LIvaLu6CowuXDJrGI=
+	b=Ub0oZAqoGhFhuWDCUPLGbI5bMAXAkr3j/aFtRJeoiwjNgmsKbWdbzbIuJwFBzcwf9
+	 OkzEiNmw8gj/qUDXRXIdPbPCll4xDp9RIEFOHfVI8U3kOQqiEo6DDZYmtbqZ5Qkai8
+	 H4CnBSBZ52FSNKANQOnknbWc7T0B0+Cs0bmzfggM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfLJWFc (ORCPT
+        id S1728564AbfLJWGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36682 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:06:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbfLJWFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:17 -0500
+        id S1729726AbfLJWFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 915422073B;
-        Tue, 10 Dec 2019 22:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB90A2053B;
+        Tue, 10 Dec 2019 22:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015516;
-        bh=8zyNla2jXgqDmHpILGytgenyNG3o9448eWYRUveLcKE=;
+        s=default; t=1576015530;
+        bh=pEEjz3Ac7oHki0v/6nYWxfjSb4k9VlXfoHypBWSLk2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lce5y2VJXAerrMsuoSQEksOD0zSPI54x4sAtME5LU9bCp9NWQqJxeNMi+dzzchiYW
-         WiB7zsvE85cIgc1RGr8nok5gyVlb04p2WfRzlGbgU7nK9aN8N1xQE8c3l48zCOtRMW
-         Xob8Hw2JjXJAfvH5BKbOGTnydoO9Fp5fdsomn1wc=
+        b=e7KyGFKMlsY01hdZi535qKpbwBeufSPRHo2DCE4ls2B7Xhj2hMY2gzvjumppMjh5Z
+         YhcgKxA+mqpt8E4sOTVKwYr3c1KIeiAoWuyobE8ZFna9RVZT46PMpyTc6PDdwAdg/z
+         p9toLvE8MsOfUFYGtc79PUlwy/Am8VEXjaicFxD4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        virtualization@lists.linux-foundation.org,
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 113/130] crypto: virtio - deal with unsupported input sizes
-Date:   Tue, 10 Dec 2019 17:02:44 -0500
-Message-Id: <20191210220301.13262-113-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 125/130] crypto: vmx - Avoid weird build failures
+Date:   Tue, 10 Dec 2019 17:02:56 -0500
+Message-Id: <20191210220301.13262-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -63,65 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
+[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
 
-Return -EINVAL for input sizes that are not a multiple of the AES
-block size, since they are not supported by our CBC chaining mode.
+In the vmx crypto Makefile we assign to a variable called TARGET and
+pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
 
-While at it, remove the pr_err() that reports unsupported key sizes
-being used: we shouldn't spam the kernel log with that.
+The variable is meant to describe what flavour of powerpc we're
+building for, eg. either 32 or 64-bit, and big or little endian.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Unfortunately TARGET is a fairly common name for a make variable, and
+if it happens that TARGET is specified as a command line parameter to
+make, the value specified on the command line will override our value.
+
+In particular this can happen if the kernel Makefile is driven by an
+external Makefile that uses TARGET for something.
+
+This leads to weird build failures, eg:
+  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
+  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+
+Which shows that we passed an empty value for $(TARGET) to the perl
+script, confirmed with make V=1:
+
+  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
+
+We can avoid this confusion by using override, to tell make that we
+don't want anything to override our variable, even a value specified
+on the command line. We can also use a less common name, given the
+script calls it "flavour", let's use that.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/crypto/vmx/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 5035b0dc1e40c..e2231a1a05a12 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -110,8 +110,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
- 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
- 		break;
- 	default:
--		pr_err("virtio_crypto: Unsupported key length: %d\n",
--			key_len);
- 		return -EINVAL;
- 	}
- 	return 0;
-@@ -485,6 +483,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
+diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
+index cab32cfec9c45..709670d2b553a 100644
+--- a/drivers/crypto/vmx/Makefile
++++ b/drivers/crypto/vmx/Makefile
+@@ -3,13 +3,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
+ vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
  
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
-@@ -505,6 +508,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-TARGET := linux-ppc64le
++override flavour := linux-ppc64le
+ else
+-TARGET := linux-ppc64
++override flavour := linux-ppc64
+ endif
  
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
+ quiet_cmd_perl = PERL $@
+-      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
++      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
+ 
+ targets += aesp8-ppc.S ghashp8-ppc.S
+ 
 -- 
 2.20.1
 
