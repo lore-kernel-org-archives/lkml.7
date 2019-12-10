@@ -2,116 +2,113 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6329DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274ECC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386052073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575978329;
-	bh=NHn5mK/szEBw/MrxrdLoXSJfgl4m+fQlUzxnCykBJIY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bVQDx2YdYuBj3yGvBDZFNlasZD4AKnrK4YZFgoZS0NQHZfKVnkZPSYgBeq2JfQxLm
-	 2gGjQD4iUpc/CQxNFPqkGzAZEyuJMh7IoJ6VxlrgwT1Kje/ac891KZIBFVHgGnSc/v
-	 /zgmeA5lGac6eT7criHTVC/IGblOGbwc8TnApiyU=
+	by mail.kernel.org (Postfix) with ESMTP id 02D2520836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfLJLpX (ORCPT
+        id S1727351AbfLJLr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:45:23 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37414 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfLJLos (ORCPT
+        Tue, 10 Dec 2019 06:47:59 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:56525 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727149AbfLJLr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:44:48 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u17so19512419lja.4;
-        Tue, 10 Dec 2019 03:44:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HPkUmO3G/A16rgtcZUNme6uiy2GoRkfbpmQRAn7AWJ8=;
-        b=dQ7Oj5c8M+t5mw86y+GO8Lr4JA3roQ3I7gCesNcM68pUbkL/1Ivcjrfgy2tqdr6R9b
-         w0B8SPVw3NTaqd+WqyCE8GeWApB8wIMqyCEsT1rElFPlHGgdBSyIKAOLRT9fpK6Yp7mQ
-         oJK6eSS4Rvrf+Tv0ZSdEF4Ps07cllspTiK1d/Q56QeGtx63YZWOLue5R79VPicj62OP3
-         9FK7TEzrkgURvNmKD7a2D6wKcabk1GWB7ahqo/Xc8KgFdzyyRmvPVGhxKOrlQcnS07Ct
-         o1GqN75JIbGRHr+4oYVgp60wJxBYybThamnJ4AfbdlNfMxt846Xef68HHIBh77qr6B7G
-         i6nA==
-X-Gm-Message-State: APjAAAXYrJszBQuX9y92iUTMUGyKNMR9C6Eq973VgkrhdDSV8mrH1cSQ
-        kFBcrduS83DaQO6qc0VwTOE=
-X-Google-Smtp-Source: APXvYqx0tCPUjbLt1rFx+WirJ499EdZwAdGnhgcl5nl1/qoH4tw61ZDHmQb2+1PkIRQexzMBKal9HA==
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr19813944lji.256.1575978285896;
-        Tue, 10 Dec 2019 03:44:45 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id n19sm1361305lfl.85.2019.12.10.03.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 03:44:43 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1iedwa-0001I2-Kf; Tue, 10 Dec 2019 12:44:44 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Arend van Spriel <arend@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Jes Sorensen <Jes.Sorensen@redhat.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH 4/7] orinoco_usb: fix interface sanity check
-Date:   Tue, 10 Dec 2019 12:44:23 +0100
-Message-Id: <20191210114426.4713-5-johan@kernel.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191210114426.4713-1-johan@kernel.org>
-References: <20191210114426.4713-1-johan@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Dec 2019 06:47:58 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TkX6IwJ_1575978472;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TkX6IwJ_1575978472)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Dec 2019 19:47:53 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v5 4/8] mm/mlock: optimize munlock_pagevec by relocking
+Date:   Tue, 10 Dec 2019 19:46:20 +0800
+Message-Id: <1575978384-222381-5-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1575978384-222381-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+During the pagevec locking, a new page's lruvec is may same as
+previous one. Thus we could save a re-locking, and only
+change lock iff lruvec is newer.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 9afac70a7305 ("orinoco: add orinoco_usb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.35
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- drivers/net/wireless/intersil/orinoco/orinoco_usb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/mlock.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-index 40a8b941ad5c..8c79b963bcff 100644
---- a/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/intersil/orinoco/orinoco_usb.c
-@@ -1608,9 +1608,9 @@ static int ezusb_probe(struct usb_interface *interface,
- 	/* set up the endpoint information */
- 	/* check out the endpoints */
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 10d15f58b061..050f999eadb1 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -289,6 +289,7 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ {
+ 	int i;
+ 	int nr = pagevec_count(pvec);
++	int delta_munlocked = -nr;
+ 	struct pagevec pvec_putback;
+ 	struct lruvec *lruvec = NULL;
+ 	int pgrescued = 0;
+@@ -299,20 +300,19 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ 	for (i = 0; i < nr; i++) {
+ 		struct page *page = pvec->pages[i];
  
--	iface_desc = &interface->altsetting[0].desc;
-+	iface_desc = &interface->cur_altsetting->desc;
- 	for (i = 0; i < iface_desc->bNumEndpoints; ++i) {
--		ep = &interface->altsetting[0].endpoint[i].desc;
-+		ep = &interface->cur_altsetting->endpoint[i].desc;
+-		lruvec = lock_page_lruvec_irq(page);
++		lruvec = relock_page_lruvec_irq(page, lruvec);
  
- 		if (usb_endpoint_is_bulk_in(ep)) {
- 			/* we found a bulk in endpoint */
+ 		if (TestClearPageMlocked(page)) {
+ 			/*
+ 			 * We already have pin from follow_page_mask()
+ 			 * so we can spare the get_page() here.
+ 			 */
+-			if (__munlock_isolate_lru_page(page, lruvec, false)) {
+-				__mod_zone_page_state(zone, NR_MLOCK,  -1);
+-				unlock_page_lruvec_irq(lruvec);
++			if (__munlock_isolate_lru_page(page, lruvec, false))
+ 				continue;
+-			} else
++			else
+ 				__munlock_isolation_failed(page);
+-		}
++		} else
++			delta_munlocked++;
+ 
+ 		/*
+ 		 * We won't be munlocking this page in the next phase
+@@ -322,8 +322,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ 		 */
+ 		pagevec_add(&pvec_putback, pvec->pages[i]);
+ 		pvec->pages[i] = NULL;
+-		unlock_page_lruvec_irq(lruvec);
+ 	}
++	__mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
++	if (lruvec)
++		unlock_page_lruvec_irq(lruvec);
+ 
+ 	/* Now we can release pins of pages that we are not munlocking */
+ 	pagevec_release(&pvec_putback);
 -- 
-2.24.0
+1.8.3.1
 
