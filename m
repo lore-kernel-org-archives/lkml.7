@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B8BC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2C0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B6420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CC420838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beROCNSl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zh+f0Rsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfLJXfZ (ORCPT
+        id S1727567AbfLJXf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:35:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37651 "EHLO
+        Tue, 10 Dec 2019 18:35:28 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35483 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfLJXfX (ORCPT
+        with ESMTP id S1727303AbfLJXfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:35:23 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so22109720wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:35:22 -0800 (PST)
+        Tue, 10 Dec 2019 18:35:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so22040943wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:35:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7Dv/VxzJDAfTaBtCuFb7lBqg7ta9q337rpC3njmbd/0=;
-        b=beROCNSlii7j5050AxrP1Q2nfBxc3FIFYjfL2AH8TEvtc03rVX3d8i7AjhVesNsrLk
-         VGmTr4XknzlhVENJRdf4oSMLCEaRVOZ+XY4NUqsd6hSnP6H4HGv/vQat7yu9Ii1ROz35
-         H+iFJue+sH9WDOTA0EBWMWJEegPa8maS+DNizsyvU3rstzki0QTRnEpyPYipRUbaD6Os
-         biN+pyuvEn9w2hXXD0vvfTqDtbPiiuUfdJPVU3GHks53jSO4JLws5wd3CHK0cCcOZt4p
-         jQSRb/pSz13CJQzbYYpvLP5U+Fi1jYtJKnpPI1798/OcX5Rx+2uCRdYp3FU3Dag8wjYP
-         li8g==
+        bh=0AbeKPvputP0xfRxnZJSwgiY+uW70IA/d2ji/wViVTY=;
+        b=Zh+f0RshI4RE2pJIb0dWo5JI2bI2b2fH2FCW8o8Jon4Efb4BPKHxohC5VFUN3YJMtn
+         u+EAUGXIW+j4U4lNYtKn4yMkaG+mB/YK7beB6COSfoS1HeS/+DJb6uaDuJm7LOkl7067
+         tCmuOpB6QnUIZMFbvq1p1oYzvw20u01vOcRUDqtsFKSYURoAfB+lQz9CRpDcFhIxJVBT
+         vP3MYgYT+Z63v0+LCSLrqPxG5woVPdSfC25IgTTgbO1gtrljhMaoMKGvOVU2IzP17A0D
+         vaixSLO5cOwSDuxO/rb0CiJYa8G6RBwyA/1nAUV3gMEAQu7HMuBQ7FN9hfgR8J+txshk
+         PqIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=7Dv/VxzJDAfTaBtCuFb7lBqg7ta9q337rpC3njmbd/0=;
-        b=hIaFpejGoxSA9K2unzg6b/DRrpChgMl298jVV4j4lBaeU31VAqTSsZaqaK/M0CfgSG
-         RmUOBzhFdWVXdtrEOCkaANl/VDQO9iQuY/xunuv+q11mKPD5ctS9XjVCABZSdBaXBVgO
-         q1o4mQOxj4MU5Gn5qnbZVngmXQBrhrIUhjMzLpYvpVsXCSgiaEh+SVsefUjgyIiA61E3
-         Xz+Tn9fiJa+8pU8Piht1d7g3kCsxFzRAznlqvUW63SHtYpDWkkVn38N5+4/dcc3lZyhG
-         4CZYf+qHkHxKzBzScTllnkmdBI7Scqs7agiE38RAymVQ+7w/LERGH2hMIdEDdIezTi5B
-         PX5w==
-X-Gm-Message-State: APjAAAVkG8tHi39lnJRyJfG4P9FfVh2zvnrDEpokYVg6UHfITythQmpa
-        ItXU4j0rgqpfds85JBFQBz8=
-X-Google-Smtp-Source: APXvYqzx9eQj+2joJ3ncGUAmrw2khMoxtWHR+p6R4TEP8jiUfptCIy5QwN4obIUYtRQ13Pas/q/dJA==
-X-Received: by 2002:adf:fcc4:: with SMTP id f4mr96621wrs.247.1576020921488;
-        Tue, 10 Dec 2019 15:35:21 -0800 (PST)
+        bh=0AbeKPvputP0xfRxnZJSwgiY+uW70IA/d2ji/wViVTY=;
+        b=pcjtlxHvlLfqdcfPeTsR6uae3UfRX/aq9xnFLS2u1ZFvKS3LfCyjY10TE5zzp+tpjB
+         rTIUGDDij88llqhxTdSCxZLdznhLutMrq2Zwq610sYk7ae1dpjxrwh9U+7BvUPQ/OHGw
+         haBlF6zbp6PdBuB1vxdn0H4Qud8OcBCBqVIYdwNc7lj11PAz8wD8Wh2AME2LXVzBAn/T
+         Cslh7VCT6+XDbKPn3F5pHKGThdVQKEp4MGoFxNf4Qbo1J6avNvosMLFsoW5aGcDtLf8L
+         jiEPBbJUyt/EbCxWH5lXHWMzuS2ynia72oTfCYF4H5TshgHRg6qT+i8929B5GtJMBAbj
+         cLQA==
+X-Gm-Message-State: APjAAAXFkivOkr6WqX9iTfJBXAREhoxOC7zNyhkdb4qybzUtkVtZCmBn
+        ToA9f0cItkYF7QGtcaEs4JY=
+X-Google-Smtp-Source: APXvYqyKbyikos4S3uOhLBceay26ubCp5ltWoiUqgKrmVRP4FNig87kIVi6vDTVlQkNOKMn1nBZ/4g==
+X-Received: by 2002:a5d:6b88:: with SMTP id n8mr133901wrx.288.1576020923297;
+        Tue, 10 Dec 2019 15:35:23 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n16sm59478wro.88.2019.12.10.15.35.19
+        by smtp.gmail.com with ESMTPSA id n16sm59478wro.88.2019.12.10.15.35.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 15:35:21 -0800 (PST)
+        Tue, 10 Dec 2019 15:35:22 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/4] soc: bcm: brcmstb: biuctrl: Tune interface for 7255 and 7216
-Date:   Tue, 10 Dec 2019 15:30:41 -0800
-Message-Id: <20191210233043.15193-3-f.fainelli@gmail.com>
+Subject: [PATCH 3/4] soc: bcm: brcmstb: biuctrl: Update layout for A72 on 7211
+Date:   Tue, 10 Dec 2019 15:30:42 -0800
+Message-Id: <20191210233043.15193-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191210233043.15193-1-f.fainelli@gmail.com>
 References: <20191210233043.15193-1-f.fainelli@gmail.com>
@@ -72,28 +72,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-7255 and 7216 are some of the latest chips that were produced and
-support the full register range configuration for the BIU, add the two
-entries to get the expected programming.
+The BIUCTRL layout is a little different on 7211 which is equipped with
+a Cortex-A72, account for those register offset differences. We will
+match 7211 specifically in a subsequent commit.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/bcm/brcmstb/biuctrl.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index 6be975392590..978cf52be664 100644
+index 978cf52be664..d766577bc5d4 100644
 --- a/drivers/soc/bcm/brcmstb/biuctrl.c
 +++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -102,6 +102,8 @@ static int __init mcp_write_pairing_set(void)
- }
+@@ -76,6 +76,12 @@ static const int b53_cpubiuctrl_regs[] = {
+ 	[CPU_WRITEBACK_CTRL_REG] = 0x22c,
+ };
  
- static const u32 b53_mach_compat[] = {
-+	0x7216,
-+	0x7255,
- 	0x7260,
- 	0x7268,
- 	0x7271,
++static const int a72_cpubiuctrl_regs[] = {
++	[CPU_CREDIT_REG] = 0x18,
++	[CPU_MCP_FLOW_REG] = 0x1c,
++	[CPU_WRITEBACK_CTRL_REG] = 0x20,
++};
++
+ #define NUM_CPU_BIUCTRL_REGS	3
+ 
+ static int __init mcp_write_pairing_set(void)
+@@ -183,6 +189,8 @@ static int __init setup_hifcpubiuctrl_regs(struct device_node *np)
+ 		cpubiuctrl_regs = b15_cpubiuctrl_regs;
+ 	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
+ 		cpubiuctrl_regs = b53_cpubiuctrl_regs;
++	else if (of_device_is_compatible(cpu_dn, "arm,cortex-a72"))
++		cpubiuctrl_regs = a72_cpubiuctrl_regs;
+ 	else {
+ 		pr_err("unsupported CPU\n");
+ 		ret = -EINVAL;
 -- 
 2.17.1
 
