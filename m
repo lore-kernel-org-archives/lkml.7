@@ -2,277 +2,130 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E865EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341E8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FDB20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0536B20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjDdUakX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8ZhFe8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfLJPY3 (ORCPT
+        id S1727535AbfLJPZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:24:29 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44701 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727434AbfLJPY3 (ORCPT
+        Tue, 10 Dec 2019 10:25:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29872 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727486AbfLJPZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:24:29 -0500
+        Tue, 10 Dec 2019 10:25:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575991466;
+        s=mimecast20190719; t=1575991503;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8oxa23NcED0zTyDLJgCkjfcTxGxXpZpp6jAKmdnoFUA=;
-        b=hjDdUakXo6yTadusmflWBwHLDSVb/3AvOikMKSuVai7weuitlmGJ5QaCHLXunKa22RinM8
-        YzW1FNEo6s8t3qmqkgtW1cVgpEWaGb1ZMAs6jNHk30/yecjhS9ECaegSA+8F2fJioq1wjf
-        1GVSyuPqzCQGIJZChPDrHFeVVm3pbmk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-KVX_jTN0MVmLww3cZI4gnQ-1; Tue, 10 Dec 2019 10:24:23 -0500
-Received: by mail-wm1-f71.google.com with SMTP id 7so714930wmf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:24:23 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding;
+        bh=SBlCViivdLPWcxJR+tjSqpcELt98NYeH9PCUPU2arcI=;
+        b=H8ZhFe8JaAH4njYvrwy6h/Yco80B6hTQrvD2w7EjTC9q4fp/F4PCFOy5fgGOKFv9c/QoLD
+        +Jd/d74+yAxEcqmStloqLOWqBhw46Mh8OGIFzDt2rgx+3cvEJZb3lPcC+CvTsLM0J7bE9X
+        QEVIJkYSw1C9JJD6aXEk7kSy4eg9yXI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-FZsgZLCYNxSI5g6JLQj-lw-1; Tue, 10 Dec 2019 10:24:59 -0500
+Received: by mail-wm1-f69.google.com with SMTP id o135so731640wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:24:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AYw78AV7R0o8WgrXo6yfKZS9on63QSEXxcw98h9QqoU=;
-        b=XZggekiBnMCojZpoL1ayTLAGB1ngChUmIqqIvfnyu4dzur/cK20/wf959yP3dFuaob
-         pi0tpVdg/OGp32WosotPIfx1E/nk61CJsTvPoPDv14UocihvGLuhM7bL7DIEUjHLx0lP
-         H7UDx7uSwijp4fZsGKOFLFEtsSXfZcP8YDOpjHdzB1jy9rtD/Me9iz5F7yra9+6eZPSp
-         Hge8A1oL5N6en3DZxCzvz5bsA2SyjXv9TVVzRUErueWjk+jixeqACr4f272REHmZ4oIx
-         vw+pWiAzxTU5MGahBSLBp8ulRmmbAPJ8Q1V7FwiMNkK0t9ODFxhzq9nO/FPsdC1H/dpP
-         6dhg==
-X-Gm-Message-State: APjAAAWwMTpg8qPjUMp6umjgLjXIKm1E42MtYI1XynMQnAcnUkwVzKr4
-        H3Gw6FmGEX4dqHMsM9uMwWdZKtVUL1mAx4A6jmbvt5RppBAZQ+/+RCsT8YqboVRvi8L+pscO3gv
-        CJOb7P9FCegQEV86xX6X6ta8d
-X-Received: by 2002:a7b:cd0d:: with SMTP id f13mr5910701wmj.66.1575991462474;
-        Tue, 10 Dec 2019 07:24:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxOpck14fn5cObFBMrpj98BL96trMkM2+U7Z4vqlsbdJty6YcJi3vdk+7tJ+zfXApoap1K2NA==
-X-Received: by 2002:a7b:cd0d:: with SMTP id f13mr5910678wmj.66.1575991462196;
-        Tue, 10 Dec 2019 07:24:22 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id n3sm3546213wrs.8.2019.12.10.07.24.19
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g+Bh1GSR5txdzqnDGr/X1/Xu1q7+Hi2S16TKSW8j1dM=;
+        b=qBbfvApHvhyiJDC42h+61PlhoVJxPIZby9jSvHLBPrfxii0JXxmEyk7NfEOCs+4zrE
+         +pqovI8Ta5qIcXaMcY/4ugie5jC/VUGbB66XqsaQhOlmtHbO3LXVcWZHXUFdSZonMVcD
+         8d9+feumWRds+uq2ffCBSzmCrOJ+jDDdvA8sbzDeW2HOLXV04KclcYzL+sSI8Om43FZO
+         mionKFHms2iOU7Ksa1PlZpJP+0CUDgA9SKG6RUVcvB9w+obE6y3+NiScIH+Qs4iAWD/+
+         i8M7FTbAArCW6mnHjHdfFx5nFsIzF9h2n8vNUHAZVKvmYV5XGmdT2yluworqEFoLXSMj
+         BG0Q==
+X-Gm-Message-State: APjAAAWLocMWVASV8Hj7cHS47PVT1IZYKzwJa4qJHAxg2wZMv41M2KLX
+        j9oV3/CxTloIDXnUmSLoUzU06+sVeuGUo9uSZFfeMQA5wwK6MyA8/1E2hESTEB5YNGXFZt1rz+V
+        KVuunRe6zcoytOYf+l2Dfcpy3
+X-Received: by 2002:a1c:49c2:: with SMTP id w185mr201646wma.138.1575991498773;
+        Tue, 10 Dec 2019 07:24:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxh2uzlfHDnLNfegEN+Y5sLsGEar+YEfBdUy8Fk9L4IE5jsiI2RzFGBJdG/g7S3IdwxHLpOuA==
+X-Received: by 2002:a1c:49c2:: with SMTP id w185mr201635wma.138.1575991498580;
+        Tue, 10 Dec 2019 07:24:58 -0800 (PST)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id i5sm706909wml.31.2019.12.10.07.24.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 07:24:21 -0800 (PST)
-Date:   Tue, 10 Dec 2019 10:24:17 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Yumei Huang <yuhuang@redhat.com>, stable@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtualization@lists.linux-foundation.org,
-        Igor Mammedov <imammedo@redhat.com>
-Subject: Re: [PATCH v2] virtio-balloon: fix managed page counts when
- migrating pages between zones
-Message-ID: <20191210102353-mutt-send-email-mst@kernel.org>
-References: <20191205092420.6934-1-david@redhat.com>
- <13e33ff9-22f2-c02a-811e-2d087e42e1ce@redhat.com>
+        Tue, 10 Dec 2019 07:24:57 -0800 (PST)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] bonding: don't init workqueues on error
+Date:   Tue, 10 Dec 2019 16:24:54 +0100
+Message-Id: <20191210152454.86247-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <13e33ff9-22f2-c02a-811e-2d087e42e1ce@redhat.com>
-X-MC-Unique: KVX_jTN0MVmLww3cZI4gnQ-1
+X-MC-Unique: FZsgZLCYNxSI5g6JLQj-lw-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 02:44:38PM +0100, David Hildenbrand wrote:
-> On 05.12.19 10:24, David Hildenbrand wrote:
-> > In case we have to migrate a ballon page to a newpage of another zone, =
-the
-> > managed page count of both zones is wrong. Paired with memory offlining
-> > (which will adjust the managed page count), we can trigger kernel crash=
-es
-> > and all kinds of different symptoms.
-> >=20
-> > One way to reproduce:
-> > 1. Start a QEMU guest with 4GB, no NUMA
-> > 2. Hotplug a 1GB DIMM and only the memory to ZONE_NORMAL
->=20
-> s/only/online/
->=20
-> as requested by Igor.
->=20
-> > 3. Inflate the balloon to 1GB
-> > 4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
-> > 5. Observe /proc/zoneinfo
-> >   Node 0, zone   Normal
-> >     pages free     16810
-> >           min      24848885473806
-> >           low      18471592959183339
-> >           high     36918337032892872
-> >           spanned  262144
-> >           present  262144
-> >           managed  18446744073709533486
-> > 6. Do anything that requires some memory (e.g., inflate the balloon som=
-e
-> > more). The OOM goes crazy and the system crashes
-> >   [  238.324946] Out of memory: Killed process 537 (login) total-vm:275=
-84kB, anon-rss:860kB, file-rss:0kB, shmem-rss:00
-> >   [  238.338585] systemd invoked oom-killer: gfp_mask=3D0x100cca(GFP_HI=
-GHUSER_MOVABLE), order=3D0, oom_score_adj=3D0
-> >   [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W       =
-  5.4.0-next-20191204+ #75
-> >   [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),=
- BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-> >   [  238.341121] Call Trace:
-> >   [  238.341337]  dump_stack+0x8f/0xd0
-> >   [  238.341630]  dump_header+0x61/0x5ea
-> >   [  238.341942]  oom_kill_process.cold+0xb/0x10
-> >   [  238.342299]  out_of_memory+0x24d/0x5a0
-> >   [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
-> >   [  238.343024]  __alloc_pages_nodemask+0x391/0x410
-> >   [  238.343407]  pagecache_get_page+0xc3/0x3a0
-> >   [  238.343757]  filemap_fault+0x804/0xc30
-> >   [  238.344083]  ? ext4_filemap_fault+0x28/0x42
-> >   [  238.344444]  ext4_filemap_fault+0x30/0x42
-> >   [  238.344789]  __do_fault+0x37/0x1a0
-> >   [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
-> >   [  238.345450]  handle_mm_fault+0x169/0x360
-> >   [  238.345790]  do_user_addr_fault+0x20d/0x490
-> >   [  238.346154]  do_page_fault+0x31/0x210
-> >   [  238.346468]  async_page_fault+0x43/0x50
-> >   [  238.346797] RIP: 0033:0x7f47eba4197e
-> >   [  238.347110] Code: Bad RIP value.
-> >   [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
-> >   [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007=
-f47eba4197e
-> >   [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 00000=
-00000000004
-> >   [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 00000=
-00000000033
-> >   [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 00000=
-00000000001
-> >   [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007=
-ffd7c0c18c0
-> >   [  238.350878] Mem-Info:
-> >   [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
-> >   [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
-> >   [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
-> >   [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
-> >   [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
-> >   [  238.351085]  free:720717 free_pcp:2 free_cma:0
-> >   [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_=
-file:48kB inactive_file:28kB unevictable:0kB iss
-> >   [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB re=
-served_highatomic:0KB active_anon:152kB inactivB
-> >   [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
-> >   [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB hig=
-h:13052kB reserved_highatomic:0KB active_anon:0B
-> >   [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927=
-865 72057594037927865
-> >   [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:7=
-3886371836733356kB high:147673348131571488kB reB
-> >   [  238.364765] lowmem_reserve[]: 0 0 0 0 0
-> >   [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (=
-UM) 1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
-> >   [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) =
-2*64kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
-> >   [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB =
-(UME) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
-> >   [  238.369184] Node 0 hugepages_total=3D0 hugepages_free=3D0 hugepage=
-s_surp=3D0 hugepages_size=3D2048kB
-> >   [  238.369915] 130 total pagecache pages
-> >   [  238.370241] 0 pages in swap cache
-> >   [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
-> >   [  238.370981] Free swap  =3D 0kB
-> >   [  238.371239] Total swap =3D 0kB
-> >   [  238.371488] 1048445 pages RAM
-> >   [  238.371756] 0 pages HighMem/MovableOnly
-> >   [  238.372090] 306992 pages reserved
-> >   [  238.372376] 0 pages cma reserved
-> >   [  238.372661] 0 pages hwpoisoned
-> >=20
-> > In another instance (older kernel), I was able to observe this
-> > (negative page count :/):
-> >   [  180.896971] Offlined Pages 32768
-> >   [  182.667462] Offlined Pages 32768
-> >   [  184.408117] Offlined Pages 32768
-> >   [  186.026321] Offlined Pages 32768
-> >   [  187.684861] Offlined Pages 32768
-> >   [  189.227013] Offlined Pages 32768
-> >   [  190.830303] Offlined Pages 32768
-> >   [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages:=
- -36920272750453009
-> >=20
-> > In another instance (older kernel), I was no longer able to start any
-> > process:
-> >   [root@vm ~]# [  214.348068] Offlined Pages 32768
-> >   [  215.973009] Offlined Pages 32768
-> >   cat /proc/meminfo
-> >   -bash: fork: Cannot allocate memory
-> >   [root@vm ~]# cat /proc/meminfo
-> >   -bash: fork: Cannot allocate memory
-> >=20
-> > Fix it by properly adjusting the managed page count when migrating if
-> > the zone changed. The managed page count of the zones now looks after
-> > unplug of the DIMM (and after deflating the balloon) just like before
-> > inflating the balloon (and plugging+onlining the DIMM).
-> >=20
-> > We'll temporarily modify the totalram page count. If this ever becomes =
-a
-> > problem, we can fine tune by providing helpers that don't touch
-> > the totalram pages (e.g., adjust_zone_managed_page_count()).
-> >=20
-> > Reported-by: Yumei Huang <yuhuang@redhat.com>
-> > Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
-> > Cc: <stable@vger.kernel.org> # v3.11+
-> > Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> > Cc: Jason Wang <jasowang@redhat.com>
-> > Cc: Jiang Liu <liuj97@gmail.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: virtualization@lists.linux-foundation.org
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >=20
-> > v1 -> v2:
-> > - Adjust count before enquing newpage (and it possibly gets free form t=
-he
-> >   balloon)
-> > - Check if the zone changed
-> >=20
-> > ---
-> >  drivers/virtio/virtio_balloon.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ba=
-lloon.c
-> > index 15b7f1d8c334..3078e1ac2a8f 100644
-> > --- a/drivers/virtio/virtio_balloon.c
-> > +++ b/drivers/virtio/virtio_balloon.c
-> > @@ -722,6 +722,13 @@ static int virtballoon_migratepage(struct balloon_=
-dev_info *vb_dev_info,
-> > =20
-> >  =09get_page(newpage); /* balloon reference */
-> > =20
-> > +=09/* fixup the managed page count (esp. of the zone) */
->=20
-> /*
->  * When we migrate to a different zone, we have to adjust the managed
->  * page count of both involved zones.
->  */
->=20
-> as requested by Michael.
->=20
->=20
-> @Michael, if there are no further comments, shall I resend?
+bond_create() initialize six workqueues used later on. In the unlikely
+event that the device registration fails, these structures are initialized
+unnecessarily, so move the initialization out of the error path.
+Also, create an error label to remove some duplicated code.
 
-Also, what does it have to do with deflate on oom?
-Why is it true we don't need to do it then?
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ drivers/net/bonding/bond_main.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> --=20
-> Thanks,
->=20
-> David / dhildenb
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
+n.c
+index fcb7c2f7f001..8756b6a023d7 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -4889,8 +4889,8 @@ int bond_create(struct net *net, const char *name)
+ =09=09=09=09   bond_setup, tx_queues);
+ =09if (!bond_dev) {
+ =09=09pr_err("%s: eek! can't alloc netdev!\n", name);
+-=09=09rtnl_unlock();
+-=09=09return -ENOMEM;
++=09=09res =3D -ENOMEM;
++=09=09goto out_unlock;
+ =09}
+=20
+ =09/*
+@@ -4905,14 +4905,17 @@ int bond_create(struct net *net, const char *name)
+ =09bond_dev->rtnl_link_ops =3D &bond_link_ops;
+=20
+ =09res =3D register_netdevice(bond_dev);
++=09if (res < 0) {
++=09=09free_netdev(bond_dev);
++=09=09goto out_unlock;
++=09}
+=20
+ =09netif_carrier_off(bond_dev);
+=20
+ =09bond_work_init_all(bond);
+=20
++out_unlock:
+ =09rtnl_unlock();
+-=09if (res < 0)
+-=09=09free_netdev(bond_dev);
+ =09return res;
+ }
+=20
+--=20
+2.23.0
 
