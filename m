@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEAAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70DB205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C35E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013284;
-	bh=oadTmD8xMyFAJq7acvFQcDeq9NwvEcS53HvNHrBQQkY=;
+	s=default; t=1576013299;
+	bh=EwON0KxD+25ZAhruFvpeWwE6GlempRxfhHmX9ra5pWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2m7VdBAOFYy+kp3i9mO7RpHW1YFP+zyEkn7UKhD9eVzVV4PfRSpKtiwme4B2Q8g1
-	 Uadl+NyimGujrzJXp3XdpbvENJK1a6P60+F2UX8Rv63PRDLYjzKfvyWPriDZG+3JZV
-	 P8PI/Kvm++WzT+BXezSHWYa0irE3qjNTSIftiXYQ=
+	b=T9Kc6EfohKkI8iqq4VGbi7bRUhP1IWDdJozw3mSf+uk65JrRA+RxTU91yw/6IqlPX
+	 P0pPs/MNfUOcYXj0XH25Gxv4f5lGsOKrJC0nLA292NACXCKQCBR0jt5T3A1PgaxaQU
+	 pOyG6NWCuub4Xs6m7dXXhoBCOXAr/7ruqgiP//TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfLJV1u (ORCPT
+        id S1728362AbfLJV2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:27:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:28:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbfLJVKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:32 -0500
+        id S1728120AbfLJVK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCBB246A3;
-        Tue, 10 Dec 2019 21:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF5C0246B8;
+        Tue, 10 Dec 2019 21:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012232;
-        bh=oadTmD8xMyFAJq7acvFQcDeq9NwvEcS53HvNHrBQQkY=;
+        s=default; t=1576012228;
+        bh=EwON0KxD+25ZAhruFvpeWwE6GlempRxfhHmX9ra5pWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/5VUTNxY0qJpaRLHBYwlQBYeXRd5H3FjmmMI+jQf05F2mEwpIjHCRevSIYKroJV6
-         VAfP0IM+DHHEyLEgNWMwaa8N+GMVW3tRaqCkWdVKmm4yc9nK2No8hXiDqpI9JqxcMs
-         M3cqjgqn1F1QwhQVwLOiEHAqz7Zq8cadRj9jCVME=
+        b=GJU40CmfWPJxdwSZQ5j1TIkIdVSCcS4Vkraa6mML2DzsEHrwDkXFD+y7PiGePsX2y
+         iARzH5quwNxd0Ir+qkMVdhtpZjW0nGXTEtaOmUaMmaHio6c/v+XzDtu/TyCwdhccEk
+         Gngx7Qt/jO/WHEwxl92+AekunXdiEtnHob4OqQos=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 181/350] phy: qcom-usb-hs: Fix extcon double register after power cycle
-Date:   Tue, 10 Dec 2019 16:04:46 -0500
-Message-Id: <20191210210735.9077-142-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 178/350] net: dsa: LAN9303: select REGMAP when LAN9303 enable
+Date:   Tue, 10 Dec 2019 16:04:43 -0500
+Message-Id: <20191210210735.9077-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,69 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 64f86b9978449ff05bfa6c64b4c5439e21e9c80b ]
+[ Upstream commit b6989d248a2d13f02895bae1a9321b3bbccc0283 ]
 
-Commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
-switched from extcon_register_notifier() to the resource-managed
-API, i.e. devm_extcon_register_notifier().
+When NET_DSA_SMSC_LAN9303=y and NET_DSA_SMSC_LAN9303_MDIO=y,
+below errors can be seen:
+drivers/net/dsa/lan9303_mdio.c:87:23: error: REGMAP_ENDIAN_LITTLE
+undeclared here (not in a function)
+  .reg_format_endian = REGMAP_ENDIAN_LITTLE,
+drivers/net/dsa/lan9303_mdio.c:93:3: error: const struct regmap_config
+has no member named reg_read
+  .reg_read = lan9303_mdio_read,
 
-This is problematic in this case, because the extcon notifier
-is dynamically registered/unregistered whenever the PHY is powered
-on/off. The resource-managed API does not unregister the notifier
-until the driver is removed, so as soon as the PHY is power cycled,
-attempting to register the notifier again results in:
+It should select REGMAP in config NET_DSA_SMSC_LAN9303.
 
-	double register detected
-	WARNING: CPU: 1 PID: 182 at kernel/notifier.c:26 notifier_chain_register+0x74/0xa0
-	Call trace:
-	 ...
-	 extcon_register_notifier+0x74/0xb8
-	 devm_extcon_register_notifier+0x54/0xb8
-	 qcom_usb_hs_phy_power_on+0x1fc/0x208
-	 ...
-
-... and USB stops working after plugging the cable out and in
-another time.
-
-The easiest way to fix this is to make a partial revert of
-commit f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
-and avoid using the resource-managed API in this case.
-
-Fixes: f0b5c2c96370 ("phy: qcom-usb-hs: Replace the extcon API")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: dc7005831523 ("net: dsa: LAN9303: add MDIO managed mode support")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-usb-hs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/dsa/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-index b163b3a1558d5..61054272a7c8b 100644
---- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-+++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
-@@ -158,8 +158,8 @@ static int qcom_usb_hs_phy_power_on(struct phy *phy)
- 		/* setup initial state */
- 		qcom_usb_hs_phy_vbus_notifier(&uphy->vbus_notify, state,
- 					      uphy->vbus_edev);
--		ret = devm_extcon_register_notifier(&ulpi->dev, uphy->vbus_edev,
--				EXTCON_USB, &uphy->vbus_notify);
-+		ret = extcon_register_notifier(uphy->vbus_edev, EXTCON_USB,
-+					       &uphy->vbus_notify);
- 		if (ret)
- 			goto err_ulpi;
- 	}
-@@ -180,6 +180,9 @@ static int qcom_usb_hs_phy_power_off(struct phy *phy)
- {
- 	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
- 
-+	if (uphy->vbus_edev)
-+		extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
-+					   &uphy->vbus_notify);
- 	regulator_disable(uphy->v3p3);
- 	regulator_disable(uphy->v1p8);
- 	clk_disable_unprepare(uphy->sleep_clk);
+diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
+index f6232ce8481fe..685e12b05a7c0 100644
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -77,6 +77,7 @@ config NET_DSA_REALTEK_SMI
+ config NET_DSA_SMSC_LAN9303
+ 	tristate
+ 	select NET_DSA_TAG_LAN9303
++	select REGMAP
+ 	---help---
+ 	  This enables support for the SMSC/Microchip LAN9303 3 port ethernet
+ 	  switch chips.
 -- 
 2.20.1
 
