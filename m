@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BD6C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4608CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1BC2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2062073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013491;
-	bh=yS2KDEXb1mtqkGjsdBPg69ZkH+a+Qekok3ngQXZ45Jc=;
+	s=default; t=1576013495;
+	bh=llz9S6WiqrSWJvcdBeTcmMWA3GxRhPN9GqmdpxjJ+is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ljngQaeVDsFzLJhuJe8asfTt6NuI1x5l3x2E6z8EXrS535hwKyYWIPAoEl2LaQ4wF
-	 4E5Ezv5oVE2209zQjyfmSKyFG7mnRDynHkhjKQe797OHIRGEipe8sKpBDmnWovxhad
-	 yUzY7XQfpjcUNgdPkZmIrummcY3woDmLOAB941hE=
+	b=zDL9Tz/ffdJG4H9ES1p8u+ycWNZG01+bt3ICoan4G9v39n/S8zKAEPl0iJ61dm1cz
+	 xeHNMPV5mks5ijHTZWmL5kEazEM9lfX29Z5NC7vVpPXsZNuYGJS/Y3QufCbFJ60Zd7
+	 VLBFX+Gs+dK7ZbvALvkidYLRJwa96EZJ3YcGiQDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfLJVJ3 (ORCPT
+        id S1727628AbfLJVJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57884 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbfLJVJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:25 -0500
+        id S1728137AbfLJVJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D915824699;
-        Tue, 10 Dec 2019 21:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1A4324696;
+        Tue, 10 Dec 2019 21:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012164;
-        bh=yS2KDEXb1mtqkGjsdBPg69ZkH+a+Qekok3ngQXZ45Jc=;
+        s=default; t=1576012161;
+        bh=llz9S6WiqrSWJvcdBeTcmMWA3GxRhPN9GqmdpxjJ+is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBOMGUX+vuZ2Ifb1HTSH9xfKyc6fTsWNsWvTyOrj4GnZ3RIZX+4Hvspq7kgmVsPVR
-         CKjV2dudYXM4AXWEJDJ4zp5GgrK450tnk315R3MTXv7yGiBnFKjaXfZ1ZTRdSWaTIo
-         Rr/QfXkWxNaaHS3H51cD6WkWPH21B9eVY4dv4CkE=
+        b=SXh3eEp8H2HPWaUYxh5zuPSoLDJ5wRBMUdYye5pOY4CKSg/Fr8IbYTKeBr9g7Byg4
+         njS5JJidVM5vxuofEbCCWCQJrwuAk9HBUNzwwmrp499wpeeKX/pKrZzO9sLBBVQ0Zu
+         EaIuY6fKSedzgVYfoeLK7ezvdV7MUnKlbu8RwxH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 125/350] drm/amd/display: enable hostvm based on roimmu active for dcn2.1
-Date:   Tue, 10 Dec 2019 16:03:50 -0500
-Message-Id: <20191210210735.9077-86-sashal@kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 123/350] bpf/stackmap: Fix deadlock with rq_lock in bpf_get_stack()
+Date:   Tue, 10 Dec 2019 16:03:48 -0500
+Message-Id: <20191210210735.9077-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,90 +62,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit 48d92e8eda3d9b61978377e7539bfc5958e850cf ]
+[ Upstream commit eac9153f2b584c702cea02c1f1a57d85aa9aea42 ]
 
-Enabling hostvm when ROIMMU is not active seems to break GPUVM.
-This fixes the issue by not enabling hostvm if ROIMMU is not
-activated.
+bpf stackmap with build-id lookup (BPF_F_STACK_BUILD_ID) can trigger A-A
+deadlock on rq_lock():
 
-Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[...]
+Call Trace:
+ try_to_wake_up+0x1ad/0x590
+ wake_up_q+0x54/0x80
+ rwsem_wake+0x8a/0xb0
+ bpf_get_stack+0x13c/0x150
+ bpf_prog_fbdaf42eded9fe46_on_event+0x5e3/0x1000
+ bpf_overflow_handler+0x60/0x100
+ __perf_event_overflow+0x4f/0xf0
+ perf_swevent_overflow+0x99/0xc0
+ ___perf_sw_event+0xe7/0x120
+ __schedule+0x47d/0x620
+ schedule+0x29/0x90
+ futex_wait_queue_me+0xb9/0x110
+ futex_wait+0x139/0x230
+ do_futex+0x2ac/0xa50
+ __x64_sys_futex+0x13c/0x180
+ do_syscall_64+0x42/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This can be reproduced by:
+1. Start a multi-thread program that does parallel mmap() and malloc();
+2. taskset the program to 2 CPUs;
+3. Attach bpf program to trace_sched_switch and gather stackmap with
+   build-id, e.g. with trace.py from bcc tools:
+   trace.py -U -p <pid> -s <some-bin,some-lib> t:sched:sched_switch
+
+A sample reproducer is attached at the end.
+
+This could also trigger deadlock with other locks that are nested with
+rq_lock.
+
+Fix this by checking whether irqs are disabled. Since rq_lock and all
+other nested locks are irq safe, it is safe to do up_read() when irqs are
+not disable. If the irqs are disabled, postpone up_read() in irq_work.
+
+Fixes: 615755a77b24 ("bpf: extend stackmap to save binary_build_id+offset instead of address")
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191014171223.357174-1-songliubraving@fb.com
+
+Reproducer:
+============================ 8< ============================
+
+char *filename;
+
+void *worker(void *p)
+{
+        void *ptr;
+        int fd;
+        char *pptr;
+
+        fd = open(filename, O_RDONLY);
+        if (fd < 0)
+                return NULL;
+        while (1) {
+                struct timespec ts = {0, 1000 + rand() % 2000};
+
+                ptr = mmap(NULL, 4096 * 64, PROT_READ, MAP_PRIVATE, fd, 0);
+                usleep(1);
+                if (ptr == MAP_FAILED) {
+                        printf("failed to mmap\n");
+                        break;
+                }
+                munmap(ptr, 4096 * 64);
+                usleep(1);
+                pptr = malloc(1);
+                usleep(1);
+                pptr[0] = 1;
+                usleep(1);
+                free(pptr);
+                usleep(1);
+                nanosleep(&ts, NULL);
+        }
+        close(fd);
+        return NULL;
+}
+
+int main(int argc, char *argv[])
+{
+        void *ptr;
+        int i;
+        pthread_t threads[THREAD_COUNT];
+
+        if (argc < 2)
+                return 0;
+
+        filename = argv[1];
+
+        for (i = 0; i < THREAD_COUNT; i++) {
+                if (pthread_create(threads + i, NULL, worker, NULL)) {
+                        fprintf(stderr, "Error creating thread\n");
+                        return 0;
+                }
+        }
+
+        for (i = 0; i < THREAD_COUNT; i++)
+                pthread_join(threads[i], NULL);
+        return 0;
+}
+============================ 8< ============================
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/dcn21/dcn21_hubbub.c   | 40 ++++++++++++-------
- 1 file changed, 25 insertions(+), 15 deletions(-)
+ kernel/bpf/stackmap.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubbub.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubbub.c
-index d1266741763b9..f5f6b4a0f0aa4 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubbub.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_hubbub.c
-@@ -22,6 +22,7 @@
-  * Authors: AMD
-  *
-  */
-+#include <linux/delay.h>
- #include "dm_services.h"
- #include "dcn20/dcn20_hubbub.h"
- #include "dcn21_hubbub.h"
-@@ -71,30 +72,39 @@ static uint32_t convert_and_clamp(
- void dcn21_dchvm_init(struct hubbub *hubbub)
- {
- 	struct dcn20_hubbub *hubbub1 = TO_DCN20_HUBBUB(hubbub);
-+	uint32_t riommu_active;
-+	int i;
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 052580c33d268..173e983619d77 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -287,7 +287,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+ 	bool irq_work_busy = false;
+ 	struct stack_map_irq_work *work = NULL;
  
- 	//Init DCHVM block
- 	REG_UPDATE(DCHVM_CTRL0, HOSTVM_INIT_REQ, 1);
+-	if (in_nmi()) {
++	if (irqs_disabled()) {
+ 		work = this_cpu_ptr(&up_read_work);
+ 		if (work->irq_work.flags & IRQ_WORK_BUSY)
+ 			/* cannot queue more up_read, fallback */
+@@ -295,8 +295,9 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+ 	}
  
- 	//Poll until RIOMMU_ACTIVE = 1
--	//TODO: Figure out interval us and retry count
--	REG_WAIT(DCHVM_RIOMMU_STAT0, RIOMMU_ACTIVE, 1, 5, 100);
-+	for (i = 0; i < 100; i++) {
-+		REG_GET(DCHVM_RIOMMU_STAT0, RIOMMU_ACTIVE, &riommu_active);
- 
--	//Reflect the power status of DCHUBBUB
--	REG_UPDATE(DCHVM_RIOMMU_CTRL0, HOSTVM_POWERSTATUS, 1);
-+		if (riommu_active)
-+			break;
-+		else
-+			udelay(5);
-+	}
-+
-+	if (riommu_active) {
-+		//Reflect the power status of DCHUBBUB
-+		REG_UPDATE(DCHVM_RIOMMU_CTRL0, HOSTVM_POWERSTATUS, 1);
- 
--	//Start rIOMMU prefetching
--	REG_UPDATE(DCHVM_RIOMMU_CTRL0, HOSTVM_PREFETCH_REQ, 1);
-+		//Start rIOMMU prefetching
-+		REG_UPDATE(DCHVM_RIOMMU_CTRL0, HOSTVM_PREFETCH_REQ, 1);
- 
--	// Enable dynamic clock gating
--	REG_UPDATE_4(DCHVM_CLK_CTRL,
--					HVM_DISPCLK_R_GATE_DIS, 0,
--					HVM_DISPCLK_G_GATE_DIS, 0,
--					HVM_DCFCLK_R_GATE_DIS, 0,
--					HVM_DCFCLK_G_GATE_DIS, 0);
-+		// Enable dynamic clock gating
-+		REG_UPDATE_4(DCHVM_CLK_CTRL,
-+						HVM_DISPCLK_R_GATE_DIS, 0,
-+						HVM_DISPCLK_G_GATE_DIS, 0,
-+						HVM_DCFCLK_R_GATE_DIS, 0,
-+						HVM_DCFCLK_G_GATE_DIS, 0);
- 
--	//Poll until HOSTVM_PREFETCH_DONE = 1
--	//TODO: Figure out interval us and retry count
--	REG_WAIT(DCHVM_RIOMMU_STAT0, HOSTVM_PREFETCH_DONE, 1, 5, 100);
-+		//Poll until HOSTVM_PREFETCH_DONE = 1
-+		REG_WAIT(DCHVM_RIOMMU_STAT0, HOSTVM_PREFETCH_DONE, 1, 5, 100);
-+	}
- }
- 
- static int hubbub21_init_dchub(struct hubbub *hubbub,
+ 	/*
+-	 * We cannot do up_read() in nmi context. To do build_id lookup
+-	 * in nmi context, we need to run up_read() in irq_work. We use
++	 * We cannot do up_read() when the irq is disabled, because of
++	 * risk to deadlock with rq_lock. To do build_id lookup when the
++	 * irqs are disabled, we need to run up_read() in irq_work. We use
+ 	 * a percpu variable to do the irq_work. If the irq_work is
+ 	 * already used by another lookup, we fall back to report ips.
+ 	 *
 -- 
 2.20.1
 
