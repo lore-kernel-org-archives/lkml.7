@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802F0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69688C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4806A20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD3B20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014602;
-	bh=g6eNLtioeTvZiQR34XhoVgzDNwVEsrxhj/qqSpUxFW0=;
+	s=default; t=1576014607;
+	bh=aC9SQ5EkNhTjwOn53SQkNmPSz9YG183WcWTkmu/cwfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0srtwzygtbaz12Gv8sPg+J0yjBWPHYb2CtSjXpWwQw1pFovMxc1qWMVFjB6lEUu1s
-	 nVJJjmbtOL93QJKJ8aCqlFXhC28aWFR0KZohOFTHxuo3e6aVGUrRtMmbpp/uANtzJu
-	 dglpd1U/WC/uParcZG5+9m1FYFuR77ru5Sg+LIf8=
+	b=Moh/TdYYnrSh8CTzvolrBj6yyt4NAHTaN7wcmvbrOLDwhoVmlXdqux2Qaol2RY0+l
+	 0FxRKK1/+X9w0ARgHaSH3EdVlCYLdhDLTqv3dwmepDnlTXeQZ+vrTZq3aySiuwkeCk
+	 93bRbMmUASCi9lgbdpYv/mWbeeC9RSUfjz5tcar4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbfLJVuB (ORCPT
+        id S1727858AbfLJVI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:50:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbfLJVI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:29 -0500
+        id S1727811AbfLJVIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 300C924680;
-        Tue, 10 Dec 2019 21:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DD52468F;
+        Tue, 10 Dec 2019 21:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012109;
-        bh=g6eNLtioeTvZiQR34XhoVgzDNwVEsrxhj/qqSpUxFW0=;
+        s=default; t=1576012092;
+        bh=aC9SQ5EkNhTjwOn53SQkNmPSz9YG183WcWTkmu/cwfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLPHKO/9mRsNd5n5fb4ad12w2YjI/w1tjHP8laDwHnk17XRHneDPNG3K6KTbI7XNp
-         hIaQJyIpcTu3fH3PIUHK5a2UOKY7/F0MdnvOJd36zJ7ewMQW9E6K4ZkjJBjXUItx+J
-         U4I+PVJyMhwmhoBFeaFzGkZ/USlchgUfVcEvg1D4=
+        b=x+L9EZGjAJ6v74Rw/yNgRuZYKMpEFwQquYNBXX4BoiTBNL6Z1PRQpFfdbSUs305pj
+         MF4StD7jQmeCrb2VEDrY2A08ifxo+khp5K3AaFt8Cv5gDaCgfurEQ06OypG96L/zqd
+         Qk6QNFWziXo2Fzagm0Mbgopo6qLoCg3VJ9fCGK1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 082/350] net/smc: increase device refcount for added link group
-Date:   Tue, 10 Dec 2019 16:03:07 -0500
-Message-Id: <20191210210735.9077-43-sashal@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 069/350] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
+Date:   Tue, 10 Dec 2019 16:02:54 -0500
+Message-Id: <20191210210735.9077-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,55 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit b3cb53c05f20c5b4026a36a7bbd3010d1f3e0a55 ]
+[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
 
-SMCD link groups belong to certain ISM-devices and SMCR link group
-links belong to certain IB-devices. Increase the refcount for
-these devices, as long as corresponding link groups exist.
+The DDC/CI protocol involves sending a multi-byte request to the
+display via I2C, which is typically followed by a multi-byte
+response. The internal I2C controller only allows single byte
+reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
+supported when the internal I2C controller is used. The I2C
+transfers complete without errors, however the data in the response
+is garbage. Abort transfers to/from slave address 0x37 (DDC) with
+-EOPNOTSUPP, to make it evident that the communication is failing.
 
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 2ba97ff325a5d..0c5fcb8ed404d 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -231,10 +231,12 @@ static int smc_lgr_create(struct smc_sock *smc, struct smc_init_info *ini)
- 	lgr->conns_all = RB_ROOT;
- 	if (ini->is_smcd) {
- 		/* SMC-D specific settings */
-+		get_device(&ini->ism_dev->dev);
- 		lgr->peer_gid = ini->ism_gid;
- 		lgr->smcd = ini->ism_dev;
- 	} else {
- 		/* SMC-R specific settings */
-+		get_device(&ini->ib_dev->ibdev->dev);
- 		lgr->role = smc->listen_smc ? SMC_SERV : SMC_CLNT;
- 		memcpy(lgr->peer_systemid, ini->ib_lcl->id_for_peer,
- 		       SMC_SYSTEMID_LEN);
-@@ -433,10 +435,13 @@ static void smc_lgr_free_bufs(struct smc_link_group *lgr)
- static void smc_lgr_free(struct smc_link_group *lgr)
- {
- 	smc_lgr_free_bufs(lgr);
--	if (lgr->is_smcd)
-+	if (lgr->is_smcd) {
- 		smc_ism_put_vlan(lgr->smcd, lgr->vlan_id);
--	else
-+		put_device(&lgr->smcd->dev);
-+	} else {
- 		smc_link_clear(&lgr->lnk[SMC_SINGLE_LINK]);
-+		put_device(&lgr->lnk[SMC_SINGLE_LINK].smcibdev->ibdev->dev);
-+	}
- 	kfree(lgr);
- }
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 521d689413c8c..3e82d604201ee 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -36,6 +36,7 @@
+ #include "dw-hdmi-cec.h"
+ #include "dw-hdmi.h"
  
++#define DDC_CI_ADDR		0x37
+ #define DDC_SEGMENT_ADDR	0x30
+ 
+ #define HDMI_EDID_LEN		512
+@@ -398,6 +399,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
+ 	u8 addr = msgs[0].addr;
+ 	int i, ret = 0;
+ 
++	if (addr == DDC_CI_ADDR)
++		/*
++		 * The internal I2C controller does not support the multi-byte
++		 * read and write operations needed for DDC/CI.
++		 * TOFIX: Blacklist the DDC/CI address until we filter out
++		 * unsupported I2C operations.
++		 */
++		return -EOPNOTSUPP;
++
+ 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
+ 
+ 	for (i = 0; i < num; i++) {
 -- 
 2.20.1
 
