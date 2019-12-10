@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B11C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C00207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38033207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017546;
-	bh=XxvBREQPuGGdyhqoXoacx7lXj4cVXXd21T7m0AxWGng=;
+	s=default; t=1576017552;
+	bh=0UTppwjja+mDbI1LJGPxJ1hNwKzUn7kPVpfiS3MxMZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRMuo17K+ROEfybv4tJ+lhVe0Zio43k+EqjHbOQdOFFHwycJGLZEpO4wCWoG7gGAz
-	 OhNur/KR4YMOZyBGHKeDXmExTMSuu81y4v6eK6OlxAWeqQ9pBzVl40GsxAFaDH4n4o
-	 F+UO3/f2YKqYSvVV03neiGJqcs+kUcTP9GlWwzGY=
+	b=0Qw27aPxS3asyAi6lUaE2UZu2SiQb5AocqrfWfKdhlp/o2AdVg+U6k6lRYKGevVmr
+	 njArAG/hEgH+3u0jtE7SUuFgZNkfAJ622qN8og6BVZNBZ/YcHVOKHd/McZ3oz0lx2W
+	 lHj8k5sSrVMY8RbqTZ5rQfUaWd9BHDPQ+KLq9DNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfLJWjF (ORCPT
+        id S1729407AbfLJWjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:39:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54330 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:39:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729776AbfLJWd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:33:29 -0500
+        id S1726691AbfLJWd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8DE20828;
-        Tue, 10 Dec 2019 22:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE920207FF;
+        Tue, 10 Dec 2019 22:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017208;
-        bh=XxvBREQPuGGdyhqoXoacx7lXj4cVXXd21T7m0AxWGng=;
+        s=default; t=1576017206;
+        bh=0UTppwjja+mDbI1LJGPxJ1hNwKzUn7kPVpfiS3MxMZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0jgYTTdCxruMJfPSv6S5xh4TbHLRcWAaVQSKysGcu2wCZ2tZ/kcqZ3R6c/NQkdaC
-         yN/4xFb2DCy96TS8R9v10zXPsL7NnQSMt/OAznXmMDN03k5gKkpBqPaF8Se5iO90fR
-         lOWKjVVtTLB5oo+TbTTbnOcAb28xnvqGAVuoO13I=
+        b=tRjHWp9jlsHTO6v5kinom+taLfVCYjQ5fIMedbpc47mYUU5NT5QT3l8cXDQ4drapH
+         ZnTCkyvkT/xss2A5Bc4mcJ0ZmM2zzXCLSkkEpkGn3t3HW3yi6DDXJkIyCWBELkPnc4
+         6/yfNTwYIX2qemRa0lr5qwCAlsClgDuQlziZW1/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benoit Parrot <bparrot@ti.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 10/71] media: i2c: ov2659: Fix missing 720p register config
-Date:   Tue, 10 Dec 2019 17:32:15 -0500
-Message-Id: <20191210223316.14988-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/71] media: am437x-vpfe: Setting STD to current value is not an error
+Date:   Tue, 10 Dec 2019 17:32:13 -0500
+Message-Id: <20191210223316.14988-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -62,43 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
+[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
-
-This was not done properly for the 720p case.
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 4f43e8c43950e..6eefb8bbb5b54 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index 572bc043b62de..36add3c463f75 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -1847,6 +1847,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
++
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.20.1
 
