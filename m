@@ -4,51 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFC5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9202C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A48205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8BD205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012904;
-	bh=vHe9YybCc9NW9vfn4rdAnJX5T0yXtpht4emVEMbcQao=;
+	s=default; t=1576012907;
+	bh=S7s86h+6KeqRF+X6M+MwymUuKKIUxWBoBrdACSS/7Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e3tgmjaDx0TKjSz7jgkeK65PBF4aG2cqxB5aHEIsfVkp13ROOVsIHNzzTM/6ahOFB
-	 NlYONBNBXHDF4CkhP4A2NNggp8MmGbvzL/3bm8VsLHLBouKroil1us/bzkKJV2St4D
-	 oSEOVlwk/fr4fdQN0ycjZA5Fic03FJ24R6y/C0Rw=
+	b=cDFSghUMpSjCTHQ8GtBG0YXUGStQM/2ZvOfgH7ry/oOuDZGF0FjjrAHBgLEMfsdnx
+	 A1yMr0ph2XKScgllPeUP3kgzD2bqCdUXwy98TaXGnzGA1pF1nMzG7QROY+O14SWFdq
+	 //kpISRn9m8GG1BLUSZwhrfpQ9Wfz2mIXejw8cxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfLJVVn (ORCPT
+        id S1728821AbfLJVLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:21:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbfLJVLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 16:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728525AbfLJVLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE6A246A8;
-        Tue, 10 Dec 2019 21:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E9E3246AE;
+        Tue, 10 Dec 2019 21:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012303;
-        bh=vHe9YybCc9NW9vfn4rdAnJX5T0yXtpht4emVEMbcQao=;
+        s=default; t=1576012298;
+        bh=S7s86h+6KeqRF+X6M+MwymUuKKIUxWBoBrdACSS/7Z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWiFI1jZUbxaLKvHAh0SZNHea+EuvtnYHDp5BdysXKj8bQBv61v4L5FtXOmQ3Jey9
-         ewEJZOSnARvQwM4QAOy4V+rdH/jROQDI8XW0NfddullARKyspvWU0KBX0boJGzwhBn
-         Vtwtiyj7czr96rosSERB63yCcUVXizt9q8nqelx8=
+        b=qVORyjm7NBbrZgnjLS/IDHC7F51Oehl6DXpemgkA5zRu/o1Xo8TEM6rkHISUMQbEf
+         wDvxNKuVIRQNuSnK9d2lcLVbOG69G9Yy7gv/plFpoHuxgqPysLt/3WCgPS94VABpqA
+         6FwMHoSpj58VuBZi4Sf8I7CG636qHAXGeL4i6AwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 239/350] perf probe: Fix to show calling lines of inlined functions
-Date:   Tue, 10 Dec 2019 16:05:44 -0500
-Message-Id: <20191210210735.9077-200-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 235/350] perf parse: If pmu configuration fails free terms
+Date:   Tue, 10 Dec 2019 16:05:40 -0500
+Message-Id: <20191210210735.9077-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,120 +75,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 86c0bf8539e7f46d91bd105e55eda96e0064caef ]
+[ Upstream commit 38f2c4226e6bc3e8c41c318242821ba5dc825aba ]
 
-Fix to show calling lines of inlined functions (where an inline function
-is called).
+Avoid a memory leak when the configuration fails.
 
-die_walk_lines() filtered out the lines inside inlined functions based
-on the address. However this also filtered out the lines which call
-those inlined functions from the target function.
-
-To solve this issue, check the call_file and call_line attributes and do
-not filter out if it matches to the line information.
-
-Without this fix, perf probe -L doesn't show some lines correctly.
-(don't see the lines after 17)
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-                                  fsnotify_access(file);
-                                  add_rchar(current, ret);
-                          }
-
-With this fix:
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-       17                         fsnotify_access(file);
-       18                         add_rchar(current, ret);
-                          }
-       20                 inc_syscr(current);
-                  }
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191030223448.12930-9-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 08aba015e0725..2b718cfd62d93 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -755,7 +755,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	Dwarf_Lines *lines;
- 	Dwarf_Line *line;
- 	Dwarf_Addr addr;
--	const char *fname, *decf = NULL;
-+	const char *fname, *decf = NULL, *inf = NULL;
- 	int lineno, ret = 0;
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
-@@ -799,13 +799,21 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 			 */
- 			if (!dwarf_haspc(rt_die, addr))
- 				continue;
-+
- 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
-+				/* Call-site check */
-+				inf = die_get_call_file(&die_mem);
-+				if ((inf && !strcmp(inf, decf)) &&
-+				    die_get_call_lineno(&die_mem) == lineno)
-+					goto found;
-+
- 				dwarf_decl_line(&die_mem, &inl);
- 				if (inl != decl ||
- 				    decf != dwarf_decl_file(&die_mem))
- 					continue;
- 			}
- 		}
-+found:
- 		/* Get source line */
- 		fname = dwarf_linesrc(line, NULL, NULL);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index d5ea043d3fc4c..422ad1888e74f 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1365,8 +1365,15 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (get_config_terms(head_config, &config_terms))
+ 		return -ENOMEM;
  
+-	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error))
++	if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
++		struct perf_evsel_config_term *pos, *tmp;
++
++		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
++			list_del_init(&pos->list);
++			free(pos);
++		}
+ 		return -EINVAL;
++	}
+ 
+ 	evsel = __add_event(list, &parse_state->idx, &attr,
+ 			    get_config_name(head_config), pmu,
 -- 
 2.20.1
 
