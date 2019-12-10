@@ -2,97 +2,111 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDC0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9E3C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B542073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EE02077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="dJ6qC0dz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urIFH+zO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfLJREu (ORCPT
+        id S1727789AbfLJRFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:04:50 -0500
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:39689 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbfLJREq (ORCPT
+        Tue, 10 Dec 2019 12:05:22 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37337 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727482AbfLJRFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:04:46 -0500
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 12:04:43 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1575997485;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=bh4wBGVIIt6FwYzD2A/GCbI85tJhoANufsWXt/nPgfs=;
-  b=dJ6qC0dzd3sy7FgfUVdWgwu2PU2g/r5iYfDJitlG0KyQzkMqLwM2ZhIH
-   dqza47hjisGWHvxkvntPmpt4h/QItNzNbD+arxUXABbmbrEppufmDNOzB
-   CbxwnTGLlrHRjgweSVu0PBraKwMP3/tR8r/4z8yLwoF5aM3MfnktozeDB
-   Q=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  igor.druzhinin@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  igor.druzhinin@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: o+qsGJbNa3suDdEcZu3nxCsTb15rCj2BGw6qcWZoYcN6ZNwdvNzo9iPbYScjv/dWg3bTyQy/dW
- lL0Pgg9ICBe9RRalAw1H2Scp9tLgd9T2JfWJ1sQYaH0XJl9qF3y5fM1GSKWMJ0vjBhUJx4C0yV
- v+xzNE/uKuQmNRxZrOzGsDkBAiSub/ZMnJTgSOVxLnWnywbp25NOEuE8jw71mx7OiUwe2SrsqR
- QXbDUSexpKbuQOE+iC03alye8by3UapYVcHxnjhItCdHmp+Q0LTCK9491OjvbgpO1Gn929uAhy
- 5wk=
-X-SBRS: 2.7
-X-MesageID: 9479236
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,300,1571716800"; 
-   d="scan'208";a="9479236"
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-To:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <hare@suse.de>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        "Igor Druzhinin" <igor.druzhinin@citrix.com>
-Subject: [PATCH 0/2] Fixing libfc memory leaks
-Date:   Tue, 10 Dec 2019 16:57:28 +0000
-Message-ID: <1575997050-12959-1-git-send-email-igor.druzhinin@citrix.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Dec 2019 12:05:22 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cy15so16626767edb.4;
+        Tue, 10 Dec 2019 09:05:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V/m7GvYpg3asIPZhHfNwzAdY+b/5CfIU9R9Z7IpYwiU=;
+        b=urIFH+zO4UZfF2rCurnwpzVDpFNMAqb2rWMAIdXu58p8ugm6svnzZ31UqKn+Rtbu5e
+         PQsO/BsQcZt/HKR9Hv4vG658oKEceiGQQVzZQcDCEEuiMdWZbPa8u31fvChGoYyihI6Y
+         sl5fkWptMuptcHYYYeXRZneQVLiNZmRg52kmHZy2nFsGvceMwwa1MKoOeZ7HkVSFiCzK
+         nuD7lyyY/3F2R8aVkID44KN0loAp/QQCgWhn4yFIKm+V7Jbnun8WnKWqmVo4Ntm+41Z5
+         P+iwzzCI7ibvAAnmmMzUWCsPVXjIo3en5FfaJIT/ttoJaq9exR3GPS32l+UhFoQca0lg
+         2mTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/m7GvYpg3asIPZhHfNwzAdY+b/5CfIU9R9Z7IpYwiU=;
+        b=dLQCvLvKcvZY8c3Bl29HYB9hejgb4ngDKjrvWsVJokR6aJKEyHpbtKl2bqS9LSO6vb
+         cEI1tK1lCtzquyzn8bQUrdQfuy1cmjWobRX5emuMJ/LnUDsv9ipQXyiNCDyLW20AWOm3
+         tjftByKCqehd27YsRHklzytUYdOAPRz56Ee7iR8TClyANDcUoYFdgrgp3IzevbvXHZ+U
+         Z09KIBcZbq5Xd9DthvQkKikv/j/1e6JLbSCpkMnojn1Qb575HcCDEGgNvqmHzVub4tCB
+         dvvJbQlV65XnI5IAcMZvApehrH7P9noXT054kjOglV2WwyKfQId50yezGy0bCIEqnbwj
+         jcRw==
+X-Gm-Message-State: APjAAAX+fqbonNqu8TixMR8DFHNuf7kQ3ixXPmyPRmQPUkh5xug+LIys
+        ggznIfKfp9RW7St8f6uAXOEM0s7moQ+jdsWwuVg=
+X-Google-Smtp-Source: APXvYqzyHbVIEY/8yAXTbmWOCmJY+Np2u+GYL67HEkNJeOc5mAbpPhpBS37Z+eeJdlRiZHSgZ7qlEoQyRL9kKTMTrHc=
+X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr4844106ejb.164.1575997520215;
+ Tue, 10 Dec 2019 09:05:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+ <20191210163557.GC27714@lunn.ch>
+In-Reply-To: <20191210163557.GC27714@lunn.ch>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 10 Dec 2019 19:05:08 +0200
+Message-ID: <CA+h21hp12UGQ04W4rDo2PdFa2_5oMmX05KKUecdz5-+hv-JqAA@mail.gmail.com>
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531 switch
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Landen Chao <landen.chao@mediatek.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        matthias.bgg@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>, sean.wang@mediatek.com,
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        frank-w@public-files.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Igor Druzhinin (2):
-  scsi: libfc: free response frame from GPN_ID
-  scsi: libfc: drop extra rport reference in fc_rport_create()
+Hi Landen, Andrew,
 
- drivers/scsi/libfc/fc_disc.c  | 2 ++
- drivers/scsi/libfc/fc_rport.c | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+On Tue, 10 Dec 2019 at 18:36, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Dec 10, 2019 at 04:14:40PM +0800, Landen Chao wrote:
+> > Add new support for MT7531:
+> >
+> > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
+> > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
+> > port 6 only supports HSGMII interface. Cpu port 5 supports either RGMII
+> > or HSGMII in different HW sku.
+>
+> Hi Landen
+>
+> Looking at the code, you seem to treat HSGMII as 2500Base-X. Is this
+> correct? Or is it SGMII over clocked to 2.5Gbps?
+>
+>          Andrew
 
--- 
-2.7.4
+I think the better question is: what is being understood by HSGMII?
+What does the AN base page look like? Do you support AN with the 2500
+baud speed? Do you support AN with lower speeds? Do you support lower
+speeds at all? What PHYs do you interoperate with in this mode? If you
+don't support AN, then what's so SGMII about it? And for that matter,
+if you don't support AN, what's so 2500Base-X (802.3z) about it? I see
+you unconditionally force the speed and disable AN in this mode. Do
+you have any reference for what SerDes protocol your hardware
+implements in this mode?
 
+Thanks,
+-Vladimir
