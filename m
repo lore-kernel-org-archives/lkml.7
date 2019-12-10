@@ -2,170 +2,148 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B844C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF273C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DED207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:37:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iC3Ab0BS"
+	by mail.kernel.org (Postfix) with ESMTP id A423B20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575970728;
+	bh=x8aJSKAR2dIcqW/3ygcQgBy7sFiK4/Pal+Rxa3TK9bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2hESVlrDTnh+tDJtRlYLbmZhMpKZP9fzrsLs9PH9UnbWQwAIeEFtzAg13R2WIWjQ2
+	 xGNGa+E51Rs76hrGXrORGaRmUE3xGKJqnXdRN+OOoX1BYwxVKxuyQTjcqz1Jlf3hbo
+	 XMcVRpLHQ2QsKwknuyXL/awInJjjkW2vo5LQm2x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLJJhP (ORCPT
+        id S1727131AbfLJJis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:37:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56418 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726957AbfLJJhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:37:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575970633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=at1Mw7R9M1dZYnbz/3B0yKBKEjOaE9EiyAqt9wXcdUk=;
-        b=iC3Ab0BSzDhSXPBXXJcKG5j8pY3Wqu1y9hpnvoJg1MZevldZ1zr/wa6wE3TvkVHeWs146I
-        RbRnq2C2Di2d31h9dS+3JpoOXBWgTpYzewAn8TReO7uuUEXsTqxFVf4xHkIxWBskyciCBs
-        emxN5os0EdnoOhPBShjJqfYLqPXnQyw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-ivEAjhKmPIiW53SKbTPoJA-1; Tue, 10 Dec 2019 04:37:09 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Dec 2019 04:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbfLJJir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:38:47 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F851800D4C;
-        Tue, 10 Dec 2019 09:37:08 +0000 (UTC)
-Received: from [10.36.117.222] (ovpn-117-222.ams2.redhat.com [10.36.117.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97D5D60BE1;
-        Tue, 10 Dec 2019 09:37:06 +0000 (UTC)
-Subject: Re: [Patch v2] mm/hotplug: Only respect mem= parameter during boot
- stage
-From:   David Hildenbrand <david@redhat.com>
-To:     Balbir Singh <bsingharora@gmail.com>, Baoquan He <bhe@redhat.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C8420663;
+        Tue, 10 Dec 2019 09:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575970726;
+        bh=x8aJSKAR2dIcqW/3ygcQgBy7sFiK4/Pal+Rxa3TK9bs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G2wZbUfdFX5wnoE/mSAwvP5ItTCOw02h6V/j2Gvd9/c8HLEU97Tsgd2+g7rQjFO2G
+         JalyFsWwXq63jgAWnCu23skt6W7K1HVeyXNiBWfQ7jkmrMfjq82r7XnlWn4mZiMCuA
+         Cy5tHjk+7PtkNt/w35f+OckD5so4qhG66KVaBaBo=
+Date:   Tue, 10 Dec 2019 10:38:43 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, mhocko@kernel.org, jgross@suse.com,
-        akpm@linux-foundation.org
-References: <20191210084413.21957-1-bhe@redhat.com>
- <75188d0f-c609-5417-aa2e-354e76b7ba6e@gmail.com>
- <429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c100d74b-1424-9852-b6ee-553a2ae48771@redhat.com>
-Date:   Tue, 10 Dec 2019 10:37:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+Subject: Re: [PATCH v2 2/3] arm64: dts: allwinner: Convert license to SPDX
+ identifier
+Message-ID: <20191210093843.qoypomttr4b7kbep@gilmour.lan>
+References: <20191209182024.20509-1-peron.clem@gmail.com>
+ <20191209182024.20509-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: ivEAjhKmPIiW53SKbTPoJA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191209182024.20509-2-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.12.19 10:36, David Hildenbrand wrote:
-> On 10.12.19 10:24, Balbir Singh wrote:
->>
->>
->> On 10/12/19 7:44 pm, Baoquan He wrote:
->>> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
->>> parameter") a global varialbe global max_mem_size is added to store
->>                   typo ^^^
->>> the value parsed from 'mem= ', then checked when memory region is
->>> added. This truly stops those DIMM from being added into system memory
->>> during boot-time.
->>>
->>> However, it also limits the later memory hotplug functionality. Any
->>> memory board can't be hot added any more if its region is beyond the
->>> max_mem_size. System will print error like below:
->>>
->>> [  216.387164] acpi PNP0C80:02: add_memory failed
->>> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
->>> [  216.392187] acpi PNP0C80:02: Enumeration failure
->>>
->>> From document of 'mem= ' parameter, it should be a restriction during
->>> boot, but not impact the system memory adding/removing after booting.
->>>
->>>   mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
->>> 	          ...
->>>
->>> So fix it by also checking if it's during boot-time when restrict memory
->>> adding. Otherwise, skip the restriction.
->>>
->>
->> The fix looks reasonable, but I don't get the use case. Booting with mem= is
->> generally a debug option, is this for debugging memory hotplug + limited memory?
-> 
-> Some people/companies use "mem=" along with KVM e.g., to avoid
-> allocating memmaps for guest backing memory and to not expose it to the
-> buddy across kexec's. The excluded physical memory is then memmap into
+Hi Cl=E9ment,
 
-s/memmap/mmaped/
+On Mon, Dec 09, 2019 at 07:20:23PM +0100, Cl=E9ment P=E9ron wrote:
+> Use a shorter SPDX identifier instead of pasting the
+> whole license.
+>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/axp803.dtsi     | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 39 +------------------
+>  .../dts/allwinner/sun50i-a64-pine64-plus.dts  | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 39 +------------------
+>  .../allwinner/sun50i-a64-sopine-baseboard.dts | 39 +------------------
+>  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi | 39 +------------------
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 +------------------
+>  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  | 39 +------------------
+>  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 39 +------------------
+>  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 39 +------------------
+>  .../allwinner/sun50i-h5-orangepi-prime.dts    | 39 +------------------
+>  .../sun50i-h5-orangepi-zero-plus2.dts         | 39 +------------------
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 39 +------------------
+>  16 files changed, 16 insertions(+), 608 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/=
+dts/allwinner/axp803.dtsi
+> index f0349ef4bfdd..0e13e75132ac 100644
+> --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
+> @@ -1,43 +1,6 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR X11)
+>  /*
+>   * Copyright 2017 Icenowy Zheng <icenowy@aosc.xyz>
+> - *
+> - * This file is dual-licensed: you can use it either under the terms
+> - * of the GPL or the X11 license, at your option. Note that this dual
+> - * licensing only applies to this file, and not this project as a
+> - * whole.
+> - *
+> - *  a) This file is free software; you can redistribute it and/or
+> - *     modify it under the terms of the GNU General Public License as
+> - *     published by the Free Software Foundation; either version 2 of the
+> - *     License, or (at your option) any later version.
+> - *
+> - *     This file is distributed in the hope that it will be useful,
+> - *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - *     GNU General Public License for more details.
+> - *
+> - * Or, alternatively,
+> - *
+> - *  b) Permission is hereby granted, free of charge, to any person
+> - *     obtaining a copy of this software and associated documentation
+> - *     files (the "Software"), to deal in the Software without
+> - *     restriction, including without limitation the rights to use,
+> - *     copy, modify, merge, publish, distribute, sublicense, and/or
+> - *     sell copies of the Software, and to permit persons to whom the
+> - *     Software is furnished to do so, subject to the following
+> - *     conditions:
+> - *
+> - *     The above copyright notice and this permission notice shall be
+> - *     included in all copies or substantial portions of the Software.
+> - *
+> - *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> - *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> - *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> - *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> - *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> - *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> - *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
 
-> the hypervisor process and KVM can deal with that. I can imagine that
-> hotplug might be desirable as well for such use cases.
-> 
->>
->> Balbir
->>
-> 
-> 
+Thanks for sending a new iteration of this. I had a look at the
+licenses texts associated to the SPDX tag in the LICENSES folder, and
+it turns out that the tag we should be using for that text is
+MIT. While we mention X11 in the header, the text associated to the
+X11 license isn't the one we have in our headers.
 
+I guess we should make very clear in the commit log that even though
+the tag now reports MIT, this maps to the same license text and is not
+therefore a license change.
 
--- 
-Thanks,
-
-David / dhildenb
-
+Thanks!
+Maxime
