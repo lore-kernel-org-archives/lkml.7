@@ -2,94 +2,67 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68AC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDFEC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08D820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AtFIj0pZ"
+	by mail.kernel.org (Postfix) with ESMTP id A957520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfLJXXD (ORCPT
+        id S1727295AbfLJXYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:23:03 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:43078 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJXXC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:23:02 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C81CD20B7187;
-        Tue, 10 Dec 2019 15:23:01 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C81CD20B7187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576020181;
-        bh=IwjesaSjIEpWOT7ynG/Xbgg6ZKGL9pgenoKbV2q6g7U=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AtFIj0pZTW3Hx8baUyJZNgJlKwVCHqk0JgEAfORoB1Ig+7wTL3Z+xEg252xhKXUHn
-         WpKnz8MLoEOt4VMwiw1H/qzFioq46Zk6Rr4kaFBZ+fiPbk7bf2tQp13QHoEvAswMw4
-         sJgAlHh3Wh83SR/ADhT6iy+dEOzCvUXUSaSx5d5s=
-Subject: Re: [PATCH v10 5/6] IMA: Add support to limit measuring keys
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191204224131.3384-1-nramas@linux.microsoft.com>
- <20191204224131.3384-6-nramas@linux.microsoft.com>
- <1576017805.4579.44.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <07c231c9-509e-cd1f-9ea0-bfb20f9a0070@linux.microsoft.com>
-Date:   Tue, 10 Dec 2019 15:23:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 18:24:35 -0500
+Received: from mga17.intel.com ([192.55.52.151]:23344 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfLJXYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 18:24:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 15:24:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="210583762"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Dec 2019 15:24:34 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH 0/2] KVM: VMX: PT (RTIT) bug fix and cleanup
+Date:   Tue, 10 Dec 2019 15:24:31 -0800
+Message-Id: <20191210232433.4071-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <1576017805.4579.44.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 2:43 PM, Mimi Zohar wrote:
+Add a missing non-canonical check on writes to the RTIT address MSRs
+and tack on a cleanup patch.
 
->> +static bool ima_match_keyring(struct ima_rule_entry *rule,
->> +			      const char *keyring, const struct cred *cred)
->> +{
->> +	char *keyrings, *next_keyring, *keyrings_ptr;
->> +	bool matched = false;
->> +
->> +	/* If "keyrings=" is not specified all keys are measured. */
-> 
-> With the addiitonal "uid" support this isn't necessarily true any
-> more.
-> 
-> Mimi
+** ALL PATCHES ARE COMPLETELY UNTESTED **
 
-Will move the check for uid ahead of the check for keyrings.
+Untested due to lack of hardware.
 
-if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
-	return false;
+Sean Christopherson (2):
+  KVM: VMX: Add non-canonical check on writes to RTIT address MSRs
+  KVM: VMX: Add helper to consolidate up PT/RTIT WRMSR fault logic
 
-> 
->> +	if (!rule->keyrings)
->> +		return true;
->> +
->> +	if (!keyring)
->> +		return false;
->> +
->> +	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
->> +		return false;
->> +
+ arch/x86/kvm/vmx/vmx.c | 57 ++++++++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-thanks,
-  -lakshmi
-
+-- 
+2.24.0
 
