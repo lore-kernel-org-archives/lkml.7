@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7E6C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27881C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4368520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFF1206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017131;
-	bh=lvHBPWoie1iqEQILYGYz/XYy4woY7NXJWDRrkOsRvTU=;
+	s=default; t=1576017136;
+	bh=1GJLTD0YCq/aHKXPaGnQo20jDPP0aimF/HpTBL6vbnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCYpCwKXzaGOHWcd7gZXvdulRR+tlGRPh3nulsKqYDzyxVg76xnroYuc1ex7detHR
-	 p+xFvcC1Pa8h1gHZYOao9E0aDTA3Sf5r2+D0wy8ePnt+om5iaaoBihsN6m4Y91d1u+
-	 iLRXsva6hA89SsiOztnz4N4+pzCTLQma9wzrwl/k=
+	b=EmeqRAIn00GcfSt10Gk979UXJB5N9yOi3YGEHf1cO7+mORJuO1k2IJOVN/Gog3+yg
+	 CsP4gSz9r+s4XYFFSBCTb5o/FBCQD42qnm/htbOhn3dRRlYXoVXh0by6gJZ4F8Eh+E
+	 ReHZv/P9U+iMbZdOQjcB1nxooqo0jbAFkDsMrTRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfLJWcK (ORCPT
+        id S1729313AbfLJWcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52062 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbfLJWbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:52 -0500
+        id S1729006AbfLJWb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993602467A;
-        Tue, 10 Dec 2019 22:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434BE24653;
+        Tue, 10 Dec 2019 22:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017111;
-        bh=lvHBPWoie1iqEQILYGYz/XYy4woY7NXJWDRrkOsRvTU=;
+        s=default; t=1576017115;
+        bh=1GJLTD0YCq/aHKXPaGnQo20jDPP0aimF/HpTBL6vbnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pa1L6KzbKwB/xS+O5OiWccC/+R2eHKGQIETOSx+G7v28dEczSEh0MkkgoUieb5Kfo
-         EceZOajtat1CchnNXPwo+xZx29fD0RQW98dtKnhAs55mP8UT4XOA9dhoyCh6H7eb5L
-         ANV8v4KOEG6z6bdOpOBgEQmmE8+dDcR27lc9AdFs=
+        b=z9gORHs/K7SCGmO0H+G8yy/tFRjad/XZY+kdeQD7ok4gh/DBpdBV8Qjbf3XFXuee1
+         mz5OG01NvATsE0uHZvMjPk+kMyK56/D8GTHnnPmQZC+U8DCGaCkXN2z+WD5p7nsqKW
+         DwFz6W03JEQohjELWQ/od56n9+93+5qMSk5WDrfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miaoqing Pan <miaoqing@codeaurora.org>,
-        Hou Bao Hou <houbao@codeaurora.org>,
-        Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 64/91] ath10k: fix get invalid tx rate for Mesh metric
-Date:   Tue, 10 Dec 2019 17:30:08 -0500
-Message-Id: <20191210223035.14270-64-sashal@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 67/91] EDAC/ghes: Fix grain calculation
+Date:   Tue, 10 Dec 2019 17:30:11 -0500
+Message-Id: <20191210223035.14270-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -62,40 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaoqing Pan <miaoqing@codeaurora.org>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
+[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
 
-ath10k does not provide transmit rate info per MSDU
-in tx completion, mark that as -1 so mac80211
-will ignore the rates. This fixes mac80211 update Mesh
-link metric with invalid transmit rate info.
+The current code to convert a physical address mask to a grain
+(defined as granularity in bytes) is:
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00035
+	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
 
-Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This is broken in several ways:
+
+1) It calculates to wrong grain values. E.g., a physical address mask
+of ~0xfff should give a grain of 0x1000. Without considering
+PAGE_MASK, there is an off-by-one. Things are worse when also
+filtering it with ~PAGE_MASK. This will calculate to a grain with the
+upper bits set. In the example it even calculates to ~0.
+
+2) The grain does not depend on and is unrelated to the kernel's
+page-size. The page-size only matters when unmapping memory in
+memory_failure(). Smaller grains are wrongly rounded up to the
+page-size, on architectures with a configurable page-size (e.g. arm64)
+this could round up to the even bigger page-size of the hypervisor.
+
+Fix this with:
+
+	e->grain = ~mem_err->physical_addr_mask + 1;
+
+The grain_bits are defined as:
+
+	grain = 1 << grain_bits;
+
+Change also the grain_bits calculation accordingly, it is the same
+formula as in edac_mc.c now and the code can be unified.
+
+The value in ->physical_addr_mask coming from firmware is assumed to
+be contiguous, but this is not sanity-checked. However, in case the
+mask is non-contiguous, a conversion to grain_bits effectively
+converts the grain bit mask to a power of 2 by rounding it up.
+
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/edac/ghes_edac.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
-index 9852c5d51139e..beeb6be06939b 100644
---- a/drivers/net/wireless/ath/ath10k/txrx.c
-+++ b/drivers/net/wireless/ath/ath10k/txrx.c
-@@ -99,6 +99,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index e3fa4390f8460..4ddbf6604e2ab 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -189,6 +189,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
+ 	/* Cleans the error report buffer */
+ 	memset(e, 0, sizeof (*e));
+ 	e->error_count = 1;
++	e->grain = 1;
+ 	strcpy(e->label, "unknown label");
+ 	e->msg = pvt->msg;
+ 	e->other_detail = pvt->other_detail;
+@@ -284,7 +285,7 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
  
- 	info = IEEE80211_SKB_CB(msdu);
- 	memset(&info->status, 0, sizeof(info->status));
-+	info->status.rates[0].idx = -1;
+ 	/* Error grain */
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+-		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
++		e->grain = ~mem_err->physical_addr_mask + 1;
+ 
+ 	/* Memory error location, mapped on e->location */
+ 	p = e->location;
+@@ -391,8 +392,13 @@ void ghes_edac_report_mem_error(struct ghes *ghes, int sev,
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) = '\0';
+ 
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
 +
- 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
- 
- 	if (tx_done->status == HTT_TX_COMPL_STATE_DISCARD) {
++	grain_bits = fls_long(e->grain - 1);
++
+ 	/* Generate the trace event */
+-	grain_bits = fls_long(e->grain);
+ 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+ 		 "APEI location: %s %s", e->location, e->other_detail);
+ 	trace_mc_event(type, e->msg, e->label, e->error_count,
 -- 
 2.20.1
 
