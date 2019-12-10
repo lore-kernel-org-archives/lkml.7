@@ -2,52 +2,52 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288E0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D31C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FA420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD542053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015998;
-	bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
+	s=default; t=1576016009;
+	bh=IX4G8bqqoaHRjb5tBEoHCzmo+ls5A6QQi8xUnyC4UHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBn/kGX9OXEvrZKMiOFz2A4tX90FuIpKKLeB4+WNTxTOKHHsduTpkQFWHOdAmkZpi
-	 K0x+J/TLzfRSgM5cHeeO4XL/SduIwxTefxL4wVaWIibV4pICoioGS19KQhapmw9qL+
-	 A9FZWSx4wwRaDAFtTzvRg/soPNkQJUA2ZZNaGxOg=
+	b=MydnYm0Up6SaiSA88Ub2VxCXG3IquLbHcVwX98d044IeZhOJacOnTPCWxBOxbzA0C
+	 1KXKQLtDctTttv7eUs/C6DMq8nnS3IGiDxIMHZQrcEBpiD3S/o+Doc17+fvSD4Asfl
+	 9wqL/QwETLVb8lHb6ZcKK+JSrt59Yu4zb/yquEHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfLJWNQ (ORCPT
+        id S1728909AbfLJWN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:13:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:13:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727631AbfLJWDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:24 -0500
+        id S1727543AbfLJWDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE84720828;
-        Tue, 10 Dec 2019 22:03:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F11D208C3;
+        Tue, 10 Dec 2019 22:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015403;
-        bh=llBBnJ3P3pa6zL/Mt18ioHegHYSz5Sae7jjVQ7Lw7aI=;
+        s=default; t=1576015399;
+        bh=IX4G8bqqoaHRjb5tBEoHCzmo+ls5A6QQi8xUnyC4UHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00zn+CZnbUUpsPihA386qLxperAQaPjX64eOJCIN6Kd0kVjoDXSq/z24FzV217uaQ
-         ARCO+UH9+ToioieDV05umaWJiu/WRuiL6PsJ749iE9weWEVhB39Benjn2RaAUSRDwn
-         iDT6Ciubxn0HX+qddkX+XvZSMYYHm04AIM22gOvI=
+        b=eaTUzEkISFfmWYFkGV7A1nudjsK/NfdFGzeOhgt0sLStE7813+rwUoasxzr2+ELdT
+         IHCAakl/ZdxuHBv/nPclP4lH5fIRRtn9qsrhx6/88H0ukv9yCw0C3yMYFmUvRXcBPo
+         3VNtR7xLmvqBtGfqNAe5COMZ3xC7Bgj45qe3OBbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 018/130] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
-Date:   Tue, 10 Dec 2019 17:01:09 -0500
-Message-Id: <20191210220301.13262-18-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 014/130] media: ov6650: Fix crop rectangle alignment not passed back
+Date:   Tue, 10 Dec 2019 17:01:05 -0500
+Message-Id: <20191210220301.13262-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,61 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
+[ Upstream commit 7b188d6ba27a131e7934a51a14ece331c0491f18 ]
 
-When building cpupower with clang, the following warning appears:
+Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
+introduced a writable copy of constified user requested crop rectangle
+in order to be able to perform hardware alignments on it.  Later
+on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
+ops") replaced s_crop() video operation using that const argument with
+set_selection() pad operation which had a corresponding argument not
+constified, however the original behavior of the driver was not
+restored.  Since that time, any hardware alignment applied on a user
+requested crop rectangle is not passed back to the user calling
+.set_selection() as it should be.
 
- utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
- prior initialization of this subobject [-Winitializer-overrides]
-                 .desc                   = N_("Processor Package C2"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                              ^~~~~~
- utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
- is here
-                 .desc                   = N_("Processor Package C9"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                             ^~~~~~
- 1 warning generated.
+Fix the issue by dropping the copy and replacing all references to it
+with references to the crop rectangle embedded in the user argument.
 
-This appears to be a copy and paste or merge mistake because the name
-and id fields both have PC9 in them, not PC2. Remove the second
-assignment to fix the warning.
-
-Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
-Link: https://github.com/ClangBuiltLinux/linux/issues/718
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-index f794d6bbb7e9f..3e4ff4a1cdf4b 100644
---- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
- 	{
- 		.name			= "PC9",
- 		.desc			= N_("Processor Package C9"),
--		.desc			= N_("Processor Package C2"),
- 		.id			= PC9,
- 		.range			= RANGE_PACKAGE,
- 		.get_count_percent	= hsw_ext_get_count_percent,
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 025869eec2ac9..98080d4204445 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -469,38 +469,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct ov6650 *priv = to_ov6650(client);
+-	struct v4l2_rect rect = sel->r;
+ 	int ret;
+ 
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
+ 		return -EINVAL;
+ 
+-	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
+-			      &rect.height, 2, H_CIF, 1, 0);
+-	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
+-			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
+-			      &rect.top, DEF_VSTRT << 1,
+-			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
+-			      0);
++	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
++			      &sel->r.height, 2, H_CIF, 1, 0);
++	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
++			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
++			      &sel->r.top, DEF_VSTRT << 1,
++			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
++			      1, 0);
+ 
+-	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
++	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
+-		priv->rect.left = rect.left;
++		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+-				(rect.left + rect.width) >> 1);
++				       (sel->r.left + sel->r.width) >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.width = rect.width;
+-		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
++		priv->rect.width = sel->r.width;
++		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.top = rect.top;
++		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+-				(rect.top + rect.height) >> 1);
++				       (sel->r.top + sel->r.height) >> 1);
+ 	}
+ 	if (!ret)
+-		priv->rect.height = rect.height;
++		priv->rect.height = sel->r.height;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
