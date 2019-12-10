@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D92C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606F3C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76419207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3331720836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017914;
-	bh=LFOAkg9kscunvVIpl231DkBrnvdPxs3A18yFFNInxJc=;
+	s=default; t=1576017918;
+	bh=4n1+cgSPG+Q3PdJV3wULbmnWpvMoFwWjuPiLf5+Y50s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLDGBG3f39/hT0lKuM2Y2smxmMyusEg2OvBG0eztzfmJzGZRyes0aijbUZbRGakgp
-	 VF6YzI/BS81X5Xpbbb54rgJuQ6UgY8M/9ThGMA0qMkI5EERy7mxLhIvgyVw4elEL14
-	 AznOK1GKnmMHyF2qTGRIgRlMY3arUjO7KlACcx+I=
+	b=ip4nipl3IVFEinjTaEV526ZKnmg703yjz4dEvtt5ejt96vzHZTIpQOCAQRG75/Bhm
+	 w3SXaP1NVEoGdlklXDwGMBu0+qgC0k0PvmcMB6JMn6Qqeudf5+prgSHGm+TcRaQvEh
+	 57CymJIRhOoVESEuiL+8iA/FeZYDEM07PY7NP7iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfLJWar (ORCPT
+        id S1727834AbfLJWpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:30:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbfLJWak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:30:40 -0500
+        id S1727202AbfLJWaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:30:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C9820838;
-        Tue, 10 Dec 2019 22:30:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0923C20836;
+        Tue, 10 Dec 2019 22:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017040;
-        bh=LFOAkg9kscunvVIpl231DkBrnvdPxs3A18yFFNInxJc=;
+        s=default; t=1576017045;
+        bh=4n1+cgSPG+Q3PdJV3wULbmnWpvMoFwWjuPiLf5+Y50s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uGCCqTA2uo6HvJE6hFAemESCXxlIYEiTNxx/sxk+Yu5/ATn5QhmusewT2zJxc5eM7
-         LSRPXqKJ+kZe/+m7n/jvoSHaztvr5Acnh5h8KIMasasILRcvAWtjFtZ/E9YLn9Wvvg
-         i+CjCZaHggx6OZvsBPvhFGHw0Yrs9WgdRVXbnaL0=
+        b=etsJmZ5qMebPb5AHIo6Wc38njdz32zF1kROsYr/gQ4zoOAtT1GQr0ZArhJQVfa1qf
+         ic4M9MM0YkOiS1o3DOym7EoDnnjy/ArKA5/p1lvD/yHqRL7wtGUWnlfVc++IX1lzTB
+         ObU82tAq+IRYLnaNuNj+Wa/2Y1M5M84YRxkc701E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/91] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Tue, 10 Dec 2019 17:29:07 -0500
-Message-Id: <20191210223035.14270-3-sashal@kernel.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 08/91] objtool: add kunit_try_catch_throw to the noreturn list
+Date:   Tue, 10 Dec 2019 17:29:12 -0500
+Message-Id: <20191210223035.14270-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,49 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Brendan Higgins <brendanhiggins@google.com>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+[ Upstream commit 33adf80f5b52e3f7c55ad66ffcaaff93c6888aaa ]
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+Fix the following warning seen on GCC 7.3:
+  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
+kunit_try_catch_throw is a function added in the following patch in this
+series; it allows KUnit, a unit testing framework for the kernel, to
+bail out of a broken test. As a consequence, it is a new __noreturn
+function that objtool thinks is broken (as seen above). So fix this
+warning by adding kunit_try_catch_throw to objtool's noreturn list.
 
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/objtool/check.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index b05946604f804..6d5bb11594dc1 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -62,9 +62,9 @@ struct bh1750_chip_info {
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 09782ff427d0d..64d48f2d85ccb 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -167,6 +167,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"fortify_panic",
+ 		"machine_real_restart",
+ 		"rewind_stack_do_exit",
++		"kunit_try_catch_throw",
+ 	};
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
- 
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
+ 	if (func->bind == STB_WEAK)
 -- 
 2.20.1
 
