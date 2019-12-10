@@ -2,48 +2,48 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A5AC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377A4C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C74720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0326520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSIOCswd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d7m+tdvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfLJKn1 (ORCPT
+        id S1727566AbfLJKnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:43:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56945 "EHLO
+        Tue, 10 Dec 2019 05:43:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20366 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727476AbfLJKnZ (ORCPT
+        with ESMTP id S1727509AbfLJKnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:43:25 -0500
+        Tue, 10 Dec 2019 05:43:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575974605;
+        s=mimecast20190719; t=1575974611;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bWw5CHeiqYpd2mPCO8jLMgnH+0xB69v4o/ZzGi9D20g=;
-        b=fSIOCswdrpz7BR4+RkDpC4isVlBvp7if3vuM2f7WKT3HWkMQGGrzpQzyIpCMJFRXRI2SNY
-        9O/1VcnE2+f+1OLIIRp/hs9Djx143YqIQoIn2WPqLNiLvlkm6thH5iRzZRI/67fUtH4sTk
-        nax4nPmPnOVgsLfvTo/3pXpqOgvbxa4=
+        bh=8fTadIIM/EGcJyroW82UCutvScqyTCaxJaPZkU5T0yE=;
+        b=d7m+tdvp7ak/qIxsyc1tQlkY+AVi2J8XX3qAqDS5UcWo3sCYokuWkC2VtHAzVGkuFmxb/8
+        hVe62YI54fzkWC8YRvLU5xW6yN4rWDA+ZPhYqIDLOWdUUvUBsKQTqar005KxCTmS9BUKFD
+        QHkytaK4UiajC6kOsO0RI4w3sGVc7J4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-LdCDeDbyMre2pv2b90AovA-1; Tue, 10 Dec 2019 05:43:21 -0500
+ us-mta-36-VouMmq0dMj-tIB48CAjylw-1; Tue, 10 Dec 2019 05:43:28 -0500
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6130F1183E2E;
-        Tue, 10 Dec 2019 10:43:20 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EA92104ED28;
+        Tue, 10 Dec 2019 10:43:27 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-168.ams2.redhat.com [10.36.117.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1546060570;
-        Tue, 10 Dec 2019 10:43:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7246D605AF;
+        Tue, 10 Dec 2019 10:43:25 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org, davem@davemloft.net
 Cc:     Dexuan Cui <decui@microsoft.com>,
@@ -52,14 +52,14 @@ Cc:     Dexuan Cui <decui@microsoft.com>,
         linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
         Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH net-next v2 3/6] vsock: add local transport support in the vsock core
-Date:   Tue, 10 Dec 2019 11:43:04 +0100
-Message-Id: <20191210104307.89346-4-sgarzare@redhat.com>
+Subject: [PATCH net-next v2 6/6] vsock/virtio: remove loopback handling
+Date:   Tue, 10 Dec 2019 11:43:07 +0100
+Message-Id: <20191210104307.89346-7-sgarzare@redhat.com>
 In-Reply-To: <20191210104307.89346-1-sgarzare@redhat.com>
 References: <20191210104307.89346-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: LdCDeDbyMre2pv2b90AovA-1
+X-MC-Unique: VouMmq0dMj-tIB48CAjylw-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -68,91 +68,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows to register a transport able to handle
-local communication (loopback).
+We can remove the loopback handling from virtio_transport,
+because now the vsock core is able to handle local communication
+using the new vsock_loopback device.
 
 Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- include/net/af_vsock.h   |  2 ++
- net/vmw_vsock/af_vsock.c | 17 ++++++++++++++++-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ net/vmw_vsock/virtio_transport.c | 61 ++------------------------------
+ 1 file changed, 2 insertions(+), 59 deletions(-)
 
-diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-index 4206dc6d813f..b1c717286993 100644
---- a/include/net/af_vsock.h
-+++ b/include/net/af_vsock.h
-@@ -98,6 +98,8 @@ struct vsock_transport_send_notify_data {
- #define VSOCK_TRANSPORT_F_G2H=09=090x00000002
- /* Transport provides DGRAM communication */
- #define VSOCK_TRANSPORT_F_DGRAM=09=090x00000004
-+/* Transport provides local (loopback) communication */
-+#define VSOCK_TRANSPORT_F_LOCAL=09=090x00000008
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transp=
+ort.c
+index 1458c5c8b64d..dfbaf6bd8b1c 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -44,10 +44,6 @@ struct virtio_vsock {
+ =09spinlock_t send_pkt_list_lock;
+ =09struct list_head send_pkt_list;
 =20
- struct vsock_transport {
- =09struct module *module;
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 74db4cd637a7..3da0749a0c97 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -136,6 +136,8 @@ static const struct vsock_transport *transport_h2g;
- static const struct vsock_transport *transport_g2h;
- /* Transport used for DGRAM communication */
- static const struct vsock_transport *transport_dgram;
-+/* Transport used for local communication */
-+static const struct vsock_transport *transport_local;
- static DEFINE_MUTEX(vsock_register_mutex);
+-=09struct work_struct loopback_work;
+-=09spinlock_t loopback_list_lock; /* protects loopback_list */
+-=09struct list_head loopback_list;
+-
+ =09atomic_t queued_replies;
 =20
- /**** UTILS ****/
-@@ -2137,7 +2139,7 @@ EXPORT_SYMBOL_GPL(vsock_core_get_transport);
+ =09/* The following fields are protected by rx_lock.  vqs[VSOCK_VQ_RX]
+@@ -86,20 +82,6 @@ static u32 virtio_transport_get_local_cid(void)
+ =09return ret;
+ }
 =20
- int vsock_core_register(const struct vsock_transport *t, int features)
+-static int virtio_transport_send_pkt_loopback(struct virtio_vsock *vsock,
+-=09=09=09=09=09      struct virtio_vsock_pkt *pkt)
+-{
+-=09int len =3D pkt->len;
+-
+-=09spin_lock_bh(&vsock->loopback_list_lock);
+-=09list_add_tail(&pkt->list, &vsock->loopback_list);
+-=09spin_unlock_bh(&vsock->loopback_list_lock);
+-
+-=09queue_work(virtio_vsock_workqueue, &vsock->loopback_work);
+-
+-=09return len;
+-}
+-
+ static void
+ virtio_transport_send_pkt_work(struct work_struct *work)
  {
--=09const struct vsock_transport *t_h2g, *t_g2h, *t_dgram;
-+=09const struct vsock_transport *t_h2g, *t_g2h, *t_dgram, *t_local;
- =09int err =3D mutex_lock_interruptible(&vsock_register_mutex);
-=20
- =09if (err)
-@@ -2146,6 +2148,7 @@ int vsock_core_register(const struct vsock_transport =
-*t, int features)
- =09t_h2g =3D transport_h2g;
- =09t_g2h =3D transport_g2h;
- =09t_dgram =3D transport_dgram;
-+=09t_local =3D transport_local;
-=20
- =09if (features & VSOCK_TRANSPORT_F_H2G) {
- =09=09if (t_h2g) {
-@@ -2171,9 +2174,18 @@ int vsock_core_register(const struct vsock_transport=
- *t, int features)
- =09=09t_dgram =3D t;
+@@ -194,7 +176,8 @@ virtio_transport_send_pkt(struct virtio_vsock_pkt *pkt)
  =09}
 =20
-+=09if (features & VSOCK_TRANSPORT_F_LOCAL) {
-+=09=09if (t_local) {
-+=09=09=09err =3D -EBUSY;
-+=09=09=09goto err_busy;
-+=09=09}
-+=09=09t_local =3D t;
-+=09}
-+
- =09transport_h2g =3D t_h2g;
- =09transport_g2h =3D t_g2h;
- =09transport_dgram =3D t_dgram;
-+=09transport_local =3D t_local;
+ =09if (le64_to_cpu(pkt->hdr.dst_cid) =3D=3D vsock->guest_cid) {
+-=09=09len =3D virtio_transport_send_pkt_loopback(vsock, pkt);
++=09=09virtio_transport_free_pkt(pkt);
++=09=09len =3D -ENODEV;
+ =09=09goto out_rcu;
+ =09}
 =20
- err_busy:
- =09mutex_unlock(&vsock_register_mutex);
-@@ -2194,6 +2206,9 @@ void vsock_core_unregister(const struct vsock_transpo=
-rt *t)
- =09if (transport_dgram =3D=3D t)
- =09=09transport_dgram =3D NULL;
+@@ -502,33 +485,6 @@ static struct virtio_transport virtio_transport =3D {
+ =09.send_pkt =3D virtio_transport_send_pkt,
+ };
 =20
-+=09if (transport_local =3D=3D t)
-+=09=09transport_local =3D NULL;
-+
- =09mutex_unlock(&vsock_register_mutex);
- }
- EXPORT_SYMBOL_GPL(vsock_core_unregister);
+-static void virtio_transport_loopback_work(struct work_struct *work)
+-{
+-=09struct virtio_vsock *vsock =3D
+-=09=09container_of(work, struct virtio_vsock, loopback_work);
+-=09LIST_HEAD(pkts);
+-
+-=09spin_lock_bh(&vsock->loopback_list_lock);
+-=09list_splice_init(&vsock->loopback_list, &pkts);
+-=09spin_unlock_bh(&vsock->loopback_list_lock);
+-
+-=09mutex_lock(&vsock->rx_lock);
+-
+-=09if (!vsock->rx_run)
+-=09=09goto out;
+-
+-=09while (!list_empty(&pkts)) {
+-=09=09struct virtio_vsock_pkt *pkt;
+-
+-=09=09pkt =3D list_first_entry(&pkts, struct virtio_vsock_pkt, list);
+-=09=09list_del_init(&pkt->list);
+-
+-=09=09virtio_transport_recv_pkt(&virtio_transport, pkt);
+-=09}
+-out:
+-=09mutex_unlock(&vsock->rx_lock);
+-}
+-
+ static void virtio_transport_rx_work(struct work_struct *work)
+ {
+ =09struct virtio_vsock *vsock =3D
+@@ -633,13 +589,10 @@ static int virtio_vsock_probe(struct virtio_device *v=
+dev)
+ =09mutex_init(&vsock->event_lock);
+ =09spin_lock_init(&vsock->send_pkt_list_lock);
+ =09INIT_LIST_HEAD(&vsock->send_pkt_list);
+-=09spin_lock_init(&vsock->loopback_list_lock);
+-=09INIT_LIST_HEAD(&vsock->loopback_list);
+ =09INIT_WORK(&vsock->rx_work, virtio_transport_rx_work);
+ =09INIT_WORK(&vsock->tx_work, virtio_transport_tx_work);
+ =09INIT_WORK(&vsock->event_work, virtio_transport_event_work);
+ =09INIT_WORK(&vsock->send_pkt_work, virtio_transport_send_pkt_work);
+-=09INIT_WORK(&vsock->loopback_work, virtio_transport_loopback_work);
+=20
+ =09mutex_lock(&vsock->tx_lock);
+ =09vsock->tx_run =3D true;
+@@ -720,22 +673,12 @@ static void virtio_vsock_remove(struct virtio_device =
+*vdev)
+ =09}
+ =09spin_unlock_bh(&vsock->send_pkt_list_lock);
+=20
+-=09spin_lock_bh(&vsock->loopback_list_lock);
+-=09while (!list_empty(&vsock->loopback_list)) {
+-=09=09pkt =3D list_first_entry(&vsock->loopback_list,
+-=09=09=09=09       struct virtio_vsock_pkt, list);
+-=09=09list_del(&pkt->list);
+-=09=09virtio_transport_free_pkt(pkt);
+-=09}
+-=09spin_unlock_bh(&vsock->loopback_list_lock);
+-
+ =09/* Delete virtqueues and flush outstanding callbacks if any */
+ =09vdev->config->del_vqs(vdev);
+=20
+ =09/* Other works can be queued before 'config->del_vqs()', so we flush
+ =09 * all works before to free the vsock object to avoid use after free.
+ =09 */
+-=09flush_work(&vsock->loopback_work);
+ =09flush_work(&vsock->rx_work);
+ =09flush_work(&vsock->tx_work);
+ =09flush_work(&vsock->event_work);
 --=20
 2.23.0
 
