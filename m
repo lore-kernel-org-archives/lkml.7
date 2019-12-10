@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA3C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0372BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521AB207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE281207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kj0r0Yq2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bNJ4J1Ko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLJTeS (ORCPT
+        id S1727032AbfLJTeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:34:18 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:44164 "EHLO
+        Tue, 10 Dec 2019 14:34:24 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:44146 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726071AbfLJTeJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726718AbfLJTeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 14:34:09 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 34415C0B80;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 35F01C0BA9;
         Tue, 10 Dec 2019 19:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576006448; bh=8cmpB+rTgiZ4iC0euaQMaGtJc3x/xfqnlQkzLOnVQDo=;
+        t=1576006448; bh=273lLdI7WjAvMCo++9OKcx//zzUtteRXA+1x/gS5aZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=kj0r0Yq2nvawlnOXu2VIkTqHFS0TMHg3TOAOg5KmriOEqwmFmVWVNL/U/fTsm8Snm
-         Ae/1BzXIDh47C088+zh5Y7N7CZOkAMlt5SmMog/ygo3s8udHGZOKc9ma2B/6qcamd/
-         0PFwZJ13sseYetLRuhJgGPhaFVGximWRTmWZ87nCX+ormuB8AFjsYh9cAF8BKSrjFC
-         kk8BXVD58+2eJ5XN7JNvpoVIbW8QaNR7bbmTiV7Zx65UAz+MXtW77o8jMth11XjuTE
-         q8juDozbNxZBPvx78oxBEGnfypwzfX/Wk/h8fTpwPNco+aHHDLSOLmp0l2LvLqiZsY
-         GmZc7HyO3GJAw==
+        b=bNJ4J1KoZvhezaQK3Q7Usu2KK2PtG1Nmm+b8jLbri9Y/w26EwIB1MctcPiDkmnIjG
+         s6EwzNj+FUBY3S09p1+qXxlTmchujCoj3ezLi0M2Bsrzn4AjPGs/GgRy2Lm7vSWu2o
+         RlmyHjOCbMOcmsrOV/6WmG3J5Jhr69tsyd7md9yX+AWNuHjyvwqDtyoyKK0743VtHf
+         HrD/9kOf+fNyLEiDOz2rwNZdq8NkSM5/QRrZFlU2u6aAflDIM6kDwhN2TnrLSnh0lF
+         NwUeYj1/09hYPNLMZRPPeXCv9GD+Tp9qj+6vSb8U7cwnm+kU/c/PZf5E4avtjxX/6t
+         iuAFPsOslYsHw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E2278A0092;
+        by mailhost.synopsys.com (Postfix) with ESMTP id F2A6FA009A;
         Tue, 10 Dec 2019 19:34:05 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/8] net: stmmac: Do not accept invalid MTU values
-Date:   Tue, 10 Dec 2019 20:33:55 +0100
-Message-Id: <7c86807d2db415419e1158a2f8c87bd6dfe8facb.1576005975.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 5/8] net: stmmac: xgmac: Clear previous RX buffer size
+Date:   Tue, 10 Dec 2019 20:33:57 +0100
+Message-Id: <d28e07a451ffdc354c6c5b746432f4f252228284.1576005975.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1576005975.git.Jose.Abreu@synopsys.com>
 References: <cover.1576005975.git.Jose.Abreu@synopsys.com>
@@ -65,12 +65,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maximum MTU value is determined by the maximum size of TX FIFO so
-that a full packet can fit in the FIFO. Add a check for this in the MTU
-change callback.
-
-Also check if provided and rounded MTU does not passes the maximum limit
-of 16K.
+When switching between buffer sizes we need to clear the previous value.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -85,36 +80,37 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 2 ++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index dfecced43f29..2ebac89049ed 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3827,12 +3827,22 @@ static void stmmac_set_rx_mode(struct net_device *dev)
- static int stmmac_change_mtu(struct net_device *dev, int new_mtu)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
-+	int txfifosz = priv->plat->tx_fifo_size;
-+
-+	if (txfifosz == 0)
-+		txfifosz = priv->dma_cap.tx_fifo_size;
-+
-+	txfifosz /= priv->plat->tx_queues_to_use;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 3b6e559aa0b9..ef8a07c68ca7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -343,6 +343,8 @@
+ #define XGMAC_DMA_CH_RX_CONTROL(x)	(0x00003108 + (0x80 * (x)))
+ #define XGMAC_RxPBL			GENMASK(21, 16)
+ #define XGMAC_RxPBL_SHIFT		16
++#define XGMAC_RBSZ			GENMASK(14, 1)
++#define XGMAC_RBSZ_SHIFT		1
+ #define XGMAC_RXST			BIT(0)
+ #define XGMAC_DMA_CH_TxDESC_HADDR(x)	(0x00003110 + (0x80 * (x)))
+ #define XGMAC_DMA_CH_TxDESC_LADDR(x)	(0x00003114 + (0x80 * (x)))
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 22a7f0cc1b90..f3f08ccc379b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -482,7 +482,8 @@ static void dwxgmac2_set_bfsize(void __iomem *ioaddr, int bfsize, u32 chan)
+ 	u32 value;
  
- 	if (netif_running(dev)) {
- 		netdev_err(priv->dev, "must be stopped to change its MTU\n");
- 		return -EBUSY;
- 	}
+ 	value = readl(ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
+-	value |= bfsize << 1;
++	value &= ~XGMAC_RBSZ;
++	value |= bfsize << XGMAC_RBSZ_SHIFT;
+ 	writel(value, ioaddr + XGMAC_DMA_CH_RX_CONTROL(chan));
+ }
  
-+	/* If condition true, FIFO is too small or MTU too large */
-+	if ((txfifosz < new_mtu) || (new_mtu > STMMAC_ALIGN(BUF_SIZE_16KiB)))
-+		return -EINVAL;
-+
- 	dev->mtu = new_mtu;
- 
- 	netdev_update_features(dev);
 -- 
 2.7.4
 
