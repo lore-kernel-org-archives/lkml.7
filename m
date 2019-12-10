@@ -2,124 +2,135 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DA0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3551D206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="KHpIsIRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 61275206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576013083;
+	bh=WvEFyyi/O+WRj6bp4PbOSJv1s0e0tDsQyd8Jf5h5W+U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ekc49TKPB0obJU+NHgNPqXwAFr8TZ/CcFE/gSKImdqD5kdTVbhK/faf96j4W8Dmk+
+	 lk2+sLBAsO2BYdiQuHJ6QB8oDxIjr3E+u93qz1Yl04Bo1BPHvbTNflZYWkXUw42Xq0
+	 grtDnTcqHZAnetDHBqWIQHUZgv/3gQ376RDEdD64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfLJVYg (ORCPT
+        id S1729460AbfLJVYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:36 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33492 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728723AbfLJVYc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:24:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so9506321pgk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 13:24:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=y6ht5YW8dhI/whPoru8OJyyMGM1ELyH7ioiCN142OAA=;
-        b=KHpIsIRJFHpu/RE+iNns/3lFjXjW7dmPCYbVqVy2fJCsmV0QXQ+Sh1tnMDBlQiuHmc
-         dEdTZ91YLJNA0acWzBev8p8U2ZgM+kMxUf+plwKLeldKf/To+yI5l1o4i8w6eTKp67zG
-         5dOPnsWjpA1rf6+HIWCJ+ywJzhdiKHqRCJKdvupaO7nSR4TdgIp4YpeCGEU6UiV3+fdo
-         pD3cHPJrjOAoe4q81m+GIuaF74ThJeM9p4B2vthnNVJV3HZGRmtIY58FYWwYzY33SbtP
-         1bh8dCKk0ZyFnxfk0aH69bVqn3mpPv1B7xR9cPH+XqM+NS6HtwMQBT61qWveHYnZjywR
-         tVaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=y6ht5YW8dhI/whPoru8OJyyMGM1ELyH7ioiCN142OAA=;
-        b=oHRaPEPph2z6/fifyr8v8LJYluXeG0j2EJ4a3owMU2kX4YPlNCp7wIMb6yhFKDD48E
-         mAWGzNCLetgV/KKn6EISqxqN01fOFo55gzrlKGsaOl1GGLVfAaQcqnEfEmYRMy1tZFYs
-         CZ7ACLQAX44FCI0JWUftR30gxgZEpNOEphE39RTmj/sQ+JYMSthBA56EBhq0vC/v0Djd
-         Ye5mANs4KxRXk8ReYKp/S7rsZ2Y69AzWj2QAmHlrUr/IXhXQRgfWxUHUvqTFzwNObMR3
-         p3Ms5rTh9iqNhdvik1byBuZF5RybAfFTILHLy2dKAe0SRYS5UBzh6bAldUYpBePOX5w/
-         6LFQ==
-X-Gm-Message-State: APjAAAWNpIpJn67cpvvpF1+dbO+o29y5R/AbNh5leX4L2S442TXyo3hy
-        xAna8WrtOEoAvSN/iCT+L7Q7bA==
-X-Google-Smtp-Source: APXvYqzC6v4sPSMefQJvm+lNgRpCI17boTVEAvsS1g+uMr6wh21YyjZZNzvkuO7OK4RunNjrL9QxpA==
-X-Received: by 2002:a62:3045:: with SMTP id w66mr8948273pfw.122.1576013071142;
-        Tue, 10 Dec 2019 13:24:31 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id v29sm4200264pgl.88.2019.12.10.13.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 13:24:30 -0800 (PST)
-Date:   Tue, 10 Dec 2019 13:24:28 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
-Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
- ksyms
-Message-ID: <20191210132428.4470a7b0@cakuba.netronome.com>
-In-Reply-To: <87eexbhopo.fsf@toke.dk>
-References: <20191210181412.151226-1-toke@redhat.com>
-        <20191210125457.13f7821a@cakuba.netronome.com>
-        <87eexbhopo.fsf@toke.dk>
-Organization: Netronome Systems, Ltd.
+        Tue, 10 Dec 2019 16:24:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728614AbfLJVKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:49 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5AC324697;
+        Tue, 10 Dec 2019 21:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012248;
+        bh=WvEFyyi/O+WRj6bp4PbOSJv1s0e0tDsQyd8Jf5h5W+U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fp0Cif0+NghVk0j7oUceQblI5x8D5PtUkMAbeRgUCKujqBWKqA8MrmekmNSQy03Rc
+         GSN2bxJ9tcBwv9QKquSW63BoLHSChdj0+BJ3Nr+b6gWeZfuop0Y4Gid9SZ8Kl/knUd
+         qttN/RIORF9g3T+4OdPGf6cL7jiuvju/PEDtG//g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 196/350] spi: sifive: disable clk when probe fails and remove
+Date:   Tue, 10 Dec 2019 16:05:01 -0500
+Message-Id: <20191210210735.9077-157-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 22:09:55 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
-> Jakub Kicinski <jakub.kicinski@netronome.com> writes:
-> > On Tue, 10 Dec 2019 19:14:12 +0100, Toke H=C3=B8iland-J=C3=B8rgensen wr=
-ote: =20
-> >> When the kptr_restrict sysctl is set, the kernel can fail to return
-> >> jited_ksyms or jited_prog_insns, but still have positive values in
-> >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when t=
-rying
-> >> to dump the program because it only checks the len fields not the actu=
-al
-> >> pointers to the instructions and ksyms.
-> >>=20
-> >> Fix this by adding the missing checks.
-> >>=20
-> >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> =20
-> >
-> > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-> >
-> > and
-> >
-> > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm f=
-ield")
-> >
-> > ? =20
->=20
-> Yeah, guess so? Although I must admit it's not quite clear to me whether
-> bpftool gets stable backports, or if it follows the "only moving
-> forward" credo of libbpf?
+From: Chuhong Yuan <hslester96@gmail.com>
 
-bpftool does not have a GH repo, and seeing strength of Alexei's
-arguments in the recent discussion - I don't think it will. So no
-reason for bpftool to be "special" =E2=9D=84=EF=B8=8F.
+[ Upstream commit a725272bda77e61c1b4de85c7b0c875b2ea639b6 ]
 
-Then again seeing Andrii's zeal for pushing the codegen stuff into
-bpftool, maybe Facebook's intention is to make it so.
+The driver forgets to disable and unprepare clk when probe fails and
+remove.
+Add the calls to fix the problem.
 
-Hard to tell what to do when standard practices don't apply, sigh.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
+Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-sifive.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-> Anyhow, I don't suppose it'll hurt to have the Fixes: tag(s) in there;
-> does Patchwork pick these up (or can you guys do that when you apply
-> this?), or should I resend?
+diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
+index 35254bdc42c48..f7c1e20432e07 100644
+--- a/drivers/spi/spi-sifive.c
++++ b/drivers/spi/spi-sifive.c
+@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	if (!cs_bits) {
+ 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	num_cs = ilog2(cs_bits) + 1;
+ 	if (num_cs > SIFIVE_SPI_MAX_CS) {
+ 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	/* Define our master */
+@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 			       dev_name(&pdev->dev), spi);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
+@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "spi_register_master failed\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	return 0;
+ 
++disable_clk:
++	clk_disable_unprepare(spi->clk);
+ put_master:
+ 	spi_master_put(master);
+ 
+@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
+ 
+ 	/* Disable all the interrupts just in case */
+ 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
++	clk_disable_unprepare(spi->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
 
-I don't think it does, but perhaps Daniel's scripts do.
-
-Either way I don't think it's worth a resend.
