@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2FEC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1811C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A9522464
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2490222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013662;
-	bh=WjS0Tq7OrsE2NjIqEF56Rkua9+801ORAczYUD93TxZA=;
+	s=default; t=1576013666;
+	bh=Wn5syDq0taCDfRGRzbyEBoljcA5/eCl9XmADb6qn/Q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vbONg//dIQU96JMBm0x7N1INWYfQmeqZ5P2ERBp75vmBBFZePD5VsGqYHtE2Xn9s
-	 QopzTMwg7C8XpeIGVt1IdH25tc5+f6paOBeeqAhxyuTb98cW0lYqDY0QyxYiTk2xYs
-	 a+LDL6YSdsOvVRWe1JlhVWOtORbI6ShJ4h7U03Nc=
+	b=vAHqferxIn3LYVYTIcde7UtqOXUR4SExUNRLuRWGWgjipq7U7looQhPCZueKQnwfQ
+	 hH+DHur5llZX99Cu/DSPIQNaVHRPVKR2NQ8wb/w0VstZa2QSOmvERVkZs8Rmq3xMTo
+	 qpbkTwU51XPh1G5wGWthlZkrZxlLuX/NhV0Bm938=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfLJVeV (ORCPT
+        id S1730026AbfLJVeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbfLJVeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:16 -0500
+        id S1729971AbfLJVeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDB14206D5;
-        Tue, 10 Dec 2019 21:34:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD3F4222C4;
+        Tue, 10 Dec 2019 21:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013655;
-        bh=WjS0Tq7OrsE2NjIqEF56Rkua9+801ORAczYUD93TxZA=;
+        s=default; t=1576013653;
+        bh=Wn5syDq0taCDfRGRzbyEBoljcA5/eCl9XmADb6qn/Q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XM1SM7OR4N2HiIuBZ7j0H1uUwoUrMwW6fFtKe0p8Pa7yjBBFbWQGcESpYKy2ecSTV
-         I8VHyoXUH8mB2NzfaetPPmi2UuUgRF1rZV6X9lha8duA+HkMewycdCjls6ngQrMOWH
-         lEH2Dg4hXPr9NHRar+rVBK8M7KHrULH5xnCgb+PY=
+        b=RBLb7ZWElxqA1yJf4e47ybq2GIVl2SJC99yc3kTSHQtHMuUyJc5s3p4so8yBBB/6G
+         P+HC6fF/hQdcJFyprbxLxkizYhasWWzKlcrx0N2TRWYWnpzprBPx7hq5QFsZktPJk7
+         h57ARrupOBwG/VRhaTwaDrpARBJ0P1vB3JAnm9zk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 094/177] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-Date:   Tue, 10 Dec 2019 16:30:58 -0500
-Message-Id: <20191210213221.11921-94-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 092/177] loop: fix no-unmap write-zeroes request behavior
+Date:   Tue, 10 Dec 2019 16:30:56 -0500
+Message-Id: <20191210213221.11921-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,62 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
 
-The definitions for bit field [19:18] of the Peripheral Function Select
-Register 3 were accidentally copied from bit field [20], leading to
-duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
-ET0_ETXD4 functions.
+Currently, if the loop device receives a WRITE_ZEROES request, it asks
+the underlying filesystem to punch out the range.  This behavior is
+correct if unmapping is allowed.  However, a NOUNMAP request means that
+the caller doesn't want us to free the storage backing the range, so
+punching out the range is incorrect behavior.
 
-Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
-enum values, and correcting the functions.
+To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
+underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
+the fallocate documentation) required to ensure that the entire range is
+backed by real storage, which suffices for our purposes.
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
+Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/block/loop.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-index 96f0246ad2f2b..82b63208135ae 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-@@ -134,7 +134,7 @@ enum {
- 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
- 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
- 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
--	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
-+	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
- 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
- 		GPIO_FN_ET0_ETXD3_A,
- 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 33232041ee86d..3eccc9b3ca84a 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -1453,7 +1453,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(ET0_ETXD2_A),
- 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
- 	GPIO_FN(ET0_ETXD3_A),
--	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
-+	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
- 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
- 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
- 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
-@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP3_20 [1] */
- 		FN_EX_WAIT0, FN_TCLK1_B,
- 	    /* IP3_19_18 [2] */
--		FN_RD_WR, FN_TCLK1_B, 0, 0,
-+		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
- 	    /* IP3_17_15 [3] */
- 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
- 		FN_ET0_ETXD3_A, 0, 0, 0,
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 126c2c5146732..9cd231a27328e 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -416,18 +416,20 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
+ 	return ret;
+ }
+ 
+-static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
++static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
++			int mode)
+ {
+ 	/*
+-	 * We use punch hole to reclaim the free space used by the
+-	 * image a.k.a. discard. However we do not support discard if
+-	 * encryption is enabled, because it may give an attacker
+-	 * useful information.
++	 * We use fallocate to manipulate the space mappings used by the image
++	 * a.k.a. discard/zerorange. However we do not support this if
++	 * encryption is enabled, because it may give an attacker useful
++	 * information.
+ 	 */
+ 	struct file *file = lo->lo_backing_file;
+-	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
+ 	int ret;
+ 
++	mode |= FALLOC_FL_KEEP_SIZE;
++
+ 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+@@ -596,9 +598,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+ 	switch (req_op(rq)) {
+ 	case REQ_OP_FLUSH:
+ 		return lo_req_flush(lo, rq);
+-	case REQ_OP_DISCARD:
+ 	case REQ_OP_WRITE_ZEROES:
+-		return lo_discard(lo, rq, pos);
++		/*
++		 * If the caller doesn't want deallocation, call zeroout to
++		 * write zeroes the range.  Otherwise, punch them out.
++		 */
++		return lo_fallocate(lo, rq, pos,
++			(rq->cmd_flags & REQ_NOUNMAP) ?
++				FALLOC_FL_ZERO_RANGE :
++				FALLOC_FL_PUNCH_HOLE);
++	case REQ_OP_DISCARD:
++		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
+ 	case REQ_OP_WRITE:
+ 		if (lo->transfer)
+ 			return lo_write_transfer(lo, rq, pos);
 -- 
 2.20.1
 
