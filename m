@@ -2,494 +2,180 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1922C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AF72077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PeDtc70a"
+	by mail.kernel.org (Postfix) with ESMTP id A447C2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 11:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfLJLkk (ORCPT
+        id S1727518AbfLJLkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 06:40:40 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44525 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbfLJLkj (ORCPT
+        Tue, 10 Dec 2019 06:40:46 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48065 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfLJLkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 06:40:39 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191210114037euoutp016ac3688852fb68d5f749b7c518efa9c6~e-6zulZPo1618016180euoutp01M
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 11:40:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191210114037euoutp016ac3688852fb68d5f749b7c518efa9c6~e-6zulZPo1618016180euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1575978037;
-        bh=wQumKIz1maChZun8tmgFpr9OpnB118sw+oCKKMdPaeQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeDtc70akSeotTCIMJII6fyITMnU2aHLnxVdOVJMpKZX5zt68CDemkgUWAOwPgeQv
-         8Jtaxgnp8tLkF2KuaGgZ2DfCWIelYaJfF+AmMPCvz8zv2SLI4brmxJVfiMjeZrpZ5R
-         7i8POYtstMRcgHgtqhqPch9ZDOuw/94IGiSckf80=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191210114037eucas1p137f80e019179a09b752aa0c7de24743a~e-6zgHOQ70524805248eucas1p1e;
-        Tue, 10 Dec 2019 11:40:37 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id CC.69.61286.5348FED5; Tue, 10
-        Dec 2019 11:40:37 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191210114036eucas1p2fe31f68148688632d983e27bed12e7d8~e-6y1t8ej2394423944eucas1p2g;
-        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191210114036eusmtrp2792869c1c710493ebca4e851a4aef52b~e-6y0_6lT2532425324eusmtrp2y;
-        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-32-5def8435d843
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 81.90.07950.4348FED5; Tue, 10
-        Dec 2019 11:40:36 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191210114036eusmtip12721cedc71aefb72d1f94113f0eacde9~e-6yUf0Qh2202222022eusmtip1E;
-        Tue, 10 Dec 2019 11:40:36 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Andreas Faerber <afaerber@suse.de>,
-        Arjun K V <arjun.kv@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: exynos: Add missing CPU frequencies for
- Exynos5422/5800
-Date:   Tue, 10 Dec 2019 12:40:27 +0100
-Message-Id: <20191210114027.14910-3-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210114027.14910-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSe0hTURjn7Hk1F9cp+WGmsNBQUFtZ3DDFIHF/FEhBaCC28qLi5mPXWSaB
-        ZmmubCaYQ6WWrWbzMV0+aki6aQ4y3dRMwxQMQRLN8kmY1rY787/f6zu/7xwOxuQr2b5YemYu
-        KcsUSwQcd1bnwG9r6Ik7y0lH27R+RLGBIrSvjCyiTaVnExNr82xi6KWJQ6hXVGzCam3lEmPG
-        Og6xWt6PCJX1HYNo7p/mxuwT1RaOsEQGXRlH9LBdh0SvBwtEqwb/ePZl99MppCQ9j5SFR19x
-        T5vqaOJk68/fmNCXo0I0EqFAbhjgEXC/SsNQIHeMjzcg+GnSsGmyhmBrcYNJk1UEhT0GtDsy
-        oh9zGVoEy8v1eyMl6iGmI8XBhaBYUnAc2BtPhm/KaZYjxMRHGaAp2uQ6DC88AV5ovjoxCw+E
-        vqn3TszDo8DaYmPTdQHQ2NrrPNQNj4bKRaVzW8BLubDd28yiQ2fhedkXLo29YMHS7sJ+8Pft
-        U9dAMYLZ4WYuTR4gGLutct0oEvosI/Y6zL5fMOiN4bR8BopmTAyHDPh+mFzydMhMO6zsrGbS
-        Mg/ulfDpdBDUWFr+15pso66ICKwfg+gHeoSgebgCVaCAmr0uNUI65EPKKWkqSQkzyethlFhK
-        yTNTw65lSQ3I/k0Gdywrb9D66FUzwjEk8OCpY34k8dniPCpfakaAMQXePEuJXeKliPNvkrKs
-        ZJlcQlJmdBBjCXx4x+u/J/HxVHEumUGS2aRs12Vgbr6FqPpQz6K/KTFH3uGxtQOW9u75rq4B
-        8bige3zO3FL5JxRTXNTlfZZuRJQdWNwuupWyeVeanUBMRtZ4Lg8pehoX4gr8w3J+rT8JPJx9
-        QVj8zPbhsfZY1cyRKWND42xd1QJFzNpO1mouTUbFJSpL57SnBJL4pli9Lbj13Cd+bEgGCFhU
-        mlgYwpRR4n/acYtEIgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsVy+t/xu7omLe9jDT4/N7Bo3lRssXzlLhaL
-        jTPWs1pc//Kc1eLssoNsFgs+zWC1OH9+A7vF5V1z2Cw+9x5htJhxfh+Txdojd9kduD1mN1xk
-        8di0qpPNo2/LKkaPzaerPT5vkgtgjdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1
-        MjJV0rezSUnNySxLLdK3S9DLuL11DVvBet+K6+t7GRsYL5p0MXJySAiYSFxcf5m5i5GLQ0hg
-        KaPE5oZfLBAJGYmT0xpYIWxhiT/Xutggij4xSlxd/w0swSZgKNH1FiTBySEikCgx++NssCJm
-        gRtMEpfezmECSQgLhEnM+LUSrIFFQFXi8O2j7CA2r4CtxPl1F6A2yEus3nCAGcTmFLCTmPSm
-        H6xXCKhmy9IpzBMY+RYwMqxiFEktLc5Nzy020itOzC0uzUvXS87P3cQIDO1tx35u2cHY9S74
-        EKMAB6MSD+8Ch3exQqyJZcWVuYcYJTiYlUR4j7cBhXhTEiurUovy44tKc1KLDzGaAh01kVlK
-        NDkfGHd5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYxetrJpS3
-        3Ja2jbGaHjrvzMmrV/dvMZ8TVGf8umD94ZS6g5OZin6V3LLbMSXw/rr2KN/P+6/dkBAw+Mh0
-        f534U88pv69eOGq01z7/dZHOxk9mO6+aH04tlfXhPvtislPQE73kpaJpEUudDPcz3FnyiXnb
-        8q7ZWdxfk4r0T2mk1a/3Mt3GlP5EXomlOCPRUIu5qDgRAPs19sCDAgAA
-X-CMS-MailID: 20191210114036eucas1p2fe31f68148688632d983e27bed12e7d8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191210114036eucas1p2fe31f68148688632d983e27bed12e7d8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191210114036eucas1p2fe31f68148688632d983e27bed12e7d8
-References: <20191210114027.14910-1-m.szyprowski@samsung.com>
-        <CGME20191210114036eucas1p2fe31f68148688632d983e27bed12e7d8@eucas1p2.samsung.com>
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iedsZ-000829-BF; Tue, 10 Dec 2019 12:40:35 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e] (unknown [IPv6:2a03:f580:87bc:d400:858e:130c:14c0:366e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 46AF748CB65;
+        Tue, 10 Dec 2019 11:40:34 +0000 (UTC)
+Subject: Re: [PATCH 0/2] can: fix USB altsetting bugs
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191210113231.3797-1-johan@kernel.org>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1244df5c-27e4-2558-3a88-5be6a7c2bfea@pengutronix.de>
+Date:   Tue, 10 Dec 2019 12:40:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191210113231.3797-1-johan@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F
+Content-Type: multipart/mixed; boundary="4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Johan Hovold <johan@kernel.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <1244df5c-27e4-2558-3a88-5be6a7c2bfea@pengutronix.de>
+Subject: Re: [PATCH 0/2] can: fix USB altsetting bugs
+References: <20191210113231.3797-1-johan@kernel.org>
+In-Reply-To: <20191210113231.3797-1-johan@kernel.org>
 
-Add missing 2.0GHz, 1.9GHz & 1.8GHz OPPs (for A15 cores) and 1.4GHz
-OPP (for A7 cores).  Also update common Odroid-XU3 Lite/XU3/XU4
-thermal cooling maps to account for new OPPs.
+--4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
 
-Since some new OPPs are not available on all Exynos5422/5800 boards
-modify dts files for Odroid XU3 Lite (limited to 1.8 GHz / 1.3 GHz) &
-Peach Pi (limited to 2.0 GHz / 1.3 GHz) accordingly.
+On 12/10/19 12:32 PM, Johan Hovold wrote:
+> We had quite a few driver using the first alternate setting instead of
+> the current one when doing descriptor sanity checks. This is mostly an
+> issue on kernels with panic_on_warn set due to a WARN() in
+> usb_submit_urn(). Since we've started backporting such fixes (e.g. as
+> reported by syzbot), I've marked these for stable as well.
+>=20
+> The second patch here is a related cleanup to prevent future issues.
 
-This patch uses maximum voltages for new OPPs. This is a temporary
-solution till proper Exynos ASV support is added.
+Applied both to linux-can.
 
-Also while at it fix the number of cooling down steps for big cores
-(should be 11 instead of 12 on Odroid XU3 Lite and 14 on XU3/XU4).
+Tnx,
+Marc
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-[mszyprow: rebased onto v5.5-rc1 and adapted to recent dts changes,
- fixed removal of the 1.4GHz OPP for A7s on Peach-Pi]
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-Based on the patch from 15th Dec 2016:
-https://patchwork.kernel.org/patch/9475909/
----
- arch/arm/boot/dts/exynos5422-odroidhc1.dts    | 64 +++++++--------
- .../boot/dts/exynos5422-odroidxu3-common.dtsi | 78 +++++++++----------
- .../boot/dts/exynos5422-odroidxu3-lite.dts    | 58 ++++++++++++++
- arch/arm/boot/dts/exynos5800-peach-pi.dts     |  9 +++
- arch/arm/boot/dts/exynos5800.dtsi             | 20 +++++
- 5 files changed, 158 insertions(+), 71 deletions(-)
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidhc1.dts b/arch/arm/boot/dts/exynos5422-odroidhc1.dts
-index d271e7548826..f163206265bb 100644
---- a/arch/arm/boot/dts/exynos5422-odroidhc1.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidhc1.dts
-@@ -72,14 +72,14 @@
- 				 */
- 				map1 {
- 					trip = <&cpu0_alert1>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -116,14 +116,14 @@
- 				};
- 				map1 {
- 					trip = <&cpu1_alert1>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -160,14 +160,14 @@
- 				};
- 				map1 {
- 					trip = <&cpu2_alert1>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -204,14 +204,14 @@
- 				};
- 				map1 {
- 					trip = <&cpu3_alert1>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 838872037493..1865a708b49f 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -107,7 +107,7 @@
- 				/*
- 				 * When reaching cpu0_alert3, reduce CPU
- 				 * by 2 steps. On Exynos5422/5800 that would
--				 * be: 1600 MHz and 1100 MHz.
-+				 * (usually) be: 1800 MHz and 1200 MHz.
- 				 */
- 				map3 {
- 					trip = <&cpu0_alert3>;
-@@ -122,19 +122,19 @@
- 				};
- 				/*
- 				 * When reaching cpu0_alert4, reduce CPU
--				 * further, down to 600 MHz (12 steps for big,
--				 * 7 steps for LITTLE).
-+				 * further, down to 600 MHz (14 steps for big,
-+				 * 8 steps for LITTLE).
- 				 */
--				map4 {
-+				cpu0_cooling_map4: map4 {
- 					trip = <&cpu0_alert4>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -198,16 +198,16 @@
- 							 <&cpu6 0 2>,
- 							 <&cpu7 0 2>;
- 				};
--				map4 {
-+				cpu1_cooling_map4: map4 {
- 					trip = <&cpu1_alert4>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -271,16 +271,16 @@
- 							 <&cpu6 0 2>,
- 							 <&cpu7 0 2>;
- 				};
--				map4 {
-+				cpu2_cooling_map4: map4 {
- 					trip = <&cpu2_alert4>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-@@ -344,16 +344,16 @@
- 							 <&cpu6 0 2>,
- 							 <&cpu7 0 2>;
- 				};
--				map4 {
-+				cpu3_cooling_map4: map4 {
- 					trip = <&cpu3_alert4>;
--					cooling-device = <&cpu0 3 7>,
--							 <&cpu1 3 7>,
--							 <&cpu2 3 7>,
--							 <&cpu3 3 7>,
--							 <&cpu4 3 12>,
--							 <&cpu5 3 12>,
--							 <&cpu6 3 12>,
--							 <&cpu7 3 12>;
-+					cooling-device = <&cpu0 3 8>,
-+							 <&cpu1 3 8>,
-+							 <&cpu2 3 8>,
-+							 <&cpu3 3 8>,
-+							 <&cpu4 3 14>,
-+							 <&cpu5 3 14>,
-+							 <&cpu6 3 14>,
-+							 <&cpu7 3 14>;
- 				};
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-index a31ca2ef750f..98feecad5489 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-@@ -30,6 +30,64 @@
- 	samsung,asv-bin = <2>;
- };
- 
-+/*
-+ * Odroid XU3-Lite board uses SoC revision with lower maximum frequencies
-+ * than Odroid XU3/XU4 boards: 1.8 GHz for A15 cores & 1.3 GHz for A7 cores.
-+ * Therefore we need to update OPPs tables and thermal maps accordingly.
-+ */
-+&cluster_a15_opp_table {
-+	/delete-node/opp-2000000000;
-+	/delete-node/opp-1900000000;
-+};
-+
-+&cluster_a7_opp_table {
-+	/delete-node/opp-1400000000;
-+};
-+
-+&cpu0_cooling_map4 {
-+	cooling-device = <&cpu0 3 7>,
-+			 <&cpu1 3 7>,
-+			 <&cpu2 3 7>,
-+			 <&cpu3 3 7>,
-+			 <&cpu4 3 12>,
-+			 <&cpu5 3 12>,
-+			 <&cpu6 3 12>,
-+			 <&cpu7 3 12>;
-+};
-+
-+&cpu1_cooling_map4 {
-+	cooling-device = <&cpu0 3 7>,
-+			 <&cpu1 3 7>,
-+			 <&cpu2 3 7>,
-+			 <&cpu3 3 7>,
-+			 <&cpu4 3 12>,
-+			 <&cpu5 3 12>,
-+			 <&cpu6 3 12>,
-+			 <&cpu7 3 12>;
-+};
-+
-+&cpu2_cooling_map4 {
-+	cooling-device = <&cpu0 3 7>,
-+			 <&cpu1 3 7>,
-+			 <&cpu2 3 7>,
-+			 <&cpu3 3 7>,
-+			 <&cpu4 3 12>,
-+			 <&cpu5 3 12>,
-+			 <&cpu6 3 12>,
-+			 <&cpu7 3 12>;
-+};
-+
-+&cpu3_cooling_map4 {
-+	cooling-device = <&cpu0 3 7>,
-+			 <&cpu1 3 7>,
-+			 <&cpu2 3 7>,
-+			 <&cpu3 3 7>,
-+			 <&cpu4 3 12>,
-+			 <&cpu5 3 12>,
-+			 <&cpu6 3 12>,
-+			 <&cpu7 3 12>;
-+};
-+
- &pwm {
- 	/*
- 	 * PWM 0 -- fan
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index c1e38139ce4f..60ab0effe474 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -156,6 +156,15 @@
- 	assigned-clock-parents = <&clock CLK_MAU_EPLL>;
- };
- 
-+/*
-+ * Peach Pi board uses SoC revision with lower maximum frequency for A7 cores
-+ * (1.3 GHz instead of 1.4 GHz) than Odroid XU3/XU4 boards.  Thus we need to
-+ * update A7 OPPs table accordingly.
-+ */
-+&cluster_a7_opp_table {
-+	/delete-node/opp-1400000000;
-+};
-+
- &cpu0 {
- 	cpu-supply = <&buck2_reg>;
- };
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-index 1be7eb60439a..b4fd53496450 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -21,6 +21,21 @@
- };
- 
- &cluster_a15_opp_table {
-+	opp-2000000000 {
-+		opp-hz = /bits/ 64 <2000000000>;
-+		opp-microvolt = <1312500>;
-+		clock-latency-ns = <140000>;
-+	};
-+	opp-1900000000 {
-+		opp-hz = /bits/ 64 <1900000000>;
-+		opp-microvolt = <1262500>;
-+		clock-latency-ns = <140000>;
-+	};
-+	opp-1800000000 {
-+		opp-hz = /bits/ 64 <1800000000>;
-+		opp-microvolt = <1237500>;
-+		clock-latency-ns = <140000>;
-+	};
- 	opp-1700000000 {
- 		opp-microvolt = <1250000 1250000 1500000>;
- 	};
-@@ -82,6 +97,11 @@
- };
- 
- &cluster_a7_opp_table {
-+	opp-1400000000 {
-+		opp-hz = /bits/ 64 <1400000000>;
-+		opp-microvolt = <1275000>;
-+		clock-latency-ns = <140000>;
-+	};
- 	opp-1300000000 {
- 		opp-microvolt = <1250000>;
- 	};
--- 
-2.17.1
 
+--4pKZgfYpzjUZxIs7BT0wqFDzgp0vWLE1V--
+
+--PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3vhC4ACgkQWsYho5Hk
+nSD2aQgAs5lFAaX+514YmdXepheaxkuir4ylLzDPIatvpPcC20tLVL7dGefACkyl
+46nNfNaGzduZI/UwIbkflwthsNqVUJvMpm9Lzho2CKpIqunUt/QDBKo+9ZxhtwI7
+UJY8uhR3CMQBNn5c4cxAFTlqM4S+wvJTn/5QrCRRxwJysfBGRifkUPV7iqTGR3yK
+/04uPq4EVVRixbQ2Te5XNdnKhv5qyDmPUll8ZPiNgrF7SuemJ0iAZmBA47elxD/j
+0iPo2BREX5akTkghbLsOHav42jREllGklBsMo3+d5M410MkliWfQH4Aou2Gx0LbM
+JnTfQqgPH3IlNXWHHqGowMmpR1bXuA==
+=Ow7r
+-----END PGP SIGNATURE-----
+
+--PYGNQfSib4ZC3jmgsc9Zx3onSi9UVP22F--
