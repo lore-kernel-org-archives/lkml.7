@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A3FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1D6C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE7B20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6EC20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015811;
-	bh=oWHD6SqONwES3CnNPvUBNIsUmyvsseXbpilCLqXF0lI=;
+	s=default; t=1576015814;
+	bh=C4iqK5lGqkGKIphoCmrLRwzWutfxjbIEpyXJyE2sRuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyOicKCNMJs+F0ExFMG3xXsGfLq8yOglV/AaG96AcTMH/jBUN+EavprAd98MIMldf
-	 p0oUFQxgl+DQJQA0s+eYHgcAm69dN+6SaPXmbVJQtWNO6SjYQtoaOR2golagMdHkVU
-	 BCiqVTQxT3f/UagjZUxFxDsW2ZVQFtVI5LxXTVpA=
+	b=1TWypvn/bXJVfqseEuKvprOy4QqS4YrRL9crz1EFieVF5EgMAs7vhgIM+0HAoUKrD
+	 KFNY8nivNsNfpBsyjzd0IxbFtrWVemCCbeZst/r5lwKEahL2iBH0M8VR/mdi/Pq1rK
+	 x03otm7lrFEUaR72EVoq864MLJJJuEpQVI2rx4DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbfLJWKJ (ORCPT
+        id S1730054AbfLJWKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:10:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:10:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728620AbfLJWEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:14 -0500
+        id S1728605AbfLJWEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2EC22B48;
-        Tue, 10 Dec 2019 22:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B88062053B;
+        Tue, 10 Dec 2019 22:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015453;
-        bh=oWHD6SqONwES3CnNPvUBNIsUmyvsseXbpilCLqXF0lI=;
+        s=default; t=1576015452;
+        bh=C4iqK5lGqkGKIphoCmrLRwzWutfxjbIEpyXJyE2sRuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9ToxdOvJIdK5KifrHkRPvz1aikPhVX0yUHNgcOArlH33ifn0v7ZC7DyaHFhL2gbV
-         tOFygfn20aRZbkTchhelcLEc0oO5CDFzSZX6W8CDMRegy73whBpdyOXeLXed5W6xi0
-         XpA8NUm+fxcVF5EbAiRFHvxXfMLl3MWnDKHWrNHA=
+        b=g2WFckODDlszZu7l3Q4q3Az92lj0W1ojz1hGVBtfy5Mf8dk63+NGydnezcnVPBq5y
+         44giKnLOZRAXkpdjUdnnniVU7thqluweff5d7c+ZfIatb4Q7cvtmUYVByi4ROVJAvE
+         hc+zeWniLbdlDG+M4Eh7BMTca1tBcQ0NG6sfxxeg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 060/130] ALSA: hda - Fix pending unsol events at shutdown
-Date:   Tue, 10 Dec 2019 17:01:51 -0500
-Message-Id: <20191210220301.13262-60-sashal@kernel.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 059/130] net: phy: dp83867: enable robust auto-mdix
+Date:   Tue, 10 Dec 2019 17:01:50 -0500
+Message-Id: <20191210220301.13262-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,59 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
+[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
 
-This is an alternative fix attemp for the issue reported in the commit
-caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
-reverted later due to regressions.  Instead of tweaking the hardware
-disablement order and the enforced irq flushing, do calling
-cancel_work_sync() of the unsol work early enough, and explicitly
-ignore the unsol events during the shutdown by checking the
-bus->shutdown flag.
+The link detection timeouts can be observed (or link might not be detected
+at all) when dp83867 PHY is configured in manual mode (speed/duplex).
 
-Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
+in case dp83867 is configured in manual mode and reduce link detection
+time.
+As per DM: "If link partners are configured to operational modes that are
+not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
+100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
+MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
+
+Hence, enable this option by default as there are no known reasons
+not to do so.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_bind.c  | 4 ++++
- sound/pci/hda/hda_intel.c | 3 +++
- 2 files changed, 7 insertions(+)
+ drivers/net/phy/dp83867.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
-index 8db1890605f60..c175b2cf63f77 100644
---- a/sound/pci/hda/hda_bind.c
-+++ b/sound/pci/hda/hda_bind.c
-@@ -42,6 +42,10 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
- {
- 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index e03e91d5f1b1b..0cbcced0870e6 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -84,6 +84,10 @@
+ #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
+ #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
  
-+	/* ignore unsol events during shutdown */
-+	if (codec->bus->shutdown)
-+		return;
++/* CFG3 bits */
++#define DP83867_CFG3_INT_OE			BIT(7)
++#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
 +
- 	if (codec->patch_ops.unsol_event)
- 		codec->patch_ops.unsol_event(codec, ev);
- }
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 96e9b3944b925..890793ad85ca1 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1450,8 +1450,11 @@ static int azx_free(struct azx *chip)
- static int azx_dev_disconnect(struct snd_device *device)
- {
- 	struct azx *chip = device->device_data;
-+	struct hdac_bus *bus = azx_bus(chip);
+ /* CFG4 bits */
+ #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
  
- 	chip->bus.shutdown = 1;
-+	cancel_work_sync(&bus->unsol_work);
+@@ -320,12 +324,13 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 			return ret;
+ 	}
+ 
++	val = phy_read(phydev, DP83867_CFG3);
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
+-	if (phy_interrupt_is_valid(phydev)) {
+-		val = phy_read(phydev, DP83867_CFG3);
+-		val |= BIT(7);
+-		phy_write(phydev, DP83867_CFG3, val);
+-	}
++	if (phy_interrupt_is_valid(phydev))
++		val |= DP83867_CFG3_INT_OE;
 +
- 	return 0;
- }
++	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
++	phy_write(phydev, DP83867_CFG3, val);
  
+ 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
+ 		dp83867_config_port_mirroring(phydev);
 -- 
 2.20.1
 
