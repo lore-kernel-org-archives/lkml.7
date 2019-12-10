@@ -2,177 +2,150 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C0CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C50DC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2207E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J99n2bWz"
+	by mail.kernel.org (Postfix) with ESMTP id DA0FD207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 13:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575984218;
+	bh=iC6lE/bN9KCKBSnTvhQqsXgQUC9ynpk6CQ6HHU9OSHw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=L3PE9lAUyWZ4wPOyLaV4Dm4ko4i/YfqZiTSkX1/w4+JQX+r9fR0YgpoIxCxgwnhst
+	 onI7JpmQYK9xdMTUHrVrAmaZ3HjHwj0X66fgRc4MMJaOtLBp2SRzyDOXk42A8eAkSw
+	 luz/9XU00fr+P+aeTHoRS8dARqDAA4FOHLKlkGvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfLJNXg (ORCPT
+        id S1727506AbfLJNXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Dec 2019 08:23:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:44154 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727440AbfLJNXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 08:23:36 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46312 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfLJNXe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 08:23:34 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so19982090wrl.13;
-        Tue, 10 Dec 2019 05:23:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jJrtiyNSy3kb+yNwZbjKaE7PnY4m0t7haj0Vxh+WdWs=;
-        b=J99n2bWznpxOP6+vsSZXrEr6p/rw1T5xKdv3U2W6e9//RNmPZtPXfD62u24G8E+C/7
-         XtwiqCDRNhXLmsDBiHVkU4zNSkopGxxHRzkWHwqzVKWhux6HNd5FHIAgUjenIZeY0JEI
-         TEVAlO4ktkiqYCmQDqZWXC0pDNAxCtdluBOXIMlXO8nr/QZXaYHKZgUCAF5qKF6kxAdD
-         W+ocHC6CEtPkTlYlFIIkMX9ehfWN4VmWo8PKArMUcj9fYSlTTU7E7BgbBk0wmP885JT4
-         00t12Pn0vbf8l+ToQpMqZAE9ZZt9OdQw6PnhCP0gcwxlHchMrexSZ/445YuFgG/f1qQP
-         CP3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jJrtiyNSy3kb+yNwZbjKaE7PnY4m0t7haj0Vxh+WdWs=;
-        b=auTeupwX/67CQ0tGq7yTjQ2wCOcmtSA/3DpcKjrvXPq0QIsPg6v+zUw/bz264XVEp8
-         eIBTc4tfPs+gMV3GU9dGWbv86cTIaFFqiN1LKvwM0COhag3K7PaTPd5igp2jMaEL81Pd
-         TpJ6x+gxJK2tYiO37AwREWP3RxGN8rysst4QoFAiHrCPTIBsJc6sF/lE0Ep3p9kqwLUo
-         tFgA0uN159DuT2O6il6M9g1JvA3U3TOnqvAzSyP8xboVh7xqqnCvIr8sbH7TfSs0vl0b
-         Z+8w6saP5zqYIzcvtBB9vHQzdK42/myAS+W9XHrDNPYAVrtdTqZLiD2tUTSeQITtfcpD
-         psvw==
-X-Gm-Message-State: APjAAAUBawExN1dnjvWrLNaTZWuXYt8U9O2WSSz5kSRnNUHP4m2c8cec
-        kWcGiC5IHq9SSE6SY1lsyG9+7sa9RRc=
-X-Google-Smtp-Source: APXvYqzCXFiEb3ot8a+PusJOfCQFFN49/7xqDziU6xgfwuaj+jEQc3h7lpRtk7Dxa6zdush/Y6vt4g==
-X-Received: by 2002:a5d:558d:: with SMTP id i13mr190439wrv.364.1575984211923;
-        Tue, 10 Dec 2019 05:23:31 -0800 (PST)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id s82sm3101680wms.28.2019.12.10.05.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 05:23:31 -0800 (PST)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v3 02/13] phy: usb: Get all drivers that use USB clks using correct enable/disable
-Date:   Tue, 10 Dec 2019 08:21:21 -0500
-Message-Id: <20191210132132.41509-3-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210132132.41509-1-alcooperx@gmail.com>
-References: <20191210132132.41509-1-alcooperx@gmail.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ECA61396;
+        Tue, 10 Dec 2019 05:23:35 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E387D3F52E;
+        Tue, 10 Dec 2019 05:23:34 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:23:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        kuninori.morimoto.gx@renesas.com,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: simple-card: Don't create separate link when platform is present" to the asoc tree
+In-Reply-To: <20191209135353.17427-1-daniel.baluta@nxp.com>
+Message-Id: <applied-20191209135353.17427-1-daniel.baluta@nxp.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BRCM USB Phy, ohci, ehci and xhci drivers all use the USB clocks
-but not all drivers use the clk_prepare_enable/clk_disable_unprepare
-versions to enable/disable the clocks. This change gets all drivers
-using the prepare version.
+The patch
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
+   ASoC: simple-card: Don't create separate link when platform is present
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 5525cf07d15f7c7eab619707627c31aa8e39dff1 Mon Sep 17 00:00:00 2001
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Date: Mon, 9 Dec 2019 15:53:53 +0200
+Subject: [PATCH] ASoC: simple-card: Don't create separate link when platform
+ is present
+
+In normal sound case all DAIs are detected as CPU-Codec.
+simple_dai_link_of supports the presence of a platform but it counts
+it as a CPU DAI resulting in the creation of an extra link.
+
+Adding a platform property to a link description like:
+
+simple-audio-card,dai-link {
+	cpu {
+		sound-dai = <&sai1>;
+	};
+	plat {
+		sound-dai = <&dsp>;
+	};
+	codec {
+		sound-dai = <&wm8960>;
+	}
+
+will result in the creation of two links:
+	* sai1 <-> wm8960
+	* dsp  <-> wm8960
+
+which is obviously not what we want. We just want one single link
+with:
+	* sai1 <-> wm8960 (and platform set to dsp).
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20191209135353.17427-1-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/phy/broadcom/phy-brcm-usb.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ sound/soc/generic/simple-card.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index f5c1f2983a1d..217e3702ef4e 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -74,8 +74,8 @@ static int brcm_usb_phy_init(struct phy *gphy)
- 	 */
- 	mutex_lock(&priv->mutex);
- 	if (priv->init_count++ == 0) {
--		clk_enable(priv->usb_20_clk);
--		clk_enable(priv->usb_30_clk);
-+		clk_prepare_enable(priv->usb_20_clk);
-+		clk_prepare_enable(priv->usb_30_clk);
- 		brcm_usb_init_common(&priv->ini);
- 	}
- 	mutex_unlock(&priv->mutex);
-@@ -106,8 +106,8 @@ static int brcm_usb_phy_exit(struct phy *gphy)
- 	mutex_lock(&priv->mutex);
- 	if (--priv->init_count == 0) {
- 		brcm_usb_uninit_common(&priv->ini);
--		clk_disable(priv->usb_20_clk);
--		clk_disable(priv->usb_30_clk);
-+		clk_disable_unprepare(priv->usb_20_clk);
-+		clk_disable_unprepare(priv->usb_30_clk);
- 	}
- 	mutex_unlock(&priv->mutex);
- 	phy->inited = false;
-@@ -360,8 +360,8 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
- 	if (priv->has_eohci)
- 		brcm_usb_uninit_eohci(&priv->ini);
- 	brcm_usb_uninit_common(&priv->ini);
--	clk_disable(priv->usb_20_clk);
--	clk_disable(priv->usb_30_clk);
-+	clk_disable_unprepare(priv->usb_20_clk);
-+	clk_disable_unprepare(priv->usb_30_clk);
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 10b82bf043d1..55e9f8800b3e 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -371,6 +371,7 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
+ 	do {
+ 		struct asoc_simple_data adata;
+ 		struct device_node *codec;
++		struct device_node *plat;
+ 		struct device_node *np;
+ 		int num = of_get_child_count(node);
  
- 	phy_provider = devm_of_phy_provider_register(dev, brcm_usb_phy_xlate);
- 
-@@ -381,8 +381,8 @@ static int brcm_usb_phy_suspend(struct device *dev)
- 	struct brcm_usb_phy_data *priv = dev_get_drvdata(dev);
- 
- 	if (priv->init_count) {
--		clk_disable(priv->usb_20_clk);
--		clk_disable(priv->usb_30_clk);
-+		clk_disable_unprepare(priv->usb_20_clk);
-+		clk_disable_unprepare(priv->usb_30_clk);
- 	}
- 	return 0;
- }
-@@ -391,8 +391,8 @@ static int brcm_usb_phy_resume(struct device *dev)
- {
- 	struct brcm_usb_phy_data *priv = dev_get_drvdata(dev);
- 
--	clk_enable(priv->usb_20_clk);
--	clk_enable(priv->usb_30_clk);
-+	clk_prepare_enable(priv->usb_20_clk);
-+	clk_prepare_enable(priv->usb_30_clk);
- 	brcm_usb_init_ipp(&priv->ini);
- 
- 	/*
-@@ -405,13 +405,13 @@ static int brcm_usb_phy_resume(struct device *dev)
- 			brcm_usb_init_eohci(&priv->ini);
- 		} else if (priv->has_eohci) {
- 			brcm_usb_uninit_eohci(&priv->ini);
--			clk_disable(priv->usb_20_clk);
-+			clk_disable_unprepare(priv->usb_20_clk);
+@@ -381,6 +382,9 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
+ 			ret = -ENODEV;
+ 			goto error;
  		}
- 		if (priv->phys[BRCM_USB_PHY_3_0].inited) {
- 			brcm_usb_init_xhci(&priv->ini);
- 		} else if (priv->has_xhci) {
- 			brcm_usb_uninit_xhci(&priv->ini);
--			clk_disable(priv->usb_30_clk);
-+			clk_disable_unprepare(priv->usb_30_clk);
- 		}
- 	} else {
- 		if (priv->has_xhci)
-@@ -419,8 +419,8 @@ static int brcm_usb_phy_resume(struct device *dev)
- 		if (priv->has_eohci)
- 			brcm_usb_uninit_eohci(&priv->ini);
- 		brcm_usb_uninit_common(&priv->ini);
--		clk_disable(priv->usb_20_clk);
--		clk_disable(priv->usb_30_clk);
-+		clk_disable_unprepare(priv->usb_20_clk);
-+		clk_disable_unprepare(priv->usb_30_clk);
- 	}
++		/* get platform */
++		plat = of_get_child_by_name(node, is_top ?
++					    PREFIX "plat" : "plat");
  
- 	return 0;
+ 		/* get convert-xxx property */
+ 		memset(&adata, 0, sizeof(adata));
+@@ -389,6 +393,8 @@ static int simple_for_each_link(struct asoc_simple_priv *priv,
+ 
+ 		/* loop for all CPU/Codec node */
+ 		for_each_child_of_node(node, np) {
++			if (plat == np)
++				continue;
+ 			/*
+ 			 * It is DPCM
+ 			 * if it has many CPUs,
 -- 
-2.17.1
+2.20.1
 
