@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2BCC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7801C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E479F24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802D9206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013692;
-	bh=ABnKnHgrIlFEjHqe5kELVmGbDQkRTILWh9zf7piBjSU=;
+	s=default; t=1576013697;
+	bh=3aXqtGp4o4Le56Dewifenxf3B2S3PUiUAh1FVSDurHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KlsI38K1TH2VS3Kh/i0LJzSsh6GqAWTZyqc55iMUBb98lwf/Jb2XbXPRxTuJzVesj
-	 6ud9HbZI+Tk20uZub62dYnc7kJxxvhRjS89U8rsA/20vjsDzjTCvRnNOvhtscCczvM
-	 PzKpWJXMVX5UuYFnmN5QMhs3e5GY8DKo1KjBaOTk=
+	b=Svm5ZCX/RX4CBc7xPZF3BrrDQ83Fdk6O3XRKW/+ztCKX3hp2pcTAQJLiNB4i2FRP0
+	 3Eg5UxFUfOEOh7xkviHCTBvt6XEbuKIpqWLPRAE5rantxegXjIcCVnA9zg850gGdpV
+	 qOYULvqcQW0wEPhrLxHaf4MFBjdyQImrnoAdr9iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfLJVeu (ORCPT
+        id S1730135AbfLJVe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbfLJVej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:39 -0500
+        id S1728071AbfLJVeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CE2B208C3;
-        Tue, 10 Dec 2019 21:34:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A34A2467A;
+        Tue, 10 Dec 2019 21:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013678;
-        bh=ABnKnHgrIlFEjHqe5kELVmGbDQkRTILWh9zf7piBjSU=;
+        s=default; t=1576013685;
+        bh=3aXqtGp4o4Le56Dewifenxf3B2S3PUiUAh1FVSDurHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9Mk5LcTA3fiBVM2mBn6j74OKs3HsH+kovNIWSQvvwBJSB06wgo5GOrKwhRVN9cbq
-         ZDkSFY/R3y8NkV8uYkzmA6uoJc6lSNcSsfzS8nAwwHX/aPzK2yw/NOrXIMW3Pzj7aa
-         JDH6hmGWr8vibj5bbQAPdP731aoVxQr8zJrJemJg=
+        b=OqYO9qYVFzHhYPHa71qLTVvxoDSbMXp7XCG7SaoG1HxaPGlAK8szYtzyKa0avCqc9
+         ynQcUz7ZJJxUvVd8lSDIZLfJnZo2dibHK0FqTcGKHOxDOJIH+C5SymbC79qnnBGVpL
+         ldFronwIsbUAmH61ewkqXZZZYllxfCh42PkYK7t0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 114/177] perf probe: Fix to show inlined function callsite without entry_pc
-Date:   Tue, 10 Dec 2019 16:31:18 -0500
-Message-Id: <20191210213221.11921-114-sashal@kernel.org>
+Cc:     Hawking Zhang <Hawking.Zhang@amd.com>,
+        Candice Li <Candice.Li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 118/177] drm/amdgpu: disallow direct upload save restore list from gfx driver
+Date:   Tue, 10 Dec 2019 16:31:22 -0500
+Message-Id: <20191210213221.11921-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -61,110 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Hawking Zhang <Hawking.Zhang@amd.com>
 
-[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
+[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+Direct uploading save/restore list via mmio register writes breaks the security
+policy. Instead, the driver should pass s&r list to psp.
 
-Without this:
+For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
+twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
+The latter is not allowed.
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+VG12 is the only exception where the driver still keeps legacy approach for S&R
+list uploading. In theory, this can be elimnated if we have valid srcntl ucode
+for VG12.
 
-With this patch:
-
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
-  Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
-
-  [root@quaco ~]#
-
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
-
-Ok, Intel system here... :-)
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Candice Li <Candice.Li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 14a3da24a0a86..fc3f3573332d9 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -686,7 +686,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 7824116498169..28794b1b15c10 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -2187,7 +2187,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
+ 	 * And it's needed by gfxoff feature.
+ 	 */
+ 	if (adev->gfx.rlc.is_rlc_v2_1) {
+-		gfx_v9_1_init_rlc_save_restore_list(adev);
++		if (adev->asic_type == CHIP_VEGA12)
++			gfx_v9_1_init_rlc_save_restore_list(adev);
+ 		gfx_v9_0_enable_save_restore_machine(adev);
+ 	}
+ 
 -- 
 2.20.1
 
