@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D6CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E2BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6132C246C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C27246BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012305;
-	bh=E0qgeFxZxqKUFnBfvaw7RnzgxM0tS1Pc/6AZP0kcofA=;
+	s=default; t=1576012312;
+	bh=yWdkQ3rxmA4VRJCK8d7wnzRs2F/xLxiKSnBauAWoCZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A+D9uvCJygP0t8VI4s4vXL8A9XmDDuBXPWQ8HklsBY0HpTTg7CP8TL6bh2X62RZaK
-	 aj8ctv1v5O7HvQr9mp6RRxQkw17SSxWGIlWHbVAeTbfR0+t6rUlNrLSpgbskaE96sX
-	 wpBWRYADz5/t5O7GYmzFRFyxWxuBqtXOPDVdwTLU=
+	b=tIfuQQkG4X2gSIgqvG9T2zibmL2MSRDX1iAr3Epk82RlxpgizYmCtdmiExV6/w6rA
+	 1hUnEMVroNcNRYWORcKWgK0IVCmzoAIu9zOdt8n/FCD2CiqhbjZwLHuRIOr14azX7T
+	 dIr6DAtoSFyeNMgpNOHFVLkcKPF7wNiD5uCVC+sU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfLJVLo (ORCPT
+        id S1728856AbfLJVLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:11:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:11:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfLJVLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:42 -0500
+        id S1726362AbfLJVLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8EB0246C1;
-        Tue, 10 Dec 2019 21:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 714B9246C5;
+        Tue, 10 Dec 2019 21:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012301;
-        bh=E0qgeFxZxqKUFnBfvaw7RnzgxM0tS1Pc/6AZP0kcofA=;
+        s=default; t=1576012305;
+        bh=yWdkQ3rxmA4VRJCK8d7wnzRs2F/xLxiKSnBauAWoCZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FhxmxZxj74O8WZKccgyrJh0lXlNqgEn1eaRu+FbMrw07VgrEVw2S3bWNtqWMN5VpL
-         BlRptmnyTD6vtCYIwVe+d2mQvURLccHlPH6a71UeTlVJJ/k+6O8yK2DXFqMukApoFg
-         I/xMUZTPbM0KMZ2ANho66Gz/Ego1GCcjEkNPnDSE=
+        b=NaC1OdxeXok3r6oGbZ8dNoOlorWwl/lWCp8zMwXGCiFGVsvnEop+Q4QTUiarBpsxl
+         8UpX4DpHm1ZYrye2tCFs8867x4IKLH7WUckR5vitfK7wmRzpxHrF5K5vX345g0mjm8
+         N9vTKk9NXxwg6HdpNLdS0BQJQHq+oBdgBeTRebUw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 238/350] perf probe: Return a better scope DIE if there is no best scope
-Date:   Tue, 10 Dec 2019 16:05:43 -0500
-Message-Id: <20191210210735.9077-199-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 241/350] perf probe: Filter out instances except for inlined subroutine and subprogram
+Date:   Tue, 10 Dec 2019 16:05:46 -0500
+Message-Id: <20191210210735.9077-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -65,80 +63,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit c701636aeec4c173208697d68da6e4271125564b ]
+[ Upstream commit da6cb952a89efe24bb76c4971370d485737a2d85 ]
 
-Make find_best_scope() returns innermost DIE at given address if there
-is no best matched scope DIE. Since Gcc sometimes generates intuitively
-strange line info which is out of inlined function address range, we
-need this fixup.
+Filter out instances except for inlined_subroutine and subprogram DIE in
+die_walk_instances() and die_is_func_instance().
 
-Without this, sometimes perf probe failed to probe on a line inside an
-inlined function:
+This fixes an issue that perf probe sets some probes on calling address
+instead of a target function itself.
 
-  # perf probe -D ksys_open:3
-  Failed to find scope of probe point.
-    Error: Failed to add events.
+When perf probe walks on instances of an abstruct origin (a kind of
+function prototype of inlined function), die_walk_instances() can also
+pass a GNU_call_site (a GNU extension for call site) to callback. Since
+it is not an inlined instance of target function, we have to filter out
+when searching a probe point.
 
-With this fix, 'perf probe' can probe it:
+Without this patch, perf probe sets probes on call site address too.This
+can happen on some function which is marked "inlined", but has actual
+symbol. (I'm not sure why GCC mark it "inlined"):
 
-  # perf probe -D ksys_open:3
-  p:probe/ksys_open _text+25707308
-  p:probe/ksys_open_1 _text+25710596
-  p:probe/ksys_open_2 _text+25711114
-  p:probe/ksys_open_3 _text+25711343
-  p:probe/ksys_open_4 _text+25714058
-  p:probe/ksys_open_5 _text+2819653
-  p:probe/ksys_open_6 _text+2819701
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2500017
+  p:probe/vfs_read_1 _text+2499468
+  p:probe/vfs_read_2 _text+2499563
+  p:probe/vfs_read_3 _text+2498876
+  p:probe/vfs_read_4 _text+2498512
+  p:probe/vfs_read_5 _text+2498627
 
+With this patch:
+
+Slightly different results, similar tho:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+2498512
+
+Committer testing:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+Before:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3131557
+  p:probe/vfs_read_1 _text+3130975
+  p:probe/vfs_read_2 _text+3131047
+  p:probe/vfs_read_3 _text+3130380
+  p:probe/vfs_read_4 _text+3130000
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+
+After:
+
+  # perf probe -D vfs_read
+  p:probe/vfs_read _text+3130000
+  #
+
+Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157291300887.19771.14936015360963292236.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index e4ef8f4935b2a..08cccd86447c5 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -756,6 +756,16 @@ static int find_best_scope_cb(Dwarf_Die *fn_die, void *data)
- 	return 0;
- }
- 
-+/* Return innermost DIE */
-+static int find_inner_scope_cb(Dwarf_Die *fn_die, void *data)
-+{
-+	struct find_scope_param *fsp = data;
-+
-+	memcpy(fsp->die_mem, fn_die, sizeof(Dwarf_Die));
-+	fsp->found = true;
-+	return 1;
-+}
-+
- /* Find an appropriate scope fits to given conditions */
- static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 0b604f8ab7c88..995607a7b4da2 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -312,18 +312,22 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+  * @dw_die: a DIE
+  *
+  * Ensure that this DIE is an instance (which has an entry address).
+- * This returns true if @dw_die is a function instance. If not, you need to
+- * call die_walk_instances() to find actual instances.
++ * This returns true if @dw_die is a function instance. If not, the @dw_die
++ * must be a prototype. You can use die_walk_instances() to find actual
++ * instances.
+  **/
+ bool die_is_func_instance(Dwarf_Die *dw_die)
  {
-@@ -767,8 +777,13 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- 		.die_mem = die_mem,
- 		.found = false,
- 	};
-+	int ret;
+ 	Dwarf_Addr tmp;
+ 	Dwarf_Attribute attr_mem;
++	int tag = dwarf_tag(dw_die);
  
--	cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb, &fsp);
-+	ret = cu_walk_functions_at(&pf->cu_die, pf->addr, find_best_scope_cb,
-+				   &fsp);
-+	if (!ret && !fsp.found)
-+		cu_walk_functions_at(&pf->cu_die, pf->addr,
-+				     find_inner_scope_cb, &fsp);
- 
- 	return fsp.found ? die_mem : NULL;
+-	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) &&
+-	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
+-		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
++	if (tag != DW_TAG_subprogram &&
++	    tag != DW_TAG_inlined_subroutine)
++		return false;
++
++	return dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
  }
+ 
+ /**
+@@ -602,6 +606,9 @@ static int __die_walk_instances_cb(Dwarf_Die *inst, void *data)
+ 	Dwarf_Die *origin;
+ 	int tmp;
+ 
++	if (!die_is_func_instance(inst))
++		return DIE_FIND_CB_CONTINUE;
++
+ 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
+ 	if (attr == NULL)
+ 		return DIE_FIND_CB_CONTINUE;
 -- 
 2.20.1
 
