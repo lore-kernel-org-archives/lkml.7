@@ -7,58 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E79C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE31C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACF920828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEA420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017176;
-	bh=iWr8FhlVMl2xbZR/aLjzGNvGy6OCfZbeoGEI9tL1hcs=;
+	s=default; t=1576017179;
+	bh=oQzplFMP+y5yFU+IvOVhNLOVCl/yAAbUjzn6JjCaoBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fSCIWTObVRcFMCogTDJoYCqh93V3p1FakbAlPxNyv5NfqDQuuGwSZLfBMqgv+pWXe
-	 xSZIcbgwFhn1jyz885eam1ZeDpKL8uKEK67FS1f2fUDErpjVMqgJegwfdw6vW+EaSI
-	 n2Vn6NMBTumDHqXlhfP2RrFx6hBYiz894EZdNmfo=
+	b=O5OrHY8RE255zYu8LsjpziuTJqlYh3vO1Vxq28nxANN7av87JxpPbiTvEgbQvZYkC
+	 3n4PUXrhFYhH5WxeD48L26j1bIVfcTY6EJOKqVsbNdUWGaYnVp8f4T2lj6t7WtPtJe
+	 iMYU1YL37f6ZyeJRP3STQRLVo8IKh9RRxQmLBIC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfLJWc0 (ORCPT
+        id S1728085AbfLJWc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbfLJWcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:05 -0500
+        id S1729446AbfLJWcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 452E420838;
-        Tue, 10 Dec 2019 22:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690C221D7D;
+        Tue, 10 Dec 2019 22:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017124;
-        bh=iWr8FhlVMl2xbZR/aLjzGNvGy6OCfZbeoGEI9tL1hcs=;
+        s=default; t=1576017144;
+        bh=oQzplFMP+y5yFU+IvOVhNLOVCl/yAAbUjzn6JjCaoBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AX8z/B8d/6IIILdmO63pPBpsIp99XcsSDe13yajEJ5aXLTIHpmvX6o7bkrsXs50kl
-         rtBg6X/dgyyG/MI8q6bJYYHVwtU9nFzhaPaY8Nhy7Nzc8rdeoriwl+bo4kXgUT28sU
-         NVzadlf6Q09dsTf6e5MZVePqf9E0yoN58+XQFXv0=
+        b=tZnu80GU7GA4Q2DMpNtHZQJKjMzG6s5bWWVVtPRZVDQSOrzyNCGVxszZVduHqZlJ1
+         8bCnURKdjw16Qn1oG4PVEvqHnL5F115CbmWDKP5oPNyqr39M84lcxBd9neuUUEWfdE
+         HHrgaDsNkr//BF38qQil58fii8Hdp6jelQcKAwcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lianbo Jiang <lijiang@redhat.com>,
-        kbuild test robot <lkp@intel.com>,
-        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
-        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
-        ebiederm@xmission.com, horms@verge.net.au,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
-        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 74/91] x86/crash: Add a forward declaration of struct kimage
-Date:   Tue, 10 Dec 2019 17:30:18 -0500
-Message-Id: <20191210223035.14270-74-sashal@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 90/91] perf intel-bts: Does not support AUX area sampling
+Date:   Tue, 10 Dec 2019 17:30:34 -0500
+Message-Id: <20191210223035.14270-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,67 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lianbo Jiang <lijiang@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
+[ Upstream commit 32a1ece4bdbde24734ab16484bad7316f03fc42d ]
 
-Add a forward declaration of struct kimage to the crash.h header because
-future changes will invoke a crash-specific function from the realmode
-init path and the compiler will complain otherwise like this:
+Add an error message because Intel BTS does not support AUX area
+sampling.
 
-  In file included from arch/x86/realmode/init.c:11:
-  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      5 | int crash_load_segments(struct kimage *image);
-        |                                ^~~~~~
-  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      6 | int crash_copy_backup_region(struct kimage *image);
-        |                                     ^~~~~~
-  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
-   parameter list will not be visible outside of this definition or declaration
-      7 | int crash_setup_memmap_entries(struct kimage *image,
-        |
-
- [ bp: Rewrite the commit message. ]
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: bhe@redhat.com
-Cc: d.hatayama@fujitsu.com
-Cc: dhowells@redhat.com
-Cc: dyoung@redhat.com
-Cc: ebiederm@xmission.com
-Cc: horms@verge.net.au
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jürgen Gross <jgross@suse.com>
-Cc: kexec@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: vgoyal@redhat.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
-Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191115124225.5247-16-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/crash.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/arch/x86/util/auxtrace.c  | 2 ++
+ tools/perf/arch/x86/util/intel-bts.c | 5 +++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index f498411f2500b..1b15304dd0980 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -1,6 +1,8 @@
- #ifndef _ASM_X86_CRASH_H
- #define _ASM_X86_CRASH_H
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index cc1d865e31f1b..429a0b04d7374 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -35,6 +35,8 @@ struct auxtrace_record *auxtrace_record__init_intel(struct perf_evlist *evlist,
  
-+struct kimage;
+ 	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+ 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
++	if (intel_bts_pmu)
++		intel_bts_pmu->auxtrace = true;
+ 
+ 	if (evlist) {
+ 		evlist__for_each_entry(evlist, evsel) {
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 5132775a044fd..400bb1a52d04a 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -121,6 +121,11 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
+ 	const struct cpu_map *cpus = evlist->cpus;
+ 	bool privileged = geteuid() == 0 || perf_event_paranoid() < 0;
+ 
++	if (opts->auxtrace_sample_mode) {
++		pr_err("Intel BTS does not support AUX area sampling\n");
++		return -EINVAL;
++	}
 +
- int crash_load_segments(struct kimage *image);
- int crash_copy_backup_region(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
+ 	btsr->evlist = evlist;
+ 	btsr->snapshot_mode = opts->auxtrace_snapshot_mode;
+ 
 -- 
 2.20.1
 
