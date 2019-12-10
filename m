@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D25C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908CBC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AEC20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C0722B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012422;
-	bh=8oN66QYS45+wKwaEuxdVg+6RSs3NE0LIegUGdt3GX5E=;
+	s=default; t=1576012424;
+	bh=Xs7yX8XN3cClFKSQ/v9OvSCmk4+zbt45uRVVg1xDQC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nfXNEDt9FhoStEpO0yszOIsLLJpVMt+uWi6K970DfOGUaMS9MTASQP4F3sN/tbHWD
-	 sXGZpgsW8C9M7/vlkJ7yhqFN8bBv1+FaX43GWqS1FZIPFzNF164c+6ZrHWgBRkoPvd
-	 OXmssaCwDxy3cLDTnP+qL0p785h8CFJNrg1vwPhg=
+	b=r7KQOrhx6kDSfT76G61b+2YSrWFXsX7IYCm0ZHn4QLG0SXUlOwOnN5PVz/yL+chEG
+	 unAutRjV0T3nPeSouEeBf/FUCEbqSx7wbCudcQslLnIbPp8yOQ6seZxZBSZP1StXAK
+	 ULCCc0mZFac6pafnC+EW4UoNUcpFoyQwCVa6r8W8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfLJVNl (ORCPT
+        id S1726522AbfLJVNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39760 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbfLJVN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:29 -0500
+        id S1729351AbfLJVNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D84D20828;
-        Tue, 10 Dec 2019 21:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F07E214AF;
+        Tue, 10 Dec 2019 21:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012408;
-        bh=8oN66QYS45+wKwaEuxdVg+6RSs3NE0LIegUGdt3GX5E=;
+        s=default; t=1576012410;
+        bh=Xs7yX8XN3cClFKSQ/v9OvSCmk4+zbt45uRVVg1xDQC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rttWNYHguXZfVMkUXT+U0UJyzyFxmjreNCBrQ8KpfurHbn/sEWw6deygKgYNz3QSX
-         Gyv0dze9o0g5bdIrgaVPzabd9P6PSalnHCkFoY/cN1Ujd55EI33qbSgtVzJMvz9JQK
-         uj2KKYP61WflupGAk6BTHFf/9NECzFv+VqRdb6cc=
+        b=SBwr9syAE4YoyVwMu8EywoYDCFZikKeqw0oxswlELOG/tNzlKr2348ZBDZ1hoYVgR
+         APWUZtZH8ARZsQc4JCJWCeusT1GYQac3fZyjkNEE2QPVMFoSMfqKVT6GBf5itPat2/
+         B59YS4Pnu8FHQTrIjj/MkPdv7S3ML6Y5OUixO+CQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: [PATCH AUTOSEL 5.4 326/350] bpf: Switch bpf_map ref counter to atomic64_t so bpf_map_inc() never fails
-Date:   Tue, 10 Dec 2019 16:07:11 -0500
-Message-Id: <20191210210735.9077-287-sashal@kernel.org>
+Cc:     Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 328/350] debugfs: Fix !DEBUG_FS debugfs_create_automount
+Date:   Tue, 10 Dec 2019 16:07:13 -0500
+Message-Id: <20191210210735.9077-289-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,373 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Kusanagi Kouichi <slash@ac.auone-net.jp>
 
-[ Upstream commit 1e0bd5a091e5d9e0f1d5b0e6329b87bb1792f784 ]
+[ Upstream commit 4250b047039d324e0ff65267c8beb5bad5052a86 ]
 
-92117d8443bc ("bpf: fix refcnt overflow") turned refcounting of bpf_map into
-potentially failing operation, when refcount reaches BPF_MAX_REFCNT limit
-(32k). Due to using 32-bit counter, it's possible in practice to overflow
-refcounter and make it wrap around to 0, causing erroneous map free, while
-there are still references to it, causing use-after-free problems.
+If DEBUG_FS=n, compile fails with the following error:
 
-But having a failing refcounting operations are problematic in some cases. One
-example is mmap() interface. After establishing initial memory-mapping, user
-is allowed to arbitrarily map/remap/unmap parts of mapped memory, arbitrarily
-splitting it into multiple non-contiguous regions. All this happening without
-any control from the users of mmap subsystem. Rather mmap subsystem sends
-notifications to original creator of memory mapping through open/close
-callbacks, which are optionally specified during initial memory mapping
-creation. These callbacks are used to maintain accurate refcount for bpf_map
-(see next patch in this series). The problem is that open() callback is not
-supposed to fail, because memory-mapped resource is set up and properly
-referenced. This is posing a problem for using memory-mapping with BPF maps.
+kernel/trace/trace.c: In function 'tracing_init_dentry':
+kernel/trace/trace.c:8658:9: error: passing argument 3 of 'debugfs_create_automount' from incompatible pointer type [-Werror=incompatible-pointer-types]
+ 8658 |         trace_automount, NULL);
+      |         ^~~~~~~~~~~~~~~
+      |         |
+      |         struct vfsmount * (*)(struct dentry *, void *)
+In file included from kernel/trace/trace.c:24:
+./include/linux/debugfs.h:206:25: note: expected 'struct vfsmount * (*)(void *)' but argument is of type 'struct vfsmount * (*)(struct dentry *, void *)'
+  206 |      struct vfsmount *(*f)(void *),
+      |      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
 
-One solution to this is to maintain separate refcount for just memory-mappings
-and do single bpf_map_inc/bpf_map_put when it goes from/to zero, respectively.
-There are similar use cases in current work on tcp-bpf, necessitating extra
-counter as well. This seems like a rather unfortunate and ugly solution that
-doesn't scale well to various new use cases.
-
-Another approach to solve this is to use non-failing refcount_t type, which
-uses 32-bit counter internally, but, once reaching overflow state at UINT_MAX,
-stays there. This utlimately causes memory leak, but prevents use after free.
-
-But given refcounting is not the most performance-critical operation with BPF
-maps (it's not used from running BPF program code), we can also just switch to
-64-bit counter that can't overflow in practice, potentially disadvantaging
-32-bit platforms a tiny bit. This simplifies semantics and allows above
-described scenarios to not worry about failing refcount increment operation.
-
-In terms of struct bpf_map size, we are still good and use the same amount of
-space:
-
-BEFORE (3 cache lines, 8 bytes of padding at the end):
-struct bpf_map {
-	const struct bpf_map_ops  * ops __attribute__((__aligned__(64))); /*     0     8 */
-	struct bpf_map *           inner_map_meta;       /*     8     8 */
-	void *                     security;             /*    16     8 */
-	enum bpf_map_type  map_type;                     /*    24     4 */
-	u32                        key_size;             /*    28     4 */
-	u32                        value_size;           /*    32     4 */
-	u32                        max_entries;          /*    36     4 */
-	u32                        map_flags;            /*    40     4 */
-	int                        spin_lock_off;        /*    44     4 */
-	u32                        id;                   /*    48     4 */
-	int                        numa_node;            /*    52     4 */
-	u32                        btf_key_type_id;      /*    56     4 */
-	u32                        btf_value_type_id;    /*    60     4 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct btf *               btf;                  /*    64     8 */
-	struct bpf_map_memory memory;                    /*    72    16 */
-	bool                       unpriv_array;         /*    88     1 */
-	bool                       frozen;               /*    89     1 */
-
-	/* XXX 38 bytes hole, try to pack */
-
-	/* --- cacheline 2 boundary (128 bytes) --- */
-	atomic_t                   refcnt __attribute__((__aligned__(64))); /*   128     4 */
-	atomic_t                   usercnt;              /*   132     4 */
-	struct work_struct work;                         /*   136    32 */
-	char                       name[16];             /*   168    16 */
-
-	/* size: 192, cachelines: 3, members: 21 */
-	/* sum members: 146, holes: 1, sum holes: 38 */
-	/* padding: 8 */
-	/* forced alignments: 2, forced holes: 1, sum forced holes: 38 */
-} __attribute__((__aligned__(64)));
-
-AFTER (same 3 cache lines, no extra padding now):
-struct bpf_map {
-	const struct bpf_map_ops  * ops __attribute__((__aligned__(64))); /*     0     8 */
-	struct bpf_map *           inner_map_meta;       /*     8     8 */
-	void *                     security;             /*    16     8 */
-	enum bpf_map_type  map_type;                     /*    24     4 */
-	u32                        key_size;             /*    28     4 */
-	u32                        value_size;           /*    32     4 */
-	u32                        max_entries;          /*    36     4 */
-	u32                        map_flags;            /*    40     4 */
-	int                        spin_lock_off;        /*    44     4 */
-	u32                        id;                   /*    48     4 */
-	int                        numa_node;            /*    52     4 */
-	u32                        btf_key_type_id;      /*    56     4 */
-	u32                        btf_value_type_id;    /*    60     4 */
-	/* --- cacheline 1 boundary (64 bytes) --- */
-	struct btf *               btf;                  /*    64     8 */
-	struct bpf_map_memory memory;                    /*    72    16 */
-	bool                       unpriv_array;         /*    88     1 */
-	bool                       frozen;               /*    89     1 */
-
-	/* XXX 38 bytes hole, try to pack */
-
-	/* --- cacheline 2 boundary (128 bytes) --- */
-	atomic64_t                 refcnt __attribute__((__aligned__(64))); /*   128     8 */
-	atomic64_t                 usercnt;              /*   136     8 */
-	struct work_struct work;                         /*   144    32 */
-	char                       name[16];             /*   176    16 */
-
-	/* size: 192, cachelines: 3, members: 21 */
-	/* sum members: 154, holes: 1, sum holes: 38 */
-	/* forced alignments: 2, forced holes: 1, sum forced holes: 38 */
-} __attribute__((__aligned__(64)));
-
-This patch, while modifying all users of bpf_map_inc, also cleans up its
-interface to match bpf_map_put with separate operations for bpf_map_inc and
-bpf_map_inc_with_uref (to match bpf_map_put and bpf_map_put_with_uref,
-respectively). Also, given there are no users of bpf_map_inc_not_zero
-specifying uref=true, remove uref flag and default to uref=false internally.
-
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20191117172806.2195367-2-andriin@fb.com
+Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
+Link: https://lore.kernel.org/r/20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/netronome/nfp/bpf/offload.c  |  4 +-
- include/linux/bpf.h                           | 10 ++--
- kernel/bpf/inode.c                            |  2 +-
- kernel/bpf/map_in_map.c                       |  2 +-
- kernel/bpf/syscall.c                          | 51 ++++++++-----------
- kernel/bpf/verifier.c                         |  6 +--
- kernel/bpf/xskmap.c                           |  6 +--
- net/core/bpf_sk_storage.c                     |  2 +-
- 8 files changed, 34 insertions(+), 49 deletions(-)
+ include/linux/debugfs.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/bpf/offload.c b/drivers/net/ethernet/netronome/nfp/bpf/offload.c
-index 88fab6a82acff..06927ba5a3ae0 100644
---- a/drivers/net/ethernet/netronome/nfp/bpf/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/bpf/offload.c
-@@ -46,9 +46,7 @@ nfp_map_ptr_record(struct nfp_app_bpf *bpf, struct nfp_prog *nfp_prog,
- 	/* Grab a single ref to the map for our record.  The prog destroy ndo
- 	 * happens after free_used_maps().
- 	 */
--	map = bpf_map_inc(map, false);
--	if (IS_ERR(map))
--		return PTR_ERR(map);
-+	bpf_map_inc(map);
- 
- 	record = kmalloc(sizeof(*record), GFP_KERNEL);
- 	if (!record) {
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 3bf3835d0e866..78d5233b4f8ec 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -99,8 +99,8 @@ struct bpf_map {
- 	/* The 3rd and 4th cacheline with misc members to avoid false sharing
- 	 * particularly with refcounting.
- 	 */
--	atomic_t refcnt ____cacheline_aligned;
--	atomic_t usercnt;
-+	atomic64_t refcnt ____cacheline_aligned;
-+	atomic64_t usercnt;
- 	struct work_struct work;
- 	char name[BPF_OBJ_NAME_LEN];
- };
-@@ -649,9 +649,9 @@ void bpf_map_free_id(struct bpf_map *map, bool do_idr_lock);
- 
- struct bpf_map *bpf_map_get_with_uref(u32 ufd);
- struct bpf_map *__bpf_map_get(struct fd f);
--struct bpf_map * __must_check bpf_map_inc(struct bpf_map *map, bool uref);
--struct bpf_map * __must_check bpf_map_inc_not_zero(struct bpf_map *map,
--						   bool uref);
-+void bpf_map_inc(struct bpf_map *map);
-+void bpf_map_inc_with_uref(struct bpf_map *map);
-+struct bpf_map * __must_check bpf_map_inc_not_zero(struct bpf_map *map);
- void bpf_map_put_with_uref(struct bpf_map *map);
- void bpf_map_put(struct bpf_map *map);
- int bpf_map_charge_memlock(struct bpf_map *map, u32 pages);
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index a70f7209cda3f..2f17f24258dc8 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -34,7 +34,7 @@ static void *bpf_any_get(void *raw, enum bpf_type type)
- 		raw = bpf_prog_inc(raw);
- 		break;
- 	case BPF_TYPE_MAP:
--		raw = bpf_map_inc(raw, true);
-+		bpf_map_inc_with_uref(raw);
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-diff --git a/kernel/bpf/map_in_map.c b/kernel/bpf/map_in_map.c
-index fab4fb134547d..4cbe987be35b4 100644
---- a/kernel/bpf/map_in_map.c
-+++ b/kernel/bpf/map_in_map.c
-@@ -98,7 +98,7 @@ void *bpf_map_fd_get_ptr(struct bpf_map *map,
- 		return inner_map;
- 
- 	if (bpf_map_meta_equal(map->inner_map_meta, inner_map))
--		inner_map = bpf_map_inc(inner_map, false);
-+		bpf_map_inc(inner_map);
- 	else
- 		inner_map = ERR_PTR(-EINVAL);
- 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index ace1cfaa24b6b..c8668ac70c982 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -313,7 +313,7 @@ static void bpf_map_free_deferred(struct work_struct *work)
- 
- static void bpf_map_put_uref(struct bpf_map *map)
- {
--	if (atomic_dec_and_test(&map->usercnt)) {
-+	if (atomic64_dec_and_test(&map->usercnt)) {
- 		if (map->ops->map_release_uref)
- 			map->ops->map_release_uref(map);
- 	}
-@@ -324,7 +324,7 @@ static void bpf_map_put_uref(struct bpf_map *map)
-  */
- static void __bpf_map_put(struct bpf_map *map, bool do_idr_lock)
- {
--	if (atomic_dec_and_test(&map->refcnt)) {
-+	if (atomic64_dec_and_test(&map->refcnt)) {
- 		/* bpf_map_free_id() must be called first */
- 		bpf_map_free_id(map, do_idr_lock);
- 		btf_put(map->btf);
-@@ -577,8 +577,8 @@ static int map_create(union bpf_attr *attr)
- 	if (err)
- 		goto free_map;
- 
--	atomic_set(&map->refcnt, 1);
--	atomic_set(&map->usercnt, 1);
-+	atomic64_set(&map->refcnt, 1);
-+	atomic64_set(&map->usercnt, 1);
- 
- 	if (attr->btf_key_type_id || attr->btf_value_type_id) {
- 		struct btf *btf;
-@@ -655,21 +655,19 @@ struct bpf_map *__bpf_map_get(struct fd f)
- 	return f.file->private_data;
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index 58424eb3b3291..798f0b9b43aee 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -54,6 +54,8 @@ static const struct file_operations __fops = {				\
+ 	.llseek  = no_llseek,						\
  }
  
--/* prog's and map's refcnt limit */
--#define BPF_MAX_REFCNT 32768
--
--struct bpf_map *bpf_map_inc(struct bpf_map *map, bool uref)
-+void bpf_map_inc(struct bpf_map *map)
- {
--	if (atomic_inc_return(&map->refcnt) > BPF_MAX_REFCNT) {
--		atomic_dec(&map->refcnt);
--		return ERR_PTR(-EBUSY);
--	}
--	if (uref)
--		atomic_inc(&map->usercnt);
--	return map;
-+	atomic64_inc(&map->refcnt);
- }
- EXPORT_SYMBOL_GPL(bpf_map_inc);
- 
-+void bpf_map_inc_with_uref(struct bpf_map *map)
-+{
-+	atomic64_inc(&map->refcnt);
-+	atomic64_inc(&map->usercnt);
-+}
-+EXPORT_SYMBOL_GPL(bpf_map_inc_with_uref);
++typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
 +
- struct bpf_map *bpf_map_get_with_uref(u32 ufd)
+ #if defined(CONFIG_DEBUG_FS)
+ 
+ struct dentry *debugfs_lookup(const char *name, struct dentry *parent);
+@@ -75,7 +77,6 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
+ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+ 				      const char *dest);
+ 
+-typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
+ struct dentry *debugfs_create_automount(const char *name,
+ 					struct dentry *parent,
+ 					debugfs_automount_t f,
+@@ -203,7 +204,7 @@ static inline struct dentry *debugfs_create_symlink(const char *name,
+ 
+ static inline struct dentry *debugfs_create_automount(const char *name,
+ 					struct dentry *parent,
+-					struct vfsmount *(*f)(void *),
++					debugfs_automount_t f,
+ 					void *data)
  {
- 	struct fd f = fdget(ufd);
-@@ -679,38 +677,30 @@ struct bpf_map *bpf_map_get_with_uref(u32 ufd)
- 	if (IS_ERR(map))
- 		return map;
- 
--	map = bpf_map_inc(map, true);
-+	bpf_map_inc_with_uref(map);
- 	fdput(f);
- 
- 	return map;
- }
- 
- /* map_idr_lock should have been held */
--static struct bpf_map *__bpf_map_inc_not_zero(struct bpf_map *map,
--					      bool uref)
-+static struct bpf_map *__bpf_map_inc_not_zero(struct bpf_map *map, bool uref)
- {
- 	int refold;
- 
--	refold = atomic_fetch_add_unless(&map->refcnt, 1, 0);
--
--	if (refold >= BPF_MAX_REFCNT) {
--		__bpf_map_put(map, false);
--		return ERR_PTR(-EBUSY);
--	}
--
-+	refold = atomic64_fetch_add_unless(&map->refcnt, 1, 0);
- 	if (!refold)
- 		return ERR_PTR(-ENOENT);
--
- 	if (uref)
--		atomic_inc(&map->usercnt);
-+		atomic64_inc(&map->usercnt);
- 
- 	return map;
- }
- 
--struct bpf_map *bpf_map_inc_not_zero(struct bpf_map *map, bool uref)
-+struct bpf_map *bpf_map_inc_not_zero(struct bpf_map *map)
- {
- 	spin_lock_bh(&map_idr_lock);
--	map = __bpf_map_inc_not_zero(map, uref);
-+	map = __bpf_map_inc_not_zero(map, false);
- 	spin_unlock_bh(&map_idr_lock);
- 
- 	return map;
-@@ -1456,6 +1446,9 @@ static struct bpf_prog *____bpf_prog_get(struct fd f)
- 	return f.file->private_data;
- }
- 
-+/* prog's refcnt limit */
-+#define BPF_MAX_REFCNT 32768
-+
- struct bpf_prog *bpf_prog_add(struct bpf_prog *prog, int i)
- {
- 	if (atomic_add_return(i, &prog->aux->refcnt) > BPF_MAX_REFCNT) {
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ffc3e53f53009..87181cd5bafd7 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -8008,11 +8008,7 @@ static int replace_map_fd_with_map_ptr(struct bpf_verifier_env *env)
- 			 * will be used by the valid program until it's unloaded
- 			 * and all maps are released in free_used_maps()
- 			 */
--			map = bpf_map_inc(map, false);
--			if (IS_ERR(map)) {
--				fdput(f);
--				return PTR_ERR(map);
--			}
-+			bpf_map_inc(map);
- 
- 			aux->map_index = env->used_map_cnt;
- 			env->used_maps[env->used_map_cnt++] = map;
-diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
-index 82a1ffe15dfaa..08dccf733991c 100644
---- a/kernel/bpf/xskmap.c
-+++ b/kernel/bpf/xskmap.c
-@@ -18,10 +18,8 @@ struct xsk_map {
- 
- int xsk_map_inc(struct xsk_map *map)
- {
--	struct bpf_map *m = &map->map;
--
--	m = bpf_map_inc(m, false);
--	return PTR_ERR_OR_ZERO(m);
-+	bpf_map_inc(&map->map);
-+	return 0;
- }
- 
- void xsk_map_put(struct xsk_map *map)
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index da5639a5bd3b9..458be6b3eda97 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -798,7 +798,7 @@ int bpf_sk_storage_clone(const struct sock *sk, struct sock *newsk)
- 		 * Try to grab map refcnt to make sure that it's still
- 		 * alive and prevent concurrent removal.
- 		 */
--		map = bpf_map_inc_not_zero(&smap->map, false);
-+		map = bpf_map_inc_not_zero(&smap->map);
- 		if (IS_ERR(map))
- 			continue;
- 
+ 	return ERR_PTR(-ENODEV);
 -- 
 2.20.1
 
