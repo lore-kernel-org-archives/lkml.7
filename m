@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590FC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61275206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F05D206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013083;
-	bh=WvEFyyi/O+WRj6bp4PbOSJv1s0e0tDsQyd8Jf5h5W+U=;
+	s=default; t=1576013088;
+	bh=TaILOQjdQJF4e3ozYjxKmHMaISIlc5tWIgaU9YIpieE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ekc49TKPB0obJU+NHgNPqXwAFr8TZ/CcFE/gSKImdqD5kdTVbhK/faf96j4W8Dmk+
-	 lk2+sLBAsO2BYdiQuHJ6QB8oDxIjr3E+u93qz1Yl04Bo1BPHvbTNflZYWkXUw42Xq0
-	 grtDnTcqHZAnetDHBqWIQHUZgv/3gQ376RDEdD64=
+	b=gZ2oz/82ylXhnq767pXRzncpOhto7NEEXNULvKs+nkk87gbsr56Txt5mx17Myf+rU
+	 bUd5CTvn8Xr+B7VqRyT7vx3EOFnQosT5XnHuamj/6veK792IWCmBNS/jwJfCFUMcEN
+	 5qrDOMPJzJHGMt/puvmBJvVcbbmxKxYuLfaVIRMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfLJVYm (ORCPT
+        id S1728608AbfLJVKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:24:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfLJVKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:49 -0500
+        id S1728561AbfLJVKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5AC324697;
-        Tue, 10 Dec 2019 21:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2804246B2;
+        Tue, 10 Dec 2019 21:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012248;
-        bh=WvEFyyi/O+WRj6bp4PbOSJv1s0e0tDsQyd8Jf5h5W+U=;
+        s=default; t=1576012239;
+        bh=TaILOQjdQJF4e3ozYjxKmHMaISIlc5tWIgaU9YIpieE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fp0Cif0+NghVk0j7oUceQblI5x8D5PtUkMAbeRgUCKujqBWKqA8MrmekmNSQy03Rc
-         GSN2bxJ9tcBwv9QKquSW63BoLHSChdj0+BJ3Nr+b6gWeZfuop0Y4Gid9SZ8Kl/knUd
-         qttN/RIORF9g3T+4OdPGf6cL7jiuvju/PEDtG//g=
+        b=MFE/xrpsRcxCwz/b9kXRh15UY6t9s5QS7qNvICkp0zr8Esp/O6p9cGaNlfFY58gJd
+         24hFNc9hKHBVenCxDllTmlYmrV6zetMjpQm9wZ6wLAyRsC/f6mYnEeVPMMuf8RxG+B
+         xwotyeWtHXjQXWo5+M88+YGiQC3enw/Z+Sogt5dY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 196/350] spi: sifive: disable clk when probe fails and remove
-Date:   Tue, 10 Dec 2019 16:05:01 -0500
-Message-Id: <20191210210735.9077-157-sashal@kernel.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        linux-ide@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 188/350] ata: sata_mv, avoid trigerrable BUG_ON
+Date:   Tue, 10 Dec 2019 16:04:53 -0500
+Message-Id: <20191210210735.9077-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -61,76 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-[ Upstream commit a725272bda77e61c1b4de85c7b0c875b2ea639b6 ]
+[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
 
-The driver forgets to disable and unprepare clk when probe fails and
-remove.
-Add the calls to fix the problem.
+There are several reports that the BUG_ON on unsupported command in
+mv_qc_prep can be triggered under some circumstances:
+https://bugzilla.suse.com/show_bug.cgi?id=1110252
+https://serverfault.com/questions/888897/raid-problems-after-power-outage
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
+https://bugs.centos.org/view.php?id=14998
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
-Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Let sata_mv handle the failure gracefully: warn about that incl. the
+failed command number and return an AC_ERR_INVALID error. We can do that
+now thanks to the previous patch.
+
+Remove also the long-standing FIXME.
+
+[v2] use %.2x as commands are defined as hexa.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-ide@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-sifive.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/ata/sata_mv.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
-index 35254bdc42c48..f7c1e20432e07 100644
---- a/drivers/spi/spi-sifive.c
-+++ b/drivers/spi/spi-sifive.c
-@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	if (!cs_bits) {
- 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
+diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+index ad385a113391e..a2b56c882081e 100644
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -2098,12 +2098,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
+ 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
+ 		 * of which are defined/used by Linux.  If we get here, this
+ 		 * driver needs work.
+-		 *
+-		 * FIXME: modify libata to give qc_prep a return value and
+-		 * return error here.
+ 		 */
+-		BUG_ON(tf->command);
+-		break;
++		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
++				tf->command);
++		return AC_ERR_INVALID;
  	}
- 
- 	num_cs = ilog2(cs_bits) + 1;
- 	if (num_cs > SIFIVE_SPI_MAX_CS) {
- 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	/* Define our master */
-@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 			       dev_name(&pdev->dev), spi);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
-@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "spi_register_master failed\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	return 0;
- 
-+disable_clk:
-+	clk_disable_unprepare(spi->clk);
- put_master:
- 	spi_master_put(master);
- 
-@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
- 
- 	/* Disable all the interrupts just in case */
- 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
-+	clk_disable_unprepare(spi->clk);
- 
- 	return 0;
- }
+ 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
+ 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
 -- 
 2.20.1
 
