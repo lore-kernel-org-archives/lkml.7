@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BFAC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4189C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B9D820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74152465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575949346;
-	bh=kcnvqzPm19XI3s3B5/yd7FRqHJyep2utfI7AJtFZ7oo=;
+	s=default; t=1575949348;
+	bh=FYSuXrBnGcX5rNJrafNsBGF9FbKeaRXFZRr6RrKW6t4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rf3wcJaj8rfLo2bVUo0U01uWdLhInzf/lEneudyhiBAd7AeBUSILMMlg5Eb1BxO8g
-	 BUgMvRLZIv7v+UBqYX0MyshERlvnbPoqj7cIdXiaDqt+PdN9/hoiddcpO2cnQQW5rA
-	 QYDDuXZwFekmVNUhqJoxWNZ4Mt3Zk+CzHXH6oKsA=
+	b=VKtn37qgn6v39wjQuLdH8UkJ1uwBa5pYleOQkwNlm2qbWk1744Xl8YMCtD5E37/z7
+	 Zi9dwF3MnNCv5QaBKwDakPQzKvUy1YQmgHrVcOgDLU0/dtQt5Vq1mt84+OtJ/OFsn5
+	 gxlrXXjJKHO8XQetOI3IwZMVpgX5R90zF/E4qn3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfLJDmZ (ORCPT
+        id S1727131AbfLJDm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:42:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60702 "EHLO mail.kernel.org"
+        Mon, 9 Dec 2019 22:42:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfLJDmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:42:22 -0500
+        id S1726890AbfLJDmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 22:42:24 -0500
 Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDFF20828;
-        Tue, 10 Dec 2019 03:42:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372AF207FF;
+        Tue, 10 Dec 2019 03:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575949341;
-        bh=kcnvqzPm19XI3s3B5/yd7FRqHJyep2utfI7AJtFZ7oo=;
+        s=default; t=1575949343;
+        bh=FYSuXrBnGcX5rNJrafNsBGF9FbKeaRXFZRr6RrKW6t4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PV17zJpMeUMcgsqGJZEYa7v+dK1p35WPEshNMPLuRqDIfD851ptRInMP44S3Rf+A3
-         SysiulIOt+USsnO9cV9nce9k5FPujO+9KKQ96olPi3W2FPajuWPZzoTEENmkfYfNFK
-         +J8+bOx7n16DpHxjRBXCVFnC1hCaEyXfBltLOZoQ=
+        b=cw663crx5NaY+PzwY4MC7sz+s5ZFgWfb/RAMWZEtGNCNgBWctYSdONb52Ez50n07q
+         xkloszOeP00Lb22Uw4PzXOtuvX+B3q31kk/NcwDA1pniB81UoA0CAe12+13FA75DDs
+         ai0yNqSRwr4BQveebCbXX/5rH3JujGAG9YYsQ2f0=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/12] rcutorture: Dispense with Dracut for initrd creation
-Date:   Mon,  9 Dec 2019 19:42:07 -0800
-Message-Id: <20191210034217.405-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/12] rcutorture: Add worst-case call_rcu() forward-progress results
+Date:   Mon,  9 Dec 2019 19:42:10 -0800
+Message-Id: <20191210034217.405-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20191210034119.GA32711@paulmck-ThinkPad-P72>
 References: <20191210034119.GA32711@paulmck-ThinkPad-P72>
@@ -61,82 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The dracut scripting does not work on all platforms, and there are no
-known failures from the init binary based on the statically linked C
-program.  This commit therefore removes the dracut scripting so that the
-statically linked C program is always used to create the init "script".
+This commit adds the worst-case results from any call_rcu()
+forward-progress tests to the rcutorture test-summary output.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/mkinitrd.sh | 55 ++--------------------
- 1 file changed, 3 insertions(+), 52 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-recheck-rcu.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/mkinitrd.sh b/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-index 6fa9bd1..38e424d 100755
---- a/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-+++ b/tools/testing/selftests/rcutorture/bin/mkinitrd.sh
-@@ -20,58 +20,9 @@ if [ -s "$D/initrd/init" ]; then
-     exit 0
- fi
- 
--T=${TMPDIR-/tmp}/mkinitrd.sh.$$
--trap 'rm -rf $T' 0 2
--mkdir $T
--
--cat > $T/init << '__EOF___'
--#!/bin/sh
--# Run in userspace a few milliseconds every second.  This helps to
--# exercise the NO_HZ_FULL portions of RCU.  The 192 instances of "a" was
--# empirically shown to give a nice multi-millisecond burst of user-mode
--# execution on a 2GHz CPU, as desired.  Modern CPUs will vary from a
--# couple of milliseconds up to perhaps 100 milliseconds, which is an
--# acceptable range.
--#
--# Why not calibrate an exact delay?  Because within this initrd, we
--# are restricted to Bourne-shell builtins, which as far as I know do not
--# provide any means of obtaining a fine-grained timestamp.
--
--a4="a a a a"
--a16="$a4 $a4 $a4 $a4"
--a64="$a16 $a16 $a16 $a16"
--a192="$a64 $a64 $a64"
--while :
--do
--	q=
--	for i in $a192
--	do
--		q="$q $i"
--	done
--	sleep 1
--done
--__EOF___
--
--# Try using dracut to create initrd
--if command -v dracut >/dev/null 2>&1
--then
--	echo Creating $D/initrd using dracut.
--	# Filesystem creation
--	dracut --force --no-hostonly --no-hostonly-cmdline --module "base" $T/initramfs.img
--	cd $D
--	mkdir -p initrd
--	cd initrd
--	zcat $T/initramfs.img | cpio -id
--	cp $T/init init
--	chmod +x init
--	echo Done creating $D/initrd using dracut
--	exit 0
--fi
--
--# No dracut, so create a C-language initrd/init program and statically
--# link it.  This results in a very small initrd, but might be a bit less
--# future-proof than dracut.
--echo "Could not find dracut, attempting C initrd"
-+# Create a C-language initrd/init infinite-loop program and statically
-+# link it.  This results in a very small initrd.
-+echo "Creating a statically linked C-language initrd"
- cd $D
- mkdir -p initrd
- cd initrd
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcu.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcu.sh
+index 2a7f3f4..9d9a416 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcu.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcu.sh
+@@ -25,6 +25,7 @@ stopstate="`grep 'End-test grace-period state: g' $i/console.log 2> /dev/null |
+ 	    tail -1 | sed -e 's/^\[[ 0-9.]*] //' |
+ 	    awk '{ print \"[\" $1 \" \" $5 \" \" $6 \" \" $7 \"]\"; }' |
+ 	    tr -d '\012\015'`"
++fwdprog="`grep 'rcu_torture_fwd_prog_cr Duration' $i/console.log 2> /dev/null | sed -e 's/^\[[^]]*] //' | sort -k15nr | head -1 | awk '{ print $14 " " $15 }'`"
+ if test -z "$ngps"
+ then
+ 	echo "$configfile ------- " $stopstate
+@@ -39,7 +40,7 @@ else
+ 			BEGIN { print ngps / dur }' < /dev/null`
+ 		title="$title ($ngpsps/s)"
+ 	fi
+-	echo $title $stopstate
++	echo $title $stopstate $fwdprog
+ 	nclosecalls=`grep --binary-files=text 'torture: Reader Batch' $i/console.log | tail -1 | awk '{for (i=NF-8;i<=NF;i++) sum+=$i; } END {print sum}'`
+ 	if test -z "$nclosecalls"
+ 	then
 -- 
 2.9.5
 
