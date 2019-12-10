@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65734C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757AAC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DF8205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478CC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014303;
-	bh=fb4PJ8U/D/CVP8XUSCaluP/R05IDtDuzZIo04hwjT8Y=;
+	s=default; t=1576014308;
+	bh=0Dmtczs0XjVQrsFhPOcyo/bvCg+GO7vOztYFq0odL50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=doHbywIv+4S3RLrJNC/2mhLSxCT0XVydaxH3hR8ieJYiQi850Z/cJXRhYMwyd+FPv
-	 oQvpwiX3uZa35iCTlKfIKrvBS67DFBDvnl/XMYWpprD0OQX+r4QGam3Q9cupCJttsq
-	 m8VqvjU5rvzO/FIHLvyVqTUEC3Uy0Hzwk/laMGsU=
+	b=BB9DRtGxui7sqQd/MH4drbpG/NnSdrz+Dn3QVLerHBL3G+79i5uZKKWxIYlPwVuDv
+	 7BzGjgKxH5wa/NYuD0qjY6OfGDxNdzhjF9gVdVki+5edaztA3/Op3B1250VryB12eD
+	 V2FnshvWD46lRMusPSAZHJbg1XgripdSQB+StBH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfLJVdH (ORCPT
+        id S1728558AbfLJVpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:33:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbfLJVdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:01 -0500
+        id S1729602AbfLJVdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91EB2207FF;
-        Tue, 10 Dec 2019 21:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E3022073B;
+        Tue, 10 Dec 2019 21:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013581;
-        bh=fb4PJ8U/D/CVP8XUSCaluP/R05IDtDuzZIo04hwjT8Y=;
+        s=default; t=1576013586;
+        bh=0Dmtczs0XjVQrsFhPOcyo/bvCg+GO7vOztYFq0odL50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnUFdA5XQ3SVdr0fDthpNBRKxEG0fQ0A7Uy8QX9tpBQu35jvlOuGU84JvsX8prUS8
-         rdVsB8Foqg/lybjF61E5QRuiQKushyq0Kbl2esAwb6dEcTWpuE5zTCm9PyzE99Tr/L
-         ZnP5wmxOj1zV9xCYCr8EEVFQ2yzN7vZR/U3Y+sCY=
+        b=QoxN87mJYcHLRv4GyDircn4f1jM0qBleI7WckkuQG2hbAmzFTcXgZYGSwfHvDmSt6
+         zuDZ6IyhlU+P9iKd960dinRXvJEbY/J6YSRn8cEUSA1Qyq+/waYjueVOuEwWgsrFiv
+         iF5RjlXdi2etFSRVKV8v/eikAyG7qI1XDD/UCKh8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 033/177] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
-Date:   Tue, 10 Dec 2019 16:29:57 -0500
-Message-Id: <20191210213221.11921-33-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/177] iio: proximity: sx9500: fix iio_triggered_buffer_{predisable,postenable} positions
+Date:   Tue, 10 Dec 2019 16:30:01 -0500
+Message-Id: <20191210213221.11921-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -62,58 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
+[ Upstream commit 3cfd6464fe23deb45bb688df66184b3f32fefc16 ]
 
-The DDC/CI protocol involves sending a multi-byte request to the
-display via I2C, which is typically followed by a multi-byte
-response. The internal I2C controller only allows single byte
-reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
-supported when the internal I2C controller is used. The I2C
-transfers complete without errors, however the data in the response
-is garbage. Abort transfers to/from slave address 0x37 (DDC) with
--EOPNOTSUPP, to make it evident that the communication is failing.
+The iio_triggered_buffer_predisable() should be called last, to detach the
+poll func after the devices has been suspended.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
+This change re-organizes things a bit so that the postenable & predisable
+are symmetrical. It also converts the preenable() to a postenable().
+
+Not stable material as there is no known problem with the current
+code, it's just not consistent with the form we would like all the
+IIO drivers to adopt so as to allow subsystem wide changes.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/iio/proximity/sx9500.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 5971976284bf9..fb396d550275c 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -39,6 +39,7 @@
+diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
+index ff80409e0c446..0f5c387c19819 100644
+--- a/drivers/iio/proximity/sx9500.c
++++ b/drivers/iio/proximity/sx9500.c
+@@ -678,11 +678,15 @@ static irqreturn_t sx9500_trigger_handler(int irq, void *private)
+ 	return IRQ_HANDLED;
+ }
  
- #include <media/cec-notifier.h>
+-static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
++static int sx9500_buffer_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct sx9500_data *data = iio_priv(indio_dev);
+ 	int ret = 0, i;
  
-+#define DDC_CI_ADDR		0x37
- #define DDC_SEGMENT_ADDR	0x30
- 
- #define HDMI_EDID_LEN		512
-@@ -320,6 +321,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
- 	u8 addr = msgs[0].addr;
- 	int i, ret = 0;
- 
-+	if (addr == DDC_CI_ADDR)
-+		/*
-+		 * The internal I2C controller does not support the multi-byte
-+		 * read and write operations needed for DDC/CI.
-+		 * TOFIX: Blacklist the DDC/CI address until we filter out
-+		 * unsupported I2C operations.
-+		 */
-+		return -EOPNOTSUPP;
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
 +
- 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
+ 	mutex_lock(&data->mutex);
  
- 	for (i = 0; i < num; i++) {
+ 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+@@ -699,6 +703,9 @@ static int sx9500_buffer_preenable(struct iio_dev *indio_dev)
+ 
+ 	mutex_unlock(&data->mutex);
+ 
++	if (ret)
++		iio_triggered_buffer_predisable(indio_dev);
++
+ 	return ret;
+ }
+ 
+@@ -707,8 +714,6 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct sx9500_data *data = iio_priv(indio_dev);
+ 	int ret = 0, i;
+ 
+-	iio_triggered_buffer_predisable(indio_dev);
+-
+ 	mutex_lock(&data->mutex);
+ 
+ 	for (i = 0; i < SX9500_NUM_CHANNELS; i++)
+@@ -725,12 +730,13 @@ static int sx9500_buffer_predisable(struct iio_dev *indio_dev)
+ 
+ 	mutex_unlock(&data->mutex);
+ 
++	iio_triggered_buffer_predisable(indio_dev);
++
+ 	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops sx9500_buffer_setup_ops = {
+-	.preenable = sx9500_buffer_preenable,
+-	.postenable = iio_triggered_buffer_postenable,
++	.postenable = sx9500_buffer_postenable,
+ 	.predisable = sx9500_buffer_predisable,
+ };
+ 
 -- 
 2.20.1
 
