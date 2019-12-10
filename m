@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0E1C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48BBC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F3720838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A0A20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfLJMNh (ORCPT
+        id S1727615AbfLJMNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:13:37 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51166 "EHLO
+        Tue, 10 Dec 2019 07:13:38 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57785 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727332AbfLJMNc (ORCPT
+        with ESMTP id S1727506AbfLJMNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:13:32 -0500
+        Tue, 10 Dec 2019 07:13:33 -0500
 Received: from 79.184.255.117.ipv4.supernova.orange.pl (79.184.255.117) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 2bc94e7c1cbbb6eb; Tue, 10 Dec 2019 13:13:29 +0100
+ id 13df9256bad9aa3c; Tue, 10 Dec 2019 13:13:30 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -30,9 +30,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Len Brown <len.brown@intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         Len Brown <lenb@kernel.org>
-Subject: [RFC v2][PATCH 7/9] cpuidle: Allow idle states to be disabled by default
-Date:   Tue, 10 Dec 2019 13:07:46 +0100
-Message-ID: <4082336.WN7UBzZTZ7@kreacher>
+Subject: [RFC v2][PATCH 5/9] intel_idle: Refactor intel_idle_cpuidle_driver_init()
+Date:   Tue, 10 Dec 2019 13:03:01 +0100
+Message-ID: <12822878.tX331RTXvW@kreacher>
 In-Reply-To: <35821518.IbFVMVmUy3@kreacher>
 References: <35821518.IbFVMVmUy3@kreacher>
 MIME-Version: 1.0
@@ -45,17 +45,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-In certain situations it may be useful to prevent some idle states
-from being used by default while allowing user space to enable them
-later on.
+Move the C-state verification and checks from
+intel_idle_cpuidle_driver_init() to a separate function,
+intel_idle_verify_cstate(), and make the former call it after
+checking the CPUIDLE_FLAG_UNUSABLE state flag.
 
-For this purpose, introduce a new state flag, CPUIDLE_FLAG_OFF, to
-mark idle states that should be disabled by default, make the core
-set CPUIDLE_STATE_DISABLED_BY_USER for those states at the
-initialization time and add a new state attribute in sysfs,
-"initial_status", to inform user space of the initial status of
-the given idle state ("disabled" if CPUIDLE_FLAG_OFF is set for it,
-"enabled" otherwise).
+Also combine the drv->states[] updates with the incrementation of
+drv->state_count.
+
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
@@ -63,111 +61,91 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 No changes from the previous version.
 
 ---
- Documentation/ABI/testing/sysfs-devices-system-cpu |    6 ++++++
- Documentation/admin-guide/pm/cpuidle.rst           |    3 +++
- drivers/cpuidle/cpuidle.c                          |    6 +++++-
- drivers/cpuidle/sysfs.c                            |   10 ++++++++++
- include/linux/cpuidle.h                            |    1 +
- 5 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/idle/intel_idle.c |   49 +++++++++++++++++++++++-----------------------
+ 1 file changed, 25 insertions(+), 24 deletions(-)
 
-Index: linux-pm/drivers/cpuidle/sysfs.c
+Index: linux-pm/drivers/idle/intel_idle.c
 ===================================================================
---- linux-pm.orig/drivers/cpuidle/sysfs.c
-+++ linux-pm/drivers/cpuidle/sysfs.c
-@@ -327,6 +327,14 @@ static ssize_t store_state_disable(struc
- 	return size;
+--- linux-pm.orig/drivers/idle/intel_idle.c
++++ linux-pm/drivers/idle/intel_idle.c
+@@ -944,6 +944,22 @@ static void intel_idle_s2idle(struct cpu
+ 	mwait_idle_with_hints(eax, ecx);
  }
  
-+static ssize_t show_state_initial_status(struct cpuidle_state *state,
-+					  struct cpuidle_state_usage *state_usage,
-+					  char *buf)
++static bool intel_idle_verify_cstate(unsigned int mwait_hint)
 +{
-+	return sprintf(buf, "%s\n",
-+		       state->flags & CPUIDLE_FLAG_OFF ? "disabled" : "enabled");
++	unsigned int mwait_cstate = MWAIT_HINT2CSTATE(mwait_hint) + 1;
++	unsigned int num_substates = (mwait_substates >> mwait_cstate * 4) &
++					MWAIT_SUBSTATE_MASK;
++
++	/* Ignore the C-state if there are NO sub-states in CPUID for it. */
++	if (num_substates == 0)
++		return false;
++
++	if (mwait_cstate > 2 && !boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
++		mark_tsc_unstable("TSC halts in idle states deeper than C2");
++
++	return true;
 +}
 +
- define_one_state_ro(name, show_state_name);
- define_one_state_ro(desc, show_state_desc);
- define_one_state_ro(latency, show_state_exit_latency);
-@@ -337,6 +345,7 @@ define_one_state_ro(time, show_state_tim
- define_one_state_rw(disable, show_state_disable, store_state_disable);
- define_one_state_ro(above, show_state_above);
- define_one_state_ro(below, show_state_below);
-+define_one_state_ro(initial_status, show_state_initial_status);
+ static void __setup_broadcast_timer(bool on)
+ {
+ 	if (on)
+@@ -1332,10 +1348,10 @@ static void __init intel_idle_cpuidle_dr
+ 	drv->state_count = 1;
  
- static struct attribute *cpuidle_state_default_attrs[] = {
- 	&attr_name.attr,
-@@ -349,6 +358,7 @@ static struct attribute *cpuidle_state_d
- 	&attr_disable.attr,
- 	&attr_above.attr,
- 	&attr_below.attr,
-+	&attr_initial_status.attr,
- 	NULL
- };
+ 	for (cstate = 0; cstate < CPUIDLE_STATE_MAX; ++cstate) {
+-		int num_substates, mwait_hint, mwait_cstate;
++		unsigned int mwait_hint;
  
-Index: linux-pm/include/linux/cpuidle.h
-===================================================================
---- linux-pm.orig/include/linux/cpuidle.h
-+++ linux-pm/include/linux/cpuidle.h
-@@ -77,6 +77,7 @@ struct cpuidle_state {
- #define CPUIDLE_FLAG_COUPLED	BIT(1) /* state applies to multiple cpus */
- #define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
- #define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
-+#define CPUIDLE_FLAG_OFF	BIT(4) /* disable this state by default */
+-		if ((cpuidle_state_table[cstate].enter == NULL) &&
+-		    (cpuidle_state_table[cstate].enter_s2idle == NULL))
++		if (!cpuidle_state_table[cstate].enter &&
++		    !cpuidle_state_table[cstate].enter_s2idle)
+ 			break;
  
- struct cpuidle_device_kobj;
- struct cpuidle_state_kobj;
-Index: linux-pm/drivers/cpuidle/cpuidle.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/cpuidle.c
-+++ linux-pm/drivers/cpuidle/cpuidle.c
-@@ -571,10 +571,14 @@ static int __cpuidle_register_device(str
- 	if (!try_module_get(drv->owner))
- 		return -EINVAL;
+ 		if (cstate + 1 > max_cstate) {
+@@ -1343,34 +1359,19 @@ static void __init intel_idle_cpuidle_dr
+ 			break;
+ 		}
  
--	for (i = 0; i < drv->state_count; i++)
-+	for (i = 0; i < drv->state_count; i++) {
- 		if (drv->states[i].flags & CPUIDLE_FLAG_UNUSABLE)
- 			dev->states_usage[i].disable |= CPUIDLE_STATE_DISABLED_BY_DRIVER;
+-		mwait_hint = flg2MWAIT(cpuidle_state_table[cstate].flags);
+-		mwait_cstate = MWAIT_HINT2CSTATE(mwait_hint);
+-
+-		/* number of sub-states for this state in CPUID.MWAIT */
+-		num_substates = (mwait_substates >> ((mwait_cstate + 1) * 4))
+-					& MWAIT_SUBSTATE_MASK;
+-
+-		/* if NO sub-states for this state in CPUID, skip it */
+-		if (num_substates == 0)
+-			continue;
+-
+-		/* if state marked as disabled, skip it */
++		/* If marked as unusable, skip this state. */
+ 		if (cpuidle_state_table[cstate].flags & CPUIDLE_FLAG_UNUSABLE) {
+ 			pr_debug("state %s is disabled\n",
+ 				 cpuidle_state_table[cstate].name);
+ 			continue;
+ 		}
  
-+		if (drv->states[i].flags & CPUIDLE_FLAG_OFF)
-+			dev->states_usage[i].disable |= CPUIDLE_STATE_DISABLED_BY_USER;
-+	}
-+
- 	per_cpu(cpuidle_devices, dev->cpu) = dev;
- 	list_add(&dev->device_list, &cpuidle_detected_devices);
++		mwait_hint = flg2MWAIT(cpuidle_state_table[cstate].flags);
++		if (!intel_idle_verify_cstate(mwait_hint))
++			continue;
  
-Index: linux-pm/Documentation/ABI/testing/sysfs-devices-system-cpu
-===================================================================
---- linux-pm.orig/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ linux-pm/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -196,6 +196,12 @@ Description:
- 		does not reflect it. Likewise, if one enables a deep state but a
- 		lighter state still is disabled, then this has no effect.
+-		if (((mwait_cstate + 1) > 2) &&
+-			!boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
+-			mark_tsc_unstable("TSC halts in idle"
+-					" states deeper than C2");
+-
+-		drv->states[drv->state_count] =	/* structure copy */
+-			cpuidle_state_table[cstate];
+-
+-		drv->state_count += 1;
++		/* Structure copy. */
++		drv->states[drv->state_count++] = cpuidle_state_table[cstate];
+ 	}
  
-+What:		/sys/devices/system/cpu/cpuX/cpuidle/stateN/initial_status
-+Date:		November 2019
-+KernelVersion:	v5.6
-+Contact:	Linux power management list <linux-pm@vger.kernel.org>
-+Description:
-+		(RO) The initial status of this state, "enabled" or "disabled".
- 
- What:		/sys/devices/system/cpu/cpuX/cpuidle/stateN/residency
- Date:		March 2014
-Index: linux-pm/Documentation/admin-guide/pm/cpuidle.rst
-===================================================================
---- linux-pm.orig/Documentation/admin-guide/pm/cpuidle.rst
-+++ linux-pm/Documentation/admin-guide/pm/cpuidle.rst
-@@ -506,6 +506,9 @@ object corresponding to it, as follows:
- ``disable``
- 	Whether or not this idle state is disabled.
- 
-+``initial_status``
-+	The initial status of this state, "enabled" or "disabled".
-+
- ``latency``
- 	Exit latency of the idle state in microseconds.
- 
+ 	if (icpu->byt_auto_demotion_disable_flag) {
 
 
 
