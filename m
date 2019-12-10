@@ -2,135 +2,192 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F133C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97E5C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431D32073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CE92073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575999602;
+	bh=vV2wOOn8NiV2CpWoWGiU22sVr3GlEUm1mVCRS4ul+KY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=H0+0OYaJn0qD2mZWtK2QXKdJ2Ezu7ovtspANpMLcuMCyKX1GMGXsf4XChYf/SFTlt
+	 SoUCIeq2wBbdGJpXJUknsQLZDU6jQZuaybBBlhi/AeWXko6tNmwFf2Te4eVcjBFpUw
+	 rN4DeS9ZteezlLZVzy7UxMMCcvPZOCgU1Tc/E6dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfLJRjK (ORCPT
+        id S1727633AbfLJRkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:39:10 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:37918 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfLJRjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:39:10 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iejTY-0006ZR-AV; Tue, 10 Dec 2019 10:39:09 -0700
-To:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-References: <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl>
- <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
- <20191122052010.GO82508@vkoul-mobl>
- <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
- <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com>
- <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
- <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
- <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
- <20191210095327.GA2536@vkoul-mobl>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <27c40d72-ab83-f2a4-7b98-55d16e602a1e@deltatee.com>
-Date:   Tue, 10 Dec 2019 10:39:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Dec 2019 12:40:01 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41169 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfLJRkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:40:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id h23so20843874ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:39:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=snXL3elBaJqUNnrwVMIQkoX2BmfJlCnkqeekmLy0jJI=;
+        b=OhxH2R6Nr1ZTcmvFCJY4c42Wn+5iOTjxo201wAntKVyS+2zt9hCNsDqSOWhbVWmxQ6
+         U4hf3Qf1NBY2kCFTQYJBLj+p0aj0dRmcpAQcHsx7GI/58+pcMdfjSx9IppPGmLYMx3Oq
+         n1Ki3WOVdVWhlVz0yApcldThYREPXTHwKeMa8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=snXL3elBaJqUNnrwVMIQkoX2BmfJlCnkqeekmLy0jJI=;
+        b=Cj75A00kAScGSNsztC1SkiXPvtux4bnjz6233C6yPLYV9EjdE28e9gl7cOV8SNAc5u
+         /qYomfQgfWCCKgtpDlYLlVJygvfn2/V9bbWLtwq0RDatg/WzKCMb/A759YmwdRkfhYjv
+         e2oLkSGtf4dsGSVb+s2KYV1Xc6vqglMw2rN39B4CceuqbXcn0gAJ167Dr/Ll1GjUBF4m
+         H8aCwAAWVZIzU6XTYbuJ7c21XTgEVyhE1h3hkhuRoJ20zFm+9GdeorTyOumTfh891UhG
+         GVlDGcAPcg2ZZi717lhzpXbLym7DdBiNwM51GPXuseQIWOkKklYfWRBcqXHsNC5xdd9y
+         3iqQ==
+X-Gm-Message-State: APjAAAXKkX4Tm4LeCmh7kHIo6EwS45NrQuI/lajZVt/BhUEulyl5/ykO
+        7BlMkAmvRceNCW+9unNqYLTMCUatfyI=
+X-Google-Smtp-Source: APXvYqxu0POO27XHllSDLekSRqQA5XW0TNyMczNMp63i/ONvfwpFPYu23y7htRcK9Mw+51eyAFjEhg==
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr20338347ljg.151.1575999597003;
+        Tue, 10 Dec 2019 09:39:57 -0800 (PST)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id t14sm2076268ljh.52.2019.12.10.09.39.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 09:39:55 -0800 (PST)
+Received: by mail-lf1-f45.google.com with SMTP id m30so14382582lfp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:39:55 -0800 (PST)
+X-Received: by 2002:ac2:50cc:: with SMTP id h12mr19498327lfm.29.1575999594895;
+ Tue, 10 Dec 2019 09:39:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210095327.GA2536@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dave.jiang@intel.com, vkoul@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
+ <CAKfTPtDBtPuvK0NzYC0VZgEhh31drCDN=o+3Hd3fUwoffQg0fw@mail.gmail.com>
+ <CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com> <CAKfTPtASrwDcHUDqHgHP=8brALFv7ncmQuqLvihg4tQsxNUqkw@mail.gmail.com>
+In-Reply-To: <CAKfTPtASrwDcHUDqHgHP=8brALFv7ncmQuqLvihg4tQsxNUqkw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 10 Dec 2019 09:39:38 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgkxNmK1pGfDaA5PqsPYpZO9tL-a4R4mpY-UhSX4f-RFg@mail.gmail.com>
+Message-ID: <CAHk-=wgkxNmK1pGfDaA5PqsPYpZO9tL-a4R4mpY-UhSX4f-RFg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     DJ Delorie <dj@redhat.com>, David Sterba <dsterba@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 10, 2019 at 6:38 AM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Mon, 9 Dec 2019 at 18:48, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Before that commit the buggy jobserver code basically does
+> >
+> >  (1) use pselect() to wait for readable and see child deaths atomically
+> >  (2) use blocking read to get the token
+> >
+> > and while (1) is atomic, if the child death happens between the two,
+> > it goes into the blocking read and has SIGCHLD blocked, so it will try
+> > to read the token from the token pipe, but it will never react to the
+> > child death - and the child death is what is going to _release_ a
+> > token.
+> >
+> > So what seems to happen is that when the right timing triggers, you
+>
+> That can explain why I can't see the problem on my platform
 
+Note that the above is kind of simplified.
 
-On 2019-12-10 2:53 a.m., Vinod Koul wrote:
-> On 22-11-19, 14:42, Dave Jiang wrote:
->>
->>
->> On 11/22/19 2:01 PM, Dan Williams wrote:
->>> On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2019-11-22 1:50 p.m., Dan Williams wrote:
->>>>> On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 11/21/19 10:20 PM, Vinod Koul wrote:
->>>>>>> On 14-11-19, 10:03, Logan Gunthorpe wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
->>>>>>>>>> But that's the problem. We can't expect our users to be "nice" and not
->>>>>>>>>> unbind when the driver is in use. Killing the kernel if the user
->>>>>>>>>> unexpectedly unbinds is not acceptable.
->>>>>>>>>
->>>>>>>>> And that is why we review the code and ensure this does not happen and
->>>>>>>>> behaviour is as expected
->>>>>>>>
->>>>>>>> Yes, but the current code can kill the kernel when the driver is unbound.
->>>>>>>>
->>>>>>>>>>>> I suspect this is less of an issue for most devices as they wouldn't
->>>>>>>>>>>> normally be unbound while in use (for example there's really no reason
->>>>>>>>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
->>>>>>>>>>>> is, the user could unbind these devices at anytime and we don't want to
->>>>>>>>>>>> panic if they do.
->>>>>>>>>>>
->>>>>>>>>>> There are many drivers which do modules so yes I am expecting unbind and
->>>>>>>>>>> even a bind following that to work
->>>>>>>>>>
->>>>>>>>>> Except they will panic if they unbind while in use, so that's a
->>>>>>>>>> questionable definition of "work".
->>>>>>>>>
->>>>>>>>> dmaengine core has module reference so while they are being used they
->>>>>>>>> won't be removed (unless I complete misread the driver core behaviour)
->>>>>>>>
->>>>>>>> Yes, as I mentioned in my other email, holding a module reference does
->>>>>>>> not prevent the driver from being unbound. Any driver can be unbound by
->>>>>>>> the user at any time without the module being removed.
->>>>>>>
->>>>>>> That sounds okay then.
->>>>>>
->>>>>> I'm actually glad Logan is putting some work in addressing this. I also
->>>>>> ran into the same issue as well dealing with unbinds on my new driver.
->>>>>
->>>>> This was an original mistake of the dmaengine implementation that
->>>>> Vinod inherited. Module pinning is distinct from preventing device
->>>>> unbind which ultimately can't be prevented. Longer term I think we
->>>>> need to audit dmaengine consumers to make sure they are prepared for
->>>>> the driver to be removed similar to how other request based drivers
->>>>> can gracefully return an error status when the device goes away rather
->>>>> than crashing.
-> 
-> Right finally wrapping my head of static dmaengine devices! we can
-> indeed have devices going away, but me wondering why this should be
-> handled in subsystems! Should the driver core not be doing this instead?
-> Would it be not a safe behaviour for unplug to unload the driver and
-> thus give a chance to unbind from subsystems too...
+It actually needs a bit more to trigger..
 
-Yes, I think it should be in the core. I was just worried about breaking
-older drivers. But I'll see if I can move a bit more of the logic for a
-v3 series.
+To lose _one_ token, you need to have a sub-make basically hit this race:
 
-Thanks,
+ - the pselect() needs to say that the pipe is readable, so there is
+at least one token
 
-Logan
+ - another sub-make comes along and steals the very last token
+
+ - but because pselect returned "readable" (no SIGCHLD yet), the
+read() starts and now blocks because all the jobserver tokens are gone
+again due to the other sub-make stealing the last one.
+
+ - before a new token comes in, the child exits, and now because the
+sub-make is blocking for reads (and because the jobserver blocks
+SIGCHILD in general outside of the pselect), it doesn't react, so it
+won't release the token that the child holds.
+
+but notice how any _other_ sub-make then releasing a token will get
+things going again, so the _common_situation is that the jobserver bug
+only causes a slight  dip in concurrency.
+
+Hitting it _once_ is trivial.
+
+Losing several tokens at once is also not that hard: you don't need to
+hit the race many times, it's enough to hit the exact same race just
+once - just with several sub-makes at the same time.
+
+And that "lose several tokens at once" isn't as unlikely as you'd
+think: they are all doing the same thing, and they all saw the free
+token with "pselect()", they all did a "read()". And since it's common
+for the tokens to be gone, the common case is that _one_ of the
+waiting sub-makes got the read, and the N other sub-makes did not, and
+went into the blocking read(). And they all had children that were
+about to finish, and finished before the next token got available.
+
+So losing quite a few tokens is easy.
+
+This has actually gone on for a long time, and I just never debugged
+it. My solution has been "I have 16 threads (8 core with HT), but I'll
+use -j32, and it is all good".
+
+I bet you can see it too - the buggy jobserver just means that the
+load isn't as high as you'd expect. Just run 'top' while the make is
+going.
+
+With the _fixed_ jobserver, if I do "make -j32", I will actually see a
+load that is over 32 (I do nothing but kernel compiles and occasional
+reboots during the merge window, so I have the kernel in my cache, so
+there's no IO, I have a fast SSD so writeback doesn't cause any delays
+either etc etc, and I have my browser and a few other things going).
+
+With the buggy one, even before the pipe rework, I would see a load
+that tended to fluctuate around 16.
+
+Because due to the bug you have a few locked-up tokens at times, so
+instead of getting a load of 32 when you use "make -j32", you get a
+load of maybe 20. Or maybe less.
+
+The pipe re-work made it much easier to trigger the "almost all the
+tokens are gone" for some reason. And the "fair readers()" patch I
+have seems to make it _really_ easy to trigger the case where
+absolutely all the tokens were gone and it goes into a single-thread
+mode. I'm not sure I really ever saw the 1-second timeout trigger, but
+it was slow.
+
+But it _is_ dependent on timing, so somebody else with a different
+load - or a different machine - might not see it to nearly the same
+degree.
+
+I bet you see the load value difference, though, even if you don't
+necessarily see enough idle CPU time to see much of a difference in
+compile times. After all, once you have all CPU's busy, it doesn't
+matter if you have a load of 16 or a load of 32 - the higher load
+won't make the compile go any faster.
+
+             Linus
