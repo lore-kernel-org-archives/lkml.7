@@ -2,108 +2,236 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F9C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7465C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3E720726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cPuGzMKG"
+	by mail.kernel.org (Postfix) with ESMTP id AF7BC2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfLJJ1m (ORCPT
+        id S1727264AbfLJJ2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:27:42 -0500
-Received: from mail-eopbgr10064.outbound.protection.outlook.com ([40.107.1.64]:30217
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbfLJJ1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:27:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nhG1tv/jGbVEY06rgXbFz5Mw9hGnlNHJvL27k9L7JbkPNoIkt65A/Rke4eGh3HJmo1cq8/gU/1iXgNDESXQ6j7X7iWSsIpMYOiD4azuJDMv1I9eDcmGesczUtS9ywvOpFzGD4j/wKdfwSxPcy3yWfFBGp0Jzf7C9gIZWj7JMq8sVum1Yt+L2or+YJ910bUXHyHoQotNqM3hX4btgaP/8STyGeMRHHh37ad3tS9lL6z8nHKVVkj9Y95BKzbqtunSMrrzuGCbqBWs7f/dGs03svxV/yKfpfwJH6tlTJzZ91wggxvU59rdy4EldGiUglyD7Szd2qOajNC5iR91OGX61fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
- b=FOyR8hSxwkq5Lg2h1griBQzGGKMXGHOT8KpV3pVX3GK/5HkqjdbcGO+Jz3tgQOm5JKAPNVw0JGAUqz/BQQRJdy+H1rn8at1chfUV6F4fKSnoO7qqFxUKvmVKpS0MSdM1p2iKYHqBI8MkDBIzaR8KaCTPPNFZnDH/34QmPIku5dNJLGz+HWZg9bEF1wRc1GSgQyNHt0eOdXNHl/a9DrjsPpjSlvdKMXq5GgdC0S21s36kP9oTO0O5dC89qHI8GZ72iITJN0FtcdCmBAnmLvrdrLoOBaiM0tqD7DQD+WVgjRCRSGDeC9ATtP9nmD/e2GXLswQSITctfRa39K7SrIGbzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6j8MCDT2xr4+/zoAj+Ms/v4LbIXbuAZDmLTTi6A6dY4=;
- b=cPuGzMKGLpe4wD+ZQvSacqwATKVuGYsXSBckj5gXKo8nMAMdoZmue37mJyl9GJVrwXqa9OD/ImK6B5zf6wYAskWM7Mqn4quKo2S7xJwS8l6I2aXshMdAFJkci0wkm/6PiAJN/05Yibjge5NQlc3h5tllMHSr8PvtmpSTOKgQqWY=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3502.eurprd04.prod.outlook.com (52.134.6.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Tue, 10 Dec 2019 09:27:39 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::64c8:fba:99e8:5ec4%6]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 09:27:39 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrei Botila <andrei.botila@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] crypto: caam - remove double buffering for ahash
-Thread-Topic: [PATCH 1/2] crypto: caam - remove double buffering for ahash
-Thread-Index: AQHVrrIee3UpGuT8yEWtzvAic+JZ5Q==
-Date:   Tue, 10 Dec 2019 09:27:39 +0000
-Message-ID: <VI1PR0402MB348517448546120EC75D5188985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1575910796-13897-1-git-send-email-andrei.botila@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 324d4264-500c-404f-34e2-08d77d533358
-x-ms-traffictypediagnostic: VI1PR0402MB3502:|VI1PR0402MB3502:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3502A4BFC32AC6463C8B3BD4985B0@VI1PR0402MB3502.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(189003)(199004)(71190400001)(52536014)(55016002)(9686003)(66556008)(71200400001)(64756008)(33656002)(66446008)(305945005)(110136005)(54906003)(91956017)(86362001)(76116006)(66946007)(66476007)(229853002)(6636002)(8936002)(478600001)(316002)(5660300002)(53546011)(6506007)(44832011)(186003)(4326008)(4744005)(26005)(8676002)(2906002)(7696005)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3502;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LX6JKw7TlQQwDw2YjmYvjcIm+RoO3cm/UNJCoIctWc6TDkROtJwuLkwDGANDaIZZZMV25vCXFR4JYOclYgh9BdI9aecd5dEeIuV+RmY1x1E/WGhG9V1JgMuXMCiMfRYquYWRBMUm2P+0SK4lCWIa2HT+x2Jty4ccNtHSBu6E9I0FQNc/VNBRGOR/ddCIHf+6FA9Brszg4A1FuPlfr3RCp0eK7lH6PgcE+5aH/3Eu3yye14hdEpyMkB1k0zEBZrCzowzhKVJoGiG0if97DqEuuxhE1mZ1Ns9X7Da74Fh7d2FlmdHLH18rYeppyisvHfCJWjZOiw7m9K6KdSQA6WHsjod+EeeN0Zs3AYnR6kLjAZ9i/zs8fWeGhX1IMeB0O6/FDfvDz5JUdSQxf+3IlaTOmVuDqQmcm37lyLfE5TL3SyaJLpsX7/3QkIiATzsEI4aL
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Dec 2019 04:28:01 -0500
+Received: from emcscan.emc.com.tw ([192.72.220.5]:40061 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfLJJ2B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:28:01 -0500
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="33219843"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 10 Dec 2019 17:27:58 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(71507:0:AUTH_RELAY)
+        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:27:58 +0800 (CST)
+Received: from 192.168.55.71
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(101178:0:AUTH_LOGIN)
+        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 10 Dec 2019 17:27:55 +0800 (CST)
+From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
+To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>
+Cc:     =?big5?B?U1RSRDItvbK0Zrxg?= <jennifer.tsai@emc.com.tw>,
+        <james.chen@emc.com.tw>,
+        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
+        "'jeff'" <jeff.chuang@emc.com.tw>,
+        =?big5?B?U1RSRDItsviozsBN?= <johnny.chuang@emc.com.tw>
+References: <1575969632-18703-1-git-send-email-johnny.chuang@elan.corp-partner.google.com>
+In-Reply-To: <1575969632-18703-1-git-send-email-johnny.chuang@elan.corp-partner.google.com>
+Subject: [PATCH] Input: elants_i2c - Add Remark ID check flow in firmware update function
+Date:   Tue, 10 Dec 2019 17:27:53 +0800
+Message-ID: <00a901d5af3c$193e9cd0$4bbbd670$@emc.com.tw>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 324d4264-500c-404f-34e2-08d77d533358
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 09:27:39.2091
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8PVkaR6iId+YIrCD/tSwxpzozq7PvW55u1yROQDjikSA6MghpjmfnnFy8ap06gNcLla4vBfC0sQgsGjh/TKR0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3502
+Content-Type: text/plain;
+        charset="big5"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQKU6CCR3y2ZDKNDJHcdSmqZJZrY96Y0pz/A
+Content-Language: zh-tw
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy01NjY3N2YyZi0xYjJmLTExZWEtOGFiMy03YzVjZjg3NDk0NzhcYW1lLXRlc3RcNTY2NzdmMzEtMWIyZi0xMWVhLThhYjMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSI0OTYyIiB0PSIxMzIyMDQ0MzY3MjY2Mjc3ODQiIGg9Imkxc3FFcndSS1dBSGZBbTlZcFdnenpCZzBWUT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/9/2019 7:00 PM, Andrei Botila wrote:=0A=
-> Previously double buffering was used for storing previous and next=0A=
-> "less-than-block-size" bytes. Double buffering can be removed by moving=
-=0A=
-> the copy of next "less-than-block-size" bytes after current request is=0A=
-> executed by HW.=0A=
-> =0A=
-> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+This patch add Remark ID check flow to firmware update function of
+elan touchscreen driver.
+
+It avoids firmware update with mismatched Remark ID.
+
+This function is supported by our latest version of boot code,
+but it cooperates well with earlier versions.
+
+Our driver will decide if enable Remark ID check with boot code version.
+
+Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+---
+ drivers/input/touchscreen/elants_i2c.c | 77
+++++++++++++++++++++++++++++++----
+ 1 file changed, 69 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/input/touchscreen/elants_i2c.c
+b/drivers/input/touchscreen/elants_i2c.c
+index d4ad24e..4911799 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -59,8 +59,10 @@
+ #define CMD_HEADER_WRITE	0x54
+ #define CMD_HEADER_READ		0x53
+ #define CMD_HEADER_6B_READ	0x5B
++#define CMD_HEADER_ROM_READ	0x96
+ #define CMD_HEADER_RESP		0x52
+ #define CMD_HEADER_6B_RESP	0x9B
++#define CMD_HEADER_ROM_RESP	0x95
+ #define CMD_HEADER_HELLO	0x55
+ #define CMD_HEADER_REK		0x66
+ 
+@@ -200,6 +202,10 @@ static int elants_i2c_execute_command(struct i2c_client
+*client,
+ 		expected_response = CMD_HEADER_6B_RESP;
+ 		break;
+ 
++	case CMD_HEADER_ROM_READ:
++		expected_response = CMD_HEADER_ROM_RESP;
++		break;
++
+ 	default:
+ 		dev_err(&client->dev, "%s: invalid command %*ph\n",
+ 			__func__, (int)cmd_size, cmd);
+@@ -556,6 +562,8 @@ static int elants_i2c_initialize(struct elants_data *ts)
+ 
+ 	/* hw version is available even if device in recovery state */
+ 	error2 = elants_i2c_query_hw_version(ts);
++	if (!error2)
++		error2 = elants_i2c_query_bc_version(ts);
+ 	if (!error)
+ 		error = error2;
+ 
+@@ -564,8 +572,6 @@ static int elants_i2c_initialize(struct elants_data *ts)
+ 	if (!error)
+ 		error = elants_i2c_query_test_version(ts);
+ 	if (!error)
+-		error = elants_i2c_query_bc_version(ts);
+-	if (!error)
+ 		error = elants_i2c_query_ts_info(ts);
+ 
+ 	if (error)
+@@ -613,39 +619,94 @@ static int elants_i2c_fw_write_page(struct i2c_client
+*client,
+ 	return error;
+ }
+ 
++static int elants_i2c_validate_remark_id(struct elants_data *ts,
++					 const struct firmware *fw)
++{
++	struct i2c_client *client = ts->client;
++	int error;
++	const u8 cmd[] = { CMD_HEADER_ROM_READ, 0x80, 0x1F, 0x00, 0x00, 0x21
+};
++	u8 resp[6] = { 0 };
++	u16 ts_remark_id = 0;
++	u16 fw_remark_id = 0;
++
++	/* Compare TS Remark ID and FW Remark ID */
++	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
++					resp, sizeof(resp));
++	if (error) {
++		dev_err(&client->dev, "failed to query Remark ID: %d\n",
+error);
++		return error;
++	}
++
++	ts_remark_id = get_unaligned_be16(&resp[3]);
++
++	fw_remark_id = get_unaligned_le16(&fw->data[fw->size - 4]);
++
++	if (fw_remark_id != ts_remark_id) {
++		dev_err(&client->dev,
++			"Remark ID Mismatched: ts_remark_id=0x%04x,
+fw_remark_id=0x%04x.\n",
++			ts_remark_id, fw_remark_id);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int elants_i2c_do_update_firmware(struct i2c_client *client,
+ 					 const struct firmware *fw,
+ 					 bool force)
+ {
++	struct elants_data *ts = i2c_get_clientdata(client);
+ 	const u8 enter_iap[] = { 0x45, 0x49, 0x41, 0x50 };
+ 	const u8 enter_iap2[] = { 0x54, 0x00, 0x12, 0x34 };
+ 	const u8 iap_ack[] = { 0x55, 0xaa, 0x33, 0xcc };
+-	const u8 close_idle[] = {0x54, 0x2c, 0x01, 0x01};
++	const u8 close_idle[] = { 0x54, 0x2c, 0x01, 0x01 };
+ 	u8 buf[HEADER_SIZE];
+ 	u16 send_id;
+ 	int page, n_fw_pages;
+ 	int error;
++	bool check_remark_id = ts->iap_version >= 0x60;
+ 
+ 	/* Recovery mode detection! */
+ 	if (force) {
+ 		dev_dbg(&client->dev, "Recovery mode procedure\n");
++
++		if (check_remark_id) {
++			error = elants_i2c_validate_remark_id(ts, fw);
++			if (error)
++				return error;
++		}
++
+ 		error = elants_i2c_send(client, enter_iap2,
+sizeof(enter_iap2));
++		if (error) {
++			dev_err(&client->dev, "failed to enter IAP mode:
+%d\n",
++				error);
++			return error;
++		}
+ 	} else {
+ 		/* Start IAP Procedure */
+ 		dev_dbg(&client->dev, "Normal IAP procedure\n");
++
+ 		/* Close idle mode */
+ 		error = elants_i2c_send(client, close_idle,
+sizeof(close_idle));
+ 		if (error)
+ 			dev_err(&client->dev, "Failed close idle: %d\n",
+error);
+ 		msleep(60);
++
+ 		elants_i2c_sw_reset(client);
+ 		msleep(20);
+-		error = elants_i2c_send(client, enter_iap,
+sizeof(enter_iap));
+-	}
+ 
+-	if (error) {
+-		dev_err(&client->dev, "failed to enter IAP mode: %d\n",
+error);
+-		return error;
++		if (check_remark_id) {
++			error = elants_i2c_validate_remark_id(ts, fw);
++			if (error)
++				return error;
++		}
++
++		error = elants_i2c_send(client, enter_iap,
+sizeof(enter_iap));
++		if (error) {
++			dev_err(&client->dev, "failed to enter IAP mode:
+%d\n",
++				error);
++			return error;
++		}
+ 	}
+ 
+ 	msleep(20);
+-- 
+2.7.4
+
