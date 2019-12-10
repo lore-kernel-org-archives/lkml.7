@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14BBC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01409C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A300D205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C906F20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012534;
-	bh=eIQ0z7KFrVi9cIMOCkXs+VUcprEsuWDL5eY/GTbXQ8g=;
+	s=default; t=1576012537;
+	bh=NjRlAIeHy2SuCz+QP9LYcmS5+EbVEaQg+w2B50lwxqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qs5h3kYIy7fqNsRel7BHdedTciNMbV2P6DTHeZE42TxhTNuhnRlM7pcAwNPttNOC4
-	 qaVXKcyH98vw0xXf8hSvGIHptsmw4HD+BOjHfiTHbDyo0J5XXBRwSj33Mg8yheWitd
-	 6j1yaNLtGZ6opGYOFTqc6/fddvg7816aPwakUj/w=
+	b=vTzcSbMuEODTLqFPwz1duDAYeF3wtQf6QKNOP48aIlan1nos7acBb1etmdJcgWjrl
+	 eE7v9wqH1Ybe3sOE/cUF1t1mxXMwOeoFdaoVFZNY1GQ1Lp+96xfEUN/9wSLjBJ91Lp
+	 oEz3u87Jrc+Ts256ir9YdUF3GCsHKuk57Iy4bLgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfLJVPd (ORCPT
+        id S1729478AbfLJVPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:15:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:15:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbfLJVNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:35 -0500
+        id S1728985AbfLJVNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCDF214D8;
-        Tue, 10 Dec 2019 21:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 636C521D7D;
+        Tue, 10 Dec 2019 21:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012414;
-        bh=eIQ0z7KFrVi9cIMOCkXs+VUcprEsuWDL5eY/GTbXQ8g=;
+        s=default; t=1576012413;
+        bh=NjRlAIeHy2SuCz+QP9LYcmS5+EbVEaQg+w2B50lwxqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUU5xt0KPUN49hcxkZ9nFzwPHkG/+H4xqiY78qECKhehP4COzer7TC4v4R/UP2fbG
-         QyHRlsvReY7qJgJpVls2nYzxpPCmN4zIuQz79gvmebEstmXzk6r6k6aPHAjvRS1PqI
-         SM7cUuQBB3C6VLVSqvgZkxWr8L2zDLLZqoEtztyM=
+        b=w0WFqYaUnogY7mp3wL20P6sgLzJZ+lfUEvfDkkYIfscf+OFoYqnOJHTnIzhRMj/F/
+         Avxi6cur3P2cRDwbaH3u0lqzL4ee1XEgrPeji5VD+UX3wC0RhWka4KNpjOZbVBRyE7
+         BvCs3kkZKGY1OnGI+Kzh1NlrxMJ7JXAvTgZz3luE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 331/350] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
-Date:   Tue, 10 Dec 2019 16:07:16 -0500
-Message-Id: <20191210210735.9077-292-sashal@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        John Garry <john.garry@huawei.com>,
+        Borislav Petkov <bp@suse.de>, huangming23@huawei.com,
+        James Morse <james.morse@arm.com>, linuxarm@huawei.com,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        tanxiaofei@huawei.com, Tony Luck <tony.luck@intel.com>,
+        wanghuiqiang@huawei.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 330/350] EDAC/ghes: Do not warn when incrementing refcount on 0
+Date:   Tue, 10 Dec 2019 16:07:15 -0500
+Message-Id: <20191210210735.9077-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,59 +64,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
+[ Upstream commit 16214bd9e43a31683a7073664b000029bba00354 ]
 
-If you try to compile this driver on a 64-bit platform then you
-will get warnings because it mixes size_t with unsigned int which
-only works on 32-bit.
+The following warning from the refcount framework is seen during ghes
+initialization:
 
-This patch fixes all of the warnings on sun4i-ss-hash.c.
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+  EDAC MC0: Giving out device to module ghes_edac.c controller ghes_edac: DEV ghes (INTERRUPT)
+  ------------[ cut here ]------------
+  refcount_t: increment on 0; use-after-free.
+  WARNING: CPU: 36 PID: 1 at lib/refcount.c:156 refcount_inc_checked
+ [...]
+  Call trace:
+   refcount_inc_checked
+   ghes_edac_register
+   ghes_probe
+   ...
+
+It warns if the refcount is incremented from zero. This warning is
+reasonable as a kernel object is typically created with a refcount of
+one and freed once the refcount is zero. Afterwards the object would be
+"used-after-free".
+
+For GHES, the refcount is initialized with zero, and that is why this
+message is seen when initializing the first instance. However, whenever
+the refcount is zero, the device will be allocated and registered. Since
+the ghes_reg_mutex protects the refcount and serializes allocation and
+freeing of ghes devices, a use-after-free cannot happen here.
+
+Instead of using refcount_inc() for the first instance, use
+refcount_set(). This can be used here because the refcount is zero at
+this point and can not change due to its protection by the mutex.
+
+Fixes: 23f61b9fc5cc ("EDAC/ghes: Fix locking and memory barrier issues")
+Reported-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: John Garry <john.garry@huawei.com>
+Cc: <huangming23@huawei.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: <linuxarm@huawei.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: <tanxiaofei@huawei.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: <wanghuiqiang@huawei.com>
+Link: https://lkml.kernel.org/r/20191121213628.21244-1-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/edac/ghes_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index fcffba5ef9276..1369c5fa30871 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -272,8 +272,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 			 */
- 			while (op->len < 64 && i < end) {
- 				/* how many bytes we can read from current SG */
--				in_r = min3(mi.length - in_i, end - i,
--					    64 - op->len);
-+				in_r = min(end - i, 64 - op->len);
-+				in_r = min_t(size_t, mi.length - in_i, in_r);
- 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
- 				op->len += in_r;
- 				i += in_r;
-@@ -293,8 +293,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 		if (mi.length - in_i > 3 && i < end) {
- 			/* how many bytes we can read from current SG */
--			in_r = min3(mi.length - in_i, areq->nbytes - i,
--				    ((mi.length - in_i) / 4) * 4);
-+			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
-+			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
- 			/* how many bytes we can write in the device*/
- 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
- 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
-@@ -320,8 +320,8 @@ static int sun4i_hash(struct ahash_request *areq)
- 	if ((areq->nbytes - i) < 64) {
- 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
- 			/* how many bytes we can read from current SG */
--			in_r = min3(mi.length - in_i, areq->nbytes - i,
--				    64 - op->len);
-+			in_r = min(areq->nbytes - i, 64 - op->len);
-+			in_r = min_t(size_t, mi.length - in_i, in_r);
- 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
- 			op->len += in_r;
- 			i += in_r;
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 1858baa96211b..523dd56a798c9 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -572,8 +572,8 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+ 	ghes_pvt = pvt;
+ 	spin_unlock_irqrestore(&ghes_lock, flags);
+ 
+-	/* only increment on success */
+-	refcount_inc(&ghes_refcount);
++	/* only set on success */
++	refcount_set(&ghes_refcount, 1);
+ 
+ unlock:
+ 	mutex_unlock(&ghes_reg_mutex);
 -- 
 2.20.1
 
