@@ -2,85 +2,123 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124E1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA01C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAC320828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576005614;
-	bh=2k/H8iAqani1y/YBaVi3wfqUka//EYa/Ou3poqmsegQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h25PqXD3Jd0wvevSHQIP2/8+DqxO5RLLszGj+eBnaYFUzWPjtdxO+T5L6vAB1TQ3U
-	 w8vRPNBDimIJP6xWCi+BuTZnu+3B1FKAHFcKBhv8uzW09QvcSTPSOJEWn3Y11dWJns
-	 oDWZO40HKO2W02HSjYQl9Y08rPMrxgwwKu90n8L8=
+	by mail.kernel.org (Postfix) with ESMTP id 4714720828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 19:25:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pfsP84Zy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfLJTUN (ORCPT
+        id S1726589AbfLJTZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 14:20:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:54368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfLJTUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 14:20:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DED39328;
-        Tue, 10 Dec 2019 11:20:12 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59FB83F6CF;
-        Tue, 10 Dec 2019 11:20:12 -0800 (PST)
-Date:   Tue, 10 Dec 2019 19:20:10 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] spi: fsl: don't map irq during probe
-Message-ID: <20191210192010.GK6110@sirena.org.uk>
-References: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
+        Tue, 10 Dec 2019 14:25:45 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:45104 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfLJTZp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 14:25:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UGHsupCw3uOoSMyNUG7+Dzli5EixX+ffpw1yo/XpsVs=; b=pfsP84Zyi6h7wAqXcRK9GrQkr
+        bipVM/25NLrGrjYo6ZNVSbbjPR+4nFRCxXBJKswT3+cCjNKLe46neN4N7SZTv/ZaNSWNtTZjM9dz7
+        ngSjjGnxKCb1G25Y9vAgWCAFvyxuRArELuoFXDNW70rqoPXc1hLtiq13cltmRc45QYwZz+Y35Btiq
+        dEXqhg/5Vk/lEfnBbcm2n30OJ/oLCYN3dAUb2LqWk6hvLq0k647b10+koQ0G9uU+r4PeUc+ooCliZ
+        cmwphh4OqJ/QeNWkvB75+gu6QZhhzm2nkXm4qsbxYLj39FrbP5aS58j63D6IMBS9Kj49l9vnyyIo4
+        ZhE/m05vg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iel8d-0002g2-Na; Tue, 10 Dec 2019 19:25:39 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 17835980D21; Tue, 10 Dec 2019 20:25:38 +0100 (CET)
+Date:   Tue, 10 Dec 2019 20:25:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: Problem with WARN_ON in mutex_trylock() and rxrpc
+Message-ID: <20191210192538.GB11457@worktop.programming.kicks-ass.net>
+References: <26229.1575547344@warthog.procyon.org.uk>
+ <20191205132212.GK2827@hirez.programming.kicks-ass.net>
+ <87wob4hvyq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HcXnUX77nabWBLF4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
-X-Cookie: We have ears, earther...FOUR OF THEM!
+In-Reply-To: <87wob4hvyq.fsf@nanos.tec.linutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 10, 2019 at 07:33:17PM +0100, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > On Thu, Dec 05, 2019 at 12:02:24PM +0000, David Howells wrote:
 
---HcXnUX77nabWBLF4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > To recap the IRC discussion; the intended mutex semantics are such to
+> > allow Priority Inheritance. This means that the mutex must be locked and
+> > unlocked in the same (task) context. Otherwise there is no distinct
+> > owner to boost for contending mutex_lock() operations.
+> >
+> > Since (soft)irq context doesn't (necessarily) have a task context, these
+> > operations don't strictly make sense, and that is what the patch in
+> > question tries to WARN about.
+> 
+> Not only that. Acquiring something which is _NOT_ designed for non
+> thread context works by chance not by design. IOW it makes assumptions
+> about the underlying mutex implementation and any change to that which
+> actually assumes thread context will break that. So, no we don't want
+> I'm clever and can do that as the implementation allows, simply because
+> this is a blatant layering violation.
 
-On Tue, Dec 10, 2019 at 03:17:15PM +0000, Christophe Leroy wrote:
-> With lastest kernel, the following warning is observed at startup:
+AFAICT the only assumption it relies on are:
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+ - that the softirq will cleanly preempt a task. That is, the task
+   context must not change under the softirq execution.
 
---HcXnUX77nabWBLF4
-Content-Type: application/pgp-signature; name="signature.asc"
+ - that the softirq runs non-preemptible.
 
------BEGIN PGP SIGNATURE-----
+Now, both these properties are rather fundamental to how our softirqs
+work. And can, therefore, be relied upon, irrespective of the mutex
+implementation.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3v7+oACgkQJNaLcl1U
-h9COMAf/atE1JYdFEaDVfUE6vUZQPvvELAUglONPvpzbC2FySvV79fZw5WQj1B1d
-bJA23l3E1GBhegHF1bWLzSYE8WtQCrgr9Jh+TNamNySK/Ob/k2xBwubsuJEWg6rF
-iV4ELtr7vBD+yqCH/a7QJ4O7HQcqYjpUTezWpUDZw/6Yn5nd3CtPyFgrCmaR4Eiu
-IB1pYoLnYJTJnJClH8JGLs25ezTXpigIeEZ4pcuAW2Sk4kC3R1GwdWK8BMI4cEur
-mCN9zWv7+09q1JLnvkc7lqwJA1vFwdPKgeSXhBGf9P37GpPH2hnqDnY8bdFTgXIO
-khEdKooQ1FU1cNpViuHqHNORPRR21g==
-=cg4Q
------END PGP SIGNATURE-----
+> > As it happens, you do mutex_unlock() from the very same softirq context
+> > you do that mutex_trylock() in, so lockdep will never have had cause to
+> > complain, 'current' is the same at acquire and release.
+> >
+> > Now, either we're in non-preemptible softirq context and a contending
+> > mutex_lock() would spuriously boost a random task, which is harmless due
+> > to the non-preemptive nature of softirq, or we're running in ksoftirqd
+> > and that gets boosted, which actually makes some sense.
+> >
+> > For PREEMPT_RT (the only case that really matters, since that actually
+> > replaces struct mutex with rt_mutex) this would result in boosting
+> > whatever (soft)irq thread ended up running the thing.
+> 
+> Well, that'd "work". Actually in RT this makes even sense as the
+> contending waiter wants the owner out of the critical region ASAP>
 
---HcXnUX77nabWBLF4--
+The only funny I could come up with is if current == idle, because in
+that case we'll attempt to boost idle. And that is a major no-no. The
+proxy execution patches will actually run into this :/
+
+> > (Also, I'm not entire sure on the current softirq model for -RT)
+> >
+> > Is this something we want to allow?
+> 
+> I'm not a fan. See above.
+
+Yeah, I'm pretty adverse to it too. But I'm not sure what to suggest
+David do instead. Clearly semaphores are an option, but perhaps there's
+something better; I've not yet tried to understand his code.
