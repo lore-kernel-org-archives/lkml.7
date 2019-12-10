@@ -2,119 +2,73 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141F6C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDD6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC85A2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VqS3SpQ5"
+	by mail.kernel.org (Postfix) with ESMTP id 23CC7207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfLJOxO (ORCPT
+        id S1727561AbfLJOxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:53:14 -0500
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:18750 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfLJOxO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:53:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1575989593; x=1607525593;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NAV6kZQrewVA32BcVnXou+TwbV5q6MZxjxEtrGeNo8M=;
-  b=VqS3SpQ5JJ2oVUm7hETyjPKTuQAxYpYpBnjjT2gO5u8an9JWUl7dTmme
-   iSA53jSaCo8v9J3FLYsP6/mMKSxDWjCMarkzWL8k8tuRjzEi2ULl1vp0d
-   mS1DLMsKhIhi5FoeciX6faUSMdzyyNPh8+KIHVkGYKSnVgYVcC3ph8KQG
-   4=;
-IronPort-SDR: wVWUhxat8iw5Q6ERyDQmmnGyVDPqrDPvphLeTNPJ5eufTf7zRgq8/rqezj2Zfh8mbPGQUj9a9W
- 6wuUfkDS+udQ==
-X-IronPort-AV: E=Sophos;i="5.69,300,1571702400"; 
-   d="scan'208";a="7928558"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 10 Dec 2019 14:53:11 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id A2C651A1EEE;
-        Tue, 10 Dec 2019 14:53:10 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Dec 2019 14:53:10 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 10 Dec 2019 14:53:09 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 10 Dec 2019 14:53:07 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH] xen-blkback: prevent premature module unload
-Date:   Tue, 10 Dec 2019 14:53:05 +0000
-Message-ID: <20191210145305.6605-1-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Dec 2019 09:53:30 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2171 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727420AbfLJOxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:53:30 -0500
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id F08F0B0D3C4BB7E5B4A8;
+        Tue, 10 Dec 2019 14:53:26 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Dec 2019 14:53:26 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
+ 2019 14:53:26 +0000
+Subject: Re: [Patch v3 0/3] iommu: reduce spinlock contention on fast path
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        <iommu@lists.linux-foundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20191206213803.12580-1-xiyou.wangcong@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <5d517a33-2e5a-529c-578c-707ae0a40e88@huawei.com>
+Date:   Tue, 10 Dec 2019 14:53:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206213803.12580-1-xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
-cache. This cache is destoyed when xen-blkif is unloaded so it is
-necessary to wait for the deferred free routine used for such objects to
-complete. This necessity was missed in commit 14855954f636 "xen-blkback:
-allow module to be cleanly unloaded". This patch fixes the problem by
-taking/releasing extra module references in xen_blkif_alloc/free()
-respectively.
+On 06/12/2019 21:38, Cong Wang wrote:
+> This patchset contains three small optimizations for the global spinlock
+> contention in IOVA cache. Our memcache perf test shows this reduced its
+> p999 latency down by 45% on AMD when IOMMU is enabled.
+> 
+> Cong Wang (3):
+>    iommu: avoid unnecessary magazine allocations
+>    iommu: optimize iova_magazine_free_pfns()
+>    iommu: avoid taking iova_rbtree_lock twice
+> ---
+>   drivers/iommu/iova.c | 75 ++++++++++++++++++++++++++------------------
+>   1 file changed, 45 insertions(+), 30 deletions(-)
+> 
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Jens Axboe <axboe@kernel.dk>
----
- drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I retested, and got a ~1.1% gain in throughput for my storage test - 
+results here if interested https://pastebin.com/dSQxYpN8
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index e8c5c54e1d26..59d576d27ca7 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -171,6 +171,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t domid)
- 	blkif->domid = domid;
- 	atomic_set(&blkif->refcnt, 1);
- 	init_completion(&blkif->drain_complete);
-+
-+	/*
-+	 * Because freeing back to the cache may be deferred, it is not
-+	 * safe to unload the module (and hence destroy the cache) until
-+	 * this has completed. To prevent premature unloading, take an
-+	 * extra module reference here and release only when the object
-+	 * has been free back to the cache.
-+	 */
-+	__module_get(THIS_MODULE);
- 	INIT_WORK(&blkif->free_work, xen_blkif_deferred_free);
- 
- 	return blkif;
-@@ -320,6 +329,7 @@ static void xen_blkif_free(struct xen_blkif *blkif)
- 
- 	/* Make sure everything is drained before shutting down */
- 	kmem_cache_free(xen_blkif_cachep, blkif);
-+	module_put(THIS_MODULE);
- }
- 
- int __init xen_blkif_interface_init(void)
--- 
-2.20.1
-
+Thanks,
+John
