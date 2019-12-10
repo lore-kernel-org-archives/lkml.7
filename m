@@ -2,130 +2,130 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C842AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F91C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B832073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575987579;
-	bh=ov5MQDFCsosZzZFCs7On3D9TRwkmnckEYiB2mMwLlIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RvzAkjIa8F5vHIN2tpwFgPnnwlJws/v06z3m3RTXfi4VlR542XbEW1cTaVihOS1Ss
-	 s9jttaaDRfHGoPWrk5cvB+cTY8w0OdFkQdbFWatt5Llh7Ce0aWkv2fOtbGmiE9mAYd
-	 LpdKxnWgctC3BZHnVUS23XEc05c8wvHdcp4C5wzM=
+	by mail.kernel.org (Postfix) with ESMTP id 758562073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MoeXIuQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfLJOTi (ORCPT
+        id S1727482AbfLJOVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:19:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36053 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbfLJOTi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:19:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so3402744wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:19:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vvShKcPkNNNZPmf7EcjJYAypgpc9NXZSs5nDPjN1qQA=;
-        b=JtKHQkJI38o9lYxquTSteA0vr7XcA52EXq3NOeF1URT8+Gvh3X6+T0OsRo+f6qI29+
-         bIEs9QfdyTb5tD0FR/8D8N02//Ol93lnWdHjg+ES/s/3Kh0sKYQmEgFUQ1Up7pzbJye8
-         KjOLWY+yP2kmR7JU3lakxZII41RKDFxZLGVFrrw+9J2BJWQHxU8N4yNW7A0qUo43PDaH
-         Ey8mNMeFKk080jTjwbOgmMNuTk5C9iTrKTYE8V1rAU/aBgxOqzYGE703PpgMfLIH8Xbs
-         lTPjX1p23Pxmf7ZINsES93+weonmuawjFJ5/PdVzcG5tDKtQ6PT0ubNqu8dWLj5I9wvU
-         Vg3A==
-X-Gm-Message-State: APjAAAVFMCjbVM0ZJgg2ktj9g1GW8Wp99e2wT+rMaPw+M9QCzj32kwFR
-        0mW6XSrUrfT8K1gkHsSAohU=
-X-Google-Smtp-Source: APXvYqxf446sXqtpzu0nV99LjNCiKJty0osulSpIpx9pagCwolcdBKEWtSanOJVj9s9RvcUKxyVdmA==
-X-Received: by 2002:a1c:f60f:: with SMTP id w15mr5357176wmc.132.1575987576101;
-        Tue, 10 Dec 2019 06:19:36 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id l15sm3380558wrv.39.2019.12.10.06.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:19:35 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:19:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191210141934.GL10404@dhcp22.suse.cz>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <20191210072453.GI2984@MiWiFi-R3L-srv>
- <20191210102834.GE10404@dhcp22.suse.cz>
- <20191210104303.GN2984@MiWiFi-R3L-srv>
- <20191210113341.GG10404@dhcp22.suse.cz>
- <20191210125557.GA28917@MiWiFi-R3L-srv>
- <20191210133202.GJ10404@dhcp22.suse.cz>
- <20191210140534.GB28917@MiWiFi-R3L-srv>
+        Tue, 10 Dec 2019 09:21:18 -0500
+Received: from mout.gmx.net ([212.227.15.15]:60369 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727061AbfLJOVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:21:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1575987668;
+        bh=l1pRmOq+rpXSKUIG2EqcAf4rtoRv+wFY83lHK/cc0ss=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=MoeXIuQ9aoji2vM/cBGhRbGcw5PFEnIzgr2TGYFbQaKxOIo440i+kinAxB3Vvl6hB
+         GQeurd3BVO2tbT8eUtI7n1JVHvj/WPY6QFRgFmN7YXyYZIU6UqHgKaw0symMDuJxGV
+         tYQjI3/jvc2kqbvg+7WAKDaYtntIIptftCH5cZZY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [172.17.64.14] ([192.166.200.216]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mkpf3-1hsNwp24qN-00mL6u; Tue, 10
+ Dec 2019 15:21:08 +0100
+To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
+From:   Arne Jansen <sensille@gmx.net>
+Subject: [PATCH] scsi_lib: ratelimit printk in scsi_prep_state_check
+Message-ID: <ed19f704-ed33-66dc-ff37-2f686b66dbd6@gmx.net>
+Date:   Tue, 10 Dec 2019 15:21:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210140534.GB28917@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kBrkFfIaI15TPM1yAM1i/LI3rFsPSOELhgHQ3tMx16sfCOTd2qm
+ unORwUNeOwrhwkrLBt8IhPxtSJIKrR77XZb95as8xDhICmuopXcteJNC4nyQnD6Hxyy0wbN
+ XO1Fpa+4Lw4LAhAxn8pz6WpcA5yEOYDuIFxA7lgIvJ5nbqLUsRzFmcmOArAByY9N0Gvezrm
+ Wgp6P/7D26r7OZhUAXBAQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tevy09w2tzs=:PerOjC1B7+FXqVAbkGXzJy
+ EhAE3G31EvOf6r5xxQEp2YBCIGTd2fDP5Us9C0QvqaahxfKJTnyqORc+XV7BFAf3Z9xukFYpO
+ 22PQzNXgj16m3i24apJnAu1FCJEUyZGyuh3vnOUK+nr/RtT+rLpvuAZD3cUPhdIttAOB1Zle6
+ 6H77Jh5Z/VWFlpinUQq8M7Y6MVjUkaCApPXzOZbb2xSL7zxaLOMIDcYLDZs61yvIP4EPKluEH
+ V/kYL0k7e37BfcpaHOVjODWOD4IZAxb+WYx8drH3fXNG6qTQlUvH1qmYW+EWU6lIHvXEyLnZX
+ GHe6o7ADRqbj179fd72JA0nBgcL7bVG3kL5VrtiItEAz3e5Z7B5jRZ4uuAMX1x6MHEZjAvk3b
+ Lec8IkaUwzYvt3iVknGdl+qYz6glnlkoMZrwO8iLcV7gF5I1qAiYHBMKsVeBq3Uj8lIDjAqhz
+ WmGEIK1fJRJAIC0+fDNO4TmaUuF83wKKL3Airf2DVJPBjC1y6fQSgVkjaSP3VckluWoJU8Y/b
+ RHrN/gbdEnzJRCm2YaaAD+nidvDKXak4BaUFLFjTfb5yltAizUvRE0U7kzMYZymF/kNU+TPys
+ f2NDGj8pc8QeLZHq1oe7fuGRD2Rvfv6TBnNAjyDGA785pCBgqRNQFF0T0yhoj/WWTEIsko1UC
+ lRnuymy8VJsBC79uJpRuNvmNeP3g4x3Uk8FKvpUF93st8QkE+zMSwba6kjhK4EPs6DB23H+QW
+ nlqbF8u29de9vEk0M8O8pYeLcC6Mc/CVUtra7xu1J7UWAgssFBToEK5ecYTIQ25uEEwmuezhi
+ MLkAdVacrtryxenistqwBcLLwJB9p+RwtOxFmLJQKIvlTXkR/NP7b3UNZvMK3yUFR000SgZrT
+ Rcyzn+QR0Abq9H3CvxPzEezdwJjwdq+rYgc61mlGWK1HRy5Oq0hZSBj3OU86JbEjDjqTXCfuK
+ lGHdqtDnya/k7YnzOq0brndMlh1asMehXLl5N2uU0cu7ir0hLRmFumEJTmCxWtznDPzWtM4tj
+ VMx5llVEXFYZ+JMx6Xw8AhGhfXw/NHUCVRH5b2xPJH/U8nHH8oqObqfEFyjACyqCKu4GpcF74
+ kfSIBof9SCRoFQUde8GciSmBv+8CqEEO/oAkdvYDQyG4BgphIYeKta8T4pwgrfS7+9G1KqBic
+ KFr/QIil3PmLRZ8mm3J5m1EMx4la5VCID+wt3YDX1hIkt+tgJ2Bd6NkEdkPAu36hh0tLp1p1j
+ wkpXBlgGCzYoiSs9eu/59RKNyzypP6gaKKH2ycCPqsVme52KXP9eJoy8pl3Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 22:05:34, Baoquan He wrote:
-> On 12/10/19 at 02:32pm, Michal Hocko wrote:
-> > On Tue 10-12-19 20:55:57, Baoquan He wrote:
-> > [...]
-> > > Btw, as you said at above, I am confused by the '[KNL,BOOT]', what does
-> > > the 'BOOT' mean in the documentation of 'mem='? I checked all parameters
-> > > with 'BOOT', still don't get it clearly.
-> > 
-> > This is a good question indeed. I have checked closer and this is what
-> > documentation says
-> > Documentation/admin-guide/kernel-parameters.rst
-> > "
-> >         BOOT    Is a boot loader parameter.
-> > 
-> > Parameters denoted with BOOT are actually interpreted by the boot
-> > loader, and have no meaning to the kernel directly.
-> > "
-> > 
-> > and that really doesn't fit, right? So I went to check the full history
-> > git tree just to get to 2.4.0-test5 and no explanation whatsoever.
-> > Fun, isn't it? ;)
-> 
-> Yeah, very interesting. Finally I got their original purpose from
-> Documentation/x86/boot.rst.
-> 
-> 
-> Special Command Line Options
-> ============================
-> 
-> If the command line provided by the boot loader is entered by the
-> user, the user may expect the following command line options to work.
-> They should normally not be deleted from the kernel command line even
-> though not all of them are actually meaningful to the kernel.  Boot
-> loader authors who need additional command line options for the boot
-> loader itself should get them registered in
-> Documentation/admin-guide/kernel-parameters.rst to make sure they will not
-> conflict with actual kernel options now or in the future.
-> 
-> ...
-> 
-> So here, [KNL,BOOT], KNL means it's used for kernel, BOOT means it's
-> needed by boot loader.
+scsi_prep_state_check is called with the queue_lock held, called from
+scsi_internal_device_unblock.
+The same lock is also acquired in softirq context from scsi_end_request.
+If the output overwhelms the serial console, the machine effectively
+comes to a halt, even triggering a hardware watchdog.
 
-OK, that clarifies this a bit. Thanks for referencing to it!
-That should explain how the behavior is not boot time restricted at all
-and the current implementation is actually correct. So a change to it
-should clearly state the new usecase as we have already discussed. In
-case there are bootloaders which really rely on the original strict
-meaning then we should be able to compare cost/benfits of those two
-usecases.
--- 
-Michal Hocko
-SUSE Labs
+This patch ratelimits the output.
+
+Signed-off-by: Arne Jansen <sensille@gmx.net>
+=2D--
+  drivers/scsi/scsi_lib.c | 14 ++++++++++----
+  1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 3e7a45d0daca..33432108d6aa 100644
+=2D-- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1232,6 +1232,10 @@ static blk_status_t scsi_setup_cmnd(struct
+scsi_device *sdev,
+  static blk_status_t
+  scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
+  {
++       static DEFINE_RATELIMIT_STATE(_rs,
++               DEFAULT_RATELIMIT_INTERVAL,
++               DEFAULT_RATELIMIT_BURST);
++
+         switch (sdev->sdev_state) {
+         case SDEV_OFFLINE:
+         case SDEV_TRANSPORT_OFFLINE:
+@@ -1240,16 +1244,18 @@ scsi_prep_state_check(struct scsi_device *sdev,
+struct request *req)
+                  * commands.  The device must be brought online
+                  * before trying any recovery commands.
+                  */
+-               sdev_printk(KERN_ERR, sdev,
+-                           "rejecting I/O to offline device\n");
++               if (__ratelimit(&_rs))
++                       sdev_printk(KERN_ERR, sdev,
++                                   "rejecting I/O to offline device\n");
+                 return BLK_STS_IOERR;
+         case SDEV_DEL:
+                 /*
+                  * If the device is fully deleted, we refuse to
+                  * process any commands as well.
+                  */
+-               sdev_printk(KERN_ERR, sdev,
+-                           "rejecting I/O to dead device\n");
++               if (__ratelimit(&_rs))
++                       sdev_printk(KERN_ERR, sdev,
++                                   "rejecting I/O to dead device\n");
+                 return BLK_STS_IOERR;
+         case SDEV_BLOCK:
+         case SDEV_CREATED_BLOCK:
+=2D-
+2.11.0
