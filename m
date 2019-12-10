@@ -2,573 +2,181 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B786C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32E9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C72207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6B720836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MTD9ktrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLJUGB (ORCPT
+        id S1726787AbfLJUGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:06:01 -0500
-Received: from mga07.intel.com ([134.134.136.100]:1506 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfLJUGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:06:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 12:05:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
-   d="scan'208";a="210545641"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga008.fm.intel.com with SMTP; 10 Dec 2019 12:05:55 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 10 Dec 2019 22:05:55 +0200
-Date:   Tue, 10 Dec 2019 22:05:55 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Tom Anderson <thomasanderson@google.com>
-Cc:     Bhawanpreet Lakha <Bhawanpreet.lakha@amd.com>,
-        Harry Wentland <hwentlan@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Pau <sean@poorly.run>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/edid: Add modes from CTA-861-G
-Message-ID: <20191210200555.GE1208@intel.com>
-References: <20191123055053.154550-1-thomasanderson@google.com>
- <fcba3169-13a1-6368-60c6-bfc9d9ad62c1@amd.com>
- <c1870c44-466f-cbc3-25fa-47c3f4ec458d@amd.com>
- <20191202233246.GA49251@google.com>
- <20191203125312.GM1208@intel.com>
- <20191210191335.GA24292@google.com>
+        Tue, 10 Dec 2019 15:06:33 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43662 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfLJUGd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 15:06:33 -0500
+Received: by mail-pl1-f193.google.com with SMTP id q16so285382plr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:06:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KYuCvJCnn+Faxgj02yKxGaH8zvOq4VASGRA5HJAqsCg=;
+        b=MTD9ktrwv9Qe/EGdE/2bZh4yhicS6KKK9nz5TQxiiS1ecQnyibdyrMQY72EQIOhZd/
+         PS9LxNpumkkm6U94oNtI1W0xasDtfC+JQSaLHlLi8/sP/7nUMzha0t11YlEdsJ2KTLHx
+         ngORqYuNTJFAP5OG/HktQQlw9+kLZuB63iEPTZFxyOnaPzPdcgoMOcLbLzxqeNB+MaGb
+         hxsyAAq427/mFeHszAcFuhybujDavy5AqNdde5bsymH127c9hICpStzUAFxAl/Kzb+zb
+         4UngusSLcZvC9XvNpMXnBQvNEQbqCBnftfTmkNl2impvBFgZsGUIBh+8h56xmzcA4zC7
+         bYsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYuCvJCnn+Faxgj02yKxGaH8zvOq4VASGRA5HJAqsCg=;
+        b=jdh8I4nINyf+hzV4lWHoH4oeCLgdtgdlLYSHCVF1SNZuTV9FPSLrGWsVhthT3XWVZB
+         PnTR8kN6fxOxTtkMp4gWGfYQI4zhGN2qR+G3OjmThZ1cKf+p2bstA7c1cpQ+7cmghgJI
+         ZMEaCgAHvC8XpbMLZZvgVPmnH8MtUQ7lHbxJAjdZZpXcxcMW6wM73UQplJWWQ3LXM0eD
+         S+JnCpvnTqKoPjuM2qb/HSgqI/bHNZWnCqhpFMwkvVbP2SzhzPEA8JyG8mv8OGtJ9kjm
+         UFx3qEz5AJitNgXgFKJ2kReXcTAqh5B9w2pk/+t77/tTc1IKSM0hJfwCHOreAVq8MnPP
+         syVg==
+X-Gm-Message-State: APjAAAXkiO6Qy0o2sD4fYmBUm9dwpHawXRTzT5uKlJKWc3x3lcrCAvsj
+        GWW9ygg3sL43WRv9SRGxLQ13lr0GH8w8MKoaS66eyA==
+X-Google-Smtp-Source: APXvYqytg3awAocSi7YUInZyP1bVBjSPyqFgrC7zY8QdBIKePfmb2aWjEP6W2ZEt7kUcS+0WS6Z8R75KRdXwZP7s//U=
+X-Received: by 2002:a17:90a:1a1a:: with SMTP id 26mr7368500pjk.129.1576008391887;
+ Tue, 10 Dec 2019 12:06:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210191335.GA24292@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000006ab7cc05994cbae2@google.com> <Pine.LNX.4.44L0.1912101440100.1647-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912101440100.1647-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 10 Dec 2019 21:06:20 +0100
+Message-ID: <CAAeHK+wY+35uBvr0=FnKsWOj91QhXuVE++V7frn5AihAPLvo5Q@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:13:35AM -0800, Tom Anderson wrote:
-> On Tue, Dec 03, 2019 at 02:53:12PM +0200, Ville Syrjälä wrote:
-> > On Mon, Dec 02, 2019 at 03:32:46PM -0800, Tom Anderson wrote:
-> > > On Mon, Nov 25, 2019 at 01:42:00PM -0500, Bhawanpreet Lakha wrote:
-> > > > Reviewed-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-> > > 
-> > > Thank you for the review. +Ville has brought to my attention 978f6b0693c7 which
-> > > added modes up to 128 which was part of a recent merge, so I didn't seen the
-> > > changes until now.
-> > > 
-> > > Ville also pointed out [1] which achieves the same thing, but has been in limbo.
-> > > At any rate, I'll be sending out a rebased v2 patch. I don't mind which patch
-> > > lands, all I want is for my 8K display to work :)
-> > 
-> > I'd just need someone to slap on a reviwed-by for the few patches
-> > that are missing it. I'd rather not waste ~13 KiB of memory for
-> > those 128-192 dummy modes, which is why I prefer my apporach.
-> 
-> Like I said, I'm fine with either patch landing. But in your patch, please merge
-> the drm_connector.h changes from here, otherwise there's a buffer overflow.
+On Tue, Dec 10, 2019 at 8:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 9 Dec 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in __mutex_lock_common
+> > kernel/locking/mutex.c:1043 [inline]
+> > BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
+> > kernel/locking/mutex.c:1106
+> > Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
+> >
+> > CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xef/0x16e lib/dump_stack.c:118
+> >   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+> >   kasan_report+0xe/0x20 mm/kasan/common.c:638
+> >   __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
+> >   __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
+> >   usbvision_v4l2_open+0x77/0x340
+> > drivers/media/usb/usbvision/usbvision-video.c:314
+> >   v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
+> >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> >   do_dentry_open+0x494/0x1120 fs/open.c:797
+> >   do_last fs/namei.c:3412 [inline]
+> >   path_openat+0x142b/0x4030 fs/namei.c:3529
+> >   do_filp_open+0x1a1/0x280 fs/namei.c:3559
+> >   do_sys_open+0x3c0/0x580 fs/open.c:1097
+> >   do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> This looks like a race in v4l2_open(): The function drops the
+> videodev_lock mutex before calling the video driver's open routine, and
+> the device can be unregistered during the short time between.
+>
+> This patch tries to make the race much more likely to happen, for
+> testing and verification.
+>
+> Andrey, will syzbot run the same test with this patch, even though it
+> says it doesn't have a reproducer?
 
-Ouch. Good catch. Didn't even notice that one. Can you send that
-hunk as a separate patch and review the remaining patches in my
-series so I could just push it all?
+Hi Alan,
 
-> 
-> > 
-> > > 
-> > > [1] https://patchwork.freedesktop.org/series/63555/
-> > > 
-> > > > 
-> > > > On 2019-11-25 1:14 p.m., Harry Wentland wrote:
-> > > > > +Bhawan who has been looking at this from our side.
-> > > > > 
-> > > > > Harry
-> > > > > 
-> > > > > On 2019-11-23 12:50 a.m., Thomas Anderson wrote:
-> > > > > > The new modes are needed for exotic displays such as 8K. Verified that
-> > > > > > modes like 8K60 and 4K120 are properly obtained from a Samsung Q900R.
-> > > > > > 
-> > > > > > Signed-off-by: Thomas Anderson <thomasanderson@google.com>
-> > > > > > ---
-> > > > > >   drivers/gpu/drm/drm_edid.c  | 388 +++++++++++++++++++++++++++++++++++-
-> > > > > >   include/drm/drm_connector.h |  16 +-
-> > > > > >   2 files changed, 391 insertions(+), 13 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> > > > > > index 6b0177112e18..ff5c928516fb 100644
-> > > > > > --- a/drivers/gpu/drm/drm_edid.c
-> > > > > > +++ b/drivers/gpu/drm/drm_edid.c
-> > > > > > @@ -1278,6 +1278,374 @@ static const struct drm_display_mode edid_cea_modes[] = {
-> > > > > >   		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > >   		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > >   	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 108 - 1280x720@48Hz 16:9 */
-> > > > > > +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
-> > > > > > +		   2280, 2500, 0, 720, 725, 730, 750, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 109 - 1280x720@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
-> > > > > > +		   2280, 2500, 0, 720, 725, 730, 750, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 110 - 1680x720@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("1680x720", DRM_MODE_TYPE_DRIVER, 99000, 1680, 2490,
-> > > > > > +		   2530, 2750, 0, 720, 725, 730, 750, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 111 - 1920x1080@48Hz 16:9 */
-> > > > > > +	{ DRM_MODE("1920x1080", DRM_MODE_TYPE_DRIVER, 148500, 1920, 2558,
-> > > > > > +		   2602, 2750, 0, 1080, 1084, 1089, 1125, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 112 - 1920x1080@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("1920x1080", DRM_MODE_TYPE_DRIVER, 148500, 1920, 2558,
-> > > > > > +		   2602, 2750, 0, 1080, 1084, 1089, 1125, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 113 - 2560x1080@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("2560x1080", DRM_MODE_TYPE_DRIVER, 198000, 2560, 3558,
-> > > > > > +		   3602, 3750, 0, 1080, 1084, 1089, 1100, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 114 - 3840x2160@48Hz 16:9 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 594000, 3840, 5116,
-> > > > > > +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 115 - 4096x2160@48Hz 256:135 */
-> > > > > > +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 594000, 4096, 5116,
-> > > > > > +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48,
-> > > > > > +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
-> > > > > > +	/* 116 - 3840x2160@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 594000, 3840, 5116,
-> > > > > > +		   5204, 5500, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 117 - 3840x2160@100Hz 16:9 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4896,
-> > > > > > +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 118 - 3840x2160@120Hz 16:9 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4016,
-> > > > > > +		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 119 - 3840x2160@100Hz 64:27 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4896,
-> > > > > > +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 120 - 3840x2160@120Hz 64:27 */
-> > > > > > +	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 1188000, 3840, 4016,
-> > > > > > +		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 121 - 5120x2160@24Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 7116,
-> > > > > > +		   7204, 7500, 0, 2160, 2168, 2178, 2200, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 122 - 5120x2160@25Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 6816,
-> > > > > > +		   6904, 7200, 0, 2160, 2168, 2178, 2200, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 123 - 5120x2160@30Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 396000, 5120, 5784,
-> > > > > > +		   5872, 6000, 0, 2160, 2168, 2178, 2200, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 124 - 5120x2160@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 5866,
-> > > > > > +		   5954, 6250, 0, 2160, 2168, 2178, 2475, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 125 - 5120x2160@50Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 6216,
-> > > > > > +		   6304, 6600, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 126 - 5120x2160@60Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 742500, 5120, 5284,
-> > > > > > +		   5372, 5500, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 127 - 5120x2160@100Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 1485000, 5120, 6216,
-> > > > > > +		   6304, 6600, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 128 - dummy */
-> > > > > > +	{ },
-> > > > > > +	/* 129 - reserved for native timing 1 */
-> > > > > > +	{ },
-> > > > > > +	/* 130 - reserved for native timing 2 */
-> > > > > > +	{ },
-> > > > > > +	/* 131 - reserved for native timing 3 */
-> > > > > > +	{ },
-> > > > > > +	/* 132 - reserved for native timing 4 */
-> > > > > > +	{ },
-> > > > > > +	/* 133 - reserved for native timing 5 */
-> > > > > > +	{ },
-> > > > > > +	/* 134 - reserved for native timing 6 */
-> > > > > > +	{ },
-> > > > > > +	/* 135 - reserved for native timing 7 */
-> > > > > > +	{ },
-> > > > > > +	/* 136 - reserved for native timing 8 */
-> > > > > > +	{ },
-> > > > > > +	/* 137 - reserved for native timing 9 */
-> > > > > > +	{ },
-> > > > > > +	/* 138 - reserved for native timing 10 */
-> > > > > > +	{ },
-> > > > > > +	/* 139 - reserved for native timing 11 */
-> > > > > > +	{ },
-> > > > > > +	/* 140 - reserved for native timing 12 */
-> > > > > > +	{ },
-> > > > > > +	/* 141 - reserved for native timing 13 */
-> > > > > > +	{ },
-> > > > > > +	/* 142 - reserved for native timing 14 */
-> > > > > > +	{ },
-> > > > > > +	/* 143 - reserved for native timing 15 */
-> > > > > > +	{ },
-> > > > > > +	/* 144 - reserved for native timing 16 */
-> > > > > > +	{ },
-> > > > > > +	/* 145 - reserved for native timing 17 */
-> > > > > > +	{ },
-> > > > > > +	/* 146 - reserved for native timing 18 */
-> > > > > > +	{ },
-> > > > > > +	/* 147 - reserved for native timing 19 */
-> > > > > > +	{ },
-> > > > > > +	/* 148 - reserved for native timing 20 */
-> > > > > > +	{ },
-> > > > > > +	/* 149 - reserved for native timing 21 */
-> > > > > > +	{ },
-> > > > > > +	/* 150 - reserved for native timing 22 */
-> > > > > > +	{ },
-> > > > > > +	/* 151 - reserved for native timing 23 */
-> > > > > > +	{ },
-> > > > > > +	/* 152 - reserved for native timing 24 */
-> > > > > > +	{ },
-> > > > > > +	/* 153 - reserved for native timing 25 */
-> > > > > > +	{ },
-> > > > > > +	/* 154 - reserved for native timing 26 */
-> > > > > > +	{ },
-> > > > > > +	/* 155 - reserved for native timing 27 */
-> > > > > > +	{ },
-> > > > > > +	/* 156 - reserved for native timing 28 */
-> > > > > > +	{ },
-> > > > > > +	/* 157 - reserved for native timing 29 */
-> > > > > > +	{ },
-> > > > > > +	/* 158 - reserved for native timing 30 */
-> > > > > > +	{ },
-> > > > > > +	/* 159 - reserved for native timing 31 */
-> > > > > > +	{ },
-> > > > > > +	/* 160 - reserved for native timing 32 */
-> > > > > > +	{ },
-> > > > > > +	/* 161 - reserved for native timing 33 */
-> > > > > > +	{ },
-> > > > > > +	/* 162 - reserved for native timing 34 */
-> > > > > > +	{ },
-> > > > > > +	/* 163 - reserved for native timing 35 */
-> > > > > > +	{ },
-> > > > > > +	/* 164 - reserved for native timing 36 */
-> > > > > > +	{ },
-> > > > > > +	/* 165 - reserved for native timing 37 */
-> > > > > > +	{ },
-> > > > > > +	/* 166 - reserved for native timing 38 */
-> > > > > > +	{ },
-> > > > > > +	/* 167 - reserved for native timing 39 */
-> > > > > > +	{ },
-> > > > > > +	/* 168 - reserved for native timing 40 */
-> > > > > > +	{ },
-> > > > > > +	/* 169 - reserved for native timing 41 */
-> > > > > > +	{ },
-> > > > > > +	/* 170 - reserved for native timing 42 */
-> > > > > > +	{ },
-> > > > > > +	/* 171 - reserved for native timing 43 */
-> > > > > > +	{ },
-> > > > > > +	/* 172 - reserved for native timing 44 */
-> > > > > > +	{ },
-> > > > > > +	/* 173 - reserved for native timing 45 */
-> > > > > > +	{ },
-> > > > > > +	/* 174 - reserved for native timing 46 */
-> > > > > > +	{ },
-> > > > > > +	/* 175 - reserved for native timing 47 */
-> > > > > > +	{ },
-> > > > > > +	/* 176 - reserved for native timing 48 */
-> > > > > > +	{ },
-> > > > > > +	/* 177 - reserved for native timing 49 */
-> > > > > > +	{ },
-> > > > > > +	/* 178 - reserved for native timing 50 */
-> > > > > > +	{ },
-> > > > > > +	/* 179 - reserved for native timing 51 */
-> > > > > > +	{ },
-> > > > > > +	/* 180 - reserved for native timing 52 */
-> > > > > > +	{ },
-> > > > > > +	/* 181 - reserved for native timing 53 */
-> > > > > > +	{ },
-> > > > > > +	/* 182 - reserved for native timing 54 */
-> > > > > > +	{ },
-> > > > > > +	/* 183 - reserved for native timing 55 */
-> > > > > > +	{ },
-> > > > > > +	/* 184 - reserved for native timing 56 */
-> > > > > > +	{ },
-> > > > > > +	/* 185 - reserved for native timing 57 */
-> > > > > > +	{ },
-> > > > > > +	/* 186 - reserved for native timing 58 */
-> > > > > > +	{ },
-> > > > > > +	/* 187 - reserved for native timing 59 */
-> > > > > > +	{ },
-> > > > > > +	/* 188 - reserved for native timing 60 */
-> > > > > > +	{ },
-> > > > > > +	/* 189 - reserved for native timing 61 */
-> > > > > > +	{ },
-> > > > > > +	/* 190 - reserved for native timing 62 */
-> > > > > > +	{ },
-> > > > > > +	/* 191 - reserved for native timing 63 */
-> > > > > > +	{ },
-> > > > > > +	/* 192 - reserved for native timing 64 */
-> > > > > > +	{ },
-> > > > > > +	/* 193 - 5120x2160@120Hz 64:27 */
-> > > > > > +	{ DRM_MODE("5120x2160", DRM_MODE_TYPE_DRIVER, 1485000, 5120, 5284,
-> > > > > > +		   5372, 5500, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 194 - 7680x4320@24Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10232,
-> > > > > > +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 195 - 7680x4320@25Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10032,
-> > > > > > +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 196 - 7680x4320@30Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 8232,
-> > > > > > +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 197 - 7680x4320@48Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10232,
-> > > > > > +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 198 - 7680x4320@50Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10032,
-> > > > > > +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 199 - 7680x4320@60Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 8232,
-> > > > > > +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 200 - 7680x4320@100Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 9792,
-> > > > > > +		   9968, 10560, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 201 - 7680x4320@120Hz 16:9 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 8032,
-> > > > > > +		   8208, 8800, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-> > > > > > +	/* 202 - 7680x4320@24Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10232,
-> > > > > > +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 203 - 7680x4320@25Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 10032,
-> > > > > > +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 204 - 7680x4320@30Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 1188000, 7680, 8232,
-> > > > > > +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 205 - 7680x4320@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10232,
-> > > > > > +		   10408, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 206 - 7680x4320@50Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 10032,
-> > > > > > +		   10208, 10800, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 207 - 7680x4320@60Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 2376000, 7680, 8232,
-> > > > > > +		   8408, 9000, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 208 - 7680x4320@100Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 9792,
-> > > > > > +		   9968, 10560, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 209 - 7680x4320@120Hz 64:27 */
-> > > > > > +	{ DRM_MODE("7680x4320", DRM_MODE_TYPE_DRIVER, 4752000, 7680, 8032,
-> > > > > > +		   8208, 8800, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 210 - 10240x4320@24Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 11732,
-> > > > > > +		   11908, 12500, 0, 4320, 4336, 4356, 4950, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 24, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 211 - 10240x4320@25Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 12732,
-> > > > > > +		   12908, 13500, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 25, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 212 - 10240x4320@30Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 1485000, 10240, 10528,
-> > > > > > +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 30, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 213 - 10240x4320@48Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 11732,
-> > > > > > +		   11908, 12500, 0, 4320, 4336, 4356, 4950, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 48, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 214 - 10240x4320@50Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 12732,
-> > > > > > +		   12908, 13500, 0, 4320, 4336, 4356, 4400, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 50, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 215 - 10240x4320@60Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 2970000, 10240, 10528,
-> > > > > > +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 216 - 10240x4320@100Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 5940000, 10240, 12432,
-> > > > > > +		   12608, 13200, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 217 - 10240x4320@120Hz 64:27 */
-> > > > > > +	{ DRM_MODE("10240x4320", DRM_MODE_TYPE_DRIVER, 5940000, 10240, 10528,
-> > > > > > +		   10704, 11000, 0, 4320, 4336, 4356, 4500, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
-> > > > > > +	/* 218 - 4096x2160@100Hz 256:135 */
-> > > > > > +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 1188000, 4096, 4896,
-> > > > > > +		   4984, 5280, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 100,
-> > > > > > +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
-> > > > > > +	/* 219 - 4096x2160@120Hz 256:135 */
-> > > > > > +	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 1188000, 4096, 4184,
-> > > > > > +		   4272, 4400, 0, 2160, 2168, 2178, 2250, 0,
-> > > > > > +		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
-> > > > > > +	  .vrefresh = 120,
-> > > > > > +	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_256_135, },
-> > > > > >   };
-> > > > > >   /*
-> > > > > > @@ -3030,6 +3398,12 @@ cea_mode_alternate_timings(u8 vic, struct drm_display_mode *mode)
-> > > > > >   	return false;
-> > > > > >   }
-> > > > > > +static bool drm_valid_cea_vic(u8 vic)
-> > > > > > +{
-> > > > > > +	return (vic > 0 && vic < 128) ||
-> > > > > > +	       (vic > 192 && vic < ARRAY_SIZE(edid_cea_modes));
-> > > > > > +}
-> > > > > > +
-> > > > > >   static u8 drm_match_cea_mode_clock_tolerance(const struct drm_display_mode *to_match,
-> > > > > >   					     unsigned int clock_tolerance)
-> > > > > >   {
-> > > > > > @@ -3046,6 +3420,9 @@ static u8 drm_match_cea_mode_clock_tolerance(const struct drm_display_mode *to_m
-> > > > > >   		struct drm_display_mode cea_mode = edid_cea_modes[vic];
-> > > > > >   		unsigned int clock1, clock2;
-> > > > > > +		if (!drm_valid_cea_vic(vic))
-> > > > > > +			continue;
-> > > > > > +
-> > > > > >   		/* Check both 60Hz and 59.94Hz */
-> > > > > >   		clock1 = cea_mode.clock;
-> > > > > >   		clock2 = cea_mode_alternate_clock(&cea_mode);
-> > > > > > @@ -3085,6 +3462,9 @@ u8 drm_match_cea_mode(const struct drm_display_mode *to_match)
-> > > > > >   		struct drm_display_mode cea_mode = edid_cea_modes[vic];
-> > > > > >   		unsigned int clock1, clock2;
-> > > > > > +		if (!drm_valid_cea_vic(vic))
-> > > > > > +			continue;
-> > > > > > +
-> > > > > >   		/* Check both 60Hz and 59.94Hz */
-> > > > > >   		clock1 = cea_mode.clock;
-> > > > > >   		clock2 = cea_mode_alternate_clock(&cea_mode);
-> > > > > > @@ -3103,11 +3483,6 @@ u8 drm_match_cea_mode(const struct drm_display_mode *to_match)
-> > > > > >   }
-> > > > > >   EXPORT_SYMBOL(drm_match_cea_mode);
-> > > > > > -static bool drm_valid_cea_vic(u8 vic)
-> > > > > > -{
-> > > > > > -	return vic > 0 && vic < ARRAY_SIZE(edid_cea_modes);
-> > > > > > -}
-> > > > > > -
-> > > > > >   /**
-> > > > > >    * drm_get_cea_aspect_ratio - get the picture aspect ratio corresponding to
-> > > > > >    * the input VIC from the CEA mode list
-> > > > > > @@ -3117,6 +3492,9 @@ static bool drm_valid_cea_vic(u8 vic)
-> > > > > >    */
-> > > > > >   enum hdmi_picture_aspect drm_get_cea_aspect_ratio(const u8 video_code)
-> > > > > >   {
-> > > > > > +	if (!drm_valid_cea_vic(video_code))
-> > > > > > +		return HDMI_PICTURE_ASPECT_NONE;
-> > > > > > +
-> > > > > >   	return edid_cea_modes[video_code].picture_aspect_ratio;
-> > > > > >   }
-> > > > > >   EXPORT_SYMBOL(drm_get_cea_aspect_ratio);
-> > > > > > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> > > > > > index 681cb590f952..0a90efa0246e 100644
-> > > > > > --- a/include/drm/drm_connector.h
-> > > > > > +++ b/include/drm/drm_connector.h
-> > > > > > @@ -188,19 +188,19 @@ struct drm_hdmi_info {
-> > > > > >   	/**
-> > > > > >   	 * @y420_vdb_modes: bitmap of modes which can support ycbcr420
-> > > > > > -	 * output only (not normal RGB/YCBCR444/422 outputs). There are total
-> > > > > > -	 * 107 VICs defined by CEA-861-F spec, so the size is 128 bits to map
-> > > > > > -	 * upto 128 VICs;
-> > > > > > +	 * output only (not normal RGB/YCBCR444/422 outputs). The max VIC
-> > > > > > +	 * defined by the CEA-861-G spec is 219, so the size is 256 bits to map
-> > > > > > +	 * upto 256 VICs.
-> > > > > >   	 */
-> > > > > > -	unsigned long y420_vdb_modes[BITS_TO_LONGS(128)];
-> > > > > > +	unsigned long y420_vdb_modes[BITS_TO_LONGS(256)];
-> > > > > >   	/**
-> > > > > >   	 * @y420_cmdb_modes: bitmap of modes which can support ycbcr420
-> > > > > > -	 * output also, along with normal HDMI outputs. There are total 107
-> > > > > > -	 * VICs defined by CEA-861-F spec, so the size is 128 bits to map upto
-> > > > > > -	 * 128 VICs;
-> > > > > > +	 * output also, along with normal HDMI outputs. The max VIC defined by
-> > > > > > +	 * the CEA-861-G spec is 219, so the size is 256 bits to map upto 256
-> > > > > > +	 * VICs.
-> > > > > >   	 */
-> > > > > > -	unsigned long y420_cmdb_modes[BITS_TO_LONGS(128)];
-> > > > > > +	unsigned long y420_cmdb_modes[BITS_TO_LONGS(256)];
-> > > > > >   	/** @y420_cmdb_map: bitmap of SVD index, to extraxt vcb modes */
-> > > > > >   	u64 y420_cmdb_map;
-> > > > > > 
-> > 
-> > -- 
-> > Ville Syrjälä
-> > Intel
+No, unfortunately there's nothing to run if there's no reproducer.
+It's technically possible to run the same program log that triggered
+the bug initially, but since the bug wasn't reproduced with this log
+even without the patch, there isn't much sense in running it with the
+patch applied.
 
--- 
-Ville Syrjälä
-Intel
+Thanks!
+
+>
+> Alan Stern
+>
+> #syz test: https://github.com/google/kasan.git 1f22d15c
+>
+> Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
+> +++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+> @@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
+>                 wake_up_interruptible(&usbvision->wait_frame);
+>                 wake_up_interruptible(&usbvision->wait_stream);
+>         } else {
+> +               msleep(100);
+>                 usbvision_release(usbvision);
+>         }
+>
+> Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
+> +++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+> @@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
+>         video_get(vdev);
+>         mutex_unlock(&videodev_lock);
+>         if (vdev->fops->open) {
+> -               if (video_is_registered(vdev))
+> +               if (video_is_registered(vdev)) {
+> +                       msleep(200);
+>                         ret = vdev->fops->open(filp);
+> -               else
+> +               } else
+>                         ret = -ENODEV;
+>         }
+>
+>
