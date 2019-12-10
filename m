@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6868C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036E3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD3A222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4956208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013635;
-	bh=tVWIOcwtsUD+cqMK4L1fGArHlYXqP6Xo+X7a3GHCS1Y=;
+	s=default; t=1576013640;
+	bh=1Ybdl3YQkMwccnYHF0UQNi1FGLHTjOF7XaloQgt7bmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dBj/zCHbprQbwqH6+TsVTzY2iw2EIgk43YiKd0uxGHJXVTAWQqIxDap+K8xrTIHHF
-	 SK5eK23Q8qJUBufO0tUjYcvzJtCdnY+UhDK3ePMtcGd1Drr5K8ZRaL+KZZMKbKazo/
-	 G6q9+LzPES7TmmITDQcqnMNKeFGKVUUk3MsGvYz0=
+	b=HDwv3ug+8SuE3q8EYz+fu9/TtMhsMAGYxdPp6baZ7wRCaVzMGiJBsnI6yqnhUptJr
+	 fY+KDKDffiAIKk6LarOURsCQ+Xwd2g0C6hUfyFbkgQa53Tk3MmxqiNKTvWonS7nqpO
+	 r7nFVEvgBPrM885ps6r8ExcjlvynhJ4XRKVY8RMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfLJVdy (ORCPT
+        id S1729897AbfLJVeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:33:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38468 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbfLJVdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:51 -0500
+        id S1728153AbfLJVdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF0AA24654;
-        Tue, 10 Dec 2019 21:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46CA4214AF;
+        Tue, 10 Dec 2019 21:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013630;
-        bh=tVWIOcwtsUD+cqMK4L1fGArHlYXqP6Xo+X7a3GHCS1Y=;
+        s=default; t=1576013634;
+        bh=1Ybdl3YQkMwccnYHF0UQNi1FGLHTjOF7XaloQgt7bmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N93cUA3dn281JwfQJ9nsZYPKGo3gkGNAxNKO/A9PjIVz7DJBfa8397TFAKCraC3Pu
-         x//QB31phQaUvY4sX/emynML4CQXwvF3BE0Kdh3brTk8BcynPUsUUF6MVTMSXC/DE0
-         6T7qxhPd5kj94GPgcPmiRWM5W/AR6c/Y+V8D3+Bs=
+        b=ZlXIdgoAZj1gfhd2K16NGzokOBSPQUBQvMgmLzalaZZCvQRxE8QPNyQMuPmam8SV5
+         8NubyGnDROdYUx1dMAmE6+R8U6Aq8/cPR5JwySrS4bLpHQKO5cDJQUPW+RYTDPmq76
+         zobJXL5JRZxsCthCyVDz4WrPXc+/iwlzj8U8w13E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corey Minyard <cminyard@mvista.com>,
-        tony camuso <tcamuso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 072/177] ipmi: Don't allow device module unload when in use
-Date:   Tue, 10 Dec 2019 16:30:36 -0500
-Message-Id: <20191210213221.11921-72-sashal@kernel.org>
+Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 075/177] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
+Date:   Tue, 10 Dec 2019 16:30:39 -0500
+Message-Id: <20191210213221.11921-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,134 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
 
-[ Upstream commit cbb79863fc3175ed5ac506465948b02a893a8235 ]
+[ Upstream commit fadcbd2901a0f7c8721f3bdb69eac95c272dc8ed ]
 
-If something has the IPMI driver open, don't allow the device
-module to be unloaded.  Before it would unload and the user would
-get errors on use.
+We need to move "spin_lock_irq(&bitmap->counts.lock)" before unmap previous
+storage, otherwise panic like belows could happen as follows.
 
-This change is made on user request, and it makes it consistent
-with the I2C driver, which has the same behavior.
+[  902.353802] sdl: detected capacity change from 1077936128 to 3221225472
+[  902.616948] general protection fault: 0000 [#1] SMP
+[snip]
+[  902.618588] CPU: 12 PID: 33698 Comm: md0_raid1 Tainted: G           O    4.14.144-1-pserver #4.14.144-1.1~deb10
+[  902.618870] Hardware name: Supermicro SBA-7142G-T4/BHQGE, BIOS 3.00       10/24/2012
+[  902.619120] task: ffff9ae1860fc600 task.stack: ffffb52e4c704000
+[  902.619301] RIP: 0010:bitmap_file_clear_bit+0x90/0xd0 [md_mod]
+[  902.619464] RSP: 0018:ffffb52e4c707d28 EFLAGS: 00010087
+[  902.619626] RAX: ffe8008b0d061000 RBX: ffff9ad078c87300 RCX: 0000000000000000
+[  902.619792] RDX: ffff9ad986341868 RSI: 0000000000000803 RDI: ffff9ad078c87300
+[  902.619986] RBP: ffff9ad0ed7a8000 R08: 0000000000000000 R09: 0000000000000000
+[  902.620154] R10: ffffb52e4c707ec0 R11: ffff9ad987d1ed44 R12: ffff9ad0ed7a8360
+[  902.620320] R13: 0000000000000003 R14: 0000000000060000 R15: 0000000000000800
+[  902.620487] FS:  0000000000000000(0000) GS:ffff9ad987d00000(0000) knlGS:0000000000000000
+[  902.620738] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  902.620901] CR2: 000055ff12aecec0 CR3: 0000001005207000 CR4: 00000000000406e0
+[  902.621068] Call Trace:
+[  902.621256]  bitmap_daemon_work+0x2dd/0x360 [md_mod]
+[  902.621429]  ? find_pers+0x70/0x70 [md_mod]
+[  902.621597]  md_check_recovery+0x51/0x540 [md_mod]
+[  902.621762]  raid1d+0x5c/0xeb0 [raid1]
+[  902.621939]  ? try_to_del_timer_sync+0x4d/0x80
+[  902.622102]  ? del_timer_sync+0x35/0x40
+[  902.622265]  ? schedule_timeout+0x177/0x360
+[  902.622453]  ? call_timer_fn+0x130/0x130
+[  902.622623]  ? find_pers+0x70/0x70 [md_mod]
+[  902.622794]  ? md_thread+0x94/0x150 [md_mod]
+[  902.622959]  md_thread+0x94/0x150 [md_mod]
+[  902.623121]  ? wait_woken+0x80/0x80
+[  902.623280]  kthread+0x119/0x130
+[  902.623437]  ? kthread_create_on_node+0x60/0x60
+[  902.623600]  ret_from_fork+0x22/0x40
+[  902.624225] RIP: bitmap_file_clear_bit+0x90/0xd0 [md_mod] RSP: ffffb52e4c707d28
 
-It does change things a little bit with respect to kernel users.
-If the ACPI or IPMI watchdog (or any other kernel user) has
-created a user, then the device module cannot be unloaded.  Before
-it could be unloaded,
+Because mdadm was running on another cpu to do resize, so bitmap_resize was
+called to replace bitmap as below shows.
 
-This does not affect hot-plug.  If the device goes away (it's on
-something removable that is removed or is hot-removed via sysfs)
-then it still behaves as it did before.
+PID: 38801  TASK: ffff9ad074a90e00  CPU: 0   COMMAND: "mdadm"
+   [exception RIP: queued_spin_lock_slowpath+56]
+   [snip]
+-- <NMI exception stack> --
+ #5 [ffffb52e60f17c58] queued_spin_lock_slowpath at ffffffff9c0b27b8
+ #6 [ffffb52e60f17c58] bitmap_resize at ffffffffc0399877 [md_mod]
+ #7 [ffffb52e60f17d30] raid1_resize at ffffffffc0285bf9 [raid1]
+ #8 [ffffb52e60f17d50] update_size at ffffffffc038a31a [md_mod]
+ #9 [ffffb52e60f17d70] md_ioctl at ffffffffc0395ca4 [md_mod]
 
-Reported-by: tony camuso <tcamuso@redhat.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: tony camuso <tcamuso@redhat.com>
+And the procedure to keep resize bitmap safe is allocate new storage
+space, then quiesce, copy bits, replace bitmap, and re-start.
+
+However the daemon (bitmap_daemon_work) could happen even the array is
+quiesced, which means when bitmap_file_clear_bit is triggered by raid1d,
+then it thinks it should be fine to access store->filemap since
+counts->lock is held, but resize could change the storage without the
+protection of the lock.
+
+Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc: NeilBrown <neilb@suse.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
- include/linux/ipmi_smi.h            | 12 ++++++++----
- 2 files changed, 24 insertions(+), 11 deletions(-)
+ drivers/md/md-bitmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 84c17f936c09c..91f2d92194892 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -447,6 +447,8 @@ enum ipmi_stat_indexes {
+diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+index 2fc8c113977fb..fd8607124bdbb 100644
+--- a/drivers/md/md-bitmap.c
++++ b/drivers/md/md-bitmap.c
+@@ -2132,6 +2132,7 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+ 		memcpy(page_address(store.sb_page),
+ 		       page_address(bitmap->storage.sb_page),
+ 		       sizeof(bitmap_super_t));
++	spin_lock_irq(&bitmap->counts.lock);
+ 	md_bitmap_file_unmap(&bitmap->storage);
+ 	bitmap->storage = store;
  
- #define IPMI_IPMB_NUM_SEQ	64
- struct ipmi_smi {
-+	struct module *owner;
-+
- 	/* What interface number are we? */
- 	int intf_num;
+@@ -2147,7 +2148,6 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
+ 	blocks = min(old_counts.chunks << old_counts.chunkshift,
+ 		     chunks << chunkshift);
  
-@@ -1139,6 +1141,11 @@ int ipmi_create_user(unsigned int          if_num,
- 	if (rv)
- 		goto out_kfree;
- 
-+	if (!try_module_get(intf->owner)) {
-+		rv = -ENODEV;
-+		goto out_kfree;
-+	}
-+
- 	/* Note that each existing user holds a refcount to the interface. */
- 	kref_get(&intf->refcount);
- 
-@@ -1269,6 +1276,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
- 	}
- 
- 	kref_put(&intf->refcount, intf_free);
-+	module_put(intf->owner);
- }
- 
- int ipmi_destroy_user(struct ipmi_user *user)
-@@ -2384,7 +2392,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
-  * been recently fetched, this will just use the cached data.  Otherwise
-  * it will run a new fetch.
-  *
-- * Except for the first time this is called (in ipmi_register_smi()),
-+ * Except for the first time this is called (in ipmi_add_smi()),
-  * this will always return good data;
-  */
- static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
-@@ -3304,10 +3312,11 @@ static void redo_bmc_reg(struct work_struct *work)
- 	kref_put(&intf->refcount, intf_free);
- }
- 
--int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
--		      void		       *send_info,
--		      struct device            *si_dev,
--		      unsigned char            slave_addr)
-+int ipmi_add_smi(struct module         *owner,
-+		 const struct ipmi_smi_handlers *handlers,
-+		 void		       *send_info,
-+		 struct device         *si_dev,
-+		 unsigned char         slave_addr)
- {
- 	int              i, j;
- 	int              rv;
-@@ -3333,7 +3342,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
- 		return rv;
- 	}
- 
--
-+	intf->owner = owner;
- 	intf->bmc = &intf->tmp_bmc;
- 	INIT_LIST_HEAD(&intf->bmc->intfs);
- 	mutex_init(&intf->bmc->dyn_mutex);
-@@ -3440,7 +3449,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
- 
- 	return rv;
- }
--EXPORT_SYMBOL(ipmi_register_smi);
-+EXPORT_SYMBOL(ipmi_add_smi);
- 
- static void deliver_smi_err_response(struct ipmi_smi *intf,
- 				     struct ipmi_smi_msg *msg,
-diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
-index 7d5fd38d5282a..1995ce1467890 100644
---- a/include/linux/ipmi_smi.h
-+++ b/include/linux/ipmi_smi.h
-@@ -211,10 +211,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
-  * is called, and the lower layer must get the interface from that
-  * call.
-  */
--int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
--		      void                     *send_info,
--		      struct device            *dev,
--		      unsigned char            slave_addr);
-+int ipmi_add_smi(struct module            *owner,
-+		 const struct ipmi_smi_handlers *handlers,
-+		 void                     *send_info,
-+		 struct device            *dev,
-+		 unsigned char            slave_addr);
-+
-+#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
-+	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
- 
- /*
-  * Remove a low-level interface from the IPMI driver.  This will
+-	spin_lock_irq(&bitmap->counts.lock);
+ 	/* For cluster raid, need to pre-allocate bitmap */
+ 	if (mddev_is_clustered(bitmap->mddev)) {
+ 		unsigned long page;
 -- 
 2.20.1
 
