@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE8FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4506BC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838322467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDD524684
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576011916;
-	bh=QZ/VVS7YQvwsxHB/D4hBgRmpqvMhX7QU3kJXgtn3YMY=;
+	s=default; t=1576011918;
+	bh=pG19F23Ng3dfKisEuzyv6YuvWsbpkjojpMZZsXuxVgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0SerrNeDiHTTqHQS7UMjImiFhKAHdKa36ZUbiV3Pc+66WmBzpww8wRK7VwU7w6VVb
-	 0EyiKC+ssEdiBqDwG+ulqlGO9H/izrxbwoNlzo3TNqIWRCa2jIpEScrywwrTLR+Q2L
-	 +SMw5x9UEKcPJ4rtGUbLOVdw5/rOLiWXxfW6LlRU=
+	b=GUnK6wOj3BSEZJqZN+vGhW3jsDv1g+nriyrI/JknNLqsAJgZWJE4whv/CunYlxY3s
+	 Y+SWUJmRnTGHC5QSw77fwByvb5EGyYNDwy6YNCMgWlmjF0qOlv3E15iDVCTEn7pfy0
+	 X3e3JV40Tb/oD6+ZGAxmBEVIUxqInM303pOUplSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLJVEq (ORCPT
+        id S1727671AbfLJVFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:05:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727349AbfLJVEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:36 -0500
+        id S1727509AbfLJVEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:04:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A969124682;
-        Tue, 10 Dec 2019 21:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1BE42465C;
+        Tue, 10 Dec 2019 21:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011875;
-        bh=QZ/VVS7YQvwsxHB/D4hBgRmpqvMhX7QU3kJXgtn3YMY=;
+        s=default; t=1576011885;
+        bh=pG19F23Ng3dfKisEuzyv6YuvWsbpkjojpMZZsXuxVgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BYWUEfsz0FMsBXIhd1bNqwQTSlc+pwzzf7V4Y2se9Xgaujbmep0Kc+CL/QHZK03+E
-         bbrE2zj64hIGC2y8bYMubIEPBsB45r1tFAVgNnDKP/vi0QNTbp+ILJa9ztjeVsCC1X
-         CKJ5Eme2TfiiJNxtQOf0rMxTM5c3oW/0d//X/YDI=
+        b=HIqtHUdlII9Y/GsydmjFZ3jHMBNmyE4VauZTwryC/QOVjcPnkKSXK+c2AEx32AsLQ
+         nv4E9RaeZ+njYZ5q7EZzckEi8osVgS6Z4k5kLaE1YKQStOWfrB1IRk3G9Gp/QR1H5z
+         6NvhjaqDv2+tutv1IpdqOtMCr5WfoueR83lzzQl8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Allen Pais <allen.pais@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 027/350] libertas: fix a potential NULL pointer dereference
-Date:   Tue, 10 Dec 2019 15:58:39 -0500
-Message-Id: <20191210210402.8367-27-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 036/350] media: seco-cec: Add a missing 'release_region()' in an error handling path
+Date:   Tue, 10 Dec 2019 15:58:48 -0500
+Message-Id: <20191210210402.8367-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
 References: <20191210210402.8367-1-sashal@kernel.org>
@@ -60,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
+[ Upstream commit a9cc4cbcdfd378b65fd4e398800cfa14e3855042 ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+At the beginning of the probe function, we have a call to
+'request_muxed_region(BRA_SMB_BASE_ADDR, 7, "CEC00001")()'
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+A corresponding 'release_region()' is performed in the remove function but
+is lacking in the error handling path.
+
+Add it.
+
+Fixes: b03c2fb97adc ("media: add SECO cec driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/platform/seco-cec/seco-cec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
-index 242d8845da3fa..30f1025ecb9bc 100644
---- a/drivers/net/wireless/marvell/libertas/if_sdio.c
-+++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
-@@ -1179,6 +1179,10 @@ static int if_sdio_probe(struct sdio_func *func,
+diff --git a/drivers/media/platform/seco-cec/seco-cec.c b/drivers/media/platform/seco-cec/seco-cec.c
+index 9cd60fe1867c9..a86b6e8f91969 100644
+--- a/drivers/media/platform/seco-cec/seco-cec.c
++++ b/drivers/media/platform/seco-cec/seco-cec.c
+@@ -675,6 +675,7 @@ err_notifier:
+ err_delete_adapter:
+ 	cec_delete_adapter(secocec->cec_adap);
+ err:
++	release_region(BRA_SMB_BASE_ADDR, 7);
+ 	dev_err(dev, "%s device probe failed\n", dev_name(dev));
  
- 	spin_lock_init(&card->lock);
- 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
-+	if (unlikely(!card->workqueue)) {
-+		ret = -ENOMEM;
-+		goto err_queue;
-+	}
- 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
- 	init_waitqueue_head(&card->pwron_waitq);
- 
-@@ -1230,6 +1234,7 @@ err_activate_card:
- 	lbs_remove_card(priv);
- free:
- 	destroy_workqueue(card->workqueue);
-+err_queue:
- 	while (card->packets) {
- 		packet = card->packets;
- 		card->packets = card->packets->next;
+ 	return ret;
 -- 
 2.20.1
 
