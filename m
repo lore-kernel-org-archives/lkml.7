@@ -2,164 +2,119 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8575EC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DF9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD282077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B4E20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5gdEnXu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF+XatHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfLJOzX (ORCPT
+        id S1727540AbfLJO5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:55:23 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34566 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbfLJOzW (ORCPT
+        Tue, 10 Dec 2019 09:57:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41447 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727426AbfLJO5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:55:22 -0500
-Received: by mail-pj1-f65.google.com with SMTP id j11so6389638pjs.1;
-        Tue, 10 Dec 2019 06:55:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=O0mxM2akhs1azWPtzdXiIb6fHUMPLCLScLzWjLvsN/k=;
-        b=f5gdEnXu/jpogrrmQnS3TU7rCbVYwV4sl7HWZYj8XCwQDRsudZh0YdckkFN3kLU3Tx
-         S62mgMTtsKuyYT5NGuWuHNR922jc13dCiCJdUXqGXsmES2w8L8cWvQSqREg0xroCcWzL
-         Sk5wyFl6i0rWt0jOCaSCRUzBV3sSdhSgAy0HgBtZpHYjFSjJl3UFWW7TXgWoGaa8VR1Z
-         wRtGef/BkhlmHX7oMKTe4p+ydhN/hHqktqKE71S4QoNKdkwsVZWOoTnHQhwr6qYf8fK9
-         EsfeMbCCuL6nGygWwB87o8pDHeP1XE+JlOOzD55FKV0uGG0WJ6Bao9qSklsxXEYJNG1B
-         zHnA==
+        Tue, 10 Dec 2019 09:57:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575989825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Pizj88R2AL6EW2h5n6WxVnUb6CuY670RUYlkHQGcOE8=;
+        b=dF+XatHhWsaENo5ceC1YMhgjcW3tiVW9p3S1ZOX97i9e9eV4feolIEkOds9W6t/Xm8B10o
+        HRGLBodvdlyTxu8rOwaObeNPh4Jt1EJMX+8IO6sxv0e6dduIZ6WL87fzTarf8d9pwR0Tfy
+        jJ8VisT3VCht1ZgNNEPZPDerLk5Ui4I=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100--axuD1D9PzaF6WCKv3iftA-1; Tue, 10 Dec 2019 09:57:04 -0500
+Received: by mail-wr1-f72.google.com with SMTP id 90so9000029wrq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:57:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=O0mxM2akhs1azWPtzdXiIb6fHUMPLCLScLzWjLvsN/k=;
-        b=LUL8AJC9VrVN/woCKlmCCQFm2hVqF8ebJSqkQG8yH7vi/fOM5cCxatuuar0+rGiPLn
-         rbiQ2DnivH81NiNfolLguksSFUX5ue9Nh9GL8+lj/qutB7pxV2U440w8F/qNDnAH7IwT
-         IWd1OEKeq+EjcLFv2Ufc7ROqN0OeI/wSDWcrADTRJ+YmlLrA+QT9/rHjqw55+q3BS3o+
-         LEjtolVIZlfiDrc3UypcSWoQgJ6aP63XYwQKewsZ2XwzS9p1rlJj12I7jEKsR1Zhyl0f
-         t9O5VLFMiL7/lTBK2nN0N7JWVKzUKI+qXBIWBJq9ocWHFAjv4huB8xm7pbomHNPBsmZv
-         sZhg==
-X-Gm-Message-State: APjAAAW/Aswp81I6aHpmZzLvEzFmqT3u5cEvFIvgd4nE6wqxORzkGhzB
-        5XKlo2sMXrXnfjTcwUOyEHg=
-X-Google-Smtp-Source: APXvYqxZhrwjqd8WvaspMBoCdMauMryqbbfQfMaCo9PcP1VwqPlCTsMO1HUsCqw6oIl1IMzv7OexvA==
-X-Received: by 2002:a17:902:409:: with SMTP id 9mr35448362ple.306.1575989721931;
-        Tue, 10 Dec 2019 06:55:21 -0800 (PST)
-Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
-        by smtp.gmail.com with ESMTPSA id e16sm3731207pff.181.2019.12.10.06.55.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 10 Dec 2019 06:55:21 -0800 (PST)
-Date:   Tue, 10 Dec 2019 22:55:15 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
-Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
-Message-ID: <20191210145515.GB3509@sol>
-References: <20191210021525.13455-1-warthog618@gmail.com>
- <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KhgmoMXvASqQe9/KIjSmxvUQfCfCVmkr95iRvUliS04=;
+        b=WJvbV0HcP4XOz0LGnUFuSL8Ri22bOSIR6NC+4w5jTdU9wdRuG+bVcCl7yiSFZs5+V/
+         M4sTftiosbaKSk9bWde9nSOq7reFplM+Q2hJ6lWlUBMSWklABn7i6XAIcVEYa34lNw3+
+         afjJ7VfNYWieLI5XX4Jo3FaWwfqqYsYi4AaqP0WrVh5scmx80UI/aWA0csxG0JlaGbR/
+         lTy2mc1whCFbed9A6s6tXy0TKvWrfkfOIAIkjoth45EY06f9jZxnRmbey45e3T198TzP
+         S115iXIlm5/4c08HWqcOfWOJphI1eGGWM8Tl3HUuATtEvP0axQ4lBdudxdegQIgvNWAb
+         dpbg==
+X-Gm-Message-State: APjAAAXQYxNrPxOGXh5wNi/glzNfmSJIq/uZP+Tla4cqLMRKPzlSesS/
+        whBCm4pSYYTuSS05/rgItFjE6yJE1fcMaHFjH2HsLxnYqK6GA26nGv8T2nGhih9PYawTsff2mIY
+        RTkWu1SzMSwlYUgQxccR/UHoy
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr3694881wrs.11.1575989819329;
+        Tue, 10 Dec 2019 06:56:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzqx6hFrH03lwVLmtWW0DWqoOkoHzF32eiPuhRamLitPZ9i/I7oZ3qKTUxtMydFXkTy9B0AOQ==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr3694865wrs.11.1575989819138;
+        Tue, 10 Dec 2019 06:56:59 -0800 (PST)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id v22sm3347493wml.11.2019.12.10.06.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 06:56:57 -0800 (PST)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        David Howells <dhowells@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Subject: [PATCH RFC] init/Kconfig: enable -O3 for all arches
+Date:   Tue, 10 Dec 2019 15:56:57 +0100
+Message-Id: <20191210145657.105808-1-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: -axuD1D9PzaF6WCKv3iftA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
-> wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > Restore the external behavior of gpio-mockup to what it was prior to the
-> > change to using GPIO_LINE_DIRECTION.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >
-> > Fix a regression introduced in v5.5-rc1.
-> >
-> > The change to GPIO_LINE_DIRECTION reversed the polarity of the
-> > dir field within gpio-mockup.c, but overlooked inverting the value on
-> > initialization and when returned by gpio_mockup_get_direction.
-> > The latter is a bug.
-> > The former is a problem for tests which assume initial conditions,
-> > specifically the mockup used to initialize chips with all lines as inputs.
-> > That superficially appeared to be the case after the previous patch due
-> > to the bug in gpio_mockup_get_direction.
-> >
-> >  drivers/gpio/gpio-mockup.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> > index 56d647a30e3e..c4fdc192ea4e 100644
-> > --- a/drivers/gpio/gpio-mockup.c
-> > +++ b/drivers/gpio/gpio-mockup.c
-> > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
-> >         int direction;
-> >
-> >         mutex_lock(&chip->lock);
-> > -       direction = !chip->lines[offset].dir;
-> > +       direction = chip->lines[offset].dir;
-> >         mutex_unlock(&chip->lock);
-> >
-> >         return direction;
-> > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
-> >         struct gpio_chip *gc;
-> >         struct device *dev;
-> >         const char *name;
-> > -       int rv, base;
-> > +       int rv, base, i;
-> >         u16 ngpio;
-> >
-> >         dev = &pdev->dev;
-> > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
-> >         if (!chip->lines)
-> >                 return -ENOMEM;
-> >
-> > +       for (i = 0; i < gc->ngpio; i++)
-> > +               chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
-> > +
-> >         if (device_property_read_bool(dev, "named-gpio-lines")) {
-> >                 rv = gpio_mockup_name_lines(dev, chip);
-> >                 if (rv)
-> > --
-> > 2.24.0
-> >
-> 
-> Hi Kent,
-> 
-> I was applying and testing your libgpiod series and noticed that the
-> gpio-tools tests fail after applying patches 16 & 17 (with linux
-> v5.5-rc1). Is this fix related to this?
-> 
+Building a kernel with -O3 may help in hunting bugs like [1] and thus
+using this switch should not be restricted to one specific arch only.
 
-I don't think so.  I've only been able to trip this problem with a
-couple of corner cases in my Go uapi test suite.
-I have been unable to reproduce it with the tools as it requires
-multiple requests with the same chip fd, including an as-is, to trip.
+Thus lets expose it. If for some reasone we have to hide it, lets hide
+it under EXPERT.
 
-And running the libgpiod tests against v5.5-rc1 works for me.
-Can you provide more details as to the errors you are seeing?
+The commit is made against next-20191210 tag.
 
-Btw, I was writing tests for your LINEINFO_WATCH patch v2, which I was
-applying to v5.5-rc1, when I ran across this.  That works ok if I
-__packed the changed struct.
-And I can confirm that patch v2 doesn't isolate watches on different
-chip fds.
+[1] https://lore.kernel.org/lkml/673b885183fb64f1cbb3ed2387524077@natalenko=
+.name/
 
-Kent.
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+---
+ init/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index a34064a031a5..b41b18edb10e 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1228,7 +1228,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+=20
+ config CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ =09bool "Optimize more for performance (-O3)"
+-=09depends on ARC
+ =09imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ =09help
+ =09  Choosing this option will pass "-O3" to your compiler to optimize
+--=20
+2.24.0
+
