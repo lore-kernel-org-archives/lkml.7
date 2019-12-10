@@ -2,129 +2,154 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4898CC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B18C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D48120828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015819;
-	bh=9/VaL0mt3ammd0UTAq+BxX5Xi9rXPHlE/4fMfXXunUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19JFd56dG3cKbXk5Aq7O4GKZuZXsXzRDwcuEX88Ee00ZtbEx9gNM45XZF4QZ2AYJe
-	 o3AnUyT82Id2PcUa6hGUIH15+4BBNFnlWGZ93hfsddgv1qIVisbJUqPN1AleUQhvwc
-	 zSUg5C3yXgaOldg785EjlB6cbGHBosay8ksbJF4E=
+	by mail.kernel.org (Postfix) with ESMTP id 5B0F220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pqqc7OHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfLJWEM (ORCPT
+        id S1729932AbfLJWKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbfLJWEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:06 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B5020637;
-        Tue, 10 Dec 2019 22:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015445;
-        bh=9/VaL0mt3ammd0UTAq+BxX5Xi9rXPHlE/4fMfXXunUg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLhScvg5Ysv3yUb2Nl1S0Ws2M/rxLi6lyB6r0FRccUx3iWdPsPFO2L2YqTe7/+04u
-         r8VRxflqfM2temCNhHXcVdiCgKusKLIHVErSu9iNtwDTQojVoPcPWDQhHfrzhmYyYi
-         TZTpPgw87erZ7Il/YU0X9c6UgLAZ5I+qv//2/nG0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Berg <bberg@redhat.com>, Borislav Petkov <bp@suse.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 053/130] x86/mce: Lower throttling MCE messages' priority to warning
-Date:   Tue, 10 Dec 2019 17:01:44 -0500
-Message-Id: <20191210220301.13262-53-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
-References: <20191210220301.13262-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 17:10:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41114 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728605AbfLJWKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:10:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576015818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ovr8AOrCcVXk6ps0Yd3R+k9jarJnVZ/R6m24MU31Neg=;
+        b=Pqqc7OHLvlgJLovS9IHJmjbNTH8+nPSXzIN+/TMFoDTfU/i+1ZmaCDPGgS9eWkp4LLZxNA
+        EmFsHRQKH8u0cBymH3EjS2eZQhvDmaSP5kxdAxqcpxiFy25fqeE+9BfYkoQFB5QlkApB4z
+        GjjS7FgG6xWCUHD/+DuVRX5yU0zZWNE=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-m9VD7xjPMKGba5fsmBOSgg-1; Tue, 10 Dec 2019 17:10:14 -0500
+Received: by mail-qv1-f72.google.com with SMTP id r8so7838589qvp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 14:10:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ovr8AOrCcVXk6ps0Yd3R+k9jarJnVZ/R6m24MU31Neg=;
+        b=m822FFudWeJSaabCIZwLpddKn1E6Efi54WwgORrAYRGJAU+TksMmDxZ/DWA6LheClI
+         dH6OUHHIs4HIlKI1LYZFmuBegmiLJAGMjZgKXwC3yVPSnxvufQMSaBtOtWfK56xsQXIG
+         JtMS+jpoQElt3O2zIo8eKCTPdFTpmMW5T/HZnlQ4db9Ogvum4Cp5f39R9ZyRyp1IVPGs
+         eGdIw/TqsFt5kKpvYkohuZH/kPXapry4oaDDufGilFVJvOKMPJTVAAOBd8MVm2gMocGU
+         YcjidPjLqtrg8fnIKj2Kr65WfvSmKj/fQPI8U9qbW0455SAxW3ovRTRzaPSpKybSMwcS
+         Fchw==
+X-Gm-Message-State: APjAAAW50W/b8zss0k3vTGRZ7IRU0+KsswTPiS7UlK+OgDNKVO3rG133
+        lIFUx3OJPgTUfjCeV8JPha1Gk6TchZhVOQX3FBEloq1E3soQPTRwlSvLsbrHAJ+r1w7wRd3eme2
+        6KYn5rrfXCY3M80BbQvK9Ci1r
+X-Received: by 2002:a37:51d4:: with SMTP id f203mr18706qkb.212.1576015814422;
+        Tue, 10 Dec 2019 14:10:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwwpNDBUah/JxrSAKxCjiRELPnHOg3DdeD0npoO5tGbThZQTwIdN5FQktw+smPeDV7cbUZ/0w==
+X-Received: by 2002:a37:51d4:: with SMTP id f203mr18680qkb.212.1576015814067;
+        Tue, 10 Dec 2019 14:10:14 -0800 (PST)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id z64sm60335qtc.4.2019.12.10.14.10.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 14:10:13 -0800 (PST)
+Subject: Re: Regression in squashfs mount option handling in v5.4
+To:     Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
+        linux-kernel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>
+References: <20191130181548.GA28459@gentoo-tp.home>
+ <6af16095-eab0-9e99-6782-374705d545e4@infradead.org>
+ <20191210185002.GA20850@gentoo-tp.home>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <2286b071-76ac-1659-5dba-6381ecb269c6@redhat.com>
+Date:   Tue, 10 Dec 2019 17:10:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210185002.GA20850@gentoo-tp.home>
+Content-Language: en-US
+X-MC-Unique: m9VD7xjPMKGba5fsmBOSgg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Berg <bberg@redhat.com>
+On 12/10/19 1:50 PM, Jeremi Piotrowski wrote:
+> On Sat, Nov 30, 2019 at 10:56:47AM -0800, Randy Dunlap wrote:
+>> [adding Cc-s]
+>>
+>> On 11/30/19 10:15 AM, Jeremi Piotrowski wrote:
+>>> Hi,
+>>>
+>>> I'm working on an embedded project which uses 'rauc' as an updater. rauc mounts
+>>> a squashfs image using
+>>>
+>>>    mount -t squashfs -o ro,loop,sizelimit=xxx squashfs.img /mnt
+>>>
+>>> On my system mount is busybox, and busybox does not know the sizelimit
+>>> parameter, so it simply passes it on to the mount syscall. The syscall
+>>> arguments end up being:
+>>>
+>>>    mount("/dev/loop0", "dir", "squashfs", MS_RDONLY|MS_SILENT, "sizelimit=xxx")
+>>>
+>>> Until kernel 5.4 this worked, since 5.4 this returns EINVAL and dmesg contains
+>>> the line "squashfs: Unknown parameter 'sizelimit'". I believe this has to do
+>>> with the conversion of squashfs to the new mount api.
+>>>
+>>> This is an unfortunate regression, and it does not seem like this can be simply
+>>> reverted. What is the suggested course of action?
+>>>
+>>> Please cc me on replies, I'm not subscribed to the list.
+>>>
+>>> Thanks,
+>>> Jeremi
+>>>
+>>
+>>
+>> -- 
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Ping. This is preventing me from updating the kernel on my systems.
+> 
 
-[ Upstream commit 9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7 ]
+Fedora is hitting a similar issue https://bugzilla.redhat.com/show_bug.cgi?id=1781863
 
-On modern CPUs it is quite normal that the temperature limits are
-reached and the CPU is throttled. In fact, often the thermal design is
-not sufficient to cool the CPU at full load and limits can quickly be
-reached when a burst in load happens. This will even happen with
-technologies like RAPL limitting the long term power consumption of
-the package.
+Dec 10 10:04:06 kernel: squashfs: version 4.0 (2009/01/31) Phillip Lougher
+Dec 10 10:04:06 kernel: squashfs: Unknown parameter 'errors'
 
-Also, these limits are "softer", as Srinivas explains:
+I don't think squashfs ever actually supported the errors parameter
+but it was just silently ignored. It turns out you could can pass
+whatever nonsense you want for parameters so I don't think we can
+reject parameters in the generic case
 
-"CPU temperature doesn't have to hit max(TjMax) to get these warnings.
-OEMs ha[ve] an ability to program a threshold where a thermal interrupt
-can be generated. In some systems the offset is 20C+ (Read only value).
-
-In recent systems, there is another offset on top of it which can be
-programmed by OS, once some agent can adjust power limits dynamically.
-By default this is set to low by the firmware, which I guess the
-prime motivation of Benjamin to submit the patch."
-
-So these messages do not usually indicate a hardware issue (e.g.
-insufficient cooling). Log them as warnings to avoid confusion about
-their severity.
-
- [ bp: Massage commit mesage. ]
-
-Signed-off-by: Benjamin Berg <bberg@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Christian Kellner <ckellner@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191009155424.249277-1-bberg@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/cpu/mcheck/therm_throt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/mcheck/therm_throt.c b/arch/x86/kernel/cpu/mcheck/therm_throt.c
-index ee229ceee745c..ec6a07b04fdbb 100644
---- a/arch/x86/kernel/cpu/mcheck/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mcheck/therm_throt.c
-@@ -185,7 +185,7 @@ static void therm_throt_process(bool new_event, int event, int level)
- 	/* if we just entered the thermal event */
- 	if (new_event) {
- 		if (event == THERMAL_THROTTLING_EVENT)
--			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
-+			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
- 				this_cpu,
- 				level == CORE_LEVEL ? "Core" : "Package",
- 				state->count);
--- 
-2.20.1
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 138b5b4d621d..7ec20b1f8a53 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -160,8 +160,7 @@ int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param)
+  		return 0;
+  	}
+  
+-	return invalf(fc, "%s: Unknown parameter '%s'",
+-		      fc->fs_type->name, param->key);
++	return 0;
+  }
+  EXPORT_SYMBOL(vfs_parse_fs_param);
 
