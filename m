@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C97C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D83AC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B453205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29326205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012691;
-	bh=MI13WdruNkQxoyQuvMsnulcUQpenwMohsKZ7fBvKQJA=;
+	s=default; t=1576012694;
+	bh=fm/+zOAPvpV2Lo3ggKjbrQ+9kbQpuyNZSNduvAMvOz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0z6skHIDM/f66xFpbvtVvta1/GjESZ9h1cWz9mOWbtse3K4b5amgnrNE3GdzHTHW6
-	 rUpeYZwyIgyb6xaMTsY0iwwm/vUsHn+ChBjIZ26sLhHUxS2mDCcikhzYNERWyQzef7
-	 bOc66tFJ9Sr8JoXoHmSb2Fytl2aODRy5OYr1HWBM=
+	b=q+pQhF70gSZmJG0xylXLMC+Zu091cVRz8exeRvQMRT+JBq31IUjq+x9nf4aE5FxQH
+	 x+X7AVX/4dLqJPlqtthcdcczL/sqBnfdXD5FBfHrUlU9C0QGYZkEKQ1bcHbSnVjBki
+	 jP6s0FL0dmbGHo9MwaxMxP5Rii2PfaSlqqyFegMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfLJVMp (ORCPT
+        id S1729308AbfLJVSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36884 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfLJVMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:33 -0500
+        id S1728376AbfLJVMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1255B2077B;
-        Tue, 10 Dec 2019 21:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADA30214AF;
+        Tue, 10 Dec 2019 21:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012352;
-        bh=MI13WdruNkQxoyQuvMsnulcUQpenwMohsKZ7fBvKQJA=;
+        s=default; t=1576012364;
+        bh=fm/+zOAPvpV2Lo3ggKjbrQ+9kbQpuyNZSNduvAMvOz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQoTKO08ouX7/FvlXYcat5m/fh4liNgUne3T3G82NanT98mzt0CEx+aY8Lorb00r3
-         kJU3FReOXws43LU4H2ANx3Pvm0VPmYsqWkAHg8Aj4SGB7pp14llWO8ZvVJkuL1K50V
-         TXIM0GJ4yeQzMMzz1k9esW9syerY7lbtExNVQg0o=
+        b=AV4ei9l4Y9tS4LZkjK7rfnJjfaQVpak1WiB/KoNeEF6wkpA+YWTJasTfGFrUm8jOn
+         O085g47/xmKI4VqANS/Gb0142j1hvGZuTgs1RMkwFYMWOfNNcdzI5x4rAEUBUx3Xei
+         Sp5Ntm0WEz/iYUvzykaWB2bxmjQ340ZkiAwiu1Wk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+Cc:     Wang Xuerui <wangxuerui@qiniu.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 282/350] qtnfmac: fix invalid channel information output
-Date:   Tue, 10 Dec 2019 16:06:27 -0500
-Message-Id: <20191210210735.9077-243-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 291/350] iwlwifi: mvm: fix unaligned read of rx_pkt_status
+Date:   Tue, 10 Dec 2019 16:06:36 -0500
+Message-Id: <20191210210735.9077-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Wang Xuerui <wangxuerui@qiniu.com>
 
-[ Upstream commit 24227a9e956a7c9913a7e6e7199a9ae3f540fe88 ]
+[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
 
-Do not attempt to print frequency for an invalid channel
-provided by firmware. That channel may simply not exist.
+This is present since the introduction of iwlmvm.
+Example stack trace on MIPS:
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
+[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+
+Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
+problem. No other unaligned accesses are spotted yet.
+
+Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/event.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/event.c b/drivers/net/wireless/quantenna/qtnfmac/event.c
-index b57c8c18a8d01..7846383c88283 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/event.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/event.c
-@@ -171,8 +171,9 @@ qtnf_event_handle_bss_join(struct qtnf_vif *vif,
- 		return -EPROTO;
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+index 0ad8ed23a4558..5ee33c8ae9d24 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
+@@ -60,6 +60,7 @@
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  *****************************************************************************/
++#include <asm/unaligned.h>
+ #include <linux/etherdevice.h>
+ #include <linux/skbuff.h>
+ #include "iwl-trans.h"
+@@ -357,7 +358,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
+ 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
+ 	len = le16_to_cpu(rx_res->byte_count);
+-	rx_pkt_status = le32_to_cpup((__le32 *)
++	rx_pkt_status = get_unaligned_le32((__le32 *)
+ 		(pkt->data + sizeof(*rx_res) + len));
  
--	pr_debug("VIF%u.%u: BSSID:%pM status:%u\n",
--		 vif->mac->macid, vif->vifid, join_info->bssid, status);
-+	pr_debug("VIF%u.%u: BSSID:%pM chan:%u status:%u\n",
-+		 vif->mac->macid, vif->vifid, join_info->bssid,
-+		 le16_to_cpu(join_info->chan.chan.center_freq), status);
- 
- 	if (status != WLAN_STATUS_SUCCESS)
- 		goto done;
-@@ -181,7 +182,7 @@ qtnf_event_handle_bss_join(struct qtnf_vif *vif,
- 	if (!cfg80211_chandef_valid(&chandef)) {
- 		pr_warn("MAC%u.%u: bad channel freq=%u cf1=%u cf2=%u bw=%u\n",
- 			vif->mac->macid, vif->vifid,
--			chandef.chan->center_freq,
-+			chandef.chan ? chandef.chan->center_freq : 0,
- 			chandef.center_freq1,
- 			chandef.center_freq2,
- 			chandef.width);
+ 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
 -- 
 2.20.1
 
