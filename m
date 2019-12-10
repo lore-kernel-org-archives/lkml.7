@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A44C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2442EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213B420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F3A20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017707;
-	bh=9GYC482xubuw+Sl8xaw1dMPpBuoo/M3QJrbWA1UOpbQ=;
+	s=default; t=1576017710;
+	bh=SbJ4s+tlx67WyIDq4yQKNvF98wHty0yh/j2e3DmMO9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TIuEJMUP8BNU/by7SjcebtvcZVRN3WcANWZSMan4mKGe9nJecHaYQVjYOA7uAXTcG
-	 eHxt3HUi+1xj8cC+CeNCAlUUMsrAKTMO/5iWBk2qs2QaOJCQDd+NFwzOC3jE/KUA4A
-	 NOmXI0shPQeWMoHt32b6yDdKWMnx7knQLG+MmTNY=
+	b=buMz3/fCc5azkAIDj59Nocx+51pG7eAnb6cz2ItUDf5kA3eUctRVIiAb0kW6T9FMV
+	 HaZSEov/aZHnErrxC5S3OnR2laCsX91UyfNSohDzxJDfi1ykJU47lVT6OtopHN5+s9
+	 0KIbWDoCNFcwN84ZNEnokN6K12e/PyXzS8QxDUpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfLJWbj (ORCPT
+        id S1730267AbfLJWls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51558 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbfLJWba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:30 -0500
+        id S1728753AbfLJWbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E402073D;
-        Tue, 10 Dec 2019 22:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB84A2077B;
+        Tue, 10 Dec 2019 22:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017089;
-        bh=9GYC482xubuw+Sl8xaw1dMPpBuoo/M3QJrbWA1UOpbQ=;
+        s=default; t=1576017098;
+        bh=SbJ4s+tlx67WyIDq4yQKNvF98wHty0yh/j2e3DmMO9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6567TuCruuJZTFduqhFFUdtows7GS1595VvypTQobD7MNovI18102di3OsXhoIv9
-         twViFN24x+nQk6FKefyBkgceZYSJbDxSNnqJNFoJ8MuhmcprrnnPEFQq2gVAnSmgVO
-         bqaNGufwvtyeYYLpAtvZO4XYHzQJpXEKO/ZmLX98=
+        b=b585LO98pMmuI+1Kd3mIn4SxqNNfOW9gFxmKNvDXHLTC2Yi1PQHFGWgxkpAxsUNhq
+         X5sZXrhUQFAwclXj9WNuf4QsvuV2NPZuzC5o4XZlF5wp6I1SwE7FXXA0uhn8DTo09W
+         RVE+hBy0/Hph8ye77MLRdB5BIrUnkZazDfVeVzVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.cz>, Jens Axboe <axboe@kernel.dk>,
-        linux-ide@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 45/91] ata: sata_mv, avoid trigerrable BUG_ON
-Date:   Tue, 10 Dec 2019 17:29:49 -0500
-Message-Id: <20191210223035.14270-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 53/91] perf probe: Fix to list probe event with correct line number
+Date:   Tue, 10 Dec 2019 17:29:57 -0500
+Message-Id: <20191210223035.14270-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,55 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit e9f691d899188679746eeb96e6cb520459eda9b4 ]
+[ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
 
-There are several reports that the BUG_ON on unsupported command in
-mv_qc_prep can be triggered under some circumstances:
-https://bugzilla.suse.com/show_bug.cgi?id=1110252
-https://serverfault.com/questions/888897/raid-problems-after-power-outage
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1652185
-https://bugs.centos.org/view.php?id=14998
+Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
+entry address of the function on which a probe is, it will fail when the
+function DIE has only ranges attribute.
 
-Let sata_mv handle the failure gracefully: warn about that incl. the
-failed command number and return an AC_ERR_INVALID error. We can do that
-now thanks to the previous patch.
+To fix this issue, use die_entrypc() instead of dwarf_entrypc().
 
-Remove also the long-standing FIXME.
+Without this fix, perf probe -l shows incorrect offset:
 
-[v2] use %.2x as commands are defined as hexa.
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-ide@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+With this:
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
+
+Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/sata_mv.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ tools/perf/util/probe-finder.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-index 2f32782cea6d9..2ec37a038eda8 100644
---- a/drivers/ata/sata_mv.c
-+++ b/drivers/ata/sata_mv.c
-@@ -2111,12 +2111,10 @@ static void mv_qc_prep(struct ata_queued_cmd *qc)
- 		 * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
- 		 * of which are defined/used by Linux.  If we get here, this
- 		 * driver needs work.
--		 *
--		 * FIXME: modify libata to give qc_prep a return value and
--		 * return error here.
- 		 */
--		BUG_ON(tf->command);
--		break;
-+		ata_port_err(ap, "%s: unsupported command: %.2x\n", __func__,
-+				tf->command);
-+		return AC_ERR_INVALID;
- 	}
- 	mv_crqb_pack_cmd(cw++, tf->nsect, ATA_REG_NSECT, 0);
- 	mv_crqb_pack_cmd(cw++, tf->hob_lbal, ATA_REG_LBAL, 0);
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 0d9d6e0803b88..248d3ff7e3454 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1567,7 +1567,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+ 		if (!func ||
+-		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
++		    die_entrypc(&spdie, &baseaddr) != 0 ||
+ 		    dwarf_decl_line(&spdie, &baseline) != 0) {
+ 			lineno = 0;
+ 			goto post;
+@@ -1584,7 +1584,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, unsigned long addr,
+ 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
+ 						&indie)) {
+ 			/* There is an inline function */
+-			if (dwarf_entrypc(&indie, &_addr) == 0 &&
++			if (die_entrypc(&indie, &_addr) == 0 &&
+ 			    _addr == addr) {
+ 				/*
+ 				 * addr is at an inline function entry.
 -- 
 2.20.1
 
