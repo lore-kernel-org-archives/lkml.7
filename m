@@ -2,103 +2,174 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA6C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2EFC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7446207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8952077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfLJQNt (ORCPT
+        id S1727619AbfLJQNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:13:49 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:44599 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfLJQNr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:13:47 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1C60C28022E40;
-        Tue, 10 Dec 2019 17:13:46 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id D7EF5CD0; Tue, 10 Dec 2019 17:13:45 +0100 (CET)
-Date:   Tue, 10 Dec 2019 17:13:45 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: hda/hdmi - Fix duplicate unref of pci_dev
-Message-ID: <20191210161345.apz4aixgszcd6vco@wunner.de>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <77aa6c01aefe1ebc4004e87b0bc714f2759f15c4.1575985006.git.lukas@wunner.de>
- <MWHPR12MB1358AEEBD730A4EDA78894E6F75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
- <20191210154649.o3vsqzrtofhvcjrl@wunner.de>
- <MWHPR12MB1358449C677259C848AAB11EF75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
+        Tue, 10 Dec 2019 11:13:54 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727436AbfLJQNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 11:13:53 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id BD22162A92049AE7E041;
+        Tue, 10 Dec 2019 16:13:51 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Dec 2019 16:13:51 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Dec
+ 2019 16:13:51 +0000
+Subject: perf top for arm64?
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <mark.rutland@arm.com>, <will@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+ <20191106140036.GA6259@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
+Date:   Tue, 10 Dec 2019 16:13:49 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR12MB1358449C677259C848AAB11EF75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20191106140036.GA6259@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml728-chm.china.huawei.com (10.201.108.79) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:53:20PM +0000, Deucher, Alexander wrote:
-> > On Tue, Dec 10, 2019 at 03:34:27PM +0000, Deucher, Alexander wrote:
-> > > > Nicholas Johnson reports a null pointer deref as well as a refcount
-> > > > underflow upon hot-removal of a Thunderbolt-attached AMD eGPU.
-> > > > He's bisected the issue down to commit 586bc4aab878 ("ALSA: hda/hdmi
-> > > > - fix vgaswitcheroo detection for AMD").
-> > > >
-> > > > The commit iterates over PCI devices using pci_get_class() and
-> > > > unreferences each device found, even though pci_get_class()
-> > > > subsequently unreferences the device as well.  Fix it.
-> > >
-> > > The pci_dev_put() a few lines above should probably be dropped as well.
-> > 
-> > That one looks fine to me.  The refcount is already increased in the caller
-> > get_bound_vga() via pci_get_domain_bus_and_slot() and it's increased
-> > again in atpx_present() via pci_get_class().  It needs to be decremented in
-> > atpx_present() to avoid leaking a ref.
-> 
-> I'm not following.  This is part of the same loop as the one you removed.
-> All we are doing is checking whether the ATPX method exists or not om the
-> platform.  The pdev may not be the same one as the one in
-> pci_get_domain_bus_and_slot().  The APTX method in the APU's ACPI namespace,
-> not the dGPUs.
+Hi all,
 
-Okay.  Still, atpx_present() doesn't pass the found pci_dev back to the
-caller, so it would be leaked if the ref isn't returned.
+I find to my surprise that "perf top" does not work for arm64:
 
-The situation is different for the pci_dev_put() I removed:  The ref is
-returned by pci_get_class() on the next loop iteration.
+root@ubuntu:/home/john/linux# tools/perf/perf top
+Couldn't read the cpuid for this machine: No such file or directory
+
+That's v5.5-rc1 release.
+
+It seems that we are just missing an arm64 version of get_cpuid() - with 
+the patch below, I now get as hoped:
+
+    PerfTop:   32857 irqs/sec  kernel:85.0%  exact:  0.0% lost: 0/0 
+drop: 0/0 [4000Hz cycles],  (all, 64 CPUs)
+-------------------------------------------------------------------------------
+
+      8.99%  [kernel]          [k] arm_smmu_cmdq_issue_cmdlist
+      5.80%  [kernel]          [k] __softirqentry_text_start
+      4.49%  [kernel]          [k] _raw_spin_unlock_irqrestore
+      3.48%  [kernel]          [k] el0_svc_common.constprop.2
+      3.37%  [kernel]          [k] _raw_write_lock_irqsave
+      3.28%  [kernel]          [k] __local_bh_enable_ip
+      3.05%  [kernel]          [k] __blk_complete_request
+      2.07%  [kernel]          [k] queued_spin_lock_slowpath
+      1.93%  [vdso]            [.] 0x0000000000000484
+
+
+Was this just missed? Or is there a good reason to omit?
 
 Thanks,
+John
 
-Lukas
+--->8---
 
-> > > > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> > > > index 35b4526f0d28..b856b89378ac 100644
-> > > > --- a/sound/pci/hda/hda_intel.c
-> > > > +++ b/sound/pci/hda/hda_intel.c
-> > > > @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
-> > > >  				return true;
-> > > >  			}
-> > > >  		}
-> > > > -		pci_dev_put(pdev);
-> > > >  	}
-> > > >  	return false;
-> > > >  }
-> > > > --
-> > > > 2.24.0
+Subject: [PATCH] perf: Add perf top support for arm64
+
+Copied from get_cpuid_str() essentially...
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+diff --git a/tools/perf/arch/arm64/util/header.c 
+b/tools/perf/arch/arm64/util/header.c
+index a32e4b72a98f..ecd1f86e29cc 100644
+--- a/tools/perf/arch/arm64/util/header.c
++++ b/tools/perf/arch/arm64/util/header.c
+@@ -1,10 +1,12 @@
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <perf/cpumap.h>
++#include <util/cpumap.h>
+  #include <internal/cpumap.h>
+  #include <api/fs/fs.h>
+  #include "debug.h"
+  #include "header.h"
++#include <errno.h>
+
+  #define MIDR "/regs/identification/midr_el1"
+  #define MIDR_SIZE 19
+@@ -12,6 +14,59 @@
+  #define MIDR_VARIANT_SHIFT      20
+  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+
++int
++get_cpuid(char *buffer, size_t sz)
++{
++	char *buf = NULL;
++	char path[PATH_MAX];
++	const char *sysfs = sysfs__mountpoint();
++	int cpu;
++	u64 midr = 0;
++	FILE *file;
++
++	if (!sysfs)
++		return EINVAL;
++
++	buf = malloc(MIDR_SIZE);
++	if (!buf)
++		return EINVAL;
++
++	/* read midr from list of cpus mapped to this pmu */
++	for (cpu = 0; cpu < cpu__max_present_cpu(); cpu++) {
++		scnprintf(path, sz, "%s/devices/system/cpu/cpu%d"MIDR,
++				sysfs, cpu);
++
++		file = fopen(path, "r");
++		if (!file) {
++			pr_debug("fopen failed for file %s\n", path);
++			continue;
++		}
++
++		if (!fgets(buf, MIDR_SIZE, file)) {
++			fclose(file);
++			continue;
++		}
++		fclose(file);
++
++		/* Ignore/clear Variant[23:20] and
++		 * Revision[3:0] of MIDR
++		 */
++		midr = strtoul(buf, NULL, 16);
++		midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
++		scnprintf(buffer, MIDR_SIZE, "0x%016lx", midr);
++		/* got midr break loop */
++		break;
++	}
++
++	if (!midr) {
++		pr_err("failed to get cpuid string\n");
++		free(buf);
++		return EINVAL;
++	}
++	return 0;
++}
++
