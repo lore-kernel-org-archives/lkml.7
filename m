@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEAAC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A63BC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C35E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4127206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013299;
-	bh=EwON0KxD+25ZAhruFvpeWwE6GlempRxfhHmX9ra5pWM=;
+	s=default; t=1576013297;
+	bh=GOXWFvh7GoXw9UjuaXvqLHGd8pSf1Cch+DSQANsyhzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9Kc6EfohKkI8iqq4VGbi7bRUhP1IWDdJozw3mSf+uk65JrRA+RxTU91yw/6IqlPX
-	 P0pPs/MNfUOcYXj0XH25Gxv4f5lGsOKrJC0nLA292NACXCKQCBR0jt5T3A1PgaxaQU
-	 pOyG6NWCuub4Xs6m7dXXhoBCOXAr/7ruqgiP//TU=
+	b=TvRA7ZpTOEJWst4UkbfhfMo3CZb2RVLHXzrLT6XCeBlU9pmDQETUEvjyzWxS/nJ9t
+	 rDX6v35bKlJXUNQfBmbhvoAK2yLMa8XUVsgRF2LXFOOhECu52tyBwr7OxnN2NWq/TC
+	 bCuLD+Unpf0Ly3qbHI1ifJwVSqEJ3MY7U/Ya0Fiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbfLJV2N (ORCPT
+        id S1728835AbfLJV2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:28:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60432 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbfLJVK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:29 -0500
+        id S1727835AbfLJVK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF5C0246B8;
-        Tue, 10 Dec 2019 21:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC95246A8;
+        Tue, 10 Dec 2019 21:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012228;
-        bh=EwON0KxD+25ZAhruFvpeWwE6GlempRxfhHmX9ra5pWM=;
+        s=default; t=1576012226;
+        bh=GOXWFvh7GoXw9UjuaXvqLHGd8pSf1Cch+DSQANsyhzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJU40CmfWPJxdwSZQ5j1TIkIdVSCcS4Vkraa6mML2DzsEHrwDkXFD+y7PiGePsX2y
-         iARzH5quwNxd0Ir+qkMVdhtpZjW0nGXTEtaOmUaMmaHio6c/v+XzDtu/TyCwdhccEk
-         Gngx7Qt/jO/WHEwxl92+AekunXdiEtnHob4OqQos=
+        b=wd4a7PhbH/7lS7uioVYJKiwPhSyx4KhkQm1CVuIYG1MDsyLqb9mdCwEtAxyFbQhND
+         6+cTCdzfl2tHfAyLskBmlmu8haeUeXrfzDU8WMsINfu3owFFDmVyPeHcBOSjEMALqu
+         wQlMVchVV3xj3TQ9Qj/Isv1xNlwayTjHZ6q5opTA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 178/350] net: dsa: LAN9303: select REGMAP when LAN9303 enable
-Date:   Tue, 10 Dec 2019 16:04:43 -0500
-Message-Id: <20191210210735.9077-139-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 176/350] gpu: host1x: Allocate gather copy for host1x
+Date:   Tue, 10 Dec 2019 16:04:41 -0500
+Message-Id: <20191210210735.9077-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,41 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit b6989d248a2d13f02895bae1a9321b3bbccc0283 ]
+[ Upstream commit b78e70c04c149299bd210759d7c7af7c86b89ca8 ]
 
-When NET_DSA_SMSC_LAN9303=y and NET_DSA_SMSC_LAN9303_MDIO=y,
-below errors can be seen:
-drivers/net/dsa/lan9303_mdio.c:87:23: error: REGMAP_ENDIAN_LITTLE
-undeclared here (not in a function)
-  .reg_format_endian = REGMAP_ENDIAN_LITTLE,
-drivers/net/dsa/lan9303_mdio.c:93:3: error: const struct regmap_config
-has no member named reg_read
-  .reg_read = lan9303_mdio_read,
+Currently when the gather buffers are copied, they are copied to a
+buffer that is allocated for the host1x client that wants to execute the
+command streams in the buffers. However, the gather buffers will be read
+by the host1x device, which causes SMMU faults if the DMA API is backed
+by an IOMMU.
 
-It should select REGMAP in config NET_DSA_SMSC_LAN9303.
+Fix this by allocating the gather buffer copy for the host1x device,
+which makes sure that it will be mapped into the host1x's IOVA space if
+the DMA API is backed by an IOMMU.
 
-Fixes: dc7005831523 ("net: dsa: LAN9303: add MDIO managed mode support")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/host1x/job.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index f6232ce8481fe..685e12b05a7c0 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -77,6 +77,7 @@ config NET_DSA_REALTEK_SMI
- config NET_DSA_SMSC_LAN9303
- 	tristate
- 	select NET_DSA_TAG_LAN9303
-+	select REGMAP
- 	---help---
- 	  This enables support for the SMSC/Microchip LAN9303 3 port ethernet
- 	  switch chips.
+diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
+index eaa5c3352c134..22559670faeef 100644
+--- a/drivers/gpu/host1x/job.c
++++ b/drivers/gpu/host1x/job.c
+@@ -436,7 +436,8 @@ static int validate(struct host1x_firewall *fw, struct host1x_job_gather *g)
+ 	return err;
+ }
+ 
+-static inline int copy_gathers(struct host1x_job *job, struct device *dev)
++static inline int copy_gathers(struct device *host, struct host1x_job *job,
++			       struct device *dev)
+ {
+ 	struct host1x_firewall fw;
+ 	size_t size = 0;
+@@ -459,12 +460,12 @@ static inline int copy_gathers(struct host1x_job *job, struct device *dev)
+ 	 * Try a non-blocking allocation from a higher priority pools first,
+ 	 * as awaiting for the allocation here is a major performance hit.
+ 	 */
+-	job->gather_copy_mapped = dma_alloc_wc(dev, size, &job->gather_copy,
++	job->gather_copy_mapped = dma_alloc_wc(host, size, &job->gather_copy,
+ 					       GFP_NOWAIT);
+ 
+ 	/* the higher priority allocation failed, try the generic-blocking */
+ 	if (!job->gather_copy_mapped)
+-		job->gather_copy_mapped = dma_alloc_wc(dev, size,
++		job->gather_copy_mapped = dma_alloc_wc(host, size,
+ 						       &job->gather_copy,
+ 						       GFP_KERNEL);
+ 	if (!job->gather_copy_mapped)
+@@ -512,7 +513,7 @@ int host1x_job_pin(struct host1x_job *job, struct device *dev)
+ 		goto out;
+ 
+ 	if (IS_ENABLED(CONFIG_TEGRA_HOST1X_FIREWALL)) {
+-		err = copy_gathers(job, dev);
++		err = copy_gathers(host->dev, job, dev);
+ 		if (err)
+ 			goto out;
+ 	}
+@@ -573,7 +574,7 @@ void host1x_job_unpin(struct host1x_job *job)
+ 	job->num_unpins = 0;
+ 
+ 	if (job->gather_copy_size)
+-		dma_free_wc(job->channel->dev, job->gather_copy_size,
++		dma_free_wc(host->dev, job->gather_copy_size,
+ 			    job->gather_copy_mapped, job->gather_copy);
+ }
+ EXPORT_SYMBOL(host1x_job_unpin);
 -- 
 2.20.1
 
