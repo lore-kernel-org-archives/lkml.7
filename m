@@ -2,137 +2,180 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC308C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71808C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017479;
-	bh=pmltaW9LsjEuTpeKbuA3I4m6I9tXYKuy+WxPnOiBySg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=sqMNXuds+thOTEsgjMQG67L6VqSA0HEZCYNxau0TKy1SCxEglvo7LJ+2jnUyHrD3f
-	 mZEXe/4X99+UTxFz3WwoJ3H7Wq77NifQLFn4/5zjAZdWoa/tvR8frqRcaV2Q90tg0f
-	 yqbXAxtw6ZCr4ZmBonj8NDOuD5TazjpyGAXleXOM=
+	by mail.kernel.org (Postfix) with ESMTP id 393DF2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHa/DmXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfLJWh5 (ORCPT
+        id S1730265AbfLJWiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:37:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbfLJWhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:37:47 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6617214D8;
-        Tue, 10 Dec 2019 22:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017467;
-        bh=pmltaW9LsjEuTpeKbuA3I4m6I9tXYKuy+WxPnOiBySg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GpF77bDRMYOZMzZUsc1xfZBNt0grHZ4wf9ahTXpwyB/3gWFtElsyCOKqPj3U1bJFM
-         F12G87CHzuPAb/bUPdSWsiVx1FaP+i8FGPXzpLIMlG9rGYgTSbaTbyG8VW14eyc8d+
-         yP9jUwAsNzCNQ3sJ/NVKANDpE4MxAYItUWmqRpYM=
-Date:   Tue, 10 Dec 2019 16:37:45 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v6 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
-Message-ID: <20191210223745.GA167002@google.com>
+        Tue, 10 Dec 2019 17:38:05 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44759 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730018AbfLJWdw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:52 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so4890765qvg.11;
+        Tue, 10 Dec 2019 14:33:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2qVtlYAOtRcz+6F4XJkyiWApaYdPcES7nZQ2donezV0=;
+        b=EHa/DmXt++387JQCZzAsAwfAYUEmAL11dzKPQCqQCESvSPxDAp9WeaxtLh+M31rPi7
+         +upY71bq8lulevUKjgA6jD7B98vHdo96nfbz27BF1g6vYlBe7uQC+tC6A3/alg+/UZpu
+         m5MOJadMJZ+iidQa4Iuvr7I9ngdppnGas9vc4YlJXWqn4rAVM3YG8RGKsYP5fUq6/p46
+         o5McgujVuymvluZyoySMIhBOHZMOvwCQlqzd8k69B3hHDYKNRI2ls2ePzzvP3RMksaoc
+         M2ZonpR+NP5eAuDzh8vMW11hj3+5T62UnOFoeimk5mjr62yeO0zgCAKv/RVSpZFggohR
+         OUHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2qVtlYAOtRcz+6F4XJkyiWApaYdPcES7nZQ2donezV0=;
+        b=Kc69b3ZBf0WQmNyGi8GD+qGTEwnNobcW6+CcODjsuJKWcxM1PizyIpzjxeXWEnjpcG
+         t2F0XmToXszj3xxw7PvCZl8Hxg++OBrPDJnltaFputAkLH0Dz8rBuDBR2rZwWyNycm+3
+         eHbW9xZCSr328mCaJaCWk4kYM5J2TKSLc9yTsYujfAlf+2zaUbkluAuU7/tAPwvFxc0/
+         Ljq64HxJrBGPmWxmFjLUcLiJz9RAYQkLK8poxjDjMtXkYqX8777++piQxdZThxUXcsWk
+         7QGEedFl8DNogY681ZvddWfoSrh5I9Ff1z5PHTsvzkKXGCasrrQIxnO3jDoRJ+q1gqib
+         0xAA==
+X-Gm-Message-State: APjAAAVayoKRZW28YhSj2wvxfZaFkML5RfjPb1XSjuaHmgpoHuLwSkP4
+        5ZeEflpGsCTaIL4SuvfyP8HKghmYoxoPG+/vmCs95A==
+X-Google-Smtp-Source: APXvYqzLdU215RBR+lRJDFtX7NSmzsBYhixAzaNonjFfJXAAbiD83HVZkQwNdg4MVVrQyCITIQ0hr3XoBh8Oe4aRaBE=
+X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr204409qvb.163.1576017230745;
+ Tue, 10 Dec 2019 14:33:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D4C7374E-4DFE-4024-8E76-9F54BF421B62@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210011438.4182911-1-andriin@fb.com> <20191210011438.4182911-12-andriin@fb.com>
+ <20191209175745.2d96a1f0@cakuba.netronome.com> <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
+ <20191210100536.7a57d5e1@cakuba.netronome.com> <20191210214407.GA3105713@mini-arch>
+In-Reply-To: <20191210214407.GA3105713@mini-arch>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 10 Dec 2019 14:33:39 -0800
+Message-ID: <CAEf4BzbSwoeKVnyJU7EoP86exNj3Eku5_+8MbEieZKt2MqrhbQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Joerg]
+On Tue, Dec 10, 2019 at 1:44 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+>
+> On 12/10, Jakub Kicinski wrote:
+> > On Tue, 10 Dec 2019 09:11:31 -0800, Andrii Nakryiko wrote:
+> > > On Mon, Dec 9, 2019 at 5:57 PM Jakub Kicinski wrote:
+> > > > On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:
+> > > > > struct <object-name> {
+> > > > >       /* used by libbpf's skeleton API */
+> > > > >       struct bpf_object_skeleton *skeleton;
+> > > > >       /* bpf_object for libbpf APIs */
+> > > > >       struct bpf_object *obj;
+> > > > >       struct {
+> > > > >               /* for every defined map in BPF object: */
+> > > > >               struct bpf_map *<map-name>;
+> > > > >       } maps;
+> > > > >       struct {
+> > > > >               /* for every program in BPF object: */
+> > > > >               struct bpf_program *<program-name>;
+> > > > >       } progs;
+> > > > >       struct {
+> > > > >               /* for every program in BPF object: */
+> > > > >               struct bpf_link *<program-name>;
+> > > > >       } links;
+> > > > >       /* for every present global data section: */
+> > > > >       struct <object-name>__<one of bss, data, or rodata> {
+> > > > >               /* memory layout of corresponding data section,
+> > > > >                * with every defined variable represented as a struct field
+> > > > >                * with exactly the same type, but without const/volatile
+> > > > >                * modifiers, e.g.:
+> > > > >                */
+> > > > >                int *my_var_1;
+> > > > >                ...
+> > > > >       } *<one of bss, data, or rodata>;
+> > > > > };
+> > > >
+> > > > I think I understand how this is useful, but perhaps the problem here
+> > > > is that we're using C for everything, and simple programs for which
+> > > > loading the ELF is majority of the code would be better of being
+> > > > written in a dynamic language like python?  Would it perhaps be a
+> > > > better idea to work on some high-level language bindings than spend
+> > > > time writing code gens and working around limitations of C?
+> > >
+> > > None of this work prevents Python bindings and other improvements, is
+> > > it? Patches, as always, are greatly appreciated ;)
+> >
+> > This "do it yourself" shit is not really funny :/
+> >
+> > I'll stop providing feedback on BPF patches if you guy keep saying
+> > that :/ Maybe that's what you want.
+> >
+> > > This skeleton stuff is not just to save code, but in general to
+> > > simplify and streamline working with BPF program from userspace side.
+> > > Fortunately or not, but there are a lot of real-world applications
+> > > written in C and C++ that could benefit from this, so this is still
+> > > immensely useful. selftests/bpf themselves benefit a lot from this
+> > > work, see few of the last patches in this series.
+> >
+> > Maybe those applications are written in C and C++ _because_ there
+> > are no bindings for high level languages. I just wish BPF programming
+> > was less weird and adding some funky codegen is not getting us closer
+> > to that goal.
+> >
+> > In my experience code gen is nothing more than a hack to work around
+> > bad APIs, but experiences differ so that's not a solid argument.
+> *nod*
+>
+> We have a nice set of C++ wrappers around libbpf internally, so we can do
+> something like BpfMap<key type, value type> and get a much better interface
+> with type checking. Maybe we should focus on higher level languages instead?
+> We are open to open-sourcing our C++ bits if you want to collaborate.
 
-On Tue, Dec 03, 2019 at 03:43:53PM +0000, James Sewart wrote:
-> pci_add_dma_alias can now be used to create a dma alias for a range of
-> devfns.
-> 
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: James Sewart <jamessewart@arista.com>
-> ---
->  drivers/pci/pci.c    | 22 +++++++++++++++++-----
->  drivers/pci/quirks.c | 14 +++++++-------
->  include/linux/pci.h  |  2 +-
->  3 files changed, 25 insertions(+), 13 deletions(-)
+Python/C++ bindings and API wrappers are an orthogonal concerns here.
+I personally think it would be great to have both Python and C++
+specific API that uses libbpf under the cover. The only debatable
+thing is the logistics: where the source code lives, how it's kept in
+sync with libbpf, how we avoid crippling libbpf itself because
+something is hard or inconvenient to adapt w/ Python, etc.
 
-Heads up Joerg: I also updated drivers/iommu/amd_iommu.c (this is the
-one reported by the kbuild test robot) and removed the printk there
-that prints the same thing as the one in pci_add_dma_alias(), and I
-updated a PCI quirk that was merged after this patch was posted.
+The problem I'm trying to solve here is not really C-specific. I don't
+think you can solve it without code generation for C++. How do you
+"generate" BPF program-specific layout of .data, .bss, .rodata, etc
+data sections in such a way, where it's type safe (to the degree that
+language allows that, of course) and is not "stringly-based" API? This
+skeleton stuff provides a natural, convenient and type-safe way to
+work with global data from userspace pretty much at the same level of
+performance and convenience, as from BPF side. How can you achieve
+that w/ C++ without code generation? As for Python, sure you can do
+dynamic lookups based on just the name of property/method, but amount
+of overheads is not acceptable for all applications (and Python itself
+is not acceptable for those applications). In addition to that, C is
+the best way for other less popular languages (e.g., Rust) to leverage
+libbpf without investing lots of effort in re-implementing libbpf in
+Rust.
 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d3c83248f3ce..dbb01aceafda 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5857,7 +5857,8 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->  /**
->   * pci_add_dma_alias - Add a DMA devfn alias for a device
->   * @dev: the PCI device for which alias is added
-> - * @devfn: alias slot and function
-> + * @devfn_from: alias slot and function
-> + * @nr_devfns: Number of subsequent devfns to alias
->   *
->   * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
->   * which is used to program permissible bus-devfn source addresses for DMA
-> @@ -5873,8 +5874,13 @@ int pci_set_vga_state(struct pci_dev *dev, bool decode,
->   * cannot be left as a userspace activity).  DMA aliases should therefore
->   * be configured via quirks, such as the PCI fixup header quirk.
->   */
-> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
->  {
-> +	int devfn_to;
-> +
-> +	nr_devfns = min(nr_devfns, (unsigned)MAX_NR_DEVFNS);
-> +	devfn_to = devfn_from + nr_devfns - 1;
+So while having nice high-level language-specific APIs is good, it's not enough.
 
-I made this look like:
+>
+> (I assume most of the stuff you have at fb is also non-c and one of
+> c++/python/php/rust/go/whatver).
 
-+       devfn_to = min(devfn_from + nr_devfns - 1,
-+                      (unsigned) MAX_NR_DEVFNS - 1);
-
-so devfn_from=0xf0, nr_devfns=0x20 doesn't cause devfn_to to wrap
-around.
-
-I did keep Logan's reviewed-by, so let me know if I broke something.
-
->  	if (!dev->dma_alias_mask)
->  		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
->  	if (!dev->dma_alias_mask) {
-> @@ -5882,9 +5888,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
->  		return;
->  	}
->  
-> -	set_bit(devfn, dev->dma_alias_mask);
-> -	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
-> -		 PCI_SLOT(devfn), PCI_FUNC(devfn));
-> +	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
-> +
-> +	if (nr_devfns == 1)
-> +		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
-> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
-> +	else if(nr_devfns > 1)
-> +		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
-> +				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
-> +				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
->  }
+Yes, C++ using libbpf directly or through very thin wrappers. For
+BCC-based stuff, obviously, we rely on C++ parts of BCC. This struct
+I'm generating is extremely useful for C++ as well, as it gives very
+natural way to access *and initialize* global variables.
