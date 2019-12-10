@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A19FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CCC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC0B205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0605620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012789;
-	bh=IeNIQDPcwkickLJ2DTiLL8BG+ZNio8sQfsfdhilggbg=;
+	s=default; t=1576012793;
+	bh=ForF08Nmv+/fRCvlgZGiU/ze2U4OXlse6twfxuvrWBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQ7mjoQRZfiIXm34UB1HC80mCe0CPo5xJo4jmUE2TowNYptwxKFidydyUYbv3v8IK
-	 iuW8bKMk3cfS/qZWsOibt+jWBaglFQoPPL9LIXcjvkVU/WQJE0ftP+w9IWXZKB8mBE
-	 gGgnLm9d6tQD+XfCV4+cdyeIWcN1gz4WEdLQtUuQ=
+	b=2FPMXL7SYa6CdJiSLzHDmqiJURrP67BKvhuKROkeyUYR/8LtQf/68mvwPKFIGWEk+
+	 5uGMPM3MxbUaZlnV/A785sFegIlon0w9QnFPIKZuU+d9WPvN+D+XEDbn3eayGkfwsB
+	 JV+oHB4LAQ1wMyMuMLkh68izyCvszuyh2EHZLoGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfLJVTr (ORCPT
+        id S1729133AbfLJVTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:19:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:19:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbfLJVMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:23 -0500
+        id S1727035AbfLJVMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9DB246AA;
-        Tue, 10 Dec 2019 21:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B09246A2;
+        Tue, 10 Dec 2019 21:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012342;
-        bh=IeNIQDPcwkickLJ2DTiLL8BG+ZNio8sQfsfdhilggbg=;
+        s=default; t=1576012339;
+        bh=ForF08Nmv+/fRCvlgZGiU/ze2U4OXlse6twfxuvrWBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItQSSk9jFpbz/E0FHEHmXkGvivCgXdBXsNINdkmGAchGxrtRVSSb2GQ4LnC/OFKdz
-         Y9xaidAG3xKF72x2T0hPCa+jSD8u6xe9heFznxNMDBOzsO4ssoilBcxTFskGrStMYu
-         71zU/9JIXyqC+xHbol8R9mUZ/+u6qyUnMKXjrGAU=
+        b=sxIT0OItVw7BWj+wBJkNIJbD+VyB6BQJatRuL8HBL0gNx8CBWzISA0PRTgzwWyP5q
+         gh2mn6EhH8LlnWPTkuimw0AE9Z9ZE5fKndSz6EQCr3jgWVBjVLqwT/5QAkNQyTjI/1
+         ukTAg7szvCrXtzWYmBe7VGJGLst9KoGLI7ENtkOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 273/350] mailbox: tegra: Fix superfluous IRQ error message
-Date:   Tue, 10 Dec 2019 16:06:18 -0500
-Message-Id: <20191210210735.9077-234-sashal@kernel.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 270/350] net: dsa: sja1105: Disallow management xmit during switch reset
+Date:   Tue, 10 Dec 2019 16:06:15 -0500
+Message-Id: <20191210210735.9077-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,59 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit c745da8d4320c49e54662c0a8f7cb6b8204f44c4 ]
+[ Upstream commit af580ae2dcb250719857b4b7024bd4bb0c2e05fb ]
 
-Commit 7723f4c5ecdb ("driver core: platform: Add an error message to
-platform_get_irq*()") added an error message to avoid drivers having
-to print an error message when IRQ lookup fails. However, there are
-some cases where IRQs are optional and so new optional versions of
-the platform_get_irq*() APIs have been added for these cases.
+The purpose here is to avoid ptp4l fail due to this condition:
 
-The IRQs for Tegra HSP module are optional because not all instances
-of the module have the doorbell and all of the shared interrupts.
-Hence, since the above commit was applied the following error messages
-are now seen on Tegra194 ...
+  timed out while polling for tx timestamp
+  increasing tx_timestamp_timeout may correct this issue, but it is likely caused by a driver bug
+  port 1: send peer delay request failed
 
- ERR KERN tegra-hsp c150000.hsp: IRQ doorbell not found
- ERR KERN tegra-hsp c150000.hsp: IRQ shared0 not found
+So either reset the switch before the management frame was sent, or
+after it was timestamped as well, but not in the middle.
 
-The Tegra HSP driver deliberately does not fail if these are not found
-and so fix the above errors by updating the Tegra HSP driver to use
-the platform_get_irq_byname_optional() API.
+The condition may arise either due to a true timeout (i.e. because
+re-uploading the static config takes time), or due to the TX timestamp
+actually getting lost due to reset. For the former we can increase
+tx_timestamp_timeout in userspace, for the latter we need this patch.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20191011083459.11551-1-jonathanh@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Locking all traffic during switch reset does not make sense at all,
+though. Forcing all CPU-originated traffic to potentially block waiting
+for a sleepable context to send > 800 bytes over SPI is not a good idea.
+Flows that are autonomously forwarded by the switch will get dropped
+anyway during switch reset no matter what. So just let all other
+CPU-originated traffic be dropped as well.
+
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/tegra-hsp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-index 4c5ba35d48d43..834b35dc3b137 100644
---- a/drivers/mailbox/tegra-hsp.c
-+++ b/drivers/mailbox/tegra-hsp.c
-@@ -657,7 +657,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 	hsp->num_db = (value >> HSP_nDB_SHIFT) & HSP_nINT_MASK;
- 	hsp->num_si = (value >> HSP_nSI_SHIFT) & HSP_nINT_MASK;
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index aa140662c7c20..4e5a428ab1a4c 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -1389,6 +1389,8 @@ int sja1105_static_config_reload(struct sja1105_private *priv)
+ 	int speed_mbps[SJA1105_NUM_PORTS];
+ 	int rc, i;
  
--	err = platform_get_irq_byname(pdev, "doorbell");
-+	err = platform_get_irq_byname_optional(pdev, "doorbell");
- 	if (err >= 0)
- 		hsp->doorbell_irq = err;
++	mutex_lock(&priv->mgmt_lock);
++
+ 	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
  
-@@ -677,7 +677,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
- 			if (!name)
- 				return -ENOMEM;
+ 	/* Back up the dynamic link speed changed by sja1105_adjust_port_config
+@@ -1420,6 +1422,8 @@ int sja1105_static_config_reload(struct sja1105_private *priv)
+ 			goto out;
+ 	}
+ out:
++	mutex_unlock(&priv->mgmt_lock);
++
+ 	return rc;
+ }
  
--			err = platform_get_irq_byname(pdev, name);
-+			err = platform_get_irq_byname_optional(pdev, name);
- 			if (err >= 0) {
- 				hsp->shared_irqs[i] = err;
- 				count++;
 -- 
 2.20.1
 
