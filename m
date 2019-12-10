@@ -2,117 +2,116 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71C1C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1C7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE922073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013522;
-	bh=xJ6cWECGTI87+zeHdc7ft6/oh7NfheN/H4B2YxWsVek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeVHAkym824CqTrsrhcx9Tr2lKzOAMgBExhwVXZW8/2Qc6ujPzH5K8Skhc+NLBH9C
-	 YG8KDImTIUs7Kr9ulFAPe4wAaIX8Y+989W/DpGTIb9nlTySp6FfeU6b1sk54qT13p/
-	 8HeZoonbU1HDXeN7SeoqabgUfLOMSH6W+lEGsLyo=
+	by mail.kernel.org (Postfix) with ESMTP id 4AE40205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNBHfHD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfLJVcB (ORCPT
+        id S1728390AbfLJVb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:32:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbfLJVJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:18 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 584E2246A3;
-        Tue, 10 Dec 2019 21:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012158;
-        bh=xJ6cWECGTI87+zeHdc7ft6/oh7NfheN/H4B2YxWsVek=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLX/qN5veZDCVw16P/qZkev7aXInRj2LBV+zCBrciFXq1vliKCewh+gWhr5ceSau/
-         3DWItK6ZFVInsaczV8dGebJe+giixihrvirVfkg37DqbjStzOZr8BnQZAcbLD9ZYcT
-         2cMAh6ji3ai6llIQFyHnexbFGpw28SaMWYZ2gslY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Szymon Janc <szymon.janc@codecoup.pl>,
-        =?UTF-8?q?S=C3=B6ren=20Beye?= <linux@hypfer.de>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 120/350] Bluetooth: Workaround directed advertising bug in Broadcom controllers
-Date:   Tue, 10 Dec 2019 16:03:45 -0500
-Message-Id: <20191210210735.9077-81-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        Tue, 10 Dec 2019 16:31:58 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39079 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727166AbfLJVbw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:31:52 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so376161plk.6;
+        Tue, 10 Dec 2019 13:31:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WtDhoZ5ivvcVrikLoCcOpbuCN5K2xI6ePb8PHhBX/qY=;
+        b=bNBHfHD03h3hmMV1w1mftAhHlsANzeRmCm5ntICoRhmQwAgj90TCYu0exwqE/pdhgE
+         GdNZfSlxmS9+MnUMV7dWFoxBeYeAAQf7p2crlgBjwXDwXG1sXMJ6b1MjtryjbQIVfa8o
+         1SX/XqQOGXbyT71gHQYIa2IRm8lwQVeIcfLSC6L0EJSb4weQ0dZWQ4IVIG1HfR5u32U9
+         aDDBA5mO5vSpt3tWu9JReI7ZfKo8J0rhq/a1azkAzqGLiHXA4pg5d+2U8UoGB8QCy25N
+         AU5WmUYt1keRgOs0PN80AM32Fz5sEXch3w0CfnU5IBM5wCHJ0QTur7PEqplqQGIDlFXt
+         Nzbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WtDhoZ5ivvcVrikLoCcOpbuCN5K2xI6ePb8PHhBX/qY=;
+        b=PthU7trMwPI5ZXqCmeKtyLsdZcrh3Vdx/4PWVmPDTk7pykpqLeJ5f6edfbu68Pgu//
+         mvHgnVpqNyt7vc5pFeIVCFqV00U0W4yyQNZC/RiqTcY+fOvhUN7rK8PwU1B/yuG9wA3w
+         rV7LU7w/C7tG9oJE/++LjXGJ1c5hhUWl/M3uraws3F6+XaTeXA4toUyKohpEQlxW0dfo
+         5NAHc+qnOSBc7Gj7w+9EA9/qCt+TF+RGhK2wiOBTwzqHkZrs92X0Nv/7nhVQ/g1WMr+L
+         mykBDZafrk6q1+OkV+Tm4HZWQ6rUEWUJUZGs/ss7CHBHatziXGQbm0IPSzO8cMJeOVdH
+         +N2g==
+X-Gm-Message-State: APjAAAVM48o/V+aK1nBZihPzmCeW8GgP+hTYVksQKsUtqqvIEYXNJfjr
+        WdiAOY3Ro7Gfmpgp1PzWeE4=
+X-Google-Smtp-Source: APXvYqwfHN9VmCdq6yL7ojouBK+46iwUO9cnHFSBSdaffvPSJZPzqJgNYzlxRmyGh/W0xuYKtbYMlw==
+X-Received: by 2002:a17:90a:8986:: with SMTP id v6mr7783380pjn.63.1576013511889;
+        Tue, 10 Dec 2019 13:31:51 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:a25c])
+        by smtp.gmail.com with ESMTPSA id o3sm3613026pju.13.2019.12.10.13.31.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 13:31:51 -0800 (PST)
+Date:   Tue, 10 Dec 2019 13:31:50 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or
+ ksyms
+Message-ID: <20191210213148.kqd6xdvqjkh3zxst@ast-mbp.dhcp.thefacebook.com>
+References: <20191210181412.151226-1-toke@redhat.com>
+ <20191210125457.13f7821a@cakuba.netronome.com>
+ <87eexbhopo.fsf@toke.dk>
+ <20191210132428.4470a7b0@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210132428.4470a7b0@cakuba.netronome.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szymon Janc <szymon.janc@codecoup.pl>
+On Tue, Dec 10, 2019 at 01:24:28PM -0800, Jakub Kicinski wrote:
+> On Tue, 10 Dec 2019 22:09:55 +0100, Toke Høiland-Jørgensen wrote:
+> > Jakub Kicinski <jakub.kicinski@netronome.com> writes:
+> > > On Tue, 10 Dec 2019 19:14:12 +0100, Toke Høiland-Jørgensen wrote:  
+> > >> When the kptr_restrict sysctl is set, the kernel can fail to return
+> > >> jited_ksyms or jited_prog_insns, but still have positive values in
+> > >> nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when trying
+> > >> to dump the program because it only checks the len fields not the actual
+> > >> pointers to the instructions and ksyms.
+> > >> 
+> > >> Fix this by adding the missing checks.
+> > >> 
+> > >> Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>  
+> > >
+> > > Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+> > >
+> > > and
+> > >
+> > > Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm field")
+> > >
+> > > ?  
+> > 
+> > Yeah, guess so? Although I must admit it's not quite clear to me whether
+> > bpftool gets stable backports, or if it follows the "only moving
+> > forward" credo of libbpf?
+> 
+> bpftool does not have a GH repo, and seeing strength of Alexei's
+> arguments in the recent discussion - I don't think it will. So no
+> reason for bpftool to be "special"
 
-[ Upstream commit 4c371bb95cf06ded80df0e6139fdd77cee1d9a94 ]
-
-It appears that some Broadcom controllers (eg BCM20702A0) reject LE Set
-Advertising Parameters command if advertising intervals provided are not
-within range for undirected and low duty directed advertising.
-
-Workaround this bug by populating min and max intervals with 'valid'
-values.
-
-< HCI Command: LE Set Advertising Parameters (0x08|0x0006) plen 15
-        Min advertising interval: 0.000 msec (0x0000)
-        Max advertising interval: 0.000 msec (0x0000)
-        Type: Connectable directed - ADV_DIRECT_IND (high duty cycle) (0x01)
-        Own address type: Public (0x00)
-        Direct address type: Random (0x01)
-        Direct address: E2:F0:7B:9F:DC:F4 (Static)
-        Channel map: 37, 38, 39 (0x07)
-        Filter policy: Allow Scan Request from Any, Allow Connect Request from Any (0x00)
-> HCI Event: Command Complete (0x0e) plen 4
-      LE Set Advertising Parameters (0x08|0x0006) ncmd 1
-        Status: Invalid HCI Command Parameters (0x12)
-
-Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
-Tested-by: SÃ¶ren Beye <linux@hypfer.de>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/hci_conn.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index ad5b0ac1f9cef..7ff92dd4c53cd 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -934,6 +934,14 @@ static void hci_req_directed_advertising(struct hci_request *req,
- 			return;
- 
- 		memset(&cp, 0, sizeof(cp));
-+
-+		/* Some controllers might reject command if intervals are not
-+		 * within range for undirected advertising.
-+		 * BCM20702A0 is known to be affected by this.
-+		 */
-+		cp.min_interval = cpu_to_le16(0x0020);
-+		cp.max_interval = cpu_to_le16(0x0020);
-+
- 		cp.type = LE_ADV_DIRECT_IND;
- 		cp.own_address_type = own_addr_type;
- 		cp.direct_addr_type = conn->dst_type;
--- 
-2.20.1
+bpftool always was and will be a special user of libbpf.
 
