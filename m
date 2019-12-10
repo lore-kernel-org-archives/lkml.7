@@ -2,220 +2,188 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9541BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6492C04E30
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC0C20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FD421556
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 03:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="pjXGQyS7"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t4LXaEHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLJDJC (ORCPT
+        id S1726682AbfLJDNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 22:09:02 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44077 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfLJDJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 22:09:01 -0500
-Received: by mail-pf1-f195.google.com with SMTP id d199so8279100pfd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 19:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DmS5ss7ipUF3F5vE6DlF0K5CcdA6RqYOk95nZq9VCag=;
-        b=pjXGQyS7oHO0C6mKYEqLhRUP2s5yD54ySVXE0KEEWdbp0xKvdqb0z9lsgfbc7Z7ha0
-         WYegY6IQvupK+gPV7kK2gcMxOhUbMBQ2/p0ntD9j+k2O4an3wZfL8gPTjG2vqMve0N03
-         3kJaRnLvNe2faci4IY9yudGAqAsR3MkJp1EbKyLZs9bqn5o5c8EDB7AHDukZpcOKCoF7
-         eQN0yR7mxzSPXyQ9PcnLonQhUvXIZr/SsN8aMnRX1q7Jy/Lwn49qB2VP7gZfuEGs+oJI
-         GaU2qSJYUavOct1+nERgJSPr4SwROn7STu2+6b4xWULiiZEzNhTsmStdnzMB3mDdQqtH
-         yPYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DmS5ss7ipUF3F5vE6DlF0K5CcdA6RqYOk95nZq9VCag=;
-        b=rANv5kupQI0A3llfSrCrXmxxuCQm7+mj6CqE9gyq/swXEJY+1294hYDQGpCPnEdl+v
-         k76REHDuG0JVH/Vmd6JH/N8avpBqG3n0d3FjGEOM4q2ya0fsvBp6KZvrQjLBCpw1jdF2
-         JmAL7PuTcAq2xXJU504Ir6itwFhsUnIc0Rzz+t+WIi+zUIMwL8LaPYKaQGeXEUBUgF+f
-         1YhV/zWH0FS/uMfLJhPM88CaOSexLT+0cuSifaitMZw9c3jj90gkU/Gd8+5acOImEWoh
-         9qti2ZxVl/Qeg+YHz6LYOmORDkf8OKhsOadb2VjawUGh0ZbLyvGdjaluq6Ui3FboWzIH
-         GpzA==
-X-Gm-Message-State: APjAAAWTojOdc4EpceWZySSpL2oBfpWzLoIoiyR/o5r+iXpmkbk1EtA8
-        lIU8T0SOQLw5hE52kErjBNp61A==
-X-Google-Smtp-Source: APXvYqwklbqazU0Dc6HZHhTC9QLFYzfhC4Kx1e6mc8e7pTupnHRD/2YXSFmiXvdj70iC2UgWjFRnuw==
-X-Received: by 2002:a63:bc01:: with SMTP id q1mr10517240pge.442.1575947340338;
-        Mon, 09 Dec 2019 19:09:00 -0800 (PST)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id w3sm863235pfd.161.2019.12.09.19.08.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 19:08:59 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for
- Secure VM.
-To:     Ram Pai <linuxram@us.ibm.com>, mpe@ellerman.id.au
-Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
-        david@gibson.dropbear.id.au, paulus@ozlabs.org,
-        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
-        linux-kernel@vger.kernel.org, leonardo@linux.ibm.com
-References: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com>
- <1575681159-30356-2-git-send-email-linuxram@us.ibm.com>
- <1575681159-30356-3-git-send-email-linuxram@us.ibm.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <5ee813ba-8f83-efd1-074c-1d9b2cb24334@ozlabs.ru>
-Date:   Tue, 10 Dec 2019 14:08:52 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 22:13:30 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46233 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbfLJDN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Dec 2019 22:13:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47X4rl0VXXz9sPW;
+        Tue, 10 Dec 2019 14:13:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1575947607;
+        bh=XGaFBEWJZznnxeIn8Ek0w48XjZCsYhZ9I08XkW0B8u8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t4LXaEHTodgmcG1vua4m1yLMdmfkap+jIrBAqwoseVkpmCuZt1WIHm51/UW6MAPUu
+         gO2K7kBYJSuori5YlCDcBP39+Dp/F2+kdZbm6auy9x2UjgQ/4LiUb3DYGXz1/P+tBD
+         wG0+hItoHPu0998Pdx7rAb6NA9BYfvsD/owN3iqbugztlZ4PMUQnejZN8oqD//2grx
+         dAlNJSVUJ/5n2Hi9R6dI7xBbzARUz/J0F0CYj3llSmRax46tw6Ys49x6zptbjohuXW
+         dbS91hURtRgV9XT4oyizXzSUb1uwgplquNKxMu1VAKSitIcJoRwlNmjVROH0c0e8EF
+         2pBdorQ+lldRA==
+Date:   Tue, 10 Dec 2019 14:13:26 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: stats (Was: Linux 5.5-rc1)
+Message-ID: <20191210141326.1e440603@canb.auug.org.au>
+In-Reply-To: <CAHk-=wiEJK=yo9vEhX_4b4ROvCqUA_rjK7g996h-5MbfOMeDrw@mail.gmail.com>
+References: <CAHk-=wiEJK=yo9vEhX_4b4ROvCqUA_rjK7g996h-5MbfOMeDrw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1575681159-30356-3-git-send-email-linuxram@us.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/OJSzA1eX5Reyx+y9Y0VhIKE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/OJSzA1eX5Reyx+y9Y0VhIKE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 07/12/2019 12:12, Ram Pai wrote:
-> Commit edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on
-> 		secure guests")
-> disabled dma_iommu_ops path, for secure VMs. Disabling dma_iommu_ops
-> path for secure VMs, helped enable dma_direct path.  This enabled
-> support for bounce-buffering through SWIOTLB.  However it fails to
-> operate when IOMMU is enabled, since I/O pages are not TCE mapped.
-> 
-> Renable dma_iommu_ops path for pseries Secure VMs.  It handles all
-> cases including, TCE mapping I/O pages, in the presence of a
-> IOMMU.
-> 
-> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+As usual, the executive friendly graph is at
+http://neuling.org/linux-next-size.html :-)
 
+(No merge commits counted, next-20191126 was the first linux-next after
+the merge window opened.)
 
-Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Commits in v5.5-rc1 (relative to v5.4):            12632
+Commits in next-20191126:                          12623
+Commits with the same SHA1:                        11691
+Commits with the same patch_id:                      280 (1)
+Commits with the same subject line:                   40 (1)
 
-Although I still do not totally understand the mechanics of this
-(swiotlb on top of huge DDW at 0x800.0000.0000.0000), this change looks
-reasonable anyway.
+(1) not counting those in the lines above.
 
+So commits in -rc1 that were in next-20191126:     12011 95%
 
+Some breakdown of the list of extra commits (relative to next-20191126)
+in -rc1:
 
-> ---
->  arch/powerpc/platforms/pseries/iommu.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 67b5009..4e27d66 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -36,7 +36,6 @@
->  #include <asm/udbg.h>
->  #include <asm/mmzone.h>
->  #include <asm/plpar_wrappers.h>
-> -#include <asm/svm.h>
->  #include <asm/ultravisor.h>
->  
->  #include "pseries.h"
-> @@ -1346,15 +1345,7 @@ void iommu_init_early_pSeries(void)
->  	of_reconfig_notifier_register(&iommu_reconfig_nb);
->  	register_memory_notifier(&iommu_mem_nb);
->  
-> -	/*
-> -	 * Secure guest memory is inacessible to devices so regular DMA isn't
-> -	 * possible.
-> -	 *
-> -	 * In that case keep devices' dma_map_ops as NULL so that the generic
-> -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
-> -	 */
-> -	if (!is_secure_guest())
-> -		set_pci_dma_ops(&dma_iommu_ops);
-> +	set_pci_dma_ops(&dma_iommu_ops);
->  }
->  
->  static int __init disable_multitce(char *str)
-> 
+Top ten first word of commit summary:
 
--- 
-Alexey
+     56 net
+     46 perf
+     41 drm
+     36 s390
+     30 x86
+     25 io_uring
+     19 pipe
+     15 rtc
+     14 alsa
+     12 selftests
+
+Top ten authors:
+
+     20 axboe@kernel.dk
+     20 acme@redhat.com
+     18 gor@linux.ibm.com
+     18 adrian.hunter@intel.com
+     16 luto@kernel.org
+     16 dhowells@redhat.com
+     13 krzk@kernel.org
+     11 will@kernel.org
+      9 viro@zeniv.linux.org.uk
+      9 treding@nvidia.com
+
+Top ten commiters:
+
+     98 davem@davemloft.net
+     52 axboe@kernel.dk
+     48 acme@redhat.com
+     36 mingo@kernel.org
+     33 gor@linux.ibm.com
+     21 torvalds@linux-foundation.org
+     16 rafael.j.wysocki@intel.com
+     15 alexandre.belloni@bootlin.com
+     14 tiwai@suse.de
+     14 mpe@ellerman.id.au
+
+There are also 612 commits in next-20191126 that didn't make it into
+v5.5-rc1.
+
+Top ten first word of commit summary:
+
+    243 drm
+     44 xtensa
+     40 arm
+     33 x86
+     29 arm64
+     27 mm
+     11 nfc
+      9 dt-bindings
+      8 nvmem
+      8 fsi
+
+Top ten authors:
+
+     40 jcmvbkbc@gmail.com
+     29 alexander.deucher@amd.com
+     26 steven.price@arm.com
+     22 leo.liu@amd.com
+     20 olof@lixom.net
+     18 zhengbin13@huawei.com
+     18 yong.zhao@amd.com
+     17 peterz@infradead.org
+     17 bhawanpreet.lakha@amd.com
+     16 akpm@linux-foundation.org
+
+Some of Andrew's patches are fixes for other patches in his tree (and
+have been merged into those).
+
+Top ten commiters:
+
+    245 alexander.deucher@amd.com
+     96 sfr@canb.auug.org.au
+     48 jcmvbkbc@gmail.com
+     28 mingo@kernel.org
+     20 olof@lixom.net
+     16 joel@jms.id.au
+     15 heiko@sntech.de
+     11 sameo@linux.intel.com
+     11 dhowells@redhat.com
+     10 srinivas.kandagatla@linaro.org
+
+Those commits by me are from the quilt series (mainly Andrew's mmotm
+tree).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OJSzA1eX5Reyx+y9Y0VhIKE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3vDVYACgkQAVBC80lX
+0GzU6QgAmGfZur4X3UenEWFtBsIv5jxvUv0N9jm34MZx6Ul2XstHQ+0DlgwFtsEU
+7f3icttQKblMNrEFzrKSYxrpfxCjVv8bV04naE2dV2XC1k3M1cEx9bqJWi/T8y5h
+DtowyaLLyddfTIgz/gQpKu26mEoDv7fEL+Kead/+7pXLGdtTGHCZt+ClVEziS7XF
+shpOcw5Ns/xDLVigd5vVoN3j96WBhWZyEQEMFTGf1wcD+Z4Dql8TcTeiGXDTJRl7
+DGrTot8GyxHHdwxe5VunCjC9b2jGvchfr8j7ARE+dFKpKiMojQVf8363feWb7/rH
+3lsbn/0Pew4oNiJd6LIkf1zyWwSw1w==
+=TldX
+-----END PGP SIGNATURE-----
+
+--Sig_/OJSzA1eX5Reyx+y9Y0VhIKE--
