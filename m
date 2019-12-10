@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C839DC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B308C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9923D2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10AE220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014722;
-	bh=LA4jwc5q3lPFXscqOD5f2qDp4cgi4LzaCbXLHdoRLws=;
+	s=default; t=1576014726;
+	bh=uqHLQvzm+xZtTxEjJWFZKxJIQ3F3G+GRncOmGj48G7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXATqX0NvzmmccUKK1C8mCxnbzAaHpei91jLsUn7Z9rNAmHDFicCdZAdxWsIX7Pw3
-	 ZCGp5hcisYyNCa8jUXXvxOsOFvkcD/vTa9vUJaJPTc76RANy9W1FAbouRboS67n/H6
-	 zA/2FlXov/sr11YTGETHlQ7juTk6xbzq7VkujZL0=
+	b=C+/32+/6i3oFMRjTQg4BWn6EKxtEYRi031fbMSZ90e1sCKy1+4DY8/jS2ck2GSAeX
+	 8jk6Y60Ryl4bmWhF3AwZUl8dcTM2QUv1pbutD7mklmrc/ZB8zSldfHi9x2C1sEM/Wk
+	 RUnrUxqUfozkef1GDxbuYmciVLn9o+gouXGtf4yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfLJVwB (ORCPT
+        id S1727592AbfLJVHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:52:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54504 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727594AbfLJVHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:50 -0500
+        id S1727312AbfLJVHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E2624688;
-        Tue, 10 Dec 2019 21:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CA524687;
+        Tue, 10 Dec 2019 21:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012069;
-        bh=LA4jwc5q3lPFXscqOD5f2qDp4cgi4LzaCbXLHdoRLws=;
+        s=default; t=1576012063;
+        bh=uqHLQvzm+xZtTxEjJWFZKxJIQ3F3G+GRncOmGj48G7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fs8XgcAWKNtXJ7iyIL8R8dVSPwdloZclkp3no5L66TyR32mZX0oziEKCHxYs7p9vs
-         WXKeR0YlY0saTaYzN7QU05e9qkzj/FoB6xG2jjMqYt9Qe/YRG46xDJcK3ryH3QWhiC
-         f8K0hI1POx1IWOZdIMrfxTvB/7WpM5TaEFAcNRFA=
+        b=q/XIRrXgOh/bO8GJyWEhRZ4hZxEC/59XYDexXMRhesOrAP8BCxD9BCL+yVrr4BaOR
+         vt5W0qBsuc4m/TKTKVo3CsBBMKe1WkGm2+KPYZvIxNJN1f2dFKfC0enLIf0jMY95nm
+         6lGZU9NP17VDiQV6a3UeCrES31UPh3xnrGVVnjCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 050/350] drm/amd/display: Set number of pipes to 1 if the second pipe was disabled
-Date:   Tue, 10 Dec 2019 16:02:35 -0500
-Message-Id: <20191210210735.9077-11-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 045/350] media: ov6650: Fix stored crop rectangle not in sync with hardware
+Date:   Tue, 10 Dec 2019 16:02:30 -0500
+Message-Id: <20191210210735.9077-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -62,44 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 2fef0faa1cdc5d41ce3ef83f7b8f7e7ecb02d700 ]
+[ Upstream commit 1463b371aff0682c70141f7521db13cc4bbf3016 ]
 
-[why]
-Some ODM-related register settings are inconsistently updated by VBIOS, causing
-the state in DC to be invalid, which would then end up crashing in certain
-use-cases (such as disable/enable device).
+The driver stores crop rectangle settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, crop rectangle width and height settings are not updated
+correctly when rectangle offset settings are applied on hardware.  If
+an error occurs while the device is updated, the stored settings my no
+longer reflect hardware state and consecutive calls to .get_selection()
+as well as .get/set_fmt() may return incorrect information.  That in
+turn may affect ability of a bridge device to use correct DMA transfer
+settings if such incorrect informamtion on active frame format returned
+by .get/set_fmt() is used.
 
-[how]
-Check the enabled status of the second pipe when determining the number of
-OPTC sources. If the second pipe is disabled, set the number of sources to 1
-regardless of other settings (that may not be updated correctly).
+Assuming a failed update of the device means its actual settings haven't
+changed, update crop rectangle width and height settings stored in the
+device private structure correctly while the rectangle offset is
+successfully applied on hardware so the stored values always reflect
+actual hardware state to the extent possible.
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/i2c/ov6650.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-index 2137e2be21404..dda90995ba933 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-@@ -287,6 +287,10 @@ void optc2_get_optc_source(struct timing_generator *optc,
- 		*num_of_src_opp = 2;
- 	else
- 		*num_of_src_opp = 1;
-+
-+	/* Work around VBIOS not updating OPTC_NUM_OF_INPUT_SEGMENT */
-+	if (*src_opp_id_1 == 0xf)
-+		*num_of_src_opp = 1;
- }
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 5426fed2574ec..43c3f1b6e19ac 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -481,6 +481,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
  
- void optc2_set_dwb_source(struct timing_generator *optc,
+ 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
++		priv->rect.width += priv->rect.left - sel->r.left;
+ 		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+ 				       (sel->r.left + sel->r.width) >> 1);
+@@ -490,6 +491,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
++		priv->rect.height += priv->rect.top - sel->r.top;
+ 		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+ 				       (sel->r.top + sel->r.height) >> 1);
 -- 
 2.20.1
 
