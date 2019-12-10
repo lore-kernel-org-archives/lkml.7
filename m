@@ -2,112 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B03FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B221C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704DA20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hhYnPCAG"
+	by mail.kernel.org (Postfix) with ESMTP id 47522206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfLJIo0 (ORCPT
+        id S1727063AbfLJIpr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:44:26 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49406 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbfLJIo0 (ORCPT
+        Tue, 10 Dec 2019 03:45:47 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46936 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfLJIpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:44:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575967465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=85iuBCTeUInaX84Dg3t6InbKz06LRvBV1i1vwBmGbVM=;
-        b=hhYnPCAGLTr8DMa2DXs0f6rdYdtmlwaGe0qfBoDpaFMGB/E2sfS6L1+gM7JvZJlecuM/iv
-        pHUF+vaWaEGGUeEnyLSGTU9k9KTunJzaASvRqMTFbA33E9+y1Tb1ehmvEXrXbhrUJ/M5Qq
-        n39OSxZiqbIF/2X4UoMbBmkB6yeze6w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-kGjaGIe6MWKsbAXT11_fOw-1; Tue, 10 Dec 2019 03:44:22 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88E9A189DF5E;
-        Tue, 10 Dec 2019 08:44:20 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FD0360BF3;
-        Tue, 10 Dec 2019 08:44:14 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, mhocko@kernel.org, david@redhat.com,
-        jgross@suse.com, akpm@linux-foundation.org, bhe@redhat.com
-Subject: [Patch v2] mm/hotplug: Only respect mem= parameter during boot stage
-Date:   Tue, 10 Dec 2019 16:44:13 +0800
-Message-Id: <20191210084413.21957-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: kGjaGIe6MWKsbAXT11_fOw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Dec 2019 03:45:46 -0500
+Received: by mail-ot1-f66.google.com with SMTP id g18so14766826otj.13;
+        Tue, 10 Dec 2019 00:45:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gu9XcTljjRQf7hRb8/Mhf5hwSbDp/VoOA2gAk6H+H+Q=;
+        b=FG5T8bpUugqi1vwtL8ZXNXg/faXNxuT0wAV7AJj+pVCDqtNO6Xh4DyTkUttfQO8SDN
+         XuAd2ccf27waOfXV6yiMmugJyELMQMlMiMX+2fLay2gRhxwA7HWu4/rj+4NUM9tYCiRF
+         npAifmQht3BjYcudZfbdiCnjA+W69wiG/cVKUURyO44zV54p1d9fb7xqzS+TnFm+inQu
+         0b3b/VCESSMf7RlWENtgmTmFBsZFHYMFMQNuCTuSTMdLoQDPLst1Ab4oMpYTl0WS8IDG
+         NHhBv/VRO2tVkWg4wNOG606g+LaPO+uxefM7D6OYFyg6ff+qin6cVFoPHwue877lo5x6
+         9yhg==
+X-Gm-Message-State: APjAAAVdxcO8HgzvIlOBEfOIQNLrkFI7sdg2SZNxgMrZpK2S2byhQGMG
+        IwtcWlbMMkHtfZOa+cbRVJNQhP0dNXUuhL/bcGY=
+X-Google-Smtp-Source: APXvYqwr5SQmZAWza7zJ7Atdb9MhYfJIuarcaSpvfba+QWrG34fJ6MQk6AeLc7aZqDjffLly9ww2kZAuvH8NC0hX6Es=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr20205715otm.297.1575967546178;
+ Tue, 10 Dec 2019 00:45:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20191204133328.18668-1-linux@roeck-us.net> <CAMuHMdXwJUzuSNS7CBpU5J6ofOZGrWMStJU9VaT2gp3m5U5=Lw@mail.gmail.com>
+ <42cb2e14-a2d7-8e53-509f-da201f0624a0@roeck-us.net>
+In-Reply-To: <42cb2e14-a2d7-8e53-509f-da201f0624a0@roeck-us.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Dec 2019 09:45:35 +0100
+Message-ID: <CAMuHMdW=aFS8qm+=cwTciNBkHmbp5f7S8PVhus7E3MEoJT-qkw@mail.gmail.com>
+Subject: Re: [PATCH] hexagon: io: Define ioremap_uc to fix build error
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Brian Cain <bcain@codeaurora.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 357b4da50a62 ("x86: respect memory size limiting via mem=3D
-parameter") a global varialbe global max_mem_size is added to store
-the value parsed from 'mem=3D ', then checked when memory region is
-added. This truly stops those DIMM from being added into system memory
-during boot-time.
+Hi Günter,
 
-However, it also limits the later memory hotplug functionality. Any
-memory board can't be hot added any more if its region is beyond the
-max_mem_size. System will print error like below:
+On Tue, Dec 10, 2019 at 9:23 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 12/10/19 12:09 AM, Geert Uytterhoeven wrote:
+> > On Wed, Dec 4, 2019 at 2:34 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >> ioremap_uc is now mandatory.
+> >>
+> >> lib/devres.c:44:3: error: implicit declaration of function 'ioremap_uc'
+> >>
+> >> Fixes: e537654b7039 ("lib: devres: add a helper function for ioremap_uc")
+> >> Cc: Tuowen Zhao <ztuowen@gmail.com>
+> >> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> >> Cc: Lee Jones <lee.jones@linaro.org>
+> >> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> >> ---
+> >>   arch/hexagon/include/asm/io.h | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/hexagon/include/asm/io.h b/arch/hexagon/include/asm/io.h
+> >> index 539e3efcf39c..39e5605c5d42 100644
+> >> --- a/arch/hexagon/include/asm/io.h
+> >> +++ b/arch/hexagon/include/asm/io.h
+> >> @@ -173,7 +173,7 @@ static inline void writel(u32 data, volatile void __iomem *addr)
+> >>
+> >>   void __iomem *ioremap(unsigned long phys_addr, unsigned long size);
+> >>   #define ioremap_nocache ioremap
+> >> -
+> >> +#define ioremap_uc ioremap
+> >>
+> >>   #define __raw_writel writel
+> >
+> > Do we really need this? There is only one user of ioremap_uc(), which
+> > Christoph is trying hard to get rid of, and the new devres helper that
+> > triggers all of this :-(
+> > https://lore.kernel.org/dri-devel/20191112105507.GA7122@lst.de/
+>
+> One may ask why we needed a devres helper in the first place if there
+> is indeed just one user.
 
-[  216.387164] acpi PNP0C80:02: add_memory failed
-[  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
-[  216.392187] acpi PNP0C80:02: Enumeration failure
+Because of the new second user, which jumped on the devres train...
+a8ff78f7f773142e ("mfd: intel-lpss: Use devm_ioremap_uc for MMIO").
 
-From document of 'mem=3D ' parameter, it should be a restriction during
-boot, but not impact the system memory adding/removing after booting.
+Gr{oetje,eeting}s,
 
-  mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
-=09          ...
+                        Geert
 
-So fix it by also checking if it's during boot-time when restrict memory
-adding. Otherwise, skip the restriction.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem=3D paramete=
-r")
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- mm/memory_hotplug.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 55ac23ef11c1..989707295d15 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -105,7 +105,11 @@ static struct resource *register_memory_resource(u64 s=
-tart, u64 size)
- =09unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
- =09char *resource_name =3D "System RAM";
-=20
--=09if (start + size > max_mem_size)
-+=09/*
-+=09 * Make sure value parsed from 'mem=3D' only restricts memory adding
-+=09 * during boot-time, so that memory hotplug won't be impacted.
-+=09 */
-+=09if (start + size > max_mem_size && system_state < SYSTEM_RUNNING)
- =09=09return ERR_PTR(-E2BIG);
-=20
- =09/*
---=20
-2.17.2
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
