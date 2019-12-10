@@ -2,133 +2,203 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B157C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8227C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D083205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012985;
-	bh=iaC0QJKhZ7MkHMnmASMuFy1JKhlGOaBmoo+TBZXGmrY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGQffgXt8qPkCV+KbIi8HB6pWmlPKo9VA2BFUTCpZPyWDLTmFJUiNxXyP5Rj5z1Yx
-	 4+gwryEKoxqa0fF+k7qkntIzqKQ6S8zy/MzscgwiyhyVFaeJkklOPVIKCO41t1uWf2
-	 hcpYvuKka4FixSIcQ8gE6+Mhku7hu/5u85ZSlQ20=
+	by mail.kernel.org (Postfix) with ESMTP id 85A48205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfLJVXE (ORCPT
+        id S1729426AbfLJVXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:23:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:23:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:58948 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbfLJVLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCD6724697;
-        Tue, 10 Dec 2019 21:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012279;
-        bh=iaC0QJKhZ7MkHMnmASMuFy1JKhlGOaBmoo+TBZXGmrY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AzTZV1+6q68apqMJ87PTMPwH0cYFHqITTXup8P0DvhErPvGtCZGik7eVgA4G73xRo
-         69BufUnlxzTzu1ADzzETACWJPjFF5hfGErs9ZVEgaEIPtOktCRaJbUfJHSYHygUeCc
-         ccUQW+ohNvU+Ss5it/fGSWWYNi5R/3vqhPKX/cFY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 222/350] perf probe: Walk function lines in lexical blocks
-Date:   Tue, 10 Dec 2019 16:05:27 -0500
-Message-Id: <20191210210735.9077-183-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+        id S1727640AbfLJVXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:23:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 13:23:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,300,1571727600"; 
+   d="scan'208";a="264656217"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Dec 2019 13:23:06 -0800
+Date:   Tue, 10 Dec 2019 13:23:05 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
+Subject: Re: [PATCH v8 4/7] KVM: VMX: Load CET states on vmentry/vmexit
+Message-ID: <20191210212305.GM15758@linux.intel.com>
+References: <20191101085222.27997-1-weijiang.yang@intel.com>
+ <20191101085222.27997-5-weijiang.yang@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101085222.27997-5-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Fri, Nov 01, 2019 at 04:52:19PM +0800, Yang Weijiang wrote:
+> "Load {guest,host} CET state" bit controls whether guest/host
+> CET states will be loaded at VM entry/exit. Before doing that,
+> KVM needs to check if CET is both enabled on host and guest.
+> 
+> Note: SHSTK and IBT features share one control MSR:
+> MSR_IA32_{U,S}_CET, which means it's difficult to hide
+> one feature from another in the case of SHSTK != IBT,
+> after discussed in community, it's agreed to allow Guest
+> control two features independently as it won't introduce
+> security hole.
+> 
+> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
 
-[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
+...
 
-Since some inlined functions are in lexical blocks of given function, we
-have to recursively walk through the DIE tree.  Without this fix,
-perf-probe -L can miss the inlined functions which is in a lexical block
-(like if (..) { func() } case.)
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index db03d9dc1297..e392e818e7eb 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -44,6 +44,7 @@
+>  #include <asm/spec-ctrl.h>
+>  #include <asm/virtext.h>
+>  #include <asm/vmx.h>
+> +#include <asm/cet.h>
+>  
+>  #include "capabilities.h"
+>  #include "cpuid.h"
+> @@ -2336,7 +2337,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>  	      VM_EXIT_LOAD_IA32_EFER |
+>  	      VM_EXIT_CLEAR_BNDCFGS |
+>  	      VM_EXIT_PT_CONCEAL_PIP |
+> -	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
+> +	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
+> +	      VM_EXIT_LOAD_HOST_CET_STATE;
+>  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
+>  				&_vmexit_control) < 0)
+>  		return -EIO;
+> @@ -2360,7 +2362,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>  	      VM_ENTRY_LOAD_IA32_EFER |
+>  	      VM_ENTRY_LOAD_BNDCFGS |
+>  	      VM_ENTRY_PT_CONCEAL_PIP |
+> -	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
+> +	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
+> +	      VM_ENTRY_LOAD_GUEST_CET_STATE;
+>  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
+>  				&_vmentry_control) < 0)
+>  		return -EIO;
+> @@ -2834,6 +2837,9 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long hw_cr0;
+>  
+> +	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
+> +		cr0 |= X86_CR0_WP;
 
-However, even though, to walk the lines in a given function, we don't
-need to follow the children DIE of inlined functions because those do
-not have any lines in the specified function.
+Huh?  What's the interaction between CR4.CET and CR0.WP?  If there really
+is some non-standard interaction then it needs to be documented in at least
+the changelog and probably with a comment as well.
 
-We need to walk though whole trees only if we walk all lines in a given
-file, because an inlined function can include another inlined function
-in the same file.
+> +
+>  	hw_cr0 = (cr0 & ~KVM_VM_CR0_ALWAYS_OFF);
+>  	if (enable_unrestricted_guest)
+>  		hw_cr0 |= KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST;
+> @@ -2936,6 +2942,22 @@ static bool guest_cet_allowed(struct kvm_vcpu *vcpu, u32 feature, u32 mode)
+>  	return false;
+>  }
+>  
+> +bool is_cet_bit_allowed(struct kvm_vcpu *vcpu)
+> +{
+> +	unsigned long cr0;
+> +	bool cet_allowed;
+> +
+> +	cr0 = kvm_read_cr0(vcpu);
+> +	cet_allowed = guest_cet_allowed(vcpu, X86_FEATURE_SHSTK,
+> +					XFEATURE_MASK_CET_USER) ||
+> +		      guest_cet_allowed(vcpu, X86_FEATURE_IBT,
+> +					XFEATURE_MASK_CET_USER);
+> +	if ((cr0 & X86_CR0_WP) && cet_allowed)
+> +		return true;
 
-Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/dwarf-aux.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+So, attempting to set CR4.CET if CR0.WP=0 takes a #GP?  But attempting
+to clear CR0.WP if CR4.CET=1 is ignored?
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 2ec24c3bed44c..929b7c0567f44 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -678,10 +678,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
- 		}
-+		if (!lw->recursive)
-+			return DIE_FIND_CB_SIBLING;
- 	}
--	if (!lw->recursive)
--		/* Don't need to search recursively */
--		return DIE_FIND_CB_SIBLING;
- 
- 	if (addr) {
- 		fname = dwarf_decl_file(in_die);
-@@ -728,6 +727,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
- {
- 	struct __line_walk_param *lw = data;
- 
-+	/*
-+	 * Since inlined function can include another inlined function in
-+	 * the same file, we need to walk in it recursively.
-+	 */
- 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
- 	if (lw->retval != 0)
- 		return DWARF_CB_ABORT;
-@@ -817,8 +820,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	 */
- 	if (rt_die != cu_die)
- 		/*
--		 * Don't need walk functions recursively, because nested
--		 * inlined functions don't have lines of the specified DIE.
-+		 * Don't need walk inlined functions recursively, because
-+		 * inner inlined functions don't have the lines of the
-+		 * specified function.
- 		 */
- 		ret = __die_walk_funclines(rt_die, false, callback, data);
- 	else {
--- 
-2.20.1
-
+> +
+> +	return false;
+> +}
+> +
+>  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -2976,6 +2998,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  			return 1;
+>  	}
+>  
+> +	if ((cr4 & X86_CR4_CET) && !is_cet_bit_allowed(vcpu))
+> +		return 1;
+> +
+>  	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+>  		return 1;
+>  
+> @@ -3839,6 +3864,12 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
+>  
+>  	if (cpu_has_load_ia32_efer())
+>  		vmcs_write64(HOST_IA32_EFER, host_efer);
+> +
+> +	if (cpu_has_load_host_cet_states_ctrl()) {
+> +		vmcs_writel(HOST_S_CET, 0);
+> +		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
+> +		vmcs_writel(HOST_SSP, 0);
+> +	}
+>  }
+>  
+>  void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
+> @@ -6436,6 +6467,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long cr3, cr4;
+> +	bool cet_allowed;
+>  
+>  	/* Record the guest's net vcpu time for enforced NMI injections. */
+>  	if (unlikely(!enable_vnmi &&
+> @@ -6466,6 +6498,25 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  		vmx->loaded_vmcs->host_state.cr3 = cr3;
+>  	}
+>  
+> +	/* To be aligned with kernel code, only user mode is supported now. */
+> +	cet_allowed = guest_cet_allowed(vcpu, X86_FEATURE_SHSTK,
+> +					XFEATURE_MASK_CET_USER) ||
+> +		      guest_cet_allowed(vcpu, X86_FEATURE_IBT,
+> +					XFEATURE_MASK_CET_USER);
+> +	if (cpu_has_load_guest_cet_states_ctrl() && cet_allowed)
+> +		vmcs_set_bits(VM_ENTRY_CONTROLS,
+> +			      VM_ENTRY_LOAD_GUEST_CET_STATE);
+> +	else
+> +		vmcs_clear_bits(VM_ENTRY_CONTROLS,
+> +				VM_ENTRY_LOAD_GUEST_CET_STATE);
+> +
+> +	if (cpu_has_load_host_cet_states_ctrl() && cet_allowed)
+> +		vmcs_set_bits(VM_EXIT_CONTROLS,
+> +			      VM_EXIT_LOAD_HOST_CET_STATE);
+> +	else
+> +		vmcs_clear_bits(VM_EXIT_CONTROLS,
+> +				VM_EXIT_LOAD_HOST_CET_STATE);
+> +
+>  	cr4 = cr4_read_shadow();
+>  	if (unlikely(cr4 != vmx->loaded_vmcs->host_state.cr4)) {
+>  		vmcs_writel(HOST_CR4, cr4);
+> -- 
+> 2.17.2
+> 
