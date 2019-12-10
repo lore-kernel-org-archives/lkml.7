@@ -2,89 +2,101 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59197C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7F9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1FE20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eagJVm76"
+	by mail.kernel.org (Postfix) with ESMTP id A950B20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfLJIP1 (ORCPT
+        id S1727145AbfLJIQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:15:27 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21469 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726062AbfLJIO4 (ORCPT
+        Tue, 10 Dec 2019 03:16:16 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32794 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfLJIQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:14:56 -0500
-X-UUID: f9b456136baf42daba0957485d388010-20191210
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=BT+q/z4xoeKXCk+y25bvARvW/z0vRa1uB7kHqAjvpaw=;
-        b=eagJVm76XNgnVVvxDHR4QtcIyynPPYY4k7twyvlRAQeSnsJbABh1afLK+LlxnJ0TM069F+hNNzWXq7ZGru/I+gYhmqZcYCt/SkEYgxdTb0VNE+DIW0hmNAOoJ0i23gobJ3xa7JVRfIfeZcbjwRJSuqwzLBRZBLIFzqSs71VZx1Y=;
-X-UUID: f9b456136baf42daba0957485d388010-20191210
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1831961689; Tue, 10 Dec 2019 16:14:48 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 10 Dec 2019 16:14:32 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 10 Dec 2019 16:14:27 +0800
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <vivien.didelot@savoirfairelinux.com>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
-        <sean.wang@mediatek.com>, <opensource@vdorst.com>,
-        <frank-w@public-files.de>, Landen Chao <landen.chao@mediatek.com>
-Subject: [PATCH net-next 6/6] arm64: dts: mt7622: add mt7531 dsa to bananapi-bpi-r64 board
-Date:   Tue, 10 Dec 2019 16:14:42 +0800
-Message-ID: <62eef5503c117f48d4b41e94fd28d75e123590b4.1575914275.git.landen.chao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <cover.1575914275.git.landen.chao@mediatek.com>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
+        Tue, 10 Dec 2019 03:16:16 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d17so14815342otc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 00:16:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l38l0VF8bf24HKe/nGZvjby43vRgIglN8+s8O7VTwDM=;
+        b=gmXKhpm9H2JmhcYQ2LoRbaF5N5zHj7O3mQBUFkw6jQv3LUCVx2rcYBFk03fCSYmkKJ
+         quvPiWLKWi1BofjzWOXQ5yM+J56pMfcUNS79WSSq7qJT5cIzctQi5e8tHgPL+EanEtBc
+         T3ssCqSiqRMD6q9DIytP1NOE6mXVbafHAqsbM46n6A6iPP173aVo4IzMe1jZOejRmb6y
+         TZAswGs9b1YOpPon7MWKgtJoIJ0E+TS83Nm+BPoyok4gIuzGuX1bPQEpJ9JG/KpTaQNk
+         /k/mLLvwM/ekiWvprf0r8fFJUE9lgEqFmigz/b76Y91dyFOKcnX2lcqA18MbKylGXEiT
+         g4GQ==
+X-Gm-Message-State: APjAAAVKGTkHdTdsDPLyRR54xajwDzEVcc7xqFe3ldHaqdMQDiLKvkQB
+        WmfptTpQzuQEqlxgGrnqwadk6ccth05AgrGi3Pg=
+X-Google-Smtp-Source: APXvYqwgxMx0+xiHwT1qjwSWjuqMw2V4ldS6xY+NgkCNvOlFjLtXJmi/Q0s6vnmXqtRCX8j0LceLUfPvxOQDOKzKwR0=
+X-Received: by 2002:a05:6830:91:: with SMTP id a17mr23322883oto.107.1575965775467;
+ Tue, 10 Dec 2019 00:16:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1575946121-30548-1-git-send-email-zhang.lin16@zte.com.cn>
+In-Reply-To: <1575946121-30548-1-git-send-email-zhang.lin16@zte.com.cn>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Dec 2019 09:15:54 +0100
+Message-ID: <CAMuHMdUWeH9u0hP9wCfgb7TJ0nQkbQTPREX+fpTh+ZVrTsCobg@mail.gmail.com>
+Subject: Re: [PATCH] initramfs: forcing panic when kstrdup failed
+To:     zhanglin <zhang.lin16@zte.com.cn>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Steven Price <steven.price@arm.com>, david.engraf@sysgo.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIG10NzUzMSBkc2EgdG8gYmFuYW5hcGktYnBpLXI2NCBib2FyZCBmb3IgNSBnaWdhIEV0aGVy
-bmV0IHBvcnRzIHN1cHBvcnQuDQoNClNpZ25lZC1vZmYtYnk6IExhbmRlbiBDaGFvIDxsYW5kZW4u
-Y2hhb0BtZWRpYXRlay5jb20+DQotLS0NCiAuLi4vZHRzL21lZGlhdGVrL210NzYyMi1iYW5hbmFw
-aS1icGktcjY0LmR0cyAgfCA1MCArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDUwIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9t
-ZWRpYXRlay9tdDc2MjItYmFuYW5hcGktYnBpLXI2NC5kdHMNCmluZGV4IDgzZTEwNTkxZTBlNS4u
-ZmZhY2VmZWU4ZTJhIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9t
-dDc2MjItYmFuYW5hcGktYnBpLXI2NC5kdHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ3NjIyLWJhbmFuYXBpLWJwaS1yNjQuZHRzDQpAQCAtMTQzLDYgKzE0Myw1NiBAQA0K
-IAltZGlvOiBtZGlvLWJ1cyB7DQogCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCiAJCSNzaXplLWNl
-bGxzID0gPDA+Ow0KKw0KKwkJc3dpdGNoQDAgew0KKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-bXQ3NTMxIjsNCisJCQlyZWcgPSA8MD47DQorCQkJcmVzZXQtZ3Bpb3MgPSA8JnBpbyA1NCAwPjsN
-CisNCisJCQlwb3J0cyB7DQorCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKwkJCQkjc2l6ZS1j
-ZWxscyA9IDwwPjsNCisNCisJCQkJcG9ydEAwIHsNCisJCQkJCXJlZyA9IDwwPjsNCisJCQkJCWxh
-YmVsID0gIndhbiI7DQorCQkJCX07DQorDQorCQkJCXBvcnRAMSB7DQorCQkJCQlyZWcgPSA8MT47
-DQorCQkJCQlsYWJlbCA9ICJsYW4wIjsNCisJCQkJfTsNCisNCisJCQkJcG9ydEAyIHsNCisJCQkJ
-CXJlZyA9IDwyPjsNCisJCQkJCWxhYmVsID0gImxhbjEiOw0KKwkJCQl9Ow0KKw0KKwkJCQlwb3J0
-QDMgew0KKwkJCQkJcmVnID0gPDM+Ow0KKwkJCQkJbGFiZWwgPSAibGFuMiI7DQorCQkJCX07DQor
-DQorCQkJCXBvcnRANCB7DQorCQkJCQlyZWcgPSA8ND47DQorCQkJCQlsYWJlbCA9ICJsYW4zIjsN
-CisJCQkJfTsNCisNCisJCQkJcG9ydEA2IHsNCisJCQkJCXJlZyA9IDw2PjsNCisJCQkJCWxhYmVs
-ID0gImNwdSI7DQorCQkJCQlldGhlcm5ldCA9IDwmZ21hYzA+Ow0KKwkJCQkJcGh5LW1vZGUgPSAi
-MjUwMGJhc2UteCI7DQorDQorCQkJCQlmaXhlZC1saW5rIHsNCisJCQkJCQlzcGVlZCA9IDwyNTAw
-PjsNCisJCQkJCQlmdWxsLWR1cGxleDsNCisJCQkJCQlwYXVzZTsNCisJCQkJCX07DQorCQkJCX07
-DQorCQkJfTsNCisJCX07DQorDQogCX07DQogfTsNCiANCi0tIA0KMi4xNy4xDQo=
+On Tue, Dec 10, 2019 at 3:47 AM zhanglin <zhang.lin16@zte.com.cn> wrote:
+> preventing further undefined behaviour when kstrdup failed.
+>
+> Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
 
+Thanks for your patch!
+
+> --- a/init/initramfs.c
+> +++ b/init/initramfs.c
+> @@ -125,6 +125,8 @@ static void __init dir_add(const char *name, time64_t mtime)
+>                 panic("can't allocate dir_entry buffer");
+>         INIT_LIST_HEAD(&de->list);
+>         de->name = kstrdup(name, GFP_KERNEL);
+> +       if (!de->name)
+> +               panic("can't allocate dir_entry.name buffer");
+>         de->mtime = mtime;
+>         list_add(&de->list, &dir_list);
+>  }
+> @@ -340,6 +342,8 @@ static int __init do_name(void)
+>                                 if (body_len)
+>                                         ksys_ftruncate(wfd, body_len);
+>                                 vcollected = kstrdup(collected, GFP_KERNEL);
+> +                               if (!vcollected)
+> +                                       panic("can not allocate vcollected buffer.");
+>                                 state = CopyFile;
+>                         }
+>                 }
+
+Do we really need to add more messages for out-of-memory conditions?
+The trend is to remove the printing of those messages, as the memory
+allocation subsystem will have printed a backtrace already anyway.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
