@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE1C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBD0C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26927207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8308D20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015667;
-	bh=ZstFcVpT/Vibbyo5HNYEP33TJSiG0HEyOIlhHVKfVes=;
+	s=default; t=1576015669;
+	bh=mLrp6O2f7HRcivfe4sxghNZULTcexJ6vEGh6fePtrqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=phmC7oCbUrpyQg2JsM8Lt+6NIM2uqoNXLxBgFCf/W4Y30XN4pTOW5Dea8Jiln3z+M
-	 V+hmnaKQorda630M0X48TtdwVYMOZxF4ety1QNg9fAUjGVPPhSHW+WH/OjQN4VKInT
-	 su58YYKCmavPlPuH37QcWD0FpFfs4Bt9sI/lr/Vk=
+	b=gr13GRkli8agKjqKKkFShPWotvQha6/Gd9ex4QE9m9hDSnWQt99Isf+h/YBfqFW+o
+	 aAE4y6SAM+7lX7slVsaj+5e9OwPqH+bgU3sIyobOMofIS5kkHWaMk/3GAoGuW2XOEQ
+	 xLrkqxIe0tbYSujyiC5TR9ln+ugwtBYCUGu/LtEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbfLJWHp (ORCPT
+        id S1729519AbfLJWHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:07:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:07:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbfLJWFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:03 -0500
+        id S1729358AbfLJWFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5342073B;
-        Tue, 10 Dec 2019 22:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470E12465B;
+        Tue, 10 Dec 2019 22:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015502;
-        bh=ZstFcVpT/Vibbyo5HNYEP33TJSiG0HEyOIlhHVKfVes=;
+        s=default; t=1576015504;
+        bh=mLrp6O2f7HRcivfe4sxghNZULTcexJ6vEGh6fePtrqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tr4VKeieWR/kxBSrrdwrIYDmi+UaBwLwCN36GO356rKjjQkAgxqYesTjl+XwN2Kfs
-         Qgv3mMpnss5kLHGbkfAN2yJ6ck2EUy4DY9FeFvYuQJPj8yzXIJ7EcHSJMr+lwgE4HU
-         mEVGaiJeYvB+mytFyO3QRuIuuqfb6xa9fyhSjoXw=
+        b=v2Bx9WLG3vXWVV3RDHflV+ZMyo6k3rUS+rAWTIgZaWbJqDGv6uh8EBtdg0ttR67Qy
+         8GIe73wVfL9jK6tsg/6G1AkalJpL4v66bpg2VtkG7Fbiza78qw0qlGVNy1jCLWlbdK
+         AR2C1kQZnF5bgcukPnWRYP5SLXE1Vee0wJ07MhjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
+Cc:     Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 102/130] spi: pxa2xx: Add missed security checks
-Date:   Tue, 10 Dec 2019 17:02:33 -0500
-Message-Id: <20191210220301.13262-102-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 103/130] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
+Date:   Tue, 10 Dec 2019 17:02:34 -0500
+Message-Id: <20191210220301.13262-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -60,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ben Zhang <benzh@chromium.org>
 
-[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
+[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
 
-pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-platform_get_irq.
-Add checks for them to fix the bugs.
+The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
+while it's streaming audio over SPI. The DSP firmware turns
+on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
+does not believe that register can change by itself. When
+BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
+read the register first before write, so PLL2 power bit is
+cleared by accident.
 
-Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
-So we cannot use _optional() for devm_clk_get and platform_get_irq.
+Marking MX-64h as volatile in regmap solved the issue.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
+Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/codecs/rt5677.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 9bf3e5f945c75..b2245cdce230b 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1559,7 +1559,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
- 	}
- 
- 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return NULL;
-+
- 	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return NULL;
-+
- 	ssp->type = type;
- 	ssp->pdev = pdev;
- 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+index 1cd20b88a3a9c..82ee8f4b965be 100644
+--- a/sound/soc/codecs/rt5677.c
++++ b/sound/soc/codecs/rt5677.c
+@@ -297,6 +297,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
+ 	case RT5677_I2C_MASTER_CTRL7:
+ 	case RT5677_I2C_MASTER_CTRL8:
+ 	case RT5677_HAP_GENE_CTRL2:
++	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
+ 	case RT5677_PWR_DSP_ST:
+ 	case RT5677_PRIV_DATA:
+ 	case RT5677_ASRC_22:
 -- 
 2.20.1
 
