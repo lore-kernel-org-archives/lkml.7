@@ -2,95 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D9EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1ABC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B3C206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19749206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 00:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PJ8kvIHh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJ9uvRBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfLJAmJ (ORCPT
+        id S1727501AbfLJAoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 19:42:09 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38462 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfLJAmJ (ORCPT
+        Mon, 9 Dec 2019 19:44:37 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34871 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfLJAoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 19:42:09 -0500
-Received: by mail-qk1-f194.google.com with SMTP id k6so14967999qki.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:42:08 -0800 (PST)
+        Mon, 9 Dec 2019 19:44:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id k196so8249904oib.2;
+        Mon, 09 Dec 2019 16:44:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FZSjeR0TOWiNnS13x7P+J574D6JiqVJY1zgnBAULjNw=;
-        b=PJ8kvIHhxdpilR3u6wl/8IY1EtKCrX7nvnNxzG93F4VYb0DdI9zX7k/tKrsEYNFAWx
-         ZHCkU4ic/S8o+5V0b2KSykdZH41eFLahQ03LIIF+oO99z9NTgtY29VqCW1yyHcn1HMwi
-         qHLDkKJTF7fFOVSWXKDSvZC3PMFh2Q125FNLg=
+        bh=VUGiVOpo+ESHTZ/q7ZXEUplweHGdxyWpw0bewKvKrKo=;
+        b=HJ9uvRByiIhcvlGFLAHIo3zMt4Bje8/0vzIZNo1QGmiVYLM6CmrM02L5Aa5UGwxX/y
+         KHhHo/C6Td7K4qbcProiLzKd6BKblDRDsqoaeYh/qIOWRPQGo3OxmXiYU/uzdFCeRaKp
+         UeAjDdXnhEPe+FwHRCTsw4148aTuISMtFE1qzMOtpvrxfQeC3eSpAodTKOXa8D/HIn/U
+         eFxPghOlpHFFabkmcygBN926ZrR4AE6vUJ9U6mG94WJhziyQ2tVEW6L9w4WzEg8ntK8A
+         aypYKtpXvik972wulYD4sleX8awhjUBrG/xoQ+1OHAnP1KaI50QqtuDmCJfLWOX5qriu
+         l7hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FZSjeR0TOWiNnS13x7P+J574D6JiqVJY1zgnBAULjNw=;
-        b=WnvmNAaYES8aGb9jkaHTN1kloZiv/9aiDXWFgopYKWYT2H/x9eyOFnU7gpWpDMaUXP
-         KNHZ+DjZuvq7lvovIY4gcHjcN0jPGpJmlm4pXgC6GPCIgQPsAKYWQ8FzfiA/aqH2l+Uz
-         6fQZW/iZh+GY9pBjC/X8hKJ6hOF8uzpGGd2Y2nEC7VrivMarGTZ6xG+08CtOPd5P3MsB
-         aevnbcppezGhdpYC7r+rVBTeY9hSfquMEhGEJBLNed7ZOGh8S5+UXwNYrZVj4ccDp1YD
-         qShNgGRRL7VU0PjMLEHhVITU6utGXNSTYWBUh6Chw4ZdwUnNlUXZ1mqFpmewf0XoAcPr
-         2BSQ==
-X-Gm-Message-State: APjAAAVZYwE8FXfiQMuapyGPLk13hTIme2bQeKi4vOF5KiBrx9w3kpOZ
-        SgZ2aqt2FySm8wTa0O3ScZUQbiZAGeQ=
-X-Google-Smtp-Source: APXvYqzGfqOiNRGM7rnWZ07jMJxBECxXS/gYgs6jSS2DB3GOevV0tkjsJXNm50w+XhR6fcrZ7OdTyg==
-X-Received: by 2002:a37:5a44:: with SMTP id o65mr30407121qkb.327.1575938527285;
-        Mon, 09 Dec 2019 16:42:07 -0800 (PST)
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com. [209.85.222.175])
-        by smtp.gmail.com with ESMTPSA id p188sm410806qkb.94.2019.12.09.16.42.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 16:42:06 -0800 (PST)
-Received: by mail-qk1-f175.google.com with SMTP id v23so15003067qkg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Dec 2019 16:42:06 -0800 (PST)
-X-Received: by 2002:a37:9547:: with SMTP id x68mr31715256qkd.206.1575938525894;
- Mon, 09 Dec 2019 16:42:05 -0800 (PST)
+        bh=VUGiVOpo+ESHTZ/q7ZXEUplweHGdxyWpw0bewKvKrKo=;
+        b=j3fFaBllJaaknEK1q8f441Ilrr9zmwzpdAWJt1eW3h8SQRSR4HZzlgYDk197wI5jAK
+         xnKCIIJnk2v0dBsWtWyEZ1MPua7PmCSsUwG7DuJHb32GxsDu9HW7NdhZ/KXqO7VeubAe
+         vMFVX07R74iVaQqDRrHD/sww4cWlHdPwMXFLkdc5Z0K9FId46Ub0N46nZk70I71Rv2Z7
+         YcVzbrSwrWgSgrsSFmIJ+6JBlYi9Q9V8hmmc0U3PdB+Qx1v0FifaiABdIAB/9lF8EnCh
+         tZ9Euurtd0DUO6D/p36gfuXOathlo40Wa8KK8Jbwp/GIoJAmu3r5d4NLOLR1I6GmFpok
+         fD8Q==
+X-Gm-Message-State: APjAAAU6zMo5RJxokSnY7xW4kTldem62fNv6AAViKPJ+7EUe77eMsx03
+        Mz5Kv8MLArD6iwP5ITJpJt4tApMZiKLlYMhczGo=
+X-Google-Smtp-Source: APXvYqz9kY5TLOFKFpF1u4hNcfjzipnq6KIGaqx/5OX1I/CehdbbdgEHMfJc0amvv3RA+MkRDHMbyuTBgTw84WZ+F38=
+X-Received: by 2002:aca:758c:: with SMTP id q134mr1786606oic.33.1575938676514;
+ Mon, 09 Dec 2019 16:44:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20191209235116.142692-1-briannorris@chromium.org>
-In-Reply-To: <20191209235116.142692-1-briannorris@chromium.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 9 Dec 2019 16:41:54 -0800
-X-Gmail-Original-Message-ID: <CA+ASDXMszUwnVPNWQ42nPnvfHE9x42vaO76Bk=qs5gD+AYxdMw@mail.gmail.com>
-Message-ID: <CA+ASDXMszUwnVPNWQ42nPnvfHE9x42vaO76Bk=qs5gD+AYxdMw@mail.gmail.com>
-Subject: Re: [PATCH] mwifiex: start out with BSS type ANY, not STA
-To:     linux-wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+ <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+ <20190626145413.GE6753@char.us.oracle.com> <20190626161608.GM3419@hirez.programming.kicks-ass.net>
+ <20190626183016.GA16439@char.us.oracle.com> <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de>
+ <1561575336.25880.7.camel@amazon.de> <20190626192100.GP3419@hirez.programming.kicks-ass.net>
+ <1561577254.25880.15.camel@amazon.de>
+In-Reply-To: <1561577254.25880.15.camel@amazon.de>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 10 Dec 2019 08:44:25 +0800
+Message-ID: <CANRm+Cx2gEf5G3W5yPrgmz0qVkgB+eWM+RCAji=PYvKvAOrHkw@mail.gmail.com>
+Subject: Re: cputime takes cstate into consideration
+To:     "Raslan, KarimAllah" <karahmed@amazon.de>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 3:52 PM Brian Norris <briannorris@chromium.org> wrote:
-> Let's make mwifiex_get_intf_num() give a proper answer, by making its
-> initial value the proper uninitialized value -- ANY.
+On Thu, 27 Jun 2019 at 03:27, Raslan, KarimAllah <karahmed@amazon.de> wrote:
+>
+> On Wed, 2019-06-26 at 21:21 +0200, Peter Zijlstra wrote:
+> > On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
+> >
+> > >
+> > > If the host is completely in no_full_hz mode and the pCPU is dedicated to a
+> > > single vCPU/task (and the guest is 100% CPU bound and never exits), you would
+> > > still be ticking in the host once every second for housekeeping, right? Would
+> > > not updating the mwait-time once a second be enough here?
+> >
+> > People are trying very hard to get rid of that remnant tick. Lets not
+> > add dependencies to it.
+> >
+> > IMO this is a really stupid issue, 100% time is correct if the guest
+> > does idle in pinned vcpu mode.
+>
+> One use case for proper accounting (obviously for a slightly relaxed definition
+> or *proper*) is *external* monitoring of CPU utilization for scaling group
+> (i.e. more VMs will be launched when you reach a certain CPU utilization).
+> These external monitoring tools needs to account CPU utilization properly.
 
-I should have noticed that this function was recently neutered in a
-patch which actually fixes the bug I cared about anyway:
-7afb94da3cd8 ("mwifiex: update set_mac_address logic")
+Except cputime accounting, the other gordian knot is qemu main loop,
+libvirt, kthreads etc can't be offload to the other hardware like
+smart nic, these stuff will contend with vCPUs even if MWAIT/HLT
+instructions are executing in the guest. There is a HLT activity state
+in CPU VMCS which indicates the logical processor is inactive because
+it executed the HLT instruction, but SDM 24.4.2 mentioned that
+execution of the MWAIT instruction may put a logical processor into an
+inactive state, however, this VMCS field never reflects this state.
 
-So the following is probably a better patch now :)
-
-[PATCH] mwifiex: delete unused mwifiex_get_intf_num()
-https://lkml.kernel.org/linux-wireless/20191210003911.28066-1-briannorris@chromium.org/T/#u
-https://patchwork.kernel.org/patch/11281155/
-
-I'll mark $subject patch as Superseded in Patchwork.
-
-Brian
+    Wanpeng
