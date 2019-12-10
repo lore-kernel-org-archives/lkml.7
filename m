@@ -4,56 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD408C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809B9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E25246A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5222F246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012189;
-	bh=OT61r/lgEN89xq2+i6L1MnJ/asTeHRCKn79128Fe61Q=;
+	s=default; t=1576012192;
+	bh=kMEv874BtPuf0HyGoIPf4BP7UuEI4I7m70iZktNpjEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPXgb7ivJFbH1HawwYUo+LscTsYSAy35Np52oquxKAkeL+FEMBfJTX6gIte82BZeA
-	 Huml8wv8jDpfIynOBQ7qSyRb4I4DXu/9YPXc4vRp6fdXvj1sfV3rZVW0zZmtTVdOPl
-	 1dJ12mfVHZ1HsDBLi1Az2BhmjSsaOPX4YfArfLSY=
+	b=AD3D5NxRDLlBiVJg0l/vZ2gzz1SNO0J1rLOJTMevDdofEmzpAiO/fVxF/UqpLo/EI
+	 S8QjGk1cZl+xfXdH6TOW4WZZz4zgrs2F1/5Pt7Xa1l6AvEQ4+opuwEQWGh8LD9j0ku
+	 zEnoUpnzzHcOiHj3xvKUfHVPXqmiLaWej8ENSPgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfLJVJt (ORCPT
+        id S1728303AbfLJVJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbfLJVJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:46 -0500
+        id S1728286AbfLJVJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10CD2077B;
-        Tue, 10 Dec 2019 21:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E35A6246AB;
+        Tue, 10 Dec 2019 21:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012185;
-        bh=OT61r/lgEN89xq2+i6L1MnJ/asTeHRCKn79128Fe61Q=;
+        s=default; t=1576012187;
+        bh=kMEv874BtPuf0HyGoIPf4BP7UuEI4I7m70iZktNpjEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RU1z3RWgjYL/0KzvxN8gmMB6RWwyxd1djwSc0jJ46fYDX9vhRMZ60wXt6w0w2ZAT7
-         6jQOSRrVq8q2BJEbd+dTL4hTCGlSkTe5xgf8b2ta+Wo/rtCKHl8RkouYC5yLIu40GT
-         3xIW3MCi1xj5uXV8W5tlak2d0CG7TteCGnW0ia5M=
+        b=AJUusVM15cvmCkt1Szx/OYUjeEPC1EPQ0mOEURtXmyeL5vga8kDIRnb0Ppzl0rtfy
+         0nE8OOjRr64YvBft+i/RjhV8q1Aih1+zo06XWmryM2r80T0XUCXKPSnzg3SdrDqqB9
+         xD0d4d3UxUfhfH+6BNqYLwZQ4bu4rTzAPwIzsn/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 142/350] x86/ioapic: Prevent inconsistent state when moving an interrupt
-Date:   Tue, 10 Dec 2019 16:04:07 -0500
-Message-Id: <20191210210735.9077-103-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>, Juston Li <juston.li@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 143/350] drm/nouveau: Resume hotplug interrupts earlier
+Date:   Tue, 10 Dec 2019 16:04:08 -0500
+Message-Id: <20191210210735.9077-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,79 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
+[ Upstream commit ac0de16a38a9ec7026ca96132e3883c564497068 ]
 
-There is an issue with threaded interrupts which are marked ONESHOT
-and using the fasteoi handler:
+Currently, we enable hotplug detection only after we re-enable the
+display. However, this is too late if we're planning on sending sideband
+messages during the resume process - which we'll need to do in order to
+reprobe the topology on resume.
 
-  if (IS_ONESHOT())
-    mask_irq();
-  ....
-  cond_unmask_eoi_irq()
-    chip->irq_eoi();
-      if (setaffinity_pending) {
-         mask_ioapic();
-         ...
-	 move_affinity();
-	 unmask_ioapic();
-      }
+So, enable hotplug events before reinitializing the display.
 
-So if setaffinity is pending the interrupt will be moved and then
-unconditionally unmasked at the ioapic level, which is wrong in two
-aspects:
-
- 1) It should be kept masked up to the point where the threaded handler
-    finished.
-
- 2) The physical chip state and the software masked state are inconsistent
-
-Guard both the mask and the unmask with a check for the software masked
-state. If the line is marked masked then the ioapic line is also masked, so
-both mask_ioapic() and unmask_ioapic() can be skipped safely.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
-Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Imre Deak <imre.deak@intel.com>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: Harry Wentland <hwentlan@amd.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191022023641.8026-11-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_display.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index d6af97fd170a9..f0262cb5657a7 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1727,9 +1727,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
+diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
+index 6f038511a03a9..53f9bceaf17a5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_display.c
++++ b/drivers/gpu/drm/nouveau/nouveau_display.c
+@@ -407,6 +407,17 @@ nouveau_display_init(struct drm_device *dev, bool resume, bool runtime)
+ 	struct drm_connector_list_iter conn_iter;
+ 	int ret;
  
- static inline bool ioapic_irqd_mask(struct irq_data *data)
- {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic_irq(data);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic_irq(data);
- 		return true;
- 	}
- 	return false;
-@@ -1766,7 +1767,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
- 		 */
- 		if (!io_apic_level_ack_pending(data->chip_data))
- 			irq_move_masked_irq(data);
--		unmask_ioapic_irq(data);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic_irq(data);
- 	}
++	/*
++	 * Enable hotplug interrupts (done as early as possible, since we need
++	 * them for MST)
++	 */
++	drm_connector_list_iter_begin(dev, &conn_iter);
++	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
++		struct nouveau_connector *conn = nouveau_connector(connector);
++		nvif_notify_get(&conn->hpd);
++	}
++	drm_connector_list_iter_end(&conn_iter);
++
+ 	ret = disp->init(dev, resume, runtime);
+ 	if (ret)
+ 		return ret;
+@@ -416,14 +427,6 @@ nouveau_display_init(struct drm_device *dev, bool resume, bool runtime)
+ 	 */
+ 	drm_kms_helper_poll_enable(dev);
+ 
+-	/* enable hotplug interrupts */
+-	drm_connector_list_iter_begin(dev, &conn_iter);
+-	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
+-		struct nouveau_connector *conn = nouveau_connector(connector);
+-		nvif_notify_get(&conn->hpd);
+-	}
+-	drm_connector_list_iter_end(&conn_iter);
+-
+ 	return ret;
  }
- #else
+ 
 -- 
 2.20.1
 
