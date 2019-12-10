@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E6AC00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD47C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5464320637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BAB420836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014264;
-	bh=F0+kkrRTwVP8Xo9cxIPdWf5Jj8TfPYEmyUfgfpDNy0A=;
+	s=default; t=1576014268;
+	bh=P6nOwu5qq+jPMphxBjJT4lHLbbDwPtH9An2Errtt6e0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgSDxrhBqXMu0CSDs6NvzMScTPCUN4Yvxcmn6laXaJ6flMseYZujgHFbYlAK4Gbvh
-	 TQx2A/rvYUScErG4egTu5b1R4L4d04Owe8Mmx2AC3ftS0wntV+Bv+4HBnweR64aFIy
-	 YU3iovj96j/U09ofhWB00x/XqKjBNiZxihd0XCtc=
+	b=0zECxQm72a7F55NU9ZeK9gccMLN5Oou2CZpglC7UR1wJ5fKjvOoD8S06zW3hXHo44
+	 pY1+jp5Kqji2MyQ4PIwq/PqkUDwINVlreRKK2y25Qi507zSYoAVrINU+PseuWJfz0g
+	 ebdu4VSeYiJLGS38nEf7Skvhv27ssq01e5hb6+S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbfLJVoX (ORCPT
+        id S1729698AbfLJVdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:44:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37744 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:33:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729705AbfLJVd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:26 -0500
+        id S1727895AbfLJVdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A2DB2467B;
-        Tue, 10 Dec 2019 21:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC946214AF;
+        Tue, 10 Dec 2019 21:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013605;
-        bh=F0+kkrRTwVP8Xo9cxIPdWf5Jj8TfPYEmyUfgfpDNy0A=;
+        s=default; t=1576013594;
+        bh=P6nOwu5qq+jPMphxBjJT4lHLbbDwPtH9An2Errtt6e0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IDFwmskJ96T/ExBGQoobVYMOk6BX9EoTkMON8TSHG20aXO982RihnFjtPVkkh7MdU
-         eyat33Gg8wguW08lm7xN/Drz1gJHjeHQ1muB/ScTW3U4jTWsbRyXBXSX+Jprkihk6r
-         Zax1G/yiToCp7LxDLtVJt5NEjqQIjWwY2Zo9BAyc=
+        b=hQzm8Tv4K+nJBKioEVYNhrfHN+ZuVSPoKW1iAfKihNxyhsqKnrqTc2Fr8oawjLBmj
+         hDQe64M9o7wwvAwrs1V5UplcOlGkjX1kGtRek5Xg2tWfRg5TszO7GuLVhZj+uwYi5k
+         96JnAiZUujyUoXbmvmNeA27+0fnP2QS4uQeG3x+8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 052/177] x86/mm: Use the correct function type for native_set_fixmap()
-Date:   Tue, 10 Dec 2019 16:30:16 -0500
-Message-Id: <20191210213221.11921-52-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 044/177] media: ti-vpe: vpe: Make sure YUYV is set as default format
+Date:   Tue, 10 Dec 2019 16:30:08 -0500
+Message-Id: <20191210213221.11921-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -67,63 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
+[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
 
-We call native_set_fixmap indirectly through the function pointer
-struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
-'unsigned' instead of 'enum fixed_addresses'. This patch changes the
-function type for native_set_fixmap to match the pointer, which fixes
-indirect call mismatches with Control-Flow Integrity (CFI) checking.
+v4l2-compliance fails with this message:
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+   fail: v4l2-test-formats.cpp(672): \
+	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+   fail: v4l2-test-formats.cpp(672): \
+	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
+	...
+   test VIDIOC_TRY_FMT: FAIL
+
+The default pixel format was setup as pointing to a specific offset in
+the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
+entry. This became false after the addition on the NV21 format (see
+above commid-id)
+
+So instead of hard-coding an offset which might change over time we need
+to use a lookup helper instead so we know the default will always be what
+we intended.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fixmap.h | 2 +-
- arch/x86/mm/pgtable.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 6390bd8c141b4..5e12b2319d7a5 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -159,7 +159,7 @@ extern pte_t *kmap_pte;
- extern pte_t *pkmap_page_table;
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 15f0b0bb89c0e..ca9095b803097 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -2305,7 +2305,7 @@ static int vpe_open(struct file *file)
+ 	v4l2_ctrl_handler_setup(hdl);
  
- void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
--void native_set_fixmap(enum fixed_addresses idx,
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- 		       phys_addr_t phys, pgprot_t flags);
- 
- #ifndef CONFIG_PARAVIRT
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 59274e2c1ac44..bf52106ab9c49 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -660,8 +660,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
- 	fixmaps_set++;
- }
- 
--void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
--		       pgprot_t flags)
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-+		       phys_addr_t phys, pgprot_t flags)
- {
- 	/* Sanitize 'prot' against any unsupported bits: */
- 	pgprot_val(flags) &= __default_kernel_pte_mask;
+ 	s_q_data = &ctx->q_data[Q_DATA_SRC];
+-	s_q_data->fmt = &vpe_formats[2];
++	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	s_q_data->width = 1920;
+ 	s_q_data->height = 1080;
+ 	s_q_data->nplanes = 1;
 -- 
 2.20.1
 
