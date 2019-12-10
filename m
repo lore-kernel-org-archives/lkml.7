@@ -4,52 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B025C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3806EC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4A520637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036E8205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014672;
-	bh=4GcaNRym+CRcSsofJfGvU4jd2st0wiBAHPwPyBYZ8Fc=;
+	s=default; t=1576014676;
+	bh=9+7vMeFtIEPS1Idj+/h7jbMupoSfm4ZM6sFEDLJEMGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvupnBwAYSIbdOKL/wCZL8Gwv0OEawG1XYJrcO769wMeP7wpaNo/HrPl8NlD34FWk
-	 uONHL2bwke1cVNUIlVOKaYlzdP7dn0ycDklMlMuKIhud2Xhd8PNFEWKbO72rAj9S6P
-	 s+ZUyzfG41k6fDXEwmcCb0z3mOs6ysZm43q8NiWo=
+	b=YqcFwkpNm3lH+nkVRV16h/yITkOMMUl5Upt4mMLeGwlBeNrpXN4U77Jhqo2fL77iN
+	 8SqHxXkT3PEL3tQTNMmMRgfpQqHyfeYf67GLQPJ63sV7Ze4vPdkDbPSbwGgckvzeJm
+	 Vy429LUlxm6EZulFqhnTl5e/sPLSieVlQVnkPo50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfLJVvL (ORCPT
+        id S1727751AbfLJVvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:51:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55148 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:51:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbfLJVIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:07 -0500
+        id S1727370AbfLJVIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F422469D;
-        Tue, 10 Dec 2019 21:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A094C24683;
+        Tue, 10 Dec 2019 21:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012086;
-        bh=4GcaNRym+CRcSsofJfGvU4jd2st0wiBAHPwPyBYZ8Fc=;
+        s=default; t=1576012085;
+        bh=9+7vMeFtIEPS1Idj+/h7jbMupoSfm4ZM6sFEDLJEMGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzMKZOrV6/tU2n6RyQhRsrTntwC6Vvpd3TxvFrcOaabTYEpmGoFUm2jA1YCQIRoRK
-         GZDgoItirj1+9SfHLU64tCNNXJdh83OMUebcNJaKsb6ohHehnZFNLdN4GXU98W6pwf
-         /zPK1UMkJs84ePmSgX8661YRVYl6J3Zp9OTNgiSY=
+        b=NNytyfQiG28ekOl+LV9L/6pq07X7FFU8JU2UFB8zuyjzTTCN0uHdP2KdouwOzXk8f
+         d0bvS+Z4YyCJPLMSzDNuwVa9gDyI7gx7NX1ET9yeOcn7UTkRXCts51CnldGFh2+0QJ
+         fyO31Zcj5LIw7RdVgFrkiZARco41Xgha8P9uvtvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 064/350] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
-Date:   Tue, 10 Dec 2019 16:02:49 -0500
-Message-Id: <20191210210735.9077-25-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 063/350] hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not idled
+Date:   Tue, 10 Dec 2019 16:02:48 -0500
+Message-Id: <20191210210735.9077-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,62 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
+[ Upstream commit eaecce12f5f0d2c35d278e41e1bc4522393861ab ]
 
-Inside function max8907_regulator_probe(), variable val could
-be uninitialized if regmap_read() fails. However, val is used
-later in the if statement to decide the content written to
-"pmic", which is potentially unsafe.
+When unloading omap3-rom-rng, we'll get the following:
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
+
+This is because the clock may be already disabled by omap3_rom_rng_idle().
+Let's fix the issue by checking for rng_idle on exit.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
-index 76152aaa330bd..96dc0eea76596 100644
---- a/drivers/regulator/max8907-regulator.c
-+++ b/drivers/regulator/max8907-regulator.c
-@@ -296,7 +296,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
+diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
+index 38b719017186e..648e39ce6bd95 100644
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -121,7 +121,8 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
+ {
+ 	cancel_delayed_work_sync(&idle_work);
+ 	hwrng_unregister(&omap3_rom_rng_ops);
+-	clk_disable_unprepare(rng_clk);
++	if (!rng_idle)
++		clk_disable_unprepare(rng_clk);
+ 	return 0;
+ }
  
- 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
--	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	if (ret)
-+		return ret;
-+
- 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
- 	    MAX8907_II2RR_VERSION_REV_B) {
- 		pmic->desc[MAX8907_SD1].min_uV = 637500;
-@@ -333,14 +336,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 		}
- 
- 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & MAX8907_MASK_LDO_SEQ) !=
- 			    MAX8907_MASK_LDO_SEQ)
- 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
- 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
- 						MAX8907_MASK_OUT5V_ENSRC)) !=
- 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
