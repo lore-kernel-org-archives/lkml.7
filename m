@@ -2,104 +2,103 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A058C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF752077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7446207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfLJQNr (ORCPT
+        id S1727599AbfLJQNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Dec 2019 11:13:49 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:44599 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfLJQNr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 11:13:47 -0500
-Received: from muru.com ([72.249.23.125]:44632 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727431AbfLJQNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:13:46 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 4935E80E1;
-        Tue, 10 Dec 2019 16:14:24 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] bus: ti-sysc: Implement quirk handling for CLKDM_NOAUTO
-Date:   Tue, 10 Dec 2019 08:13:42 -0800
-Message-Id: <20191210161342.15142-1-tony@atomide.com>
-X-Mailer: git-send-email 2.24.0
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1C60C28022E40;
+        Tue, 10 Dec 2019 17:13:46 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D7EF5CD0; Tue, 10 Dec 2019 17:13:45 +0100 (CET)
+Date:   Tue, 10 Dec 2019 17:13:45 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Cc:     Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/hdmi - Fix duplicate unref of pci_dev
+Message-ID: <20191210161345.apz4aixgszcd6vco@wunner.de>
+References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <77aa6c01aefe1ebc4004e87b0bc714f2759f15c4.1575985006.git.lukas@wunner.de>
+ <MWHPR12MB1358AEEBD730A4EDA78894E6F75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
+ <20191210154649.o3vsqzrtofhvcjrl@wunner.de>
+ <MWHPR12MB1358449C677259C848AAB11EF75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR12MB1358449C677259C848AAB11EF75B0@MWHPR12MB1358.namprd12.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For dra7 dcan and dwc3 instances we need to block clockdomain autoidle.
-Let's do this with CLKDM_NOAUTO quirk flag and enable it for dcan and
-dwc3.
+On Tue, Dec 10, 2019 at 03:53:20PM +0000, Deucher, Alexander wrote:
+> > On Tue, Dec 10, 2019 at 03:34:27PM +0000, Deucher, Alexander wrote:
+> > > > Nicholas Johnson reports a null pointer deref as well as a refcount
+> > > > underflow upon hot-removal of a Thunderbolt-attached AMD eGPU.
+> > > > He's bisected the issue down to commit 586bc4aab878 ("ALSA: hda/hdmi
+> > > > - fix vgaswitcheroo detection for AMD").
+> > > >
+> > > > The commit iterates over PCI devices using pci_get_class() and
+> > > > unreferences each device found, even though pci_get_class()
+> > > > subsequently unreferences the device as well.  Fix it.
+> > >
+> > > The pci_dev_put() a few lines above should probably be dropped as well.
+> > 
+> > That one looks fine to me.  The refcount is already increased in the caller
+> > get_bound_vga() via pci_get_domain_bus_and_slot() and it's increased
+> > again in atpx_present() via pci_get_class().  It needs to be decremented in
+> > atpx_present() to avoid leaking a ref.
+> 
+> I'm not following.  This is part of the same loop as the one you removed.
+> All we are doing is checking whether the ATPX method exists or not om the
+> platform.  The pdev may not be the same one as the one in
+> pci_get_domain_bus_and_slot().  The APTX method in the APU's ACPI namespace,
+> not the dGPUs.
 
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c                 | 10 ++++++++--
- include/linux/platform_data/ti-sysc.h |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+Okay.  Still, atpx_present() doesn't pass the found pci_dev back to the
+caller, so it would be leaked if the ref isn't returned.
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -473,7 +473,7 @@ static void sysc_clkdm_deny_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
- 
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
- 
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -485,7 +485,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
- {
- 	struct ti_sysc_platform_data *pdata;
- 
--	if (ddata->legacy_mode)
-+	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
- 		return;
- 
- 	pdata = dev_get_platdata(ddata->dev);
-@@ -1245,6 +1245,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	/* Quirks that need to be set based on detected module */
- 	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_AESS),
-+	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
-+	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
-+		   SYSC_QUIRK_CLKDM_NOAUTO),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
- 		   SYSC_MODULE_QUIRK_HDQ1W),
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
-diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
---- a/include/linux/platform_data/ti-sysc.h
-+++ b/include/linux/platform_data/ti-sysc.h
-@@ -49,6 +49,7 @@ struct sysc_regbits {
- 	s8 emufree_shift;
- };
- 
-+#define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
- #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
- #define SYSC_MODULE_QUIRK_AESS		BIT(19)
- #define SYSC_MODULE_QUIRK_SGX		BIT(18)
--- 
-2.24.0
+The situation is different for the pci_dev_put() I removed:  The ref is
+returned by pci_get_class() on the next loop iteration.
+
+Thanks,
+
+Lukas
+
+> > > > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> > > > index 35b4526f0d28..b856b89378ac 100644
+> > > > --- a/sound/pci/hda/hda_intel.c
+> > > > +++ b/sound/pci/hda/hda_intel.c
+> > > > @@ -1419,7 +1419,6 @@ static bool atpx_present(void)
+> > > >  				return true;
+> > > >  			}
+> > > >  		}
+> > > > -		pci_dev_put(pdev);
+> > > >  	}
+> > > >  	return false;
+> > > >  }
+> > > > --
+> > > > 2.24.0
