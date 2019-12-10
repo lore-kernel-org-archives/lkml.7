@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21205C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA1FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB0C246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8146B24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012164;
-	bh=3GPtx5pUqQWxEANxlsUwjXgjJlKI6nkAA0UcNLDxKqw=;
+	s=default; t=1576012166;
+	bh=ExJa1uzw4YsyFUsIJI3vUUtRkYWOhea+6RzTG0beOdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejsB8hdZ7GYw3m3biiRm5TYFHSswByB7hGUIoXt2n7QiVghxKQeIABFd4JtW+HCFT
-	 7/HjiHBVJ9GqXOB0YposzLxULMrN0y1WcvK6AF1nWdDDR17OSMtXxxT5+2ijQgy+rO
-	 3cRD288VJmVRv779/cIvRqHeL3Z6cjdb0eXVUZt0=
+	b=WqEDBtTWVD1PmRS9RHltDZptBJMv7GFbJ4KH7cwIrSxZ/CyOBjPMK5io6IG4r2acy
+	 j6RFKaBN/Cub4LunmRT1Kwt8yXBUE9wGeoKNPdu2Tl5h4j3xc+iyycCb+GuJsYss+Q
+	 9bp0UurtsPsetzDdMoaFRD0vPKMhLgL5spa7y2j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfLJVJW (ORCPT
+        id S1727499AbfLJVJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57702 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbfLJVJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728120AbfLJVJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 16:09:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857F824687;
-        Tue, 10 Dec 2019 21:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6F9246B4;
+        Tue, 10 Dec 2019 21:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012159;
-        bh=3GPtx5pUqQWxEANxlsUwjXgjJlKI6nkAA0UcNLDxKqw=;
+        s=default; t=1576012160;
+        bh=ExJa1uzw4YsyFUsIJI3vUUtRkYWOhea+6RzTG0beOdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y3X9VgnGFfvms8rtexKBhMnvCmAEfFpBFX3P8YJf9WNhnvNAcmgKRhVJB6TwvHiR4
-         exozn3Z9Wkzm4dlyXn6hsUC3y9BFTJjSya/CJSqiDxzn8EiIVBkySVgzgifftTswsw
-         rU8kqChtjrvXXuh7c42c5p+WDpdD2hPxRq05+/v4=
+        b=0jF6NNBn4OL3L6PQzPZfPPeiR/Pgv5/7jqJvlgokoIULJhQGFaNE5rXDvJ/3/WKM/
+         7XigXE06yimGUYHuZsRvAJxZPgXehGtnNCFMTyxRas2zLqoVPkQiHJ32ikM+RfukBt
+         Bun9OH9RB9zI9lTJnaJS21+6Sue7aUnPdK3qokRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mattijs Korpershoek <mkorpershoek@baylibre.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Tim Bird <Tim.Bird@sony.com>, Tim Bird <tim.bird@sony.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 121/350] Bluetooth: hci_core: fix init for HCI_USER_CHANNEL
-Date:   Tue, 10 Dec 2019 16:03:46 -0500
-Message-Id: <20191210210735.9077-82-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 122/350] selftests: Fix O= and KBUILD_OUTPUT handling for relative paths
+Date:   Tue, 10 Dec 2019 16:03:47 -0500
+Message-Id: <20191210210735.9077-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,50 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-[ Upstream commit eb8c101e28496888a0dcfe16ab86a1bee369e820 ]
+[ Upstream commit 303e6218ecec475d5bc3e5922dec770ee5baf107 ]
 
-During the setup() stage, HCI device drivers expect the chip to
-acknowledge its setup() completion via vendor specific frames.
+Fix O= and KBUILD_OUTPUT handling for relative paths.
 
-If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
-the vendor specific frames are never tranmitted to the driver, as
-they are filtered in hci_rx_work().
+export KBUILD_OUTPUT=../kselftest_size
+make TARGETS=size kselftest-all
 
-Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
-frames if the HCI device is is HCI_INIT state.
+or
 
-[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
+make O=../kselftest_size TARGETS=size kselftest-all
 
-Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+In both of these cases, targets get built in ../kselftest_size which is
+a one level up from the size test directory.
+
+make[1]: Entering directory '/mnt/data/lkml/kselftest_size'
+make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+        ARCH=x86 -C ../../.. headers_install
+  INSTALL ../kselftest_size/usr/include
+gcc -static -ffreestanding -nostartfiles -s    get_size.c  -o ../kselftest_size/size/get_size
+/usr/bin/ld: cannot open output file ../kselftest_size/size/get_size: No such file or directory
+collect2: error: ld returned 1 exit status
+make[3]: *** [../lib.mk:138: ../kselftest_size/size/get_size] Error 1
+make[2]: *** [Makefile:143: all] Error 2
+make[1]: *** [/mnt/data/lkml/linux_5.4/Makefile:1221: kselftest-all] Error 2
+make[1]: Leaving directory '/mnt/data/lkml/kselftest_size'
+make: *** [Makefile:179: sub-make] Error 2
+
+Use abs_objtree exported by the main Makefile.
+
+Reported-by: Tim Bird <Tim.Bird@sony.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Tested-by: Tim Bird <tim.bird@sony.com>
+Acked-by: Tim Bird <tim.bird@sony.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/testing/selftests/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index b2559d4bed815..0cc9ce9172229 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4440,7 +4440,14 @@ static void hci_rx_work(struct work_struct *work)
- 			hci_send_to_sock(hdev, skb);
- 		}
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 4cdbae6f4e61b..3405aa26a655a 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -86,10 +86,10 @@ override LDFLAGS =
+ endif
  
--		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-+		/* If the device has been opened in HCI_USER_CHANNEL,
-+		 * the userspace has exclusive access to device.
-+		 * When device is HCI_INIT, we still need to process
-+		 * the data packets to the driver in order
-+		 * to complete its setup().
-+		 */
-+		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
-+		    !test_bit(HCI_INIT, &hdev->flags)) {
- 			kfree_skb(skb);
- 			continue;
- 		}
+ ifneq ($(O),)
+-	BUILD := $(O)
++	BUILD := $(abs_objtree)
+ else
+ 	ifneq ($(KBUILD_OUTPUT),)
+-		BUILD := $(KBUILD_OUTPUT)/kselftest
++		BUILD := $(abs_objtree)/kselftest
+ 	else
+ 		BUILD := $(shell pwd)
+ 		DEFAULT_INSTALL_HDR_PATH := 1
+@@ -102,6 +102,7 @@ include $(top_srcdir)/scripts/subarch.include
+ ARCH           ?= $(SUBARCH)
+ export KSFT_KHDR_INSTALL_DONE := 1
+ export BUILD
++#$(info abd_objtree = $(abs_objtree) BUILD = $(BUILD))
+ 
+ # build and run gpio when output directory is the src dir.
+ # gpio has dependency on tools/gpio and builds tools/gpio
 -- 
 2.20.1
 
