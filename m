@@ -2,94 +2,98 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E7CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA6CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E08A20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F4420836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="mt115MN0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfLJRvd (ORCPT
+        id S1727722AbfLJRvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:51:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:57219 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfLJRvd (ORCPT
+        Tue, 10 Dec 2019 12:51:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40934 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbfLJRvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:51:33 -0500
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mr9OA-1hzN2L2hCo-00oGcT for <linux-kernel@vger.kernel.org>; Tue, 10 Dec
- 2019 18:51:31 +0100
-Received: by mail-qk1-f172.google.com with SMTP id z14so6835430qkg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:51:31 -0800 (PST)
-X-Gm-Message-State: APjAAAVLh7K0yoiAPQVyGgf6m6FppAqz4namXhHleENIoWXagEvEOBLU
-        QhJ7QDardumFaIiC7KfhtS3CE5DTSx0jDgu7vgY=
-X-Google-Smtp-Source: APXvYqwLAiu3+p6iaDMl8EgpIoU3Zkljq9QMkI/BV/wvJWrCucp15nuCsyQOzr2eqfgSN1ubzhiRY5fsSG/rTWJnItM=
-X-Received: by 2002:a37:b283:: with SMTP id b125mr27668682qkf.352.1576000290527;
- Tue, 10 Dec 2019 09:51:30 -0800 (PST)
+        Tue, 10 Dec 2019 12:51:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q8so198376pfh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=fW3Ref0PHQ5io/FZ7XeWN9s3SNVfAIL+FiYKUeQn2KE=;
+        b=mt115MN0ewRf9mbMFfp3Iuy2d9FfypEgxpQPsNISDAUH+rYzYYoVGNS6eQVx4xwi7P
+         yTtaMc7LznoM3N9LJtFlmsznQ0SGCA7fpiGDFmINKs/wZ+ddeaDvS5XJj5isX8gCWPn+
+         cfh+7/hpwkswXJwkPhciglEpdSvkWiZithOzgl+FdoDdWMXk1r1uRSPSvEi6e+dPZzuW
+         M2SkMSiHHj2cbV6o06Ph2ggoSQQ6j1YB1OhHfP8YWBCLhnAcvJ3C7RwuftNOGuJE0E0w
+         zGZV1mQY+gTcqgcLn4dgrucRHY4oamVhHdAXQH0goEO9cb2BEEs2PZNrayEg8nkaVLPv
+         v1Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=fW3Ref0PHQ5io/FZ7XeWN9s3SNVfAIL+FiYKUeQn2KE=;
+        b=EEOzGLt0JVx01gIx2MofH5yiFofY3zVVNTs6xG0ba5nks9J1XEAfFxf1fmgzxhmocr
+         Ul5Uj4mZyQcQMVvogtqKIbV6b8NuifQvDrJvhqkeJoNHRyW4o7enE5T0NFehQ+I0i3g8
+         HyGkd46LeNtkznM7MwtW79jCuMDWGq/2D079GEqYscomXOVCVbCtmHms+yIdfkBAO80Z
+         GNLf0y9lNLgrzwTIgr2AW2Sj2LEU2BFrOEpj+FzhA2KECDef+iM7tUpgO/qGFlm1dlsW
+         tObOVhMkhBfKxha4cbqUASy0s5CDC/KOahga9o5gnb62On1YpBCwshdPanPFwZal44wY
+         BWGA==
+X-Gm-Message-State: APjAAAWUnqTfGDicWSG5pnTUy7MPkOKjhnYoyp9tvLEStI93zwGzWXrU
+        YL2vitbMCSNswnRYE33uCPSG5w==
+X-Google-Smtp-Source: APXvYqwcFHWWm9eTWrLu+KNteuLcuDUJ3dB0pTgi9WFTG+6hBnstYp4EgibKkKe5+8YCV2iFmQrQKg==
+X-Received: by 2002:a65:5608:: with SMTP id l8mr26335894pgs.210.1576000298286;
+        Tue, 10 Dec 2019 09:51:38 -0800 (PST)
+Received: from cakuba.netronome.com ([2601:646:8e00:e18::3])
+        by smtp.gmail.com with ESMTPSA id y128sm4103464pfg.17.2019.12.10.09.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 09:51:38 -0800 (PST)
+Date:   Tue, 10 Dec 2019 09:51:34 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/5] ethtool netlink interface, preliminary
+ part
+Message-ID: <20191210095134.27f46a81@cakuba.netronome.com>
+In-Reply-To: <cover.1575982069.git.mkubecek@suse.cz>
+References: <cover.1575982069.git.mkubecek@suse.cz>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <cover.1575977795.git.vitor.soares@synopsys.com> <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
-In-Reply-To: <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 10 Dec 2019 18:51:14 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1cwoTbT3zsa-tfApwewDT1-ksHZs6_vkBYpKbgptsfjw@mail.gmail.com>
-Message-ID: <CAK8P3a1cwoTbT3zsa-tfApwewDT1-ksHZs6_vkBYpKbgptsfjw@mail.gmail.com>
-Subject: Re: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:itayKSU1OR2FDC8JQ5IYL5ANIZSz6coceAnGeYRSXoEgxjJupnz
- 1ADsw1AvYUgPvkRJwt4NwL0imXkpP7YUOy8gg/h85KKe/Lly4OJ1clzftm01Ucrv2YEEHQ3
- DjwK+0qW+RQ5RlnxJA5eEUkFiZnOYDJxccIGdcrGWzq0U3ZKT+fXBApR6dLh6Ky4gdnbb3z
- yFUXQkyoLtnRCGaf7CfIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gJWvan+hM+g=:dElaufqJbaVrH7lL+OT1Yr
- 2LQQvp7KS9SWvlLYfWGkHaUMRGYJHT/NMs1YyRojl6UMFTlu73aTtoVErjWmFTfC9gS+sH/Uj
- TNTxIUZPrYulNdmS/6i+7rgSu6gc3AKF4ukEsoYh1yrn73fV+644SFibcovxRqxJfaJ5ANnWy
- i+KdL11/837jIGloKQcpsDBNa7NC70M6mixyNmlyidaMaTlV+uu298IthyWLCJK0kRazvpCyA
- 3PBpGgh226C1aGnJtE/A4/OrdagBSsYffWaKg4BeurJ2TfMvIQJjzR+lixUmyNBzN+0a37S8J
- 8vQZA0bYIcYXNNK4YkbYDxNts2J6+GsAceKQ574GObAqzhclhtNWeO5NB4RNSrnMrJFtD3tYj
- pFTxszdZLeFSZ5n95x5sQXdKd4azZUX5zmCp43GCNrSU5sQQOeWVkFknDqDo7VbhzWI4hsiEx
- kfq/msADCxPI46Xy79P7+Ae63ULKPo7BFyItWnoe7qQJsAu04EaI+TwcBlIdp60Y9lc2hpIZQ
- tgASJdGveocpttbLs7J/R2D0eCzNDNiM4WOOAPFSz3qsZth2K+FbxYa5fytJU23bZUOoUQFbk
- p4ngZVxTtmMrWAGfFLBxOxCOUZ5+VFmTKLcfsXg7/xNJk1q6hzlw5rupUvhfeGzyYs0B6B76N
- UcR8pRiGrPpoKrDKm2akCwaZwRRwxZukZxY22abzm1v29raq5ORMW6mYU/kgpQzYhHre4mbcT
- avKQFkc+Is1beFyNN8OtGg/+sqCwJKqTmxk5t2t/oJR45ja6OgBEbAKa+G72DeKz3V7Mst/K4
- H30xsvGJ9XuEdrGON15AH5KSzir/UO7zPFb5gOqiTTv2qysV9ECXhCMNcEko1dIQvWXGw9jnR
- +emwQeHIVN0l1BlG5BZQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 4:37 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->
-> +/* IOCTL commands */
-> +#define I3C_DEV_IOC_MAGIC      0x07
-> +
-> +struct i3c_ioc_priv_xfer {
-> +       struct i3c_priv_xfer __user *xfers;     /* pointers to i3c_priv_xfer */
-> +       __u32 nxfers;                           /* number of i3c_priv_xfer */
-> +};
-> +
-> +#define I3C_IOC_PRIV_XFER      \
-> +       _IOW(I3C_DEV_IOC_MAGIC, 30, struct i3c_ioc_priv_xfer)
-> +
-> +#define  I3C_IOC_PRIV_XFER_MAX_MSGS    42
+On Tue, 10 Dec 2019 14:07:48 +0100 (CET), Michal Kubecek wrote:
+> As Jakub Kicinski suggested in ethtool netlink v7 discussion, this
+> submission consists only of preliminary patches which raised no objections;
+> first four patches already have Acked-by or Reviewed-by.
+> 
+> - patch 1 exposes permanent hardware address (as shown by "ethtool -P")
+>   via rtnetlink
+> - patch 2 is renames existing netlink helper to a better name
+> - patch 3 and 4 reorganize existing ethtool code (no functional change)
+> - patch 5 makes the table of link mode names available as an ethtool string
+>   set (will be needed for the netlink interface) 
+> 
+> Once we get these out of the way, v8 of the first part of the ethtool
+> netlink interface will follow.
 
-This is not a great data structure for UAPI, please see
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/tree/Documentation/core-api/ioctl.rst?h=compat-ioctl-endgame&id=927324b7900ee9b877691a8b237e272fabb21bf5
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-for some background. I'm planning to submit that documentation for
-mainline integration soon.
-
-     Arnd
+Thank you!
