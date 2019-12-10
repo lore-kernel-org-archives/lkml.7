@@ -2,122 +2,166 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFA9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C9C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BBF20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DD420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkxmP9mx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g+R7jGIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLJKmS (ORCPT
+        id S1727329AbfLJKnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:42:18 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39351 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfLJKmS (ORCPT
+        Tue, 10 Dec 2019 05:43:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35756 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbfLJKnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:42:18 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so7150604plk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 02:42:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kfdQQeeLkcakBGBCZLadlJ1Gb6o3OJURT7E+WRswKJ4=;
-        b=UkxmP9mxRXTpS8hT7YgShz2dcmP5Hwuqr2jD3WSGJ07fm4fm+lPoO9zMD+Zvi3djZr
-         zM+8T3oWM2JVrYhcTfAykTmzzCnhoKjtu4Zes0V/pqrwXR8nLTLKTAU6sIVfhT1okOmW
-         55ztvGctEHx/cIOzl3BRQKwnHP2BCnNvrgFzYX7W+sVztMrPlLQ/VTqo1PT3l8V9hr64
-         z8S54c4gW7y5vZnsE3TCdaaK88Mz8SpPXBmwese0apssXggOKhO5Lc9P+s5rc6wqqxQw
-         aKRtUoiowJ//JLoPVtDjRBrokwibIk3gQgbIXML4PgZVwfvE4WAUt9Es2K4AINj4WoRm
-         3U5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kfdQQeeLkcakBGBCZLadlJ1Gb6o3OJURT7E+WRswKJ4=;
-        b=j0dtVt1DLsYQFM2jpkjwikRUaZpc3r+FcYM529tBktyVuSceLqMtsgrZRiKm+UZt5C
-         x6Tq0k3YxwD+pRkn7MSfKxGzEksYO0ahy7CoqrWofYYNhGlxgm9AysdIoR66iqybLDO9
-         RKwWV4ROSEk8jawhBbWvO56dBLIwq1oBms/xHT9IHoffUNaB+8v7s0MYBPoW/IDeSAWb
-         2mr+91qfZOhPvUoRsnMefl33sgSfFo1DlPVPFVUmHwPAQ5LpNJlJOKnhssAplvR7VNVS
-         y8zXTMld7fnf7u4XYgR6mZP48GhB1u3dJYNLh0Sp103bWSpmjfxO0GrWztxA3Ujx+6Mq
-         CoqQ==
-X-Gm-Message-State: APjAAAUa0PsaT/mPS1G0Awl1YqZQ+pTGlxwc1L1ejJyMdek7E39dzaB+
-        Wty+ZrdB/S7ZIqmbCxe8CsU=
-X-Google-Smtp-Source: APXvYqwu+tTCvyc9M4sHHFPFQ80Mkvn4JOQJ9Afdczl4FWLtBn8MV1Rpo6aKaRC84TjVx5vssAJ3mQ==
-X-Received: by 2002:a17:902:ff10:: with SMTP id f16mr3996110plj.312.1575974537741;
-        Tue, 10 Dec 2019 02:42:17 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a26sm2993251pfo.5.2019.12.10.02.42.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 02:42:16 -0800 (PST)
-Subject: Re: [PATCH 1/2] staging: octeon: delete driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org,
-        David Daney <ddaney@caviumnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Florian Westphal <fw@strlen.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Branden Bonaby <brandonbonaby94@gmail.com>,
-        =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>,
-        Sandro Volery <sandro@volery.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Giovanni Gherdovich <bobdc9664@seznam.cz>,
-        Valery Ivanov <ivalery111@gmail.com>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <6f934497-0635-7aa0-e7d5-ed2c4cc48d2d@roeck-us.net>
-Date:   Tue, 10 Dec 2019 02:42:14 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 05:43:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575974593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p0+JwFDMZsyAdIm5iZQOsypIJdHkBPYWVLOBLKiChvk=;
+        b=g+R7jGIZ2x4ztGC/+8sFaDP6TjPt0UcOIQiHZA4Id/zuwNZ/eJ5CnRvCA3KQYmdF1jY5x8
+        wCjnhvjFa/dLpTQoD+hjCMDjE2nAYA5lgCcsUBU9vtCz18i9vq4ZfUUDXafFMFzPUj25/z
+        hPqXtisGaxfy0OieKVW0n5W34g3VhSA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-vQGtSDQ5Nn-OyTGmwJgrKA-1; Tue, 10 Dec 2019 05:43:08 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A75528024DD;
+        Tue, 10 Dec 2019 10:43:06 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F39B75C1B0;
+        Tue, 10 Dec 2019 10:43:05 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 18:43:03 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Message-ID: <20191210104303.GN2984@MiWiFi-R3L-srv>
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <20191210072453.GI2984@MiWiFi-R3L-srv>
+ <20191210102834.GE10404@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210102834.GE10404@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: vQGtSDQ5Nn-OyTGmwJgrKA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 1:15 AM, Greg Kroah-Hartman wrote:
-> This driver has been in the tree since 2009 with no real movement to get
-> it out.  Now it is starting to cause build issues and other problems for
-> people who want to fix coding style problems, but can not actually build
-> it.
-> 
-> As nothing is happening here, just delete the module entirely.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Cc: David Daney <ddaney@caviumnetworks.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Cc: Wambui Karuga <wambui.karugax@gmail.com>
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Cc: Florian Westphal <fw@strlen.de>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Branden Bonaby <brandonbonaby94@gmail.com>
-> Cc: "Petr Štetiar" <ynezz@true.cz>
-> Cc: Sandro Volery <sandro@volery.com>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> Cc: Giovanni Gherdovich <bobdc9664@seznam.cz>
-> Cc: Valery Ivanov <ivalery111@gmail.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 12/10/19 at 11:28am, Michal Hocko wrote:
+> On Tue 10-12-19 15:24:53, Baoquan He wrote:
+> > On 12/09/19 at 11:07am, Michal Hocko wrote:
+> > > On Fri 06-12-19 23:05:24, Baoquan He wrote:
+> > > > In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
+=3D
+> > > > parameter") a global varialbe global max_mem_size is added to store
+> > > > the value which is parsed from 'mem=3D '. This truly stops those
+> > > > DIMM from being added into system memory during boot.
+> > > >=20
+> > > > However, it also limits the later memory hotplug functionality. Any
+> > > > memory board can't be hot added any more if its region is beyond th=
+e
+> > > > max_mem_size. System will print error like below:
+> > > >=20
+> > > > [  216.387164] acpi PNP0C80:02: add_memory failed
+> > > > [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
+> > > > [  216.392187] acpi PNP0C80:02: Enumeration failure
+> > > >=20
+> > > > >From document of 'mem =3D' parameter, it should be a restriction d=
+uring
+> > > > boot, but not impact the system memory adding/removing after bootin=
+g.
+> > > >=20
+> > > >   mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount of =
+memory
+> > > >=20
+> > > > So fix it by also checking if it's during SYSTEM_BOOTING stage when
+> > > > restrict memory adding. Otherwise, skip the restriction.
+> > >=20
+> > > Could you be more specific about why the boot vs. later hotplug makes
+> > > any difference? The documentation is explicit about the boot time but
+> > > considering this seems to be like that since ever I strongly suspect
+> > > that this is just an omission.
+> >=20
+> > I think the 'mem=3D' updating in commit 357b4da50a62 will only affect
+> > those hotplugable memory regions. When I tested it, there are three
+> > memmory boards, one is the normal memory region with 4G memory, and the
+> > other two are hotpluggable memory boards and recorded in ACPI tables,
+> > each is 1GB. When put all them three onsite before boot, they will be
+> > recognized by firmware and written into e820 table and/or EFI table, th=
+en
+> > kernel can read them from e820 and them as system memory, we get 6G
+> > memory.=20
+> >=20
+> > However, if add 'mem=3D', like 'mme=3D3G', w/o commit 357b4da50a62, in =
+e820,
+> > we will only get 3G memory. Later in acpi_init(), acpi scanning will
+> > search those two memory regions, and try to add them into system call
+> > because the two hotpluggable memory boards are power on and ready.
+> > Then we will get 3G + 1G + 1G, 5G memory. the 1st 3G is from the normal
+> > memory board, its last 1G is trimmed. Jurgen's patch is trying to fix t=
+his
+> > because the adding happens during boot time, and conflicts with 'mem=3D=
+'.=20
+>=20
+> Unless I misunderstand what you are saying this all is just expected.
+> You have restricted the memory explicitly and the result is that not all
+> the memory is visible.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Yes.
+
+>=20
+> > But after system bootup, we should be able to hot add/remove any memory
+> > board. This should not be restricted by a boot-time kernel parameter
+> > 'mme=3D'. This is what I am trying to fix.
+>=20
+> This is a simple statement without any actual explanation on why. Why is
+> hotplug memory special? What is the usecase? Who would want to use mem
+> parameter and later expect a memory above the restrected area to be
+> hotplugable?
+
+The why is 'mem=3D' is used to restrict the amount of system ram during
+boot. We have two ways to add system memory, one is installing DIMMs
+before boot, the other is hot adding memory after boot. Without David's=20
+use case, we may need redefine 'mem=3D' and change its documentation in
+kernel-parameters.txt, if we don't want to fix it like this. Otherwise,
+'mem=3D' will limit the system's upper system ram always, that is not
+expected.
+
+>=20
+> David has provided an actual usecase [1] but this needs to be documented
+> somewhere so that we do not break that accidentally in the future.
+> Ideally both in code which adds the boot restriction and the kernel
+> command line documentation to be explicit about BOOT restriction.
+>=20
+> [1] http://lkml.kernel.org/r/429622cf-f0f4-5d80-d39d-b0d8a6c6605f@redhat.=
+com
+
+Yes, agree. As I replied in the v2 thread, I will add that into log, and
+also will change text of 'mem=3D' in kernel-parameters.txt.
+
+Thanks
+Baoquan
+
