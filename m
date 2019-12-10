@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A45C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF96FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF302073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838E62077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014698;
-	bh=eS9xvF9rq5NfJcNEJkfhvmpa8K7NKLijEPXsZ/nbijw=;
+	s=default; t=1576014704;
+	bh=PrODbBkMcThbXTtclDbkpaI0D3MEkIjDDfJdQn04QRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iAjSJ9yKEmFbGeOMZ6VLZuuaqBNV9oERg1NdXQzyuCVx5OFGCY8MeoiJW5zpaLH63
-	 Sj2p0k+up/5hynE5heYsM+ba9UX15cfzrez3JgzwLN6KFCwUkONdWVH+T6OiisCKYf
-	 LP3re0wahmk3oL6AbhwM0I2NX2mKmPH3HxfhrPqk=
+	b=b0J9iOD1fdMRhwCxWhtqFLezdRjj1hWA62/BmJvQtlbX0ft5tWCPIzQGv1+E5eX0Q
+	 r0hCdxwZ12x0DfIdnsW4uFJ3ywokpGBvoQywL9G5hCTs8XpE4dY+59qEOTkEkKLBfP
+	 MHDjFORFhpUWybF8v3+SXs+FIqVRp7JHwKt2+Xr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfLJVvh (ORCPT
+        id S1730120AbfLJVvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:51:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbfLJVIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:02 -0500
+        id S1727380AbfLJVH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3080224691;
-        Tue, 10 Dec 2019 21:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 332032468F;
+        Tue, 10 Dec 2019 21:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012081;
-        bh=eS9xvF9rq5NfJcNEJkfhvmpa8K7NKLijEPXsZ/nbijw=;
+        s=default; t=1576012077;
+        bh=PrODbBkMcThbXTtclDbkpaI0D3MEkIjDDfJdQn04QRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZZUJEbmqlgu0VdrBoDEALQomMBux8FUppITGZeExTINrBlHJRwsv1pEekHZfgaD7
-         uZFGcaE2TeH9Ksp0LcWiKO3sK/RyYvF45a+pOhrBG5jnS01ssHJA1u2K8MyNJL5rAa
-         hhpCRjv9LFtHE/KLjxLwY9Z1ieGZILwT3CPPv7SU=
+        b=HePooKbNgEInkJpvnHnfaW4mXdevm2TZXwgq3QE/OP0Cv6/GhPF+eXgikaRgWdOr5
+         6MuDDymS3SPKKPnP5U9SWp14cUyi4A1HHlhwq2myX774XJwPphXkXb00jAssxscR9v
+         OpUaXgVt7nfCXDu1wx5tQHswMvJ7V9dPkwerO7qI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 060/350] drm/amd/display: fix struct init in update_bounding_box
-Date:   Tue, 10 Dec 2019 16:02:45 -0500
-Message-Id: <20191210210735.9077-21-sashal@kernel.org>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 056/350] selftests/bpf: Correct path to include msg + path
+Date:   Tue, 10 Dec 2019 16:02:41 -0500
+Message-Id: <20191210210735.9077-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,45 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit 960b6f4f2d2e96d5f7ffe2854e0040b46cafbd36 ]
+[ Upstream commit c588146378962786ddeec817f7736a53298a7b01 ]
 
-dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
-  struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-         ^
+The "path" buf is supposed to contain path + printf msg up to 24 bytes.
+It will be cut anyway, but compiler generates truncation warns like:
 
-Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
+"
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c: In
+function ‘setup_cgroup_environment’:
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:34:
+warning: ‘/cgroup.controllers’ directive output may be truncated
+writing 19 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+				  ^~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:2:
+note: ‘snprintf’ output between 20 and 4116 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:34:
+warning: ‘/cgroup.subtree_control’ directive output may be truncated
+writing 23 bytes into a region of size between 1 and 4097
+[-Wformat-truncation=]
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+				  ^~~~~~~~~~~~~~~~~~~~~~~
+cgroup_path);
+samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:2:
+note: ‘snprintf’ output between 24 and 4120 bytes into a destination
+of size 4097
+snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
+cgroup_path);
+"
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+In order to avoid warns, lets decrease buf size for cgroup workdir on
+24 bytes with assumption to include also "/cgroup.subtree_control" to
+the address. The cut will never happen anyway.
+
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20191002120404.26962-3-ivan.khoronzhuk@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/cgroup_helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index ebe67c34dabf6..78b2cc2e122fc 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -3041,7 +3041,7 @@ static void cap_soc_clocks(
- static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
- 		struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
+diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
+index e95c33e333a40..b29a73fe64dbc 100644
+--- a/tools/testing/selftests/bpf/cgroup_helpers.c
++++ b/tools/testing/selftests/bpf/cgroup_helpers.c
+@@ -98,7 +98,7 @@ int enable_all_controllers(char *cgroup_path)
+  */
+ int setup_cgroup_environment(void)
  {
--	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-+	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES];
- 	int i;
- 	int num_calculated_states = 0;
- 	int min_dcfclk = 0;
-@@ -3049,6 +3049,8 @@ static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_
- 	if (num_states == 0)
- 		return;
+-	char cgroup_workdir[PATH_MAX + 1];
++	char cgroup_workdir[PATH_MAX - 24];
  
-+	memset(calculated_states, 0, sizeof(calculated_states));
-+
- 	if (dc->bb_overrides.min_dcfclk_mhz > 0)
- 		min_dcfclk = dc->bb_overrides.min_dcfclk_mhz;
- 	else
+ 	format_cgroup_path(cgroup_workdir, "");
+ 
 -- 
 2.20.1
 
