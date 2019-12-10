@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C755CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE2B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3C2246AD
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012224;
-	bh=QLCQh0vfV7h/ZjC9RNBV9ppkij/a1m7fig8tN2/1+Dc=;
+	s=default; t=1576012226;
+	bh=LNb5tT2SBnK5bHgP1NX43CYoSjrTbdSaem5o9Bb6YFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQppLeIihVXimrcYOJHHGWkTJbIUIgu2bRwC/GYukQIACjh3wy9tvusKXu/J8QNid
-	 s90xz1THzaYHw50sNAXTUURYyrxjqxw8NnFf5LTELrg1+COMvG11Es+E6nzRz4oijt
-	 PgC3QUWah0Pew6Pm51RiwHGU/a596MP73vUnOwPc=
+	b=hW+ExiNyaRgW5HK+cEYxIkQB0fnTswKE2UqbEJHeeQni12n9EUl3vbY9I4ekKtDA1
+	 Vhf1hfdgIczjfSy/OWZsfWJQhBjmipMiug3RSw95KfD0S3pLX1CNq2NjcGXwiB+pYx
+	 tEPOEMf2jFHrKjJ9wgvjFilwWk0p/I7xdgft7kqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfLJVKX (ORCPT
+        id S1728483AbfLJVKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:10:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728088AbfLJVKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:20 -0500
+        id S1726708AbfLJVKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78F1E246AD;
-        Tue, 10 Dec 2019 21:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C20C246A8;
+        Tue, 10 Dec 2019 21:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012220;
-        bh=QLCQh0vfV7h/ZjC9RNBV9ppkij/a1m7fig8tN2/1+Dc=;
+        s=default; t=1576012223;
+        bh=LNb5tT2SBnK5bHgP1NX43CYoSjrTbdSaem5o9Bb6YFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EB3oeAZHDppBQIVMS7t9sdZ/KMxxloRuZ6AJ5TpyRFjrIjfe9+v7F+cBNMRcREiiL
-         JXd/+VnS64mDU1QhA199ALrfoDncOmSShZXomajMKSj5cVLKahfFu3R3aT2vpqIM28
-         qFGlHUOrj96paTx2GRl8SrZSkjhYns2YP1qWyXKY=
+        b=kljyK0wLEImGhSOPSglDMn/2rvAL2QKUDAPpmzfhJanOkt91Y+rHjFjr8g2eyn2DL
+         OyWynW6L5LbDNIZ71bWbnjY3mUBI540TlJCqfoYV56KzuM+fPNnM6+W/oJd8fC30EX
+         kSlRpfJ2dYdNsOsG5ktDMAX9V+66LO03jMEWpkpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 170/350] ALSA: hda - Fix pending unsol events at shutdown
-Date:   Tue, 10 Dec 2019 16:04:35 -0500
-Message-Id: <20191210210735.9077-131-sashal@kernel.org>
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 173/350] RDMA/qedr: Fix srqs xarray initialization
+Date:   Tue, 10 Dec 2019 16:04:38 -0500
+Message-Id: <20191210210735.9077-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,59 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
+[ Upstream commit 73ab512f720298aabe23b34110e3f6a8545b0ba5 ]
 
-This is an alternative fix attemp for the issue reported in the commit
-caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
-reverted later due to regressions.  Instead of tweaking the hardware
-disablement order and the enforced irq flushing, do calling
-cancel_work_sync() of the unsol work early enough, and explicitly
-ignore the unsol events during the shutdown by checking the
-bus->shutdown flag.
+There was a missing initialization for the srqs xarray.
+SRQs xarray can also be called from irq context when searching
+for an element and uses the xa_XXX_irq apis, therefore should
+be initialized with IRQ flags.
 
-Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 9fd15987ed27 ("qedr: Convert srqidr to XArray")
+Link: https://lore.kernel.org/r/20191027200451.28187-2-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_bind.c  | 4 ++++
- sound/pci/hda/hda_intel.c | 3 +++
- 2 files changed, 7 insertions(+)
+ drivers/infiniband/hw/qedr/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
-index 8272b50b83493..6a85645663759 100644
---- a/sound/pci/hda/hda_bind.c
-+++ b/sound/pci/hda/hda_bind.c
-@@ -43,6 +43,10 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
- {
- 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
+diff --git a/drivers/infiniband/hw/qedr/main.c b/drivers/infiniband/hw/qedr/main.c
+index dc71b6e16a07f..b462eaca1ee3c 100644
+--- a/drivers/infiniband/hw/qedr/main.c
++++ b/drivers/infiniband/hw/qedr/main.c
+@@ -357,6 +357,7 @@ static int qedr_alloc_resources(struct qedr_dev *dev)
+ 		return -ENOMEM;
  
-+	/* ignore unsol events during shutdown */
-+	if (codec->bus->shutdown)
-+		return;
-+
- 	if (codec->patch_ops.unsol_event)
- 		codec->patch_ops.unsol_event(codec, ev);
- }
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index c52419376c748..86a416cdeb296 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1382,8 +1382,11 @@ static int azx_free(struct azx *chip)
- static int azx_dev_disconnect(struct snd_device *device)
- {
- 	struct azx *chip = device->device_data;
-+	struct hdac_bus *bus = azx_bus(chip);
+ 	spin_lock_init(&dev->sgid_lock);
++	xa_init_flags(&dev->srqs, XA_FLAGS_LOCK_IRQ);
  
- 	chip->bus.shutdown = 1;
-+	cancel_work_sync(&bus->unsol_work);
-+
- 	return 0;
- }
- 
+ 	if (IS_IWARP(dev)) {
+ 		xa_init_flags(&dev->qps, XA_FLAGS_LOCK_IRQ);
 -- 
 2.20.1
 
