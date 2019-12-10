@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65435C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03A5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3538020836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B70820836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015677;
-	bh=09sbiJ3mvra8Nr6qRvwY9YfTmMuj4PlX8GJhh4fE1IU=;
+	s=default; t=1576015681;
+	bh=SQNqfs3xX6Ay9KHY/sTpJriYHrOPjc5jnhEYVXUUXV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvFgcTDXKsktPZJPK6ZE0OteDpujr0u84H7MNze772fZvDKfINNc81L8x3LxPY45P
-	 th118QBP5PXgZGDj1CG1/wWkOvWhM9KfmcGe3D7mfpbsIr01MdT6KlQJNiX7FJZsRK
-	 R6VwHmRowcAxJyn9XGrPD7hRvOv3eYD8/Viie0/w=
+	b=i5t3/jQv5++AMv6tmzpLDR5VNmuX5KJmZiHXuBMD/Uhvvt25/hOL1qGzQbCfg7+b/
+	 wbIfydOJlsfKApYkxNcJ53y53rgQDdZOh3A6kdATygMaGx+250ReiHjwcrpyo0GzYt
+	 XDaFuSan/OyYu5o3SlcysRiA+8EUzfSuuSF0jWgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfLJWH4 (ORCPT
+        id S1727406AbfLJWE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:04:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbfLJWE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:59 -0500
+        id S1727076AbfLJWEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9418920637;
-        Tue, 10 Dec 2019 22:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84E920828;
+        Tue, 10 Dec 2019 22:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015498;
-        bh=09sbiJ3mvra8Nr6qRvwY9YfTmMuj4PlX8GJhh4fE1IU=;
+        s=default; t=1576015485;
+        bh=SQNqfs3xX6Ay9KHY/sTpJriYHrOPjc5jnhEYVXUUXV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEdMAqvOtLQpSnZDjSQ0cuSUr1CnX/efNAconsxMd+9ixeJ535mFx+0w+8JzK5LwV
-         wmRkNoOjitshTnEJtKAhTfhXhR5xoAKtFLuW5Uv9l4mIC0mg4x9cSeSwa1MsvChOrX
-         RDAmQaWSmaXKfB2le/QlYqyT8sK8bIb/Jo7q+CBU=
+        b=v85NphY5CbSmB5/k9sW6Ce3fQ1NoT32+kXQ1Z4fXk/2H13ltJLuTEsiukJTpYEpgL
+         V0Yr9Hlq056eqw/STBkg1zsOaX3BAgFdM7s2sszsxwL7EdOAGI5AdKwWq9VtXXRRHp
+         Wrguy547AeK4Wj0qIt/o+tgcoE3Bji9YmM+irNpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 098/130] fsi: core: Fix small accesses and unaligned offsets via sysfs
-Date:   Tue, 10 Dec 2019 17:02:29 -0500
-Message-Id: <20191210220301.13262-98-sashal@kernel.org>
+Cc:     James Clark <James.Clark@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 088/130] libsubcmd: Use -O0 with DEBUG=1
+Date:   Tue, 10 Dec 2019 17:02:19 -0500
+Message-Id: <20191210220301.13262-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,108 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: James Clark <James.Clark@arm.com>
 
-[ Upstream commit 9f4c2b516b4f031e3cd0e45957f4150b3c1a083d ]
+[ Upstream commit 22bd8f1b5a1dd168ba4eba27cb17643a11012f5d ]
 
-Subtracting the offset delta from four-byte alignment lead to wrapping
-of the requested length where `count` is less than `off`. Generalise the
-length handling to enable and optimise aligned access sizes for all
-offset and size combinations. The new formula produces the following
-results for given offset and count values:
+When a 'make DEBUG=1' build is done, the command parser is still built
+with -O6 and is hard to step through, fix it making it use -O0 in that
+case.
 
-    offset  count | length
-    --------------+-------
-    0       1     | 1
-    0       2     | 2
-    0       3     | 2
-    0       4     | 4
-    0       5     | 4
-    1       1     | 1
-    1       2     | 1
-    1       3     | 1
-    1       4     | 1
-    1       5     | 1
-    2       1     | 1
-    2       2     | 2
-    2       3     | 2
-    2       4     | 2
-    2       5     | 2
-    3       1     | 1
-    3       2     | 1
-    3       3     | 1
-    3       4     | 1
-    3       5     | 1
-
-We might need something like this for the cfam chardevs as well, for
-example we don't currently implement any alignment restrictions /
-handling in the hardware master driver.
-
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20191108051945.7109-6-joel@jms.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-core.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ tools/lib/subcmd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 4ea63d9bd1315..8feca59c1f6b0 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -419,6 +419,31 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
- }
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e58df09..5dbb0dde208c4 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -28,7 +28,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
-+static unsigned long aligned_access_size(size_t offset, size_t count)
-+{
-+	unsigned long offset_unit, count_unit;
-+
-+	/* Criteria:
-+	 *
-+	 * 1. Access size must be less than or equal to the maximum access
-+	 *    width or the highest power-of-two factor of offset
-+	 * 2. Access size must be less than or equal to the amount specified by
-+	 *    count
-+	 *
-+	 * The access width is optimal if we can calculate 1 to be strictly
-+	 * equal while still satisfying 2.
-+	 */
-+
-+	/* Find 1 by the bottom bit of offset (with a 4 byte access cap) */
-+	offset_unit = BIT(__builtin_ctzl(offset | 4));
-+
-+	/* Find 2 by the top bit of count */
-+	count_unit = BIT(8 * sizeof(unsigned long) - 1 - __builtin_clzl(count));
-+
-+	/* Constrain the maximum access width to the minimum of both criteria */
-+	return BIT(__builtin_ctzl(offset_unit | count_unit));
-+}
-+
- static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		struct kobject *kobj, struct bin_attribute *attr, char *buf,
- 		loff_t off, size_t count)
-@@ -434,8 +459,7 @@ static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += read_len) {
--		read_len = min_t(size_t, count, 4);
--		read_len -= off & 0x3;
-+		read_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
- 		if (rc)
-@@ -462,8 +486,7 @@ static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += write_len) {
--		write_len = min_t(size_t, count, 4);
--		write_len -= off & 0x3;
-+		write_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
- 		if (rc)
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS += -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
+ else
+   CFLAGS += -O6
 -- 
 2.20.1
 
