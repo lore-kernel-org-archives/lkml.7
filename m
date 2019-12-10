@@ -2,144 +2,175 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED24CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A707C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AA82053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7CA2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cSSUpZLt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+1+Af0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLJPSG (ORCPT
+        id S1727467AbfLJPVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:18:06 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:43205 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLJPSG (ORCPT
+        Tue, 10 Dec 2019 10:21:08 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46153 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbfLJPVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:18:06 -0500
-Received: by mail-vs1-f65.google.com with SMTP id x4so13282701vsx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 07:18:05 -0800 (PST)
+        Tue, 10 Dec 2019 10:21:07 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z17so20291815ljk.13;
+        Tue, 10 Dec 2019 07:21:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jcUnC0/SEm4HDTIw1YLkWhbNF7DV2HNNDkdfVlTygbE=;
-        b=cSSUpZLtf+hCVZvTD7HbKKL/zq4Rkmgcb2lIlIkDlhoxjyGVl0vVSnKlyJSar8oMju
-         kJKrdwjxQ132req2y4+nrrVfisVcDFp//Vza1JYfv88Pn0pawYqigZnVIjKe8hsBLtwo
-         MCeVhuUG+FD6AVkT5efECIF5yoeCURQPE8pK5mLLWFQv5VUdlsUYexM/XG4pBnG0lMlj
-         homajns2YyoPkCVbVSABDLsSQp/B9WvdKRwStVCpME0KK4gfjaFWk6c6Sp+tT9WhGfwd
-         Wm0n+fvhFn2WYXhdCvCyA4aduw0ySOsjxw4ZHQ5FAt3egnPm7ELrA47hNqGA3SWWB7Yy
-         x0ug==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8lyoZyzsZNTOAf8Nzqym+U3Y69zCHzXOvzwC1owD+S0=;
+        b=J+1+Af0JHG58PlH408ipfa111DWb0WPeJF2NIjCnB+ugmxJ4n9spb6luGk47BCPdMc
+         Xjw32kYP3ItG9Ro7E97HH2ZfmnIkzHIub+sL7ayp/dWawthbdfAxQCXf+RQT5u0t1PGT
+         c/CocoitL4nroLToESUzTVxI2Izi6hTn5jYcUd4N/2JT5uQONfD18v/hghHvVcN+Bpdd
+         FbLjno8or6NdIPNN/iQCdUZ6T0/ZkNrTMGJwVx2+HtbPfXka2Ep2Rnx5oiOIS6/n2cO8
+         B+/iwLeLejRL9J/7ARHg+A7ou/rwYSzpOe45nS4AjZLSV2drC+XK77IFrOyMflSmKXau
+         2N3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jcUnC0/SEm4HDTIw1YLkWhbNF7DV2HNNDkdfVlTygbE=;
-        b=MGi5lCJR+xlNJ5qbuusPx+I5vH3nrGX8Jduddj68TAlz7MwugsQXP8NODVRPIqKd43
-         XtSfiRCcUNvRAt1uW9SwPlvLKzvcJVsIILk83o15XivQ0EWPqAMDfVQW6HGgyiKW3tov
-         YHFyfW3aMMfaMickzzGi1Ry/OUYva9sCl7boUhfSYeqs7br61d4rwRV10b9sSfAznyqv
-         BHLv3N0nXF0cpMr6QN8ubsqOtC+jBb5dV5TubqVXcXg2za/EYRJkvZGlX19kiwIAvjLy
-         dbU+4AqvW8zDkmBBVSDhuuuiDXLQ9odQboQeUyYWZbaTD9yQHDdl/VCCR7zrTxqaMI87
-         K90w==
-X-Gm-Message-State: APjAAAXAKHCP4WJvfPBkck6ePsGHCoCSZfrdi4G7qijM6rXn5owVt5DS
-        e9nmUcOa/LTRC8Ws3kOK+ZU/Dh2IzNhGDYTnjGkgQQ==
-X-Google-Smtp-Source: APXvYqxHTWP37WCrbgkX6nxMLdBw/0tPKoRg5nRin2f5LJXHzhcKcpphZKWgMGaQKXGnCPL9VoXyCSqg/WxqTmWfZqM=
-X-Received: by 2002:a05:6102:5d1:: with SMTP id v17mr25314853vsf.200.1575991085086;
- Tue, 10 Dec 2019 07:18:05 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8lyoZyzsZNTOAf8Nzqym+U3Y69zCHzXOvzwC1owD+S0=;
+        b=N34KYfZ8wM+EeI8T+yhOsbMU59lqAy0yGse0wYJIPBGHiEyBLUma3rLEQRNc5eOlXN
+         xnoLInv0Jhsr8c6+ZCo6APGJTpHNAPBD1IaAb/kxbfQSdqOydRP6IrctVuZ48GLXl/W/
+         LINuPxSTOhACJslYPDYo1qEYTMY+p7nQ+JSevuwaKBgEq8rv8KrGKprNqw6OWcLdOVaa
+         8w+MeAIyhxyXnT1fFTMRzhpPQAbuhGXOyIcymaifrodxb8FYzSZNnRknmHBO345FXub1
+         qNU1PUWD1d6KoQXuitF2T3Qh4U3ejbr9wbC/Tx2iIlTmaNhiRtKdksgs7ouxRfR8Gx85
+         lJVw==
+X-Gm-Message-State: APjAAAUQtnl3FMeJmy+zakswyJguNzh8fWCVEKS0hnqq7Z4ZnDnU7fnz
+        /NeTinLXaAFdoIxFmOqCbcwoY4tZ
+X-Google-Smtp-Source: APXvYqzdxvr3ddYPqp008DAMyebSx01uJv+XuaMs8KFVPyiBdie6L1P71GLLiPzWAql6FmO8NRGDMw==
+X-Received: by 2002:a2e:90da:: with SMTP id o26mr20913058ljg.25.1575991264325;
+        Tue, 10 Dec 2019 07:21:04 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id q186sm1992249ljq.30.2019.12.10.07.21.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 07:21:03 -0800 (PST)
+Subject: Re: [PATCH 3/6] input: elants: support common touchscreen DT
+ properties
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
+ <20191210023818.GB15246@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <2c9cd83c-518f-2f22-c3e7-ac629a181b8d@gmail.com>
+Date:   Tue, 10 Dec 2019 18:21:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <cover.1573456283.git.baolin.wang@linaro.org> <CAK8P3a1we9D5C2NOBww=cW-4L1PT3t0NnDRmknLwiLm652TmKg@mail.gmail.com>
- <CAMz4kuK9HEuGdhNqHO_qoy9jD=ccsPPhD_dKYwNRgQyWyYwqRA@mail.gmail.com>
- <CAK8P3a0rNhyxmUWLUV1js3FsuAESDOPX3E4b8ActtL4GRT4uTA@mail.gmail.com>
- <CADBw62pzV+5ZXBEbFvTQJ9essAd4cd7Xkz5j9AXB5rAQy0wLqA@mail.gmail.com>
- <CAMz4kuK_3q4JY1vNXe6zGHDNF8Ep-SkcUq6Z25r790VSz4+Bjw@mail.gmail.com>
- <CAK8P3a11vJb1riYseqPnF_5SuJA+YnYuGwC0XWx6_rk+eQ0Bmw@mail.gmail.com>
- <f88856aa-9175-2a93-3747-c98215cb79c3@suse.de> <20191127090023.GA23040@infradead.org>
- <CAK8P3a0gUWf_+ZmscuFanvPG=wN09ELL-JpByjJJM4Lo1FYmrQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a0gUWf_+ZmscuFanvPG=wN09ELL-JpByjJJM4Lo1FYmrQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Dec 2019 16:17:28 +0100
-Message-ID: <CAPDyKFoNAF1UUvzvEGxTS=yKJshVgHsXqXiCxno75=aasME4kw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Add MMC software queue support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Hannes Reinecke <hare@suse.de>,
-        "(Exiting) Baolin Wang" <baolin.wang@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Paolo Valente <paolo.valente@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191210023818.GB15246@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Nov 2019 at 13:01, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Nov 27, 2019 at 10:00 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Tue, Nov 26, 2019 at 12:17:15PM +0100, Hannes Reinecke wrote:
-> >  If requests are batched enough we could just drain
-> > and switch every time an other partition access comes in.  Especially
-> > so if people only use partitions for boot partitions and other rarely
-> > used areas.
->
-> We only support a single user partition plus up to two boot partitions that
-> are accessed rarely, I don't think there is any reason to optimize switching
-> between them.
+10.12.2019 05:38, Michał Mirosław пишет:
+> On Tue, Dec 10, 2019 at 04:03:18AM +0300, Dmitry Osipenko wrote:
+>> 10.12.2019 03:19, Michał Mirosław пишет:
+>>> Support common DT properties like axis inversions to complement
+>>> information obtained from device's firmware.a
+> [...]
+>>> @@ -498,10 +498,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+>>>  			 rows, cols, osr);
+>>>  	} else {
+>>>  		/* translate trace number to TS resolution */
+>>> -		ts->x_max = ELAN_TS_RESOLUTION(rows, osr);
+>>> -		ts->x_res = DIV_ROUND_CLOSEST(ts->x_max, phy_x);
+>>> -		ts->y_max = ELAN_TS_RESOLUTION(cols, osr);
+>>> -		ts->y_res = DIV_ROUND_CLOSEST(ts->y_max, phy_y);
+>>> +		ts->prop.max_x = ELAN_TS_RESOLUTION(rows, osr);
+>>> +		ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
+>>> +		ts->prop.max_y = ELAN_TS_RESOLUTION(cols, osr);
+>>> +		ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
+>>>  	}
+>>>  
+>>>  	return 0;
+>>> @@ -833,8 +833,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
+>>>  
+>>>  			input_mt_slot(input, i);
+>>>  			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
+>>> -			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+>>> -			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
+>>> +			touchscreen_report_pos(input, &ts->prop, x, y, true);
+>>>  			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+>>>  			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
+>>>  
+>>> @@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
+>>>  	ts->input->name = "Elan Touchscreen";
+>>>  	ts->input->id.bustype = BUS_I2C;
+>>>  
+>>> +	touchscreen_parse_properties(ts->input, true, &ts->prop);
+>>
+>> Shouldn't this function be invoked after setting the max x/y sizes with
+>> the hardware values? That's what all other drivers do and then you won't
+>> need to set the ts->prop.max_x/y above in the code.
+> 
+> This is done later in the series - this patch only adds axis inversion
+> support and ignores DT-provided sizes.
 
-I agree. However, let me just add some more information to this.
+What is the reason of splitting it into two patches?
 
-There are more partitions, like the RPMB for example. In regards to
-partition switching, after serving a request to the RPMB partition, we
-always switch back to the main user area. I think that is sufficient.
+Perhaps I'm still missing something, but why something a bit more simple
+like this wouldn't yield exactly the same result:
 
-Also note that requests for the RPMB partitions are managed via
-REQ_OP_DRV_IN|OUT.
+diff --git a/drivers/input/touchscreen/elants_i2c.c
+b/drivers/input/touchscreen/elants_i2c.c
+index d4ad24ea54c8..8763a3b25c29 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -32,6 +32,7 @@
+ #include <linux/slab.h>
+ #include <linux/firmware.h>
+ #include <linux/input/mt.h>
++#include <linux/input/touchscreen.h>
+ #include <linux/acpi.h>
+ #include <linux/of.h>
+ #include <linux/gpio/consumer.h>
+@@ -147,6 +148,8 @@ struct elants_data {
 
->
-> The only change that I think we need here is to change the partition switch
-> from something that is done synchronously during ->queue_rq() to
-> something that fits better into normal scheme of sending a cmd to
-> the device, returning BLK_STS_RESOURCE from ->queue_rq.
+ 	/* Must be last to be used for DMA operations */
+ 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
++
++	struct touchscreen_properties prop;
+ };
 
-You want to translate them to be managed similar to REQ_OP_DRV_IN|OUT, no?
+ static int elants_i2c_send(struct i2c_client *client,
+@@ -807,8 +810,7 @@ static void elants_i2c_mt_event(struct elants_data
+*ts, u8 *buf)
 
-I am just trying to understand what this would help us with, but I
-don't get it, sorry.
+ 			input_mt_slot(input, i);
+ 			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+-			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
++			touchscreen_report_pos(ts->input, &ts->prop, x, y, true);
+ 			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+ 			input_event(input, EV_ABS, ABS_MT_TOUCH_MAJOR, w);
 
-I realize that I am joining the show a bit late, apologize for that.
-But it seems like you are forgetting about re-tuning, urgent bkops,
-card detect, SDIO combo cards, etc.
+@@ -1249,6 +1251,8 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
 
-For example, re-tuning may be required because of a CRC error on the
-previously sent transfer. Thus re-tuning must be done before serving
-the next request.
-
-Likewise, when the device signals urgent bkops status, we must not
-serve any new request until the card has notified us that it is ready
-with it's internal housekeeping operations.
-
-> Possibly this could even be turned into a standard struct request that is
-> added between two normal requests for different partitions at some
-> point, if this simplifies the logic (I suspect it won't, but it may be worth
-> a try).
-
-Doing so, means re-tuning, bkops, etc, also needs to be managed in the
-same way. Is this really the way to go?
-
-Kind regards
-Uffe
++	touchscreen_parse_properties(ts->input, true, &ts->prop);
++
+ 	error = input_register_device(ts->input);
+ 	if (error) {
+ 		dev_err(&client->dev,
