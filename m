@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1811C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838D6C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2490222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5CF20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013666;
-	bh=Wn5syDq0taCDfRGRzbyEBoljcA5/eCl9XmADb6qn/Q4=;
+	s=default; t=1576013670;
+	bh=ykKCGCn8/3t67A1Ya/4CAb5bkolOeo9qOFYnfKkRN8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAHqferxIn3LYVYTIcde7UtqOXUR4SExUNRLuRWGWgjipq7U7looQhPCZueKQnwfQ
-	 hH+DHur5llZX99Cu/DSPIQNaVHRPVKR2NQ8wb/w0VstZa2QSOmvERVkZs8Rmq3xMTo
-	 qpbkTwU51XPh1G5wGWthlZkrZxlLuX/NhV0Bm938=
+	b=EKoJXvtLJhISdGJt/XWxMNPwEruuEbjDhrtrDXBT2cgzLF5lX+n0gRfPuxcPFPLBV
+	 l4tmoOvH1UQN6295gaRuToaoiUhrpDp3t6fezU/bkihb5//CSOX5yTGG8oJKLEVlnt
+	 f/6AoqEN2dvZLWvPlGEX/r+pxyM5mv/t8V79ftoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbfLJVeZ (ORCPT
+        id S1729619AbfLJVe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfLJVeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:14 -0500
+        id S1728402AbfLJVeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3F4222C4;
-        Tue, 10 Dec 2019 21:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FA2324654;
+        Tue, 10 Dec 2019 21:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013653;
-        bh=Wn5syDq0taCDfRGRzbyEBoljcA5/eCl9XmADb6qn/Q4=;
+        s=default; t=1576013659;
+        bh=ykKCGCn8/3t67A1Ya/4CAb5bkolOeo9qOFYnfKkRN8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RBLb7ZWElxqA1yJf4e47ybq2GIVl2SJC99yc3kTSHQtHMuUyJc5s3p4so8yBBB/6G
-         P+HC6fF/hQdcJFyprbxLxkizYhasWWzKlcrx0N2TRWYWnpzprBPx7hq5QFsZktPJk7
-         h57ARrupOBwG/VRhaTwaDrpARBJ0P1vB3JAnm9zk=
+        b=mumTng4KbfrCJ5EASheNpQWolfviMdbE1iYef1PHw0eyy9YgpYVC0FuxqYFOquflG
+         6nKEAW15pVjEV3GYiAMLvc/ci302O0hps/SIlR2O4vWTW/QtHsZWQ9qED8CKGIIKtC
+         V6EhKDxXgKpinUNAXhiyrZohduQ6AOfrVMZhibzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 092/177] loop: fix no-unmap write-zeroes request behavior
-Date:   Tue, 10 Dec 2019 16:30:56 -0500
-Message-Id: <20191210213221.11921-92-sashal@kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 097/177] Bluetooth: Fix advertising duplicated flags
+Date:   Tue, 10 Dec 2019 16:31:01 -0500
+Message-Id: <20191210213221.11921-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -59,81 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 
-[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
+[ Upstream commit 6012b9346d8959194c239fd60a62dfec98d43048 ]
 
-Currently, if the loop device receives a WRITE_ZEROES request, it asks
-the underlying filesystem to punch out the range.  This behavior is
-correct if unmapping is allowed.  However, a NOUNMAP request means that
-the caller doesn't want us to free the storage backing the range, so
-punching out the range is incorrect behavior.
+Instances may have flags set as part of its data in which case the code
+should not attempt to add it again otherwise it can cause duplication:
 
-To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
-underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
-the fallocate documentation) required to ensure that the entire range is
-backed by real storage, which suffices for our purposes.
+< HCI Command: LE Set Extended Advertising Data (0x08|0x0037) plen 35
+        Handle: 0x00
+        Operation: Complete extended advertising data (0x03)
+        Fragment preference: Minimize fragmentation (0x01)
+        Data length: 0x06
+        Flags: 0x04
+          BR/EDR Not Supported
+        Flags: 0x06
+          LE General Discoverable Mode
+          BR/EDR Not Supported
 
-Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ net/bluetooth/hci_request.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 126c2c5146732..9cd231a27328e 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -416,18 +416,20 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
- 	return ret;
- }
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 9448ebd3780a3..a8ddd211e94c2 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -1258,6 +1258,14 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
  
--static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
-+static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
-+			int mode)
- {
- 	/*
--	 * We use punch hole to reclaim the free space used by the
--	 * image a.k.a. discard. However we do not support discard if
--	 * encryption is enabled, because it may give an attacker
--	 * useful information.
-+	 * We use fallocate to manipulate the space mappings used by the image
-+	 * a.k.a. discard/zerorange. However we do not support this if
-+	 * encryption is enabled, because it may give an attacker useful
-+	 * information.
- 	 */
- 	struct file *file = lo->lo_backing_file;
--	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
- 	int ret;
+ 	instance_flags = get_adv_instance_flags(hdev, instance);
  
-+	mode |= FALLOC_FL_KEEP_SIZE;
++	/* If instance already has the flags set skip adding it once
++	 * again.
++	 */
++	if (adv_instance && eir_get_data(adv_instance->adv_data,
++					 adv_instance->adv_data_len, EIR_FLAGS,
++					 NULL))
++		goto skip_flags;
 +
- 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
-@@ -596,9 +598,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	switch (req_op(rq)) {
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
--	case REQ_OP_DISCARD:
- 	case REQ_OP_WRITE_ZEROES:
--		return lo_discard(lo, rq, pos);
-+		/*
-+		 * If the caller doesn't want deallocation, call zeroout to
-+		 * write zeroes the range.  Otherwise, punch them out.
-+		 */
-+		return lo_fallocate(lo, rq, pos,
-+			(rq->cmd_flags & REQ_NOUNMAP) ?
-+				FALLOC_FL_ZERO_RANGE :
-+				FALLOC_FL_PUNCH_HOLE);
-+	case REQ_OP_DISCARD:
-+		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_WRITE:
- 		if (lo->transfer)
- 			return lo_write_transfer(lo, rq, pos);
+ 	/* The Add Advertising command allows userspace to set both the general
+ 	 * and limited discoverable flags.
+ 	 */
+@@ -1290,6 +1298,7 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+ 		}
+ 	}
+ 
++skip_flags:
+ 	if (adv_instance) {
+ 		memcpy(ptr, adv_instance->adv_data,
+ 		       adv_instance->adv_data_len);
 -- 
 2.20.1
 
