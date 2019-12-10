@@ -2,143 +2,235 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D09C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8030C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFF820836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1575986884;
-	bh=TBWYVaEvcDybt0/r2WSYNCQaf8g1hoqdKE1coTTb47U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hTGVX4ZkMl06r0mOLnaQeIwl/DFNQYKHpfGaporAbeMPaTiS/dKrpg9OUmrXjwqMS
-	 cwwCJUpcrlZptKQL3j/bkrCjXfB5teicgYjPZSkXUY4iezJR0dvjl+ZAron/f680A2
-	 2e4b+cCljnfx/IiC7RoSyhiO4nQKRjd9zPn63rDU=
+	by mail.kernel.org (Postfix) with ESMTP id 903F22073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="e7qTM/D5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfLJOID (ORCPT
+        id S1727516AbfLJOIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:08:03 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54723 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfLJOIC (ORCPT
+        Tue, 10 Dec 2019 09:08:07 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:56506 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727145AbfLJOIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:08:04 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAE1B3p009761;
         Tue, 10 Dec 2019 09:08:02 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so3370758wmj.4;
-        Tue, 10 Dec 2019 06:08:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JOrvgpzri55cuZvf0g5PJCe5RKiv3DNl9WA35jfmGNA=;
-        b=DSej2cweNQWw6uTscZM7qcb25ALpLf/tDJRAYj8JtC/wTfvacTpba+CjexejWWLsUO
-         fkHcNqY+mCOh7t6E5b+t4kMnpj3eyu9YILOJDn6/t6IE//G2B3oIzPCgeSD2dArfZQ5a
-         Ie0x1Bg7o2ci+rI2W0dM7f4OusB0TmeCe8kDA7879zadlFDbudXlmorZ2go5VVM3pn8H
-         zVDp0K9Ds6O5GJA8Pr9UYvJfjoHTtP8RVRo/Q+0MxNZONotithdZ+An5EQ2m5bAWeHxl
-         Q9aZlO0qtFjrS0LMHFaPsffDHMYGH0ImLeSYr7Cn+9l8TCmjUqTII1uSjc1yK7WvEwYu
-         Gpxg==
-X-Gm-Message-State: APjAAAUqG2xJjbLV2TD5mkHEwl3C3Zf8Oscn4r9mlgPAKb2nq0iAfeW6
-        K65X47ktUlRZclxoNCKBxb+slMXv
-X-Google-Smtp-Source: APXvYqwJtpMeRV9/dPQzUGGfgWCOqNHmCdtyqiAq1hNDJDJIwLpsBTZ3tqq0TEvFOmuvp5V761VrHw==
-X-Received: by 2002:a1c:7e13:: with SMTP id z19mr5424339wmc.67.1575986880429;
-        Tue, 10 Dec 2019 06:08:00 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id b17sm3383425wrp.49.2019.12.10.06.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:07:59 -0800 (PST)
-Date:   Tue, 10 Dec 2019 15:07:58 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     chengkaitao <pilgrimtao@gmail.com>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org, smuchun@gmail.com
-Subject: Re: [PATCH] mm: cleanup some useless code
-Message-ID: <20191210140758.GK10404@dhcp22.suse.cz>
-References: <20191210134911.2570-1-pilgrimtao@gmail.com>
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2wraevshx1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Dec 2019 09:08:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LLXeB6emSqRUY1funjSzHWeGKetim/PtUQb/eJtzT9hAvupWMD3eK7Q9QtpbiheKEG+EOvycSMKGUiHfPJtbVNO0jfVQ4/gODWnkuFwYeNPGmVgQucA/cSL3x0nAUUvj3Sm3qRWQzQzlDfcl6QDllPY+DasR/pKl9xU3OCS0f/uphaRLwAS7aYfSVahr70uu2VIt0lfqr+syWnnVoVXOHIpM3/UvmCeDJUedu62nmH8T7nVE0SxvkkiO8SzKLxzXYXSVBDEOlTvbtHdATHGDWe4mLPmn/nzbMkONyG1RFrJ1J/aE2IFZvuwdgpXZNDhTH1r7q44yU3XCXZzeq1lxig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MEUVD/b8t5rhOPqIHa01OUSPSw58YehjU/aKbWiRQdM=;
+ b=ncrCv85aGksr23maSMzsjxVFYFmCFbhBD9DbBPfXNWuq585SCHVFI9gDLNB25UAbmq0CaB0qrmz+OkaiTjXiKKDCQ/vQYSC/Hi1Zb5gZmsYnYaPi9Z7QPp1+S7ijNA4uUxAO4meu5rZkNLXkDs83res9Wk9u3STTRGloR/YpdA7nj9B480CW4VXiEpOpLJm0phEx2/3cYf9MR6okuSRAKqL/V9cdo+ygaFYKR+ZBwny22lYvNQIxiRP849AMg9/xS2AAEifI2gdqwW3xQcSLjPMDVN4EaaRauIISgeAMu0QFwN9P+ZIUelkOA7khF1Yff+t0evBd+tL6KEI07EZF/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MEUVD/b8t5rhOPqIHa01OUSPSw58YehjU/aKbWiRQdM=;
+ b=e7qTM/D5Dv4b918rMzX97y/ZbxNeY81+u6eyV+4ksk8IAm2dMSZ1sECQ5b+2X/uOlyhT8Sfy/WUoLoeF5QvnmFgngi78kQQylw6S/9V65uJey0/Z4lf5OJ9tpomRvqprVgmEudTjcfQNI3Aq0OC63GJd195+WX/NS4q+2VvATxw=
+Received: from DM6PR03CA0032.namprd03.prod.outlook.com (2603:10b6:5:40::45) by
+ DM6PR03MB3500.namprd03.prod.outlook.com (2603:10b6:5:ac::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.18; Tue, 10 Dec 2019 14:08:00 +0000
+Received: from CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::209) by DM6PR03CA0032.outlook.office365.com
+ (2603:10b6:5:40::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.14 via Frontend
+ Transport; Tue, 10 Dec 2019 14:08:00 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT054.mail.protection.outlook.com (10.152.74.100) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2495.26
+ via Frontend Transport; Tue, 10 Dec 2019 14:07:59 +0000
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xBAE7wX0024966
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 10 Dec 2019 06:07:58 -0800
+Received: from SCSQMBX10.ad.analog.com (10.77.17.105) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 10 Dec 2019 09:07:58 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 10 Dec 2019 06:07:58 -0800
+Received: from saturn.ad.analog.com ([10.48.65.121])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id xBAE7uKD010118;
+        Tue, 10 Dec 2019 09:07:57 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: imu: adis: use new `delay` structure for SPI transfer delays
+Date:   Tue, 10 Dec 2019 16:07:55 +0200
+Message-ID: <20191210140755.14305-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191204080904.2557-1-alexandru.ardelean@analog.com>
+References: <20191204080904.2557-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210134911.2570-1-pilgrimtao@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(39860400002)(189003)(199004)(54534003)(7636002)(107886003)(426003)(26005)(336012)(2616005)(5660300002)(4326008)(86362001)(316002)(70586007)(356004)(44832011)(70206006)(2906002)(8936002)(1076003)(246002)(54906003)(8676002)(7696005)(186003)(110136005)(36756003)(478600001)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3500;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f092f350-3755-41dd-6574-08d77d7a5cf9
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3500:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB350075B2CF133D94702A1C6FF95B0@DM6PR03MB3500.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:632;
+X-Forefront-PRVS: 02475B2A01
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KvWmnOuJ2cg2Que/nfsVLzrCDv0VgNGtHm2GiTXhhOTGWOvNMCM61zO5Aa07tplTX16nZhy/QteR1woi3k3YsfHObq6fogXPd3q5OesFeJApAEaAD6q7Gx2tGPB1TBevB8o3LafOV+bWKMe/ki+41AYzsPPt2KLE2iSvQgg3Dr0ru/Lz/x2tDdXCM/ZyHNJitVs/hdJiwltT+DCGYGw2JW0J0avBS2AexQJdJonTS0BNbIad4pte8/pHF9COvTqDgU07Un/Rigz+8hvLH5xJniCGtY8gtzIwWstpuzhndZJuHOg/e9YZDJ8UzIoxNJjk4XWcVDbfZQI9E3BziHVSXZBUaHOWSFhHWGM3UQDdEtbvzWiiA9gRz2qPCXi3oFANzMgWWho6oRURf5U5raq3efsh9j2IgbMKQO0DOrp9sKRVeW5ktkURsGi1Onyazs7V1LZvQHQuxLJZVIzhEmYRhKzuYZnWFE4Q0sjiYQCO/lIZ4rBIK/1xYXIozZ44hJs/VGr5PD1BMbIWMlPf/1Ef/A==
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2019 14:07:59.4143
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f092f350-3755-41dd-6574-08d77d7a5cf9
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3500
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_03:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 05:49:10, chengkaitao wrote:
-> From: Kaitao Cheng <pilgrimtao@gmail.com>
-> 
-> There is a duplicate PageTransHuge, because hpage_nr_pages have
-> the same one.
+In a recent change to the SPI subsystem [1], a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current `delay_usecs`
+with `delay` for this driver.
 
-I am not a great fan of changes like these - a minor code churn without
-a clear benefit - but in this particular case I do agree that there is
-an improvement because we have two states to represent the same thing.
-I have hard time believing this makes a more optimal code as
-PageTransHuge is a trivial check so it doesn't make much sense to
-replicate the state locally.
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
-That being said the changelog could be improved a bit. What about
-something like the following?
-"
-Compound pages handling in mem_cgroup_migrate is more convoluted than
-necessary. The state is duplicated in compound variable and the same
-could be achieved by PageTransHuge check which is trivial and
-hpage_nr_pages is already PageTransHuge aware.
+[1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+`spi_transfer` + spi_transfer_delay_exec()")
 
-It is much simpler to just use hpage_nr_pages for nr_pages and replace
-the local variable by PageTransHuge check directly
-"
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+Changelog v1 -> v2:
+* fixed typo in commit desc `delay_secs` ->  `delay_usecs`
 
-To the change
-Acked-by: Michal Hocko <mhocko@suse.com>
+ drivers/iio/imu/adis.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Thanks!
-> ---
->  mm/memcontrol.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index bc01423277c5..870284d3ee9d 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6678,7 +6678,6 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
->  {
->  	struct mem_cgroup *memcg;
->  	unsigned int nr_pages;
-> -	bool compound;
->  	unsigned long flags;
->  
->  	VM_BUG_ON_PAGE(!PageLocked(oldpage), oldpage);
-> @@ -6700,8 +6699,7 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
->  		return;
->  
->  	/* Force-charge the new page. The old one will be freed soon */
-> -	compound = PageTransHuge(newpage);
-> -	nr_pages = compound ? hpage_nr_pages(newpage) : 1;
-> +	nr_pages = hpage_nr_pages(newpage);
->  
->  	page_counter_charge(&memcg->memory, nr_pages);
->  	if (do_memsw_account())
-> @@ -6711,7 +6709,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
->  	commit_charge(newpage, memcg, false);
->  
->  	local_irq_save(flags);
-> -	mem_cgroup_charge_statistics(memcg, newpage, compound, nr_pages);
-> +	mem_cgroup_charge_statistics(memcg, newpage, PageTransHuge(newpage),
-> +			nr_pages);
->  	memcg_check_events(memcg, newpage);
->  	local_irq_restore(flags);
->  }
-> -- 
-> 2.20.1
-
+diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+index e14c8536fd09..3cc57ef22b2e 100644
+--- a/drivers/iio/imu/adis.c
++++ b/drivers/iio/imu/adis.c
+@@ -38,7 +38,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -46,7 +47,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -54,19 +56,22 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 6,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.tx_buf = adis->tx + 8,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		},
+ 	};
+ 
+@@ -138,7 +143,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->write_delay,
++			.delay.value = adis->data->write_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -146,7 +152,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+@@ -155,14 +162,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+ 			.cs_change = 1,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 			.cs_change_delay.value = adis->data->cs_change_delay,
+ 			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
+ 		}, {
+ 			.rx_buf = adis->rx + 2,
+ 			.bits_per_word = 8,
+ 			.len = 2,
+-			.delay_usecs = adis->data->read_delay,
++			.delay.value = adis->data->read_delay,
++			.delay.unit = SPI_DELAY_UNIT_USECS,
+ 		},
+ 	};
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
