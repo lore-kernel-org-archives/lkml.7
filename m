@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF30C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3596C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6448F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747EB22464
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576013649;
-	bh=2Hmia6uVBT0pGAtAMw0KLOxb1KHmx2lNNMAxCv4+9AE=;
+	s=default; t=1576013652;
+	bh=UtT9m3SV8Nl59iqRpAiuZx2MjM2XWgzYpBKXjgJDrGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IhjrfTWVJBLepSKhjStE9GvqHb8W7TuTaOJJgWRJoKN41Xc/qkyaBuNq0hjnhwUEC
-	 tFOmLJ/pG9N++GoIucIGe6LWrLNOA1MClAFfFIrkPgf3frNGIqxm4VElEs2yZ2kGmq
-	 WldJv6WnTvdoVa6seA0FNhxr6i9fsOXzCQfMwCaY=
+	b=SELAnerHwUu367vS1M71BHWfMg6y0kx3UDNXb4dLVFG48ym0siuh/ofO1Df+iV6sR
+	 EpjDTSRn6TZs6O8tygHQQTceRSHD/rwx6hRwyj/pgs/DLGl5fHS6s83QTNvyBCMrHY
+	 DUUP0nULOcgdn8IBy2wSkigIk1Ox4FYJkHhSI/eM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfLJVeI (ORCPT
+        id S1729965AbfLJVeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:34:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:34:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729904AbfLJVeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:01 -0500
+        id S1729942AbfLJVeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A1B222C4;
-        Tue, 10 Dec 2019 21:33:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F78A208C3;
+        Tue, 10 Dec 2019 21:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013640;
-        bh=2Hmia6uVBT0pGAtAMw0KLOxb1KHmx2lNNMAxCv4+9AE=;
+        s=default; t=1576013647;
+        bh=UtT9m3SV8Nl59iqRpAiuZx2MjM2XWgzYpBKXjgJDrGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tpLtngDt2oKsTXOBsbMQVcTRDRuMXXhWEKyBx6Gxk3UZppjQ4snuFIPXuULT2ygzq
-         t4h5e7SrWbaZzpUoA8DaAFez0UwPeyPhNUlgkGkXV+GQhLNyvlV923v41Bh7Q1e9eW
-         0PLO0kKz39rJYqi1jVXxvEmdS2PSuqqFaVU+GTn4=
+        b=aOXol1qYm96HQn7dHnGAkEeUZf7pHc0EPlZSChHW0KyK2NaJWq1SP2bUwW8W5pFQD
+         90wbuNTSO46XBIex7j16+1n1pOJW7j2iLURh3lext2EEIEku1GCdj4mMovAle8QCrE
+         Grj70pgD7QDg7O+Sy9puKWzkVHf7D0SlxbZxg6lU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lingling Xu <ling_ling.xu@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 080/177] spi: sprd: adi: Add missing lock protection when rebooting
-Date:   Tue, 10 Dec 2019 16:30:44 -0500
-Message-Id: <20191210213221.11921-80-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 086/177] ALSA: hda/hdmi - implement mst_no_extra_pcms flag
+Date:   Tue, 10 Dec 2019 16:30:50 -0500
+Message-Id: <20191210213221.11921-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -60,37 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lingling Xu <ling_ling.xu@unisoc.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 91ea1d70607e374b014b4b9bea771ce661f9f64b ]
+[ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
 
-When rebooting the system, we should lock the watchdog after
-configuration to make sure the watchdog can reboot the system
-successfully.
+To support the DP-MST multiple streams via single connector feature,
+the HDMI driver was extended with the concept of backup PCMs. See
+commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
 
-Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Link: https://lore.kernel.org/r/7b04711127434555e3a1a86bc6be99860cd86668.1572257085.git.baolin.wang@linaro.org
+This implementation works fine with snd_hda_intel.c as PCM topology
+is fully managed within the single driver.
+
+When the HDA codec driver is used from ASoC components, the concept
+of backup PCMs no longer fits. For ASoC topologies, the physical
+HDMI converters are presented as backend DAIs and these should match
+with hardware capabilities. The ASoC topology may define arbitrary
+PCMs (i.e. frontend DAIs) and have processing elements before eventual
+routing to the HDMI BE DAIs. With backup PCMs, the link between
+FE and BE DAIs would become dynamic and change when monitors are
+(un)plugged. This would lead to modifying the topology every time
+hotplug events happen, which is not currently possible in ASoC and
+there does not seem to be any obvious benefits from this design.
+
+To overcome above problems and enable the HDMI driver to be used
+from ASoC, this patch adds a new mode (mst_no_extra_pcms flags) to
+patch_hdmi.c. In this mode, the codec driver does not assume
+the backup PCMs to be created.
+
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191029134017.18901-2-kai.vehmanen@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-sprd-adi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/hda_codec.h  |  1 +
+ sound/pci/hda/patch_hdmi.c | 19 ++++++++++++++-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index df5960bddfe61..f1fc2bde6ef30 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -367,6 +367,9 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
- 	val |= BIT_WDG_RUN | BIT_WDG_RST;
- 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
+diff --git a/sound/pci/hda/hda_codec.h b/sound/pci/hda/hda_codec.h
+index 2003403ce1c82..199927694aeff 100644
+--- a/sound/pci/hda/hda_codec.h
++++ b/sound/pci/hda/hda_codec.h
+@@ -262,6 +262,7 @@ struct hda_codec {
+ 	unsigned int force_pin_prefix:1; /* Add location prefix */
+ 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
+ 	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
++	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
  
-+	/* Lock the watchdog */
-+	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, ~WDG_UNLOCK_KEY);
+ #ifdef CONFIG_PM
+ 	unsigned long power_on_acct;
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index c827a2a89cc3d..9d5e3c8d62b93 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2063,15 +2063,24 @@ static bool is_hdmi_pcm_attached(struct hdac_device *hdac, int pcm_idx)
+ static int generic_hdmi_build_pcms(struct hda_codec *codec)
+ {
+ 	struct hdmi_spec *spec = codec->spec;
+-	int idx;
++	int idx, pcm_num;
+ 
+ 	/*
+ 	 * for non-mst mode, pcm number is the same as before
+-	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
+-	 *  dev_num is the device entry number in a pin
+-	 *
++	 * for DP MST mode without extra PCM, pcm number is same
++	 * for DP MST mode with extra PCMs, pcm number is
++	 *  (nid number + dev_num - 1)
++	 * dev_num is the device entry number in a pin
+ 	 */
+-	for (idx = 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
 +
- 	mdelay(1000);
++	if (codec->mst_no_extra_pcms)
++		pcm_num = spec->num_nids;
++	else
++		pcm_num = spec->num_nids + spec->dev_num - 1;
++
++	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
++
++	for (idx = 0; idx < pcm_num; idx++) {
+ 		struct hda_pcm *info;
+ 		struct hda_pcm_stream *pstr;
  
- 	dev_emerg(sadi->dev, "Unable to restart system\n");
 -- 
 2.20.1
 
