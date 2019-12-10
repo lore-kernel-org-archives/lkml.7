@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89195C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956A8C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8C920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6202F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017152;
-	bh=xfqzfHzmDVF2NCNq9omTFPeXuBDsh3yuMnBSW7K8NEY=;
+	s=default; t=1576017154;
+	bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g2rZNCTkOch+1/QOo6cpjcec9u+TuY78go5c43bFzURM82dUwD/UO6lO3nzH2SrZn
-	 jjj2SoPCK0BqIQDQ+O/g1NEbJHo4V5HI/C4K7CQc1GBQ/kX7OeibZPYm1cmrzFV3bA
-	 9/l9WyryGBJ8DTR6ZJh6wUZFn+qYm1HMv4O8HyCI=
+	b=IgIX0ESmFbrFknj9lWAo+sA/FP+4PZlMigsfQ4Wy6jFYxbn7ajsp615GjFnM2L3iY
+	 PxNqMvIigTX2yRcjTBBkHULSji0GQLBX+8cJGoSrGgYi/mgkz0Z5rhCu+63hhNKXRz
+	 GrJgDXb5BjbI4hNhvu0+pq9nNmE5e0BLTgLypCfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbfLJWca (ORCPT
+        id S1729590AbfLJWcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:32:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52614 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfLJWcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:32:13 -0500
+        id S1729406AbfLJWcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:32:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B7621D7D;
-        Tue, 10 Dec 2019 22:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB73206EC;
+        Tue, 10 Dec 2019 22:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017132;
-        bh=xfqzfHzmDVF2NCNq9omTFPeXuBDsh3yuMnBSW7K8NEY=;
+        s=default; t=1576017141;
+        bh=jMU3kFotkVBX39/Yd5DQJ41yYpGXPPIv4Qel/rKToJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkxErzxwYMQEbJThb6ANIUn1I0kAS9k3ms0IeqRkYjj4U/f51bXtuydqguJgaQbqG
-         zqGNp0Llq5wuCBQOo4LrdlFi1RK4CiNtZ6WD7OYbIq107h6n/ZhwCBqM5TU2NWysLS
-         SowpNJj3VmovWsGGGtFOPeFpNLLy25mPqS8lGkc0=
+        b=tRu50ERfPHiHAvbPGLqt0ls3D4JO9I1QY/73DywNhM5fLtOiclzoZIzm3JHsj5bun
+         1wg2G0je4qfKJQ6v9OEUmzGz66KFNQaTGmG46crt8RGCxAo+GrQ5rO09nmivxPx7UU
+         f/s1tBq+o28iTAEz3Rgschsi2/DX64geA0xEPlA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 81/91] spi: st-ssc4: add missed pm_runtime_disable
-Date:   Tue, 10 Dec 2019 17:30:25 -0500
-Message-Id: <20191210223035.14270-81-sashal@kernel.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 88/91] libtraceevent: Fix memory leakage in copy_filter_type
+Date:   Tue, 10 Dec 2019 17:30:32 -0500
+Message-Id: <20191210223035.14270-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -59,43 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
+[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
 
-The driver forgets to call pm_runtime_disable in probe failure
-and remove.
-Add the missed calls to fix it.
+It is necessary to free the memory that we have allocated when error occurs.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-st-ssc4.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
-index e54b596384582..710adbc2485f5 100644
---- a/drivers/spi/spi-st-ssc4.c
-+++ b/drivers/spi/spi-st-ssc4.c
-@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 5e10ba796a6f4..569bceff5f51b 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
  
- clk_disable:
-+	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(spi_st->clk);
- put_master:
- 	spi_master_put(master);
-@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct spi_st *spi_st = spi_master_get_devdata(master);
+ 		arg->type = FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
+ 			arg->boolean.value = 0;
  
-+	pm_runtime_disable(&pdev->dev);
-+
- 	clk_disable_unprepare(spi_st->clk);
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
  
- 	pinctrl_pm_select_sleep_state(&pdev->dev);
+ 		filter_type->filter = arg;
+ 
 -- 
 2.20.1
 
