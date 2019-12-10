@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87F0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE81BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4EE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D802077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017361;
-	bh=38FFUr4wJcSHZUo18xjwL//0/s+aUyFXP8m0Ec/39v0=;
+	s=default; t=1576017368;
+	bh=Qown7nKWMCdE+y6oslLj47cFZCNIzkiKiO9h4uPV668=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OapoZKrcONvMXiL7fZlkLvULFEzprW2rt6vkj7xEW2Y7x8TSsnxDNWZdHFXKATEnC
-	 VY3QpcqraHOwRAMOvqgkTT6n6vQrPNVKb56xd9xPN5u4JRLPq4pc99DJx3LRdFZkBF
-	 +d2qPjdCJ6Xhy8ZcbxfTKCuuQOnmI0ZC43Bh7h7s=
+	b=nddWJpo9cCLP/z9W1m6S5PrBIMZBsatHE/4XecwEEw9cOGQAb6pjCI17TKTgVAcRP
+	 8vLqJWj1R0NMse8vXN6+5A0oSgL6LSRdA4ZIdPQJNcYbFb77uncSWpMvrlZPpCgSPJ
+	 gf0SHJZ57gByVU5wvaFHDG6VpIjYIP6nmZ1k05Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbfLJWgB (ORCPT
+        id S1730276AbfLJWeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:36:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55788 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfLJWeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:25 -0500
+        id S1730115AbfLJWeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C6120836;
-        Tue, 10 Dec 2019 22:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD72214D8;
+        Tue, 10 Dec 2019 22:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017264;
-        bh=38FFUr4wJcSHZUo18xjwL//0/s+aUyFXP8m0Ec/39v0=;
+        s=default; t=1576017243;
+        bh=Qown7nKWMCdE+y6oslLj47cFZCNIzkiKiO9h4uPV668=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AK5QDvCxSNyhcwrB6ujF6dB2CM19kDLrHGqqljbekTvZqwnffOmDpPY0H9cTPqJPY
-         FPY8hmsUuRkm0U5CjpUy0ci5Rj7jHKNNB4/CNfwdraEoP9v6cFw5BwGsJhMHjXL23J
-         2CzrxOSrOmvTyhDC2lxClBpbt5Tu8VMMdOjVTJ/s=
+        b=qbHYRhs34uQ7JK529ApnyttARgI/ELVn/DANmsnlHqZC8M+nQCe/VfT+tOGp6QrcB
+         ndKR9lfpCaXApkndIGCg6pIDdet5Cjtg0bGZNch1bTs9qtyzk+CqQD1Exdfs9gdJt9
+         1QH7CcQxyYEOtxVIh7pAEacQ6jOkbqWEVIsdMj18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 58/71] parport: load lowlevel driver if ports not found
-Date:   Tue, 10 Dec 2019 17:33:03 -0500
-Message-Id: <20191210223316.14988-58-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 40/71] perf probe: Fix to find range-only function instance
+Date:   Tue, 10 Dec 2019 17:32:45 -0500
+Message-Id: <20191210223316.14988-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -59,70 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
+[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
 
-Usually all the distro will load the parport low level driver as part
-of their initialization. But we can get into a situation where all the
-parallel port drivers are built as module and we unload all the modules
-at a later time. Then if we just do "modprobe parport" it will only
-load the parport module and will not load the low level driver which
-will actually register the ports. So, check the bus if there is any
-parport registered, if not, load the low level driver.
+Fix die_is_func_instance() to find range-only function instance.
 
-We can get into the above situation with all distro but only Suse has
-setup the alias for "parport_lowlevel" and so it only works in Suse.
-Users of Debian based distro will need to load the lowlevel module
-manually.
+In some case, a function instance can be made without any low PC or
+entry PC, but only with address ranges by optimization.  (e.g. cold text
+partially in "text.unlikely" section) To find such function instance, we
+have to check the range attribute too.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/util/dwarf-aux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index f26af0214ab3e..3be1f4a041d49 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -228,6 +228,18 @@ static int port_check(struct device *dev, void *dev_drv)
- 	return 0;
- }
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index a509aa8433a1c..af78d6fc8d12c 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -304,10 +304,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
++	Dwarf_Attribute attr_mem;
  
-+/*
-+ * Iterates through all the devices connected to the bus and return 1
-+ * if the device is a parallel port.
-+ */
-+
-+static int port_detect(struct device *dev, void *dev_drv)
-+{
-+	if (is_parport(dev))
-+		return 1;
-+	return 0;
-+}
+ 	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
++	return !dwarf_func_inline(dw_die) &&
++	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
+ }
 +
  /**
-  *	parport_register_driver - register a parallel port device driver
-  *	@drv: structure describing the driver
-@@ -280,6 +292,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
- 		if (ret)
- 			return ret;
- 
-+		/*
-+		 * check if bus has any parallel port registered, if
-+		 * none is found then load the lowlevel driver.
-+		 */
-+		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-+				       port_detect);
-+		if (!ret)
-+			get_lowlevel_driver();
-+
- 		mutex_lock(&registration_lock);
- 		if (drv->match_port)
- 			bus_for_each_dev(&parport_bus_type, NULL, drv,
+  * die_get_data_member_location - Get the data-member offset
+  * @mb_die: a DIE of a member of a data structure
 -- 
 2.20.1
 
