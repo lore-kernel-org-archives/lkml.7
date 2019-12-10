@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6181AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD49C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B94206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F922206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012512;
-	bh=zx5Yrot9OfO0dMKAtw83UUJizqsiN+/QTwHFntvrSVs=;
+	s=default; t=1576012516;
+	bh=qLpA8Hj/Bemhj0QN8KheWl81yCIKzadDZCnWM+wT4+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WV2CeaG+Tok2VeybHQdMQoHNd/yRS8vDWc6DO9LlW3i8ZncCV3Nny6URytrSwW5kk
-	 xC/Mv191sy5uuVvPOPvsr837U7qnzIQeBR7FPU4B05GmdBNYzfPr0iCx3pQ/G+HuRM
-	 oHqpHZnInZfszXvyu8U9nhUWanoTmiOZyG8GDY6w=
+	b=eZXGiEukr2SVLcZvm6Ema3XFlWasPKtA22HjEXkOZK725x2BwRfS346mF3xwJ0APY
+	 LUU8/drCkWBV95ef1YPfW0KfouaGC+csm1lyzkNLy3MJHj0LosglLpu6lun6y8es9H
+	 yl8VyOQ4+WvA1/Ifj/sBi/cXFKrOIMa7xdhNKJVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfLJVPL (ORCPT
+        id S1729394AbfLJVNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:15:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40284 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbfLJVNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:41 -0500
+        id S1729311AbfLJVN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEF97214D8;
-        Tue, 10 Dec 2019 21:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2110214AF;
+        Tue, 10 Dec 2019 21:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012420;
-        bh=zx5Yrot9OfO0dMKAtw83UUJizqsiN+/QTwHFntvrSVs=;
+        s=default; t=1576012405;
+        bh=qLpA8Hj/Bemhj0QN8KheWl81yCIKzadDZCnWM+wT4+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atDT7Oq6RQvklgbpbXk15OXbiUCIKLl1iz5a1HvHM+FWm3EtYn7sndZm7h3LbyVxA
-         Beg309xLcvRH8aMFYjnx1DEFJi3IEtb3dx8R8UW+aSnZYEfE2cFDjvny7ZxgR9rd0O
-         ApnoGTJxZ8WyMC5TjAbV+kFrAXkJIGP+L1qghOS0=
+        b=YWTPuRBRL9oqkiZsne/R6P40FbVQJsAhf44cR38Ypa/s9F6PzUnC+jmbnIp0ExGjU
+         YjU/YQFBwb5zWE5P3e6Uj7bs1w6zrftrePRgAGUhEs2vwV0R5b5WTptKTwNqXJRPFo
+         khOH5MrfjQ686J8ltzFHiEPiOO3HGTT285+1tRzE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        clang-built-linux@googlegroups.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 335/350] perf parse: Fix potential memory leak when handling tracepoint errors
-Date:   Tue, 10 Dec 2019 16:07:20 -0500
-Message-Id: <20191210210735.9077-296-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 324/350] mt76: fix possible out-of-bound access in mt7615_fill_txs/mt7603_fill_txs
+Date:   Tue, 10 Dec 2019 16:07:09 -0500
+Message-Id: <20191210210735.9077-285-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -68,83 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 4584f084aa9d8033d5911935837dbee7b082d0e9 ]
+[ Upstream commit e8b970c8e367e85fab9b8ac4f36080e5d653c38e ]
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+Fix possible out-of-bound access of status rates array in
+mt7615_fill_txs/mt7603_fill_txs routines
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
-
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
-
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20191120180925.21787-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: c5211e997eca ("mt76: mt7603: rework and fix tx status reporting")
+Fixes: 4af81f02b49c ("mt76: mt7615: sync with mt7603 rate control changes")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c | 4 +++-
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 422ad1888e74f..9a958ec5a096d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -480,6 +480,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index c328192307c48..ff3f3d98b6252 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -1032,8 +1032,10 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
+ 			    cur_rate->flags != info->status.rates[i].flags)) {
+ 			i++;
+-			if (i == ARRAY_SIZE(info->status.rates))
++			if (i == ARRAY_SIZE(info->status.rates)) {
++				i--;
+ 				break;
++			}
  
- 	if (!e)
-@@ -493,18 +494,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
+ 			info->status.rates[i] = *cur_rate;
+ 			info->status.rates[i].count = 0;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index e07ce2c100133..111e38ff954a2 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -914,8 +914,10 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
+ 			    cur_rate->flags != info->status.rates[i].flags)) {
+ 			i++;
+-			if (i == ARRAY_SIZE(info->status.rates))
++			if (i == ARRAY_SIZE(info->status.rates)) {
++				i--;
+ 				break;
++			}
  
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
- 		break;
- 	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
- }
- 
- static int add_tracepoint(struct list_head *list, int *idx,
+ 			info->status.rates[i] = *cur_rate;
+ 			info->status.rates[i].count = 0;
 -- 
 2.20.1
 
