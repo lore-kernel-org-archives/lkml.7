@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A37C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0C5C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89565214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6112721D7D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017120;
-	bh=Geg8BiCNfOFyx6ld/4oc3DXwvMx5hL/gRn80R9OOjR4=;
+	s=default; t=1576017125;
+	bh=D00Bev4GF1xxSMTBxMDrGCvVFc64qrRJW94CI4dAx6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BDojsVDJNDhnVhvMMaI/kXVEBwDH1nFXCU1JplRFrsvD3Kh7IhKE0zMNHdMtB4YaT
-	 LxyoBl6zbLbwyXVph6F47XnOr0dakwaFmgitd8vCMkTVCFSSgv05a79K7AZUZvHdHo
-	 rTG95aCkVl2xVQ4OVrtE20Pcyv1nx+1iR0BE3tDI=
+	b=C5TNTSghjypGHnyolapcPRj8ftYyOETEpLuikm8dwbEbvxpoXOjhtWLDlbYytklL2
+	 n8ZFzHalAGDIqHDaBZz18hu1FYtn1FeR24rzmXYghKxL+3gQ/KAdZDfBXSTN60WjWy
+	 Tz2mine2V2mKCmo8fpuc2aCv+kYneLRNEN4UYaBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfLJWb7 (ORCPT
+        id S1729160AbfLJWcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:32:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728797AbfLJWbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:41 -0500
+        id S1728827AbfLJWbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF6E20828;
-        Tue, 10 Dec 2019 22:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D2A206EC;
+        Tue, 10 Dec 2019 22:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017100;
-        bh=Geg8BiCNfOFyx6ld/4oc3DXwvMx5hL/gRn80R9OOjR4=;
+        s=default; t=1576017105;
+        bh=D00Bev4GF1xxSMTBxMDrGCvVFc64qrRJW94CI4dAx6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2se46PULOuIAsEvrBXB/7uWYp4YYlLYATqWXDDRXXr5c/RxRYyn6+PWZAEH8Cg7OO
-         ihp5bggDJGX6OomKiZogOXM5YG9VDoo0TfN4x4oBR4VCUl8WJe5zFsswgPvB0z1SQM
-         RBXU3mQihY8+t6+nM2u/rMd7MTyySYQWP1T1TerU=
+        b=RUiX6QmSW/9DdMgeq9pue0/ZjHRF/PoxQ3rqS26JPSYFxqkVHsKI7MxoRIzRRnb2x
+         giUR7d3WRzxucoLjCYwjZJlqMYdWAnRt652xCZufPyI2DMJ8Da5VrZK/4plkWE14yM
+         9RvmHw/pzvawDBH5+To/SKuhPgqgMRQepS5o1EmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 55/91] perf probe: Fix to probe an inline function which has no entry pc
-Date:   Tue, 10 Dec 2019 17:29:59 -0500
-Message-Id: <20191210223035.14270-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 59/91] perf probe: Skip overlapped location on searching variables
+Date:   Tue, 10 Dec 2019 17:30:03 -0500
+Message-Id: <20191210223035.14270-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -63,68 +63,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+Since debuginfo__find_probes() callback function can be called with  the
+location which already passed, the callback function must filter out
+such overlapped locations.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
+add_probe_trace_event() has already done it by commit 1a375ae7659a
+("perf probe: Skip same probe address for a given line"), but
+add_available_vars() doesn't. Thus perf probe -v shows same address
+repeatedly as below:
 
-Without this patch:
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
 
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
+With this fix, perf probe -V shows it correctly:
 
-With this patch:
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
 
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 248d3ff7e3454..9fc6fedcfa1aa 100644
+index cfc2e1e7cca42..440f0a92ade65 100644
 --- a/tools/perf/util/probe-finder.c
 +++ b/tools/perf/util/probe-finder.c
-@@ -950,7 +950,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+@@ -1414,6 +1414,18 @@ static int collect_variables_cb(Dwarf_Die *die_mem, void *data)
+ 	return DIE_FIND_CB_END;
+ }
+ 
++static bool available_var_finder_overlap(struct available_var_finder *af)
++{
++	int i;
++
++	for (i = 0; i < af->nvls; i++) {
++		if (af->pf.addr == af->vls[i].point.address)
++			return true;
++	}
++	return false;
++
++}
++
+ /* Add a found vars into available variables list */
+ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ {
+@@ -1424,6 +1436,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 	Dwarf_Die die_mem;
+ 	int ret;
+ 
++	/*
++	 * For some reason (e.g. different column assigned to same address),
++	 * this callback can be called with the address which already passed.
++	 * Ignore it first.
++	 */
++	if (available_var_finder_overlap(af))
++		return 0;
++
+ 	/* Check number of tevs */
+ 	if (af->nvls == af->max_vls) {
+ 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
 -- 
 2.20.1
 
