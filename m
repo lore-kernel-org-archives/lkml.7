@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B18C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C7DC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C352073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4396205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014655;
-	bh=rZN8rTHY3jDi7TIYmmIep/ISAGfSy9H42HEB/jDa8NY=;
+	s=default; t=1576014659;
+	bh=asbODuq9YX1MLuI2W1AwEAHZRn0UwT3hDDn5Dkz5VQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNDcxNt/oDODar7HrILJhpXGQOmlz4RJD9UUxSigpbwYFBByGuooiAAFDncaF6kQ3
-	 bm+9SnqeXOpVabtoXNJRQ/kHqAmDSaTtOH8kCDAiQw+soLtgCeEFuVoXiRR5yL3Jox
-	 jbHANWxgNAc90g00VghcXzm/qX1SXrxwUvjyLqxc=
+	b=AiJhpY9QqwFBv3r+Gt3Xw02KRmbRo9bTASVOQJwWt/G4RmFZx04GAOTxrklnC7wie
+	 yzsw3s1MvGUo21BhFI9eAnoUBO2Eb//5Hl5379XjAUhgXuW18krlfmubsoLLoY9blp
+	 u6YxYcmg4l7RbZL/75kh8qSOe7XMe/wl5jByNc4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfLJVuy (ORCPT
+        id S1726364AbfLJVIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:50:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:08:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfLJVIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:08:14 -0500
+        id S1727728AbfLJVIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:08:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 024542469E;
-        Tue, 10 Dec 2019 21:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C5324691;
+        Tue, 10 Dec 2019 21:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012093;
-        bh=rZN8rTHY3jDi7TIYmmIep/ISAGfSy9H42HEB/jDa8NY=;
+        s=default; t=1576012079;
+        bh=asbODuq9YX1MLuI2W1AwEAHZRn0UwT3hDDn5Dkz5VQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flqgm4LmXd/Ot9v0RGzNJVF9n4/jRiuyV6eRSycKqTjHM9As2Mw+MD4W/eoq6kLj4
-         Cm3ZgnkWESvpN8MD53heuiwHlDHNBOyprxYEhq35b/qDwbsFoMAv0rosS388L2XeZR
-         sUEDgALlcSZEkQMWSL6pkfm/HU7+Sw9JvRhEBQt8=
+        b=xOLWSUVVbMd0kTYOrx4XUQLB1HWNHa3yZByLOrb1aezAZPGfDiVQExwrSkSMpTEAc
+         x+Uwl0J2fDcxcB5WgK51TJXSdJ2kXKeIxHopG2s6jGmhOmAL1jb3jpunGbXMm2iKO3
+         RZYD0AEoBu4f4sY4ZRjFhtYRgfqeSXQ5u0C8KoVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 070/350] samples: pktgen: fix proc_cmd command result check logic
-Date:   Tue, 10 Dec 2019 16:02:55 -0500
-Message-Id: <20191210210735.9077-31-sashal@kernel.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 058/350] media: venus: Fix occasionally failures to suspend
+Date:   Tue, 10 Dec 2019 16:02:43 -0500
+Message-Id: <20191210210735.9077-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,80 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+[ Upstream commit 8dbebb2bd01e6f36e9a215dcde99ace70408f2c8 ]
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+Failure to suspend (venus_suspend_3xx) happens when the system
+is fresh booted and loading venus driver. This happens once and
+after reload the venus driver modules the problem disrepair.
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
+Fix the failure by skipping the check for WFI and IDLE bits if
+PC_READY is on in control status register.
 
-For clarity of an execution flow, 'errexit' flag has been set.
-
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_venus.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index 4af4046d71be4..40873a5d1461d 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
+diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+index 7129a2aea09ad..0d8855014ab3d 100644
+--- a/drivers/media/platform/qcom/venus/hfi_venus.c
++++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+@@ -1472,6 +1472,7 @@ static int venus_suspend_3xx(struct venus_core *core)
+ {
+ 	struct venus_hfi_device *hdev = to_hfi_priv(core);
+ 	struct device *dev = core->dev;
++	u32 ctrl_status;
+ 	bool val;
+ 	int ret;
  
-+set -o errexit
+@@ -1487,6 +1488,10 @@ static int venus_suspend_3xx(struct venus_core *core)
+ 		return -EINVAL;
+ 	}
+ 
++	ctrl_status = venus_readl(hdev, CPU_CS_SCIACMDARG0);
++	if (ctrl_status & CPU_CS_SCIACMDARG0_PC_READY)
++		goto power_off;
 +
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
+ 	/*
+ 	 * Power collapse sequence for Venus 3xx and 4xx versions:
+ 	 * 1. Check for ARM9 and video core to be idle by checking WFI bit
+@@ -1511,6 +1516,7 @@ static int venus_suspend_3xx(struct venus_core *core)
+ 	if (ret)
+ 		return ret;
  
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
++power_off:
+ 	mutex_lock(&hdev->lock);
  
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
-+
- ## -- General shell tricks --
- 
- function root_check_run_with_sudo() {
+ 	ret = venus_power_off(hdev);
 -- 
 2.20.1
 
