@@ -2,57 +2,53 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1F0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3161CC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FECC2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027A020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014272;
-	bh=U9BNCHPmYuZnrtHrBx88BCeEEwo02lL9ebLIPtJWHCY=;
+	s=default; t=1576014281;
+	bh=lbtJZOvXmjk47Zc5OtErUJv/UdxnjO9bpPO32xW3jB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfVufvlfGf6CO0ZXnT08X7YMAE69GFClv9NUky2Ak8sfUatT5xPHLLXCxbkTxz9iL
-	 l5qNw39bBphQgKVT3c51drz0vFLgcbGFwgdje0E0J3gMpvgT6XmxDpf91q3QrO80bx
-	 QjWJ1KdLQt37N1Ma1z4JhmIeDTe8b8XT02NXspxk=
+	b=az92nwaGbH+VUX1LBPkH8GlymqSuixuU2sHb6xqE7fccvCihslfyowkomO2hqvcmn
+	 Fr9kziEwRAvvFCI4UY1zo4JOl4ILHF6jDjggj+uFaWDXVdzs4BEFbZaA1t/61l0Kau
+	 KIDWdOwsKBCoX8geGXIQwJmhWuFP+0faNcw29zx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfLJVoa (ORCPT
+        id S1729828AbfLJVoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:44:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbfLJVdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:24 -0500
+        id S1729687AbfLJVdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8DF214AF;
-        Tue, 10 Dec 2019 21:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C3C622464;
+        Tue, 10 Dec 2019 21:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013603;
-        bh=U9BNCHPmYuZnrtHrBx88BCeEEwo02lL9ebLIPtJWHCY=;
+        s=default; t=1576013595;
+        bh=lbtJZOvXmjk47Zc5OtErUJv/UdxnjO9bpPO32xW3jB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQKFC5MLfjx1WJma+/avB765Z9pz/hZCzgeAUDZZUub7jMseWfqYBj70dSZx6LMA+
-         f0Xar9TV99N90YfJTvfOJBVLclIhxTv1h/Yb9T/OdRGwPhpR34ipzslHBlM6chCl6U
-         ElHW5IMLhT26AYeINJm77ptCMRsn1skXvbGc6mfA=
+        b=dwO9+4otcC6XfgdJ75LVzUhJ11KNv3Ia33YJNZGB9QmcILuHtorOX4k5Ooc09laeC
+         LShDpJfxDE+1vYCqYzX3M7crkvpE3PEzcCv0Qg1MVatHHIL9U1et3mLeCQD9cUWB83
+         yNWoTt15IrXYdl0bEUd0AJSAjG3DYUXxNFLVJF0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 051/177] syscalls/x86: Use COMPAT_SYSCALL_DEFINE0 for IA32 (rt_)sigreturn
-Date:   Tue, 10 Dec 2019 16:30:15 -0500
-Message-Id: <20191210213221.11921-51-sashal@kernel.org>
+Cc:     Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 045/177] media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel panic
+Date:   Tue, 10 Dec 2019 16:30:09 -0500
+Message-Id: <20191210213221.11921-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -65,82 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 00198a6eaf66609de5e4de9163bb42c7ca9dd7b7 ]
+[ Upstream commit a37980ac5be29b83da67bf7d571c6bd9f90f8e45 ]
 
-Use COMPAT_SYSCALL_DEFINE0 to define (rt_)sigreturn() syscalls to
-replace sys32_sigreturn() and sys32_rt_sigreturn(). This fixes indirect
-call mismatches with Control-Flow Integrity (CFI) checking.
+v4l2-compliance fails with this message:
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008224049.115427-4-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+   warn: v4l2-test-formats.cpp(717): \
+   	TRY_FMT cannot handle an invalid pixelformat.
+   test VIDIOC_TRY_FMT: FAIL
+
+This causes the following kernel panic:
+
+Unable to handle kernel paging request at virtual address 56595561
+pgd = ecd80e00
+*pgd=00000000
+Internal error: Oops: 205 [#1] PREEMPT SMP ARM
+...
+CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
+	4.14.62-01715-gc8cd67f49a19 #1
+Hardware name: Generic DRA72X (Flattened Device Tree)
+task: ece44d80 task.stack: ecc6e000
+PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
+LR is at 0x8
+
+Because the driver fails to properly check the 'num_planes' values for
+proper ranges it ends up accessing out of bound data causing the kernel
+panic.
+
+Since this driver only handle single or dual plane pixel format, make
+sure the provided value does not exceed 2 planes.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/syscalls/syscall_32.tbl | 4 ++--
- arch/x86/ia32/ia32_signal.c            | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 3cf7b533b3d13..273e99c0b9110 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -130,7 +130,7 @@
- 116	i386	sysinfo			sys_sysinfo			__ia32_compat_sys_sysinfo
- 117	i386	ipc			sys_ipc				__ia32_compat_sys_ipc
- 118	i386	fsync			sys_fsync			__ia32_sys_fsync
--119	i386	sigreturn		sys_sigreturn			sys32_sigreturn
-+119	i386	sigreturn		sys_sigreturn			__ia32_compat_sys_sigreturn
- 120	i386	clone			sys_clone			__ia32_compat_sys_x86_clone
- 121	i386	setdomainname		sys_setdomainname		__ia32_sys_setdomainname
- 122	i386	uname			sys_newuname			__ia32_sys_newuname
-@@ -184,7 +184,7 @@
- 170	i386	setresgid		sys_setresgid16			__ia32_sys_setresgid16
- 171	i386	getresgid		sys_getresgid16			__ia32_sys_getresgid16
- 172	i386	prctl			sys_prctl			__ia32_sys_prctl
--173	i386	rt_sigreturn		sys_rt_sigreturn		sys32_rt_sigreturn
-+173	i386	rt_sigreturn		sys_rt_sigreturn		__ia32_compat_sys_rt_sigreturn
- 174	i386	rt_sigaction		sys_rt_sigaction		__ia32_compat_sys_rt_sigaction
- 175	i386	rt_sigprocmask		sys_rt_sigprocmask		__ia32_sys_rt_sigprocmask
- 176	i386	rt_sigpending		sys_rt_sigpending		__ia32_compat_sys_rt_sigpending
-diff --git a/arch/x86/ia32/ia32_signal.c b/arch/x86/ia32/ia32_signal.c
-index 513ba49c204fe..35ddf2c9848c6 100644
---- a/arch/x86/ia32/ia32_signal.c
-+++ b/arch/x86/ia32/ia32_signal.c
-@@ -21,6 +21,7 @@
- #include <linux/personality.h>
- #include <linux/compat.h>
- #include <linux/binfmts.h>
-+#include <linux/syscalls.h>
- #include <asm/ucontext.h>
- #include <linux/uaccess.h>
- #include <asm/fpu/internal.h>
-@@ -118,7 +119,7 @@ static int ia32_restore_sigcontext(struct pt_regs *regs,
- 	return err;
- }
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index ca9095b803097..54f0d9d3cc491 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1646,7 +1646,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 			      &pix->height, MIN_H, MAX_H, H_ALIGN,
+ 			      S_ALIGN);
  
--asmlinkage long sys32_sigreturn(void)
-+COMPAT_SYSCALL_DEFINE0(sigreturn)
- {
- 	struct pt_regs *regs = current_pt_regs();
- 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
-@@ -144,7 +145,7 @@ asmlinkage long sys32_sigreturn(void)
- 	return 0;
- }
- 
--asmlinkage long sys32_rt_sigreturn(void)
-+COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
- {
- 	struct pt_regs *regs = current_pt_regs();
- 	struct rt_sigframe_ia32 __user *frame;
+-	if (!pix->num_planes)
++	if (!pix->num_planes || pix->num_planes > 2)
+ 		pix->num_planes = fmt->coplanar ? 2 : 1;
+ 	else if (pix->num_planes > 1 && !fmt->coplanar)
+ 		pix->num_planes = 1;
 -- 
 2.20.1
 
