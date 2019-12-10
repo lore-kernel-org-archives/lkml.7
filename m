@@ -2,51 +2,54 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BCDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FABC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F7120838
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD4B2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012471;
-	bh=XM9dQd3kPg6XfL3Juj+uxV70f9dwsDukZaIS4aX6BTE=;
+	s=default; t=1576012480;
+	bh=Sjk26Xenb9gbjd6XEYt8Eux0fap3BLo0eMdUgQ6sgSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CBLMTjY+eY2JOepjYwGT8A+1H2dVGnrr/BeOqJsKnfJNzKdNNeP5HR7JeNaeUJWFh
-	 SG644rN679adZSYqt2RJAE1M8O+xmrzDtsxKwS0SHvmTbuP3x+yWEgfDy2yoe9Wwch
-	 +J/FYQVjhTRWtmP6idav+t+ceC0xZ7+UM9B3WOWA=
+	b=e9CRbJsDJ/PZ0DtinQZR4myV3BiAIIskB1hCne30CkY7Iv8++NuBae90wgKyXeppn
+	 UOgxj8Htnixnopkpqh6dNhjoEK5aUdf3TZ/XkFMb/8A5zRiiLaxfIvoL/gBvOoo6J5
+	 weTTerHu0gYaJAmH8PMa+TPP2UktVnVvLEzpfrj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfLJVO3 (ORCPT
+        id S1729464AbfLJVNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:14:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40804 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfLJVNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:54 -0500
+        id S1729039AbfLJVNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E6E214D8;
-        Tue, 10 Dec 2019 21:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C0E20828;
+        Tue, 10 Dec 2019 21:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012433;
-        bh=XM9dQd3kPg6XfL3Juj+uxV70f9dwsDukZaIS4aX6BTE=;
+        s=default; t=1576012421;
+        bh=Sjk26Xenb9gbjd6XEYt8Eux0fap3BLo0eMdUgQ6sgSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=npsbdZeJnQ88ujnJEtNv+tC56hxEpZ8B5vE7/FCuTKDcOmItVYLQflxqs480DN+VN
-         u4ZAachV481OCt3/o/KDY7cpnvgg7rkirgR4gCyZ7YeBBAByBzh6geQha9SRIB3Uei
-         RL4DbOcTwU7c9Ma45K8zv9Pno5OC5DKoy4YnWx9k=
+        b=RlSB+Iav79jcb2mRKhWWJeHfO64A4fduM8LZN/PQjC0el4ePC1rRyNa+YvnHD8Jzh
+         yVii0D3IuJcVrtAjRLnaT1EL9W4adDpIbM5S/0w+pp/PPCWJeEQbX5zt902nsaAidu
+         zHFi+hkPKueEaTofAVZFZenQrCJaCpNLUYdwM2gs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 346/350] bpf: Provide better register bounds after jmp32 instructions
-Date:   Tue, 10 Dec 2019 16:07:31 -0500
-Message-Id: <20191210210735.9077-307-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 336/350] mips: fix build when "48 bits virtual memory" is enabled
+Date:   Tue, 10 Dec 2019 16:07:21 -0500
+Message-Id: <20191210210735.9077-297-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,132 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 581738a681b6faae5725c2555439189ca81c0f1f ]
+[ Upstream commit 3ed6751bb8fa89c3014399bb0414348499ee202a ]
 
-With latest llvm (trunk https://github.com/llvm/llvm-project),
-test_progs, which has +alu32 enabled, failed for strobemeta.o.
-The verifier output looks like below with edit to replace large
-decimal numbers with hex ones.
- 193: (85) call bpf_probe_read_user_str#114
-   R0=inv(id=0)
- 194: (26) if w0 > 0x1 goto pc+4
-   R0_w=inv(id=0,umax_value=0xffffffff00000001)
- 195: (6b) *(u16 *)(r7 +80) = r0
- 196: (bc) w6 = w0
-   R6_w=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
- 197: (67) r6 <<= 32
-   R6_w=inv(id=0,smax_value=0x7fffffff00000000,umax_value=0xffffffff00000000,
-            var_off=(0x0; 0xffffffff00000000))
- 198: (77) r6 >>= 32
-   R6=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
- ...
- 201: (79) r8 = *(u64 *)(r10 -416)
-   R8_w=map_value(id=0,off=40,ks=4,vs=13872,imm=0)
- 202: (0f) r8 += r6
-   R8_w=map_value(id=0,off=40,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
- 203: (07) r8 += 9696
-   R8_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
- ...
- 255: (bf) r1 = r8
-   R1_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=0xffffffff,var_off=(0x0; 0xffffffff))
- ...
- 257: (85) call bpf_probe_read_user_str#114
- R1 unbounded memory access, make sure to bounds check any array access into a map
+With CONFIG_MIPS_VA_BITS_48=y the build fails miserably:
 
-The value range for register r6 at insn 198 should be really just 0/1.
-The umax_value=0xffffffff caused later verification failure.
+  CC      arch/mips/kernel/asm-offsets.s
+In file included from arch/mips/include/asm/pgtable.h:644,
+                 from include/linux/mm.h:99,
+                 from arch/mips/kernel/asm-offsets.c:15:
+include/asm-generic/pgtable.h:16:2: error: #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+ #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+  ^~~~~
+include/asm-generic/pgtable.h:390:28: error: unknown type name 'p4d_t'; did you mean 'pmd_t'?
+ static inline int p4d_same(p4d_t p4d_a, p4d_t p4d_b)
+                            ^~~~~
+                            pmd_t
 
-After jmp instructions, the current verifier already tried to use just
-obtained information to get better register range. The current mechanism is
-for 64bit register only. This patch implemented to tighten the range
-for 32bit sub-registers after jmp32 instructions.
-With the patch, we have the below range ranges for the
-above code sequence:
- 193: (85) call bpf_probe_read_user_str#114
-   R0=inv(id=0)
- 194: (26) if w0 > 0x1 goto pc+4
-   R0_w=inv(id=0,smax_value=0x7fffffff00000001,umax_value=0xffffffff00000001,
-            var_off=(0x0; 0xffffffff00000001))
- 195: (6b) *(u16 *)(r7 +80) = r0
- 196: (bc) w6 = w0
-   R6_w=inv(id=0,umax_value=0xffffffff,var_off=(0x0; 0x1))
- 197: (67) r6 <<= 32
-   R6_w=inv(id=0,umax_value=0x100000000,var_off=(0x0; 0x100000000))
- 198: (77) r6 >>= 32
-   R6=inv(id=0,umax_value=1,var_off=(0x0; 0x1))
- ...
- 201: (79) r8 = *(u64 *)(r10 -416)
-   R8_w=map_value(id=0,off=40,ks=4,vs=13872,imm=0)
- 202: (0f) r8 += r6
-   R8_w=map_value(id=0,off=40,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
- 203: (07) r8 += 9696
-   R8_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
- ...
- 255: (bf) r1 = r8
-   R1_w=map_value(id=0,off=9736,ks=4,vs=13872,umax_value=1,var_off=(0x0; 0x1))
- ...
- 257: (85) call bpf_probe_read_user_str#114
- ...
+[ ... more such errors ... ]
 
-At insn 194, the register R0 has better var_off.mask and smax_value.
-Especially, the var_off.mask ensures later lshift and rshift
-maintains proper value range.
+scripts/Makefile.build:99: recipe for target 'arch/mips/kernel/asm-offsets.s' failed
+make[2]: *** [arch/mips/kernel/asm-offsets.s] Error 1
 
-Suggested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191121170650.449030-1-yhs@fb.com
+This happens because when CONFIG_MIPS_VA_BITS_48 enables 4th level of the
+page tables, but neither pgtable-nop4d.h nor 5level-fixup.h are included to
+cope with the 5th level.
+
+Replace #ifdef conditions around includes of the pgtable-nop{m,u}d.h with
+explicit CONFIG_PGTABLE_LEVELS and add include of 5level-fixup.h for the
+case when CONFIG_PGTABLE_LEVELS==4
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/mips/include/asm/pgtable-64.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 87181cd5bafd7..df033c5877cbe 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -978,6 +978,17 @@ static void __reg_bound_offset(struct bpf_reg_state *reg)
- 						 reg->umax_value));
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index 93a9dce31f255..813dfe5f45a59 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -18,10 +18,12 @@
+ #include <asm/fixmap.h>
+ 
+ #define __ARCH_USE_5LEVEL_HACK
+-#if defined(CONFIG_PAGE_SIZE_64KB) && !defined(CONFIG_MIPS_VA_BITS_48)
++#if CONFIG_PGTABLE_LEVELS == 2
+ #include <asm-generic/pgtable-nopmd.h>
+-#elif !(defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_MIPS_VA_BITS_48))
++#elif CONFIG_PGTABLE_LEVELS == 3
+ #include <asm-generic/pgtable-nopud.h>
++#else
++#include <asm-generic/5level-fixup.h>
+ #endif
+ 
+ /*
+@@ -216,6 +218,9 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
+ 	return pgd_val(pgd);
  }
  
-+static void __reg_bound_offset32(struct bpf_reg_state *reg)
-+{
-+	u64 mask = 0xffffFFFF;
-+	struct tnum range = tnum_range(reg->umin_value & mask,
-+				       reg->umax_value & mask);
-+	struct tnum lo32 = tnum_cast(reg->var_off, 4);
-+	struct tnum hi32 = tnum_lshift(tnum_rshift(reg->var_off, 32), 32);
++#define pgd_phys(pgd)		virt_to_phys((void *)pgd_val(pgd))
++#define pgd_page(pgd)		(pfn_to_page(pgd_phys(pgd) >> PAGE_SHIFT))
 +
-+	reg->var_off = tnum_or(hi32, tnum_intersect(lo32, range));
-+}
-+
- /* Reset the min/max bounds of a register */
- static void __mark_reg_unbounded(struct bpf_reg_state *reg)
+ static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
  {
-@@ -5433,6 +5444,10 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
- 	/* We might have learned some bits from the bounds. */
- 	__reg_bound_offset(false_reg);
- 	__reg_bound_offset(true_reg);
-+	if (is_jmp32) {
-+		__reg_bound_offset32(false_reg);
-+		__reg_bound_offset32(true_reg);
-+	}
- 	/* Intersecting with the old var_off might have improved our bounds
- 	 * slightly.  e.g. if umax was 0x7f...f and var_off was (0; 0xf...fc),
- 	 * then new var_off is (0; 0x7f...fc) which improves our umax.
-@@ -5542,6 +5557,10 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
- 	/* We might have learned some bits from the bounds. */
- 	__reg_bound_offset(false_reg);
- 	__reg_bound_offset(true_reg);
-+	if (is_jmp32) {
-+		__reg_bound_offset32(false_reg);
-+		__reg_bound_offset32(true_reg);
-+	}
- 	/* Intersecting with the old var_off might have improved our bounds
- 	 * slightly.  e.g. if umax was 0x7f...f and var_off was (0; 0xf...fc),
- 	 * then new var_off is (0; 0x7f...fc) which improves our umax.
+ 	return (pud_t *)pgd_page_vaddr(*pgd) + pud_index(address);
 -- 
 2.20.1
 
