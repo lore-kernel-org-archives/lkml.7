@@ -2,134 +2,127 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3402CC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557DCC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08661206D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMiO3uR/"
+	by mail.kernel.org (Postfix) with ESMTP id 32DD5206D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfLJXfb (ORCPT
+        id S1727684AbfLJXfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:35:31 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37658 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbfLJXf0 (ORCPT
+        Tue, 10 Dec 2019 18:35:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42155 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfLJXfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:35:26 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so22109824wru.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 15:35:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bz/VQlnz1v5AapS+5W6yfHgO6/GtfVjJurkUMo3Qj+c=;
-        b=XMiO3uR/UOvB8/0OkYcGo0WzEqQthD3zK9VQDl1SgddDSMaOSCwhiuLqBrm5kd2LDq
-         LCvn5ToNLJXtSnw1XMcptooNxusKlNCtsIbm3VgOfIx3Z/Rs6/KdC9/f67x8YYFarIJY
-         8AiQIBM2DvN+jLNA+pMpQoJ0m6Ruj3zlMSM+/vDcKu25b97NDbSG4TOJp7dqJKkT4I3I
-         Vz7nvOQ8ZvgLcUTFUY4d75hKbjjUYtL1y09agbpek9YYyq9xH/ozZskvupcHIMOCaCRa
-         kjNR1yRdDlw8Ow4sorCd+JTxm0+OAyVPZtRTYaZKE5G1Stk8SEAvE0z/ul2rGUl0uqBF
-         O1og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=bz/VQlnz1v5AapS+5W6yfHgO6/GtfVjJurkUMo3Qj+c=;
-        b=rh75pJW9wBRPdWVUwwsDTDrUO2L9/lRCU5PflRm7ycqmu+oNiiVBbX8UCh2iVt8oGY
-         4hIYddq330cu97d5bsvMfrJtlwaKbd//SMrK11Rx7YTnYUn5GKF8/igHF4bhUfI14B47
-         Gx3vRj8C2q+ofntoGxJTBu5LGdOfAFSMWyB2jzCj7Z6N6FqH5asdkdXiLm9KdfcV12lH
-         P3QrxLsk0dvr1I0sXKq0jliMdVlDIU2q2bRi/KYiKUDbfw7g/A6oNxhIitQvR2oT8Gvh
-         VUkqR5MBeyC5c2550JdzSQaT/6yI3G/KHUszpJkttTm81lgBdv4lxDGwkbAqwbmBwKdo
-         3iPQ==
-X-Gm-Message-State: APjAAAUwJ4cYd1VAQO+vkbyOkSz7yhtUJmfbcMG3RqT/80XwrI9lbSQH
-        Fspv3R4kV7s+rucZwxBxjUY=
-X-Google-Smtp-Source: APXvYqwIv3ahhcp5oA0qthC+C2oIZVWxnkywGlQdzWkYiCi0KoHVvw+BTTuKL/H1IUVai4VYIn36Uw==
-X-Received: by 2002:adf:ebc1:: with SMTP id v1mr85673wrn.351.1576020925098;
-        Tue, 10 Dec 2019 15:35:25 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n16sm59478wro.88.2019.12.10.15.35.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 15:35:24 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 4/4] soc: bcm: brcmstb: biuctrl: Update programming for 7211
-Date:   Tue, 10 Dec 2019 15:30:43 -0800
-Message-Id: <20191210233043.15193-5-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191210233043.15193-1-f.fainelli@gmail.com>
-References: <20191210233043.15193-1-f.fainelli@gmail.com>
+        Tue, 10 Dec 2019 18:35:52 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iep2S-0007Qa-6r; Wed, 11 Dec 2019 00:35:34 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6BA721C047B;
+        Wed, 11 Dec 2019 00:35:31 +0100 (CET)
+Date:   Tue, 10 Dec 2019 23:35:30 -0000
+From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/urgent] Revert "locking/mutex: Complain upon mutex API
+ misuse in IRQ contexts"
+Cc:     Davidlohr Bueso <dbueso@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        will@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191210220523.28540-1-dave@stgolabs.net>
+References: <20191210220523.28540-1-dave@stgolabs.net>
+MIME-Version: 1.0
+Message-ID: <157602093075.30329.6269791000248748517.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a matching entry for 7211 which can be programmed with the same
-BIUCTRL settings as other Brahma-B53 based SoCs. While at it, rename the
-function to include a72 in the name to reflect this applies to both
-types of 64-bit capable CPUs that we support (Brahma-B53 and
-Cortex-A72).
+The following commit has been merged into the locking/urgent branch of tip:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Commit-ID:     c571b72e2b845ca0519670cb7c4b5fe5f56498a5
+Gitweb:        https://git.kernel.org/tip/c571b72e2b845ca0519670cb7c4b5fe5f56498a5
+Author:        Davidlohr Bueso <dave@stgolabs.net>
+AuthorDate:    Tue, 10 Dec 2019 14:05:23 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 11 Dec 2019 00:27:43 +01:00
+
+Revert "locking/mutex: Complain upon mutex API misuse in IRQ contexts"
+
+This ended up causing some noise in places such as rxrpc running in softirq.
+
+The warning is misleading in this case as the mutex trylock and unlock
+operations are done within the same context; and therefore we need not
+worry about the PI-boosting issues that comes along with no single-owner
+lock guarantees.
+
+While we don't want to support this in mutexes, there is no way out of
+this yet; so lets get rid of the WARNs for now, as it is only fair to
+code that has historically relied on non-preemptible softirq guarantees.
+In addition, changing the lock type is also unviable: exclusive rwsems
+have the same issue (just not the WARN_ON) and counting semaphores
+would introduce a performance hit as mutexes are a lot more optimized.
+
+This reverts:
+
+    a0855d24fc22: ("locking/mutex: Complain upon mutex API misuse in IRQ contexts")
+
+Fixes: a0855d24fc22: ("locking/mutex: Complain upon mutex API misuse in IRQ contexts")
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+Tested-by: David Howells <dhowells@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-afs@lists.infradead.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: will@kernel.org
+Link: https://lkml.kernel.org/r/20191210220523.28540-1-dave@stgolabs.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/locking/mutex.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index d766577bc5d4..61731e01f94b 100644
---- a/drivers/soc/bcm/brcmstb/biuctrl.c
-+++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -107,7 +107,8 @@ static int __init mcp_write_pairing_set(void)
- 	return 0;
- }
- 
--static const u32 b53_mach_compat[] = {
-+static const u32 a72_b53_mach_compat[] = {
-+	0x7211,
- 	0x7216,
- 	0x7255,
- 	0x7260,
-@@ -116,19 +117,19 @@ static const u32 b53_mach_compat[] = {
- 	0x7278,
- };
- 
--static void __init mcp_b53_set(void)
-+static void __init mcp_a72_b53_set(void)
+diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+index 54cc5f9..5352ce5 100644
+--- a/kernel/locking/mutex.c
++++ b/kernel/locking/mutex.c
+@@ -733,9 +733,6 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
+  */
+ void __sched mutex_unlock(struct mutex *lock)
  {
- 	unsigned int i;
- 	u32 reg;
- 
- 	reg = brcmstb_get_family_id();
- 
--	for (i = 0; i < ARRAY_SIZE(b53_mach_compat); i++) {
--		if (BRCM_ID(reg) == b53_mach_compat[i])
-+	for (i = 0; i < ARRAY_SIZE(a72_b53_mach_compat); i++) {
-+		if (BRCM_ID(reg) == a72_b53_mach_compat[i])
- 			break;
- 	}
- 
--	if (i == ARRAY_SIZE(b53_mach_compat))
-+	if (i == ARRAY_SIZE(a72_b53_mach_compat))
+-#ifdef CONFIG_DEBUG_MUTEXES
+-	WARN_ON(in_interrupt());
+-#endif
+ #ifndef CONFIG_DEBUG_LOCK_ALLOC
+ 	if (__mutex_unlock_fast(lock))
  		return;
+@@ -1416,7 +1413,6 @@ int __sched mutex_trylock(struct mutex *lock)
  
- 	/* Set all 3 MCP interfaces to 8 credits */
-@@ -261,7 +262,7 @@ static int __init brcmstb_biuctrl_init(void)
- 		return ret;
- 	}
- 
--	mcp_b53_set();
-+	mcp_a72_b53_set();
- #ifdef CONFIG_PM_SLEEP
- 	register_syscore_ops(&brcmstb_cpu_credit_syscore_ops);
+ #ifdef CONFIG_DEBUG_MUTEXES
+ 	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
+-	WARN_ON(in_interrupt());
  #endif
--- 
-2.17.1
-
+ 
+ 	locked = __mutex_trylock(lock);
