@@ -2,151 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E968C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E226C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A15F2073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3B206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfLJURD (ORCPT
+        id S1726714AbfLJUSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:17:03 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:51802 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726500AbfLJURC (ORCPT
+        Tue, 10 Dec 2019 15:18:51 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:46084 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfLJUSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:17:02 -0500
-Received: (qmail 6917 invoked by uid 2102); 10 Dec 2019 15:17:01 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 10 Dec 2019 15:17:01 -0500
-Date:   Tue, 10 Dec 2019 15:17:01 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
-        <jrdr.linux@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, <mchehab@kernel.org>,
-        <rfontana@redhat.com>, <syzkaller-bugs@googlegroups.com>,
-        <tglx@linutronix.de>
-Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-In-Reply-To: <00000000000031a0af05995eca0b@google.com>
-Message-ID: <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
+        Tue, 10 Dec 2019 15:18:51 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 25A422008B;
+        Tue, 10 Dec 2019 21:18:46 +0100 (CET)
+Date:   Tue, 10 Dec 2019 21:18:45 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, lee.jones@linaro.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] drm: atmel-hlcdc: enable clock before configuring
+ timing engine
+Message-ID: <20191210201845.GA24756@ravnborg.org>
+References: <1575984287-26787-1-git-send-email-claudiu.beznea@microchip.com>
+ <1575984287-26787-3-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575984287-26787-3-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=XYAwZIGsAAAA:8
+        a=3T0gCXIu3ADAjCj7PMoA:9 a=CjuIK1q_8ugA:10 a=E8ToXWR_bxluHZ7gmE-Z:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019, syzbot wrote:
+Hi Claudiu.
 
-> > On Mon, 9 Dec 2019, syzbot wrote:
+On Tue, Dec 10, 2019 at 03:24:44PM +0200, Claudiu Beznea wrote:
+> Changing pixel clock source without having this clock source enabled
+> will block the timing engine and the next operations after (in this case
+> setting ATMEL_HLCDC_CFG(5) settings in atmel_hlcdc_crtc_mode_set_nofb()
+> will fail). It is recomended (although in datasheet this is not present)
+> to actually enabled pixel clock source before doing any changes on timing
+> enginge (only SAM9X60 datasheet specifies that the peripheral clock and
+> pixel clock must be enabled before using LCD controller).
 > 
-> >> Hello,
-> 
-> >> syzbot found the following crash on:
-> 
-> >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> >> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
-> >> kernel config:   
-> >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> >> dashboard link:  
-> >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
-> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> >> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> >> IMPORTANT: if you fix the bug, please add the following tag to the  
-> >> commit:
-> >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
-> 
-> >> ==================================================================
-> >> BUG: KASAN: use-after-free in __mutex_lock_common
-> >> kernel/locking/mutex.c:1043 [inline]
-> >> BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
-> >> kernel/locking/mutex.c:1106
-> >> Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
-> 
-> >> CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> >> Google 01/01/2011
-> >> Call Trace:
-> >>    __dump_stack lib/dump_stack.c:77 [inline]
-> >>    dump_stack+0xef/0x16e lib/dump_stack.c:118
-> >>    print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-> >>    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-> >>    kasan_report+0xe/0x20 mm/kasan/common.c:638
-> >>    __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
-> >>    __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
-> >>    usbvision_v4l2_open+0x77/0x340
-> >> drivers/media/usb/usbvision/usbvision-video.c:314
-> >>    v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
-> >>    chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> >>    do_dentry_open+0x494/0x1120 fs/open.c:797
-> >>    do_last fs/namei.c:3412 [inline]
-> >>    path_openat+0x142b/0x4030 fs/namei.c:3529
-> >>    do_filp_open+0x1a1/0x280 fs/namei.c:3559
-> >>    do_sys_open+0x3c0/0x580 fs/open.c:1097
-> >>    do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
-> >>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> > This looks like a race in v4l2_open(): The function drops the
-> > videodev_lock mutex before calling the video driver's open routine, and
-> > the device can be unregistered during the short time between.
-> 
-> > This patch tries to make the race much more likely to happen, for
-> > testing and verification.
-> 
-> > Andrey, will syzbot run the same test with this patch, even though it
-> > says it doesn't have a reproducer?
-> 
-> > Alan Stern
-> 
-> > #syz test: https://github.com/google/kasan.git 1f22d15c
-> 
-> This crash does not have a reproducer. I cannot test it.
+> Fixes: 1a396789f65a ("drm: add Atmel HLCDC Display Controller support")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Let's try the same patch with a different bug report -- one that has a
-reproducer.  I assume that syzbot gets the bug identity from the
-email's From: line (which has been updated acoordingly) rather than the 
-Subject: line.
+We already had a remotely similar fix.
+See 262d67e73f9a920a20bd75278761400404a82de0
+("drm: atmel-hlcdc: enable sys_clk during initalization.")
 
-#syz test: https://github.com/google/kasan.git 1f22d15c
+In this patch sys_clk is only enabled if we have a fixed_clk.
+Maybe we should do this unconditionally in
+atmel_hlcdc_dc_load()?
 
-Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-===================================================================
---- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
-+++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-@@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
- 		wake_up_interruptible(&usbvision->wait_frame);
- 		wake_up_interruptible(&usbvision->wait_stream);
- 	} else {
-+		msleep(100);
- 		usbvision_release(usbvision);
- 	}
- 
-Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-===================================================================
---- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
-+++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-@@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
- 	video_get(vdev);
- 	mutex_unlock(&videodev_lock);
- 	if (vdev->fops->open) {
--		if (video_is_registered(vdev))
-+		if (video_is_registered(vdev)) {
-+			msleep(200);
- 			ret = vdev->fops->open(filp);
--		else
-+		} else
- 			ret = -ENODEV;
- 	}
- 
+Then we do not need this enable(disable in the mode_set_nofb
+implementation.
 
+Have you considered this way to fix it?
+
+	Sam
+
+> ---
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> index 5040ed8d0871..721fa88bf71d 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> @@ -73,7 +73,11 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+>  	unsigned long prate;
+>  	unsigned int mask = ATMEL_HLCDC_CLKDIV_MASK | ATMEL_HLCDC_CLKPOL;
+>  	unsigned int cfg = 0;
+> -	int div;
+> +	int div, ret;
+> +
+> +	ret = clk_prepare_enable(crtc->dc->hlcdc->sys_clk);
+> +	if (ret)
+> +		return;
+>  
+>  	vm.vfront_porch = adj->crtc_vsync_start - adj->crtc_vdisplay;
+>  	vm.vback_porch = adj->crtc_vtotal - adj->crtc_vsync_end;
+> @@ -147,6 +151,8 @@ static void atmel_hlcdc_crtc_mode_set_nofb(struct drm_crtc *c)
+>  			   ATMEL_HLCDC_VSPSU | ATMEL_HLCDC_VSPHO |
+>  			   ATMEL_HLCDC_GUARDTIME_MASK | ATMEL_HLCDC_MODE_MASK,
+>  			   cfg);
+> +
+> +	clk_disable_unprepare(crtc->dc->hlcdc->sys_clk);
+>  }
+>  
+>  static enum drm_mode_status
+> -- 
+> 2.7.4
