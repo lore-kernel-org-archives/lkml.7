@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE90C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA53C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABD92214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54835214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017075;
-	bh=B1QIwygrLOhokb6wIsVKv19GcVnKSWWMr+sjIqDHfZY=;
+	s=default; t=1576017078;
+	bh=Z7K+oj/JkQA5YRHDIlUTzyS+hFqNZSPO5JJW6XUfysU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKalJbUd2P7FlN9VDO3/o3TvisAtKKNN/jORl7a2rqsudCt9LQ5ntsywlSWZxTNL+
-	 K/sE9MTUPthD0aWgwmlGeproNMpxBlcgTu7fDmrysy3kXXU3rcWu9HD1xzk1JRgjcq
-	 tJJ60GtGXNm+BtG20H8V52ku455Gag6PsflgBO5U=
+	b=bSEhXF3gUM8m1p2Iznfldr/uoQ6kydn8HMTHlYpbG8WX3onwCqkRgqRaHxUrtsVmk
+	 L8P/NEVGt6ShXnEvlbEe1VgFWeE3wwnLA7sZ9Wn2gaHWleaD5M9BOwO/2AmtiC5FR1
+	 JnbQhmvVCiezW7OMV2VdkwY7s8tY+DOtKsz85+Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfLJWbO (ORCPT
+        id S1728217AbfLJWbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:31:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51140 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:31:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbfLJWbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:31:12 -0500
+        id S1728107AbfLJWbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2872B2073D;
-        Tue, 10 Dec 2019 22:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9580A2077B;
+        Tue, 10 Dec 2019 22:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017071;
-        bh=B1QIwygrLOhokb6wIsVKv19GcVnKSWWMr+sjIqDHfZY=;
+        s=default; t=1576017074;
+        bh=Z7K+oj/JkQA5YRHDIlUTzyS+hFqNZSPO5JJW6XUfysU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aS5ih6bHImVN+LpAodVrPU7Vwym2QLfb4LyusboWsVsnVzWORyhH+QZLeQO6SXC7W
-         cetolBhGfhbBvDdqg9GFDlfEO9cK6sN36HLCAFfKJg9/yK5ziq52B/Ol/ySOFfESxy
-         dg90+vgrJHKPaUnPuT3YTV7i0oejwU3oNcslU/nA=
+        b=VBc4GKx/nAuKFk7G8h48nH9GdfePsR4eAO5cIHvhb5kDqFLpX/g16VERmxede9Gzr
+         2+7s1aRMSHjE14uwmUptIi4LxuL2jpbI7c7I3cmoYiUQopKhpi9KrXWKJmj56TGNPB
+         x08lfHEVPH3CVNrFGYaMQJKMmWi4diE++BAFNFqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/91] iio: chemical: atlas-ph-sensor: fix iio_triggered_buffer_predisable() position
-Date:   Tue, 10 Dec 2019 17:29:34 -0500
-Message-Id: <20191210223035.14270-30-sashal@kernel.org>
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 32/91] perf report: Add warning when libunwind not compiled in
+Date:   Tue, 10 Dec 2019 17:29:36 -0500
+Message-Id: <20191210223035.14270-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
 References: <20191210223035.14270-1-sashal@kernel.org>
@@ -60,56 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit 0c8a6e72f3c04bfe92a64e5e0791bfe006aabe08 ]
+[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-The iio_triggered_buffer_predisable() should be called last, to detach the
-poll func after the devices has been suspended.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-The position of iio_triggered_buffer_postenable() is correct.
+The warning is:
 
-Note this is not stable material. It's a fix in the logical
-model rather fixing an actual bug.  These are being tidied up
-throughout the subsystem to allow more substantial rework that
-was blocked by variations in how things were done.
+Warning:
+Please install libunwind development packages during the perf build.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/chemical/atlas-ph-sensor.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/chemical/atlas-ph-sensor.c b/drivers/iio/chemical/atlas-ph-sensor.c
-index dad2a8be68308..f5859c118a44a 100644
---- a/drivers/iio/chemical/atlas-ph-sensor.c
-+++ b/drivers/iio/chemical/atlas-ph-sensor.c
-@@ -331,16 +331,16 @@ static int atlas_buffer_predisable(struct iio_dev *indio_dev)
- 	struct atlas_data *data = iio_priv(indio_dev);
- 	int ret;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 6e88460cd13d3..33ff5c843346c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -292,6 +292,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
--	ret = iio_triggered_buffer_predisable(indio_dev);
-+	ret = atlas_set_interrupt(data, false);
- 	if (ret)
- 		return ret;
- 
--	ret = atlas_set_interrupt(data, false);
-+	pm_runtime_mark_last_busy(&data->client->dev);
-+	ret = pm_runtime_put_autosuspend(&data->client->dev);
- 	if (ret)
- 		return ret;
- 
--	pm_runtime_mark_last_busy(&data->client->dev);
--	return pm_runtime_put_autosuspend(&data->client->dev);
-+	return iio_triggered_buffer_predisable(indio_dev);
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
++
+ 	return 0;
  }
  
- static const struct iio_trigger_ops atlas_interrupt_trigger_ops = {
 -- 
 2.20.1
 
