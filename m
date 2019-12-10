@@ -4,65 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5BFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451F3C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134BC20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A6220637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014188;
-	bh=Nh0t2oBP8UfM8IVQ3zFsckO+YL0uT0J1bGe3OxOkadI=;
+	s=default; t=1576014200;
+	bh=IibUGRyeA3M1U//bypfMpuY7HJeOPi48okTAHcXe4Zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uFZIe+facb/8/dKjq8SwkJVCNz4+yXPbC6hHbM0UUQgrVw2fMJjq3OWjfuT+zzCP7
-	 28kdP7VRf12tz7K1PB5PC3JXG/fziDMDYiy8ZBxGZLx2uazeTru15Kech+namBJWfZ
-	 ouck9n6UwXKfzmZMBqoVXZdac0j/o6o1xC6brN6E=
+	b=p8DxB6SuOg6ZJdHNe/gwhtqok8ArBrmlmJM1my5hnHuh+aH5Xe0+WDG0iQce4qvEb
+	 CQzEbqmpadAAMN0dB8aDRHf3OQPpPA8MRxZ7AhPMoikXmXJ7C1RD/SJDsCEdXVsq4s
+	 d7nQ8JpK4sRmobf4FfTenURwGXyRW6eQUJ0qMiag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfLJVnG (ORCPT
+        id S1729804AbfLJVdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:33:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729833AbfLJVdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:33:46 -0500
+        id S1728215AbfLJVdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:33:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A13205C9;
-        Tue, 10 Dec 2019 21:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCB3D24655;
+        Tue, 10 Dec 2019 21:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013625;
-        bh=Nh0t2oBP8UfM8IVQ3zFsckO+YL0uT0J1bGe3OxOkadI=;
+        s=default; t=1576013618;
+        bh=IibUGRyeA3M1U//bypfMpuY7HJeOPi48okTAHcXe4Zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YqJfKrpjR5YG3k/k5CXi/p6/80Bl1NfBUzt+t4tQnCH6eJNHYR3Iyjpf1t47WBjMD
-         4ZZsNCFqLE7FGVg0rp+xpc+IPgz0bnh6w19IT9+qnPYDgkD41IxKPGy+BJe+6ClJP/
-         KFvOhv+G/v+b9wQ2Xb+J5oKRmSxGBNHtxorAqC3M=
+        b=oSPPPDszIN3FAihvlT2ggYsOMWNi02KVmCGeE/DNjvatbcSEADB1riFcpiNS7/D6Y
+         WtRlnnkaiuWCI5wnLsX59UkSaoT1SrvIPN5GU4hkLRI1mPkG6g9ec+MDOHm7Tq+WLk
+         OmnoiuDmrjmoZ9IBbx/j0s7USQVywJyB+i+Th8YA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 067/177] perf tests: Disable bp_signal testing for arm64
-Date:   Tue, 10 Dec 2019 16:30:31 -0500
-Message-Id: <20191210213221.11921-67-sashal@kernel.org>
+Cc:     Szymon Janc <szymon.janc@codecoup.pl>,
+        =?UTF-8?q?S=C3=B6ren=20Beye?= <linux@hypfer.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 063/177] Bluetooth: Workaround directed advertising bug in Broadcom controllers
+Date:   Tue, 10 Dec 2019 16:30:27 -0500
+Message-Id: <20191210213221.11921-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -71,111 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Szymon Janc <szymon.janc@codecoup.pl>
 
-[ Upstream commit 6a5f3d94cb69a185b921cb92c39888dc31009acb ]
+[ Upstream commit 4c371bb95cf06ded80df0e6139fdd77cee1d9a94 ]
 
-As there are several discussions for enabling perf breakpoint signal
-testing on arm64 platform: arm64 needs to rely on single-step to execute
-the breakpointed instruction and then reinstall the breakpoint exception
-handler.  But if we hook the breakpoint with a signal, the signal
-handler will do the stepping rather than the breakpointed instruction,
-this causes infinite loops as below:
+It appears that some Broadcom controllers (eg BCM20702A0) reject LE Set
+Advertising Parameters command if advertising intervals provided are not
+within range for undirected and low duty directed advertising.
 
-         Kernel space              |            Userspace
-  ---------------------------------|--------------------------------
-                                   |  __test_function() -> hit
-				   |                       breakpoint
-  breakpoint_handler()             |
-    `-> user_enable_single_step()  |
-  do_signal()                      |
-                                   |  sig_handler() -> Step one
-				   |                instruction and
-				   |                trap to kernel
-  single_step_handler()            |
-    `-> reinstall_suspended_bps()  |
-                                   |  __test_function() -> hit
-				   |     breakpoint again and
-				   |     repeat up flow infinitely
+Workaround this bug by populating min and max intervals with 'valid'
+values.
 
-As Will Deacon mentioned [1]: "that we require the overflow handler to
-do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
-hw_breakpoint code is a complete disaster so my preference would be to
-rip out the perf part and just implement something directly in ptrace,
-but it's a pretty horrible job".  Though Will commented this on arm
-architecture, but the comment also can apply on arm64 architecture.
+< HCI Command: LE Set Advertising Parameters (0x08|0x0006) plen 15
+        Min advertising interval: 0.000 msec (0x0000)
+        Max advertising interval: 0.000 msec (0x0000)
+        Type: Connectable directed - ADV_DIRECT_IND (high duty cycle) (0x01)
+        Own address type: Public (0x00)
+        Direct address type: Random (0x01)
+        Direct address: E2:F0:7B:9F:DC:F4 (Static)
+        Channel map: 37, 38, 39 (0x07)
+        Filter policy: Allow Scan Request from Any, Allow Connect Request from Any (0x00)
+> HCI Event: Command Complete (0x0e) plen 4
+      LE Set Advertising Parameters (0x08|0x0006) ncmd 1
+        Status: Invalid HCI Command Parameters (0x12)
 
-For complete information, I searched online and found a few years back,
-Wang Nan sent one patch 'arm64: Store breakpoint single step state into
-pstate' [2]; the patch tried to resolve this issue by avoiding single
-stepping in signal handler and defer to enable the signal stepping when
-return to __test_function().  The fixing was not merged due to the
-concern for missing to handle different usage cases.
-
-Based on the info, the most feasible way is to skip Perf breakpoint
-signal testing for arm64 and this could avoid the duplicate
-investigation efforts when people see the failure.  This patch skips
-this case on arm64 platform, which is same with arm architecture.
-
-[1] https://lkml.org/lkml/2018/11/15/205
-[2] https://lkml.org/lkml/2015/12/23/477
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
+Tested-by: Sören Beye <linux@hypfer.de>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/bp_signal.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ net/bluetooth/hci_conn.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 910e25e641883..6cf00650602ef 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -48,14 +48,6 @@ asm (
- 	"__test_function:\n"
- 	"incq (%rdi)\n"
- 	"ret\n");
--#elif defined (__aarch64__)
--extern void __test_function(volatile long *ptr);
--asm (
--	".globl __test_function\n"
--	"__test_function:\n"
--	"str x30, [x0]\n"
--	"ret\n");
--
- #else
- static void __test_function(volatile long *ptr)
- {
-@@ -301,10 +293,15 @@ bool test__bp_signal_is_supported(void)
- 	 * stepping into the SIGIO handler and getting stuck on the
- 	 * breakpointed instruction.
- 	 *
-+	 * Since arm64 has the same issue with arm for the single-step
-+	 * handling, this case also gets suck on the breakpointed
-+	 * instruction.
-+	 *
- 	 * Just disable the test for these architectures until these
- 	 * issues are resolved.
- 	 */
--#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
-+#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
-+    defined(__aarch64__)
- 	return false;
- #else
- 	return true;
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index 15d1cb5aee18d..f5c27065ad44c 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -931,6 +931,14 @@ static void hci_req_directed_advertising(struct hci_request *req,
+ 			return;
+ 
+ 		memset(&cp, 0, sizeof(cp));
++
++		/* Some controllers might reject command if intervals are not
++		 * within range for undirected advertising.
++		 * BCM20702A0 is known to be affected by this.
++		 */
++		cp.min_interval = cpu_to_le16(0x0020);
++		cp.max_interval = cpu_to_le16(0x0020);
++
+ 		cp.type = LE_ADV_DIRECT_IND;
+ 		cp.own_address_type = own_addr_type;
+ 		cp.direct_addr_type = conn->dst_type;
 -- 
 2.20.1
 
