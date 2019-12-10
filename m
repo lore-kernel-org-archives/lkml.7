@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F34AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 306A1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBA420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047D420828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576014004;
-	bh=+fsTG8jqgVv9IshU4XWp+lrwOoRwdpyvkbX4QhjDkM4=;
+	s=default; t=1576014012;
+	bh=hzr0+RYl1LfimtxMSPA8uEVGYwsm5C0ktaBByI12+1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAq22N+yh9s83oj2iM4IE5e5FwmrQxjm4Fw/NWxU9aTHuJHqw+U/e8Q7yzX3JUd1o
-	 FWU+O/H2Bm3jDAVMxYae3RdrWRM+U9xIsOpX2ThGwsrav2pZE3U1naEprb+jrhN1qL
-	 m2Vw9ceCWVtqaeQjtpeM/llAphIaPo1igumkzE6k=
+	b=yqXCIXI7N1RxIAw8KJUB3tvjI5Rxqizuf4w8Qv0ao+TXofwG1sTvK7vwm87jmLX5Z
+	 +WpgquGkg3kJFIBezHu3hzWPtQLZsLZm5TOYZTLyqfY986TDacD0sh23ETljbSaujM
+	 qQFzEfy3JZNl2rUJbTmchYuuCO4yZO7u9aZ3g6XM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfLJVj7 (ORCPT
+        id S1728535AbfLJVkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40014 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:40:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbfLJVem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:42 -0500
+        id S1729664AbfLJVeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:34:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1E5E2465A;
-        Tue, 10 Dec 2019 21:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0E21205C9;
+        Tue, 10 Dec 2019 21:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013681;
-        bh=+fsTG8jqgVv9IshU4XWp+lrwOoRwdpyvkbX4QhjDkM4=;
+        s=default; t=1576013675;
+        bh=hzr0+RYl1LfimtxMSPA8uEVGYwsm5C0ktaBByI12+1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLUeTiuglzGRB9fEfFXgaT2KrZ9AlJ/t/8b+K7oSmf7Ny6pdU5+8/F8XZsRDcDHMo
-         sWXpTl62BVVLFuz4+82OiEGWvf9qCgpXUcWf2kBXo97Gf/RJ58Qk0HadoLbdywAAdW
-         zzjcz/zX4jCF/KbsgPZYLrP8E8BVet1lClklq+NE=
+        b=usi7eIoJcgpkfXL33Hs2LDMY3yG8eJ84CPQATXp9y2YoYRx/8gcBI1dagdYsnqgZG
+         UXd8cAtnvLJNAKzdw8ysMSi31VFP+xvzLCkB7RoWgaEAdImw6QmL9MUyZnHBBudi+C
+         EnZtT/kOj/SN0DYZygaSxYOYc9717L8Vquoyzpyc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 116/177] perf probe: Fix to probe a function which has no entry pc
-Date:   Tue, 10 Dec 2019 16:31:20 -0500
-Message-Id: <20191210213221.11921-116-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 111/177] perf probe: Walk function lines in lexical blocks
+Date:   Tue, 10 Dec 2019 16:31:15 -0500
+Message-Id: <20191210213221.11921-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -64,92 +63,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
+[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
 
-Fix 'perf probe' to probe a function which has no entry pc or low pc but
-only has ranges attribute.
+Since some inlined functions are in lexical blocks of given function, we
+have to recursively walk through the DIE tree.  Without this fix,
+perf-probe -L can miss the inlined functions which is in a lexical block
+(like if (..) { func() } case.)
 
-probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
-but that doesn't work for the function DIE which has only ranges
-attribute. Use die_entrypc() instead.
+However, even though, to walk the lines in a given function, we don't
+need to follow the children DIE of inlined functions because those do
+not have any lines in the specified function.
 
-Without this fix:
+We need to walk though whole trees only if we walk all lines in a given
+file, because an inlined function can include another inlined function
+in the same file.
 
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-
-With this:
-
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]#
-
-Using it with 'perf trace':
-
-  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
-
-Doesn't seem to be used in x86_64:
-
-  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
-  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
-  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
-  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
-  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
-  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
-  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
-  $
-
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index d0d333c90b35b..64d4837c8f821 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1002,7 +1002,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
- 		param->retval = find_probe_point_by_line(pf);
- 	} else if (die_is_func_instance(sp_die)) {
- 		/* Instances always have the entry address */
--		dwarf_entrypc(sp_die, &pf->addr);
-+		die_entrypc(sp_die, &pf->addr);
- 		/* But in some case the entry address is 0 */
- 		if (pf->addr == 0) {
- 			pr_debug("%s has no entry PC. Skipped\n",
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 5bbb87f63ecba..6e7cb3537ce01 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -691,10 +691,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
+ 			if (lw->retval != 0)
+ 				return DIE_FIND_CB_END;
+ 		}
++		if (!lw->recursive)
++			return DIE_FIND_CB_SIBLING;
+ 	}
+-	if (!lw->recursive)
+-		/* Don't need to search recursively */
+-		return DIE_FIND_CB_SIBLING;
+ 
+ 	if (addr) {
+ 		fname = dwarf_decl_file(in_die);
+@@ -741,6 +740,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
+ {
+ 	struct __line_walk_param *lw = data;
+ 
++	/*
++	 * Since inlined function can include another inlined function in
++	 * the same file, we need to walk in it recursively.
++	 */
+ 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
+ 	if (lw->retval != 0)
+ 		return DWARF_CB_ABORT;
+@@ -830,8 +833,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	 */
+ 	if (rt_die != cu_die)
+ 		/*
+-		 * Don't need walk functions recursively, because nested
+-		 * inlined functions don't have lines of the specified DIE.
++		 * Don't need walk inlined functions recursively, because
++		 * inner inlined functions don't have the lines of the
++		 * specified function.
+ 		 */
+ 		ret = __die_walk_funclines(rt_die, false, callback, data);
+ 	else {
 -- 
 2.20.1
 
