@@ -2,147 +2,178 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04983C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C46C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83BF2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KFb25BYR"
+	by mail.kernel.org (Postfix) with ESMTP id DF1C62053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfLJKQP (ORCPT
+        id S1727436AbfLJKQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:16:15 -0500
-Received: from mout.web.de ([212.227.15.4]:45433 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbfLJKQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:16:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1575972961;
-        bh=3lu1/bDzlHQWncDoTWVRGXTFeZBsALALSvK0V4xQUsY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=KFb25BYRz38RT7bBf9g68vibTN2tb4JGx9opUc1mZNJ4Not8GUBMr7buSnrGJUqQx
-         7axuRPjrS5qBaXUm59c8a/RaxEmtkkRg7iTR1WqRYdIGTgMCcre1VaK47DMHJqGnNI
-         f0BU9UDZvOg/etK6APcDSsREplsuuJu18HeoRsQs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.43.108] ([89.204.137.56]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LZvfZ-1htANw25Az-00lm0J; Tue, 10
- Dec 2019 11:16:01 +0100
-Subject: Re: [PATCH 8/8] arm64: dts: rockchip: RockPro64: enable wifi module
- at sdio0
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191209223822.27236-1-smoch@web.de> <2668270.pdtvSLGib8@diego>
- <2cf70216-8d98-4122-4f4e-b8254089a017@web.de> <6162240.GiEx4hqPFh@diego>
- <0101016eef171394-2c71e1b8-45b9-4e38-96f9-2841dd0607ba-000000@us-west-2.amazonses.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <e8742d18-9dd9-bd97-1d4a-0c5312501b24@web.de>
-Date:   Tue, 10 Dec 2019 11:15:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 05:16:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33790 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727276AbfLJKQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:16:33 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAA7Fjw058096
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:16:32 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsknar35h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:16:32 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 10 Dec 2019 10:16:30 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 10 Dec 2019 10:16:26 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAAGPxc36045042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Dec 2019 10:16:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C52DA4051;
+        Tue, 10 Dec 2019 10:16:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7307BA404D;
+        Tue, 10 Dec 2019 10:16:22 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 10 Dec 2019 10:16:22 +0000 (GMT)
+Date:   Tue, 10 Dec 2019 15:46:21 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
+ kthread
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210092601.GK2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <0101016eef171394-2c71e1b8-45b9-4e38-96f9-2841dd0607ba-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-X-Provags-ID: V03:K1:BmouxPORzFnUtMfMs9rkSg06N45biyMWFv+dkxM532l+MBmsCq9
- NKrsNRGYig8S6iERHaN1OEDubM+pu6B4PQehaKPwuJUFbld0HZvWXcyJ1iCZKgK+h1b76D6
- OwuGqbC6k/i4YNYXPy1kRnaSgy69AyTCLqMbYxtDKTTvk8OoS2CaXCk90NFm9+Y6kvbd5Y2
- 0ekhcoci7MjDZSaZonzrg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JdUVEkMY6j4=:YPPupy08imKC1CuXy723Fb
- oojqA1+dEiyvgS6ZUBJAZ5A65eTviEtBJV4o4OCd9ZA0kmqfrU80oq0mQclUw/wMuiqNbxiCR
- y3Da5meb5biCNAXVnAmQdeYt3q/eFc2EPwS3yjNRHv1nfPso7gsgJz7qXwGCRNvtMiKifD0Nb
- ma8Hl8QLWIb4RYsLeGebnCYbfNUx+9uxFhYtM3unf340sOM0G4jBgHmJQa7k3pV0dP/WByyFR
- 3KD3zRjPgaOaS2P8Hos9QmYpyzRkb7ibRvaAzLfiDmqDqD4M+z5/oP6gZ5+6N/zurIPDpEgNc
- 7Dkum/I2cTVCcVwNCJSmuRR+KW6hgNJbCneE4NBvWpHMbjOtAO/86+inVWXFOVLEN+jtOU9qZ
- be7EN7NjWMk7OBd5jHdWtj62PoGnd3/SZaF8tHEjWOrEnsGROV6ElDlSQpM8muQlkuqzH++H6
- /F9+ghMAT/MTY+U162haEdsMeN3DSYtZuNWhs9Pp6CVre4pB3eisliYdbTAzIunnA7iKFNf0c
- q6/Dyf2qv0hWHMqQBamdigB/TMxAgzmlPP/4BbFeYHgEAcbQvuMC6q1Y+qGeWtMBr+pUSMgCD
- pRgSgyJtjBQzR92BWJG8jV4viPa/pHr9iQCcVowjH8n8GvHAh+2WXMn4LXCQiMrfXpp7IJG1E
- qRhinRvo+RsPHe5n3//NEkdSVJiqi8j9cc3mu9nDbm7svfuTupNsQNrmbL+qxs36z0Eunprxm
- djgO6OSSSrhJUbglhLouU3/dNMWySsEpF+UDGOoTb37xsgE4t3uK+gCGNK2lsm7a5EMLPJ6gh
- IjfH2+CYhAPEs36M+7OykUU8DD3p5fQ7PDsYvJ60leWKTChqOSAlmZ8kBYftkBmGy6f/kA0SW
- z0qnFc4vt16ogKGe9d+Psh2aB4cZup83qt7ybXBfqe42hDs6vlYAZakOIbBiOHYq9Pmbbfhmi
- OBTDn4mXyonqoD6LY5e06xvv779fPeFeIvIejlH+9Owo50mtK17RDqY1Ug0uRb3CrsJi/5DGt
- Sk7WpDtlOam9IzBt9otYxh7d+pVc+1hEiZxZlTTZAvr9ORNWwaYrVh4VdBisOI5LMVoCbUq63
- dbXBbt7JW2CX/pqtLvdti16g+lFrtaL1m7J4fYosqSG9ICUMKQhoxdbqXXlJD00XM66nK/Zu7
- /Tr4MHJlY7TFY4F3JsCPRei2XP0PUQ9BBeFZwM80D9dA21UTof7jWkvPnZHcRiU3JOV7mEaXB
- rnyk7ZdfPzyWIuqkjyOqA9ffuicoDRxB6qKykZA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20191210092601.GK2844@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19121010-0016-0000-0000-000002D36ED9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121010-0017-0000-0000-000033358525
+Message-Id: <20191210101621.GB9139@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Peter Zijlstra <peterz@infradead.org> [2019-12-10 10:26:01]:
+
+> On Tue, Dec 10, 2019 at 11:13:30AM +0530, Srikar Dronamraju wrote:
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 44123b4d14e8..82126cbf62cd 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -2664,7 +2664,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+> >   */
+> >  int wake_up_process(struct task_struct *p)
+> >  {
+> > -	return try_to_wake_up(p, TASK_NORMAL, 0);
+> > +	int wake_flags = 0;
+> > +
+> > +	if (is_per_cpu_kthread(p))
+> > +		wake_flags = WF_KTHREAD;
+> > +
+> > +	return try_to_wake_up(p, TASK_NORMAL, wake_flags);
+> >  }
+> >  EXPORT_SYMBOL(wake_up_process);
+> 
+> Why wake_up_process() and not try_to_wake_up() ? This way
+> wake_up_state(.state = TASK_NORMAL() is no longer the same as
+> wake_up_process(), and that's weird!
+> 
+
+Thanks Vincent and Peter for your review comments.
+
+I was trying to be more conservative. But I don't see any reason why we
+can't do the same at try_to_wake_up. And I mostly thought the kthreads were
+using wake_up_process.
+
+So I shall move the check to try_to_wake_up then.
+
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 69a81a5709ff..36486f71e59f 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -6660,6 +6660,27 @@ static void set_skip_buddy(struct sched_entity *se)
+> >  		cfs_rq_of(se)->skip = se;
+> >  }
+> >  
+> > +static int kthread_wakeup_preempt(struct rq *rq, struct task_struct *p, int wake_flags)
+> > +{
+> > +	struct task_struct *curr = rq->curr;
+> > +	struct cfs_rq *cfs_rq = task_cfs_rq(curr);
+> > +
+> > +	if (!(wake_flags & WF_KTHREAD))
+> > +		return 0;
+> > +
+> > +	if (p->nr_cpus_allowed != 1 || curr->nr_cpus_allowed == 1)
+> > +		return 0;
+> 
+> Per the above, WF_KTHREAD already implies p->nr_cpus_allowed == 1.
+
+Yes, this is redundant.
+
+> 
+> > +	if (cfs_rq->nr_running > 2)
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * Don't preempt, if the waking kthread is more CPU intensive than
+> > +	 * the current thread.
+> > +	 */
+> > +	return p->nvcsw * curr->nivcsw >= p->nivcsw * curr->nvcsw;
+> 
+> Both these conditions seem somewhat arbitrary. The number of context
+> switch does not correspond to CPU usage _at_all_.
+> 
+> vtime OTOH does reflect exactly that, if it runs a lot, it will be ahead
+> in the tree.
+> 
+
+Right, my rational was to not allow a runaway kthread to preempt and take
+control.
 
 
-On 10.12.19 10:14, Kalle Valo wrote:
-> Heiko St=C3=BCbner <heiko@sntech.de> writes:
->
->> Hi Soeren,
->>
->> Am Dienstag, 10. Dezember 2019, 00:29:21 CET schrieb Soeren Moch:
->>> On 10.12.19 00:08, Heiko St=C3=BCbner wrote:
->>>> Am Montag, 9. Dezember 2019, 23:38:22 CET schrieb Soeren Moch:
->>>>> RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
->>>>> The BCM4359/9 wifi controller in this module is connected to sdio0,
->>>>> enable this interface.
->>>>>
->>>>> Signed-off-by: Soeren Moch <smoch@web.de>
->>>>> ---
->>>>> Not sure where to place exactly the sdio0 node in the dts because
->>>>> existing sd nodes are not sorted alphabetically.
->>>>>
->>>>> This last patch in this brcmfmac patch series probably should be pic=
-ked
->>>>> up by Heiko independently of the rest of this series. It was sent to=
-gether
->>>>> to show how this brcmfmac extension for 4359-sdio support with RSDB =
-is
->>>>> used and tested.
->>>> node placement looks good so I can apply it, just a general questions
->>>> I only got patch 8/8 are patches 1-7 relevant for this one and what a=
-re they?
->>> Patches 1-7 are the patches to support the BCM4359 chipset with SDIO
->>> interface in the linux brcmfmac net-wireless driver, see [1].
->>>
->>> So this patch series has 2 parts:
->>> patches 1-7: add support for the wifi chipset in the wireless driver,
->>> this has to go through net-wireless
->>> patch 8: enable the wifi module with this chipset on RockPro64, this p=
-atch
->> Thanks for the clarification :-) .
->>
->> As patch 8 "only" does the core sdio node, it doesn't really depend on =
-the
->> earlier ones and you can submit any uart-hooks for bluetooth once the
->> other patches land I guess.
->>
->>
->>> If this was confusing, what would be the ideal way to post such series=
-?
->> I think every maintainer has some slightly different perspective on thi=
-s,
->> but personally I like getting the whole series to follow the discussion=
- but
->> also to just see when the driver-side changes get merged, as the dts-pa=
-rts
->> need to wait for that in a lot of cases.
-> FWIW I prefer the same as Heiko. If I don't see all the patches in the
-> patchset I start worrying if patchwork lost them, or something, and then
-> it takes more time from me to investigate what happened. So I strongly
-> recommend sending the whole series to everyone as it saves time.
->
-Thanks for your explanation.
-I will keep this in mind for future submissions.
+-- 
+Thanks and Regards
+Srikar Dronamraju
 
-Soeren
