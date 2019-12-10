@@ -2,144 +2,217 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759EDC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEC5C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535542073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143D22053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 10:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="m2m7N6nt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfLJKLa (ORCPT
+        id S1727351AbfLJKMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 05:11:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727305AbfLJKLa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 05:11:30 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAA7Fi4058096
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:11:28 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsknaqw9q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 05:11:28 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 10 Dec 2019 10:11:26 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 10:11:21 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAABKum50004096
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 10:11:20 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2951C42042;
-        Tue, 10 Dec 2019 10:11:20 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 670BC42052;
-        Tue, 10 Dec 2019 10:11:17 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 10 Dec 2019 10:11:17 +0000 (GMT)
-Date:   Tue, 10 Dec 2019 15:41:16 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
- kthread
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
+        Tue, 10 Dec 2019 05:12:25 -0500
+Received: from mout.web.de ([212.227.15.3]:37609 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727032AbfLJKMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 05:12:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1575972737;
+        bh=3pTHW4Q8tyW+6nWjz/mcweMqA2s1Pt/POPAPISyIziw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=m2m7N6ntcSuVfQN3D5ryfKP7j5okQF5gFM0nD7aGhu/AG1sTRgdw19cuo6Dy+C+Bf
+         bWN5EUVB5NVigklAQUWRlunV7c4/4qKmriIrRqIHer2FQSQjXKuWerhuUgYLVq4GKa
+         4+61OyhPt9SY2fWUNnCgUEf++UzR/IldpGeWsoxE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.43.108] ([89.204.137.56]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lj2Cs-1i1h7O2m3a-00dDCn; Tue, 10
+ Dec 2019 11:12:16 +0100
+Subject: Re: [PATCH 5/8] brcmfmac: add support for BCM4359 SDIO chipset
+To:     Chi-Hsien Lin <Chi-Hsien.Lin@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Wright Feng <Wright.Feng@cypress.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191209223822.27236-1-smoch@web.de>
+ <20191209223822.27236-5-smoch@web.de>
+ <ea33f5b2-0748-1837-ee59-5b00177f7f4e@cypress.com>
+ <1910862f-2564-6252-535c-8916e6c5e150@cypress.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <d41c6942-abaf-ca0b-3858-07e1f95f9b15@web.de>
+Date:   Tue, 10 Dec 2019 11:12:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtCBxV+az30n8E9fRv_HweN_QPJn_ni961OsKp5xUWUD2A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19121010-0012-0000-0000-000003736E80
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121010-0013-0000-0000-000021AF4031
-Message-Id: <20191210101116.GA9139@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_01:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100090
+In-Reply-To: <1910862f-2564-6252-535c-8916e6c5e150@cypress.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+X-Provags-ID: V03:K1:5vJ0I53uaFC3igMAqUvXs+svR8AgkAyoI6gi8SHgsWC/4t95XoC
+ ULY5aGlIRgTk4Nl0UGzwxlzxCCASMh4Igih2kU9X7lMbgEdWKns1ViS8S380Jag8ydGmTSf
+ 7eeoQxHYy0IzQEzZl7tMA3kFaLle9uq6P3HVW9DUVrIvr7hA6bwBRKddNFtVpFZ94Ae8oQ5
+ CSxm0HYYWKdFSV1ND5qeQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZOqwXIJv5FU=:F2EAtCwZH40CsbH89Q0HiK
+ euYX67SdY5mNBD+uiVhBUi+Tp+cWrQy9n8GSOk9nuHaVMGGBMPNQJwc+BQxc2fePnenSQMD8w
+ 8O8T4UwnmZTfjB+Bh/7ob7acfE6rJvJbylJTYC1TENlBssLJEWipPnwWgFd13/jngKr/A28bS
+ 1gWRJTkqiIrp9kq1KJjHriT0AAMEo4pJUekUcOKmEvP1JYPpzPa2cLa+g6nAPo6bnbA26syDp
+ bID915cskbBUNVorKpUKYKKBH+tMLK90r6NBl1gF+oKgtBZ2SNmKed4TW1i4fSuomm/TQDAu7
+ uHiS2f3zhoP8soHOLM398+6FqylW8ezj0b5VI37ds0x7qA6//Y2T1KQKzhEGg5jYFyyopM2u5
+ /gEJ34uCZ/tHoJs7Gxi63o/4qoBu5n1ZaxODCBvM36yhPoI/gdsgYrnaAxrxZ/NlRFEYYudmF
+ N53ZxxHwHKaQmZCDng0+c8ll7EfP64pv21tKcR6JgvNhXJhfQ1OTtWqGyxcvyaBWaQaI9UK9R
+ BlWN06ldbQF7c6tA3l5Of5nZNxia76eH3yQuBlcTBEi/FiuejMCOIqa+wDmmtb/K+p7PHvAaG
+ rRqvZk39/4k3eHTwJGvqFcYG/Hak5bd+wyUMCAZkArmB6gzjTxB8hlXEF0kv6VlBlbVfIG/+I
+ j+SCmcgk4nVqDDzmerWgYzUkTFyGAeZcFrlEOjjL3/dYNnllhd5ajOPqgR0CxoGQosZhvVpV/
+ o8znxsatouwaXH/P4x2njkbgzf32+56maByn9XvUygfpg/Dz7/I9TMyA4fHWlbLeX5TGLLEf3
+ Y4mP5RP9uPNREq10HXISLOhXPZEV1Fc1OSLtApy3aeyg+iKHyK1cwyROYmDEOYkBxxGkQsiGn
+ +BC3imz7D2dH9UFtism5Zm4PW1UjffRNGpRb7707XfxPNViXKST1OEDVgs4wtfmPMtvmd83qI
+ 7OHZXfS5kqnjficc2QK7iJ39wq8SOtebgiFP4wqCAvNhCnyDKLkbtIRzRtgLFGTuHO5M3/wwf
+ qSrF3PysSYNpQt4QsnKitGXIQjYevQkGP4gA1sVJp4wiwJ8PmgmnMatGSLtDeHHG9q0ZqhtDT
+ r6OZaVlo9qHllg+H8KTE2yihC/+XKn4m7UPXOq5/CmkQxZs+jVlU8GobKGMRuxt6U7C9Z3MbX
+ FtufxIBqMNA2B3M1aaIXYWf54A0Gqm2kkj0FoLVhZsZp5j9FKeVPTkf3ai0TqIkdO8/pDaMKv
+ NTU7MfFyJQISjovJoAoZmEAoI+Rfso5Y0Cee8lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Vincent Guittot <vincent.guittot@linaro.org> [2019-12-10 10:43:46]:
 
-> On Tue, 10 Dec 2019 at 06:43, Srikar Dronamraju
-> <srikar@linux.vnet.ibm.com> wrote:
-> >
-> > This is more prone to happen if the current running task is CPU
-> > intensive and the sched_wake_up_granularity is set to larger value.
-> > When the sched_wake_up_granularity was relatively small, it was observed
-> > that the bound thread would complete before the load balancer would have
-> > chosen to move the cache hot task to a different CPU.
-> >
-> > To deal with this situation, the current running task would yield to a
-> > per CPU bound kthread, provided kthread is not CPU intensive.
-> >
-> > /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
-> >
-> > (With sched_wake_up_granularity set to 15ms)
-> 
-> So you increase sched_wake_up_granularity to a high level to ensure
-> that current is no preempted by waking thread but then you add a way
-> to finally preempt it which is somewhat weird IMO
-> 
 
-Yes, setting to a smaller value will help mitigate/solve the problem.
-There may be folks out who have traditionally set a high wake_up_granularity
-(and have seen better performance with it), who may miss out that when using
-blk-mq, such settings will cause more harm. And they may continue to see
-some performance regressions when they move to a lower wake_up_granularity.
+On 10.12.19 07:32, Chi-Hsien Lin wrote:
+>
+> On 12/10/2019 11:38, Chi-Hsien Lin wrote:
+>>
+>> On 12/10/2019 6:38, Soeren Moch wrote:
+>>> BCM4359 is a 2x2 802.11 abgn+ac Dual-Band HT80 combo chip and it
+>>> supports Real Simultaneous Dual Band feature.
+>>>
+>>> Based on a similar patch by: Wright Feng <wright.feng@cypress.com>
+>> Hi Soeren,
+>>
+>> Is it possible to also keep the ID in the original patch from Wright?
+>> You can use below IDs and allow both to be supported:
+>>
+>> #define SDIO_DEVICE_ID_BROADCOM_4359		0x4359
+>> #define SDIO_DEVICE_ID_CY_89359			0x4355
+> Fix a typo. The ID should be
+>
+> #define SDIO_DEVICE_ID_CYPRESS_89359			0x4355
+>
+> Note that brcmf_sdmmc_ids[] also needs an entry for the above ID. The
+> chipid references can remain unchanged.
+Hi Chi-hsien,
 
-> Have you tried to increase the priority of workqueue thread  (decrease
-> nice priority) ? This is the right way to reduce the impact of the
-> sched_wake_up_granularity on the wakeup of your specific kthread.
-> Because what you want at the end is keeping a low wakeup granularity
-> for these io workqueues
-> 
+thanks for all your reviews. I will re-add this ID and send a v2 of this
+series.
 
-Yes, people can tune the priority of workqueue threads and infact it may be
-easier to set wake_up_granularity to a lower value. However the point is how
-do we make everyone aware that they are running into a performance issue
-with a higher wakeup_granularity?
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+Thanks again,
+Soeren
+>
+> Chi-hsien Lin
+>
+>>
+>> Chi-hsien Lin
+>>
+>>
+>>> Signed-off-by: Soeren Moch <smoch@web.de>
+>>> ---
+>>> Cc: Kalle Valo <kvalo@codeaurora.org>
+>>> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+>>> Cc: Franky Lin <franky.lin@broadcom.com>
+>>> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+>>> Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+>>> Cc: Wright Feng <wright.feng@cypress.com>
+>>> Cc: linux-wireless@vger.kernel.org
+>>> Cc: brcm80211-dev-list.pdl@broadcom.com
+>>> Cc: brcm80211-dev-list@cypress.com
+>>> Cc: netdev@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> ---
+>>>    drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 1 +
+>>>    drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c   | 1 +
+>>>    drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c   | 2 ++
+>>>    include/linux/mmc/sdio_ids.h                              | 1 +
+>>>    4 files changed, 5 insertions(+)
+>>>
+>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c=
+ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+>>> index 68baf0189305..5b57d37caf17 100644
+>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+>>> @@ -973,6 +973,7 @@ static const struct sdio_device_id brcmf_sdmmc_ids=
+[] =3D {
+>>>    	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_43455),
+>>>    	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4354),
+>>>    	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4356),
+>>> +	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4359),
+>>>    	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_4373),
+>>>    	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_43012),
+>>>    	{ /* end: all zeroes */ }
+>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b=
+/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
+>>> index baf72e3984fc..282d0bc14e8e 100644
+>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
+>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
+>>> @@ -1408,6 +1408,7 @@ bool brcmf_chip_sr_capable(struct brcmf_chip *pu=
+b)
+>>>    		addr =3D CORE_CC_REG(base, sr_control0);
+>>>    		reg =3D chip->ops->read32(chip->ctx, addr);
+>>>    		return (reg & CC_SR_CTL0_ENABLE_MASK) !=3D 0;
+>>> +	case BRCM_CC_4359_CHIP_ID:
+>>>    	case CY_CC_43012_CHIP_ID:
+>>>    		addr =3D CORE_CC_REG(pmu->base, retention_ctl);
+>>>    		reg =3D chip->ops->read32(chip->ctx, addr);
+>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b=
+/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>> index 21e535072f3f..c4012ed58b9c 100644
+>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+>>> @@ -616,6 +616,7 @@ BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
+>>>    BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
+>>>    BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
+>>>    BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
+>>> +BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
+>>>    BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
+>>>    BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
+>>>
+>>> @@ -638,6 +639,7 @@ static const struct brcmf_firmware_mapping brcmf_s=
+dio_fwnames[] =3D {
+>>>    	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
+>>>    	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
+>>>    	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
+>>> +	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0xFFFFFFFF, 4359),
+>>>    	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
+>>>    	BRCMF_FW_ENTRY(CY_CC_43012_CHIP_ID, 0xFFFFFFFF, 43012)
+>>>    };
+>>> diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids=
+.h
+>>> index 08b25c02b5a1..930ef2d8264a 100644
+>>> --- a/include/linux/mmc/sdio_ids.h
+>>> +++ b/include/linux/mmc/sdio_ids.h
+>>> @@ -41,6 +41,7 @@
+>>>    #define SDIO_DEVICE_ID_BROADCOM_43455		0xa9bf
+>>>    #define SDIO_DEVICE_ID_BROADCOM_4354		0x4354
+>>>    #define SDIO_DEVICE_ID_BROADCOM_4356		0x4356
+>>> +#define SDIO_DEVICE_ID_BROADCOM_4359		0x4359
+>>>    #define SDIO_DEVICE_ID_CYPRESS_4373		0x4373
+>>>    #define SDIO_DEVICE_ID_CYPRESS_43012		43012
+>>>
+>>> --
+>>> 2.17.1
+>>>
+>>> .
+>>>
 
