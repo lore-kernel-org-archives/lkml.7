@@ -2,92 +2,297 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D478C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1ECC2D0D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB72D20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E159520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iJcaQcPf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qg2idsjz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfLJJvQ (ORCPT
+        id S1727540AbfLJJva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:51:16 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37908 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfLJJvA (ORCPT
+        Tue, 10 Dec 2019 04:51:30 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43291 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfLJJv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:51:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBA9otj8055691;
-        Tue, 10 Dec 2019 03:50:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575971455;
-        bh=EW8lyngOZ0xu4oujP21x2gdJOB/XYSQJYaDt1najk+U=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iJcaQcPfRY4unXNhj4dJXZ6paaRn0uua8o7K2S5qv96q2+YIy1sUPjEL6ARSx0cbQ
-         Kwrxkn46m1s6uxKqTs/4XiL8pDY0YGIrcO+f1yBmZk/5OYag2PQ6Ksv+vWlBEL/wLB
-         xsZt2sn9LTt9TIZ48h5zPV1c3vrXya5Z1qGGG1LM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBA9otWE130509
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 03:50:55 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 03:50:54 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 03:50:54 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBA9oZVo048503;
-        Tue, 10 Dec 2019 03:50:52 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
-        <zhang.chunyan@linaro.org>, <tony@atomide.com>
-Subject: [PATCH v3 5/7] mmc: sdhci-omap: Add DISABLE_DTO_FOR_ERASE Quirk
-Date:   Tue, 10 Dec 2019 15:21:49 +0530
-Message-ID: <20191210095151.15441-6-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20191210095151.15441-1-faiz_abbas@ti.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
+        Tue, 10 Dec 2019 04:51:29 -0500
+Received: by mail-vs1-f66.google.com with SMTP id x4so12546558vsx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KMORO6YLurGC9coObMxz6fn2NzFCAetPjibkmjGyJDQ=;
+        b=qg2idsjzuM2EuulQzs29kdk+EbcoL3LZeGdKFx4UZWJFOCsLHnmWc/hU73nthUZD+F
+         arcP1pp32UjqCNm5/aPyoOH3mVM9F3flbtbe9u2HpPhFyBb8uaFp/t15yLayWsAjvmVD
+         jjzXA5tO29AYwR82Qstx2Lg3ILrPBMLWlLGeXZje/PEVo0ei7BFhqpHzL5YUcHiQHETp
+         70wHWykRYkNsgx2wwiyVZ1/CQZ6O1/bAVaXArRu1qJ7kbtHyOUSxpVp8ZQr5+DsYCl1D
+         5mZwNwYGOE4o5is8DhOMS3vgfbp3OMflJ6d1pu44qdG5Ah4LWJYNN9dE08thuz4QrmkM
+         Ws+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KMORO6YLurGC9coObMxz6fn2NzFCAetPjibkmjGyJDQ=;
+        b=L3gohFjZtJwSwtq6gurYVtzXYhiW9wtXmkgLvVmeyyMTRRjplF+OB5wmlwrCCufYx7
+         ytCfgfMf7HWmT+Nn1aoK8xDXE0Y5JaJIqCXSJucUnJ9dBlK6uZOWLuhX2HE4GepRm8kH
+         L3Sg9ClfNwxKyzb9ulXJ9Jzo1dCk23ES5ZYIVzdbi4gKZTyJ3a65VDjINwTlDcJFEeoi
+         U9BJ2f7bXUoL10M5JGsNH5KQtQpdjBuvJRT0Z46a3wr2tr7Z/vFuN+mQKDCN3weMgh12
+         jCRY5Zx3KuP/IW21voPaQUbLrpdhKYjnBkakRhJf2mjv1l//W4h2yNeqjsIMNz0EB/JQ
+         1lJw==
+X-Gm-Message-State: APjAAAUDJIomro7f1Dha11Cx1X7p5q6vKL5IyM/D43g9xdVjUhK2mCx1
+        +hWwfLcxAynQyU2tWXLp2I2MmqKZHuu/7FoSNyNLtw==
+X-Google-Smtp-Source: APXvYqyqVsfloBxPx+OU7yT1yq+RRFLOjF9tbpSgQt+rFvvOjS8FfYO5WQc5l2AzCPayN08YsHD/0wd7QvMvEkOnnXY=
+X-Received: by 2002:a05:6102:5d1:: with SMTP id v17mr24239747vsf.200.1575971487761;
+ Tue, 10 Dec 2019 01:51:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191128074522.69706-1-ludovic.desroches@microchip.com> <20191128074522.69706-2-ludovic.desroches@microchip.com>
+In-Reply-To: <20191128074522.69706-2-ludovic.desroches@microchip.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 10:50:51 +0100
+Message-ID: <CAPDyKFrJmWTtJGT+KuPSVb_ywQ3uwwdYzipK=B_1_dBeuM5dMg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] mmc: sdhci-of-at91: rework clocks management to
+ support SAM9x60 device
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        claudiu.beznea@microchip.com, Eugen.Hristev@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a Quirk to disable DTO during an erase command.
+On Thu, 28 Nov 2019 at 08:45, Ludovic Desroches
+<ludovic.desroches@microchip.com> wrote:
+>
+> In the SAM9x60 SoC, there are only two clocks instead of three for the
+> SDHCI device. The base clk is no longer provided, it is generated
+> internally from the mult clk.
+>
+> The values of the base clk and mul in the capabilities registers may not
+> reflect the reality as the mult clk is a programmable clock which can take
+> several rates. As we can't trust those values, take them from the clock
+> tree and update the capabilities according to.
+>
+> As we can have the same pitfall, in some cases, with the SAMA5D2 Soc,
+> stop relying on capabilities too.
+>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci-omap.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 84d85aa743da..c54c864fe419 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -879,6 +879,7 @@ static const struct sdhci_pltfm_data sdhci_omap_pdata = {
- 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN |
- 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
- 		   SDHCI_QUIRK2_RSP_136_HAS_CRC |
-+		   SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE |
- 		   SDHCI_QUIRK2_DISABLE_HW_TIMEOUT,
- 	.ops = &sdhci_omap_ops,
- };
--- 
-2.19.2
+Applied for next, thanks!
 
+Kind regards
+Uffe
+
+
+> ---
+>
+> Changes:
+> - v4: fix typo for the capabilities register and remove extra
+>   parentheses
+> - v3: none
+> - v2: none
+>
+>  drivers/mmc/host/sdhci-of-at91.c | 105 +++++++++++++++++--------------
+>  1 file changed, 58 insertions(+), 47 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+> index 5959e394b416..b2a8c45c9c23 100644
+> --- a/drivers/mmc/host/sdhci-of-at91.c
+> +++ b/drivers/mmc/host/sdhci-of-at91.c
+> @@ -33,7 +33,14 @@
+>
+>  #define SDHCI_AT91_PRESET_COMMON_CONF  0x400 /* drv type B, programmable clock mode */
+>
+> +struct sdhci_at91_soc_data {
+> +       const struct sdhci_pltfm_data *pdata;
+> +       bool baseclk_is_generated_internally;
+> +       unsigned int divider_for_baseclk;
+> +};
+> +
+>  struct sdhci_at91_priv {
+> +       const struct sdhci_at91_soc_data *soc_data;
+>         struct clk *hclock;
+>         struct clk *gck;
+>         struct clk *mainck;
+> @@ -141,12 +148,24 @@ static const struct sdhci_ops sdhci_at91_sama5d2_ops = {
+>         .set_power              = sdhci_at91_set_power,
+>  };
+>
+> -static const struct sdhci_pltfm_data soc_data_sama5d2 = {
+> +static const struct sdhci_pltfm_data sdhci_sama5d2_pdata = {
+>         .ops = &sdhci_at91_sama5d2_ops,
+>  };
+>
+> +static const struct sdhci_at91_soc_data soc_data_sama5d2 = {
+> +       .pdata = &sdhci_sama5d2_pdata,
+> +       .baseclk_is_generated_internally = false,
+> +};
+> +
+> +static const struct sdhci_at91_soc_data soc_data_sam9x60 = {
+> +       .pdata = &sdhci_sama5d2_pdata,
+> +       .baseclk_is_generated_internally = true,
+> +       .divider_for_baseclk = 2,
+> +};
+> +
+>  static const struct of_device_id sdhci_at91_dt_match[] = {
+>         { .compatible = "atmel,sama5d2-sdhci", .data = &soc_data_sama5d2 },
+> +       { .compatible = "microchip,sam9x60-sdhci", .data = &soc_data_sam9x60 },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, sdhci_at91_dt_match);
+> @@ -156,50 +175,37 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
+>         struct sdhci_host *host = dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>         struct sdhci_at91_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> -       int ret;
+>         unsigned int                    caps0, caps1;
+>         unsigned int                    clk_base, clk_mul;
+> -       unsigned int                    gck_rate, real_gck_rate;
+> +       unsigned int                    gck_rate, clk_base_rate;
+>         unsigned int                    preset_div;
+>
+> -       /*
+> -        * The mult clock is provided by as a generated clock by the PMC
+> -        * controller. In order to set the rate of gck, we have to get the
+> -        * base clock rate and the clock mult from capabilities.
+> -        */
+>         clk_prepare_enable(priv->hclock);
+>         caps0 = readl(host->ioaddr + SDHCI_CAPABILITIES);
+>         caps1 = readl(host->ioaddr + SDHCI_CAPABILITIES_1);
+> -       clk_base = (caps0 & SDHCI_CLOCK_V3_BASE_MASK) >> SDHCI_CLOCK_BASE_SHIFT;
+> -       clk_mul = (caps1 & SDHCI_CLOCK_MUL_MASK) >> SDHCI_CLOCK_MUL_SHIFT;
+> -       gck_rate = clk_base * 1000000 * (clk_mul + 1);
+> -       ret = clk_set_rate(priv->gck, gck_rate);
+> -       if (ret < 0) {
+> -               dev_err(dev, "failed to set gck");
+> -               clk_disable_unprepare(priv->hclock);
+> -               return ret;
+> -       }
+> -       /*
+> -        * We need to check if we have the requested rate for gck because in
+> -        * some cases this rate could be not supported. If it happens, the rate
+> -        * is the closest one gck can provide. We have to update the value
+> -        * of clk mul.
+> -        */
+> -       real_gck_rate = clk_get_rate(priv->gck);
+> -       if (real_gck_rate != gck_rate) {
+> -               clk_mul = real_gck_rate / (clk_base * 1000000) - 1;
+> -               caps1 &= (~SDHCI_CLOCK_MUL_MASK);
+> -               caps1 |= ((clk_mul << SDHCI_CLOCK_MUL_SHIFT) &
+> -                         SDHCI_CLOCK_MUL_MASK);
+> -               /* Set capabilities in r/w mode. */
+> -               writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN,
+> -                      host->ioaddr + SDMMC_CACR);
+> -               writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
+> -               /* Set capabilities in ro mode. */
+> -               writel(0, host->ioaddr + SDMMC_CACR);
+> -               dev_info(dev, "update clk mul to %u as gck rate is %u Hz\n",
+> -                        clk_mul, real_gck_rate);
+> -       }
+> +
+> +       gck_rate = clk_get_rate(priv->gck);
+> +       if (priv->soc_data->baseclk_is_generated_internally)
+> +               clk_base_rate = gck_rate / priv->soc_data->divider_for_baseclk;
+> +       else
+> +               clk_base_rate = clk_get_rate(priv->mainck);
+> +
+> +       clk_base = clk_base_rate / 1000000;
+> +       clk_mul = gck_rate / clk_base_rate - 1;
+> +
+> +       caps0 &= ~SDHCI_CLOCK_V3_BASE_MASK;
+> +       caps0 |= (clk_base << SDHCI_CLOCK_BASE_SHIFT) & SDHCI_CLOCK_V3_BASE_MASK;
+> +       caps1 &= ~SDHCI_CLOCK_MUL_MASK;
+> +       caps1 |= (clk_mul << SDHCI_CLOCK_MUL_SHIFT) & SDHCI_CLOCK_MUL_MASK;
+> +       /* Set capabilities in r/w mode. */
+> +       writel(SDMMC_CACR_KEY | SDMMC_CACR_CAPWREN, host->ioaddr + SDMMC_CACR);
+> +       writel(caps0, host->ioaddr + SDHCI_CAPABILITIES);
+> +       writel(caps1, host->ioaddr + SDHCI_CAPABILITIES_1);
+> +       /* Set capabilities in ro mode. */
+> +       writel(0, host->ioaddr + SDMMC_CACR);
+> +
+> +       dev_info(dev, "update clk mul to %u as gck rate is %u Hz and clk base is %u Hz\n",
+> +                clk_mul, gck_rate, clk_base_rate);
+>
+>         /*
+>          * We have to set preset values because it depends on the clk_mul
+> @@ -207,19 +213,19 @@ static int sdhci_at91_set_clks_presets(struct device *dev)
+>          * maximum sd clock value is 120 MHz instead of 208 MHz. For that
+>          * reason, we need to use presets to support SDR104.
+>          */
+> -       preset_div = DIV_ROUND_UP(real_gck_rate, 24000000) - 1;
+> +       preset_div = DIV_ROUND_UP(gck_rate, 24000000) - 1;
+>         writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+>                host->ioaddr + SDHCI_PRESET_FOR_SDR12);
+> -       preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
+> +       preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
+>         writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+>                host->ioaddr + SDHCI_PRESET_FOR_SDR25);
+> -       preset_div = DIV_ROUND_UP(real_gck_rate, 100000000) - 1;
+> +       preset_div = DIV_ROUND_UP(gck_rate, 100000000) - 1;
+>         writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+>                host->ioaddr + SDHCI_PRESET_FOR_SDR50);
+> -       preset_div = DIV_ROUND_UP(real_gck_rate, 120000000) - 1;
+> +       preset_div = DIV_ROUND_UP(gck_rate, 120000000) - 1;
+>         writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+>                host->ioaddr + SDHCI_PRESET_FOR_SDR104);
+> -       preset_div = DIV_ROUND_UP(real_gck_rate, 50000000) - 1;
+> +       preset_div = DIV_ROUND_UP(gck_rate, 50000000) - 1;
+>         writew(SDHCI_AT91_PRESET_COMMON_CONF | preset_div,
+>                host->ioaddr + SDHCI_PRESET_FOR_DDR50);
+>
+> @@ -314,7 +320,7 @@ static const struct dev_pm_ops sdhci_at91_dev_pm_ops = {
+>  static int sdhci_at91_probe(struct platform_device *pdev)
+>  {
+>         const struct of_device_id       *match;
+> -       const struct sdhci_pltfm_data   *soc_data;
+> +       const struct sdhci_at91_soc_data        *soc_data;
+>         struct sdhci_host               *host;
+>         struct sdhci_pltfm_host         *pltfm_host;
+>         struct sdhci_at91_priv          *priv;
+> @@ -325,17 +331,22 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+>                 return -EINVAL;
+>         soc_data = match->data;
+>
+> -       host = sdhci_pltfm_init(pdev, soc_data, sizeof(*priv));
+> +       host = sdhci_pltfm_init(pdev, soc_data->pdata, sizeof(*priv));
+>         if (IS_ERR(host))
+>                 return PTR_ERR(host);
+>
+>         pltfm_host = sdhci_priv(host);
+>         priv = sdhci_pltfm_priv(pltfm_host);
+> +       priv->soc_data = soc_data;
+>
+>         priv->mainck = devm_clk_get(&pdev->dev, "baseclk");
+>         if (IS_ERR(priv->mainck)) {
+> -               dev_err(&pdev->dev, "failed to get baseclk\n");
+> -               return PTR_ERR(priv->mainck);
+> +               if (soc_data->baseclk_is_generated_internally) {
+> +                       priv->mainck = NULL;
+> +               } else {
+> +                       dev_err(&pdev->dev, "failed to get baseclk\n");
+> +                       return PTR_ERR(priv->mainck);
+> +               }
+>         }
+>
+>         priv->hclock = devm_clk_get(&pdev->dev, "hclock");
+> --
+> 2.24.0
+>
