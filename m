@@ -2,170 +2,99 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B4BC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3325C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DD02077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AHySgW9o"
+	by mail.kernel.org (Postfix) with ESMTP id 8E41420836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1575988637;
+	bh=Htiw4KHrUr8tUURx+VNiZ7ZXYqZqdNLrXH1hUZlmBvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yPyEFZCJdXaVxAGif0ChQkXXre0y32BgssUFnqSPaCbjxe+96nPkRefI74yn+jBae
+	 4xin6DgtjN2KTy7AuT13vONwXwHKEXZBN6z5PHTpkVlFsYgWlLit1eysXpqLDsbKhz
+	 n2qEdGa4+eLbgppNThe/GNnhV15ai4akc9rlh0BU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfLJOgM (ORCPT
+        id S1727536AbfLJOhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:36:12 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36145 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727345AbfLJOgL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:36:11 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so3462906wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yjMFWTYHmrjkoTt4O0NLSDRVQC77k5RcZMfPtU0Nr1I=;
-        b=AHySgW9oLiGyRKJ8Vo5Ur+webysJrDBLo3GW2Kx+BYchkOt5FXqHO53UhcKQ52gB5q
-         +eb3Me2mn/t71xM8moTWKGVxPbksJaok4YbSlEqx8xcXwsUZqbR/wD2k6Xvl7Bkmka2y
-         j2FxJjtyM1JnhOuqx78mgCZan+LPQyCtkpXmuDK0Xonk4jrCVbm004UYoct4ZscbtMkl
-         wpNfqFqwj4ZWjmfz//g9sbgKbZmS2yKQ6MvylbqezD5RRsSfIEsbSH/MSOuNavm6k2h3
-         nu0ZKcqoZ2wSSvv26JEsa1qMkLlCWv1U4To9lw/BkeLNAllUXDvJtCh8UrLD8qrakQr1
-         hQdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yjMFWTYHmrjkoTt4O0NLSDRVQC77k5RcZMfPtU0Nr1I=;
-        b=kn1XqZFbkebH1y3u4PP+BN7NgOS+jvwboD7mA/X6R36tPRdLjuaBL1C87vmkm/owan
-         zNBFoRaHXDPUG5m+OsPzRBTmtemC0sHEzwN2VUs3PvSN5QcwRpBCxqrjlh1fSmE9L3k/
-         xglg6/N6TnnvTiU34Lz76ivqPsBOC17Zz85sNBMzuH6n+M3uqlpG5QACAopFaFaVXlJ/
-         zsvfU07qaA7zJo5Efnq8WP0q6atbV8oX3L2WZ8sYNtF4eyWgQUpGUnRQ/IX+3Upn3saz
-         7cpVep8t7qRLqybkQZqe/1ekon/Jjul7OikeSvWyuNyi0eDCbsEcENElIH+PQQtUOni2
-         Fa5w==
-X-Gm-Message-State: APjAAAVILgAHjhuRraU4pd4DknXBLbhOlIFDn8IAGr1jewi3GWw9ifLi
-        oGR99nsA04snxZsvpVUSX4g7ekJYiTQ=
-X-Google-Smtp-Source: APXvYqy3upd3hZM0xoS/UcXhDBcDbWUZxF4SDcOXxxCG3ubzDYr6YSoCINcFebQPJm32Yj6poX9ETQ==
-X-Received: by 2002:a1c:7419:: with SMTP id p25mr5375758wmc.129.1575988568700;
-        Tue, 10 Dec 2019 06:36:08 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:683a:fee4:9950:e8ce? ([2a01:e34:ed2f:f020:683a:fee4:9950:e8ce])
-        by smtp.googlemail.com with ESMTPSA id i16sm3453857wmb.36.2019.12.10.06.36.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 06:36:08 -0800 (PST)
-Subject: Re: [PATCH v3 0/3] thermal: introduce by-name softlink
-To:     Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191205071953.121511-1-wvw@google.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <69dd3a7a-c5fe-3ae7-8a4d-c3939870eed8@linaro.org>
-Date:   Tue, 10 Dec 2019 15:36:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 10 Dec 2019 09:37:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727345AbfLJOhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:37:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4820520637;
+        Tue, 10 Dec 2019 14:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575988635;
+        bh=Htiw4KHrUr8tUURx+VNiZ7ZXYqZqdNLrXH1hUZlmBvw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j9+R5XOzhrVdFcS0cua2tqkoQtmc/F4BwJbaSD8veBmF+iaa5GGPxlbzQzXNr7pyI
+         OGnjYDUBaDauVTIPjqxPY3ogsvFBrXdgG/tO1dNPAOFdzIGGvqog6qLJ/XI4LjMkpP
+         Ae1GLD0gAZqsUW7ELcNcnjAJcGU9Lr+E+m0Tp5hM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-serial@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Hyunki Koo <kkoos00@naver.com>,
+        HYUN-KI KOO <hyunki00.koo@samsung.com>,
+        Shinbeom Choi <sbeom.choi@samsung.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 02/10] tty: serial: samsung_tty: fix build warning
+Date:   Tue, 10 Dec 2019 15:36:58 +0100
+Message-Id: <20191210143706.3928480-2-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
+References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20191205071953.121511-1-wvw@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/12/2019 08:19, Wei Wang wrote:
-> The paths thermal_zone%d and cooling_device%d are not intuitive and the
-> numbers are subject to change due to device tree change. This usually
-> leads to tree traversal in userspace code.
-> The patch creates `tz-by-name' and `cdev-by-name' for thermal zone and
-> cooling_device respectively.
+Fix a build warning on systems that do not have CONFIG_OF enabled.
 
-Instead of adding another ABI, I suggest we put the current one
-deprecated with a warning in the dmesg, update the documentation and
-change the name the next version.
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Hyunki Koo <kkoos00@naver.com>
+Cc: HYUN-KI KOO <hyunki00.koo@samsung.com>
+Cc: Shinbeom Choi <sbeom.choi@samsung.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/tty/serial/samsung_tty.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-> Changes since v1 [1]:
->  * Split cooling device registration into a seperate patch
-> Changes since v2 [2]:
->  * Split improve error message in thermal zone registration
-> 
-> [1]: v1: https://lore.kernel.org/patchwork/patch/1139450/
-> [2]: v2: https://lkml.org/lkml/2019/12/4/1291
-> 
-> Wei Wang (3):
->   thermal: prevent cooling device with no type to be registered
->   thermal: improve error message in thermal zone registration
->   thermal: create softlink by name for thermal_zone and cooling_device
-> 
->  drivers/thermal/thermal_core.c | 55 +++++++++++++++++++++++++++-------
->  1 file changed, 44 insertions(+), 11 deletions(-)
-> 
-
-
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 83fd51607741..67c5a84d0a26 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -1851,7 +1851,10 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+ 
+ /* Device driver serial port probe */
+ 
++#ifdef CONFIG_OF
+ static const struct of_device_id s3c24xx_uart_dt_match[];
++#endif
++
+ static int probe_index;
+ 
+ static inline struct s3c24xx_serial_drv_data *s3c24xx_get_driver_data(
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.24.0
 
