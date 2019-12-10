@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B418C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5245FC00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165C8206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EEB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012646;
-	bh=u0aHa+I+Jg9B2MxzGcgEWpk6L/1D3U3c2zfgH+wGegg=;
+	s=default; t=1576012651;
+	bh=fs8JSDLuW2dEyYdyDybBSXTeMzo+5VJFwmn7GzATvqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LB/NGBeD3GJftR0S9jvvV9wmFQSU95nbiIiA6QnmUKALIqvuP1cytnqiGfUfQmCre
-	 Sb89D07LziDtECjjHA5sey11Pt+PWBKWVIhXK+UG2Z0zz4uEdLdaOvQv375kvtXxjR
-	 9ybWUUCVHX2YUOoRjbm0/xvFcM7ms/UwcYRbrUXw=
+	b=Pa9Tz284A5AhxyA3wZA0gID/U97BAza14mg1iJdKxAbbvGPSPnFQ0BIpTqlWs0Gid
+	 6NKCvF4seIQh9SF0FKQ6GTInjzvtfHlv+2AypHJpjBzlQUFMV7B6HTbmA07sXeBB0s
+	 rsVnqjq1DggqzGzYF7nTAfBGRrA9CpR5p1m91rMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfLJVM5 (ORCPT
+        id S1729064AbfLJVR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:17:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbfLJVMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:54 -0500
+        id S1729142AbfLJVM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272EA222C4;
-        Tue, 10 Dec 2019 21:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 812FF214AF;
+        Tue, 10 Dec 2019 21:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012373;
-        bh=u0aHa+I+Jg9B2MxzGcgEWpk6L/1D3U3c2zfgH+wGegg=;
+        s=default; t=1576012376;
+        bh=fs8JSDLuW2dEyYdyDybBSXTeMzo+5VJFwmn7GzATvqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Oe3pjyr4pTbr7icGH6edWTuZxhbu+R8ZF88kGQwXxzhEn90ONpdSpLWrbFOMXK6F
-         y9TPmno/CeWCvzSWgxBzFAImIHGcW2kGTNB5mXMhYNrZ9puUTkFipOFzTbKskAQAim
-         iU++NQ5L6bBi2w3u1Yr587qwSKCiH/7LNzPahX/A=
+        b=CbusRGHu+PUtmLCTukUgYTsiy6yf65YpE4xd3e+l6J2PpDn50boUi/H693QZF+sOP
+         BNOA2TGbZCLsmkUyFc3KATUSBVrG0KuN/13zWdtfZHzrXHLr/xQ/gngSpyd5MhcpAz
+         Pm0mfV6bDBzQ5nlOjtma3C1QsLoyih2pA2yaAZSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omar Sandoval <osandov@fb.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 299/350] btrfs: don't prematurely free work in end_workqueue_fn()
-Date:   Tue, 10 Dec 2019 16:06:44 -0500
-Message-Id: <20191210210735.9077-260-sashal@kernel.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar.Eggemann@arm.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        patrick.bellasi@matbug.net, qperret@google.com, surenb@google.com,
+        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 301/350] sched/uclamp: Fix overzealous type replacement
+Date:   Tue, 10 Dec 2019 16:06:46 -0500
+Message-Id: <20191210210735.9077-262-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,52 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
+[ Upstream commit 7763baace1b738d65efa46d68326c9406311c6bf ]
 
-Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
-the work item) and then calls bio_endio(). This is another potential
-instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
+Some uclamp helpers had their return type changed from 'unsigned int' to
+'enum uclamp_id' by commit
 
-In particular, the endio call may depend on other work items. For
-example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
-__btrfs_correct_data_nocsum() -> dio_read_error() ->
-submit_dio_repair_bio(), which submits a bio that is also completed
-through a end_workqueue_fn() work item. However,
-__btrfs_correct_data_nocsum() waits for the newly submitted bio to
-complete, thus it depends on another work item.
+  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
 
-This example currently usually works because we use different workqueue
-helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
-However, it may deadlock with stacked filesystems and is fragile
-overall. The proper fix is to free the work item at the very end of the
-work function, so let's do that.
+but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
+range, which should really be unsigned int. The affected helpers are
+uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Note that this doesn't lead to any obj diff using a relatively recent
+aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
+properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
+anything funny. I'm still marking this as fixing the above commit to be on
+the safe side.
+
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Qais Yousef <qais.yousef@arm.com>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar.Eggemann@arm.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: patrick.bellasi@matbug.net
+Cc: qperret@google.com
+Cc: surenb@google.com
+Cc: tj@kernel.org
+Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
+Link: https://lkml.kernel.org/r/20191115103908.27610-1-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/core.c  | 6 +++---
+ kernel/sched/sched.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 402b61bf345cd..3895c21853cc4 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1657,8 +1657,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
- 	bio->bi_status = end_io_wq->status;
- 	bio->bi_private = end_io_wq->private;
- 	bio->bi_end_io = end_io_wq->end_io;
--	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
- 	bio_endio(bio);
-+	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 44123b4d14e82..8dacda4b03627 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
+ 	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
  }
  
- static int cleaner_kthread(void *arg)
+-static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
++static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
+ {
+ 	if (clamp_id == UCLAMP_MIN)
+ 		return 0;
+@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
+ }
+ 
+ static inline
+-enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
++unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
+ 				   unsigned int clamp_value)
+ {
+ 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
+ 
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c8870c5bd7df2..49ed949f850c4 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2309,7 +2309,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+ #endif /* CONFIG_CPU_FREQ */
+ 
+ #ifdef CONFIG_UCLAMP_TASK
+-enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
++unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
+ static __always_inline
+ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
 -- 
 2.20.1
 
