@@ -2,179 +2,179 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CC4C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6B9C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAC62073D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1AF2073D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 16:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfLJQiw (ORCPT
+        id S1727603AbfLJQju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 11:38:52 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34732 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727508AbfLJQiw (ORCPT
+        Tue, 10 Dec 2019 11:39:50 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56727 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfLJQju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 11:38:52 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ieiX9-000357-Hf; Tue, 10 Dec 2019 16:38:47 +0000
-Date:   Tue, 10 Dec 2019 17:38:46 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Jann Horn <jannh@google.com>, cyphar@cyphar.com,
-        Andy Lutomirski <luto@amacapital.net>, viro@zeniv.linux.org.uk,
-        Jed Davis <jld@mozilla.com>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v2 4/4] samples: Add example of using PTRACE_GETFD in
- conjunction with user trap
-Message-ID: <20191210163845.6hbbawr6cpt5dp5c@wittgenstein>
-References: <20191209070646.GA32477@ircssh-2.c.rugged-nimbus-611.internal>
- <20191209192959.GB10721@redhat.com>
- <BE3E056F-0147-4A00-8FF7-6CC9DE02A30C@ubuntu.com>
- <20191209204635.GC10721@redhat.com>
- <20191210111051.j5opodgjalqigx6q@wittgenstein>
- <CAMp4zn84YQHz62x-nxZFBgMEW9AiMt75q_rO83uaGg=YtyKV-w@mail.gmail.com>
+        Tue, 10 Dec 2019 11:39:50 -0500
+X-Originating-IP: 90.182.112.136
+Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 2F5696000D;
+        Tue, 10 Dec 2019 16:39:46 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 17:39:44 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [v5,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Message-ID: <20191210163944.GS1463890@piout.net>
+References: <20190919014520.15500-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMp4zn84YQHz62x-nxZFBgMEW9AiMt75q_rO83uaGg=YtyKV-w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190919014520.15500-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:07:45AM -0800, Sargun Dhillon wrote:
-> On Tue, Dec 10, 2019 at 3:10 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > [I'm expanding the Cc to a few Firefox and glibc people since we've been
-> >  been talking about replacing SECCOMP_RET_TRAP with
-> >  SECCOMP_RET_USER_NOTIF for a bit now because the useage of
-> >  SECCOMP_RET_TRAP in the broker blocks desirable core glibc changes.
-> >  Even if just for their lurking pleasure. :)]
-> >
-> > On Mon, Dec 09, 2019 at 09:46:35PM +0100, Oleg Nesterov wrote:
-> > > On 12/09, Christian Brauner wrote
-> > >
-> > > I agree, and I won't really argue...
-> > >
-> > > but the changelog in 2/4 says
-> > >
-> > >       The requirement that the tracer has attached to the tracee prior to the
-> > >       capture of the file descriptor may be lifted at a later point.
-> > >
-> > > so may be we should do this right now?
-> >
-> > I think so, yes. This doesn't strike me as premature optimization but
-> > rather as a core design questions.
-> >
-> > >
-> > > plus this part
-> > >
-> > >       @@ -1265,7 +1295,8 @@ SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
-> > >               }
-> > >
-> > >               ret = ptrace_check_attach(child, request == PTRACE_KILL ||
-> > >       -                                 request == PTRACE_INTERRUPT);
-> > >       +                                 request == PTRACE_INTERRUPT ||
-> > >       +                                 request == PTRACE_GETFD);
-> > >
-> > > actually means "we do not need ptrace, but we do not know where else we
-> > > can add this fd_install(get_task_file()).
-> >
-> > Right, I totally get your point and I'm not a fan of this being in
-> > ptrace() either.
-> >
-> > The way I see is is that the main use-case for this feature is the
-> > seccomp notifier and I can see this being useful. So the right place to
-> > plumb this into might just be seccomp and specifically on to of the
-> > notifier.
-> > If we don't care about getting and setting fds at random points of
-> > execution it might make sense to add new options to the notify ioctl():
-> >
-> > #define SECCOMP_IOCTL_NOTIF_GET_FD      SECCOMP_IOWR(3, <sensible struct>)
-> > #define SECCOMP_IOCTL_NOTIF_SET_FD      SECCOMP_IOWR(4, <sensible struct>)
-> >
-> > which would let you get and set fds while the supervisee is blocked.
-> >
-> > Christian
-> Doesn't SECCOMP_IOCTL_NOTIF_GET_FD have some ambiguity to it?
+Hi,
 
-As Tycho mentioned, this is why we have a the tid of the calling task
-but we also have a cookie per request.
-The cookie is useful so that you can do
-- receive request <chocolate> cookie
-- open(/proc/<pid>{/mem})
-- verify <chocolate> cookie still exists
-  - <chocolate> cookie still exists -> file descriptor refers to correct
-    task
-  - <chocolate> cookie gone -> task has been recycled
-
-> Specifically, because
-> multiple processes can have the same notifier attached to them? If we
-> choose to go down the
-> route of introducing an ioctl (which I'm not at all opposed to), I
-> would rather do it on pidfd. We
-> can then plumb seccomp notifier to send pidfd instead of raw pid. In
-> the mean time, folks
-> can just open up /proc/${PID}, and do the check cookie dance.
+On 19/09/2019 09:45:19+0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - quartz-drive-strength-ohms: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> Christian,
-> As the maintainer of pidfd, what do you think?
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- Replace nxp,quartz-drive-strength with
+> 	  quartz-drive-strength-ohms
+> 	- Select ohm unit for quartz drive strength
+> 
+> Change in v4:
+> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+> 	- Add nxp,rtc-interrupt-type property
+> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
+> 
+> Change in v3:
+> 	- None
+> 
+> Change in v2:
+> 	- Replace properties name
+> 	  quartz-load-capacitance -> quartz-load-femtofarads
+> 	  quartz-drive-strength -> nxp,quartz-drive-strength
+> 	  quartz-low-jitter -> nxp,quartz-low-jitter
+> 	- Replace drive strength name
+> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+> 	- Set default interrupt-output-pin as "INTA"
+> 
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..7f907581d5db 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,52 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
+> +  type. Valid values are
+> +  INT_PIE(periodic interrupt enable),
+> +  INT_OIE(offset correction interrupt enable),
+> +  INT_A1IE(alarm1 interrupt enable),
+> +  INT_A2IE(alarm2 interrupt enable),
+> +  INT_TSRIE(timestamp register interrupt enable)
+> +  INT_BSIE(battery switch interrupt enable),
+> +  INT_WDIE(WatchDog interrupt enable,and
+> +  compose these values such as: INT_A1IE | INT_A2IE,
+> +  but currently only support INT_A1IE, default value is INT_A1IE.
+> +  The property and property nxp,rtc-interrupt-output-pin
+> +  work together to generate some interrupts on some pins.
+> +
+> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA". The property and property
+> +  nxp,rtc-interrupt-type work together to generate some interrupts on
+> +  some pins.
+> +
 
-Let me quote what I wrote to the Mozilla folks today. :)
+This binding is still not working. What if you need INT_A1 on INTA and
+INT_WD on INTB?
 
-"(One thing that always strikes me is that if my pidfd patches would've
-been ready back when we did the seccomp notifier we could've added a
-pidfd argument to the seccomp notifier kernel struct and if a flag is
-set given back a pidfd alongside the notifier fd. This way none of this
-revalidting the id stuff would've been necessary and you could also
-safely translate from a pidfd into a /proc/<pid> directory to e.g. open
-/proc/<pid>/mem. Anyway, that's not out of scope. One could still
-write a patch for that to add a pidfd argument under a new flag to the
-kernel struct. Should be rather trivial.)"
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
+> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
+> +  Default value is 12500fF.
+> +
+> +- quartz-drive-strength-ohms: Drive strength for the quartz,
+> +  expressed in ohm, Valid values are 60000, 100000 and 500000.
+> +  Default value is 100000 ohm.
+> +
+> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+> +
+> +- wakeup-source: Boolean property, Please refer to
+> +  Documentation/devicetree/bindings/power/wakeup-source.txt
+> +
+>  Example:
+>  
+>  pcf85363: pcf85363@51 {
+>  	compatible = "nxp,pcf85363";
+>  	reg = <0x51>;
+> -};
+>  
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +	wakeup-source;
+> +	nxp,rtc-interrupt-output-pin = "INTA";
+> +	nxp,rtc-interrupt-type = <INT_A1IE>;
+> +	quartz-load-femtofarads = <12500>;
+> +	quartz-drive-strength-ohms = <60000>;
+> +	nxp,quartz-low-jitter;
+> +};
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> new file mode 100644
+> index 000000000000..6340bf2da8f5
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +
+> +/* Interrupt type */
+> +#define INT_WDIE	(1 << 0)
+> +#define INT_BSIE	(1 << 1)
+> +#define INT_TSRIE	(1 << 2)
+> +#define INT_A2IE	(1 << 3)
+> +#define INT_A1IE	(1 << 4)
+> +#define INT_OIE		(1 << 5)
+> +#define INT_PIE		(1 << 6)
 
-So yeah, it crossed my mind. ;)
+Please remove IE from the define names. i.e INT_WDIE is a bit enabling
+INT_WD, you don't get an interrupt when the watchdog is enabled but
+rather when it expires.
 
-I really would like to have this placed under a flag though...
-I very much dislike the idea of receiving any kind of fd
-- _especially a pidfd_ - implicitly.
-So ideally this would be a flag to the receive ioctl(). Kees just got my
-SECCOMP_USER_NOTIF_FLAG_CONTINUE patchset merged for v5.5 which adds the
 
-#define SECCOMP_USER_NOTIF_FLAG_CONTINUE (1UL << 0)
-
-flag which when set in the send case (i.e. supervisor -> kernel) will
-cause the syscall to be executed.
-
-When we add a new flag to get a pidfd it might make sense to rename the
-CONTINUE flag in master before v5.5 is out to
-
-#define SECCOMP_USER_NOTIF_SEND_FLAG_CONTINUE (1UL << 0)
-
-to indicate that it's only valid for the SEND ioctl().
-
-Then we add
-
-#define SECCOMP_USER_NOTIF_RECV_FLAG_PIDFD (1UL << 0)
-
-for v5.6. This way send and receive flags are named differently for
-clarity. (I don't care about the name being long. Other people might
-though _shrug_.)
-
-Christian
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
