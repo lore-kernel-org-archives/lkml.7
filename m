@@ -2,94 +2,115 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC52C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B32C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EA720828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576000358;
-	bh=h1yDgBiBQnmhjiwC4RsoTbv9SDy85ywpupjU/q0rRKQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1RcbLS5WKJYeKjPhrsLnf7n0LOXjSXHY5cfxPaUiWm/+Sm/f5HsvtG7CndW+XzRI4
-	 CrbXSCAWM4G5405KpYL8JpZYT0uXnvllFWPLavh4SeEiqhqG7IaSr/dROOdSmn7+rK
-	 vW7vi7j/iUgW14ZQIjMZuSoRG5464nv6sBiV0nKQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5A36A20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfLJRwg (ORCPT
+        id S1727527AbfLJRz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:52:36 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33140 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfLJRwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:52:36 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 21so20957385ljr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ktwnBelOBvFJpjKuF3uDbyoR2+Ho0WYd40e7X6G/Ax4=;
-        b=XDHhbs2a8XE64U2SOt752BFK+HfakWHiThL/FiJTrRyMG/Vs77GtdpLI8fgQKUor/O
-         +kGI9sdd9bjkCqZiqBE5NKc6GvcYHWa5q+tJOgwbt9LMIdYAwc+FCf1I08Plw0ztBuAG
-         iiP9mpueXZ6Tupr+S7j2jUNPTo7OJISmLlrOg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ktwnBelOBvFJpjKuF3uDbyoR2+Ho0WYd40e7X6G/Ax4=;
-        b=S4nEGpxSRchzoY/vCLkou+OJAEIANCUNHO0ocN2Jt2669EVkwogNUUIU/1PAbm7AJ5
-         2TE9znu8RICPxZdFETOAer0xAQvcLb1zcFvTA9HudkrzdyvXPSmzMMyO01ZyqUO+Y/yV
-         ZHbjtIdb1DQVyJqrYdZsdVcG7cu4KEATxC2ILnLIpxyGHwo1bGygPY99l85vwUoU5HHj
-         bNkvEzgyciwFczGLMRBxjlNfsUWcNnoQq4QPNhHUPns+aGQyNY95pAOu5ff6b6ydog06
-         MQbsnjYNbTMwl11C2SGK7TX0Hh0Mvp/Gd9LTFpNW3hpsVmq4za8L6xVFKCk8wrHIgbER
-         uhkw==
-X-Gm-Message-State: APjAAAUC1w1PISC0tbqjLWm83U8EjyM9eAy75jtqkcrfKWE3KxWoUkmg
-        iHI0u8fBOWFwV4AHqd4YjoOhmcSHJ3M=
-X-Google-Smtp-Source: APXvYqy68OsK1llJEQLk2JPrBYEgYQ0FMSD6rEUgo1+OVczbxcncSRqDgiU+w1TggCLQ0gUYh5TT+w==
-X-Received: by 2002:a2e:9181:: with SMTP id f1mr22086298ljg.51.1576000353985;
-        Tue, 10 Dec 2019 09:52:33 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id p26sm1980411lfh.64.2019.12.10.09.52.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 09:52:32 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id y1so3122162lfb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:52:32 -0800 (PST)
-X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr16180003lfp.106.1576000352511;
- Tue, 10 Dec 2019 09:52:32 -0800 (PST)
+        Tue, 10 Dec 2019 12:55:27 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:38276 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727259AbfLJRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:55:27 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iejjI-0006rj-HL; Tue, 10 Dec 2019 10:55:25 -0700
+To:     Jiasen Lin <linjiasen@hygon.cn>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Kit Chow <kchow@gigaio.com>
+References: <20191210002437.2907-1-logang@deltatee.com>
+ <20191210002437.2907-5-logang@deltatee.com>
+ <eb5603ae-d884-ea13-7f7a-4d578e4fa6ee@hygon.cn>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <23d2c1a3-54fa-db6c-32ee-312a667ac0c9@deltatee.com>
+Date:   Tue, 10 Dec 2019 10:55:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191208153949.GJ32275@shao2-debian> <20191209085559.GA5868@dhcp22.suse.cz>
- <CAHk-=whF0mbvWC=sYKWTrpymmjWkGZcX9hnHgnm1t1M++W66zA@mail.gmail.com> <20191210141502.GQ32275@shao2-debian>
-In-Reply-To: <20191210141502.GQ32275@shao2-debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 10 Dec 2019 09:52:16 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjj33OvL17p4XOjTjS-_MMEr5p0RqR9yLGhKWV3cgb57w@mail.gmail.com>
-Message-ID: <CAHk-=wjj33OvL17p4XOjTjS-_MMEr5p0RqR9yLGhKWV3cgb57w@mail.gmail.com>
-Subject: Re: [pipe] 3c0edea9b2: lmbench3.PIPE.bandwidth.MB/sec -17.0% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <eb5603ae-d884-ea13-7f7a-4d578e4fa6ee@hygon.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: kchow@gigaio.com, dan.j.williams@intel.com, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linjiasen@hygon.cn
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 4/5] dmaengine: plx-dma: Implement hardware
+ initialization and cleanup
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 6:15 AM kernel test robot <rong.a.chen@intel.com> wrote:
->
-> Hi Linus,
->
-> Sorry for the inconvenience, indeed, the regression has been fixed.
 
-Woohoo.. And more than fixed, it looks like. Not that I looked at
-historical data, I'm not sure how much this number normally
-fluctuates. I'm assuming the stddev is just a per-boot "do it a few
-times" rather than any long-term thing?
 
-                Linus
+On 2019-12-09 11:49 p.m., Jiasen Lin wrote:
+> Integrated DMA engine of PEX87xx series switch support various
+> interrupts. According to my personal experience, I suggest that
+> enable error interrupt, invalid decscriptor interrupt, abort done
+> interrupt, graceful puse done interrupt, and
+> immediate pasue done interrupt by write  DMA Channel x Interrupt
+> Control/Status register.
+
+Well, that depends on what we want to do with these interrupts:
+
+1) We shouldn't need to handle the error/invalid descriptor interrupt.
+We instead just see that a specific descriptor failed (in the usual way)
+and handle it accordingly. (Though this isn't really documented well).
+An invalid descriptor should really never happen unless we have a driver
+bug. I suppose I could print an error message if either occur.
+
+2) We never send an abort or immediate pause to the device, so neither
+interrupt can ever fire. So there's nothing to do if they do fire and
+thus no sense enabling them.
+
+3) We do send a graceful pause to the device on teardown but prefer to
+poll for the end of the pause instead of adding the extra complexity to
+waiting for an interrupt. So no need for the interrupt.
+
+Logan
+
+
+
+> 
+> Thanks,
+> Jiasen Lin
+> 
+>>   	kref_init(&plxdev->ref);
+>>   	INIT_WORK(&plxdev->release_work, plx_dma_release_work);
+>> +	spin_lock_init(&plxdev->ring_lock);
+>> +	tasklet_init(&plxdev->desc_task, plx_dma_desc_task,
+>> +		     (unsigned long)plxdev);
+>>   
+>> +	RCU_INIT_POINTER(plxdev->pdev, pdev);
+>>   	plxdev->bar = pcim_iomap_table(pdev)[0];
+>>   
+>>   	dma = &plxdev->dma_dev;
+>> @@ -169,6 +501,16 @@ static void plx_dma_remove(struct pci_dev *pdev)
+>>   
+>>   	free_irq(pci_irq_vector(pdev, 0),  plxdev);
+>>   
+>> +	rcu_assign_pointer(plxdev->pdev, NULL);
+>> +	synchronize_rcu();
+>> +
+>> +	spin_lock_bh(&plxdev->ring_lock);
+>> +	plxdev->ring_active = false;
+>> +	spin_unlock_bh(&plxdev->ring_lock);
+>> +
+>> +	__plx_dma_stop(plxdev);
+>> +	plx_dma_abort_desc(plxdev);
+>> +
+>>   	plxdev->bar = NULL;
+>>   	plx_dma_put(plxdev);
+>>   
+>>
