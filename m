@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182B3C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A3FC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E144420637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE7B20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015807;
-	bh=WQUmKw110NB9JpZMyTvISK/CN0wm7Sz1NdrAJ6v6Gvc=;
+	s=default; t=1576015811;
+	bh=oWHD6SqONwES3CnNPvUBNIsUmyvsseXbpilCLqXF0lI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUR/pbN6Kq8rrnz/lgA6NJAelcKFfgAdQ5ddFkFHJvLF/TehwnNuEK42OyKfQrdEI
-	 16hGVZ+QxIp8qVOb1jVvukQXvE3sDrYzY/lafNunTrVQWJ8c1Rwv6EycEXKBPZD/V1
-	 HvJaSFC2h9VTWQH/bw9wE6O7I/Cq0/S3lOpSjEPM=
+	b=wyOicKCNMJs+F0ExFMG3xXsGfLq8yOglV/AaG96AcTMH/jBUN+EavprAd98MIMldf
+	 p0oUFQxgl+DQJQA0s+eYHgcAm69dN+6SaPXmbVJQtWNO6SjYQtoaOR2golagMdHkVU
+	 BCiqVTQxT3f/UagjZUxFxDsW2ZVQFtVI5LxXTVpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfLJWEO (ORCPT
+        id S1729188AbfLJWKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:10:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbfLJWEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:09 -0500
+        id S1728620AbfLJWEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 284462053B;
-        Tue, 10 Dec 2019 22:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF2EC22B48;
+        Tue, 10 Dec 2019 22:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015449;
-        bh=WQUmKw110NB9JpZMyTvISK/CN0wm7Sz1NdrAJ6v6Gvc=;
+        s=default; t=1576015453;
+        bh=oWHD6SqONwES3CnNPvUBNIsUmyvsseXbpilCLqXF0lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OBmG9hbOVt08noGgj18QIYcEedINQeGaYUgmEewkYqKvJH/A4fcSiHXDnltJVuXW
-         qY67IdXS+SLub79Kw741E9wN/13OKgr2UikldRZF0UiGfWcUo4+EvVd7T+B+5OSUod
-         GxOiN+Rdztm1ioYt0hqA8oFvYJmpDjcZKGqrjbqY=
+        b=f9ToxdOvJIdK5KifrHkRPvz1aikPhVX0yUHNgcOArlH33ifn0v7ZC7DyaHFhL2gbV
+         tOFygfn20aRZbkTchhelcLEc0oO5CDFzSZX6W8CDMRegy73whBpdyOXeLXed5W6xi0
+         XpA8NUm+fxcVF5EbAiRFHvxXfMLl3MWnDKHWrNHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Chiu <chiu@endlessm.com>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 056/130] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
-Date:   Tue, 10 Dec 2019 17:01:47 -0500
-Message-Id: <20191210220301.13262-56-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 060/130] ALSA: hda - Fix pending unsol events at shutdown
+Date:   Tue, 10 Dec 2019 17:01:51 -0500
+Message-Id: <20191210220301.13262-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,71 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0eeb91ade90ce06d2fa1e2fcb55e3316b64c203c ]
+[ Upstream commit ca58f55108fee41d87c9123f85ad4863e5de7f45 ]
 
-The RTL8723BU has problems connecting to AP after each warm reboot.
-Sometimes it returns no scan result, and in most cases, it fails
-the authentication for unknown reason. However, it works totally
-fine after cold reboot.
+This is an alternative fix attemp for the issue reported in the commit
+caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling") that was
+reverted later due to regressions.  Instead of tweaking the hardware
+disablement order and the enforced irq flushing, do calling
+cancel_work_sync() of the unsol work early enough, and explicitly
+ignore the unsol events during the shutdown by checking the
+bus->shutdown flag.
 
-Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-for cold reboot and warm reboot, the registers imply that the MAC
-is already powered and thus some procedures are skipped during
-driver initialization. Double checked the vendor driver, it reads
-the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-during initialization based on them. This commit only tells the
-RTL8723BU to do full initialization without checking MAC status.
-
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: caa8422d01e9 ("ALSA: hda: Flush interrupts on disabling")
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://lore.kernel.org/r/s5h1ruxt9cz.wl-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
- 3 files changed, 5 insertions(+)
+ sound/pci/hda/hda_bind.c  | 4 ++++
+ sound/pci/hda/hda_intel.c | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index 95e3993d8a331..a895b6fd6f858 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -1349,6 +1349,7 @@ struct rtl8xxxu_fileops {
- 	u8 has_s0s1:1;
- 	u8 has_tx_report:1;
- 	u8 gen2_thermal_meter:1;
-+	u8 needs_full_init:1;
- 	u32 adda_1t_init;
- 	u32 adda_1t_path_on;
- 	u32 adda_2t_path_on_a;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-index c4b86a84a721d..27e97df996c73 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-@@ -1673,6 +1673,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
- 	.has_s0s1 = 1,
- 	.has_tx_report = 1,
- 	.gen2_thermal_meter = 1,
-+	.needs_full_init = 1,
- 	.adda_1t_init = 0x01c00014,
- 	.adda_1t_path_on = 0x01c00014,
- 	.adda_2t_path_on_a = 0x01c00014,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 91b01ca32e752..b58bf8e2cad2f 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -3905,6 +3905,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 	else
- 		macpower = true;
+diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
+index 8db1890605f60..c175b2cf63f77 100644
+--- a/sound/pci/hda/hda_bind.c
++++ b/sound/pci/hda/hda_bind.c
+@@ -42,6 +42,10 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
+ {
+ 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
  
-+	if (fops->needs_full_init)
-+		macpower = false;
++	/* ignore unsol events during shutdown */
++	if (codec->bus->shutdown)
++		return;
 +
- 	ret = fops->power_on(priv);
- 	if (ret < 0) {
- 		dev_warn(dev, "%s: Failed power on\n", __func__);
+ 	if (codec->patch_ops.unsol_event)
+ 		codec->patch_ops.unsol_event(codec, ev);
+ }
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 96e9b3944b925..890793ad85ca1 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1450,8 +1450,11 @@ static int azx_free(struct azx *chip)
+ static int azx_dev_disconnect(struct snd_device *device)
+ {
+ 	struct azx *chip = device->device_data;
++	struct hdac_bus *bus = azx_bus(chip);
+ 
+ 	chip->bus.shutdown = 1;
++	cancel_work_sync(&bus->unsol_work);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
