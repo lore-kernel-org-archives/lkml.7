@@ -2,159 +2,193 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBE1C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E997C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB8F20726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="du4OR0Lw"
+	by mail.kernel.org (Postfix) with ESMTP id E6C7720726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLJJ0K (ORCPT
+        id S1727196AbfLJJ1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:26:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42676 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfLJJ0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:26:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HnoPtgDyyEf84ZWb/qymyd1fNl04iBZY3/x7YWhBuy8=; b=du4OR0LwfqnYS24MzA+8qk22K
-        ww7jdnZ7F5lymBuvVfjwdS4X/9q1flzgkvLLm0Qw1m/yMZ8RY93MaWAmixCw9xhyNHSq/uKjRLlJT
-        PPuVM/mHsbLpkzniD0IAth0h+2hP0iulbN7HBZMPMeg/YxuMfw1w4dBPZe+lAc/eQKRV2afp8XYr2
-        hT24hxLfBGdN9pq2oahlKlkcRYq9VKn7XgIAhESiiCBZdwF6wy7AH2NpbE1l6v3CcGliN3sXSluRS
-        vHI0Ju0Elox8AjwmMO1rY7YwAlMTfmLMtx9EssBvX/YaTmFDLCoORALz3wQS6wOdX7yY9t1ILaKgN
-        fwzpq7K1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iebmN-0002pk-NM; Tue, 10 Dec 2019 09:26:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7096300596;
-        Tue, 10 Dec 2019 10:24:41 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1E45D2010F142; Tue, 10 Dec 2019 10:26:01 +0100 (CET)
-Date:   Tue, 10 Dec 2019 10:26:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2] sched/core: Preempt current task in favour of bound
- kthread
-Message-ID: <20191210092601.GK2844@hirez.programming.kicks-ass.net>
-References: <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
+        Tue, 10 Dec 2019 04:27:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36160 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726574AbfLJJ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:27:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6B6A1AE74;
+        Tue, 10 Dec 2019 09:27:19 +0000 (UTC)
+Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        gurchetansingh@chromium.org
+References: <20191210085759.14763-1-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
+Date:   Tue, 10 Dec 2019 10:27:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210054330.GF27253@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191210085759.14763-1-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:13:30AM +0530, Srikar Dronamraju wrote:
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 44123b4d14e8..82126cbf62cd 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -2664,7 +2664,12 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
->   */
->  int wake_up_process(struct task_struct *p)
->  {
-> -	return try_to_wake_up(p, TASK_NORMAL, 0);
-> +	int wake_flags = 0;
-> +
-> +	if (is_per_cpu_kthread(p))
-> +		wake_flags = WF_KTHREAD;
-> +
-> +	return try_to_wake_up(p, TASK_NORMAL, wake_flags);
->  }
->  EXPORT_SYMBOL(wake_up_process);
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x
+Content-Type: multipart/mixed; boundary="byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, open list
+ <linux-kernel@vger.kernel.org>,
+ "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
+ gurchetansingh@chromium.org
+Message-ID: <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
+Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
+References: <20191210085759.14763-1-kraxel@redhat.com>
+In-Reply-To: <20191210085759.14763-1-kraxel@redhat.com>
 
-Why wake_up_process() and not try_to_wake_up() ? This way
-wake_up_state(.state = TASK_NORMAL() is no longer the same as
-wake_up_process(), and that's weird!
+--byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 69a81a5709ff..36486f71e59f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6660,6 +6660,27 @@ static void set_skip_buddy(struct sched_entity *se)
->  		cfs_rq_of(se)->skip = se;
+Hi
+
+Am 10.12.19 um 09:57 schrieb Gerd Hoffmann:
+> virtio-gpu uses cached mappings.  shmem helpers use writecombine though=
+=2E
+> So roll our own mmap function, wrapping drm_gem_shmem_mmap(), to tweak
+> vm_page_prot accordingly.
+>=20
+> Reported-by: Gurchetan Singh <gurchetansingh@chromium.org>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_object.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/=
+virtio/virtgpu_object.c
+> index 017a9e0fc3bb..158610902054 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -75,6 +75,22 @@ static void virtio_gpu_free_object(struct drm_gem_ob=
+ject *obj)
+>  	drm_gem_shmem_free_object(obj);
 >  }
->  
-> +static int kthread_wakeup_preempt(struct rq *rq, struct task_struct *p, int wake_flags)
+> =20
+> +static int virtio_gpu_gem_mmap(struct drm_gem_object *obj, struct vm_a=
+rea_struct *vma)
 > +{
-> +	struct task_struct *curr = rq->curr;
-> +	struct cfs_rq *cfs_rq = task_cfs_rq(curr);
+> +	pgprot_t prot;
+> +	int ret;
 > +
-> +	if (!(wake_flags & WF_KTHREAD))
-> +		return 0;
+> +	ret =3D drm_gem_shmem_mmap(obj, vma);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	if (p->nr_cpus_allowed != 1 || curr->nr_cpus_allowed == 1)
-> +		return 0;
-
-Per the above, WF_KTHREAD already implies p->nr_cpus_allowed == 1.
-
-> +	if (cfs_rq->nr_running > 2)
-> +		return 0;
-> +
-> +	/*
-> +	 * Don't preempt, if the waking kthread is more CPU intensive than
-> +	 * the current thread.
-> +	 */
-> +	return p->nvcsw * curr->nivcsw >= p->nivcsw * curr->nvcsw;
-
-Both these conditions seem somewhat arbitrary. The number of context
-switch does not correspond to CPU usage _at_all_.
-
-vtime OTOH does reflect exactly that, if it runs a lot, it will be ahead
-in the tree.
-
+> +	/* virtio-gpu needs normal caching, so clear writecombine */
+> +	prot =3D vm_get_page_prot(vma->vm_flags);
+> +	prot =3D pgprot_decrypted(prot);
+> +	vma->vm_page_prot =3D prot;
+> +	return 0;
 > +}
+
+There's similar code in udl, [1] which still uses writecombine for
+imported buffers. Virtio does not need this?
+
+Aside from this, do you think we could handle all special cases within
+shmem?
+
+Best regards
+Thomas
+
+[1]
+https://cgit.freedesktop.org/drm/drm-tip/tree/drivers/gpu/drm/udl/udl_gem=
+=2Ec?id=3D28ecf94a6f1072fc4744c06f5b3d267297125b37#n20
+
 > +
->  /*
->   * Preempt the current task with a newly woken task if needed:
->   */
-> @@ -6716,7 +6737,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
->  	find_matching_se(&se, &pse);
->  	update_curr(cfs_rq_of(se));
->  	BUG_ON(!pse);
-> -	if (wakeup_preempt_entity(se, pse) == 1) {
-> +	if (wakeup_preempt_entity(se, pse) == 1 || kthread_wakeup_preempt(rq, p, wake_flags)) {
->  		/*
->  		 * Bias pick_next to pick the sched entity that is
->  		 * triggering this preemption.
+>  static const struct drm_gem_object_funcs virtio_gpu_gem_funcs =3D {
+>  	.free =3D virtio_gpu_free_object,
+>  	.open =3D virtio_gpu_gem_object_open,
+> @@ -86,7 +102,7 @@ static const struct drm_gem_object_funcs virtio_gpu_=
+gem_funcs =3D {
+>  	.get_sg_table =3D drm_gem_shmem_get_sg_table,
+>  	.vmap =3D drm_gem_shmem_vmap,
+>  	.vunmap =3D drm_gem_shmem_vunmap,
+> -	.mmap =3D &drm_gem_shmem_mmap,
+> +	.mmap =3D &virtio_gpu_gem_mmap,
+>  };
+> =20
+>  struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev=
+,
+>=20
 
-How about something like:
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
-	if (wakeup_preempt_entity(se, pse) >= 1-!!(wake_flags & WF_KTHREAD))
 
-instead? Then we allow kthreads a little more preemption room.
+--byvtVeCFq7qEeSe2yUOBbH4fGZ9G4ZJeh--
+
+--tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3vZPIACgkQaA3BHVML
+eiOEEQgAm12FJOpXRZL0gz0A05Oagc66189UnZVFiMGYgvmaTb/glrD2qc1uZ0/z
+kDVe8Amys5mv3I/QeEuoN9p9ZMpuxAdcKmeNlfroDSo5BJfJWQO9/PC5Lyz6sWEq
+Snr9ukUlw2jwtSFA0GcbgzdbuVyaA6ZM4rkNuYAnadUPf/EswcgUxQlxWjZSQ1dY
+4PnkqgrHk+LZwyza2haOM5AX/2zjGjdbGxPHWQ1LE4YSESqEOg4xOJ0AuYCc84aO
+fU8klXGhkQ+MeTr55AG71Kc10y8cQwelz4V/f4AW05Kk6eHuumykaVUZPE2+AVtu
+r+HKNLNv+FkXOrlmPdo3y0F/BFB8Fw==
+=15RE
+-----END PGP SIGNATURE-----
+
+--tXIp6XNLLIEce1SuAIUeV5SovceQlbU1x--
