@@ -2,89 +2,149 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBE8C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF33DC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A3D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="e+CNvBHv"
+	by mail.kernel.org (Postfix) with ESMTP id B075D2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576014757;
+	bh=fKm1ZFrDKIByraym24ADBULjhawwkuZsmHr7TxK0mfo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aR2FeZi5dhmVkyiFPeJR1P4uewyMrRC9vK57N8CdXeMAHIid5I9PQ25JD85Manpqk
+	 0QTwUxRaF860CPv5v1w/zWy8SepoBFtxBCnTaeuquvOqxq24Vy7/YgmiyxIBU9Ofwo
+	 OHnFCuRMBcfGPDP3p19u/ozzbIYrjKivzdIRQO5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfLJVwQ (ORCPT
+        id S1728730AbfLJVwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:52:16 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38278 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729567AbfLJVwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:52:10 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 65324DBF;
-        Tue, 10 Dec 2019 22:52:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576014727;
-        bh=Ih8EqcfA4nD8hACm8d/yLl08r2Db3KdImZJ3njZhk8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e+CNvBHvYgFhT/I85xrhtTzkQLHns7WVHJpYg3UMd4sJbpHR6Qd23yypDPmqv0757
-         GVaIZwYM2MzQ5Shu5N/q/keQ5SHPHq86mwcwACrbDvIG4VRowIPbQuRgVes+Pi+7UZ
-         CvHmfF8nUh6qaN5KnXOf/GZJLZ1wiHpMqXg4W3o0=
-Date:   Tue, 10 Dec 2019 23:51:58 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v5 2/4] Revert "drm/tegra: Move drm_dp_link helpers to
- Tegra DRM"
-Message-ID: <20191210215158.GA13051@pendragon.ideasonboard.com>
-References: <1575957299-12977-1-git-send-email-allen.chen@ite.com.tw>
- <1575957299-12977-3-git-send-email-allen.chen@ite.com.tw>
+        Tue, 10 Dec 2019 16:52:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727165AbfLJVHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:07:40 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 492D32467E;
+        Tue, 10 Dec 2019 21:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012060;
+        bh=fKm1ZFrDKIByraym24ADBULjhawwkuZsmHr7TxK0mfo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vAWl9idQ7idGYFV2+KWQNpB5dkqLinljjF1zz2l0zEvU6vQoJTR9UJlMn3RVQdqOG
+         nvEKYhWheQEaTVQPD7vIpUknZ1MoeAkuR0ylzLI39ijxFm+WGhlfjq373inxC2jmbF
+         H2Qyt6OX+vaDFgXwxefvLlMAglqyQhj8bn+9BX8A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 042/350] media: ov6650: Fix crop rectangle alignment not passed back
+Date:   Tue, 10 Dec 2019 16:02:27 -0500
+Message-Id: <20191210210735.9077-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1575957299-12977-3-git-send-email-allen.chen@ite.com.tw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Allen,
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-Thank you for the patch.
+[ Upstream commit 7b188d6ba27a131e7934a51a14ece331c0491f18 ]
 
-On Tue, Dec 10, 2019 at 01:53:40PM +0800, allen wrote:
-> This reverts commit 9a42c7c647a9ad0f7ebb147a52eda3dcb7c84292.
+Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
+introduced a writable copy of constified user requested crop rectangle
+in order to be able to perform hardware alignments on it.  Later
+on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
+ops") replaced s_crop() video operation using that const argument with
+set_selection() pad operation which had a corresponding argument not
+constified, however the original behavior of the driver was not
+restored.  Since that time, any hardware alignment applied on a user
+requested crop rectangle is not passed back to the user calling
+.set_selection() as it should be.
 
-Why ?
+Fix the issue by dropping the copy and replacing all references to it
+with references to the crop rectangle embedded in the user argument.
 
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> ---
->  drivers/gpu/drm/drm_dp_helper.c | 128 ++++++
->  drivers/gpu/drm/tegra/Makefile  |   1 -
->  drivers/gpu/drm/tegra/dp.c      | 876 ----------------------------------------
->  drivers/gpu/drm/tegra/dp.h      | 177 --------
->  drivers/gpu/drm/tegra/dpaux.c   |   1 -
->  drivers/gpu/drm/tegra/sor.c     |   1 -
->  include/drm/drm_dp_helper.h     |  16 +
->  7 files changed, 144 insertions(+), 1056 deletions(-)
->  delete mode 100644 drivers/gpu/drm/tegra/dp.c
->  delete mode 100644 drivers/gpu/drm/tegra/dp.h
+Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-[snip]
-
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 68776b0710f98..c6af725532585 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -465,38 +465,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct ov6650 *priv = to_ov6650(client);
+-	struct v4l2_rect rect = sel->r;
+ 	int ret;
+ 
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
+ 		return -EINVAL;
+ 
+-	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
+-			      &rect.height, 2, H_CIF, 1, 0);
+-	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
+-			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
+-			      &rect.top, DEF_VSTRT << 1,
+-			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
+-			      0);
++	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
++			      &sel->r.height, 2, H_CIF, 1, 0);
++	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
++			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
++			      &sel->r.top, DEF_VSTRT << 1,
++			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
++			      1, 0);
+ 
+-	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
++	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
+-		priv->rect.left = rect.left;
++		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+-				(rect.left + rect.width) >> 1);
++				       (sel->r.left + sel->r.width) >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.width = rect.width;
+-		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
++		priv->rect.width = sel->r.width;
++		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.top = rect.top;
++		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+-				(rect.top + rect.height) >> 1);
++				       (sel->r.top + sel->r.height) >> 1);
+ 	}
+ 	if (!ret)
+-		priv->rect.height = rect.height;
++		priv->rect.height = sel->r.height;
+ 
+ 	return ret;
+ }
 -- 
-Regards,
+2.20.1
 
-Laurent Pinchart
