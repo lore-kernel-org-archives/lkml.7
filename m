@@ -2,137 +2,111 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A77C2D0DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F696C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E52E2077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649BB207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 09:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VEf9Oy/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLJJwE (ORCPT
+        id S1727508AbfLJJvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 04:52:04 -0500
-Received: from mx1.emlix.com ([188.40.240.192]:52806 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbfLJJwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 04:52:03 -0500
-X-Greylist: delayed 451 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 04:52:02 EST
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 988E75FE45;
-        Tue, 10 Dec 2019 10:44:30 +0100 (CET)
-Subject: Re: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
- <20190923135808.815-2-philipp.puschmann@emlix.com>
- <VE1PR04MB6638A9E882D40FB7F8CB7F14895D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Message-ID: <eb584cf0-2be4-138f-e339-aaf9f6f203b0@emlix.com>
-Date:   Tue, 10 Dec 2019 10:44:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 10 Dec 2019 04:51:19 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:45559 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfLJJvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 04:51:16 -0500
+Received: by mail-vk1-f193.google.com with SMTP id g7so5376178vkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NcOgayy9z/aBI2J3iHtRhOACGybXIm3aEUhJEwhAQls=;
+        b=VEf9Oy/RRgF1tiaCcmB53O77DmqvJkBKqLxP0IpSlUwEAxUm2jSgp33Fzi8yDd/bSo
+         UvmNU20JF6L3z7OXZMQkCE//tL1l7Ufml8oQdJ5HWKzIzuefyEyVKnIV+axY+bSExgJc
+         4I56ZMwqsJDuIJ8blY5/QXluYaoDyu4js+zkfLbVCsdRv4vlvLDkEaxBO38xIR996pDR
+         PZEKcPOaaOCB859PNkvsMwtbUmDOlTqnalPJWj7J7hvR5vSTZ6h/izB4CoZ1wyWgjh1t
+         iKkrP4CAY0QriL1ykih9kiZjT1sSP/+SQbX5zpZOEqMeBZ0dnocwIbG65XOlL85sPB07
+         wydQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NcOgayy9z/aBI2J3iHtRhOACGybXIm3aEUhJEwhAQls=;
+        b=V/81xYWIP9oNfQS3NziX258vPi32nUNJ2gOISfOR2SXpe3IKLd4KLea9S4j1mCSQh/
+         4I0FYe7Mw0Hed109QAMilrGIlFHrTLvrAIZVoVz/QQxcANl3kBptJt0c6J28ZlDOXV5Y
+         kr3/BPqXQsEeQwrFqlOkhi9LFxAh5l5I4z48cOhlKOv+84o3DVe7GAXCOUcJb/Od0AeQ
+         uEkXDlwBdm2vXNzNF3NGXysacvb/V5FTgZbFE5Z3Es+mkP5kgV5RAWL+Jt/pZqZcj/Nk
+         noALwnE0vsx+qehmdC7cxmKFW71jUa9AnXHRsrQQ+3yP3A7/2lbObODl7s9LcWFTu2mp
+         MN/A==
+X-Gm-Message-State: APjAAAXjZ0LRYTIhw8X8shbuw7exQiCKtB8dDoHxUcpRJDwKhhYt9s/k
+        Afri/oynIxF/4q+7QZFYel5OTRyZjYiTBZb/74FuTg==
+X-Google-Smtp-Source: APXvYqxzkz3LOZtzyNbuS6mvGvrUGFSaHG3D9TLCl6e41P4rm8M22wzl95/7soAZ90Ipy3g5cEzCsiuWU53RXMrP5ds=
+X-Received: by 2002:ac5:c844:: with SMTP id g4mr28846087vkm.25.1575971475476;
+ Tue, 10 Dec 2019 01:51:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB6638A9E882D40FB7F8CB7F14895D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+References: <0101016eacb256f5-89bd0ec9-5208-41bc-aafe-844c2178e4c1-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016eacb256f5-89bd0ec9-5208-41bc-aafe-844c2178e4c1-000000@us-west-2.amazonses.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 10:50:39 +0100
+Message-ID: <CAPDyKFovbLHe_HOLsjrW2arp1vh6uVoz9TWqcvzZvCtJ6j3P6w@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] dt-bindings: mmc: sdhci-msm: Add compatible string
+ for sc7180
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 27 Nov 2019 at 12:49, Veerabhadrarao Badiganti
+<vbadigan@codeaurora.org> wrote:
+>
+> Add sc7180 SoC specific compatible strings for qcom-sdhci controller.
+>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
-Am 04.12.19 um 10:19 schrieb Robin Gong:
-> On 2019-9-23 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
->> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the buffer,
->> when 0 ARM owns it. When processing the buffers in
->> sdma_update_channel_loop the ownership of the currently processed buffer
->> was set to SDMA again before running the callback function of the buffer and
->> while the sdma script may be running in parallel. So there was the possibility to
->> get the buffer overwritten by SDMA before it has been processed by kernel
-> Does this patch need indeed? I don't think any difference here move done flag
-> before callback or after callback, because callback never care this flag and actually
-> done flag is setup for next time rather than this time.
-The callback doesn't care, but the DMA controller cares about this flag. I see a possible race
-condition here. If i set the DONE flag for a specific buffer descriptor before handling the
-data belonging to this buffer descriptor (aka running the callback function) the DMA script running
-at the same time could corrupt that data while being processed.
-Or is there are mechanism that prevents this case, that i havn't considered here.
-
-> Basically, this flag should be
-> set to 1 quickly asap so that sdma could use this bd asap. If delay the flag may cause
-> sdma channel stop since all BDs consumed.
-
-> Could you try again your case without this patch?
-I don't have the hw to reproduce this available at the moment but as i remember i did run it without
-this patch successfully already. The problem i have described above was more a logical or theoretical
-one than a problem that really occured with my setup.
-
->> leading to kind of random errors in the upper layers, e.g. bluetooth.
->>
->> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
->> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
->> ---
->>
->> Changelog v5:
->>  - no changes
->>
->> Changelog v4:
->>  - fixed the fixes tag
->>
->> Changelog v3:
->>  - use correct dma_wmb() instead of dma_wb()
->>  - add fixes tag
->>
->> Changelog v2:
->>  - add dma_wb()
->>
->>  drivers/dma/imx-sdma.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
->> 9ba74ab7e912..b42281604e54 100644
->> --- a/drivers/dma/imx-sdma.c
->> +++ b/drivers/dma/imx-sdma.c
->> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
->> sdma_channel *sdmac)
->>  		*/
->>
->>  		desc->chn_real_count = bd->mode.count;
->> -		bd->mode.status |= BD_DONE;
->>  		bd->mode.count = desc->period_len;
->>  		desc->buf_ptail = desc->buf_tail;
->>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd; @@ -817,6
->> +816,9 @@ static void sdma_update_channel_loop(struct sdma_channel
->> *sdmac)
->>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
->>  		spin_lock(&sdmac->vc.lock);
->>
->> +		dma_wmb();
->> +		bd->mode.status |= BD_DONE;
->> +
->>  		if (error)
->>  			sdmac->status = old_status;
->>  	}
->> --
->> 2.23.0
-> 
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index da4edb1..7ee639b 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>                 "qcom,msm8996-sdhci", "qcom,sdhci-msm-v4"
+>                 "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"
+>                 "qcom,qcs404-sdhci", "qcom,sdhci-msm-v5"
+> +               "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>         NOTE that some old device tree files may be floating around that only
+>         have the string "qcom,sdhci-msm-v4" without the SoC compatible string
+>         but doing that should be considered a deprecated practice.
+> --
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+>
