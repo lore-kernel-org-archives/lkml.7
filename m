@@ -2,248 +2,180 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC7C2BD09
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93333C04E30
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908872077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9A22077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 01:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyP2Wrjv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Gf5MMXBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLJBsK (ORCPT
+        id S1726691AbfLJBs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Dec 2019 20:48:10 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42366 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfLJBsK (ORCPT
+        Mon, 9 Dec 2019 20:48:29 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:43001 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfLJBs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Dec 2019 20:48:10 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y19so12287649lfl.9;
-        Mon, 09 Dec 2019 17:48:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RbApsi06fJZ4JQyn9YruAT0fENTJ10sIt7ZG90JW5+Q=;
-        b=pyP2Wrjv322RJVvAF31wU6JEGAbn6M+TCW+LTSt7WPYzw8zZA4CU3FxecWC5fLsVfN
-         feIUniO3WKqL+B1FSG9ahl853WgHq7dJCk6af4Mt2g2M/n1KiCkkFTmw1gcBRSJ834L9
-         T8Ec24v8UBTtuZ5oFlk7BoPg2iD3wT501jp1oL7WYNTLuZ8u3y+B+ILN6cHs5PY87p1Q
-         /h4J7crXgLGTlB3YYdrKOTlxXuIStFrmeBKhFpixJ91mqG52dgHaEtdbQ5qldWObl/Ln
-         HdltwspeK41iLKT9MJZFz8YBVkTxBoab6iaThdRFk+WTL3rXeuDNxq1ZXb01lr/KbUpn
-         eWNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RbApsi06fJZ4JQyn9YruAT0fENTJ10sIt7ZG90JW5+Q=;
-        b=MRG5VpB+oKsoCkCf7A8qsqiA7T2nt92wo6pcbHHHQkoD0qD4CmKzUPAnA9IbZ0Xsyb
-         DHK9jf2lZkpf8Le39zUnPCLCrk60fyU8RGKQZvK8PKXd+AOoJ4eaBXx03R00sMvme54U
-         PlEIgGAwYNLRlr7I2VgC7pU5AyBGBywZLJFYjb5E64dlRYw1IGkywfjLmToEMCRy65z3
-         DkWoqijgSVTgE1s5cRa+5m3SprXNEwnGP4OpNy5tdgcVZfoDx5vpnCxOn6vbaN+yBftN
-         hPgx0YDew0EUuPsI/I9w3gS3ZzYvB3s7jxGbSlx13zZptLIsLHa5PijDCdBcvPr3gQzL
-         LvzQ==
-X-Gm-Message-State: APjAAAUIeSxzmxG8KYtxs4f8P30rdWb4EMsIS4lBc4oNLKgiR2heu9Gc
-        lJHNYsgL7RrbuseuT+TnFjLN9sh6
-X-Google-Smtp-Source: APXvYqzXL5VP8uMrrpPxJ7Py8YIHwvTvSVP3Z5xSc/Stp85+4W9W7inRV+LfJqW2ALQ99p6EFH+kFQ==
-X-Received: by 2002:ac2:489b:: with SMTP id x27mr17729318lfc.130.1575942487122;
-        Mon, 09 Dec 2019 17:48:07 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n14sm548932lfe.5.2019.12.09.17.48.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2019 17:48:06 -0800 (PST)
-Subject: Re: [PATCH 6/6] input: elants: read touchscreen size for EKTF3624
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
- <06f20ed8e50fe634c59cf3c585d37f1175133533.1575936961.git.mirq-linux@rere.qmqm.pl>
- <fd020252-0646-5d01-95d6-aff79b8709f6@gmail.com>
-Message-ID: <2f609f7c-cb4f-fccb-83cc-dfed5b8039b3@gmail.com>
-Date:   Tue, 10 Dec 2019 04:48:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 9 Dec 2019 20:48:28 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191210014824epoutp030fb948beedd8238f89d19b502fa07f85~e31vHv4kV0224902249epoutp03k
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 01:48:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191210014824epoutp030fb948beedd8238f89d19b502fa07f85~e31vHv4kV0224902249epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575942504;
+        bh=k7AI/Lr2qas6OzGrBYygZV3pRf4kGqEMg5Ib9WF0vSA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Gf5MMXByDEkWTwXDWn1ybxIwWLxfeGevpI5k+vXs8otz2A0pfgRVIiOdJqyG5UxDL
+         CXcdpQa6+O4ygLifI2ZwZR3r8X8cZWqoq8LoVv/MZ3g+H4+Z7cn8iQCWWdKQ5jQH0x
+         py7RkPm1pKvQuitFhn8Hz86LFtZZYwUFZwGmrSkY=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191210014824epcas1p12e25b46c851a1f484ddc1ea0bbe00cf1~e31uz4jt41395913959epcas1p1o;
+        Tue, 10 Dec 2019 01:48:24 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47X2yZ2MHYzMqYkn; Tue, 10 Dec
+        2019 01:48:22 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.71.57028.C59FEED5; Tue, 10 Dec 2019 10:48:12 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191210014812epcas1p28ba190c592a7a17efb59b17c0a060255~e31jMOl2S2756727567epcas1p2M;
+        Tue, 10 Dec 2019 01:48:12 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191210014812epsmtrp10257692d72b7427f91000afadd93138b~e31jLc9mr1565015650epsmtrp1K;
+        Tue, 10 Dec 2019 01:48:12 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-c1-5deef95c8264
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D0.7C.10238.B59FEED5; Tue, 10 Dec 2019 10:48:11 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191210014811epsmtip1de99097e6676eceb4887da936929a30e~e31i_MbGR2302523025epsmtip1j;
+        Tue, 10 Dec 2019 01:48:11 +0000 (GMT)
+Subject: Re: [PATCH 3/4] PM / devfreq: Kconfig: add DEVFREQ_DELAYED_TIMER
+ option
+To:     Kamil Konieczny <k.konieczny@samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <4b1b94e9-890a-cce1-c33d-33864c7ed230@samsung.com>
+Date:   Tue, 10 Dec 2019 10:54:38 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <fd020252-0646-5d01-95d6-aff79b8709f6@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191209144425.13321-4-k.konieczny@samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmnm7Mz3exBpNOSlhsnLGe1WLBpxms
+        FufPb2C3ONv0ht3i8q45bBafe48wWqw9cpfd4nbjCjYHDo9NqzrZPPq2rGL0+LxJLoA5Ktsm
+        IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
+        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BZYFecWJucWleul5yfq6VoYGBkSlQYUJ2xq95
+        i9gLOvkq9ncvZ21gnMzdxcjJISFgIvF992KWLkYuDiGBHYwSu862MkM4nxglXnd0MUI43xgl
+        rnX2MMG0XFl/FCqxl1Hi/47b7BDOe0aJhb1L2ECqhAWCJN59+QxmiwjoSrzZsRRsLrPAPCaJ
+        N9MusIIk2AS0JPa/uAFWxC+gKHH1x2NGEJtXwE5i3aunYDUsAqoSfY0P2EFsUYEwiZPbWqBq
+        BCVOznzCAmJzCthK3Nu4Eew8ZgFxiVtP5kPZ8hLb384BWywh8JpN4ubE+4wQP7hI3DhxBsoW
+        lnh1fAs7hC0l8bK/Dcqullh58ggbRHMHo8SW/RBXSwgYS+xfOhloAwfQBk2J9bv0IcKKEjt/
+        z2WEWMwn8e5rDytIiYQAr0RHmxBEibLE5Qd3ocEoKbG4vZNtAqPSLCTvzELywiwkL8xCWLaA
+        kWUVo1hqQXFuemqxYYEhcnxvYgSnTy3THYxTzvkcYhTgYFTi4V3g8C5WiDWxrLgy9xCjBAez
+        kgjv8TagEG9KYmVValF+fFFpTmrxIUZTYGhPZJYSTc4Hpva8knhDUyNjY2MLE0MzU0NDJXFe
+        jh8XY4UE0hNLUrNTUwtSi2D6mDg4pRoYSx9xR/vu8PtUv0T847uqFVxZOhqtbDtj1q8V5560
+        7AJ3UFkPi4zO7pDmA8Yb2KKspx//ZbPgvmk2p03f9BgXgb3SfTcPsjzk7T5r9fBMc7es7Oe6
+        WwwuV7r7NSbctXPe51nmfFgwcmOMj5l2+Xm5KcrMKvcEAqYum//zH5vpFz7ZbQem/I1RYinO
+        SDTUYi4qTgQALuCLbbUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTjf657tYg3efbCw2zljParHg0wxW
+        i/PnN7BbnG16w25xedccNovPvUcYLdYeuctucbtxBZsDh8emVZ1sHn1bVjF6fN4kF8AcxWWT
+        kpqTWZZapG+XwJXxa94i9oJOvor93ctZGxgnc3cxcnJICJhIXFl/lLGLkYtDSGA3o8S91Y3s
+        EAlJiWkXjzJ3MXIA2cIShw8XQ9S8ZZR41NXKBFIjLBAk8e7LZzYQW0RAV+LNjqXMIEXMAguY
+        JObfnMgC0XGYUaL3y09WkCo2AS2J/S9ugHXwCyhKXP3xmBHE5hWwk1j36ilYDYuAqkRf4wOw
+        K0QFwiR2LnnMBFEjKHFy5hMWEJtTwFbi3saNYHFmAXWJP/MuMUPY4hK3nsyHistLbH87h3kC
+        o/AsJO2zkLTMQtIyC0nLAkaWVYySqQXFuem5xYYFhnmp5XrFibnFpXnpesn5uZsYwXGkpbmD
+        8fKS+EOMAhyMSjy8CxzexQqxJpYVV+YeYpTgYFYS4T3eBhTiTUmsrEotyo8vKs1JLT7EKM3B
+        oiTO+zTvWKSQQHpiSWp2ampBahFMlomDU6qB0YltQ0nMuTfqNR7RZ4//Dt3oP+30gZ3H/y1X
+        P97NM7M6LeO6sIJyzrVQ6ZIrBzjKGGaa8fQJ680NShVoX/uoz4Dd7O97baHJmV03GrXSkhqu
+        Z0xy1NroX7tQTXUHx736+9/d/pvMebw2L0s3g2ndtQ/sTElrt1/dzy6XKq5h5vOsYspC/4P/
+        lViKMxINtZiLihMBAcMNIp8CAAA=
+X-CMS-MailID: 20191210014812epcas1p28ba190c592a7a17efb59b17c0a060255
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91
+References: <20191209144425.13321-1-k.konieczny@samsung.com>
+        <CGME20191209144442eucas1p1e4f5cf4a1716262e2b6715fb41876f91@eucas1p1.samsung.com>
+        <20191209144425.13321-4-k.konieczny@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.12.2019 04:23, Dmitry Osipenko пишет:
-> 10.12.2019 03:19, Michał Mirosław пишет:
->> EKTF3624 as present in Asus TF300T tablet has touchscreen size encoded
->> in different registers.
->>
->> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
->> ---
->>  drivers/input/touchscreen/elants_i2c.c | 77 ++++++++++++++++++++++++--
->>  1 file changed, 72 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
->> index 27aca3971da5..e60a5eb9fb37 100644
->> --- a/drivers/input/touchscreen/elants_i2c.c
->> +++ b/drivers/input/touchscreen/elants_i2c.c
->> @@ -34,7 +34,7 @@
->>  #include <linux/input/touchscreen.h>
->>  #include <linux/input/mt.h>
->>  #include <linux/acpi.h>
->> -#include <linux/of.h>
->> +#include <linux/of_device.h>
->>  #include <linux/gpio/consumer.h>
->>  #include <linux/regulator/consumer.h>
->>  #include <asm/unaligned.h>
->> @@ -42,6 +42,10 @@
->>  /* Device, Driver information */
->>  #define DEVICE_NAME	"elants_i2c"
->>  
->> +/* Device IDs */
->> +#define EKTH3500	0
->> +#define EKTF3624	1
->> +
->>  /* Convert from rows or columns into resolution */
->>  #define ELAN_TS_RESOLUTION(n, m)   (((n) - 1) * (m))
->>  
->> @@ -160,6 +164,7 @@ struct elants_data {
->>  
->>  	bool wake_irq_enabled;
->>  	bool keep_power_in_suspend;
->> +	u8 chip_id;
->>  
->>  	/* Must be last to be used for DMA operations */
->>  	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
->> @@ -434,7 +439,53 @@ static int elants_i2c_query_bc_version(struct elants_data *ts)
->>  	return 0;
->>  }
->>  
->> -static int elants_i2c_query_ts_info(struct elants_data *ts)
->> +static int elants_i2c_query_ts_info_ektf(struct elants_data *ts)
->> +{
->> +	struct i2c_client *client = ts->client;
->> +	int error;
->> +	u8 resp[4];
->> +	u16 phy_x, phy_y;
->> +	const u8 get_xres_cmd[] = {
->> +		CMD_HEADER_READ, E_INFO_X_RES, 0x00, 0x00
->> +	};
->> +	const u8 get_yres_cmd[] = {
->> +		CMD_HEADER_READ, E_INFO_Y_RES, 0x00, 0x00
->> +	};
->> +
->> +	/* Get X/Y size in mm */
->> +	error = elants_i2c_execute_command(client, get_xres_cmd,
->> +					   sizeof(get_xres_cmd),
->> +					   resp, sizeof(resp), 1,
->> +					   "get X size");
->> +	if (error)
->> +		return error;
->> +
->> +	phy_x = resp[2] | ((resp[3] & 0xF0) << 4);
->> +
->> +	error = elants_i2c_execute_command(client, get_yres_cmd,
->> +					   sizeof(get_yres_cmd),
->> +					   resp, sizeof(resp), 1,
->> +					   "get Y size");
->> +	if (error)
->> +		return error;
->> +
->> +	phy_y = resp[2] | ((resp[3] & 0xF0) << 4);
->> +
->> +	/* calculate resolution from size */
->> +	if (!ts->prop.max_x)
->> +		ts->prop.max_x = 2240;
->> +	ts->x_res = DIV_ROUND_CLOSEST(ts->prop.max_x, phy_x);
->> +
->> +	if (!ts->prop.max_y)
->> +		ts->prop.max_y = 1408;
->> +	ts->y_res = DIV_ROUND_CLOSEST(ts->prop.max_y, phy_y);
->> +
->> +	dev_dbg(&client->dev, "phy_x=%d, phy_y=%d\n", phy_x, phy_y);
->> +
->> +	return 0;
->> +}
->> +
->> +static int elants_i2c_query_ts_info_ekth(struct elants_data *ts)
->>  {
->>  	struct i2c_client *client = ts->client;
->>  	int error;
->> @@ -587,8 +638,20 @@ static int elants_i2c_initialize(struct elants_data *ts)
->>  		error = elants_i2c_query_test_version(ts);
->>  	if (!error)
->>  		error = elants_i2c_query_bc_version(ts);
->> -	if (!error)
->> -		error = elants_i2c_query_ts_info(ts);
->> +
->> +	switch (ts->chip_id) {
->> +	case EKTH3500:
->> +		if (!error)
->> +			error = elants_i2c_query_ts_info_ekth(ts);
->> +		break;
->> +	case EKTF3624:
->> +		if (!error)
->> +			error = elants_i2c_query_ts_info_ektf(ts);
->> +		break;
->> +	default:
->> +		unreachable();
->> +		break;
->> +	}
->>  
->>  	if (error)
->>  		ts->iap_mode = ELAN_IAP_RECOVERY;
->> @@ -1185,6 +1248,9 @@ static int elants_i2c_probe(struct i2c_client *client,
->>  	ts->client = client;
->>  	i2c_set_clientdata(client, ts);
->>  
->> +	if (client->dev.of_node)
->> +		ts->chip_id = (uintptr_t)of_device_get_match_data(&client->dev);
->> +
->>  	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
->>  	if (IS_ERR(ts->vcc33)) {
->>  		error = PTR_ERR(ts->vcc33);
->> @@ -1422,7 +1488,8 @@ MODULE_DEVICE_TABLE(acpi, elants_acpi_id);
->>  
->>  #ifdef CONFIG_OF
->>  static const struct of_device_id elants_of_match[] = {
->> -	{ .compatible = "elan,ekth3500" },
->> +	{ .compatible = "elan,ekth3500", .data = (void *)EKTH3500 },
->> +	{ .compatible = "elan,ektf3624", .data = (void *)EKTF3624 },
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(of, elants_of_match);
+On 12/9/19 11:44 PM, Kamil Konieczny wrote:
+> Add Kconfig option DEVFREQ_DELAYED_TIMER. If set, devfreq workqueue
+> will use delayed timer from its start.
 > 
-> It also should be possible to remove elants_of_match entirely and do the
-> following in the I2C ID table:
+> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
+> ---
+>  drivers/devfreq/Kconfig | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> static const struct i2c_device_id elants_i2c_id[] = {
-> 	{ "ekth3500", EKTH3500 },
-> 	{ "ektf3624", EKTF3624 },
-> 	{ }
-> };
-> MODULE_DEVICE_TABLE(i2c, elants_i2c_id);
-> 
-> Then OF core will take care of device ID matching by removing the
-> "elan," part from the compatible value of the device-tree and comparing
-> it with the values in elants_i2c_id[].
-> 
-> And then in elants_i2c_probe() you could :
-> 
-> 	chip->chip_id = (uintptr_t)id->driver_data;
-> 
-> See "drivers/mfd/max77620.c" for the example.
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 38a94df749a2..c799917c34c9 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -74,6 +74,18 @@ config DEVFREQ_GOV_PASSIVE
+>  	  through sysfs entries. The passive governor recommends that
+>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>  
+> +comment "DEVFREQ Options"
+> +
+> +config DEVFREQ_DELAYED_TIMER
+> +	bool "Use delayed timer in Simple Ondemand Governor"
+> +	default false
+> +	help
+> +	  Simple Ondemand Governor uses polling for reading buses counters.
+> +	  A default timer used is deferred, which saves power, but can
+> +	  miss increased demand for higher bus frequency if timer was
+> +	  assigned to idle cpu. If you want to change this to delayed
+> +	  timer at the cost of more power used, say Yes here.
+> +
+>  comment "DEVFREQ Drivers"
+
+I don't think that we cannot choice the all options in Kconfig
+at the build time. If we add something like this patch,
+
+we can choice the any options in Kconfig as following:
+- polling time (millisecond)
+- up threshold
+- down threshold
+- type of workqueue
+- etc ...
+
+Also, there are too much optional value and selectable value 
+in the linux kernel. 
+
+As I said, If you suggest the reasonable data with test result,
+I will add the new flag to 'struct devfreq_dev_profile'.
+
+>  
+>  config ARM_EXYNOS_BUS_DEVFREQ
 > 
 
-But maybe it's not really worth the effort at all since we need to
-override the sizes in device-tree anyway?
 
-What about to just ignore the firmware values of eKTF3624 for simplicity?
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
