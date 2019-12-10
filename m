@@ -2,103 +2,171 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979BDC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686A1C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7205920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7D3208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 23:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576021795;
+	bh=O8g07w6nqDMkqHZMoDdxx6Q9u1cAy0psqnVVzTIGPiM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BMdlFZlMyTqmsyp5bgM2mfNefsYFek8r8o2iHdhPKLYtlBR+ZleX9d4zdoCmIBqef
+	 nOxNg8yG8zzF7dWTPiQd/KbpcqlGU1PRgrvdpdLcmlAohFjbm/HfpNE3KBhOTrXxYy
+	 bceh9gVrG/OU5tQe/TRBUEYYtXwWxAT0c3RXFMOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfLJXho (ORCPT
+        id S1726687AbfLJXty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 18:37:44 -0500
-Received: from mga05.intel.com ([192.55.52.43]:28187 "EHLO mga05.intel.com"
+        Tue, 10 Dec 2019 18:49:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfLJXho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:37:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 15:37:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="210586609"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Dec 2019 15:37:43 -0800
-Date:   Tue, 10 Dec 2019 15:37:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        ak@linux.intel.com, peterz@infradead.org, pbonzini@redhat.com,
-        kan.liang@intel.com, mingo@redhat.com, rkrcmar@redhat.com,
-        like.xu@intel.com, jannh@google.com, arei.gonglei@huawei.com,
-        jmattson@google.com
-Subject: Re: [PATCH v8 12/14] KVM/x86/lbr: lbr emulation
-Message-ID: <20191210233742.GB23765@linux.intel.com>
-References: <1565075774-26671-1-git-send-email-wei.w.wang@intel.com>
- <1565075774-26671-13-git-send-email-wei.w.wang@intel.com>
+        id S1725999AbfLJXty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 18:49:54 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A12420663;
+        Tue, 10 Dec 2019 23:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576021793;
+        bh=O8g07w6nqDMkqHZMoDdxx6Q9u1cAy0psqnVVzTIGPiM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=la5NazEa8jCiN8xpow1GMbHqtzlSPcvayJlXzlc0OPZhelaViQxAwI2g6eSSjIZVC
+         ANXVK0kb/uZAPSxPZArh6VIy79tz3xc94Z18P+Y0QRmArXEa+vD0cLlzsikh9dWRmN
+         5KgGu6fFgANshBXJQCvZ4zdq3o1uQ60sh2qRzMw4=
+Date:   Tue, 10 Dec 2019 17:49:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
+Message-ID: <20191210234951.GA175479@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565075774-26671-13-git-send-email-wei.w.wang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <f6325a23635ca56fd3aa616160b5cf967d62d01a.1575612493.git.eswara.kota@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 06, 2019 at 03:16:12PM +0800, Wei Wang wrote:
-> +static bool intel_pmu_set_lbr_msr(struct kvm_vcpu *vcpu,
-> +				  struct msr_data *msr_info)
+On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
+> Add support to PCIe RC controller on Intel Gateway SoCs.
+> PCIe controller is based of Synopsys DesignWare PCIe core.
+> 
+> Intel PCIe driver requires Upconfigure support, Fast Training
+> Sequence and link speed configurations. So adding the respective
+> helper functions in the PCIe DesignWare framework.
+> It also programs hardware autonomous speed during speed
+> configuration so defining it in pci_regs.h.
+> 
+> Also, mark Intel PCIe driver depends on MSI IRQ Domain
+> as Synopsys DesignWare framework depends on the
+> PCI_MSI_IRQ_DOMAIN.
+> 
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -14,6 +14,8 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> +extern const unsigned char pcie_link_speed[];
+
+This shouldn't be needed; there's a declaration in drivers/pci/pci.h.
+
+> +struct intel_pcie_soc {
+> +	unsigned int pcie_ver;
+> +	unsigned int pcie_atu_offset;
+> +	u32 num_viewport;
+> +};
+
+Looks a little strange to have the fields below lined up but the ones
+above not.
+
+> +struct intel_pcie_port {
+> +	struct dw_pcie		pci;
+> +	void __iomem		*app_base;
+> +	struct gpio_desc	*reset_gpio;
+> +	u32			rst_intrvl;
+> +	u32			max_speed;
+> +	u32			link_gen;
+> +	u32			max_width;
+> +	u32			n_fts;
+> +	struct clk		*core_clk;
+> +	struct reset_control	*core_rst;
+> +	struct phy		*phy;
+> +	u8			pcie_cap_ofst;
+> +};
+> +
+> +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
 > +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	u32 index = msr_info->index;
-> +	u64 data = msr_info->data;
-> +	bool ret = false;
+> +	u32 old;
 > +
-> +	/* The lbr event should have been allocated when reaching here. */
-> +	if (WARN_ON(!pmu->lbr_event))
-> +		return ret;
+> +	old = readl(base + ofs);
+> +	val = (old & ~mask) | (val & mask);
 > +
-> +	/*
-> +	 * Host perf could reclaim the lbr feature via ipi calls, and this can
-> +	 * be detected via lbr_event->oncpu being set to -1. To ensure the
-> +	 * writes to the lbr msrs don't happen after the lbr feature has been
-> +	 * reclaimed by the host, the interrupt is disabled before performing
-> +	 * the writes.
-> +	 */
-> +	local_irq_disable();
-> +	if (pmu->lbr_event->oncpu == -1)
-> +		goto out;
-> +
-> +	switch (index) {
-> +	case MSR_IA32_DEBUGCTLMSR:
-> +		ret = true;
-> +		/*
-> +		 * Currently, only FREEZE_LBRS_ON_PMI and DEBUGCTLMSR_LBR are
-> +		 * supported.
-> +		 */
-> +		data &= (DEBUGCTLMSR_FREEZE_LBRS_ON_PMI | DEBUGCTLMSR_LBR);
-> +		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
-> +		break;
-> +	default:
-> +		if (is_lbr_msr(vcpu, index)) {
-> +			ret = true;
-> +			wrmsrl(index, data);
+> +	if (val != old)
+> +		writel(val, base + ofs);
 
-@data needs to be run through is_noncanonical_address() when writing the
-MSRs that take an address.  In general, it looks like there's a lack of
-checking on the validity of @data.
+I assume this is never used on registers where the "old & ~mask" part
+contains RW1C bits?  If there are RW1C bits in that part, this will
+corrupt them.
 
-> +		}
-> +	}
-> +
-> +out:
-> +	local_irq_enable();
-> +	return ret;
+> +	if (!lpp->pcie_cap_ofst) {
+> +		ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
+> +		if (!ret) {
+> +			ret = -ENXIO;
+> +			dev_err(dev, "Invalid PCIe capability offset\n");
+
+Some of your messages start with a capital letter, others not.
+
+> +int intel_pcie_msi_init(struct pcie_port *pp)
+
+You might add a comment here like the one at
+ks_pcie_am654_msi_host_init().  Since the users of the
+.msi_host_init() function pointer only call the function if the
+pointer is non-NULL, it's not completely obvious why you have this
+stub function.
+
+> +{
+> +	/* PCIe MSI/MSIx is handled by MSI in x86 processor */
+> +	return 0;
 > +}
+
+> +	/*
+> +	 * Intel PCIe doesn't configure IO region, so set viewport
+> +	 * to not to perform IO region access.
+
+s/to not to/to not/
+
+> +	 */
+> +	pci->num_viewport = data->num_viewport;
 > +
+> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
+
+Probably superfluous.
+
+> +
+> +	return ret;
+
+Since the return value is known here:
+
+  return 0;
+
+> +}
