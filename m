@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812EFC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0363C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5744822464
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61602464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012410;
-	bh=3yIRxbD7xE9D403SQkid8uZMATyDWz3ZczN4YUKfBDk=;
+	s=default; t=1576012415;
+	bh=Gu20jdMGooPgUqWt7IPemTA2lGRYLKUr01ksHmbOYnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSFl0j3bBOuE8b1gkk3lpENY9jkSJ/SvhCkl++6lhVc61/1/TVPM7uxOg2plxyy3y
-	 nNd0Pcl/YV9OVKgttjelkTJML/x+zBxx93cbxwKPQnWkAUmWOPLq54EyDOiuWBxkit
-	 IQzRYYklItkSStqm8cwc7t60Gsh0Jd0zaMM4g5uw=
+	b=nKAyrlKawOURPkgEqnbfwqhRfJnD+rI3FoVeqT18Bu/emzpk/NpxtAa3JFsBnSrzH
+	 aYVZobUwEtBLBhpmge5oIzBB2Wm2SW9u+/hfT3GLf1ebsnYZj3s4RpmnzhF/Rh9Il3
+	 EsBMd7C+DsxQGvYxVZnP1GnD89YGVLFKyLah3GtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfLJVN2 (ORCPT
+        id S1729369AbfLJVNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:13:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbfLJVNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:13:21 -0500
+        id S1729305AbfLJVNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EC582077B;
-        Tue, 10 Dec 2019 21:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C51B420828;
+        Tue, 10 Dec 2019 21:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012400;
-        bh=3yIRxbD7xE9D403SQkid8uZMATyDWz3ZczN4YUKfBDk=;
+        s=default; t=1576012403;
+        bh=Gu20jdMGooPgUqWt7IPemTA2lGRYLKUr01ksHmbOYnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlvmxzIqKt0XXI90wmOCIqrMNt+gI5Zb/tVSVvOjNzGCgp97Kbvkd6lcL8lKJPoHp
-         vjkUpTr1SXnPQBE311g6Nefcs+5jRXCkUrIqp2IlQ5iN5pVmFxB2RTOJRqpiAiQf5x
-         Os2Rjx3Hx94jO4xz1LatNknmdp2BcZ2m42fdLSP8=
+        b=prT8oTgGOB6ma3xRMScMFftW74EdVHb55QISuoVFGASVndsc2LBOvSz9qkrsyZTtN
+         ra7FH7BMWu/9OSZg1vw/zwjnzh8j6Ut1IgPH9hP/M3J/M78Etqgzdbb7Enlm5eIZbr
+         dqLSkF3lk/IBsUTG5hCHLe2FbUqMxfJsvCJs33FA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 319/350] bnxt_en: Improve RX buffer error handling.
-Date:   Tue, 10 Dec 2019 16:07:04 -0500
-Message-Id: <20191210210735.9077-280-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 322/350] ASoC: soc-pcm: check symmetry before hw_params
+Date:   Tue, 10 Dec 2019 16:07:07 -0500
+Message-Id: <20191210210735.9077-283-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -59,77 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 19b3751ffa713d04290effb26fe01009010f2206 ]
+[ Upstream commit 5cca59516de5df9de6bdecb328dd55fb5bcccb41 ]
 
-When hardware reports RX buffer errors, the latest 57500 chips do not
-require reset.  The packet is discarded by the hardware and the
-ring will continue to operate.
+This reverts commit 957ce0c6b8a1f (ASoC: soc-pcm: check symmetry after
+hw_params).
 
-Also, add an rx_buf_errors counter for this type of error.  It can help
-the user to identify if the aggregation ring is too small.
+That commit cause soc_pcm_params_symmetry can't take effect.
+cpu_dai->rate, cpu_dai->channels and cpu_dai->sample_bits
+are updated in the middle of soc_pcm_hw_params, so move
+soc_pcm_params_symmetry to the end of soc_pcm_hw_params is
+not a good solution, for judgement of symmetry in the function
+is always true.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+FIXME:
+According to the comments of that commit, I think the case
+described in the commit should disable symmetric_rates
+in Back-End, rather than changing the position of
+soc_pcm_params_symmetry.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Link: https://lore.kernel.org/r/1573555602-5403-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         | 8 ++++++--
- drivers/net/ethernet/broadcom/bnxt/bnxt.h         | 1 +
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 ++
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ sound/soc/soc-pcm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 04ec909e06dfd..527e1bf931160 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1767,8 +1767,12 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index cdce96a3051bf..a6e96cf1d8ff9 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -877,6 +877,11 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	int i, ret = 0;
  
- 		rc = -EIO;
- 		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
--			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
--			bnxt_sched_reset(bp, rxr);
-+			bnapi->cp_ring.rx_buf_errors++;
-+			if (!(bp->flags & BNXT_FLAG_CHIP_P5)) {
-+				netdev_warn(bp->dev, "RX buffer error %x\n",
-+					    rx_err);
-+				bnxt_sched_reset(bp, rxr);
-+			}
- 		}
- 		goto next_rx_no_len;
+ 	mutex_lock_nested(&rtd->card->pcm_mutex, rtd->card->pcm_subclass);
++
++	ret = soc_pcm_params_symmetry(substream, params);
++	if (ret)
++		goto out;
++
+ 	if (rtd->dai_link->ops->hw_params) {
+ 		ret = rtd->dai_link->ops->hw_params(substream, params);
+ 		if (ret < 0) {
+@@ -958,9 +963,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
  	}
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-index d333589811a53..5163bb848618f 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -927,6 +927,7 @@ struct bnxt_cp_ring_info {
- 	dma_addr_t		hw_stats_map;
- 	u32			hw_stats_ctx_id;
- 	u64			rx_l4_csum_errors;
-+	u64			rx_buf_errors;
- 	u64			missed_irqs;
+ 	component = NULL;
  
- 	struct bnxt_ring_struct	cp_ring_struct;
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 51c1404767178..89f95428556eb 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -173,6 +173,7 @@ static const char * const bnxt_ring_tpa2_stats_str[] = {
- 
- static const char * const bnxt_ring_sw_stats_str[] = {
- 	"rx_l4_csum_errors",
-+	"rx_buf_errors",
- 	"missed_irqs",
- };
- 
-@@ -552,6 +553,7 @@ static void bnxt_get_ethtool_stats(struct net_device *dev,
- 		for (k = 0; k < stat_fields; j++, k++)
- 			buf[j] = le64_to_cpu(hw_stats[k]);
- 		buf[j++] = cpr->rx_l4_csum_errors;
-+		buf[j++] = cpr->rx_buf_errors;
- 		buf[j++] = cpr->missed_irqs;
- 
- 		bnxt_sw_func_stats[RX_TOTAL_DISCARDS].counter +=
+-	ret = soc_pcm_params_symmetry(substream, params);
+-        if (ret)
+-		goto component_err;
+ out:
+ 	mutex_unlock(&rtd->card->pcm_mutex);
+ 	return ret;
 -- 
 2.20.1
 
