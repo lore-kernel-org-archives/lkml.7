@@ -2,109 +2,117 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A08EC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E24C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9B720836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q2RFFgse"
+	by mail.kernel.org (Postfix) with ESMTP id 560F8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576017321;
+	bh=fwLbFOwYuosUNvBtBzCJnteMtb0lpfmmcy3XtRemLj8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B6EZFsc/ZDmf/8NwRvJNqkxVbITjhHGFuFEWogafCeI03oDjim1UVXNQkwKGUefUc
+	 CzyCWWRy9TAlEE5yoxRovejRVaMI90y623Xtte6z4uMdw1iU6LBkdHAhSOMMluOmHZ
+	 WqbwawxiGSmGxNylPokEFUdHCswMgl0/YJaY7i/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbfLJWfF (ORCPT
+        id S1729507AbfLJWfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:35:05 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35805 "EHLO ozlabs.org"
+        Tue, 10 Dec 2019 17:35:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfLJWfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:35:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1730421AbfLJWef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:34:35 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47XZcx5kMkz9sS8;
-        Wed, 11 Dec 2019 09:34:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576017300;
-        bh=jMelgaoY2YVu2U1fG/AHlQ4glmuVPCJvHyn0RjP4iOo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q2RFFgseM6kD3z7fostLllZY/5UCm67D4hQss4rwT7awNS0TvHiOFE3j902qDWO3L
-         gOoEJ9anWy0fFyzVm37l3xkdzh2p5LBZ2HLmsxN9iz38lJslK97BSFUIknMNUlDuTB
-         gIxCNPulcTiL7Ro3PaevaJfGkMUy1UMZLGGLZop690Q+2ABuUW8wgf7FBIV13VpSLj
-         OIdJKYkAl0v6gXvKrjyWI9S4TYNW6TTx4WmGvGqMJp72743c/tNbYlGMW4aoYBklph
-         LG3qmF7hWHdeHr8jv5pSMAoDOW9K4h9HLhNGnAETws26bUY27mPQHvF2EsWgirDlNW
-         uEZJohI+/5L2Q==
-Date:   Wed, 11 Dec 2019 09:34:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: linux-next: Tree for Dec 10 (ethernet/8390/8390p.c)
-Message-ID: <20191211093449.0932cef4@canb.auug.org.au>
-In-Reply-To: <ce89aa80-558c-1ccb-afbe-0af6bc4f3e19@infradead.org>
-References: <20191210140225.1aa0c90e@canb.auug.org.au>
-        <ce89aa80-558c-1ccb-afbe-0af6bc4f3e19@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CECD2077B;
+        Tue, 10 Dec 2019 22:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017275;
+        bh=fwLbFOwYuosUNvBtBzCJnteMtb0lpfmmcy3XtRemLj8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bY39le62X/hxofPDsA91P1xWiJjSxpmtp5v/ke3MtLWf57LvLcRQZMhJ5vI5mao6V
+         KIBEheKGqWO8v7e84PuRIzv0Tyo6HQfxsN9iMHxGX9SSoZRvtfTocJfRSxY1BMyBih
+         a76iIj3SsrnnBUKYVX4XzgkMfNNl5VKZr7fJ6WE0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 66/71] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Tue, 10 Dec 2019 17:33:11 -0500
+Message-Id: <20191210223316.14988-66-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
+References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7LARfLRMNLloF/0HH__5J_H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7LARfLRMNLloF/0HH__5J_H
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-Hi Randy,
+[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
 
-On Mon, 9 Dec 2019 23:13:34 -0800 Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
->
-> On 12/9/19 7:02 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > Changes since 20191209:
-> >  =20
->=20
-> on i386:
->=20
-> ../drivers/net/ethernet/8390/8390p.c:44:6: error: conflicting types for =
-=E2=80=98eip_tx_timeout=E2=80=99
->  void eip_tx_timeout(struct net_device *dev, unsigned int txqueue)
->       ^~~~~~~~~~~~~~
-> In file included from ../drivers/net/ethernet/8390/lib8390.c:75:0,
->                  from ../drivers/net/ethernet/8390/8390p.c:12:
-> ../drivers/net/ethernet/8390/8390.h:53:6: note: previous declaration of =
-=E2=80=98eip_tx_timeout=E2=80=99 was here
->  void eip_tx_timeout(struct net_device *dev);
->       ^~~~~~~~~~~~~~
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-Looks like this has been fixed for today (in the vhost tree).
---=20
-Cheers,
-Stephen Rothwell
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---Sig_/7LARfLRMNLloF/0HH__5J_H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index ff80314988093..bff3cbd05c0a8 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -245,8 +245,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -266,8 +266,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -289,8 +289,8 @@ int sun4i_hash_update(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
+-- 
+2.20.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3wHYkACgkQAVBC80lX
-0Gy1zQf/XBlLXFyjf2UIu0lqNQyKeWdtnjgqXuqcFOQtDqhdZ1u1ulVlNP6DQllI
-oS7FFzxgOUf/yj1rWFLc/MoXE9Gx7TxwiSwphiGgw1A1/2mpD3ARKhVnwUeConM/
-uJnBvgvWbpKnkuEdxl/HmAf31/R3eqrKwjOBvDb0eutvuFVr0dzkg8fadtu7zqRz
-gRBVxsmqtP7KNfHjBtTZu4AyarX57ry7bZ+zTal9zvML7kKCyYYRp0xtqkn30EWC
-jNkvGM9HDbKT7MSLoxctSTYvW4I+OQKfJSZQFPFPCIYEtnHw7SPtUGzq44O2Z+hs
-a90M1MwaouLwQLFDfghQRpHmWRwPgA==
-=9FkA
------END PGP SIGNATURE-----
-
---Sig_/7LARfLRMNLloF/0HH__5J_H--
