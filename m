@@ -2,171 +2,99 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA54AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076B2C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CBF20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7FB20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 14:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MrYDU4oJ"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="L2E5nPko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfLJO1g (ORCPT
+        id S1727545AbfLJO1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 09:27:36 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25797 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727333AbfLJO1f (ORCPT
+        Tue, 10 Dec 2019 09:27:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45946 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbfLJO1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 09:27:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575988055;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DzrfXrqS3i0iVxslRT9HAUzTMYttEiFFx6V9DjllFWk=;
-        b=MrYDU4oJENAWReISd22FCyf/X2Ca2S4LZ4s3BGuI1N+i3F0CYJTQMTH4kwla6WcFHwbVqv
-        G4PdSgq4IOaPt04lLpwbH7lwDo+dOy/Hy0Yb3hUA3EdV1rU0P/Ib2kpoYBj/gyFbUqW5ur
-        jTFjmJ2xIf6nXC5uyfxd3HPPkvpMYbI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-xa7TZhTqO7Kb8n4BRlDJvw-1; Tue, 10 Dec 2019 09:27:34 -0500
-Received: by mail-wm1-f70.google.com with SMTP id z2so663268wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:27:34 -0800 (PST)
+        Tue, 10 Dec 2019 09:27:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so20292422wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 06:27:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W5IUf7nsGsbe8tjOIPGAbRfLSF1koHZCPW1tiAPp8KQ=;
+        b=L2E5nPkojADtCwJoOc2zngiVfEFaOKerMJDA+dP8i3AACTrFfXIMrkbZ9lYGWVu9sV
+         D2erbLhpXuzHVInZHHR8xNKZ/SM9Kp8u0zdDN8Dlt+Sj0C4Sa7S0/keaBfvgNCDUEXo8
+         h5kebBQIiPHTu3yDYxD7ieCguFvT34pbVQXmbMVMuWJpPfTAM5RiAru/6vv47X8TyUXd
+         Vs3IusyQUM204x2b1Y58btUqzfGzL2KEgImhUKTVNeggWhnICXA0Aq69dkdgr6qLJ31M
+         MLm1/iZMet/4Jam1bbyZ2eZOWDvTuC4v3/jP+cvta2HH5p+QG20t2PqOlYBlqb8ASitt
+         cqqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X1lHEli2ZPEUphqWeLKjY7ANrLSq38w1XZiJ4O+hMh4=;
-        b=DqaAsg/00GExja8cR0BMXey08ffbVHoq0x7ERiwCdn3OsFlsCR+T99J3bl8pFfCzPN
-         nu6BGIAGg4z7+hxx6LcnrSZPYjGiBNSN3JtwNuay5Wyj9n2p2XcgUUdqi44kKyCr0Qzy
-         vTJQNh08k1tBbuWqHvgD2740OfxxWWTuACINJNv8H8cfDQxcVUuE0X5yH9FNgMRRgUVn
-         zubnI+njMsxnQxlpCZtlpAZocO0Gv9NQtIcmm0/42ojhzuA1Z8JCyjkLAIyZUCUKzLdh
-         sVHJM5K7Ta+ifLQp01hWD5q/KOr1W5G+bR/uftdgqACE6zWQsAvSAbPxuV8pVTgHwNam
-         mGow==
-X-Gm-Message-State: APjAAAV0Ur886r7sYk+bR8woex3pyPDkjqdQq5gO8oflPwFwYWeNPHbk
-        TLuiEyvSTAqANeSB49VyFw553XHn3vkqiJiraXF2xRidyjIjpBMe0N3aldA/4MqVRF172s+rbIP
-        JouQPTdqW5HPDCG9rKAiZ2Gll
-X-Received: by 2002:a7b:c30b:: with SMTP id k11mr3443160wmj.36.1575988050871;
-        Tue, 10 Dec 2019 06:27:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyORv9pUAClZj3uuRIeWG42TpWgdtau7zFiq4ztIMEHBp0R7wL6KdQcy5e01sv2Y+LjIftgSw==
-X-Received: by 2002:a7b:c30b:: with SMTP id k11mr3443140wmj.36.1575988050692;
-        Tue, 10 Dec 2019 06:27:30 -0800 (PST)
-Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
-        by smtp.gmail.com with ESMTPSA id n1sm3420590wrw.52.2019.12.10.06.27.29
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W5IUf7nsGsbe8tjOIPGAbRfLSF1koHZCPW1tiAPp8KQ=;
+        b=b6oN/uxWzDdwk/WRPnDdxXxbL/ccktGtRf+9fWuIcCpDR7Fl33qTFMzBGx6QTDPq9v
+         wMyah/1v9Fb/X5skNxfXOhVVKpMOjlEDZ9Mb4qyUaQ4pa1nOOXkw/6R15XK3YsgJDxvQ
+         uWgOM1A9TW5lCnWiA1VBvafcvlLowbU368Y9xhCzzvDnV3/lqJEbhNe9Aw+86hyVg0hk
+         Jb+dIhQjXhXvuFdD59/vNFhm3UYx+X8XJCbjyc/lxvHxXR5VVX2ltwXNSvAWEIeAweo+
+         u5Yt31L3Eg8p/uC2GaA7GHVmGeBBNN0JXZMpIBm9Ta/eT0vlh7wZV7Y+Kzq58iRzKZt6
+         gtow==
+X-Gm-Message-State: APjAAAVFS9HR7+D/HjerNvuu5hagCqdEeZCMtVgk7aZRjrPSHPwlMbGZ
+        TMII8ztYD1NduMkMZUSnnp8kJQ==
+X-Google-Smtp-Source: APXvYqyUBijfm2TzBx1LeB2u6bQBew7o/j0N0PGJZC176s95+fAfBOddZN/O46L6Umk0VstiaF22Fg==
+X-Received: by 2002:a5d:46c1:: with SMTP id g1mr3564701wrs.200.1575988070777;
+        Tue, 10 Dec 2019 06:27:50 -0800 (PST)
+Received: from localhost (ip-94-113-220-172.net.upcbroadband.cz. [94.113.220.172])
+        by smtp.gmail.com with ESMTPSA id m10sm3468304wrx.19.2019.12.10.06.27.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 06:27:30 -0800 (PST)
-Date:   Tue, 10 Dec 2019 09:27:27 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julio Faracco <jcfaracco@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org, dnmendes76@gmail.com,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        Tue, 10 Dec 2019 06:27:50 -0800 (PST)
+Date:   Tue, 10 Dec 2019 15:27:49 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Shannon Nelson <snelson@pensando.io>,
-        Martin Habets <mhabets@solarflare.com>
-Subject: Re: [PATCH RFC net-next v8 1/3] netdev: pass the stuck queue to the
- timeout handler
-Message-ID: <20191210092623-mutt-send-email-mst@kernel.org>
-References: <20191203201804.662066-1-mst@redhat.com>
- <20191203201804.662066-2-mst@redhat.com>
- <CAMuHMdXDm0NiCk1pD_-wS9c-ErmRKkrqnPc_pGKzG=QB35mj9A@mail.gmail.com>
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 5/5] ethtool: provide link mode names as a
+ string set
+Message-ID: <20191210142749.GA7075@nanopsycho>
+References: <cover.1575982069.git.mkubecek@suse.cz>
+ <fe689865e1e8cda85dd0ca259c820c473bd9576c.1575982069.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXDm0NiCk1pD_-wS9c-ErmRKkrqnPc_pGKzG=QB35mj9A@mail.gmail.com>
-X-MC-Unique: xa7TZhTqO7Kb8n4BRlDJvw-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
+In-Reply-To: <fe689865e1e8cda85dd0ca259c820c473bd9576c.1575982069.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 08:40:06AM +0100, Geert Uytterhoeven wrote:
-> Hi Michael,
->=20
-> On Tue, Dec 3, 2019 at 9:21 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > This allows incrementing the correct timeout statistic without any mess=
-.
-> > Down the road, devices can learn to reset just the specific queue.
-> >
-> > The patch was generated with the following script:
->=20
-> [...]
->=20
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->=20
-> > --- a/drivers/net/ethernet/8390/8390p.c
-> > +++ b/drivers/net/ethernet/8390/8390p.c
-> > @@ -41,9 +41,9 @@ void eip_set_multicast_list(struct net_device *dev)
-> >  }
-> >  EXPORT_SYMBOL(eip_set_multicast_list);
-> >
-> > -void eip_tx_timeout(struct net_device *dev)
-> > +void eip_tx_timeout(struct net_device *dev, unsigned int txqueue)
-> >  {
-> > -       __ei_tx_timeout(dev);
-> > +       __ei_tx_timeout(dev, txqueue);
-> >  }
-> >  EXPORT_SYMBOL(eip_tx_timeout);
->=20
-> On Mon, Dec 9, 2019 at 6:37 AM <noreply@ellerman.id.au> wrote:
-> > FAILED linux-next/m68k-defconfig/m68k Mon Dec 09, 16:34
-> >
-> > http://kisskb.ellerman.id.au/kisskb/buildresult/14060060/
-> >
-> > Commit:   Add linux-next specific files for 20191209
-> >           6cf8298daad041cd15dc514d8a4f93ca3636c84e
-> > Compiler: m68k-linux-gcc (GCC) 4.6.3 / GNU ld (GNU Binutils) 2.22
-> >
-> > Possible errors
-> > ---------------
-> >
-> > drivers/net/ethernet/8390/8390p.c:44:6: error: conflicting types for 'e=
-ip_tx_timeout'
-> > drivers/net/ethernet/8390/8390p.c:48:1: error: conflicting types for 'e=
-ip_tx_timeout'
-> > make[5]: *** [scripts/Makefile.build:266: drivers/net/ethernet/8390/839=
-0p.o] Error 1
-> > make[4]: *** [scripts/Makefile.build:503: drivers/net/ethernet/8390] Er=
-ror 2
-> > make[3]: *** [scripts/Makefile.build:503: drivers/net/ethernet] Error 2
-> > make[2]: *** [scripts/Makefile.build:503: drivers/net] Error 2
-> > make[1]: *** [Makefile:1693: drivers] Error 2
-> > make: *** [Makefile:179: sub-make] Error 2
->=20
-> Looks like you forgot to update the forward declaration in
-> drivers/net/ethernet/8390/8390.h
+Tue, Dec 10, 2019 at 02:08:13PM CET, mkubecek@suse.cz wrote:
+>Unlike e.g. netdev features, the ethtool ioctl interface requires link mode
+>table to be in sync between kernel and userspace for userspace to be able
+>to display and set all link modes supported by kernel. The way arbitrary
+>length bitsets are implemented in netlink interface, this will be no longer
+>needed.
+>
+>To allow userspace to access all link modes running kernel supports, add
+>table of ethernet link mode names and make it available as a string set to
+>userspace GET_STRSET requests. Add build time check to make sure names
+>are defined for all modes declared in enum ethtool_link_mode_bit_indices.
+>
+>Once the string set is available, make it also accessible via ioctl.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-Fixed now.
-
-> There may be others...
-
-Could not find any but pls do let me know.
-
-> http://kisskb.ellerman.id.au/kisskb/head/6cf8298daad041cd15dc514d8a4f93ca=
-3636c84e/
->=20
-> Gr{oetje,eeting}s,
->=20
->                         Geert
->=20
-> --=20
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->=20
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
-
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
