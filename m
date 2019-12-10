@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DDBC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCCEC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1662077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D102077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576017437;
-	bh=blLUoTpQ6T7Qmn8UspTegfMLI1oc5yQMRt2rwXI1jhY=;
+	s=default; t=1576017441;
+	bh=z6VNPAjdlwsXZf+UURspqWnK3HBDctgIcTjbgHC1vMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cI7WNOgIwCioP0Iv71y4PcQBj72hodgkJCR0kOak4yViLCRUS1XeS6w16hzw0Q3m6
-	 aaMuHV5uATDv+4S95R4eobTUHxiqM2OD/IQU4IQtexKccdny/+WUig7j56/gPhsejy
-	 3Z+1OIF0fMKc09rGYwm3CAkQawV3LQ5wVcO4Znog=
+	b=tvfNs5knQhBfoQMMJYcxONPxiuVTMVx9BvoNTcr1uJWH+dlvJB+Gas7jrz1bBz2qz
+	 bBdwohFgrqjWnVTMVNYLnBXDjRf42KizmOSw0jxEwL2vtdzcK70HBcHvCsK/Ik0Zk9
+	 Kj3qWbunW54146o5dnT8o4b4ZSGURUT5ug0sedCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfLJWhQ (ORCPT
+        id S1730094AbfLJWeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:37:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:34:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730130AbfLJWeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:06 -0500
+        id S1729170AbfLJWdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:33:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72208208C3;
-        Tue, 10 Dec 2019 22:34:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D3ED208C3;
+        Tue, 10 Dec 2019 22:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017246;
-        bh=blLUoTpQ6T7Qmn8UspTegfMLI1oc5yQMRt2rwXI1jhY=;
+        s=default; t=1576017227;
+        bh=z6VNPAjdlwsXZf+UURspqWnK3HBDctgIcTjbgHC1vMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKLcJqIeAhc2JbVhXuMADuD0m76FWOSDGFn6Kb230q3LSgNXpAGt2SRxDWCLeE19q
-         /8VelP3J7TQElAjnthVvw7ic2NzmZiXG5bXKeb+Mxd2RtThkJ/papBpmOIV7KWWFBZ
-         lCh2OHB5MomNwZdw6ig3AmzPJRJGkha9XP+u3uZ4=
+        b=JV4TWomsTuezmxRHAo4wFizyDEos0VGnvslx1gKxnQOsWactQc3ctL+WxVMFXhF9H
+         t8WUAYojR7s7pORiKC1SGFjXghhEWjPGvz9sA/UHkzBLGflqJH1EDOtuNvrVIY8LiL
+         ZQXO8gSGAEnidt7r2irftxqYQ6r4yQIZdGfu/PGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 42/71] perf probe: Walk function lines in lexical blocks
-Date:   Tue, 10 Dec 2019 17:32:47 -0500
-Message-Id: <20191210223316.14988-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 25/71] perf report: Add warning when libunwind not compiled in
+Date:   Tue, 10 Dec 2019 17:32:30 -0500
+Message-Id: <20191210223316.14988-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
 References: <20191210223316.14988-1-sashal@kernel.org>
@@ -61,74 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit acb6a7047ac2146b723fef69ee1ab6b7143546bf ]
+[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
 
-Since some inlined functions are in lexical blocks of given function, we
-have to recursively walk through the DIE tree.  Without this fix,
-perf-probe -L can miss the inlined functions which is in a lexical block
-(like if (..) { func() } case.)
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-However, even though, to walk the lines in a given function, we don't
-need to follow the children DIE of inlined functions because those do
-not have any lines in the specified function.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-We need to walk though whole trees only if we walk all lines in a given
-file, because an inlined function can include another inlined function
-in the same file.
+The warning is:
 
-Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
+Warning:
+Please install libunwind development packages during the perf build.
+
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index af78d6fc8d12c..ef6fa620a4264 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -664,10 +664,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
- 		}
-+		if (!lw->recursive)
-+			return DIE_FIND_CB_SIBLING;
- 	}
--	if (!lw->recursive)
--		/* Don't need to search recursively */
--		return DIE_FIND_CB_SIBLING;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index f256fac1e7225..0f7ebac1846b5 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -285,6 +285,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
- 	if (addr) {
- 		fname = dwarf_decl_file(in_die);
-@@ -714,6 +713,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
- {
- 	struct __line_walk_param *lw = data;
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
++
+ 	return 0;
+ }
  
-+	/*
-+	 * Since inlined function can include another inlined function in
-+	 * the same file, we need to walk in it recursively.
-+	 */
- 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
- 	if (lw->retval != 0)
- 		return DWARF_CB_ABORT;
-@@ -803,8 +806,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	 */
- 	if (rt_die != cu_die)
- 		/*
--		 * Don't need walk functions recursively, because nested
--		 * inlined functions don't have lines of the specified DIE.
-+		 * Don't need walk inlined functions recursively, because
-+		 * inner inlined functions don't have the lines of the
-+		 * specified function.
- 		 */
- 		ret = __die_walk_funclines(rt_die, false, callback, data);
- 	else {
 -- 
 2.20.1
 
