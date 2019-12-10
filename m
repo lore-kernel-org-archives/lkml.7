@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1088FC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865B2C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42D0207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8EA207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 18:55:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lVRphTYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aje+hkE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfLJSz1 (ORCPT
+        id S1727833AbfLJSza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 13:55:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40556 "EHLO
+        Tue, 10 Dec 2019 13:55:30 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37943 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbfLJSzZ (ORCPT
+        with ESMTP id S1727813AbfLJSz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 13:55:25 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so21311056wrn.7;
-        Tue, 10 Dec 2019 10:55:23 -0800 (PST)
+        Tue, 10 Dec 2019 13:55:28 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so21339861wrh.5;
+        Tue, 10 Dec 2019 10:55:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=buyLI45l4zB2SYDrnrkuR0XbVX9htttO2YBB5BmsEdg=;
-        b=lVRphTYlkKXnztZvgIn6OhW2ANapDiarJXM+1NdrWmhdluIthENf58m2q+4BDl958E
-         XVlz6rNhmXRpXxY6HFfeloYi9FFHi6dVGLOEw/5xPb5A9HyfXV9lggTLIYPHu+WHLrfz
-         uf6QleJcHZCvSaI1AAr+CFDxDPChU1tfpFRuNo1AoX1mcQhffC4nvXxpnJJbqu91J7R0
-         TrOiUnN5dhLwRIqxam0RHfld17iM/vMNK0ZO8joAYIXF8UhncSyASuQqLMT+4YxkybAs
-         Lf7Rqd+yND2ThEaULn7JXZ02XJ5IhRqkyS+G44SXlW9OShR+LM5B0dh2lm3ZZ7/sCTxs
-         Z+Aw==
+        bh=zGMvJWZo3bb5zgamkdnRKaVLQdrbvMefeySxvLbMI38=;
+        b=aje+hkE/+cZZU+/Ppdll3mTIUW8qKLA/5x0PZcMiq9tm8zyH+AGTKB3VKONQeMMb0x
+         lwQPhevBddVLD4SciVMGl2Bj4TVXtoiH6BoGPS44K78xEHxShUwpYMahFEH0++K6dn00
+         +8CJKs1LOJfc2AC7LUq+yr23Ih8ey/yE5GL9qZUYROTj/suTP/ln0TCT+RT0ohpm2Lu9
+         gJrEoia4D4eoAqwXWZdmzG6svXXmpOFSRKRIveCibqU2K+Z0AUbT69WxDyrlC64PYfPP
+         J0frDKrvRy/uoumh6+aEYeteQ+72B0B+qT0yqyLxbvH+GUGS3WwmMpCwn+1iX00I2f3c
+         bigg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=buyLI45l4zB2SYDrnrkuR0XbVX9htttO2YBB5BmsEdg=;
-        b=oK/8RVFvCnj/lUmGthqUoySBm6fMubclEhwXLN6H38Kl3nWyN2j9WzYbOGYs3fhAeL
-         OEov1DdCXXXrpyolv+KTpcTzRIKNuTPcZW46C7VcP22p7QvwHqvsPSbieo2c+79O1HtO
-         X1evVQA254/EYST3OBZ2yj+9OunuJT9OEpGVkx4jpVlsegPX9lYtEHnwQhkUhxB6250r
-         Q9LJO+h0CEifa9UqzAnbX0LcGgMG9MgHiN7yQp5y/WFbrXsCtSIa/gFMVddn9jxhbvez
-         uoOjzOmKnhR/6XnoIFV1E0DeScXHPe+/sTVaYFKga1aR+dbDLtqcpVuXS3iFGzL36Ohq
-         CIxQ==
-X-Gm-Message-State: APjAAAWTArv21k6bEVjscREy8zM794RMNICIftseCSJkZrPlr9HVFsEZ
-        iPNGL5qbEa8lF0HYPQ2S03O7jW18
-X-Google-Smtp-Source: APXvYqzj5EReFxF160THPK7rEWBfVB4+rTGlzMJbnbHBDFvu8E8Gz7fADcgSauoJzarnONnYz2LNWw==
-X-Received: by 2002:a5d:50d2:: with SMTP id f18mr4939176wrt.366.1576004122183;
-        Tue, 10 Dec 2019 10:55:22 -0800 (PST)
+        bh=zGMvJWZo3bb5zgamkdnRKaVLQdrbvMefeySxvLbMI38=;
+        b=XhxlvcH3tVa83xUTBaAZJGPGG1LJ0NS1aK37qFp0IYpu4J7NClSBI7JHNW+adYefYv
+         vUbzUL5mjcxZJVZ43/MsU66FTJXgcI4n463R3eCpq6FsMBp+lRLPd2qEnTq7kC84Pivy
+         Edu5ObRrEycsDKoy8Vl2S6cvsAtxQ0npiEpr7JvOaQ/cB2vXs5WlZPhKcSSSi7csx8xk
+         IBGZkBMT4d1uZPQVsFB7cHIV3WkEQr4TgTNYpqA3x9kEaNbs7IoD3OQGnaW816QK3gA8
+         HA9GaiE/9qtlMT+hc7YwGZtmNksIXa8U0x9wHkhO3Gkw3QnBee4Z4rAHc5rmt3zCbsPh
+         DtYQ==
+X-Gm-Message-State: APjAAAUPNA18z2Ha2MhOvSkEWZKSon3q2FW4mTXK6n69JN4ik2ZZn+cu
+        toZs9SxeE3QRihMWlonrPu9NTX/W
+X-Google-Smtp-Source: APXvYqzIS8G0PdjjpBmf61HE3iOGZM19FKt+i8oHcpYPbW7+AdFkhjQQuMhi7akcabIgkfnvSZTsTQ==
+X-Received: by 2002:a5d:4ec2:: with SMTP id s2mr4764181wrv.291.1576004125685;
+        Tue, 10 Dec 2019 10:55:25 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e6sm4213536wru.44.2019.12.10.10.55.19
+        by smtp.gmail.com with ESMTPSA id e6sm4213536wru.44.2019.12.10.10.55.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 10:55:21 -0800 (PST)
+        Tue, 10 Dec 2019 10:55:25 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     bcm-kernel-feedback-list@broadcom.com,
@@ -69,9 +69,9 @@ Cc:     bcm-kernel-feedback-list@broadcom.com,
         Parallel ATA drivers)),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS)
-Subject: [PATCH 4/8] ata: ahci_brcm: Add missing clock management during recovery
-Date:   Tue, 10 Dec 2019 10:53:47 -0800
-Message-Id: <20191210185351.14825-5-f.fainelli@gmail.com>
+Subject: [PATCH 5/8] ata: ahci_brcm: Manage reset line during suspend/resume
+Date:   Tue, 10 Dec 2019 10:53:48 -0800
+Message-Id: <20191210185351.14825-6-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191210185351.14825-1-f.fainelli@gmail.com>
 References: <20191210185351.14825-1-f.fainelli@gmail.com>
@@ -80,39 +80,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The downstream implementation of ahci_brcm.c did contain clock
-management recovery, but until recently, did that outside of the
-libahci_platform helpers and this was unintentionally stripped out while
-forward porting the patch upstream.
+We were not managing the reset line during suspend/resume, but this
+needs to be done to ensure that the controller can exit low power modes
+correctly, especially with deep sleep suspend mode that may reset parts
+of the logic.
 
-Add the missing clock management during recovery and sleep for 10
-milliseconds per the design team recommendations to ensure the SATA PHY
-controller and AFE have been fully quiesced.
-
-Fixes: eb73390ae241 ("ata: ahci_brcm: Recover from failures to identify devices")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/ata/ahci_brcm.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/ata/ahci_brcm.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 58f8fd7bb8b8..66a570d0da83 100644
+index 66a570d0da83..76612577a59a 100644
 --- a/drivers/ata/ahci_brcm.c
 +++ b/drivers/ata/ahci_brcm.c
-@@ -274,6 +274,13 @@ static unsigned int brcm_ahci_read_id(struct ata_device *dev,
- 	/* Perform the SATA PHY reset sequence */
- 	brcm_sata_phy_disable(priv, ap->port_no);
+@@ -343,10 +343,16 @@ static int brcm_ahci_suspend(struct device *dev)
+ 	struct ata_host *host = dev_get_drvdata(dev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
++	int ret;
  
-+	/* Reset the SATA clock */
-+	ahci_platform_disable_clks(hpriv);
-+	msleep(10);
-+
-+	ahci_platform_enable_clks(hpriv);
-+	msleep(10);
-+
- 	/* Bring the PHY back on */
- 	brcm_sata_phy_enable(priv, ap->port_no);
+ 	brcm_sata_phys_disable(priv);
  
+-	return ahci_platform_suspend(dev);
++	ret = ahci_platform_suspend(dev);
++
++	if (!IS_ERR_OR_NULL(priv->rcdev))
++		reset_control_assert(priv->rcdev);
++
++	return ret;
+ }
+ 
+ static int brcm_ahci_resume(struct device *dev)
+@@ -354,7 +360,12 @@ static int brcm_ahci_resume(struct device *dev)
+ 	struct ata_host *host = dev_get_drvdata(dev);
+ 	struct ahci_host_priv *hpriv = host->private_data;
+ 	struct brcm_ahci_priv *priv = hpriv->plat_data;
+-	int ret;
++	int ret = 0;
++
++	if (!IS_ERR_OR_NULL(priv->rcdev))
++		ret = reset_control_deassert(priv->rcdev);
++	if (ret)
++		return ret;
+ 
+ 	/* Make sure clocks are turned on before re-configuration */
+ 	ret = ahci_platform_enable_clks(hpriv);
 -- 
 2.17.1
 
