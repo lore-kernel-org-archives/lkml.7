@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809B9C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D34C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5222F246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6BF246AA
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012192;
-	bh=kMEv874BtPuf0HyGoIPf4BP7UuEI4I7m70iZktNpjEA=;
+	s=default; t=1576012196;
+	bh=p4Ouzi2dQxXDQpMa6jd+uJ+hILDlMBsHNOy9APzS59k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AD3D5NxRDLlBiVJg0l/vZ2gzz1SNO0J1rLOJTMevDdofEmzpAiO/fVxF/UqpLo/EI
-	 S8QjGk1cZl+xfXdH6TOW4WZZz4zgrs2F1/5Pt7Xa1l6AvEQ4+opuwEQWGh8LD9j0ku
-	 zEnoUpnzzHcOiHj3xvKUfHVPXqmiLaWej8ENSPgI=
+	b=VtgRhi3K9+XhIzYVw6MaxlFzj6Ku5HHYZgl7g3+jEohcY2InscUWW35JIw0YNy4HK
+	 HK/q3Ee0AmoFqaYId/p9h/Q2jJbmc/Tlv/Y+M3FSUGOa+DsYVAUxInxW7m4GvTEHBB
+	 J2qY10XUHDr3gHYgDUaEM30hHNpOO2n/TiWTkJqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfLJVJu (ORCPT
+        id S1727188AbfLJVJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:09:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:09:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfLJVJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:09:47 -0500
+        id S1728301AbfLJVJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:09:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35A6246AB;
-        Tue, 10 Dec 2019 21:09:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBCD3246AC;
+        Tue, 10 Dec 2019 21:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012187;
-        bh=kMEv874BtPuf0HyGoIPf4BP7UuEI4I7m70iZktNpjEA=;
+        s=default; t=1576012189;
+        bh=p4Ouzi2dQxXDQpMa6jd+uJ+hILDlMBsHNOy9APzS59k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJUusVM15cvmCkt1Szx/OYUjeEPC1EPQ0mOEURtXmyeL5vga8kDIRnb0Ppzl0rtfy
-         0nE8OOjRr64YvBft+i/RjhV8q1Aih1+zo06XWmryM2r80T0XUCXKPSnzg3SdrDqqB9
-         xD0d4d3UxUfhfH+6BNqYLwZQ4bu4rTzAPwIzsn/E=
+        b=xHjbqSKYOiXcnpkoTKKJQU07CPOWVTvQCspubSXECTFO5SYGnDpbUOLfeQMCRq/id
+         FvlkODOPlH0IMpD9Kcn14aZJF5BECQ003XT04kr8czD/aOrC+ZnaMvzoObJsxhtLc/
+         RbjIDD55rXE2RgrjCscwJBCgLXTVjNxnQ0IJRpYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <sean@poorly.run>, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 143/350] drm/nouveau: Resume hotplug interrupts earlier
-Date:   Tue, 10 Dec 2019 16:04:08 -0500
-Message-Id: <20191210210735.9077-104-sashal@kernel.org>
+Cc:     Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 145/350] media: aspeed: set hsync and vsync polarities to normal before starting mode detection
+Date:   Tue, 10 Dec 2019 16:04:10 -0500
+Message-Id: <20191210210735.9077-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,67 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
-[ Upstream commit ac0de16a38a9ec7026ca96132e3883c564497068 ]
+[ Upstream commit 5b3f3c41c5c791c1c22cd91655e7ef4b2a1dff7c ]
 
-Currently, we enable hotplug detection only after we re-enable the
-display. However, this is too late if we're planning on sending sideband
-messages during the resume process - which we'll need to do in order to
-reprobe the topology on resume.
+Sometimes it detects a weird resolution such as 1024x287 when the
+actual resolution is 1024x768. To resolve such an issue, this
+commit adds clearing for hsync and vsync polarity register bits
+at the beginning of the first mode detection. This is recommended
+in the datasheet.
 
-So, enable hotplug events before reinitializing the display.
-
-Cc: Juston Li <juston.li@intel.com>
-Cc: Imre Deak <imre.deak@intel.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Harry Wentland <hwentlan@amd.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191022023641.8026-11-lyude@redhat.com
+Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_display.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/media/platform/aspeed-video.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
-index 6f038511a03a9..53f9bceaf17a5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-@@ -407,6 +407,17 @@ nouveau_display_init(struct drm_device *dev, bool resume, bool runtime)
- 	struct drm_connector_list_iter conn_iter;
- 	int ret;
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index eb12f37930629..84e0650106f51 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -741,6 +741,8 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
+ 		}
  
-+	/*
-+	 * Enable hotplug interrupts (done as early as possible, since we need
-+	 * them for MST)
-+	 */
-+	drm_connector_list_iter_begin(dev, &conn_iter);
-+	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
-+		struct nouveau_connector *conn = nouveau_connector(connector);
-+		nvif_notify_get(&conn->hpd);
-+	}
-+	drm_connector_list_iter_end(&conn_iter);
-+
- 	ret = disp->init(dev, resume, runtime);
- 	if (ret)
- 		return ret;
-@@ -416,14 +427,6 @@ nouveau_display_init(struct drm_device *dev, bool resume, bool runtime)
- 	 */
- 	drm_kms_helper_poll_enable(dev);
+ 		set_bit(VIDEO_RES_DETECT, &video->flags);
++		aspeed_video_update(video, VE_CTRL,
++				    VE_CTRL_VSYNC_POL | VE_CTRL_HSYNC_POL, 0);
+ 		aspeed_video_enable_mode_detect(video);
  
--	/* enable hotplug interrupts */
--	drm_connector_list_iter_begin(dev, &conn_iter);
--	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
--		struct nouveau_connector *conn = nouveau_connector(connector);
--		nvif_notify_get(&conn->hpd);
--	}
--	drm_connector_list_iter_end(&conn_iter);
--
- 	return ret;
- }
- 
+ 		rc = wait_event_interruptible_timeout(video->wait,
 -- 
 2.20.1
 
