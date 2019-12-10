@@ -2,98 +2,152 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA6CC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDF3C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F4420836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1133720828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 17:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="mt115MN0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKJ02JEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfLJRvj (ORCPT
+        id S1727743AbfLJRwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 12:51:39 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40934 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfLJRvi (ORCPT
+        Tue, 10 Dec 2019 12:52:05 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37021 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbfLJRwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:51:38 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q8so198376pfh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 09:51:38 -0800 (PST)
+        Tue, 10 Dec 2019 12:52:04 -0500
+Received: by mail-ed1-f68.google.com with SMTP id cy15so16763486edb.4;
+        Tue, 10 Dec 2019 09:52:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=fW3Ref0PHQ5io/FZ7XeWN9s3SNVfAIL+FiYKUeQn2KE=;
-        b=mt115MN0ewRf9mbMFfp3Iuy2d9FfypEgxpQPsNISDAUH+rYzYYoVGNS6eQVx4xwi7P
-         yTtaMc7LznoM3N9LJtFlmsznQ0SGCA7fpiGDFmINKs/wZ+ddeaDvS5XJj5isX8gCWPn+
-         cfh+7/hpwkswXJwkPhciglEpdSvkWiZithOzgl+FdoDdWMXk1r1uRSPSvEi6e+dPZzuW
-         M2SkMSiHHj2cbV6o06Ph2ggoSQQ6j1YB1OhHfP8YWBCLhnAcvJ3C7RwuftNOGuJE0E0w
-         zGZV1mQY+gTcqgcLn4dgrucRHY4oamVhHdAXQH0goEO9cb2BEEs2PZNrayEg8nkaVLPv
-         v1Rw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wQCy8ynvHFscUmzOGqeaNWyMRPeyT0GgcD6In5jOnkM=;
+        b=gKJ02JEeAROeyRbkkLj6APxHcp6swZRz4k76XBQMV/pKpLY82KanP9ME6AqpZ7eUOS
+         1VE3dMsdWajVnXWTqqvboQoBPQ8LZAMd1MMD07XefkoXq7STexPZ8eMusSUQ4svDqy2G
+         QCVOIpMNpXcM1VW+Jm1nABmwRpdoTGpBALGqgl7eB8Lg7jwZ8XwA39tLrnLIQiH8w4cE
+         vFe5Xq6/tiDfJbvMcWLYuTO8PQBSkva5X+K2tDrUSxc3UlgEYgHwcpQaa5Vl5X1mghwl
+         5TReleDlzRyWGx+8nZlfH8t8NXDRQ74RjEDYZ+FQuoi5SXmV1Q0I1TuAEDRJs4fBzN+h
+         pE9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=fW3Ref0PHQ5io/FZ7XeWN9s3SNVfAIL+FiYKUeQn2KE=;
-        b=EEOzGLt0JVx01gIx2MofH5yiFofY3zVVNTs6xG0ba5nks9J1XEAfFxf1fmgzxhmocr
-         Ul5Uj4mZyQcQMVvogtqKIbV6b8NuifQvDrJvhqkeJoNHRyW4o7enE5T0NFehQ+I0i3g8
-         HyGkd46LeNtkznM7MwtW79jCuMDWGq/2D079GEqYscomXOVCVbCtmHms+yIdfkBAO80Z
-         GNLf0y9lNLgrzwTIgr2AW2Sj2LEU2BFrOEpj+FzhA2KECDef+iM7tUpgO/qGFlm1dlsW
-         tObOVhMkhBfKxha4cbqUASy0s5CDC/KOahga9o5gnb62On1YpBCwshdPanPFwZal44wY
-         BWGA==
-X-Gm-Message-State: APjAAAWUnqTfGDicWSG5pnTUy7MPkOKjhnYoyp9tvLEStI93zwGzWXrU
-        YL2vitbMCSNswnRYE33uCPSG5w==
-X-Google-Smtp-Source: APXvYqwcFHWWm9eTWrLu+KNteuLcuDUJ3dB0pTgi9WFTG+6hBnstYp4EgibKkKe5+8YCV2iFmQrQKg==
-X-Received: by 2002:a65:5608:: with SMTP id l8mr26335894pgs.210.1576000298286;
-        Tue, 10 Dec 2019 09:51:38 -0800 (PST)
-Received: from cakuba.netronome.com ([2601:646:8e00:e18::3])
-        by smtp.gmail.com with ESMTPSA id y128sm4103464pfg.17.2019.12.10.09.51.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 09:51:38 -0800 (PST)
-Date:   Tue, 10 Dec 2019 09:51:34 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wQCy8ynvHFscUmzOGqeaNWyMRPeyT0GgcD6In5jOnkM=;
+        b=F4NPQR6+qeJ3W1rpMWzYcihyuXrqvfBqgnBWDa1gHXoE60GwO4H97uUZ5dsgLJmX7K
+         dKN3mHrD9n1wzGKJaxrUl+2TLt7yiYXPmNOhnCj1OktBr8n6H/9Ss7/sPyUYjMgwhBuI
+         5OHMoU3pZK8+TBPjU4NKvnN4uo7YeNiK6hCC2wDr6vAyvpbugb/neXg4JYIEoqsJHsO+
+         7trEa9tmaK9Gfl9k7RnJA6eIQwTXLUYbMyIkCvxZM7QF96Op49fYdEwrYzvTsPkJ5Xbd
+         g6OhjI2lv8gp6xvVb8wUvkpwKWE+tQaru9uAVTcalJhYqh7q0YVuSUGlfiXzZY7iDY3d
+         Te3Q==
+X-Gm-Message-State: APjAAAVZGS7nd54UdkzfB6QmrTdomeX4HaIQxEL2sIQrdhlKHaUXKwYF
+        y1ypd1mwuyAh6iYh5h0EDP0zAdaX
+X-Google-Smtp-Source: APXvYqwBvLc/EQQkt19VqMdtDrJ8c1RqbCl9f9SkpY/cmquGH8O4YHV+IVLZjyzZsV8jVMztCfA4hw==
+X-Received: by 2002:a50:9203:: with SMTP id i3mr27791265eda.146.1576000322268;
+        Tue, 10 Dec 2019 09:52:02 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id i25sm94014edx.72.2019.12.10.09.51.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 09:52:01 -0800 (PST)
+Subject: Re: [PATCH 0/2] Couple of reset-brcmstb fixes
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/5] ethtool netlink interface, preliminary
- part
-Message-ID: <20191210095134.27f46a81@cakuba.netronome.com>
-In-Reply-To: <cover.1575982069.git.mkubecek@suse.cz>
-References: <cover.1575982069.git.mkubecek@suse.cz>
-Organization: Netronome Systems, Ltd.
+References: <20191104181502.15679-1-f.fainelli@gmail.com>
+ <159380b7ec799f15269a4a6e8f2482a02748e6fd.camel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <ccb1a422-21a0-88b3-0874-67b7c6c54d4a@gmail.com>
+Date:   Tue, 10 Dec 2019 09:51:57 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <159380b7ec799f15269a4a6e8f2482a02748e6fd.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 14:07:48 +0100 (CET), Michal Kubecek wrote:
-> As Jakub Kicinski suggested in ethtool netlink v7 discussion, this
-> submission consists only of preliminary patches which raised no objections;
-> first four patches already have Acked-by or Reviewed-by.
+On 11/6/19 1:01 AM, Philipp Zabel wrote:
+> Hi Florian,
 > 
-> - patch 1 exposes permanent hardware address (as shown by "ethtool -P")
->   via rtnetlink
-> - patch 2 is renames existing netlink helper to a better name
-> - patch 3 and 4 reorganize existing ethtool code (no functional change)
-> - patch 5 makes the table of link mode names available as an ethtool string
->   set (will be needed for the netlink interface) 
+> On Mon, 2019-11-04 at 10:15 -0800, Florian Fainelli wrote:
+>> Hi Philipp,
+>>
+>> This series replaces the previously submitted fixes to the reset-brcmstb
+>> driver and also fix the dt binding example.
+>>
+>> Thank you!
 > 
-> Once we get these out of the way, v8 of the first part of the ethtool
-> netlink interface will follow.
+> Thank you. Both applied to reset/fixes.
 
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-
-Thank you!
+Philipp, when do you expect these patches to hit Linus' tree? Thanks!
+-- 
+Florian
