@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8F5C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE1C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F97620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26927207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015656;
-	bh=/U5mBdY+HaDIPRi4lflZSSCfc6eLruDUWM40ZKLiTpI=;
+	s=default; t=1576015667;
+	bh=ZstFcVpT/Vibbyo5HNYEP33TJSiG0HEyOIlhHVKfVes=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMI2kSjZ1FRwg4XctB2I1p5OEszQj1oTtpwwuhd17vtG3EFsS4KwMOuOlvgJsxpS7
-	 C8b8H70aauYyUp1v9Sa3qmf144mpytJfqgDIGWCVFMpn2yxYgo9nRlFycBMzsDnm7w
-	 TwhdfNY1tz4poGxCCkYn27KQo/af/J53ttEA4PMk=
+	b=phmC7oCbUrpyQg2JsM8Lt+6NIM2uqoNXLxBgFCf/W4Y30XN4pTOW5Dea8Jiln3z+M
+	 V+hmnaKQorda630M0X48TtdwVYMOZxF4ety1QNg9fAUjGVPPhSHW+WH/OjQN4VKInT
+	 su58YYKCmavPlPuH37QcWD0FpFfs4Bt9sI/lr/Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbfLJWHf (ORCPT
+        id S1729768AbfLJWHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:07:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:07:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfLJWFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:07 -0500
+        id S1729339AbfLJWFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FD62464B;
-        Tue, 10 Dec 2019 22:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5342073B;
+        Tue, 10 Dec 2019 22:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015506;
-        bh=/U5mBdY+HaDIPRi4lflZSSCfc6eLruDUWM40ZKLiTpI=;
+        s=default; t=1576015502;
+        bh=ZstFcVpT/Vibbyo5HNYEP33TJSiG0HEyOIlhHVKfVes=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzO7ZZuvxsy1TRS0tkcffFVT8G5cYEKnl6OKLlJUvgcKiJXZaVqwLP77Z6Qzb/33m
-         fuhUTtLpvuIyc0Iyno8Q3ijO4nuG9+eN98F9pRF0tnczbX82T5VjhkPCyTWqmd29OS
-         EmdR6jH8BicFQyuu43yqUSBg2k6u296VnX6SFnkE=
+        b=tr4VKeieWR/kxBSrrdwrIYDmi+UaBwLwCN36GO356rKjjQkAgxqYesTjl+XwN2Kfs
+         Qgv3mMpnss5kLHGbkfAN2yJ6ck2EUy4DY9FeFvYuQJPj8yzXIJ7EcHSJMr+lwgE4HU
+         mEVGaiJeYvB+mytFyO3QRuIuuqfb6xa9fyhSjoXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/130] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 17:02:36 -0500
-Message-Id: <20191210220301.13262-105-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 102/130] spi: pxa2xx: Add missed security checks
+Date:   Tue, 10 Dec 2019 17:02:33 -0500
+Message-Id: <20191210220301.13262-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,71 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+pxa2xx_spi_init_pdata misses checks for devm_clk_get and
+platform_get_irq.
+Add checks for them to fix the bugs.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
+So we cannot use _optional() for devm_clk_get and platform_get_irq.
 
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index 2394557653d57..6d154069c9623 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 9bf3e5f945c75..b2245cdce230b 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1559,7 +1559,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
+ 	}
+ 
+ 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(ssp->clk))
++		return NULL;
 +
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -2005,7 +2006,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -2033,7 +2034,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
+ 	ssp->irq = platform_get_irq(pdev, 0);
++	if (ssp->irq < 0)
++		return NULL;
++
+ 	ssp->type = type;
+ 	ssp->pdev = pdev;
+ 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 -- 
 2.20.1
 
