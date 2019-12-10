@@ -2,71 +2,88 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11691C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CD7C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D122920726
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FCE20726
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 08:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlDiT0UL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcSTjB+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfLJIEX (ORCPT
+        id S1726911AbfLJIGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 03:04:23 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45934 "EHLO
+        Tue, 10 Dec 2019 03:06:20 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22259 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726071AbfLJIEW (ORCPT
+        by vger.kernel.org with ESMTP id S1726364AbfLJIGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 03:04:22 -0500
+        Tue, 10 Dec 2019 03:06:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575965061;
+        s=mimecast20190719; t=1575965177;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dEcFPUgnLfk0OgFFb+OrSZaIOT1djGc+rDDJSgVmBvk=;
-        b=FlDiT0UL8HRkDjnaM9oJ1XB+rdlI1+EwOyu1H6EuYBbVIEUeK+sct9/KxXLVaHMuZCKfGZ
-        PJxOVvA5tU5lOruzPRCtaEeo+wYGpJZizj5Ty+EZgtYNI3Grp78SrGI36+jVI7jF1eb+F1
-        kKsl4u1+clbDXQ50UxGpRgP3f2mNVIs=
+        bh=BiwVSVrkVC5x1zEcwCmZ0emg/mFsMseNMfs46qx16pM=;
+        b=DcSTjB+HDsCZOsGU6mizQKAG430HCIana6gUScdszullzDN8QrFW/3Ycv43Y+wO1JtvczP
+        p6Wl2FZnX+i73jEz6r7qRAY/ttrNM0Bz7UqRLgMuBUMZZZAbCdEBhRpZs6P44VKJ8ma+ep
+        OiGLAyR8AciEd+aIWiwHIh4Hmx2Qego=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-PKuz4irqPaK1MMNCgcN8iw-1; Tue, 10 Dec 2019 03:04:18 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-192-4ovWJzv0PRWwsIUU_SAzXQ-1; Tue, 10 Dec 2019 03:06:12 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5EF9183B700;
-        Tue, 10 Dec 2019 08:04:16 +0000 (UTC)
-Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 08A60600D3;
-        Tue, 10 Dec 2019 08:04:13 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 16:04:11 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>,
-        =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191210080411.GJ2984@MiWiFi-R3L-srv>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <7fc610be-df56-c5ae-33fb-53b471aa76d1@suse.com>
- <94aead35-1541-6c1a-d172-70dc613410c2@redhat.com>
- <1089517e-4454-be5e-1320-7f246c4efefe@suse.com>
- <43dbabf0-08c4-9780-af56-20b19b1a5866@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 712341852E23;
+        Tue, 10 Dec 2019 08:06:09 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EB2415D70D;
+        Tue, 10 Dec 2019 08:05:55 +0000 (UTC)
+Date:   Tue, 10 Dec 2019 16:05:50 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191210080550.GA5699@ming.t460p>
+References: <alpine.LNX.2.21.1.1911271055200.8@nippy.intranet>
+ <cb6e84781c4542229a3f31572cef19ab@SVR-IES-MBX-03.mgc.mentorg.com>
+ <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+ <20191128091712.GD15549@ming.t460p>
+ <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+ <20191129005734.GB1829@ming.t460p>
+ <20191129023555.GA8620@ming.t460p>
+ <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
+ <20191203022337.GE25002@ming.t460p>
+ <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
 MIME-Version: 1.0
-In-Reply-To: <43dbabf0-08c4-9780-af56-20b19b1a5866@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: PKuz4irqPaK1MMNCgcN8iw-1
+In-Reply-To: <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 4ovWJzv0PRWwsIUU_SAzXQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,125 +91,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/09/19 at 12:11pm, David Hildenbrand wrote:
-> On 09.12.19 12:08, J=FCrgen Gro=DF wrote:
-> > On 09.12.19 12:01, David Hildenbrand wrote:
-> >> On 09.12.19 11:24, J=FCrgen Gro=DF wrote:
-> >>> On 09.12.19 11:07, Michal Hocko wrote:
-> >>>> On Fri 06-12-19 23:05:24, Baoquan He wrote:
-> >>>>> In commit 357b4da50a62 ("x86: respect memory size limiting via mem=
-=3D
-> >>>>> parameter") a global varialbe global max_mem_size is added to store
-> >>>>> the value which is parsed from 'mem=3D '. This truly stops those
-> >>>>> DIMM from being added into system memory during boot.
-> >>>>>
-> >>>>> However, it also limits the later memory hotplug functionality. Any
-> >>>>> memory board can't be hot added any more if its region is beyond th=
-e
-> >>>>> max_mem_size. System will print error like below:
-> >>>>>
-> >>>>> [  216.387164] acpi PNP0C80:02: add_memory failed
-> >>>>> [  216.389301] acpi PNP0C80:02: acpi_memory_enable_device() error
-> >>>>> [  216.392187] acpi PNP0C80:02: Enumeration failure
-> >>>>>
-> >>>>> >From document of 'mem =3D' parameter, it should be a restriction d=
-uring
-> >>>>> boot, but not impact the system memory adding/removing after bootin=
-g.
-> >>>>>
-> >>>>>     mem=3Dnn[KMG]     [KNL,BOOT] Force usage of a specific amount o=
-f memory
-> >>>>>
-> >>>>> So fix it by also checking if it's during SYSTEM_BOOTING stage when
-> >>>>> restrict memory adding. Otherwise, skip the restriction.
-> >>>>
-> >>>> Could you be more specific about why the boot vs. later hotplug make=
-s
-> >>>> any difference? The documentation is explicit about the boot time bu=
-t
-> >>>> considering this seems to be like that since ever I strongly suspect
-> >>>> that this is just an omission.
-> >>>>
-> >>>> Btw. how have you tested the situation fixed by 357b4da50a62?
-> >>>
-> >>> I guess he hasn't.
-> >>>
-> >>> The backtrace of the problem at that time was:
-> >>>
-> >>> [ 8321.876844]  [<ffffffff81019ab9>] dump_trace+0x59/0x340
-> >>> [ 8321.882683]  [<ffffffff81019e8a>] show_stack_log_lvl+0xea/0x170
-> >>> [ 8321.889298]  [<ffffffff8101ac31>] show_stack+0x21/0x40
-> >>> [ 8321.895043]  [<ffffffff81319530>] dump_stack+0x5c/0x7c
-> >>> [ 8321.900779]  [<ffffffff8107fbf1>] warn_slowpath_common+0x81/0xb0
-> >>> [ 8321.907482]  [<ffffffff81009f54>] xen_alloc_pte+0x1d4/0x390
-> >>> [ 8321.913718]  [<ffffffff81064950>]
-> >>> pmd_populate_kernel.constprop.6+0x40/0x80
-> >>> [ 8321.921498]  [<ffffffff815ef0a8>] phys_pmd_init+0x210/0x255
-> >>> [ 8321.927724]  [<ffffffff815ef2c7>] phys_pud_init+0x1da/0x247
-> >>> [ 8321.933951]  [<ffffffff815efb81>] kernel_physical_mapping_init+0xf=
-5/0x1d4
-> >>> [ 8321.941533]  [<ffffffff815ebc7d>] init_memory_mapping+0x18d/0x380
-> >>> [ 8321.948341]  [<ffffffff810647f9>] arch_add_memory+0x59/0xf0
-> >>> [ 8321.954570]  [<ffffffff815eceed>] add_memory_resource+0x8d/0x160
-> >>> [ 8321.961283]  [<ffffffff815ecff2>] add_memory+0x32/0xf0
-> >>> [ 8321.967025]  [<ffffffff813e1c91>] acpi_memory_device_add+0x131/0x2=
-e0
-> >>> [ 8321.974128]  [<ffffffff8139f752>] acpi_bus_attach+0xe2/0x190
-> >>> [ 8321.980453]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
-> >>> [ 8321.986778]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
-> >>> [ 8321.993103]  [<ffffffff8139f6ce>] acpi_bus_attach+0x5e/0x190
-> >>> [ 8321.999428]  [<ffffffff813a1157>] acpi_bus_scan+0x37/0x70
-> >>> [ 8322.005461]  [<ffffffff81fba955>] acpi_scan_init+0x77/0x1b4
-> >>> [ 8322.011690]  [<ffffffff81fba70c>] acpi_init+0x297/0x2b3
-> >>> [ 8322.017530]  [<ffffffff8100213a>] do_one_initcall+0xca/0x1f0
-> >>> [ 8322.023855]  [<ffffffff81f74266>] kernel_init_freeable+0x194/0x226
-> >>> [ 8322.030760]  [<ffffffff815eb1ba>] kernel_init+0xa/0xe0
-> >>> [ 8322.036503]  [<ffffffff815f7bc5>] ret_from_fork+0x55/0x80
-> >>>
-> >>> So this patch would break it again.
-> >>>
-> >>> I'd recommend ...
-> >>>
-> >>>>
-> >>>>> Fixes: 357b4da50a62 ("x86: respect memory size limiting via mem=3D =
-parameter")
-> >>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
-> >>>>> ---
-> >>>>>    mm/memory_hotplug.c | 2 +-
-> >>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >>>>> index 55ac23ef11c1..5466a0a00901 100644
-> >>>>> --- a/mm/memory_hotplug.c
-> >>>>> +++ b/mm/memory_hotplug.c
-> >>>>> @@ -105,7 +105,7 @@ static struct resource *register_memory_resourc=
-e(u64 start, u64 size)
-> >>>>>    =09unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_B=
-USY;
-> >>>>>    =09char *resource_name =3D "System RAM";
-> >>>>>   =20
-> >>>>> -=09if (start + size > max_mem_size)
-> >>>>> +=09if (start + size > max_mem_size && system_state =3D=3D SYSTEM_B=
-OOTING)
-> >>>
-> >>> ... changing this to: ... && system_state !=3D SYSTEM_RUNNING
-> >>
-> >> I think we usually use system_state < SYSTEM_RUNNING
-> >>
+On Tue, Dec 10, 2019 at 08:35:43AM +0100, Andrea Vai wrote:
+> Il giorno mar, 03/12/2019 alle 10.23 +0800, Ming Lei ha scritto:
+> > On Fri, Nov 29, 2019 at 03:41:01PM +0100, Andrea Vai wrote:
+> > > Il giorno ven, 29/11/2019 alle 10.35 +0800, Ming Lei ha scritto:
+> > > > On Fri, Nov 29, 2019 at 08:57:34AM +0800, Ming Lei wrote:
+> > > >=20
+> > > > > [...]
+> > > >=20
+> > > > > Andrea, can you collect the following log when running the
+> > test
+> > > > > on current new(bad) kernel?
+> > > > >=20
+> > > > > =09/usr/share/bcc/tools/stackcount  -K
+> > blk_mq_make_request
+> > > >=20
+> > > > Instead, please run the following trace, given insert may be
+> > > > called from other paths, such as flush plug:
+> > > >=20
+> > > > =09/usr/share/bcc/tools/stackcount -K t:block:block_rq_insert
+> > >=20
+> > > Attached, for new (patched) bad kernel.
+> > >=20
+> > > Produced by: start the trace script (with the pendrive already
+> > > plugged), wait some seconds, run the test (1 trial, 1 GB), wait
+> > for
+> > > the test to finish, stop the trace.
+> > >=20
+> > > The copy took ~1700 seconds.
 > >=20
-> > Works for me as well. :-)
+> > See the two path[1][2] of inserting request, and path[1] is
+> > triggered
+> > 4358 times, and the path[2] is triggered 5763 times.
 > >=20
-
-Thanks for reviewing and suggestions, will correct it as
-'system_state < SYSTEM_RUNNING'.=20
-
+> > The path[2] is expected behaviour. Not sure path [1] is correct,
+> > given
+> > ext4_release_file() is supposed to be called when this inode is
+> > released. That means the file is closed 4358 times during 1GB file
+> > copying to usb storage.
+> >=20
+> > Cc filesystem list.
+> >=20
+> >=20
+> > [1] insert requests when returning to user mode from syscall
+> >=20
+> >   b'blk_mq_sched_request_inserted'
+> >   b'blk_mq_sched_request_inserted'
+> >   b'dd_insert_requests'
+> >   b'blk_mq_sched_insert_requests'
+> >   b'blk_mq_flush_plug_list'
+> >   b'blk_flush_plug_list'
+> >   b'io_schedule_prepare'
+> >   b'io_schedule'
+> >   b'rq_qos_wait'
+> >   b'wbt_wait'
+> >   b'__rq_qos_throttle'
+> >   b'blk_mq_make_request'
+> >   b'generic_make_request'
+> >   b'submit_bio'
+> >   b'ext4_io_submit'
+> >   b'ext4_writepages'
+> >   b'do_writepages'
+> >   b'__filemap_fdatawrite_range'
+> >   b'ext4_release_file'
+> >   b'__fput'
+> >   b'task_work_run'
+> >   b'exit_to_usermode_loop'
+> >   b'do_syscall_64'
+> >   b'entry_SYSCALL_64_after_hwframe'
+> >     4358
+> >=20
+> > [2] insert requests from writeback wq context
+> >=20
+> >   b'blk_mq_sched_request_inserted'
+> >   b'blk_mq_sched_request_inserted'
+> >   b'dd_insert_requests'
+> >   b'blk_mq_sched_insert_requests'
+> >   b'blk_mq_flush_plug_list'
+> >   b'blk_flush_plug_list'
+> >   b'io_schedule_prepare'
+> >   b'io_schedule'
+> >   b'rq_qos_wait'
+> >   b'wbt_wait'
+> >   b'__rq_qos_throttle'
+> >   b'blk_mq_make_request'
+> >   b'generic_make_request'
+> >   b'submit_bio'
+> >   b'ext4_io_submit'
+> >   b'ext4_bio_write_page'
+> >   b'mpage_submit_page'
+> >   b'mpage_process_page_bufs'
+> >   b'mpage_prepare_extent_to_map'
+> >   b'ext4_writepages'
+> >   b'do_writepages'
+> >   b'__writeback_single_inode'
+> >   b'writeback_sb_inodes'
+> >   b'__writeback_inodes_wb'
+> >   b'wb_writeback'
+> >   b'wb_workfn'
+> >   b'process_one_work'
+> >   b'worker_thread'
+> >   b'kthread'
+> >   b'ret_from_fork'
+> >     5763
+> >=20
+> > Thanks,
+> > Ming
+> >=20
 >=20
-> As this patch has to be resent, I'd also enjoy a comment explaining why
-> this special check is in place
->=20
-> /* Make sure memory hotplug works although mem=3D was specified */
->=20
-> or sth. like that :)
+> Is there any update on this? Sorry if I am making noise, but I would
+> like to help to improve the kernel (or fix it) if I can help.
+> Otherwise, please let me know how to consider this case,
 
-OK, will consider what is better to be placed here. Thanks.
+IMO, the extra write path from exit_to_usermode_loop() isn't expected,
+that should be the reason why write IO order is changed, then performance
+drops on your USB storage.
+
+We need our fs/ext4 experts to take a look.
+
+Or can you reproduce the issue on xfs or btrfs?
+
+Thanks,
+Ming
 
