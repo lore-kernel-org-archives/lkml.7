@@ -2,132 +2,93 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B89C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA70EC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C751620828
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:11:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="ZdBShLQ7"
+	by mail.kernel.org (Postfix) with ESMTP id ABA2020828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576008783;
+	bh=vJ3KhnKNnbZTTPI7grFEjsDwO4KNsvu73+dwh+qaYb0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mtV2+AWD62z4GsuP9cgsBuFzOnRqzD66U8CUcFqIaWLyI1zQC6SsXyTtMVDytrkbC
+	 rr4aACH61EHrZgILlnyBkQEeNCYBnIBNHgrburLq5S6VopBd1S+8CteMqsP/TIe39r
+	 aGHYplVDq9fbz6g8NpwvKSBZij/hT1HqAHZUU8u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLJULa (ORCPT
+        id S1726856AbfLJUNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:11:30 -0500
-Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:2513
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726364AbfLJULa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:11:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TENl+fk5ps4GBjrb7J4Ksn6hAyjTO87eVTOoy8gRy8YuKncvDCSSOPfMBCpT9whYQ+ihaDWu5bcEofkOjwKn4elKYI34q1Rgk4UrufpV/HH6No5E1XFPq0O9d/JlYtBdqyrC6XQrCqq3+7MlDranKfkW0Z3XV8OI9UmJ3vGwYkaS4vkuQ+ayhGbqK64c2bCZgdLq9u2H4GEUSWs0MAcSeGmCVgXHb7c6wZCJbY6fAgep97TLZX79ouJUir+x40uSTx1rLeFmJW0Lb8zGqSFiNaWpDmeRJivtF5SfEbInKNqHOVXyY1wA4soZfeQfvnjVNyVkm2sW3Yofg+ed5c8BfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xtkc3FFrT8Ge0fFYbXzKM91r3Fb4uYCErErWY2NKvIQ=;
- b=IS9iLhtwP4vvqYrrxrrDWOrmfNY2jF2vohyMuxrWKWRyfrabgjhDcZLiakp27kX34inw3ILGfK/ympT4zWRhRnzhul8z+qQ1szM28jjIxXr0OVFK3s40VFV9ILglvp7zQoaDgIkAAn8H7gLsZdaTElPWxVkwbyNZEFjO8T4Obe0CbzsXjwiqzIbxhrBcGUzwKC78nLx5umd6M0Hfo+uTJnflJegaahDNoQ3bSsq8SY++M05QSRpvU+ZvRLLUpjkwD/JSAhaDIIrbbc6WfkQkZJi6qo4p6syNawhVomTLKI3gLL90kQ8JGZu1X+2XDZLrDbX3253G1/BXKscPP33mVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xtkc3FFrT8Ge0fFYbXzKM91r3Fb4uYCErErWY2NKvIQ=;
- b=ZdBShLQ7v7bKozHxIlC8FqZxUHPum0dxJY1HN1+SYAmJ1Wqu5dDkh21FYQKGuD5TNkVJmsE+7/pse83dnBbMpmoyY+2/FQfaT+Ygusk4fe84crmgmFiQbJEPmNjW634wJbXWtWf9zyO+8xR7ZzC7jptKJm9Wg+N+S32b7xPV85w=
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
- OSAPR01MB3105.jpnprd01.prod.outlook.com (52.134.248.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Tue, 10 Dec 2019 20:11:25 +0000
-Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::52c:1c46:6bf0:f01f]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
- ([fe80::52c:1c46:6bf0:f01f%4]) with mapi id 15.20.2516.018; Tue, 10 Dec 2019
- 20:11:25 +0000
-From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+        Tue, 10 Dec 2019 15:13:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfLJUNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 15:13:02 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 834FF2073D;
+        Tue, 10 Dec 2019 20:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576008781;
+        bh=vJ3KhnKNnbZTTPI7grFEjsDwO4KNsvu73+dwh+qaYb0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Ylcp4vyIt/GhiU64FesmDccwqfmRX6TcfjKoBxFKsRUF+3qvggWee5XHSTqU3Psy3
+         B7VtYVpYg5ghV28uk+27m1CmXj0GVPL/PyT2GewXFEZBu/0mPJnO4uBvsvkGqomnON
+         TtIZH/wDrB146Nt79GWDQkDRZSExC3/Sc8Jug/eQ=
+Date:   Tue, 10 Dec 2019 21:12:57 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Yangbo Lu <yangbo.lu@nxp.com>,
-        Antonio Borneo <antonio.borneo@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ptp: clockmatrix: add I2C dependency
-Thread-Topic: [PATCH] ptp: clockmatrix: add I2C dependency
-Thread-Index: AQHVr5QAx2lSMFz0fk6orfzUzEVPlqezzMcA
-Date:   Tue, 10 Dec 2019 20:11:25 +0000
-Message-ID: <20191210201111.GA20611@renesas.com>
-References: <20191210195648.811120-1-arnd@arndb.de>
-In-Reply-To: <20191210195648.811120-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [173.195.53.163]
-x-clientproxiedby: BYAPR05CA0006.namprd05.prod.outlook.com
- (2603:10b6:a03:c0::19) To OSAPR01MB3025.jpnprd01.prod.outlook.com
- (2603:1096:604:2::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vincent.cheng.xh@renesas.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ec537052-0f92-4956-68b3-08d77dad2209
-x-ms-traffictypediagnostic: OSAPR01MB3105:
-x-microsoft-antispam-prvs: <OSAPR01MB3105557C481FCA4363CB9AABD25B0@OSAPR01MB3105.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02475B2A01
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(199004)(189003)(2616005)(5660300002)(8936002)(52116002)(1076003)(6512007)(2906002)(66476007)(6506007)(33656002)(6486002)(71200400001)(66556008)(8676002)(316002)(6916009)(54906003)(64756008)(4326008)(186003)(66446008)(26005)(86362001)(81156014)(81166006)(66946007)(478600001)(36756003);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB3105;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ErJ7pia/t9FKIa2qws7WflJ5X3ONLOCJHWWGHxpBnJm2dPLBgl4mDtU2Y/rAWVN+AEMBo5bHdlGDe7mPXUEwzfa6A4QtEo1wm9KBOrUPdYzUzk2awL1nBrQtH2j+IKWds9pwDY3Opnrqu9904IdoYXVC1IHr0ycwbkCsgjIVphHDZNH2+CkKBjyKCMJr9kf4J5cw90zzpLcHl6KRzZiOIl1/vXoAEiKI4xayT/j9ZbXgmhGxAg/dho/T71bIBZseIDNZaLOaMVffkvc3KwvmHndY0i/tkJHBMpKIQsLQFEeiLMC9YwcJfRu0hVk4QjTFpEkc2HE3cDO5xrA9or1VwUglKNUK/6kCX4IaO+dhI3Wee+eUxXj84TvkxfG0R80/rrKshug7HMHlXDnkul15TDaZyVAvQ2cvilw2Nuh5TLVsDcSPP3+C1Cz+ki2vjz9T
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <861C0A262AFA624491479A97B5F79F13@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+cc:     Thomas Gleixner <tglx@linutronix.de>, Pavel Machek <pavel@ucw.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpu/SMT: fix x86 link error without CONFIG_SYSFS
+In-Reply-To: <20191210195614.786555-1-arnd@arndb.de>
+Message-ID: <nycvar.YFH.7.76.1912102111480.4603@cbobk.fhfr.pm>
+References: <20191210195614.786555-1-arnd@arndb.de>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec537052-0f92-4956-68b3-08d77dad2209
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2019 20:11:25.3248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QXn98qYNjiGbhRfvzaSMEIBLf2o1SuKyq2TLyR9DddNGPHPzZ3wy2WROXcEZFznrofue+jpE/ic54viOteIe1sM/uDUMsnlgoXYTHxI+6AU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB3105
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTAsIDIwMTkgYXQgMDI6NTY6MzRQTSBFU1QsIEFybmQgQmVyZ21hbm4gd3Jv
-dGU6DQo+V2l0aG91dCBJMkMsIHdlIGdldCBhIGxpbmsgZmFpbHVyZToNCj4NCj5kcml2ZXJzL3B0
-cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24gYGlkdGNtX3hmZXIuaXNyYS4zJzoNCj5w
-dHBfY2xvY2ttYXRyaXguYzooLnRleHQrMHhjYyk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYGky
-Y190cmFuc2ZlcicNCj5kcml2ZXJzL3B0cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24g
-YGlkdGNtX2RyaXZlcl9pbml0JzoNCj5wdHBfY2xvY2ttYXRyaXguYzooLmluaXQudGV4dCsweDE0
-KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgaTJjX3JlZ2lzdGVyX2RyaXZlcicNCj5kcml2ZXJz
-L3B0cC9wdHBfY2xvY2ttYXRyaXgubzogSW4gZnVuY3Rpb24gYGlkdGNtX2RyaXZlcl9leGl0JzoN
-Cj5wdHBfY2xvY2ttYXRyaXguYzooLmV4aXQudGV4dCsweDEwKTogdW5kZWZpbmVkIHJlZmVyZW5j
-ZSB0byBgaTJjX2RlbF9kcml2ZXInDQo+DQo+Rml4ZXM6IDNhNmJhN2RjNzc5OSAoInB0cDogQWRk
-IGEgcHRwIGNsb2NrIGRyaXZlciBmb3IgSURUIENsb2NrTWF0cml4LiIpDQo+U2lnbmVkLW9mZi1i
-eTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4tLS0NCj4gZHJpdmVycy9wdHAvS2Nv
-bmZpZyB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
-KC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHRwL0tjb25maWcgYi9kcml2ZXJzL3B0cC9L
-Y29uZmlnDQo+aW5kZXggZGMzZDhlY2I0MjMxLi5lMzc3OTdjMGE4NWMgMTAwNjQ0DQo+LS0tIGEv
-ZHJpdmVycy9wdHAvS2NvbmZpZw0KPisrKyBiL2RyaXZlcnMvcHRwL0tjb25maWcNCj5AQCAtMTA3
-LDcgKzEwNyw3IEBAIGNvbmZpZyBQVFBfMTU4OF9DTE9DS19LVk0NCj4gDQo+IGNvbmZpZyBQVFBf
-MTU4OF9DTE9DS19JRFRDTQ0KPiAJdHJpc3RhdGUgIklEVCBDTE9DS01BVFJJWCBhcyBQVFAgY2xv
-Y2siDQo+LQlkZXBlbmRzIG9uIFBUUF8xNTg4X0NMT0NLDQo+KwlkZXBlbmRzIG9uIFBUUF8xNTg4
-X0NMT0NLICYmIEkyQw0KPiAJZGVmYXVsdCBuDQo+IAloZWxwDQo+IAkgIFRoaXMgZHJpdmVyIGFk
-ZHMgc3VwcG9ydCBmb3IgdXNpbmcgSURUIENMT0NLTUFUUklYKFRNKSBhcyBhIFBUUA0KPi0tIA0K
-DQpTb3JyeSwgdGhhdCB3YXMgZmxhZ2dlZCBieSAia2J1aWxkIHRlc3Qgcm9ib3QiIE5vdiAyNS4N
-Cg0KSSB3YXMgaW4gdGhlIHByb2Nlc3Mgb2YgY3JlYXRpbmcgYSBwYXRjaCBzZXJpZXMgd2l0aCBv
-dGhlciB1cGRhdGVzLA0KYnV0IHlvdSBiZWF0IG1lIHRvIHRoZSBwdW5jaC4gIFRoYW5rLXlvdS4N
-Cg0KUmV2aWV3ZWQtYnk6IFZpbmNlbnQgQ2hlbmcgIDx2aW5jZW50LmNoZW5nLnhoQHJlbmVzYXMu
-Y29tPg0KDQpSZWdhcmRzLA0KVmluY2VudA0K
+On Tue, 10 Dec 2019, Arnd Bergmann wrote:
+
+> When CONFIG_SYSFS is disabled, but CONFIG_HOTPLUG_SMT is enabled,
+> the kernel fails to link:
+
+I wonder where such kernels are running ... or I rather don't :)
+
+> arch/x86/power/cpu.o: In function `hibernate_resume_nonboot_cpu_disable':
+> (.text+0x38d): undefined reference to `cpuhp_smt_enable'
+> arch/x86/power/hibernate.o: In function `arch_resume_nosmt':
+> hibernate.c:(.text+0x291): undefined reference to `cpuhp_smt_enable'
+> hibernate.c:(.text+0x29c): undefined reference to `cpuhp_smt_disable'
+> 
+> Move the exported functions out of the #ifdef section into its
+> own with the correct conditions.
+> 
+> The patch that caused this is marked for stable backports, so
+> this one may need to be backported as well.
+> 
+> Fixes: ec527c318036 ("x86/power: Fix 'nosmt' vs hibernation triple fault during resume")
+
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+
+Thanks for fixing my oversight.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
