@@ -2,84 +2,95 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2721AC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE08C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A190D20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D66207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 15:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eaxlabs.cz header.i=@eaxlabs.cz header.b="RLELJyUD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNKUlyZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfLJPnG (ORCPT
+        id S1727455AbfLJPqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 10:43:06 -0500
-Received: from ms9.eaxlabs.cz ([147.135.177.209]:42808 "EHLO ms9.eaxlabs.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbfLJPnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 10:43:06 -0500
-X-Greylist: delayed 2323 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 10:43:05 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eaxlabs.cz; s=mail;
-        h=Message-Id:Date:Subject:Cc:To:From; bh=JYLcJhGa26ePxUhCLaeVt5gG3fUkiaBnY+uXwvTg0qA=;
-        b=RLELJyUDmacFSXsa8R7Tt97fV3tJOUdtlPaZ1LeqB1ELIK4D7sgzOZiSTzIm4uEoC4mH3fMh7qGECVW48jpVxK3CZe1XC8vlBkn9M+F2Nm89MRzCrN5JR0XU/7BpDjOQ2YUoXJZyepDJtLXvmYJkjRfQOpzylpxnA9vKR4QfFI8=;
-Received: from [82.99.129.6] (helo=localhost.localdomain)
-        by ms9.eaxlabs.cz with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <devik@eaxlabs.cz>)
-        id 1ieh3e-0002ca-76; Tue, 10 Dec 2019 16:04:16 +0100
-From:   Martin Devera <devik@eaxlabs.cz>
-To:     linux-kernel@vger.kernel.org
-Cc:     jan.pohanka@merz.cz,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Martin Devera <devik@eaxlabs.cz>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH] mtd: rawnand: Fix unexpected timeouts in waitrdy
-Date:   Tue, 10 Dec 2019 16:03:18 +0100
-Message-Id: <20191210150319.3125-1-devik@eaxlabs.cz>
-X-Mailer: git-send-email 2.11.0
+        Tue, 10 Dec 2019 10:46:25 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42032 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfLJPqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 10:46:25 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x13so28257plr.9;
+        Tue, 10 Dec 2019 07:46:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SEVzYm5jNJz4VDppe7/WWH/36/csGHzBj+3YG9crYxM=;
+        b=eNKUlyZV+9AK1rbPzSc599PR8/HSVo0lodnmDdgldEBN+E8992+FTU0pFM/BGwnRcH
+         JAxUwICUHyHn0fe2PDB8IPK5J2ulLLVCxPCSoIlVq8ink6QYMpUvg1wtEFYTmJtG0Aq4
+         FmagRIeEWF8vc3f1ZIDGXaygRrcXQp33KVybMXUp+hupPuuye2cNt4jaGv8NnO6Ppe5q
+         VXiAhpSunwIaX/0TC1mVYTkVImYNC0+dqChCaIQNefOMfwRwAadw5Jf/TWrRIMxV8SeV
+         WNhnXbn+tv/bK4U0imlAM3QUz5SYnzTbw+8Zatgv3E7/216iAUJUsnt7mvF7/g4XMaKl
+         97eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SEVzYm5jNJz4VDppe7/WWH/36/csGHzBj+3YG9crYxM=;
+        b=sshqrgdjhvBwda3JhTZAOLU66b43vsew2XVdRlvYFg0pB8UCTvhdB/rxqHZz6cwO5o
+         x7bPlzcpqIPVhAvLiMqjxYFJxWgjZy3/BiQeT3WGIjE5UUosQhWsMEMsvXyY7iQ/+RcY
+         Wkol/J4lT/13MWZbjRMmizTxUsGqKZ1aS+0DMgXaouy8n+NnZgJrtf3B+8vOPtSpnLrW
+         3gv448C2J+8bdd0C/vycFevZdYH6wXOGfaEdxoWQeQxWQfWDkNSi0ZSHJEXonl7m96uD
+         CLn6uZ6YgQrvDLEuKAt+GUIAPLmCuC9GZX4PJF/hLnrhSWph8tKkawL4puVpdd7LodEp
+         oBrA==
+X-Gm-Message-State: APjAAAWQLC2OSsiZ4YsYf4pITonxqdEone3UyQA7RqPQ4Dr5N1EK6F63
+        WfCKr0StA84+yEsI6q5IROI=
+X-Google-Smtp-Source: APXvYqytYp0R9zyeFlRgYBWM3uJZ4gUjN8fiMjYfYdCW0CrSvIjuPbzjXajrvhEJz9y++TYaz9rvHA==
+X-Received: by 2002:a17:902:aa8f:: with SMTP id d15mr36828933plr.80.1575992784728;
+        Tue, 10 Dec 2019 07:46:24 -0800 (PST)
+Received: from localhost.corp.microsoft.com ([167.220.255.5])
+        by smtp.googlemail.com with ESMTPSA id k13sm4113815pfp.48.2019.12.10.07.46.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 07:46:24 -0800 (PST)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, jgg@ziepe.ca,
+        dave.hansen@linux.intel.com, david@redhat.com, namit@vmware.com,
+        richardw.yang@linux.intel.com, christophe.leroy@c-s.fr,
+        tglx@linutronix.de, Tianyu.Lan@microsoft.com, osalvador@suse.de,
+        michael.h.kelley@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, vkuznets@redhat.com, eric.devolder@oracle.com
+Subject: [RFC PATCH 0/4] x86/Hyper-V: Add Dynamic memory hot-remove function
+Date:   Tue, 10 Dec 2019 23:46:07 +0800
+Message-Id: <20191210154611.10958-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The used way to compute jiffies timeout brokes when
-jiffie difference is 1. Simply add 1 - it has no other
-side effects.
-Fixes STM32MP1 FMC2 NAND controller which sometimes failed
-exactly in this way.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Signed-off-by: Martin Devera <devik@eaxlabs.cz>
----
- drivers/mtd/nand/raw/nand_base.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Hyper-V provides dynamic memory hot add/remove function.
+Memory hot-add has already enabled in Hyper-V balloon driver.
+Now add memory hot-remove function.
 
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index d527e448ce19..beab3a775cc7 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -721,7 +721,11 @@ int nand_soft_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
- 	if (ret)
- 		return ret;
- 
--	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms);
-+	/* +1 below is necessary because if we are now in the last fraction
-+	 * of jiffy and msecs_to_jiffies is 1 then we will wait only that
-+	 * small jiffy fraction - possibly leading to false timeout
-+	 */
-+	timeout_ms = jiffies + msecs_to_jiffies(timeout_ms) + 1;
- 	do {
- 		ret = nand_read_data_op(chip, &status, sizeof(status), true);
- 		if (ret)
+Tianyu Lan (4):
+  mm/resource: Move child to new resource when release mem region.
+  mm/hotplug: Expose is_mem_section_removable() and offline_pages()
+  Hyper-V/Balloon: Call add_memory() with dm_device.ha_lock.
+  x86/Hyper-V: Add memory hot remove function
+
+ drivers/hv/hv_balloon.c | 707 ++++++++++++++++++++++++++++++++++++++++++------
+ kernel/resource.c       |  38 ++-
+ mm/memory_hotplug.c     |   2 +
+ 3 files changed, 664 insertions(+), 83 deletions(-)
+
 -- 
-2.11.0
+2.14.5
 
