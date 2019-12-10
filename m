@@ -2,92 +2,215 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD96C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602D9C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F53222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D50920838
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 12:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QayVJLfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfLJM3o (ORCPT
+        id S1727349AbfLJMbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 07:29:44 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:56999 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbfLJM3o (ORCPT
+        Tue, 10 Dec 2019 07:31:19 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:39946 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727281AbfLJMbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 07:29:44 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 125AA100B01B2;
-        Tue, 10 Dec 2019 13:29:42 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id B9112ECCD5; Tue, 10 Dec 2019 13:29:41 +0100 (CET)
-Date:   Tue, 10 Dec 2019 13:29:41 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        alexander.deucher@amd.com, tiwai@suse.de
-Subject: Re: Linux v5.5 serious PCI bug
-Message-ID: <20191210122941.zzybs4z5jphpjsu2@wunner.de>
-References: <PSXP216MB0438BFEAA0617283A834E11580580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191209131239.GP2665@lahna.fi.intel.com>
- <PSXP216MB043809A423446A6EF2C7909A80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191210072800.GY2665@lahna.fi.intel.com>
- <PSXP216MB04384F89D9D9DDA6999347CF805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        Tue, 10 Dec 2019 07:31:18 -0500
+Received: by mail-ua1-f66.google.com with SMTP id v18so2463736uaq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 04:31:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
+        b=QayVJLfzwhxAFLgXNRzLMZdJ0IvLzxp4+fLYkgsafsn6S05wJNPxe1W2fAZYyUBGR8
+         BcCeWqYv6slEWraMiYfCcPv4pF0tfY9IyHA+7AWdiyjqH31IZzLc5y/xNthjj+0mqejq
+         /gjucQhq10JYIm5v0/LMFDew4Ilc+OXTn08xJPNEu664cWU63FxtQ7yCvrJrZZa8xDGP
+         W9EiAP+c5SMOv4CIfQw/j0wZDvKbWs+qtoigdrFb6GjKOwnzrUG6gxYkrj4TJEB4DeJS
+         YgnZ+BySLGuychJ02elTMZf7LBTg/2mNw+VpOcdbROX8BTpOTFbTDzDl1jY4Q1isKofp
+         L0Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Cu4xcLC6fx43ALyB2PH7P6iHLVvlsMlK6QGD81ONfJA=;
+        b=UpLf2NJd1lc96Ipp7/QUY1tBrpSt4osQZoqfhqpwigsgoHSO76NJCh3sx2NduJ9AlW
+         cAbbPd6vv8uocE1whyiBTRQBGt3jrz4wvcVLh6zGeKWizhG9M1Guk59GDhEKkTQ7w88q
+         EZSjesbzXizVTNcLn1BXi+KodvEGHXdQdJ5X1ZcGJClYFuOd7sL3cZIAinNYAoR7pb/o
+         AlpUICVn/VysPbFWMTsOFmA8lae4OIeCOMlXvu7kPdCsIzRet1aV5cN1fpAvbklF8cSv
+         qIDWjTJy4qiA00cAyDNzhcT3Sa/PDd8c0PNDlIfHyv/I3pV6qDNNrNMX8x0n3BWnu/kU
+         Cjvg==
+X-Gm-Message-State: APjAAAXiY0xanlaTzk9hXEMFbs232WOkefBQdFDxsq0his0AWCukGSH6
+        o4rYT+u39id0eJ7B5adqVLGh/vC0Y1YIcTXuP6+Vqw==
+X-Google-Smtp-Source: APXvYqyrTM1DC8Fmp+/CAB2noSeEwqc06KeL4uYpQ1xlDaNR2EbcD+cNIjYR1xbMle/tNoYu8/S+qEj9nJ91/lu54KE=
+X-Received: by 2002:ab0:2759:: with SMTP id c25mr3460125uap.104.1575981077116;
+ Tue, 10 Dec 2019 04:31:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB04384F89D9D9DDA6999347CF805B0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191113172514.19052-1-ludovic.Barre@st.com>
+In-Reply-To: <20191113172514.19052-1-ludovic.Barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Dec 2019 13:30:41 +0100
+Message-ID: <CAPDyKFrZxOCkw9U05UZPRSGz2CqmhOq944z8MEVox8Y_UEYC4A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mmc: mmci: add threaded irq to abort DPSM of
+ non-functional state
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[cc += Alex, Takashi]
+On Wed, 13 Nov 2019 at 18:25, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> If datatimeout occurs on R1B request, the Data Path State Machine stays
+> in busy and is non-functional. Only a reset aborts the DPSM.
+>
+> Like a reset must be outside of critical section, this patch adds
+> threaded irq function to release state machine. In this case,
+> the mmc_request_done is called at the end of threaded irq and
+> skipped into irq handler.
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 44 ++++++++++++++++++++++++++++++++++++-----
+>  drivers/mmc/host/mmci.h |  1 +
+>  2 files changed, 40 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 40e72c30ea84..ec6e249c87ca 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -556,6 +556,9 @@ static void mmci_dma_error(struct mmci_host *host)
+>  static void
+>  mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
+>  {
+> +       if (host->irq_action == IRQ_WAKE_THREAD)
+> +               return;
+> +
 
-On Tue, Dec 10, 2019 at 12:00:23PM +0000, Nicholas Johnson wrote:
-> On Tue, Dec 10, 2019 at 09:28:00AM +0200, mika.westerberg@linux.intel.com wrote:
-> > On Mon, Dec 09, 2019 at 01:33:49PM +0000, Nicholas Johnson wrote:
-> > > On Mon, Dec 09, 2019 at 03:12:39PM +0200, mika.westerberg@linux.intel.com wrote:
-> > > > On Mon, Dec 09, 2019 at 12:34:04PM +0000, Nicholas Johnson wrote:
-> > > > > I have compiled Linux v5.5-rc1 and thought all was good until I 
-> > > > > hot-removed a Gigabyte Aorus eGPU from Thunderbolt. The driver for the 
-> > > > > GPU was not loaded (blacklisted) so the crash is nothing to do with the 
-> > > > > GPU driver.
-> > > > > 
-> > > > > We had:
-> > > > > - kernel NULL pointer dereference
-> > > > > - refcount_t: underflow; use-after-free.
-> 
-> The following is the culprit responsible for the issues:
-> 
-> commit 586bc4aab878efcf672536f0cdec3d04b6990c94
-> Author: Alex Deucher <alexander.deucher@amd.com>
-> Date:   Fri Nov 22 16:43:50 2019 -0500
-> 
->     ALSA: hda/hdmi - fix vgaswitcheroo detection for AMD
+It seems a bit unnecessary to check this every time mmci_request_end()
+is called.
 
-Does the below fix the issue?
+How about avoiding to call mmci_request_end() for the one specific
+condition instead? See more below.
 
--- >8 --
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 35b4526f0d28..b856b89378ac 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1419,7 +1419,6 @@ static bool atpx_present(void)
- 				return true;
- 			}
- 		}
--		pci_dev_put(pdev);
- 	}
- 	return false;
- }
+>         writel(0, host->base + MMCICOMMAND);
+>
+>         BUG_ON(host->data);
+> @@ -1321,6 +1324,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>         } else if (host->variant->busy_timeout && busy_resp &&
+>                    status & MCI_DATATIMEOUT) {
+>                 cmd->error = -ETIMEDOUT;
+> +               host->irq_action = IRQ_WAKE_THREAD;
+
+You could check this flag a few lines below and if it's set to
+IRQ_WAKE_THREAD, avoid to call mmci_request_end().
+
+>         } else {
+>                 cmd->resp[0] = readl(base + MMCIRESPONSE0);
+>                 cmd->resp[1] = readl(base + MMCIRESPONSE1);
+> @@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>  {
+>         struct mmci_host *host = dev_id;
+>         u32 status;
+> -       int ret = 0;
+>
+>         spin_lock(&host->lock);
+> +       host->irq_action = IRQ_HANDLED;
+>
+>         do {
+>                 status = readl(host->base + MMCISTATUS);
+> @@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+>                 if (host->variant->busy_detect_flag)
+>                         status &= ~host->variant->busy_detect_flag;
+>
+> -               ret = 1;
+>         } while (status);
+>
+>         spin_unlock(&host->lock);
+>
+> -       return IRQ_RETVAL(ret);
+> +       return host->irq_action;
+> +}
+> +
+> +/*
+> + * mmci_irq_threaded is call if the mmci host need to release state machines
+> + * before to terminate the request.
+> + * If datatimeout occurs on R1B request, the Data Path State Machine stays
+> + * in busy and is non-functional. Only a reset can to abort the DPSM.
+> + */
+> +static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
+> +{
+> +       struct mmci_host *host = dev_id;
+> +       unsigned long flags;
+> +
+> +       if (host->rst) {
+> +               reset_control_assert(host->rst);
+> +               udelay(2);
+> +               reset_control_deassert(host->rst);
+> +       }
+> +
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       writel(host->clk_reg, host->base + MMCICLOCK);
+> +       writel(host->pwr_reg, host->base + MMCIPOWER);
+> +       writel(MCI_IRQENABLE | host->variant->start_err,
+> +              host->base + MMCIMASK0);
+> +
+> +       host->irq_action = IRQ_HANDLED;
+> +       mmci_request_end(host, host->mrq);
+> +       spin_unlock_irqrestore(&host->lock, flags);
+> +
+> +       return host->irq_action;
+>  }
+>
+>  static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+> @@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
+>                         goto clk_disable;
+>         }
+>
+> -       ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
+> -                       DRIVER_NAME " (cmd)", host);
+> +       ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
+> +                                       mmci_irq_threaded, IRQF_SHARED,
+> +                                       DRIVER_NAME " (cmd)", host);
+>         if (ret)
+>                 goto clk_disable;
+>
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 158e1231aa23..5e63c0596364 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -412,6 +412,7 @@ struct mmci_host {
+>
+>         struct timer_list       timer;
+>         unsigned int            oldstat;
+> +       u32                     irq_action;
+>
+>         /* pio stuff */
+>         struct sg_mapping_iter  sg_miter;
+> --
+> 2.17.1
+>
+
+Otherwise this looks good, besides my other earlier comments, of course.
+
+Kind regards
+Uffe
