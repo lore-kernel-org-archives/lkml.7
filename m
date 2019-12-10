@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D502C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F1C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5A22053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5047A20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015919;
-	bh=IK4yETR9Uqu46qZrHkOVvpPuKVCdVd7R2bzpFGcaoYQ=;
+	s=default; t=1576015928;
+	bh=qPUpym6iprrBUL5VvWek+m8rHkTo/q5tSyLJ+Eaj+fQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLbv6+hoMIvkqMfl2j/nP8zsonoh6cs9fx9q57lfWNprb9zrH2G9rGqBMXONUgq65
-	 UmlkeERkgQd8fx3luGRPo+Q7kgpNm84bhdKLbkDb+rTI+ImS0pghnRvCWqRb9J8Ibd
-	 UGN7WkUEbKPCNrMDoNo6yO/4bHrdkMBX4rBgJ5mU=
+	b=wwA2DSMWehTTqM9WIMxPkhyeclwl3V3b4i7ApYSFqFhGcF7MA1vXmRLauR+yiILRQ
+	 Qm0ZZKrxUM7//J8CMOPBPXudamEyqKzEeA75BUV1eCU8MspIAuoomi6q5rD+X6r8ps
+	 2S6YaY7xzENpEokOJI0WKmpoHj3aYlElmMJgcaCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfLJWL6 (ORCPT
+        id S1729486AbfLJWMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:11:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:12:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbfLJWDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:46 -0500
+        id S1727988AbfLJWDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:03:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F41A6214D8;
-        Tue, 10 Dec 2019 22:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B6E020637;
+        Tue, 10 Dec 2019 22:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015425;
-        bh=IK4yETR9Uqu46qZrHkOVvpPuKVCdVd7R2bzpFGcaoYQ=;
+        s=default; t=1576015421;
+        bh=qPUpym6iprrBUL5VvWek+m8rHkTo/q5tSyLJ+Eaj+fQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaIHCOFy499jbqr6dqYbLoYuvYR0U9II2QseYscsbM/GmmH6fNHzNcdGDOeQ95S6S
-         gMFgh2Kn8aeBEty58H/abyvrgbZV3lhSONJE/ICZh0wfYoVOx+K+EeYmMG46rfvX6W
-         r1kT1wGBxDUX/qzSBZiCtIT4xcj54Jrtgn/qwfhg=
+        b=k0bEFxzRGVUJ3lQsfqhQegwHA0YrkhYHmYkmkCXZWI9Ki+LQxgGMkUgewVcez6nUr
+         NWC4zWJe0Qg0q6U5X3ntUq8T7pr8W5d+ozOKK/w3OLJtOdPR3SPr35ZJi0EGyRcOpP
+         AoHvrxejC8xK5HDEKWZV6C2JbIji3zkWUXf32hao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/130] media: ti-vpe: vpe: Make sure YUYV is set as default format
-Date:   Tue, 10 Dec 2019 17:01:28 -0500
-Message-Id: <20191210220301.13262-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 033/130] media: cx88: Fix some error handling path in 'cx8800_initdev()'
+Date:   Tue, 10 Dec 2019 17:01:24 -0500
+Message-Id: <20191210220301.13262-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -61,51 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
+[ Upstream commit e1444e9b0424c70def6352580762d660af50e03f ]
 
-v4l2-compliance fails with this message:
+A call to 'pci_disable_device()' is missing in the error handling path.
+In some cases, a call to 'free_irq()' may also be missing.
 
-   fail: v4l2-test-formats.cpp(672): \
-	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-   fail: v4l2-test-formats.cpp(672): \
-	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
-	...
-   test VIDIOC_TRY_FMT: FAIL
+Reorder the error handling path, add some new labels and fix the 2 issues
+mentionned above.
 
-The default pixel format was setup as pointing to a specific offset in
-the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
-entry. This became false after the addition on the NV21 format (see
-above commid-id)
+This way, the error handling path in more in line with 'cx8800_finidev()'
+(i.e. the remove function)
 
-So instead of hard-coding an offset which might change over time we need
-to use a lookup helper instead so we know the default will always be what
-we intended.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/cx88/cx88-video.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 8a5c0d3e733e1..a136fb14bf1a7 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2322,7 +2322,7 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
+diff --git a/drivers/media/pci/cx88/cx88-video.c b/drivers/media/pci/cx88/cx88-video.c
+index 7d25ecd4404bf..1748812bd7e55 100644
+--- a/drivers/media/pci/cx88/cx88-video.c
++++ b/drivers/media/pci/cx88/cx88-video.c
+@@ -1310,7 +1310,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 	core = cx88_core_get(dev->pci);
+ 	if (!core) {
+ 		err = -EINVAL;
+-		goto fail_free;
++		goto fail_disable;
+ 	}
+ 	dev->core = core;
  
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
--	s_q_data->fmt = &vpe_formats[2];
-+	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	s_q_data->width = 1920;
- 	s_q_data->height = 1080;
- 	s_q_data->nplanes = 1;
+@@ -1356,7 +1356,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 				       cc->step, cc->default_value);
+ 		if (!vc) {
+ 			err = core->audio_hdl.error;
+-			goto fail_core;
++			goto fail_irq;
+ 		}
+ 		vc->priv = (void *)cc;
+ 	}
+@@ -1370,7 +1370,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 				       cc->step, cc->default_value);
+ 		if (!vc) {
+ 			err = core->video_hdl.error;
+-			goto fail_core;
++			goto fail_irq;
+ 		}
+ 		vc->priv = (void *)cc;
+ 		if (vc->id == V4L2_CID_CHROMA_AGC)
+@@ -1533,11 +1533,14 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 
+ fail_unreg:
+ 	cx8800_unregister_video(dev);
+-	free_irq(pci_dev->irq, dev);
+ 	mutex_unlock(&core->lock);
++fail_irq:
++	free_irq(pci_dev->irq, dev);
+ fail_core:
+ 	core->v4ldev = NULL;
+ 	cx88_core_put(core, dev->pci);
++fail_disable:
++	pci_disable_device(pci_dev);
+ fail_free:
+ 	kfree(dev);
+ 	return err;
 -- 
 2.20.1
 
