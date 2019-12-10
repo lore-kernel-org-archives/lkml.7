@@ -2,135 +2,119 @@ Return-Path: <SRS0=jko7=2A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256B0C43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9286BC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000C22077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578C720652
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 20:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkVXh212"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfLJUZN (ORCPT
+        id S1726750AbfLJU1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 15:25:13 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50215 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfLJUZK (ORCPT
+        Tue, 10 Dec 2019 15:27:18 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46048 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJU1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 15:25:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id e13so5690441iob.17
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 12:25:09 -0800 (PST)
+        Tue, 10 Dec 2019 15:27:17 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x1so17549784qkl.12;
+        Tue, 10 Dec 2019 12:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5V2NSfZgK4/Je85OyonRM0yBzGLQR7w5GuKR54sNbOU=;
+        b=QkVXh212Ftcx8Y6fANY69Ji6EerkudvY1MO9aue92kDcP+/YpQHJgENTSdBNNVgMKJ
+         tcLH15dEkZq9IdlW8t/iU8VEtXBf8Zg3qtsXRzg2Xy/IZs3PMiU3CTzB+MO5EGtUVHgs
+         4nDmuqrVH/scWoP0NXSiaEQVF2YjdmUAVjEvxOepUksHZXPvzqyMGcQw9GwbHjm4xKoe
+         vn9rPJ5av4Y99JhwU/jQc4vQtj4PxhXdC1yI9Yd6DJF/kd6C5ITzFbLFVzrRIURVcyjU
+         T3wux1FKUvAOKuhKzsKfBSakZ0HBkIEzobRFO7RVinxb8KPqhIW7BmYg4dJdnMCm2ZWa
+         w/QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IBtinwMCRMWLO1FGG87GH33R7/HTzSA1E26knQt0doY=;
-        b=DlZP9lMyvPGK8VuS+eqZ9MtNVqFDsOfryDnnzUNBViQg51/40jNhUrL9HvUB83hfhG
-         RDwE+qmnL9yAXZYRdws3BrxbzQ2uONae/3zB/g+i/+0AVYWA8RQ06y0WdC9ICyzMRqrD
-         97fPH9bnRs2Rop2hyf1UpBv0uty1+soKbv5aJ7B1s+mh/AxvWumOmfCCVAucBxlbaZSi
-         3Go8fidxTDrRyiBUkaaBckbRhrnpeiCymuAfJET3U0vVPgoC8kxB4jXipTth0/wdIuf8
-         cbHzZHnUwIV6OZqV450Qe8ABYbfEhAKxXgcTTkDCrTjHSXwi/u1Hz6CeQSBSD8IZStmR
-         nSkQ==
-X-Gm-Message-State: APjAAAUkj6QntR0rEK5QbfE0rxzqU4h8WfeWNknjK4eX+TCqNFXIWXMK
-        bkeQr4+aHFZFe70vuejjb3vnUYk+Hh8AcY6D2dK6S60fFUe5
-X-Google-Smtp-Source: APXvYqyzamLGmwMNg8Ei/LfCVUrfm7ezUDQQ7Tr14xk/byEnpsxmwIa8xTvkyBl9GZd0pCSuX51XtU0kz8ow3ieCCRvyJRnBj3kn
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5V2NSfZgK4/Je85OyonRM0yBzGLQR7w5GuKR54sNbOU=;
+        b=C9HR2nYEPbOJTaRLvoxbVTz9YufHBTV15hFZD2F1fEdLxdlBIt4BQMoVRejrsKoSwD
+         N6+o+B56JTYIo4g3mMm7SQtg/uBe6jefXwVNk0t2v96lYviujZdiGddM44LJdaQz/CK/
+         n1ZgWN7BK1TXj5Ic4Ixxb0DmmzKUjrxZPgC5X4e9yCgss8iYn83/+x2krjN4n+EghxiK
+         2C6sfJnR3E5db2p1SoycjJAtBX9zcfSru2jGLV9hKk2vukQSyjKCYog8dc+treH4/8Qf
+         6UUOAN0VuWeUXEbJOwqOOiADoeoHiERrQSkh+jXpcPU0E7PQI+zaItYQbJmxKdt9AgSw
+         AVDA==
+X-Gm-Message-State: APjAAAX+F2c1Gt1NtQkQ/kWCgJQEWGqcD4Kz+1WIf22EE+pZxBR/UIRI
+        Msx5I10K5AtPNePhRvq/acaDdLN+
+X-Google-Smtp-Source: APXvYqwOGFrAxPMqjGVV2dJtk7h9DKrcBSQ0NtzD9IQgVICnNlRvCnUqIZZ9I1lq5uWr9jpKvm5DZw==
+X-Received: by 2002:a05:620a:21d4:: with SMTP id h20mr24469639qka.468.1576009636498;
+        Tue, 10 Dec 2019 12:27:16 -0800 (PST)
+Received: from ?IPv6:2601:282:800:fd80:6903:116b:63ac:ff23? ([2601:282:800:fd80:6903:116b:63ac:ff23])
+        by smtp.googlemail.com with ESMTPSA id b81sm1250595qkc.135.2019.12.10.12.27.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2019 12:27:15 -0800 (PST)
+Subject: Re: [PATCH net-next v2 1/5] rtnetlink: provide permanent hardware
+ address in RTM_NEWLINK
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+References: <cover.1575982069.git.mkubecek@suse.cz>
+ <7c28b1aa87436515de39e04206db36f6f374dc2f.1575982069.git.mkubecek@suse.cz>
+ <20191210095105.1f0008f5@cakuba.netronome.com>
+ <acd3947857e5be5340239cd49c8e2a51c283b884.camel@sipsolutions.net>
+ <0c9148be76615b3b77a3e730df75f311b1001b9f.camel@sipsolutions.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <513ce8a1-f3ee-bd5f-a27c-86729e0536fd@gmail.com>
+Date:   Tue, 10 Dec 2019 13:27:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:cd0d:: with SMTP id g13mr2258513jaq.110.1576009509276;
- Tue, 10 Dec 2019 12:25:09 -0800 (PST)
-Date:   Tue, 10 Dec 2019 12:25:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f6967505995f4e9d@google.com>
-Subject: KASAN: wild-memory-access Read in insert_char
-From:   syzbot <syzbot+ebd135f6bfef7f74a68c@syzkaller.appspotmail.com>
-To:     daniel.vetter@ffwll.ch, ghalat@redhat.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com, textshell@uchuujin.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <0c9148be76615b3b77a3e730df75f311b1001b9f.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 12/10/19 1:23 PM, Johannes Berg wrote:
+> On Tue, 2019-12-10 at 21:22 +0100, Johannes Berg wrote:
+>> On Tue, 2019-12-10 at 09:51 -0800, Jakub Kicinski wrote:
+>>> On Tue, 10 Dec 2019 14:07:53 +0100 (CET), Michal Kubecek wrote:
+>>>> @@ -1822,6 +1826,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+>>>>  	[IFLA_PROP_LIST]	= { .type = NLA_NESTED },
+>>>>  	[IFLA_ALT_IFNAME]	= { .type = NLA_STRING,
+>>>>  				    .len = ALTIFNAMSIZ - 1 },
+>>>> +	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+>>>>  };
+>>>>  
+>>>>  static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
+>>>
+>>> Jiri, I just noticed ifla_policy didn't get strict_start_type set when
+>>> ALT_IFNAME was added, should we add it in net? 🤔
+>>
+>> Does it need one? It shouldn't be used with
+>> nla_parse_nested_deprecated(), and if it's used with nla_parse_nested()
+>> then it doesn't matter?
+> 
+> No, wait. I misread, you said "when ALT_IFNAME was added" but somehow I
+> managed to read "when it was added"...
+> 
+> So yeah, it should have one. Dunno about net, your call. I'd probably
+> not bother for an NLA_REJECT attribute, there's little use including it
+> anyway.
+> 
 
-syzbot found the following crash on:
-
-HEAD commit:    6794862a Merge tag 'for-5.5-rc1-kconfig-tag' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=158cd061e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
-dashboard link: https://syzkaller.appspot.com/bug?extid=ebd135f6bfef7f74a68c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144d1282e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141a5db1e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ebd135f6bfef7f74a68c@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: wild-memory-access in memmove include/linux/string.h:395  
-[inline]
-BUG: KASAN: wild-memory-access in scr_memmovew include/linux/vt_buffer.h:68  
-[inline]
-BUG: KASAN: wild-memory-access in insert_char+0x206/0x400  
-drivers/tty/vt/vt.c:839
-Read of size 212 at addr 00000000ffffff3a by task syz-executor266/8995
-
-CPU: 1 PID: 8995 Comm: syz-executor266 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  __kasan_report.cold+0x5/0x41 mm/kasan/report.c:510
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  memmove+0x24/0x50 mm/kasan/common.c:116
-  memmove include/linux/string.h:395 [inline]
-  scr_memmovew include/linux/vt_buffer.h:68 [inline]
-  insert_char+0x206/0x400 drivers/tty/vt/vt.c:839
-  csi_at drivers/tty/vt/vt.c:1964 [inline]
-  do_con_trol+0x41a6/0x61b0 drivers/tty/vt/vt.c:2431
-  do_con_write.part.0+0xfd9/0x1ef0 drivers/tty/vt/vt.c:2797
-  do_con_write drivers/tty/vt/vt.c:2565 [inline]
-  con_write+0x46/0xd0 drivers/tty/vt/vt.c:3135
-  process_output_block drivers/tty/n_tty.c:595 [inline]
-  n_tty_write+0x40e/0x1080 drivers/tty/n_tty.c:2333
-  do_tty_write drivers/tty/tty_io.c:962 [inline]
-  tty_write+0x496/0x7f0 drivers/tty/tty_io.c:1046
-  __vfs_write+0x8a/0x110 fs/read_write.c:494
-  vfs_write+0x268/0x5d0 fs/read_write.c:558
-  ksys_write+0x14f/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __ia32_sys_write+0x71/0xb0 fs/read_write.c:620
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7fc6a39
-Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
-24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffdae18c EFLAGS: 00000246 ORIG_RAX: 0000000000000004
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020000000
-RDX: 0000000000000078 RSI: 00000000080eb080 RDI: 00000000ffdae1e0
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+It's new in net, so it has to be there not net-next.
