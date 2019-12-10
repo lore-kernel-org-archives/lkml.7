@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8CFC43603
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAECC43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15AB2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE9920637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015729;
-	bh=RdbXfKf5Rzr0OhOxihP2NlquBOZt0BtHA4HrYjLMuwo=;
+	s=default; t=1576015737;
+	bh=+FSfsTMhWnVbXHveRqF4bTYhm7dm42KvOsciyFqV9ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZtYlxeoI0448EzKptPUgLTb7/T2TQJWJgogYL9ioqOcFq742yXN8S/5qzobXNletg
-	 EOmuEn9WjDN04eC2EiY7BM/amhNgZtkMmnfDhUTYqSLcNapiqJ9Ao8yZHANssw/8pI
-	 6ylwMIAH8aHLn1R6KoVrDWHVLwZ6x1JtOfmZEe+o=
+	b=gmTjj/h3HUNjWm9KLHCZmMN7FToepacO4k+DyC/DIGMWkntGjjLKiwldKeCo2sTLy
+	 UG4GLUSzldPmaozjRHT2MLxEqncKw532IpzOs/SMpRtmE3nnGtSfbegEdmeDO4F1o+
+	 psi1gqV7B/AAp0xeW6cdEJWQB3+LfAVg2gbYtUaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfLJWEh (ORCPT
+        id S1729282AbfLJWI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35332 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:08:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbfLJWE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:28 -0500
+        id S1728986AbfLJWEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64F92053B;
-        Tue, 10 Dec 2019 22:04:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9A02073B;
+        Tue, 10 Dec 2019 22:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015467;
-        bh=RdbXfKf5Rzr0OhOxihP2NlquBOZt0BtHA4HrYjLMuwo=;
+        s=default; t=1576015475;
+        bh=+FSfsTMhWnVbXHveRqF4bTYhm7dm42KvOsciyFqV9ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J80oV2IHPWRBD+3ZSSaPEmv7x5MopSzzJmdEwXdGKiexCPof7FlAT8JY1cILvB/Xe
-         7WU2j36LMI+Qku5Y9cb3mg9s3/sFGrf9aJgRGaabog0SORLMvBb2vkiBTxHrkKWA5k
-         j1KULvF+MZErqtr78lY1MmgPAbkBHL7uapxp0uvA=
+        b=WWsrAqW49fmgtunHsknrKAREpJfI41OBjmr617EMUq9jzjX9SPXmT0GO2HoICiq4k
+         WyGqmbXXEBFfrfkTvBvZ/yCxPbU2v4qluBFLbAprkQYb93Sf27TQ+DWTN8GHQMTrmW
+         Q+qzzH1ro74HnQnAeiyx0Si8C7HotQJeF+vvo+WY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 073/130] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
-Date:   Tue, 10 Dec 2019 17:02:04 -0500
-Message-Id: <20191210220301.13262-73-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 080/130] ALSA: timer: Limit max amount of slave instances
+Date:   Tue, 10 Dec 2019 17:02:11 -0500
+Message-Id: <20191210220301.13262-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -59,48 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
+[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
 
-The regs pointer in amd_gpio_irq_handler() should have __iomem
-on it, so add that to fix the following sparse warnings:
+The fuzzer tries to open the timer instances as much as possible, and
+this may cause a system hiccup easily.  We've already introduced the
+cap for the max number of available instances for the h/w timers, and
+we should put such a limit also to the slave timers, too.
 
-drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
-drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
-drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
+This patch introduces the limit to the multiple opened slave timers.
+The upper limit is hard-coded to 1000 for now, which should suffice
+for any practical usages up to now.
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/core/timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index b78f42abff2f8..7385cd81498c4 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -509,7 +509,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
- 	irqreturn_t ret = IRQ_NONE;
- 	unsigned int i, irqnr;
- 	unsigned long flags;
--	u32 *regs, regval;
-+	u32 __iomem *regs;
-+	u32  regval;
- 	u64 status, mask;
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index c60dfd52e8a6d..22589a073423b 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -88,6 +88,9 @@ static LIST_HEAD(snd_timer_slave_list);
+ /* lock for slave active lists */
+ static DEFINE_SPINLOCK(slave_active_lock);
  
- 	/* Read the wake status */
++#define MAX_SLAVE_INSTANCES	1000
++static int num_slaves;
++
+ static DEFINE_MUTEX(register_mutex);
+ 
+ static int snd_timer_free(struct snd_timer *timer);
+@@ -266,6 +269,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			err = -EINVAL;
+ 			goto unlock;
+ 		}
++		if (num_slaves >= MAX_SLAVE_INSTANCES) {
++			err = -EBUSY;
++			goto unlock;
++		}
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+ 			err = -ENOMEM;
+@@ -275,6 +282,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
++		num_slaves++;
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+ 			snd_timer_close_locked(timeri, &card_dev_to_put);
+@@ -364,6 +372,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
+ 	struct snd_timer_instance *slave, *tmp;
+ 
+ 	list_del(&timeri->open_list);
++	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
++		num_slaves--;
+ 
+ 	/* force to stop the timer */
+ 	snd_timer_stop(timeri);
 -- 
 2.20.1
 
