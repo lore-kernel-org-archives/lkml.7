@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D91C00454
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E9C43603
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746122053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB422053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 22:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576015637;
-	bh=rLbRwo/sWzOuGDAdvjlVr/Po4p7Jwwrg/ApC9RoDilc=;
+	s=default; t=1576015640;
+	bh=l21FHSd8GPHC4IagFr+tkgZpvOS6I667FH0fdL1bliU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IzQH+80IbBU0EzHL7D5SIfRUrRj2AgcC8WP9auEeolY7NpUaLdg6nCQQ+vfeoPRsg
-	 VVQqDiC86xZ2f21mqaw6yWAwJd1cX5C0K2j/umFTr45G/VE7LOKwxFT671KinyesT2
-	 hc7McyASvsRmmiVyqYLjBaU2TUM7Z8UvSYFmJCWg=
+	b=mxxZ0cAvuumabHAYLLK9CiO4q6/nwSnGyL47qXWtnadEJQ4umO8ymzJrudykHKfZf
+	 p7MpByBfWisycwQTy24SQmJsHET9nSyD9nm56rRcNiSsPsOeOFfXs6EsJWX/DRD+3N
+	 j6D479nZWX/IWz2k4PoBELpWKjYfxClHBk9x16S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfLJWFM (ORCPT
+        id S1729488AbfLJWHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 17:05:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36000 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 17:07:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727409AbfLJWE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:04:56 -0500
+        id S1726968AbfLJWFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:05:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0BF20637;
-        Tue, 10 Dec 2019 22:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E40A6214AF;
+        Tue, 10 Dec 2019 22:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015494;
-        bh=rLbRwo/sWzOuGDAdvjlVr/Po4p7Jwwrg/ApC9RoDilc=;
+        s=default; t=1576015511;
+        bh=l21FHSd8GPHC4IagFr+tkgZpvOS6I667FH0fdL1bliU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWQ9GCBhH4nJ/53c4J+F2WL4guWYpFVmXLcApQsq0FPRbSkA3lFYIpESLHwN8G+5C
-         x4IkPKskx0QXYWvjb1iPzTZyTnmlkh/djSi9/UdE12CE4cIYa2Zs5LnyUMgi8TS39s
-         ZDniojhkw81y8zJ26VfHJCDLWO6ywPPAfM90bd0w=
+        b=ank1sulZuhEQSetPbvPHbk9cpgw4+ZG10HJVKufNRFTC93SWsmGUYID2GOxHfjAfs
+         nd58sA3X60BOh4+1yKmXTqQ8+HlUH6lAqGPJYX4z6yeZRihiUEwKZV0SQU1tKyCjv2
+         xytCxOLh7GMwfeI4KSE8PMLeDi4UGo5PVNAWBWaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 095/130] perf probe: Skip end-of-sequence and non statement lines
-Date:   Tue, 10 Dec 2019 17:02:26 -0500
-Message-Id: <20191210220301.13262-95-sashal@kernel.org>
+Cc:     Lianbo Jiang <lijiang@redhat.com>,
+        kbuild test robot <lkp@intel.com>,
+        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
+        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
+        ebiederm@xmission.com, horms@verge.net.au,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
+        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 109/130] x86/crash: Add a forward declaration of struct kimage
+Date:   Tue, 10 Dec 2019 17:02:40 -0500
+Message-Id: <20191210220301.13262-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -62,140 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
+[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
 
-Skip end-of-sequence and non-statement lines while walking through lines
-list.
+Add a forward declaration of struct kimage to the crash.h header because
+future changes will invoke a crash-specific function from the realmode
+init path and the compiler will complain otherwise like this:
 
-The "end-of-sequence" line information means:
+  In file included from arch/x86/realmode/init.c:11:
+  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      5 | int crash_load_segments(struct kimage *image);
+        |                                ^~~~~~
+  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      6 | int crash_copy_backup_region(struct kimage *image);
+        |                                     ^~~~~~
+  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      7 | int crash_setup_memmap_entries(struct kimage *image,
+        |
 
- "the current address is that of the first byte after the
-  end of a sequence of target machine instructions."
- (DWARF version 4 spec 6.2.2)
+ [ bp: Rewrite the commit message. ]
 
-This actually means out of scope and we can not probe on it.
-
-On the other hand, the statement lines (is_stmt) means:
-
- "the current instruction is a recommended breakpoint location.
-  A recommended breakpoint location is intended to “represent”
-  a line, a statement and/or a semantically distinct subpart
-  of a statement."
-
- (DWARF version 4 spec 6.2.2)
-
-So, non-statement line info also should be skipped.
-
-These can reduce unneeded probe points and also avoid an error.
-
-E.g. without this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
-
-  #
-
-This puts 5 probes on one line, but acutally it's not inlined function.
-This is because there are many non statement instructions at the
-function prologue.
-
-With this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  #
-
-Now perf-probe skips unneeded addresses.
-
-Committer testing:
-
-Slightly different results, but similar:
-
-Before:
-
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
-
-  #
-
-After:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  #
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: bhe@redhat.com
+Cc: d.hatayama@fujitsu.com
+Cc: dhowells@redhat.com
+Cc: dyoung@redhat.com
+Cc: ebiederm@xmission.com
+Cc: horms@verge.net.au
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jürgen Gross <jgross@suse.com>
+Cc: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: vgoyal@redhat.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
+Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/crash.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 49f9c65f1a9c1..d48bd5eaa0f2a 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -773,6 +773,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
- 	size_t nlines, i;
-+	bool flag;
+diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
+index a7adb2bfbf0b8..6b8ad6fa3979a 100644
+--- a/arch/x86/include/asm/crash.h
++++ b/arch/x86/include/asm/crash.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_CRASH_H
+ #define _ASM_X86_CRASH_H
  
- 	/* Get the CU die */
- 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
-@@ -803,6 +804,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 				  "Possible error in debuginfo.\n");
- 			continue;
- 		}
-+		/* Skip end-of-sequence */
-+		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
-+			continue;
-+		/* Skip Non statement line-info */
-+		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
-+			continue;
- 		/* Filter lines based on address */
- 		if (rt_die != cu_die) {
- 			/*
++struct kimage;
++
+ int crash_load_segments(struct kimage *image);
+ int crash_copy_backup_region(struct kimage *image);
+ int crash_setup_memmap_entries(struct kimage *image,
 -- 
 2.20.1
 
