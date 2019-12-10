@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC8FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A22C00454
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB18F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076D3208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Dec 2019 21:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576012351;
-	bh=hpI3x1KQBGanvKU3gE981T5ZKcILSbMyCMdBEjfE7jQ=;
+	s=default; t=1576012353;
+	bh=jMXgQtIZOPOIuXUvDseEE9HrBBmr6B6RlBv4+edN7wk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=juRO373HOTAUBqjNnA6qfe6717NNCe0jqyIlEVonuoMlw5sTVoZIIwk9FVHYsmpTt
-	 4B65QIlbWe57qcCA2nAQz24w4JlYo07+4oqqLsRi39kE1XC5AkrUlfChNTKopPYxLU
-	 H8UfofUBuRPQ9efST2KKIp3U/y1G/gsgVka1v6Fc=
+	b=F86NCOK3ddS7ZGIPCXRXEpB+owWl7UEqylZGwMMi8tDujzJ3n+AqphhUrHdJzHWLW
+	 m55QXMOBvG/gVipEjS7U4DV/cq6J+q1y7SOrQNwpl87TDZ6fWCIfFGQgFZVUwsf9lT
+	 zFpvPYMAccXhfzi+1nHK1gSMlC5AcuWMo5pLLkAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfLJVMa (ORCPT
+        id S1728999AbfLJVMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 16:12:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36002 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 16:12:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728918AbfLJVMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:18 -0500
+        id S1728933AbfLJVMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66712246A8;
-        Tue, 10 Dec 2019 21:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F5C0246B8;
+        Tue, 10 Dec 2019 21:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012338;
-        bh=hpI3x1KQBGanvKU3gE981T5ZKcILSbMyCMdBEjfE7jQ=;
+        s=default; t=1576012340;
+        bh=jMXgQtIZOPOIuXUvDseEE9HrBBmr6B6RlBv4+edN7wk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mk5P++PJKfEBPmq2ws3BsSn7k7GxnSKPDZiz6Cz7mWzVAo1Th52Ir7FFYT97rX5aN
-         8KdsA1DJj/gBfV5+c8o6eUKK4Mc7kizFdmttEUtrqETNXhwy+i0Kl99iHZgFP0v192
-         EzQHiMUc9e2Y9dQX/YF/DrLwMyYZRVltqzhlk3gk=
+        b=GOYvdSjBVl2m9WtLy2KwxTBaSw3g74FeaWh1W/fLrZS+lfFsszSd1wsNLSsuiEca2
+         jN2tll+QPm1ZvuQCiFAAbofIZdHJ5pClhjb16tbok2aBYWrNOOVIME5Qd5Y5sZW0WK
+         q/kyts4rGMw9FoonICRNFMdIi38KHxJKuAIo0K7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 269/350] ASoC: Intel: kbl_rt5663_rt5514_max98927: Add dmic format constraint
-Date:   Tue, 10 Dec 2019 16:06:14 -0500
-Message-Id: <20191210210735.9077-230-sashal@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 271/350] r8169: respect EEE user setting when restarting network
+Date:   Tue, 10 Dec 2019 16:06:16 -0500
+Message-Id: <20191210210735.9077-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -60,38 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit e2db787bdcb4f2722ecf410168f0583764634e45 ]
+[ Upstream commit 7ec3f872bc85ada93db34448d73bb399d6b82c2c ]
 
-On KBL platform, the microphone is attached to external codec(rt5514)
-instead of PCH. However, TDM slot between PCH and codec is 16 bits only.
-In order to avoid setting wrong format, we should add a constraint to
-force to use 16 bits format forever.
+Currently, if network is re-started, we advertise all supported EEE
+modes, thus potentially overriding a manual adjustment the user made
+e.g. via ethtool. Be friendly to the user and preserve a manual
+setting on network re-start.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190923162940.199580-1-yuhsuan@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/realtek/r8169_main.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-index 74dda8784f1a0..67b276a65a8d2 100644
---- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-+++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-@@ -400,6 +400,9 @@ static int kabylake_dmic_startup(struct snd_pcm_substream *substream)
- 	snd_pcm_hw_constraint_list(runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
- 			dmic_constraints);
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 1d67eeeab79d6..229bc6026ebc4 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -680,6 +680,7 @@ struct rtl8169_private {
+ 	struct rtl8169_counters *counters;
+ 	struct rtl8169_tc_offsets tc_offset;
+ 	u32 saved_wolopts;
++	int eee_adv;
  
-+	runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+	snd_pcm_hw_constraint_msbits(runtime, 0, 16, 16);
+ 	const char *fw_name;
+ 	struct rtl_fw *rtl_fw;
+@@ -2075,6 +2076,10 @@ static int rtl8169_set_eee(struct net_device *dev, struct ethtool_eee *data)
+ 	}
+ 
+ 	ret = phy_ethtool_set_eee(tp->phydev, data);
 +
- 	return snd_pcm_hw_constraint_list(substream->runtime, 0,
- 			SNDRV_PCM_HW_PARAM_RATE, &constraints_rates);
++	if (!ret)
++		tp->eee_adv = phy_read_mmd(dev->phydev, MDIO_MMD_AN,
++					   MDIO_AN_EEE_ADV);
+ out:
+ 	pm_runtime_put_noidle(d);
+ 	return ret;
+@@ -2105,10 +2110,16 @@ static const struct ethtool_ops rtl8169_ethtool_ops = {
+ static void rtl_enable_eee(struct rtl8169_private *tp)
+ {
+ 	struct phy_device *phydev = tp->phydev;
+-	int supported = phy_read_mmd(phydev, MDIO_MMD_PCS, MDIO_PCS_EEE_ABLE);
++	int adv;
++
++	/* respect EEE advertisement the user may have set */
++	if (tp->eee_adv >= 0)
++		adv = tp->eee_adv;
++	else
++		adv = phy_read_mmd(phydev, MDIO_MMD_PCS, MDIO_PCS_EEE_ABLE);
+ 
+-	if (supported > 0)
+-		phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, supported);
++	if (adv >= 0)
++		phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_EEE_ADV, adv);
  }
+ 
+ static void rtl8169_get_mac_version(struct rtl8169_private *tp)
+@@ -7064,6 +7075,7 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	tp->pci_dev = pdev;
+ 	tp->msg_enable = netif_msg_init(debug.msg_enable, R8169_MSG_DEFAULT);
+ 	tp->supports_gmii = ent->driver_data == RTL_CFG_NO_GBIT ? 0 : 1;
++	tp->eee_adv = -1;
+ 
+ 	/* Get the *optional* external "ether_clk" used on some boards */
+ 	rc = rtl_get_ether_clk(tp);
 -- 
 2.20.1
 
