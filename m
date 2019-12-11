@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38204C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B998EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A392073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820612073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079670;
-	bh=XUHcoykyLvckV5PdmDnupnL1JXiN65tjng30i/Gu1Bo=;
+	s=default; t=1576079676;
+	bh=aeJN9iD2dFfWHJYWyfxdk8+zHVMsBoio6kyTZ0brv3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2serjIoxdQOX6m+K15laDMs8657w700YBDWM/3fMV7k8VwTK6wh1la9vQpF9dYur2
-	 dCCTiMqqdW0Oa2H8Qo1jJXPdD1S6HAOzGxJjEYmz2L3VuWv8Thh66FLt96FYIx66Lo
-	 hLFh7Ih0lu6nRvAxiJO9DayS4GaQCd5c/qrA+iyI=
+	b=rVlC8jjAqa0it3oHaujypgwFrp2ZKRkjHDZAgt6m9dGUJpu3e2wYgrhbnRavOewcI
+	 jNWPT2Tw3Pqa6OQlTVjtXNOCVkX63HFlzrw4/4YR5Rl1sQ0jL+dboSm8rcl6GXo+r7
+	 cuQpeGin+VLrlgFhJKhiq3kDeZ3cZ2fhf/2pG+H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbfLKPRo (ORCPT
+        id S1732015AbfLKPR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:17:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:17:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729663AbfLKPRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:17:43 -0500
+        id S1731391AbfLKPRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E0B4208C3;
-        Wed, 11 Dec 2019 15:17:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2DB2073D;
+        Wed, 11 Dec 2019 15:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077462;
-        bh=XUHcoykyLvckV5PdmDnupnL1JXiN65tjng30i/Gu1Bo=;
+        s=default; t=1576077443;
+        bh=aeJN9iD2dFfWHJYWyfxdk8+zHVMsBoio6kyTZ0brv3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UKp33KiCyzx5QmK3hInmxziN3ToTVxKR/vp+tl91F/9NGj5mPNjyA5GguHuEteuKh
-         6RlDT8AnlRn214otlxqyEb3PReKTzPGiMWTJy80QLCqdvjYyjV7xVxqqraB7W7JJnz
-         aVvcbrdg9GSYX8hDJeOUxx3O0N8XKrWihMv6CXQ4=
+        b=JUrYAt6Si/Ej0BPborKQZj5QXIHgI4/9xTDoRH8yWCaIA43iVPJ+plrTc1X7S51Eo
+         FmCjASuwdz8PZu2R3xRm2/lHi2YPPP4K4Jtx+wyurQvH4tNuT/hqEwcsrDQduXpkaB
+         YuYfc5dVkCS5Agyyoyts5Hexo1cEVMflx937sphQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 048/243] clk: rockchip: fix rk3188 sclk_mac_lbtest parameter ordering
-Date:   Wed, 11 Dec 2019 16:03:30 +0100
-Message-Id: <20191211150342.346050237@linuxfoundation.org>
+Subject: [PATCH 4.19 042/243] net: ethernet: ti: cpts: correct debug for expired txq skb
+Date:   Wed, 11 Dec 2019 16:03:24 +0100
+Message-Id: <20191211150341.984159300@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit ac8cb53829a6ba119082e067f5bc8fab3611ce6a ]
+[ Upstream commit d0e14c4d9bcef0d4aa1057d2959adaa6f18d4a17 ]
 
-Similar to commit a9f0c0e56371 ("clk: rockchip: fix rk3188 sclk_smc
-gate data") there is one other gate clock in the rk3188 clock driver
-with a similar wrong ordering, the sclk_mac_lbtest. So fix it as well.
+The msgtype and seqid that is smth that belongs to event for
+comparison but not for staled txq skb.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3188.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ti/cpts.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
-index 9a6ad5a4cdf06..2ca7e2be2f09e 100644
---- a/drivers/clk/rockchip/clk-rk3188.c
-+++ b/drivers/clk/rockchip/clk-rk3188.c
-@@ -362,8 +362,8 @@ static struct rockchip_clk_branch common_clk_branches[] __initdata = {
- 			RK2928_CLKGATE_CON(2), 5, GFLAGS),
- 	MUX(SCLK_MAC, "sclk_macref", mux_sclk_macref_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(21), 4, 1, MFLAGS),
--	GATE(0, "sclk_mac_lbtest", "sclk_macref",
--			RK2928_CLKGATE_CON(2), 12, 0, GFLAGS),
-+	GATE(0, "sclk_mac_lbtest", "sclk_macref", 0,
-+			RK2928_CLKGATE_CON(2), 12, GFLAGS),
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 4f644ac314fe8..d7543811dfae2 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -119,9 +119,7 @@ static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
  
- 	COMPOSITE(0, "hsadc_src", mux_pll_src_gpll_cpll_p, 0,
- 			RK2928_CLKSEL_CON(22), 0, 1, MFLAGS, 8, 8, DFLAGS,
+ 		if (time_after(jiffies, skb_cb->tmo)) {
+ 			/* timeout any expired skbs over 1s */
+-			dev_dbg(cpts->dev,
+-				"expiring tx timestamp mtype %u seqid %04x\n",
+-				mtype, seqid);
++			dev_dbg(cpts->dev, "expiring tx timestamp from txq\n");
+ 			__skb_unlink(skb, &cpts->txq);
+ 			dev_consume_skb_any(skb);
+ 		}
 -- 
 2.20.1
 
