@@ -2,177 +2,86 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA3EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7C0C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A2214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE1C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="E5sw+O0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfLKNdr (ORCPT
+        id S1729627AbfLKNeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:33:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57945 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbfLKNdr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:33:47 -0500
-Received: from erbse.hi.pengutronix.de ([2001:67c:670:100:9e5c:8eff:fece:cdfe])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <bst@pengutronix.de>)
-        id 1if27d-0001zF-83; Wed, 11 Dec 2019 14:33:45 +0100
-Subject: Re: [PATCH 08/12] crypto: caam - support crypto_engine framework for
- SKCIPHER algorithms
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-9-git-send-email-iuliana.prodan@nxp.com>
- <c0fa1e68-107d-f9ee-fbf2-0d0e6ef8d39d@pengutronix.de>
- <VI1PR04MB44458A1566067B5456337AEE8C5A0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-From:   Bastian Krause <bst@pengutronix.de>
-Message-ID: <56aa6894-6df9-1ade-6c22-cccb99172d2a@pengutronix.de>
-Date:   Wed, 11 Dec 2019 14:33:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 08:34:24 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:47388 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729370AbfLKNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:34:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5mrH73H8IK9PCLoNbfAeyMajTAOWJOgXGTCwDhw8YRM=; b=E5sw+O0i+JbR6CuiQPBxKMAPbL
+        BfsuNXhPVsOpKRXRHp/0ZjPlOTgBZZ7CPjSzBQjiPPpVpSPY6DdsSJbj8Ep26qr38wXK4Aq4xi7fn
+        PCXgH50sYMZVLD+23kGaqTjLNxI/GsB/5LybwUHMIsSDvH5YDkau6KMx6cx/3YRE+2YQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1if280-0004Ma-Du; Wed, 11 Dec 2019 14:34:08 +0100
+Date:   Wed, 11 Dec 2019 14:34:08 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
+        "R.J.Dunlop" <bob.dunlop@farsite.com>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
+        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
+Message-ID: <20191211133408.GL16369@lunn.ch>
+References: <20191209151256.2497534-1-arnd@arndb.de>
+ <20191209151256.2497534-4-arnd@arndb.de>
+ <m3d0cvjq1h.fsf@t19.piap.pl>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB44458A1566067B5456337AEE8C5A0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:9e5c:8eff:fece:cdfe
-X-SA-Exim-Mail-From: bst@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <m3d0cvjq1h.fsf@t19.piap.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi,
-
-On 12/11/19 1:20 PM, Iuliana Prodan wrote:
-> On 12/10/2019 5:27 PM, Bastian Krause wrote:
->> On 11/17/19 11:30 PM, Iuliana Prodan wrote:
->>> Integrate crypto_engine into CAAM, to make use of the engine queue.
->>> Add support for SKCIPHER algorithms.
->>>
->>> This is intended to be used for CAAM backlogging support.
->>> The requests, with backlog flag (e.g. from dm-crypt) will be listed
->>> into crypto-engine queue and processed by CAAM when free.
->>> This changes the return codes for caam_jr_enqueue:
->>> -EINPROGRESS if OK, -EBUSY if request is backlogged,
->>> -ENOSPC if the queue is full, -EIO if it cannot map the caller's
->>> descriptor, -EINVAL if crypto_tfm not supported by crypto_engine.
->>>
->>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
->>> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>
->>> Reviewed-by: Horia Geantã <horia.geanta@nxp.com>
->>> ---
->>>   drivers/crypto/caam/Kconfig   |  1 +
->>>   drivers/crypto/caam/caamalg.c | 84 +++++++++++++++++++++++++++++++++++--------
->>>   drivers/crypto/caam/intern.h  |  2 ++
->>>   drivers/crypto/caam/jr.c      | 51 ++++++++++++++++++++++++--
->>>   4 files changed, 122 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig
->>> index 87053e4..1930e19 100644
->>> --- a/drivers/crypto/caam/Kconfig
->>> +++ b/drivers/crypto/caam/Kconfig
->>> @@ -33,6 +33,7 @@ config CRYPTO_DEV_FSL_CAAM_DEBUG
->>>   
-> ...
->>>   
->>> +static int skcipher_do_one_req(struct crypto_engine *engine, void *areq)
->>> +{
->>> +	struct skcipher_request *req = skcipher_request_cast(areq);
->>> +	struct caam_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
->>> +	struct caam_skcipher_req_ctx *rctx = skcipher_request_ctx(req);
->>> +	struct caam_jr_request_entry *jrentry;
->>> +	u32 *desc = rctx->edesc->hw_desc;
->>> +	int ret;
->>> +
->>> +	jrentry = &rctx->edesc->jrentry;
->>> +	jrentry->bklog = true;
->>> +
->>> +	ret = caam_jr_enqueue_no_bklog(ctx->jrdev, desc,
->>> +				       rctx->skcipher_op_done, jrentry);
->>> +
->>> +	if (ret != -EINPROGRESS) {
->>> +		skcipher_unmap(ctx->jrdev, rctx->edesc, req);
->>> +		kfree(rctx->edesc);
->>> +	} else {
->>> +		ret = 0;
->>> +	}
->>> +
->>> +	return ret;
->>
->> While testing this on a i.MX6 DualLite I see -ENOSPC being returned here
->> after a couple of GiB of data being encrypted (via dm-crypt with LUKS
->> extension). This results in these messages from crypto_engine:
->>
->>    caam_jr 2101000.jr0: Failed to do one request from queue: -28
->>
->> And later..
->>
->>    Buffer I/O error on device dm-0, logical block 59392
->>    JBD2: Detected IO errors while flushing file data on dm-0-8
->>
->> Reproducible with something like this:
->>
->>    echo "testkey" | cryptsetup luksFormat \
->>      --cipher=aes-cbc-essiv:sha256 \
->>      --key-file=- \
->>      --key-size=256 \
->>      /dev/mmcblk1p8
->>    echo "testkey" | cryptsetup open \
->>      --type luks \
->>      --key-file=- \
->>      /dev/mmcblk1p8 data
->>
->>    mkfs.ext4 /dev/mapper/data
->>    mount /dev/mapper/data /mnt
->>
->>    set -x
->>    while [ true ]; do
->>      dd if=/dev/zero of=/mnt/big_file bs=1M count=1024
->>      sync
->>    done
->>
->> Any ideas?
->>
+On Wed, Dec 11, 2019 at 08:10:34AM +0100, Krzysztof HaÅ‚asa wrote:
+> Arnd,
 > 
-> Thanks for testing this!
+> Arnd Bergmann <arnd@arndb.de> writes:
+> 
+> > - Most other supported HDLC hardware that we supoprt is for the ISA or
+> >   PCI buses.
+> 
+> I would be surprised if there is anybody left with ISA sync serial
+> stuff, but the PCI hardware still has some users - these machines don't
+> need to be upgraded yearly. Most people have migrated away, though.
 
-Sure :)
+Hi Krzysztof, Arnd
 
-> I reproduced this issue on imx6dl, _but_ only with the bypass sw queue 
-> patch. It only reproduces on some targets, e.g. on imx7d I don't get the 
-> -ENOSPC error. So, I believe there is a timing issue between 
-> crypto-engine and CAAM driver, both sending requests to CAAM hw.
-> I'm debugging this and I'll let you know my findings.
+I have a use case for hdlc_cisco and hdlc_raw_eth. But it uses a lot
+of out of tree code, the DAHDI driver framework for E1 cards, and an
+E1 card which is not part of DAHDI.
 
-I can't even use this without the "crypto: caam - bypass crypto-engine
-sw queue, if empty". The mkfs.ext4 command does not even finish and I
-see hung task warnings. Am I holding it wrong?
+Given how much of this is out of tree, i would understand if you
+eventually decide to remove this HDLC code.
 
-Regards,
-Bastian
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	   Andrew
