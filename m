@@ -2,115 +2,130 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AE3C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C30E214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBB82077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080299;
-	bh=6dcgXjzWV3O7RK4XmMcGtUtHXuJGkOeYHlgMecRCNis=;
+	s=default; t=1576080303;
+	bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dqjw8h/e3nFjZbGdx6UAQU4VWf0qojC++iMjEgzEc140rcvP+2wrSTTf2NHEJnj8s
-	 WeJRI1V832nbeAH2zWp7MJC4gDb4FTK76E/rmP33x6zs2/+8rYmXEh1JtLAnZdHU5e
-	 UcTS12iK6CW4q9jR/Q4Yvl4e3MSUdilNvQc0dwCo=
+	b=BD667RH24Ou7zujurQGfpwerm/xzswzOefJ2863iuHQ34DOXAH9vYsT0CRBqUMO84
+	 EpRq5SGIWhJr1+nuDzIJpmC+JN9Lwgj3lCkhMUsDknFlj4MjR0J/TjXolJBK+Py/bw
+	 RnsdiX4IGCpY1RCO7V5gYfvSBr0b+ONYWIqzX+Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfLKPM5 (ORCPT
+        id S2388878AbfLKQFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730778AbfLKPMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730429AbfLKPM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F71C24686;
-        Wed, 11 Dec 2019 15:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D4692467D;
+        Wed, 11 Dec 2019 15:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077157;
-        bh=6dcgXjzWV3O7RK4XmMcGtUtHXuJGkOeYHlgMecRCNis=;
+        s=default; t=1576077176;
+        bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOL+vNAM0igtZ70r/2DEw7YPAi21voaVQdjVDq/iTYrnFWeBMNhFoiM3/zGUKUleC
-         qkDhHl/CwxAhxdqHL9dRzHD2mm9ga+ZQPXAhw4MyJQ5w12RnTKm3mB/lfli18YHCUS
-         On5xpRvO4os4IybVlqXGFzEokeMmaKeqrNk3IXnQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 043/134] jbd2: Fix statistics for the number of logged blocks
-Date:   Wed, 11 Dec 2019 10:10:19 -0500
-Message-Id: <20191211151150.19073-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=rFEYRj8RxbU1sKEEgPuDcs0/drDd/uO7o2nZh8flGXnoR09hukvZBlCyALN3z/ThW
+         dH4lSfD3IfSpT8BRYitil0O1YPhi4fz5g757K/CdhviS1sFu6z8BgzpBMCgk89c0Cp
+         uTY0NY3eKr5jbxToAwQfVK2wQpQKt0KYBk6Pnjms=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH 5.3 010/105] serial: pl011: Fix DMA ->flush_buffer()
+Date:   Wed, 11 Dec 2019 16:04:59 +0100
+Message-Id: <20191211150223.556547365@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
+commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
 
-jbd2 statistics counting number of blocks logged in a transaction was
-wrong. It didn't count the commit block and more importantly it didn't
-count revoke descriptor blocks. Make sure these get properly counted.
+PL011's ->flush_buffer() implementation releases and reacquires the port
+lock.  Due to a race condition here, data can end up being added to the
+circular buffer but neither being discarded nor being sent out.  This
+leads to, for example, tcdrain(2) waiting indefinitely.
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Process A                       Process B
+
+uart_flush_buffer()
+ - acquire lock
+ - circ_clear
+ - pl011_flush_buffer()
+ -- release lock
+ -- dmaengine_terminate_all()
+
+                                uart_write()
+                                - acquire lock
+                                - add chars to circ buffer
+                                - start_tx()
+                                -- start DMA
+                                - release lock
+
+ -- acquire lock
+ -- turn off DMA
+ -- release lock
+
+                                // Data in circ buffer but DMA is off
+
+According to the comment in the code, the releasing of the lock around
+dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
+callback.  However, since the time this code was written, the DMA engine
+API documentation seems to have been clarified to say that
+dmaengine_terminate_all() (in the identically implemented but
+differently named dmaengine_terminate_async() variant) does not wait for
+any running complete callback to be completed and can even be called
+from a complete callback.  So there is no possibility of deadlock if the
+DMA engine driver implements this API correctly.
+
+So we should be able to just remove this release and reacquire of the
+lock to prevent the aforementioned race condition.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/jbd2/commit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/amba-pl011.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 132fb92098c71..c43591cd70f1c 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -727,7 +727,6 @@ start_journal_io:
- 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
- 			}
- 			cond_resched();
--			stats.run.rs_blocks_logged += bufs;
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
+ 	if (!uap->using_tx_dma)
+ 		return;
  
- 			/* Force a new descriptor to be generated next
-                            time round the loop. */
-@@ -814,6 +813,7 @@ start_journal_io:
- 		if (unlikely(!buffer_uptodate(bh)))
- 			err = -EIO;
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 
- 		/*
- 		 * The list contains temporary buffer heads created by
-@@ -859,6 +859,7 @@ start_journal_io:
- 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
- 		clear_buffer_jwrite(bh);
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 		__brelse(bh);		/* One for getblk */
- 		/* AKPM: bforget here */
- 	}
-@@ -880,6 +881,7 @@ start_journal_io:
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
-+	stats.run.rs_blocks_logged++;
- 	if (jbd2_has_feature_async_commit(journal) &&
- 	    journal->j_flags & JBD2_BARRIER) {
- 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
--- 
-2.20.1
+-	/* Avoid deadlock with the DMA engine callback */
+-	spin_unlock(&uap->port.lock);
+-	dmaengine_terminate_all(uap->dmatx.chan);
+-	spin_lock(&uap->port.lock);
++	dmaengine_terminate_async(uap->dmatx.chan);
++
+ 	if (uap->dmatx.queued) {
+ 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
+ 			     DMA_TO_DEVICE);
+
 
