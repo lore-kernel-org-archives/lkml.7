@@ -2,251 +2,88 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17745C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F0BC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CFF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:50:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fVzD4IBH"
+	by mail.kernel.org (Postfix) with ESMTP id 01752214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576050670;
+	bh=qiPe1cR8jTyi2ZizEmnHbE84tSLl/GzPxrWmcuXHThI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GBpHdkOZXf4fDS+d1BKj0yMZzXrJbtf21/iK+C9X9zqzpW3rKkIGSfUZPrHyIzNrJ
+	 pr5EfXXHvuBCGAud6YQOgFxpoXFoVJkyJAjGyBDk3qAjMomb2/D2jKn0k/XrNIAbP4
+	 XulH+aHC+GJ6ZQqbvzw4i6gNzN3xD744Ntqz9s4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfLKHu3 (ORCPT
+        id S1728256AbfLKHvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:50:29 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37602 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfLKHu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:50:29 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so5881870wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:50:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=B4jibqDc1qVy/j2PdbJbaqTCeLaTTJvVeLinEnfDL2M=;
-        b=fVzD4IBHnhzl29HjXbGL2UON0m1YkEYEHwu2CQ02YorLWFV+d7/8A0lRI7nlHqSHQT
-         ySaVv7nSwtLKE6Wa5jOP31xgZgr5i/oiGFJ3/x1jSVie2NEA7kgTzr/7ePXjI5LuB25J
-         MwHN2i9mZYBLMtEQqErzJVvW68nsIoUGmPlI4YTKJ9KAZCViHRwX2eDmS4JV1dlVFFUT
-         f7IPlr4mf0CVubumPvqB/KuGEqwsJCWyNoqelHJ0x7FeycTn7joe00y/BKNZkVWQFpFD
-         87kJkXBRvi4aqYKtn70CUyPMBhxiRuS4zBZvAhnyPFXhemNJkIahB4L1chQZXWBxLr5Y
-         suOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B4jibqDc1qVy/j2PdbJbaqTCeLaTTJvVeLinEnfDL2M=;
-        b=KzuR+y86ActAmstQ//sY2Bd+vq7BC1wZvHPa9AUAZp9N0pjawdkUvdZ4l+fIPk4yKE
-         3wvnstMLoiwd8GOMV8t2lVt4S5AVcjsCFTRjAGyPh34rDyf/LpKzW16jbPH84VUi7nsr
-         KH74RXYp19p1CkP47rwoXk/YTBFfDV6lcKMT0J7+md+7aE/aoGduPR9kkIAkg9NvjepN
-         dPrEgLOeO14+amklVHdPOfbdFM5zHs/OSWgHrAAt7GLZKRV6+lXlJmzBpFM8ToXI4gry
-         dyKVM3i9MLYh1p4TnwBE6i6ZxrR9QOMkDHotaoZknzZCDroQkwwUHcsR74vzvqymGYJ8
-         KQPg==
-X-Gm-Message-State: APjAAAVuMUEfMUfdtAfL2YMqoVcJaCe04cpdRjnCsRb4ciJg1sB2MVml
-        1+8nG+jSiTTARRLO9rhzneBOpA==
-X-Google-Smtp-Source: APXvYqzEF04T+GcngcmVdZfbQJ57lAu6S299DFDYV4t5FAnc+ntYnEImzN3McMQxiX8g+sknfwdAFQ==
-X-Received: by 2002:a1c:f31a:: with SMTP id q26mr1915933wmq.142.1576050627087;
-        Tue, 10 Dec 2019 23:50:27 -0800 (PST)
-Received: from dell ([2.27.35.147])
-        by smtp.gmail.com with ESMTPSA id i5sm1271653wml.31.2019.12.10.23.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 23:50:26 -0800 (PST)
-Date:   Wed, 11 Dec 2019 07:50:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 3/6] mfd: rn5t618: add irq support
-Message-ID: <20191211075021.GW3468@dell>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-4-andreas@kemnade.info>
- <20191210093225.GT3468@dell>
- <20191210175900.64df7de8@kemnade.info>
+        Wed, 11 Dec 2019 02:51:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLKHvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:51:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEFB720637;
+        Wed, 11 Dec 2019 07:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576050668;
+        bh=qiPe1cR8jTyi2ZizEmnHbE84tSLl/GzPxrWmcuXHThI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bd7vHXWukmh1dj8rWvgqbRutYFiEb4S3Fzk4XexdgHYlmoqBoVoBrl5pao0S6mC61
+         S8oayT/fOAxrGghR0S7wgSLpHpgtP2rQN4MGcy70g0F3e+QmUDt6c+2/q/2XIt4Zww
+         tHmwTXAvh9ZDxDQJCeoTdfTisEkeqbEkuSFq8VZQ=
+Date:   Wed, 11 Dec 2019 08:51:05 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 211/350] rfkill: allocate static minor
+Message-ID: <20191211075105.GJ398293@kroah.com>
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-172-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210175900.64df7de8@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191210210735.9077-172-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019, Andreas Kemnade wrote:
-
-> On Tue, 10 Dec 2019 09:32:25 +0000
-> Lee Jones <lee.jones@linaro.org> wrote:
+On Tue, Dec 10, 2019 at 04:05:16PM -0500, Sasha Levin wrote:
+> From: Marcel Holtmann <marcel@holtmann.org>
 > 
-> > On Fri, 29 Nov 2019, Andreas Kemnade wrote:
-> > 
-> > > This adds support for irq handling in the rc5t619 which is required  
-> > 
-> > Please capitalise abbreviations and device names (as they do in the
-> > datasheet).
-> > 
-> for IRQ vs. irq: I see both things in commit messages. Is there any rule about
-> that?
-
-No, it's preference.  Mine is to follow the conventions set out by
-standard English grammar.  Capital letters to start sentences, proper
-nouns and abbreviations, etc.
-
-> > > for properly implementing subdevices like rtc.  
-> > 
-> > "RTC"
-> > 
-> > > For now only definitions for the variant rc5t619 are included.
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > > Changes in v3:
-> > > alignment cleanup
-> > > 
-> > > Changes in v2:
-> > > - no dead code, did some more testing and thinking for that
-> > > - remove extra empty lines
-> > > 
-> > >  drivers/mfd/Kconfig         |  1 +
-> > >  drivers/mfd/Makefile        |  2 +-
-> > >  drivers/mfd/rn5t618-core.c  | 34 ++++++++++++++-
-> > >  drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/rn5t618.h | 16 +++++++
-> > >  5 files changed, 136 insertions(+), 2 deletions(-)
-> > >  create mode 100644 drivers/mfd/rn5t618-irq.c
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index ae24d3ea68ea..522e068d0082 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -1057,6 +1057,7 @@ config MFD_RN5T618
-> > >  	depends on OF
-> > >  	select MFD_CORE
-> > >  	select REGMAP_I2C
-> > > +	select REGMAP_IRQ
-> > >  	help
-> > >  	  Say yes here to add support for the Ricoh RN5T567,
-> > >  	  RN5T618, RC5T619 PMIC.
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index 110ea700231b..2906d5db67d0 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> > >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> > >  obj-$(CONFIG_MFD_RK808)		+= rk808.o
-> > >  
-> > > -rn5t618-objs			:= rn5t618-core.o
-> > > +rn5t618-objs			:= rn5t618-core.o rn5t618-irq.o
-> > >  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
-> > >  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
-> > >  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-> > > diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
-> > > index da5cd9c92a59..1e2326217681 100644
-> > > --- a/drivers/mfd/rn5t618-core.c
-> > > +++ b/drivers/mfd/rn5t618-core.c
-> > > @@ -8,6 +8,7 @@
-> > >  
-> > >  #include <linux/delay.h>
-> > >  #include <linux/i2c.h>
-> > > +#include <linux/interrupt.h>
-> > >  #include <linux/mfd/core.h>
-> > >  #include <linux/mfd/rn5t618.h>
-> > >  #include <linux/module.h>
-> > > @@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
-> > >  
-> > >  	i2c_set_clientdata(i2c, priv);
-> > >  	priv->variant = (long)of_id->data;
-> > > -
-> > > +	priv->chip_irq = i2c->irq;
-> > > +	priv->dev = &i2c->dev;  
-> > 
-> > '\n'
-> > 
-> > >  	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
-> > >  	if (IS_ERR(priv->regmap)) {
-> > >  		ret = PTR_ERR(priv->regmap);
-> > > @@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > +	if (priv->chip_irq > 0) {
-> > > +		if (rn5t618_irq_init(priv))
-> > > +			priv->chip_irq = 0;
-> > > +	}
-> > > +
-> > >  	return 0;
-> > >  }
-> > >  
-> > > @@ -154,15 +161,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-> > > +{
-> > > +	struct rn5t618 *priv = dev_get_drvdata(dev);
-> > > +
-> > > +	if (priv->chip_irq)
-> > > +		disable_irq(priv->chip_irq);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-> > > +{
-> > > +	struct rn5t618 *priv = dev_get_drvdata(dev);
-> > > +
-> > > +	if (priv->chip_irq)
-> > > +		enable_irq(priv->chip_irq);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static const struct i2c_device_id rn5t618_i2c_id[] = {
-> > >  	{ }
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);  
-> > 
-> > Not this patch I know, but it's strange to see this empty.
+> [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
 > 
-> Yes, should be cleaned up. For now the device tree stuff seems to kick in.
+> udev has a feature of creating /dev/<node> device-nodes if it finds
+> a devnode:<node> modalias. This allows for auto-loading of modules that
+> provide the node. This requires to use a statically allocated minor
+> number for misc character devices.
+> 
+> However, rfkill uses dynamic minor numbers and prevents auto-loading
+> of the module. So allocate the next static misc minor number and use
+> it for rfkill.
+> 
+> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  include/linux/miscdevice.h | 1 +
+>  net/rfkill/core.c          | 9 +++++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 
-I think this can be removed completely.
+I'll go queue this up for 5.4.y now, as that's the only place that
+should need it.
 
-Just make sure you use .probe2 and it should be automatic.
+thanks,
 
-[...]
-
-> > > +	switch (rn5t618->variant) {
-> > > +	case RC5T619:
-> > > +		irq_chip = &rc5t619_irq_chip;
-> > > +		break;
-> > > +
-> > > +		/* TODO: check irq definitions for other variants */  
-> > 
-> > No need for this.  It's implied.
-> > 
-> > OOI, when support for more variants be added?
-> > 
-> I have done research about the RN5T618. It has just the RTC IRQ missing, I could just
-> add the table for it to prepare the path for others. I cannot test it but
-> since there are no users yet, it does not harm that it is not well-tested.
-
-If there are no users and it can't be tested, it should be left out.
-We don't want potentially broken, untested code with no users in the
-kernel.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
