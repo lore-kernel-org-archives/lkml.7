@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF2BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B9DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899C022527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B961222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078714;
-	bh=NX0S9Qx6zPAjKxQOAmvpsNw3KnU41sQnZPjSKneBC6I=;
+	s=default; t=1576078718;
+	bh=s+wMiJEOiQo89phfscHrYDvY1oc9mRfkQJW9+IN9xPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFFBFYXkC+1G+yg6k/DYoEyNW35vYdTCuiCtFSaFQ+ShLcb5obvCpnZyQMtqTM4NT
-	 9+RCYw8GyjHA+A8WLXWsCRYmljopGfSMOofSiWrwmu6vFHAVouV3NZ0pCdufsOkAME
-	 OoNIU+eXHlG0BquocUicx61cbD3Q4vd+Irlzu364=
+	b=dseZzvC5uwq+Ewy57MjLmCiSW5k36wMGD1PCLvYZhBUp0T9FI0wsIQ2eFaZeVFWKu
+	 NfQ/OfPPcGMO/uY1J2TzEbbw1UwxWHcnlTn8g9OMS0wnpe8hk+8aaUNT+ylF7s0FOT
+	 6Td7fAJ7B87Gpa1l7RmPNGgbSwv9jj7N42BgSpIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388451AbfLKPid (ORCPT
+        id S2388459AbfLKPih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388309AbfLKPi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:27 -0500
+        id S2388448AbfLKPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B176422527;
-        Wed, 11 Dec 2019 15:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73312465A;
+        Wed, 11 Dec 2019 15:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078706;
-        bh=NX0S9Qx6zPAjKxQOAmvpsNw3KnU41sQnZPjSKneBC6I=;
+        s=default; t=1576078712;
+        bh=s+wMiJEOiQo89phfscHrYDvY1oc9mRfkQJW9+IN9xPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qO8MM0Gz0D6dbNHomFBFDZweecZcR15HUv6bxB5e76VW6uGBNG2Fn2sgxSmiiO/fp
-         uwBrnha56FJJliJstZh4fbVmHeHpkvelNsJd3rPLY/ZIj6qacq5iA/JV74/7LPruqP
-         xVhQ7/tgSVFAtICukeOWTClq0EMMeU2FEvMZdLkg=
+        b=NgroWYrxFJpBv1doUIAqgJrZ+GrDFw0y9fZ9ZdCVcNzW2lB/E4UqrDJqXgAuiXBnX
+         Hdz5UIY9uVjwXE0neIM8SNFcHuYYG0V63nTnOZ6isVFsPTxqrcLDM8lL9x8q2PHqST
+         9CbCwaJnBvAuVXaW8I5eW2dT6lM5mTwL6pj46/hk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 12/37] jbd2: Fix statistics for the number of logged blocks
-Date:   Wed, 11 Dec 2019 10:37:48 -0500
-Message-Id: <20191211153813.24126-12-sashal@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Barry Song <Baohua.Song@csr.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 18/37] mfd: mfd-core: Honour Device Tree's request to disable a child-device
+Date:   Wed, 11 Dec 2019 10:37:54 -0500
+Message-Id: <20191211153813.24126-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -58,59 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Lee Jones <lee.jones@linaro.org>
 
-[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
+[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
 
-jbd2 statistics counting number of blocks logged in a transaction was
-wrong. It didn't count the commit block and more importantly it didn't
-count revoke descriptor blocks. Make sure these get properly counted.
+Until now, MFD has assumed all child devices passed to it (via
+mfd_cells) are to be registered. It does not take into account
+requests from Device Tree and the like to disable child devices
+on a per-platform basis.
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Well now it does.
+
+Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
+Link: https://lkml.org/lkml/2019/8/22/1350
+
+Reported-by: Barry Song <Baohua.Song@csr.com>
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/mfd-core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 2d964ce456060..ebbd7d054cabd 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -740,7 +740,6 @@ start_journal_io:
- 				submit_bh(WRITE_SYNC, bh);
- 			}
- 			cond_resched();
--			stats.run.rs_blocks_logged += bufs;
- 
- 			/* Force a new descriptor to be generated next
-                            time round the loop. */
-@@ -827,6 +826,7 @@ start_journal_io:
- 		if (unlikely(!buffer_uptodate(bh)))
- 			err = -EIO;
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 
- 		/*
- 		 * The list contains temporary buffer heads created by
-@@ -872,6 +872,7 @@ start_journal_io:
- 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
- 		clear_buffer_jwrite(bh);
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 		__brelse(bh);		/* One for getblk */
- 		/* AKPM: bforget here */
- 	}
-@@ -893,6 +894,7 @@ start_journal_io:
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
-+	stats.run.rs_blocks_logged++;
- 	if (jbd2_has_feature_async_commit(journal) &&
- 	    journal->j_flags & JBD2_BARRIER) {
- 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 215bb5eeb5acf..85f4e55823717 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -177,6 +177,11 @@ static int mfd_add_device(struct device *parent, int id,
+ 	if (parent->of_node && cell->of_compatible) {
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
++				if (!of_device_is_available(np)) {
++					/* Ignore disabled devices error free */
++					ret = 0;
++					goto fail_alias;
++				}
+ 				pdev->dev.of_node = np;
+ 				pdev->dev.fwnode = &np->fwnode;
+ 				break;
 -- 
 2.20.1
 
